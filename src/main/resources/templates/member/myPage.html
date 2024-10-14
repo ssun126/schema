@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mainLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+</head>
+<body>
+    <div class="cui_container" data-module="template">
+        <div class="cui_lnb">
+            <div class="lnb_root">
+                <div class="lnb_head">
+                    <h2 class="lnb_title"><span>마이페이지</span></h2>
+                </div>
+                <div class="cui_nav">
+                    <nav class="nav_root">
+                        <ul>
+                            <li>
+                                <a href="#" class="nav_item" aria-selected="true">
+                                    <span class="nav_label">사용자 정보</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="cui_content">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title"><span>사용자 정보</span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+                    <form class="cui_form_field">
+                        <fieldset>
+                            <legend><span>사용자 정보</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:120px;">
+                                    <col>
+                                    <col style="width:120px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>ID</span></th>
+                                    <td><p>Covision</p></td>
+                                    <th><span>ID</span></th>
+                                    <td><p>홍길동</p></td>
+                                </tr>
+                                <tr>
+                                    <th><span>가입일</span></th>
+                                    <td><p>2024-07-01</p></td>
+                                    <th><span>승인일</span></th>
+                                    <td><p>2024-07-01</p></td>
+                                </tr>
+                                <tr>
+                                    <th><span>접속 목적</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content wrap">
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th ><span>관리 업무</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_grid_wrap" >
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>Audit Management</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="cui_items_wrap" data-direction="column">
+                                                <div class="item_label"><span>관리자</span></div>
+                                                <div class="item_content wrap">
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>알림설정</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content wrap">
+                                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="center" >
+                            <div class="item_content">
+                                <a href="#" class="cui_button primary"><span>저장</span></a>
+                                <a href="#" class="cui_button"><span>비밀번호 변경</span></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

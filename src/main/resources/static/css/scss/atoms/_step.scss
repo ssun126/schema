@@ -1,0 +1,60 @@
+.cui_step {
+    ol {
+        @include reset-this-list;
+        display         : flex;
+        align-items     : center;
+        justify-content : center;
+        counter-reset   : counter;
+
+
+        li {
+            position          : relative;
+            display           : flex;
+            align-items       : center;
+            flex              : 0 0 auto;
+            flex-direction    : column;
+            width             : 120px;
+            counter-increment : counter;
+            color             : var(--step-list);
+
+            &:before {
+                font-size   : 16px;
+                line-height : 24px;
+                display     : block;
+                content     : counter(counter);
+            }
+
+            i {
+                margin : 6px 0 4px;
+
+                &:before {
+                    font-size : 36px;
+                }
+            }
+
+            span {
+                color : var(--text-endpoint);
+            }
+
+            &.active {
+                color : var(--primary);
+
+                span {
+                    color : var(--text-primary);
+                }
+            }
+
+            & + li {
+                &:after {
+                    position   : absolute;
+                    top        : 15px;
+                    left       : -30px;
+                    width      : 60px;
+                    height     : 1px;
+                    content    : '';
+                    background : var(--border-primary);
+                }
+            }
+        }
+    }
+}

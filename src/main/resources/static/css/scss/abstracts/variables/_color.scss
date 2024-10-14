@@ -1,0 +1,185 @@
+//theme
+$theme-primary-color   : #005BAE;
+$theme-primary-hover   : #005BAE;
+$theme-primary-text    : #ffffff;
+$theme-secondary-color : #5e9cd5;
+$theme-endpoint-color  : #F9FAFB;
+
+// gray
+$white                 : #ffffff;
+$gray-100              : #f8f8f8;
+$gray-150              : #eaeaea;
+$gray-200              : #dddddd;
+$gray-250              : #c7c7c7;
+$gray-300              : #ababab;
+$gray-400              : #999999;
+$gray-500              : #777777;
+$gray-600              : #555555;
+$gray-650              : #454545;
+$gray-700              : #353535;
+$gray-800              : #222222;
+$gray-900              : #1a1a1a;
+$black                 : #000000;
+
+
+// 포인트 컬러
+$pink-soft             : #FFD8D6;
+$pink-main             : #FF3377;
+$pink-hard             : #931063;
+$yellow-soft           : #FFFACC;
+$yellow-main           : #FFD500;
+$yellow-hard           : #937300;
+$cyan-soft             : #C9FCEF;
+$cyan-main             : #00BCCC;
+$cyan-hard             : #004F76;
+$violet-soft           : #FFD6F9;
+$violet-main           : #DD33FF;
+$violet-hard           : #5F1093;
+$red-soft              : #FFE2CE;
+$red-main              : #FF210D;
+$red-hard              : #93041B;
+$lime-soft             : #F0FBCE;
+$lime-main             : #77BF13;
+$lime-hard             : #356E06;
+$blue-soft             : #D5FBFE;
+$blue-main             : #30B2F2;
+$blue-hard             : #0F4A8C;
+$grape-soft            : #F2D6FF;
+$grape-main            : #9933FF;
+$grape-hard            : #3E1093;
+$orange-soft           : #FFF2D3;
+$orange-main           : #FF9326;
+$orange-hard           : #933C0C;
+$green-soft            : #D0FBCE;
+$green-main            : #12B348;
+$green-hard            : #056743;
+$indigo-soft           : #D6E9FE;
+$indigo-main           : #3377FE;
+$indigo-hard           : #102E93;
+$space-soft            : #F1F2F8;
+$space-main            : #6D7080;
+$space-hard            : #22274A;
+
+// 상태 컬러 배열
+$point-colors          : (
+        "pink_soft" $pink-soft,
+        "pink_main" $pink-main,
+        "pink_hard" $pink-hard,
+        "yellow_soft" $yellow-soft,
+        "yellow_main" $yellow-main,
+        "yellow_hard" $yellow-hard,
+        "cyan_soft" $cyan-soft,
+        "cyan_main" $cyan-main,
+        "cyan_hard" $cyan-hard,
+        "violet_soft" $violet-soft,
+        "violet_main" $violet-main,
+        "violet_hard" $violet-hard,
+        "red_soft" $red-soft,
+        "red_main" $red-main,
+        "red_hard" $red-hard,
+        "lime_soft" $lime-soft,
+        "lime_main" $lime-main,
+        "lime_hard" $lime-hard,
+        "blue_soft" $blue-soft,
+        "blue_main" $blue-main,
+        "blue_hard" $blue-hard,
+        "grape_soft" $grape-soft,
+        "grape_main" $grape-main,
+        "grape_hard" $grape-hard,
+        "orange_soft" $orange-soft,
+        "orange_main" $orange-main,
+        "orange_hard" $orange-hard,
+        "green_soft" $green-soft,
+        "green_main" $green-main,
+        "green_hard" $green-hard,
+        "indigo_soft" $indigo-soft,
+        "indigo_main" $indigo-main,
+        "indigo_hard" $indigo-hard,
+        "space_soft" $space-soft,
+        "space_main" $space-main,
+        "space_hard" $space-hard,
+);
+
+$point-mixin-colors    : (
+        "pink" $pink-soft $pink-main $pink-hard,
+        "yellow" $yellow-soft $yellow-main $yellow-hard,
+        "cyan" $cyan-soft $cyan-main $cyan-hard,
+        "violet" $violet-soft $violet-main $violet-hard,
+        "red" $red-soft $red-main $red-hard,
+        "lime" $lime-soft $lime-main $lime-hard,
+        "blue" $blue-soft $blue-main $blue-hard,
+        "grape" $grape-soft $grape-main $grape-hard,
+        "orange" $orange-soft $orange-main $orange-hard,
+        "green" $green-soft $green-main $green-hard,
+        "indigo" $indigo-soft $indigo-main $indigo-hard,
+        "space" $space-soft $space-main $space-hard,
+);
+
+$point-main-colors     : (
+        "pink" $pink-main,
+        "yellow" $yellow-main,
+        "cyan" $cyan-main,
+        "violet" $violet-main,
+        "red" $red-main,
+        "lime" $lime-main,
+        "blue" $blue-main,
+        "grape" $grape-main,
+        "orange" $orange-main,
+        "green" $green-main,
+        "indigo" $indigo-main,
+        "space" $space-main,
+);
+
+
+// contextmenu
+$contextmenu-bg        : $white;
+$contextmenu-shadow    : 0 3px 12px rgba($black, 0.12);
+$contextmenu-border    : $gray-200;
+
+
+// alert
+$alert-bg              : $white;
+
+// scrollbar
+$scrollbar-color       : $gray-200;
+
+// progress
+$progress-bar          : $gray-200;
+
+// 모듈 컬러 (콘텐츠앱 등)
+$content-app-color     : #4a86e8;
+$content-app-text      : #ffffff;
+
+// alert color
+$alert-info-color      : #0068f1;
+$alert-success-color   : #00af63;
+$alert-error-color     : #ff0318;
+$alert-warning-color   : #ffa609;
+
+// 상태
+$color-state-red       : #ff6565;
+$color-state-green     : #7ED321;
+$color-state-cyan      : #1fdfed;
+$color-state-blue      : #a5badf;
+$color-state-pink      : #e9a7f5;
+$color-state-gray      : #9d9d9d;
+$color-state-light     : #cecece;
+$color-state-white     : #ffffff;
+$color-state-purple    : #9A82F7;
+$color-state-sky       : #52B7EC;
+$color-state-orange    : #EDAD52;
+
+// 상태 컬러 배열
+$status-colors         : (
+        "red" $color-state-red,
+        "green" $color-state-green,
+        "cyan" $color-state-cyan,
+        "blue" $color-state-blue,
+        "pink" $color-state-pink,
+        "gray" $color-state-gray,
+        "light" $color-state-light,
+        "white" $color-state-white,
+        "purple" $color-state-purple,
+        "sky" $color-state-sky,
+        "orange" $color-state-orange,
+);

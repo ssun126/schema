@@ -1,0 +1,109 @@
+@use "sass:math";
+@use "sass:selector";
+@use "sass:string";
+
+/* nav */
+.cui_nav {
+    $gap               : 4px;
+    $min-height        : 48px;
+    $item_height       : $min-height - ($gap*2);
+    $label-line-height : 20px;
+    $icon-height       : 32px;
+    $padding-vertical  : math.div($min-height - $icon-height, 2);
+    @include reset-ul;
+    padding            : $gap 0;
+
+    li {
+        $options : (
+                "loop-end" : 8,
+                "end-selector" : " > .nav_item",
+                "padding-gap" : 10px,
+                "$start-padding " : 24px
+        );
+        @include navi-depty-padding($options);
+
+        & > .nav_item {
+            position   : relative;
+            display    : flex;
+            width      : 100%;
+            min-height : $min-height;
+            padding    : $padding-vertical $gap*4 $padding-vertical var(--lnb-space);
+            cursor     : pointer;
+            text-align : left;
+            border     : none;
+            background : none;
+            gap        : 4px;
+
+            &:hover {
+                &:before {
+                    opacity : 1;
+                }
+            }
+
+            &:before {
+                position         : absolute;
+                top              : $gap;
+                right            : $gap*2;
+                bottom           : $gap;
+                left             : $gap*2;
+                display          : block;
+                content          : '';
+                opacity          : 0;
+                border-radius    : var(--control-radius);
+                background-color : var(--hover-theme);
+            }
+
+            &[aria-selected=true] {
+                font-weight : $text-font-weight-bold;
+                color       : var(--primary);
+                &:before {
+                    opacity : 1;
+                }
+            }
+
+            .nav_label {
+                line-height : $label-line-height;
+                display     : flex;
+                align-items : center;
+                flex        : 0 1 auto;
+                padding     : math.div($icon-height - $label-line-height, 2) 0;
+                word-break  : break-all;
+
+                @include area-active('li', '[aria-expanded=true]') {
+                    color:var(--primary);
+                    font-weight:$text-font-weight-bold;
+                }
+            }
+
+            .nav_toggle {
+                flex        : 0 0 auto;
+                margin-left : auto;
+
+                &:before {
+                    content : $ci_caret_down;
+
+                    @include area-active('li', '[aria-expanded=true]') {
+                        content : $ci_caret_up;
+                    }
+                }
+            }
+
+            .nav_aside {
+                display     : flex;
+                margin-left : auto;
+                gap         : 2px;
+            }
+
+
+        }
+
+        & > ul {
+            display : none;
+
+            @include area-active('li', '[aria-expanded=true]') {
+                display : block;
+            }
+        }
+
+    }
+}

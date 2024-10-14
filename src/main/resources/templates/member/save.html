@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ko" data-mode="">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="../../plugin/jq/jQuery.jqGrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../plugin/jqGrid/jQuery.jqGrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../plugin/jqGrid/ui.jqGrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" >
+
+    <script type="text/javascript" src="../../plugin/jquery/jquery.min-1.11.1.js"></script>
+    <script type="text/javascript" src="../../plugin/jqueryUi/jquery-ui.js"></script>
+    <script type="text/javascript" src="../../plugin/jqGrid/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="../../js/app.js"></script>
+    <title>회원가입</title>
+</head>
+<body>
+<div class="cui_app">
+    <div class="cui_global">
+        <h1 class="global_logo">
+            <a href="#"><span class="blind">동우화인캠</span></a>
+        </h1>
+        <nav class="cui_gnb" role="navigation">
+            <ul>
+                <li>
+                    <a href="#"><span>Company Information</span></a>
+                    <ul>
+                        <li>
+                            <a href="#"><span>menu1</span></a>
+                            <ul>
+                                <li><a href="#"><span>menu1-1</span></a></li>
+                                <li><a href="#"><span>menu1-2</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span>menu2</span></a></li>
+                        <li><a href="#"><span>menu3</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><span>Audit Management</span></a></li>
+                <li><a href="#"><span>Part Management</span></a></li>
+                <li><a href="#"><span>Quality Control</span></a></li>
+                <li>
+                    <a href="#"><span>Q&A</span></a>
+                    <ul>
+                        <li>
+                            <a href="#"><span>menu1</span></a>
+                            <ul>
+                                <li><a href="#"><span>menu1-1</span></a></li>
+                                <li><a href="#"><span>menu1-2</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span>menu2</span></a></li>
+                        <li><a href="#"><span>menu3</span></a></li>
+                    </ul>
+                </li>
+                <li class="more">
+                    <a href="#" class="toggle"><span>더보기</span></a>
+                    <ul></ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="global_utility">
+            <select class="cui_select_field">
+                <option>KOR</option>
+                <option>ENG</option>
+                <option>JPN</option>
+                <option>CHN</option>
+            </select>
+            <div class="utility_profile">
+                <div class="info">
+                    <strong>김하랑 과장</strong>
+                    <span>UX디자인팀</span>
+                </div>
+            </div>
+            <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃"><span>로그아웃</span></button>
+        </div>
+    </div>
+    <div class="cui_container center" data-module="join">
+        <div class="cui_lnb">
+            <div class="lnb_root">
+                <div class="lnb_head">
+                    <h2 class="lnb_title"><span>회원가입</span></h2>
+                </div>
+                <div class="cui_nav">
+                    <nav class="nav_root">
+                        <ul>
+                            <li>
+                                <a href="#" class="nav_item">
+                                    <span class="nav_label">회원가입</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="cui_content ">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title center"><span>회원가입</span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+                    <div class="cui_step">
+                        <ol>
+                            <li class="active">
+                                <i data-cui-icon="file_search"></i>
+                                <span>정보수집 동의</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="lock"></i>
+                                <span>ID/PW 및 벤더정보</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="receipt"></i>
+                                <span>워런티 협약</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="task"></i>
+                                <span>동우 승인</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="cui_scroll_section">
+                        <div class="privacy_area">
+                            <h3 class="title">동우화인켐㈜ 개인정보처리방침</h3>
+                            <p>동우화인켐㈜는 개인정보보호법을 준수하여 개인정보 보호 및 권익을 보호합니다.</p>
+                            <p>동우화인켐 주식회사 (이하 "동우화인켐")는 개인정보보호법을 준수하여 정보주체의 개인정보 보호 및 권익을 보호하고 개인정보와 관련한 정보주체의 고충을 원활하게 처리할 수 있도록, 개인정보보호법 제 30 조 및 동법 시행령 제 31 조에 의거하여 다음과 같이 개인정보처리방침(이하 "본 방침")을 두고 있습니다.</p>
+                            <div class="privacy_con v2">
+                                <ul>
+                                    <li>
+                                        <strong>제 1 조 (총칙)</strong>
+                                        <ul>
+                                            <li>1. 동우화인켐이 취급하는 모든 개인정보는 관련 법령에 근거하여 수집·보유 및 처리되고 있습니다.</li>
+                                            <li>2. 동우화인켐은 본 방침을 통하여 정보주체가 제공하는 개인정보가 어떠한 용도와 방식으로 이용되고 있으며, 개인정보보호를 위해 어떠한 조치가 취해지고 있는지 공개하고 있습니다.</li>
+                                            <li>3. 동우화인켐의 본 방침은 시행일로부터 적용되며, 관련 법령 및 지침의 변경 또는 동우화인켐 내부사정에 따라 개정될 수 있으며, 개인정보처리방침을 개정하는 경우에는 개정된 사항을 동우화인켐 홈페이지 또는 그룹웨어의 공지사항을 통하여 공지할 것입니다.</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 2 조 (개인정보의 처리목적)</strong>
+                                        <p>동우화인켐은 개인정보를 다음과 같은 목적을 위해 처리합니다. 처리한 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경될 시에는 개인정보보호법 제 18 조에 따라 정보주체에게 사전 동의를 구할 예정입니다.</p>
+                                        <table border="1">
+                                            <tbody><tr>
+                                                <th>구분</th>
+                                                <th>내용</th>
+                                            </tr>
+                                            <tr>
+                                                <td>임직원 인사관리</td>
+                                                <td>인력관리, 업무분배, 급여지급, 임직원 복지관련 사항의 처리, 근로계약상 의무준수, 재직증명서 발급, 세금 납부, 법정 보험 가입, 근로기준법 및 각종 근로자 관련 법령준수, 퇴직 후의 재직증명서 및 경력증명서 발급을 효율적으로 수행하기 위한 목적</td>
+                                            </tr>
+                                            <tr>
+                                                <td>입사지원자 채용</td>
+                                                <td>입사지원 관련 행정 처리 및 입사지원자 채용업무 수행 목적</td>
+                                            </tr>
+                                            <tr>
+                                                <td>협력업체와의 유기적인 업무수행</td>
+                                                <td>계약체결 또는 합의에 따라 동우화인켐과 업무를 수행하는 협력업체 임직원과의 업무 연락, 용이한 업무수행, 보안유지 목적</td>
+                                            </tr>
+                                            </tbody></table>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 3 조 (처리하는 개인정보의 항목)</strong>
+                                        <p>동우화인켐에서 처리하는 개인정보의 항목 및 수집방법은 다음과 같습니다.</p>
+                                        <ul>
+                                            <li>1. 동우화인켐의 임직원 개인정보</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>필수항목</th>
+                                                    <th>선택항목</th>
+                                                    <th>민감정보</th>
+                                                    <th>수집방법</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>성명, 사진, 사번, 현주소, 전화번호, 휴대전화번호, 전자우편주소, 성별, 생년월일, 병역사항, 보훈대상 사항, 학력사항, 경력사항, 급여 등 지급을 위한 사항(은행 및 계좌번호)</td>
+                                                    <td>결혼여부, 피부양자 또는 가족사항(근로계약 체결 및 이행을 위하여 불가피하게 필요하지 않는 한 해당 가족의 수집동의가 필요할 수 있음), 어학능력 및 자격면허에 관한 사항, 표창사항</td>
+                                                    <td>건강상태, 장애 및 병력 관련 사항(건강검진 자료 일체 및 문진자료 포함)</td>
+                                                    <td>서면양식 또는 전화, 전자우편, 그룹웨어 인사시스템(ezHR) 개인정보 조회 및 입력란</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>2. 동우화인켐의 입사지원자 개인정보</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>필수항목</th>
+                                                    <th>선택항목</th>
+                                                    <th>민감정보</th>
+                                                    <th>수집방법</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>성명, 사진, 현주소, 전화번호, 휴대전화번호, 전자우편주소, 성별, 생년월일, 병역사항, 보훈대상 사항, 학력사항, 경력사항, 어학능력 및 자격면허에 관한 사항(필요 직군에 한함)</td>
+                                                    <td>어학능력 및 자격면허에 관한 사항(필요 직군 이외의 경우), 표창사항</td>
+                                                    <td>없음</td>
+                                                    <td>동우화인켐 채용 홈페이지 또는 입사지원서 양식, 전화</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>3. 동우화인켐의 협력업체 직원 개인정보</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>필수항목</th>
+                                                    <th>선택항목</th>
+                                                    <th>민감정보</th>
+                                                    <th>수집방법</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>성명, 소속회사명, 소속부서명, 소속회사 주소, 직위, 직책, 전화번호, 휴대전화번호, 전자우편주소, FAX번호, ID, 패스워드, 접속로그, 접속IP정보</td>
+                                                    <td>생년월일, 사진, 거주지주소</td>
+                                                    <td>없음</td>
+                                                    <td>서면양식, 전화, 전자우편, 협력사 포털시스템</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>4. 동우화인켐은 제1항 내지 제3항에 규정된 개인정보와는 별도로 정보주체의 고유식별정보 (주민등록번호, 외국인등록번호 등) 또는 민감정보(혈액형, 건강상태, 건강검진 자료, 장애 및 병력 관련 사항, 종교 등)를 수집·이용하려는 경우에는 반드시 정보주체에게 별도의 동의를 받아 수집·이용하고 있으며, 정보주체의 주민등록번호의 경우 개인정보보호법상 허용되는 경우를 제외하고는 어떠한 경우에도 수집, 이용하지 않습니다.</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 4 조 (개인정보의 처리 및 보유기간)</strong>
+                                        <p>동우화인켐은 법령에 따른 개인정보 보유・이용기간 또는 정보주체로부터 개인정보를 수집 시에 동의 받은 개인정보 보유・이용기간 내에서 개인정보를 처리・보유합니다.</p>
+                                        <p>동우화인켐에서 처리하는 개인정보의 처리 및 보유기간은 다음과 같습니다.</p>
+                                        <ul>
+                                            <li>1. 동우화인켐 임직원중 퇴사자: 퇴사일로부터 3 년이후 파기</li>
+                                            <li>2. 입사지원자 중 불합격자: 합격자 발표일로부터 1 개월이내 파기 (단, 정보주체의 삭제요청이 있을 경우 지체없이 파기)</li>
+                                            <li>3. 입/출 데이터: 5 년 경과후 파기</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 5 조 (개인정보의 파기)</strong>
+                                        <ul>
+                                            <li>1. 동우화인켐은 수집한 개인정보의 이용목적이 달성된 후에는 보유기간 및 이용기간의 만료에 따라 해당정보를 지체없이 파기합니다.</li>
+                                            <li>2. 정보주체로부터 동의받은 개인정보의 보유기간이 경과하거나 처리목적이 달성되었음에도 불구하고 다른 법령에 따라 개인정보를 계속 보존하여야 하는 경우에는, 해당 개인정보를 별도의 데이터베이스 (DB)로 옮기거나 보관장소를 달리하여 보존합니다.</li>
+                                            <li>3. 개인정보 파기의 절차 및 방법은 다음과 같습니다.</li>
+                                            <ul>
+                                                <li>파기절차 : 동우화인켐은 파기사유가 발생한 개인정보를 선정, 내부절차를 통해 개인정보를 파기합니다.</li>
+                                                <li>파기방법 : 종이문서에 기록, 저장, 인쇄된 개인정보는 분쇄기로 분쇄하거가 소각하여 파기합니다. 전자적 파일 형태로 기록, 저장된 개인정보는 기록을 재생할 수 없는 기술적 방법을 사용하여 파기합니다.</li>
+                                            </ul>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 6 조 (개인정보의 제 3 자의 제공)</strong>
+                                        <p>동우화인켐은 원칙적으로 정보주체의 개인정보를 제 2 조 (개인정보의 처리목적)에서 명시한 범위 내에서 처리하며, 정보주체의 사전 동의 없이는 본래의 범위를 초과하여 처리하거나 제 3 자에게 제공하지 않습니다. 다만, 다음의 경우에는 개인정보를 처리할 수 있습니다.</p>
+                                        <ul>
+                                            <li>1. 정보주체가 사전에 제 3 자 제공 및 공개에 동의한 경우</li>
+                                            <li>2. 법령 등에 의해 제공이 요구되거나 수사목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
+                                            <li>3. 계약의 이행을 위하여 필요한 개인정보로서 경제적/기술적인 사유로 통상의 동의를 받는 것이 현저히 곤란한 경우</li>
+                                            <li>4. 개인을 식별하기에 특정할 수 없는 상태로 가공하여 이용하는 경우</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 7 조 (개인정보처리의 위탁)</strong>
+                                        <ul>
+                                            <li>1. 동우화인켐은 다음의 경우에 한해 개인정보 취급 업무의 원활한 수행을 위하여 개인정보를 외부 전문업체 (이하 "수탁자")에 위탁하여 운영하고 있으며, 재화 또는 서비스를 홍보하거나 판매를 권유하는 업무는 위탁하지 않습니다.</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>구분</th>
+                                                    <th>수탁자</th>
+                                                    <th>위탁하는 업무의 내용</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>임직원들을 위한 복지 및 생활서비스 제공</td>
+                                                    <td>㈜현대이지웰</td>
+                                                    <td>복지포인트를 이용한 임직원 온라인쇼핑몰, 법인콘도 운영 등</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>임직원 교육위탁</td>
+                                                    <td>휴넷, 캐럿글로벌</td>
+                                                    <td>임직원의 직무 및 어학 관련 능력향상을 위한 교육컨텐츠 제공 등</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>건강검진센터 운영</td>
+                                                    <td>KMI 한국의학연구소, 삼성서울병원, 평택굿모닝병원, 녹십자아이메드, 대한산업보건협회, 안중백병원, 아주대병원, 옴니케어</td>
+                                                    <td>임직원의 건강검진 및 건강관리서비스 등</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>사업장 출입통제 및 보안</td>
+                                                    <td>에스텍시스템</td>
+                                                    <td>임직원 사원증 발급 및 출입관리 등</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>항공권 및 비자발급</td>
+                                                    <td>우리항공여행사</td>
+                                                    <td>임직원을 위한 항공권 발급 및 비자발급 대행</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>우리사주 예탁</td>
+                                                    <td>한국증권금융</td>
+                                                    <td>임직원 우리사주 예탁</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>2. 제1항에 따라 개인정보의 처리를 위탁하는 경우, 동우화인켐은 개인정보 보호의 안전을 위해 "수탁자"와의 위탁계약 체결시 개인정보보호법 제26조 및 동 시행령 제28조에 따라 위탁업무의 목적 및 범위, 위탁업무 수행목적 외 개인정보의 처리금지, 기술적·관리적 보호조치, 재위탁 제한, "수탁자"에 대한 관리·감독, 손해배상 등 책임에 관한 사항 등을 계약서 등의 문서에 명시하거나 별도의 보안서약서를 징구하여 당해 문서들을 서면 또는 전자적으로 관리·보관하고 있습니다.</li>
+                                            <li>3. 제1항의 "수탁자"나 위탁업무의 내용이 변경될 경우, 개인정보보호법 제26조 제2항에 따라 "수탁자"와 위탁업무의 내용을 정보주체가 손쉽게 확인 가능하도록 본 방침을 즉시 개정하여 홈페이지를 통해 공개하도록 하겠습니다.</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 8 조 (개인정보의 안전성 확보 조치)</strong>
+                                        <p>동우화인켐은 개인정보보호법 제 29 조 및 동법 시행령 제 30 조에 따라 다음과 같이 개인정보 안전성 확보에 필요한 기술적·관리적·물리적 조치를 하고 있습니다.</p>
+                                        <ul>
+                                            <li>1. 내부관리계획의 수립 및 시행</li>
+                                            <li>개인정보의 안전한 처리를 위해 내부관리계획을 수립하여 시행하고 있습니다.</li>
+                                            <li>2. 접근통제 및 접근권한의 제한</li>
+                                            <li>동우화인켐은 개인정보를 처리하는 데이터베이스시스템에 대한 접근권한의 차등부여, 변경, 말소를 통하여 개인정보에 대한 접근통제를 위하여 필요한 조치를 하고 있으며, 침입차단시스템을 이용하여 외부로부터의 무단 접근을 통제하고 있습니다.</li>
+                                            <li>3. 개인정보의 암호화</li>
+                                            <li>정보주체의 개인정보는 암호화되어 저장 및 관리되고 있습니다. 또한 중요한 데이터는 저장 및 전송 시 암호화하여 사용하는 등의 별도 보안기능을 사용하고 있습니다.</li>
+                                            <li>4. 접속기록의 보관 및 위·변조 방지</li>
+                                            <li>개인정보처리시스템에 접속한 기록(웹 로그, 요약정보 등)을 최소 6개월 이상 보관, 관리하고 있으며, 접속 기록이 위·변조 및 도난, 분실되지 않도록 보안기능을 사용하고 있습니다.</li>
+                                            <li>5. 보안프로그램의 설치</li>
+                                            <li>동우화인켐은 해킹이나 컴퓨터 바이러스 등에 의한 개인정보 유출 및 훼손을 막기 위하여 보안프로그램을 설치하고 주기적인 갱신·점검을 하며 외부로부터 접근이 통제된 구역에 시스템을 설치하고 기술적/물리적으로 감시 및 차단하고 있습니다.</li>
+                                            <li>6. 개인정보취급자의 최소화 및 교육</li>
+                                            <li>개인정보를 취급하는 직원을 최소화하여 지정하고 해당 직원에 대하여 정기적으로 교육을 실시하고 있습니다.</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 9 조 (정보주체의 권리·의무 및 그 행사방법)</strong>
+                                        <ul>
+                                            <li>1. 정보주체는 개인정보보호법 제 35 조에 따라 동우화인켐에게 개인정보의 열람·증명을 요구할 수 있습니다. 이 경우 동우화인켐은 정보주체의 요구에 성실하게 대응하고, 정보주체의 신분을 나타내는 주민등록증, 여권, 운전면허증 등의 신분증명서를 제시 받아 본인 여부를 확인합니다.</li>
+                                            <li>2. 동우화인켐은 정보주체의 대리인이 개인정보에 대한 열람·증명을 요구하는 경우에는 대리관계를 나타내는 위임장 및 대리인의 신분증명서 등을 제시 받아 대리인 여부를 확인합니다.</li>
+                                            <li>3. 동우화인켐은 정보주체가 개인정보에 대한 열람·증명 요구하는 경우, 개인정보보호법 제35조 제4항에 따라 다음 각 호의 어느 하나에 해당하는 경우에는 열람·증명을 제한할 수 있습니다.</li>
+                                            <ul>
+                                                <li>① 법률에 따라 열람이 금지되거나 제한되는 경우</li>
+                                                <li>② 다른 사람의 생명·신체를 해할 우려가 있거나 다른 사람의 재산과 그 밖의 이익을 부당하게 침해할 우려가 있는 경우</li>
+                                            </ul>
+                                            <li>4. 정보주체는 개인정보보호법 제36조에 따라 동우화인켐에게 개인정보의 정정·삭제를 요구할 수 있으며, 동우화인켐은 개인정보의 정정·삭제를 완료할 때까지 당해 개인정보를 이용하거나 제공하지 않습니다. 다만 다른 법령에서 그 개인정보가 수집 대상으로 명시되어 있는 경우에는 그 삭제를 요구할 수 없습니다.</li>
+                                            <li>5. 정보주체는 개인정보보호법 제37조에 따라 자신의 개인정보 처리의 정지를 요구하거나 개인정보 처리에 대한 동의를 철회할 수 있으며, 동우화인켐은 처리정지 요구를 받았을 때에는 지체 없이 정보주체의 요구에 따라 개인정보 처리의 전부를 정지하거나 일부를 정지한 후 처리가 정지된 개인정보에 대하여 해당 개인정보의 파기 등 필요한 조치를 하여야 하고, 정보주체가 개인정보 처리에 대한 동의를 철회한 때에는 지체 없이 수집된 개인정보를 복구·재생할 수 없도록 파기하는 등 필요한 조치를 하여야 합니다. 다만, 다음 각 호의 어느 하나에 해당하는 경우에는 동우화인켐은 정보주체의 처리정지요구를 거절하거나 동의 철회에 따른 조치를 하지 아니할 수 있습니다.</li>
+                                            <ul>
+                                                <li>① 법률에 특별한 규정이 있거나 법령상 의무를 준수하기 위하여 불가피한 경우</li>
+                                                <li>② 다른 사람의 생명·신체를 해할 우려가 있거나 다른 사람의 재산과 그 밖의 이익을 부당하게 침해할 우려가 있는 경우</li>
+                                                <li>③ 개인정보를 처리하지 아니하면 정보주체와 체결한 계약의 이행이 곤란한 경우로서 정보주체가 그 계약의 해지 의사를 명확하게 밝히지 아니한 경우</li>
+                                            </ul>
+                                            <li>6. 동우화인켐은 제5항 단서에 따라 처리정지 요구를 거절하거나 동의 철회에 따른 조치를 하지 아니하였을 때에는 정보주체에게 지체 없이 그 사유를 알려야 합니다.</li>
+                                            <li>7. 동우화인켐은 권리 행사를 한 자가 본인이거나 정당한 대리인인지를 확인합니다.</li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 10 조 (개인정보보호책임)</strong>
+                                        <p>1. 동우화인켐은 개인정보 처리에 관한 업무를 총괄해서 책임지고 개인정보를 보호하며 개인정보와 관련한 불만처리 및 피해구제 등을 위하여 개인정보보호법 제 31 조 제 1 항에 따라 아래와 같이 개인정보보호책임자 및 개인정보보호담당자를 지정하고 있습니다.</p>
+                                        <table border="1">
+                                            <tbody><tr>
+                                                <th>개인정보보호책임자</th>
+                                                <th>개인정보보호담당자</th>
+                                            </tr>
+                                            <tr>
+                                                <td>담당부서: 지원그룹<br>성명: 임승훈<br>전화: 031-659-4620<br>이메일: pollo@dwchem.co.kr</td>
+                                                <td>담당부서: 총무팀<br>성명: 이광용<br>전화: 031-659-4620<br>이메일: pollo@dwchem.co.kr</td>
+                                            </tr>
+                                            </tbody></table>
+                                        <p>2. 정보주체는 본 방침에 따른 권리 행사를 동우화인켐에 대하여 서면, 전자우편, 모사전송(FAX) 등을 통하여 할 수 있습니다. 또한 대리인을 통하여 본 조에 따른 권리 행사를 할 수 있으며, 이 경우 개인정보처리 방법에 관한 고시 별지 제 11 호 서식에 따른 위임장을 제출해야 합니다.</p>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 11 조 (권익침해 구제방법)</strong>
+                                        <p>정보주체는 개인정보의 침해로 인한 구제를 받기 위하여 다음과 같은 기관에게 분쟁해결이나 상담 등을 신청할 수 있습니다. 다만, 다음과 같은 기관은 동우화인켐과는 별개의 기관으로서, 동우화인켐의 자체적인 개인정보 불만처리, 피해구제 결과에 만족하지 못하거나 보다 자세한 도움 및 상담이 필요할 경우 문의하여 주시기 바랍니다.</p>
+                                        <table border="1">
+                                            <tbody><tr>
+                                                <th>구분</th>
+                                                <th>소관업무</th>
+                                                <th>홈페이지/전화</th>
+                                            </tr>
+                                            <tr>
+                                                <td>개인정보보호 종합지원 포털(행정안전부 운영)</td>
+                                                <td>개인정보 침해사실 신고, 상담신청, 자료제공 등</td>
+                                                <td><a href="http://www.privacy.go.kr">http://www.privacy.go.kr</a><br>02-2100-3394</td>
+                                            </tr>
+                                            <tr>
+                                                <td>개인정보 침해신고센터(한국인터넷진흥원 운영)</td>
+                                                <td>개인정보 침해사실 신고, 상담신청 등</td>
+                                                <td><a href="http://privacy.kisa.or.kr">http://privacy.kisa.or.kr</a><br>(국번없이)118</td>
+                                            </tr>
+                                            <tr>
+                                                <td>개인정보 분쟁조정위원회</td>
+                                                <td>개인정보 분쟁조정신청, 집단분쟁조정(민사적해결)</td>
+                                                <td><a href="http://kopico.go.kr">http://kopico.go.kr</a><br>1833-6972</td>
+                                            </tr>
+                                            </tbody></table>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 12 조 (영상정보처리기기 운영 및 관리)</strong>
+                                        <p>동우화인켐은 사업장 별로 공개된 장소에 영상정보처리기기를 설치·운영하고 있으며, 다음과 같이 영상정보처리기기를 운영·관리하고 있습니다. 다만, 개인의 사생활을 현저히 침해할 우려가 있는 장소 (화장실, 탈의실 등)에는 영상정보처리기기를 설치·운영하지 않습니다.</p>
+                                        <ul>
+                                            <li>1. 설치 근거 및 설치 목적</li>
+                                            <ul>
+                                                <li>① 설치 근거: 개인정보보호법 제25조 제①항 제2호 내지 제3호</li>
+                                                <li>② 설치 목적: 범죄의 예방 및 수사 목적, 시설 안전 및 화재 예방 목적</li>
+                                            </ul>
+                                            <li>2. 설치 대수, 설치 위치, 촬영 범위</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>구분</th>
+                                                    <th>설치대수</th>
+                                                    <th>설치위치</th>
+                                                    <th>촬영범위</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>평택공장</td>
+                                                    <td>192대</td>
+                                                    <td>공장외곽, 출입문, 건물내부 등</td>
+                                                    <td>각 공장 내/외부</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>신흥공장</td>
+                                                    <td>82대</td>
+                                                    <td>공장외곽, 출입문, 건물내부 등</td>
+                                                    <td>각 공장 내/외부</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>삼기공장</td>
+                                                    <td>21대</td>
+                                                    <td>공장외곽, 출입문, 건물내부 등</td>
+                                                    <td>각 공장 내/외부</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>판교스마트오피스</td>
+                                                    <td>5대</td>
+                                                    <td>출입문, 건물내부 등</td>
+                                                    <td>각 사무실 내/외부</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>3. 담당 부서, 관리책임자 및 영상정보에 대한 접근권한자</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>평택공장</th>
+                                                    <th>신흥공장</th>
+                                                    <th>삼기공장</th>
+                                                    <th>판교스마트오피스</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>총무팀/총무팀장</td>
+                                                    <td>익산지원팀/익산지원팀장</td>
+                                                    <td>사업관리팀/사업관리팀장</td>
+                                                    <td>총무팀/총무팀장</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>4. 촬영시간, 보관기간, 보관장소 및 처리방법</li>
+                                            <table border="1">
+                                                <tbody><tr>
+                                                    <th>구분</th>
+                                                    <th>촬영시간</th>
+                                                    <th>보관기간</th>
+                                                    <th>보관장소</th>
+                                                    <th>영상정보 확인부서</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>평택공장</td>
+                                                    <td>24시간</td>
+                                                    <td>30일</td>
+                                                    <td>보안상황실, 서버실</td>
+                                                    <td>총무팀</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>신흥공장</td>
+                                                    <td>24시간</td>
+                                                    <td>30일</td>
+                                                    <td>정문보안실</td>
+                                                    <td>익산지원팀</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>삼기공장</td>
+                                                    <td>24시간</td>
+                                                    <td>30일</td>
+                                                    <td>정문보안실</td>
+                                                    <td>사업관리팀</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>판교스마트오피스</td>
+                                                    <td>24시간</td>
+                                                    <td>30일</td>
+                                                    <td>서버실</td>
+                                                    <td>총무팀</td>
+                                                </tr>
+                                                </tbody></table>
+                                            <li>5. 정보주체의 영상정보 열람 등 요구에 대한 조치</li>
+                                            <ul>
+                                                <li>① 동우화인켐은 정보주체가 자신이 촬영된 개인영상정보에 대하여 열람 또는 존재확인(이하 "열람 등")을 요구하는 경우에는 본인여부 및 정당한 대리인인지의 여부를 확인하는 등 지체 없이 필요한 조치를 취하고 있습니다.</li>
+                                                <li>② 다만, 동우화인켐은 개인영상정보의 보관기간이 경과하여 파기한 경우 또는 기타 정보주체의 열람 등 요구를 거부할 만한 정당한 사유가 존재하는 경우에는 정보주체에게 10일 이내에 서면 등으로 거부 사유를 통지하여 개인영상정보 열람 등 요구를 거부할 수 있습니다.</li>
+                                                <li>③ 또한, 정보주체에게 열람 등의 조치를 취하는 경우에도, 정보주체 이외의 자를 명백히 알아볼 수 있거나 정보주체 이외의 자의 사생활 침해 우려가 있는 경우에는 해당되는 정보주체 이외의 자의 개인영상정보를 알아볼 수 없도록 보호조치를 취하고 있습니다.</li>
+                                            </ul>
+                                            <li>6. 영상정보 보호를 위한 기술적·관리적 및 물리적 조치</li>
+                                            <ul>
+                                                <li>① 개인정보 내부관리계획의 수립 및 시행</li>
+                                                <li>② 개인영상정보에 대한 접근 통제 및 접근 권한의 제한조치</li>
+                                                <li>③ 개인영상정보를 안전하게 저장 및 전송할 수 있도록 암호화 조치 및 비밀번호 설정 등</li>
+                                                <li>④ 개인영상정보 처리기록의 보관 및 위조·변조 방지를 위한 조치</li>
+                                                <li>⑤ 개인영상정보의 안전한 물리적 보관을 위한 보관시설 마련 또는 잠금장치 설치</li>
+                                            </ul>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <strong>제 13 조 (개인정보 처리방침 시행 및 변경)</strong>
+                                        <ul>
+                                            <li>1. 본 방침은 2024 년 06 월 30 일부터 시행됩니다.</li>
+                                            <li>2. 이전의 개인정보 처리방침은 아래에서 확인하실 수 있습니다.</li>
+                                            <ul>
+                                                <li>① 2011. 03. 08 ~ 2016. 09. 11 적용 <a href="/contents.do?menuPos=66&amp;lang=kor">(클릭)</a></li>
+                                                <li>② 2016. 09. 12 ~ 2020. 12. 17 적용 <a href="/contents.do?menuPos=65&amp;lang=kor">(클릭)</a></li>
+                                                <li>③ 2020. 12. 18 ~ 2024. 06. 29 적용 <a href="/contents.do?menuPos=63&amp;lang=kor">(클릭)</a></li>
+                                                <li>④ 2024. 06. 30 ~</li>
+                                            </ul>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="cui_form_field">
+                        <fieldset>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <div class="item_content">
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>동의합니다.</span></label>
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>동의하지 않습니다.</span></label>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="right" >
+                                <div class="item_content">
+                                    <a href="#" class="cui_button primary"><span>다음</span></a>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form action="/member/save" method="post">
+    <input type="text" name="USER_Email" placeholder="이메일" id="USER_Email" onblur="emailCheck()">
+    <p id="check-result"></p>
+    <input type="text" name="USER_Password" placeholder="비밀번호">
+    <input type="text" name="USER_Name" placeholder="이름">
+    <input type="text" name="USER_Mobile" placeholder="전화번호">
+    <input type="submit" value="회원가입">
+</form>
+</body>
+<script>
+    // 이메일 입력값을 가져오고,
+    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+    // 사용 가능 여부를 이메일 입력창 아래에 표시
+        const emailCheck = () => {
+            const email = document.getElementById("USER_Email").value;
+            const checkResult = document.getElementById("check-result");
+            console.log("입력한 이메일", email);
+            $.ajax({
+                // 요청방식: post, url: "email-check", 데이터: 이메일
+                type: "post",
+                url: "/member/email-check",
+                data: {
+                    "USER_Email": email
+                },
+                success: function(res) {
+                    console.log("요청성공", res);
+                    if (res == "ok") {
+                        console.log("사용가능한 이메일");
+                        checkResult.style.color = "green";
+                        checkResult.innerHTML = "사용가능한 이메일";
+                    } else {
+                        console.log("이미 사용중인 이메일");
+                        checkResult.style.color = "red";
+                        checkResult.innerHTML = "이미 사용중인 이메일";
+                    }
+                },
+                error: function(err) {
+                    console.log("에러발생", err);
+                }
+            });
+        }
+</script>
+</html>

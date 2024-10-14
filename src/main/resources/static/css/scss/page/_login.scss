@@ -1,0 +1,155 @@
+[data-module="login"] {
+    @at-root .cui_app .cui_container[data-module="login"] .cui_content .cui_main {
+        display         : flex;
+        align-items     : center;
+        justify-content : flex-end;
+        padding         : 20px 100px;
+        background      : url("#{$images-src}/login/login_bg.png") no-repeat center fixed;
+
+    }
+    .login_logo {
+        position        : absolute;
+        top             : 40px;
+        left            : 40px;
+        width           : 770px;
+        height          : 64px;
+        background      : url("#{$images-src}/login/ment.png") 0 center no-repeat;
+        background-size : contain;
+
+        span {
+            @include clip;
+        }
+    }
+
+    .login_content {
+        display        : flex;
+        align-items    : center;
+        flex-direction : column;
+        gap            : 8px;
+
+        .login_box {
+            overflow      : hidden;
+            width         : 462px;
+            border-radius : 10px 10px 70px 10px;
+            background    : #fff;
+            box-shadow    : 4px 4px 14px rgba(117, 119, 133, 0.16);
+
+            article {
+                padding-right : 50px;
+                padding-left  : 50px;
+
+                &:first-child {
+                    padding-top : 40px;
+                }
+            }
+
+            .login_form {
+                padding-top    : 20px;
+                padding-bottom : 20px;
+
+                .login_form_logo {
+                    width           : 364px;
+                    height          : 44px;
+                    background      : url("#{$images-src}/common/logo.svg") 0 center no-repeat;
+                    background-size : contain;
+
+                    span {
+                        @include clip;
+                    }
+                }
+
+                .login_form_filed {
+                    display        : flex;
+                    flex-direction : column;
+                    gap            : 20px;
+
+                    .cui_items_wrap {
+                        .cui_text_field {
+                            font-size     : 18px;
+                            line-height   : 40px;
+                            height        : 40px;
+                            border-width  : 0 0 1px 0;
+                            border-color  : var(--border-endpoint);
+                            border-radius : 0;
+                        }
+
+                        .cui_button {
+                            font-size   : 20px;
+                            font-weight : $text-font-weight-bold;
+                            width       : 100%;
+                            min-height  : 50px;
+                        }
+                    }
+                }
+
+                .login_form_settings {
+                    margin-top : 8px;
+                }
+            }
+
+            .login_board {
+                .widget_card {
+                    margin           : 0 calc(var(--widget-padding) * -1);
+                    padding          : 18px 0 24px;
+                    border-width     : 1px 0 0 0;
+                    border-radius    : 0;
+                    box-shadow       : none;
+                    --widget-padding : 10px;
+                    --widget-radius  : 0;
+
+                    .widget_head {
+                        height : 30px;
+                        border : none;
+
+                        .title {
+                            font-size : 16px;
+                            color     : #005BAE;
+
+                            &:before {
+                                font-size : 30px;
+                                width     : 30px;
+                                height    : 30px;
+                            }
+                        }
+
+                        .actions {
+                            display : none;
+                        }
+                    }
+                }
+            }
+
+            .login_info {
+                padding-top    : 20px;
+                padding-bottom : 30px;
+                color          : #fff;
+                background     : #0A3255;
+
+                h2 {
+                    font-size     : 28px;
+                    display       : flex;
+                    align-items   : center;
+                    margin-bottom : 12px;
+                    gap           : 4px;
+
+                    &:before {
+                        font-size : 30px;
+                        width     : 30px;
+                        height    : 30px;
+                    }
+                }
+
+                p {
+                    font-weight   : $text-font-weight-bold;
+                    margin-bottom : 2px;
+                }
+
+                div {
+                    font-weight : $text-font-weight;
+                }
+            }
+
+        }
+
+    }
+}

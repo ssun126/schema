@@ -1,0 +1,16 @@
+.cui_attachments {
+    display        : flex;
+    flex-direction : column;
+
+    .cui_items_wrap {
+        .item_label {
+            flex  : 0 0 auto;
+            width : unset;
+            font-weight:$text-font-weight;
+        }
+
+        .item_content {
+            gap : 0;
+        }
+    }
+}

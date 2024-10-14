@@ -1,0 +1,116 @@
+.cui_items_wrap {
+    display     : inline-flex;
+    align-items : flex-start;
+    max-width   : 100%;
+    width:fit-content;
+    gap         : 8px;
+
+    $align      : (
+            "left" "flex-start",
+            "right" "flex-end",
+            "center" "center"
+    );
+
+    &[data-direction] {
+        display : flex;
+        width   : 100%;
+    }
+
+    @each $direction, $flex in $align {
+        &[data-direction="#{$direction}"] {
+            & > .item_content {
+                justify-content : #{$flex};
+            }
+        }
+    }
+    &[data-direction=column] {
+        flex-direction : column;
+
+        & > .item_label {
+            flex  : 1 0 auto;
+            width : 100%;
+        }
+        & > .item_content {
+            flex-direction : column;
+        }
+    }
+
+    &[data-wrap=wrap] {
+        & > .item_content {
+            flex-wrap : wrap;
+            gap       : 0 12px;
+        }
+    }
+
+    & > .item_label {
+        font-weight    : $text-font-weight-bold;
+        flex           : 0 0 auto;
+        width          : 72px;
+        padding        : 6px 0;
+        vertical-align : middle;
+        word-break     : break-all;
+
+        &[data-cui-icon] {
+            display     : flex;
+            align-items : center;
+            gap         : 4px;
+
+            & > * {
+                flex-grow : 0;
+            }
+        }
+    }
+
+    & > .item_content {
+        display : flex;
+        flex    : 0 1 auto;
+        width   : 100%;
+        gap     : 0 6px;
+
+
+        &[data-role=calendar-picker]{
+            position : relative;
+            width    : 116px;
+
+            .cui_text_field {
+                width         : 100%;
+            }
+
+            &:has(.cui_button.icon){
+                .cui_text_field {
+                    padding-right : 24px;
+                }
+                .cui_button.icon {
+                    position : absolute;
+                    top      : 0;
+                    right    : 0;
+                }
+            }
+        }
+
+        & > * {
+            flex : 0 1 auto;
+        }
+
+        .field_connect {
+            line-height : var(--line-height);
+            display     : flex;
+            align-items : center;
+            margin      : 0 -3px;
+        }
+    }
+}
+
+.cui_grid_wrap {
+    $grid-columns-max     : 326px;
+    display               : grid;
+    align-items           : start;
+    gap                   : 12px 24px;
+    grid-template-columns : repeat(auto-fill, $grid-columns-max);
+
+    @for $i from 1 to 4 {
+        & > [data-size="#{$i}"] {
+            grid-column : auto / span #{$i};
+        }
+    }
+}

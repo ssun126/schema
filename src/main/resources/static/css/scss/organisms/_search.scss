@@ -1,0 +1,19 @@
+/* Search */
+.cui_search {
+    display       : flex;
+    padding       : 20px;
+    border        : 1px solid var(--border-theme);
+    border-radius : 8px;
+    background    : var(--endpoint);
+    gap           : 32px;
+
+    .search_list {
+        flex : 0 1 calc(100% - 132px);
+    }
+
+    .search_action {
+        display     : flex;
+        align-items : flex-end;
+        flex        : 1 0 0;
+    }
+}

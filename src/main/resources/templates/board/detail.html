@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+    <style>
+        table, tr, td, th {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <th>id</th>
+        <td th:text="${board.BOARD_IDX}"></td>
+    </tr>
+    <tr>
+        <th>title</th>
+        <td th:text="${board.BOARD_TITLE}"></td>
+    </tr>
+    <tr>
+        <th>writer</th>
+        <td th:text="${board.INPUT_USER_ID}"></td>
+    </tr>
+    <tr>
+        <th>date</th>
+        <td th:text="${board.INPUT_DATE}"></td>
+    </tr>
+    <tr>
+        <th>hits</th>
+        <td th:text="${board.BOARD_HITS}"></td>
+    </tr>
+    <tr>
+        <th>contents</th>
+        <td th:text="${board.BOARD_DESC}"></td>
+    </tr>
+    <tr th:if="${board.ATTACHED_FILE == 1}">
+        <th>image</th>
+        <td th:each="boardFile: ${boardFileList}">
+            <img th:src="@{|/upload/${boardFile.FILE_NAME}|}" alt="" width="200" height="200">
+        </td>
+    </tr>
+</table>
+<button onclick="listReq()">목록</button>
+<button onclick="updateReq()">수정</button>
+<button onclick="deleteReq()">삭제</button>
+</body>
+<script th:inline="javascript">
+    const listReq = () => {
+        location.href = "/board/list";
+    }
+    const updateReq = () => {
+        location.href = `/board/update/[[${board.BOARD_IDX}]]`;
+    }
+    const deleteReq = () => {
+        location.href = `/board/delete/[[${board.BOARD_IDX}]]`;
+    }
+</script>
+</html>

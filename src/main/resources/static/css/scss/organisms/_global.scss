@@ -1,0 +1,207 @@
+/* GNB */
+.cui_gnb {
+    display     : flex;
+    //overflow    : hidden;
+    align-items : center;
+    flex        : 0 1 auto;
+    width       : 100%;
+    color       : inherit;
+
+    @include reset-ul;
+    @include reset-link;
+
+    button {
+        color : inherit;
+    }
+
+    a {
+        font-size     : $text-font-size-lg;
+        line-height   : 1;
+        display       : flex;
+        align-items   : center;
+        height        : 36px;
+        padding       : 0 16px;
+        white-space   : nowrap;
+        border-radius : 0;
+    }
+
+    li {
+        position : relative;
+
+        @include hover {
+            & > a {
+                background : var(--hover-fill);
+
+                & + ul {
+                    display : block;
+                }
+            }
+
+        }
+    }
+
+    & > ul {
+        display : inline-flex;
+
+        & > li {
+            &.more {
+                display : none;
+                float   : unset;
+                margin  : unset;
+                padding : unset;
+
+                &.on {
+                    display : inline-flex;
+                }
+
+                .toggle {
+                    justify-content : center;
+                    width           : 32px;
+                    padding         : 0;
+                    border-radius   : 5px;
+
+                    &:before {
+                        @include icon-font;
+                        content : $ci_ellipsis_vertical;
+                    }
+
+                    & > span {
+                        @include clip;
+                    }
+                }
+            }
+
+            & > a {
+                height        : 40px;
+                border-radius : var(--control-radius);
+            }
+
+            & > ul {
+                top  : 100%;
+                left : 0;
+            }
+        }
+
+        ul {
+            position      : absolute;
+            z-index       : $zindex-gnb;
+            top           : calc(var(--gnb-gap) * -1);
+            left          : 100%;
+            display       : none;
+            padding       : var(--gnb-gap) 0;
+            border-radius : var(--gnb-radius);
+            background    : var(--paper-primary);
+            box-shadow    : 0 3px 6px rgba($black, 0.25);
+
+            &[aria-expanded="true"] {
+                display : block;
+            }
+        }
+    }
+
+}
+
+/* Global */
+.cui_global {
+    position      : relative;
+    z-index       : 30;
+    display       : flex;
+    align-items   : center;
+    flex-shrink   : 0;
+    box-sizing    : border-box;
+    width         : 100%;
+    height        : $global-height;
+    padding       : 0 20px;
+    color         : var(--text-primary);
+    border-bottom : 1px solid var(--border-theme);
+
+    .global_logo {
+        display     : flex;
+        align-items : center;
+        flex-shrink : 0;
+        width       : 200px;
+        height      : 25px;
+        margin      : 0 26px 0 0;
+
+        a {
+            display             : flex;
+            width               : 100%;
+            height              : 100%;
+            background-image    : url("#{$images-src}/common/logo.svg");
+            background-repeat   : no-repeat;
+            background-position : left center;
+            background-size     : contain;
+        }
+    }
+
+    .global_icon {
+        @include reset-button;
+        width  : 44px;
+        height : 44px;
+
+        &:before {
+            @include icon-font;
+            font-size : $icon-size;
+        }
+
+        em {
+            top              : 2px;
+            left             : 70%;
+            transform        : translateX(-50%);
+            transform-origin : 100% 0;
+        }
+
+        span {
+            @include clip;
+        }
+
+        .cui_badge {
+            position : absolute;
+        }
+    }
+
+    .global_utility {
+        display     : flex;
+        align-items : center;
+        flex-shrink : 0;
+        margin-left : auto;
+
+        .cui_select_field {
+            width : auto;
+        }
+
+        .utility_profile {
+            @include reset-button;
+            display    : flex;
+            padding    : 0 10px;
+            text-align : left;
+
+            .cui_avatar {
+                @include avatar(36px);
+                flex : 0 0 auto;
+            }
+
+            .info {
+                display        : flex;
+                flex-direction : column;
+                margin-left    : 12px;
+
+                strong, em {
+                    @include text-truncate;
+                    max-width : 300px;
+                }
+
+                strong {
+                    line-height : 20px;
+                }
+
+                span {
+                    font-size   : 12px;
+                    line-height : 18px;
+                }
+            }
+        }
+    }
+
+
+}

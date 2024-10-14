@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" >
+    <script type="text/javascript" src="../../js/jquery.min.js"></script>
+    <title>로그인</title>
+    <!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
+    <style>
+        .cui_dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <!-- [종료] 퍼블본용 style. 개발 반영되면 안됨 -->
+</head>
+<body>
+<div class="cui_app">
+    <div class="cui_container" data-module="login">
+        <div class="cui_content" >
+            <div class="cui_main" >
+                <div class="login_logo"><span>Schema Supply chain & Chemical conformation management system</span></div>
+                <div class="login_content">
+                    <div class="login_box">
+                        <article class="login_form">
+                            <form class="login_form_filed" action="/login" method="post">
+                                <div class="cui_items_wrap" data-direction="right">
+                                    <div class="item_content">
+                                        <select class="cui_select_field" id="multiLanguage">
+                                            <option value="">KOR</option>
+                                            <option value="">ENG</option>
+                                            <option value="">JPN</option>
+                                            <option value="">CHN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <h1 class="login_form_logo"><span>동우화인캠</span></h1>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <input name="USER_Id" class="cui_text_field" type="text" placeholder="ID">
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <input name="USER_Password" class="cui_text_field" type="password" placeholder="PW">
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <button type="submit" class="cui_button primary"><span>LOGIN</span></button>
+                                </div>
+                            </form>
+                            <div class="login_form_settings">
+                                <a href="#" onClick="modal('dialog')" class="cui_button endpoint" data-cui-icon="search"><span>ID/PW 찾기</span></a>
+                                <a href="/member/unlock" class="cui_button endpoint" data-cui-icon="lock"><span>PW 잠김해제</span></a>
+                                <a href="/member/agree" class="cui_button endpoint" data-cui-icon="user_plus"><span>회원가입</span></a>
+                            </div>
+                        </article>
+                        <article class="login_info">
+                            <h2 data-cui-icon="messages"><span>FAQ</span></h2>
+                            <p>DP Portal 시스템의 궁금한 점 있으시면 문의해주세요.</p>
+                            <div><a href=""><span>partnerhelp@dwchem.co.kr</span></a></div>
+                        </article>
+                    </div>
+                    <p>COPYRIGHT ⓒ 2024 DWCHEM.CO.KR. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cui_dialog" style="width:240px;display:none;" id="dialog">
+        <div class="dialog_container">
+            <div class="dialog_head">
+                <div class="dialog_title">
+                    <div class="main_label">ID/PW 찾기</div>
+                </div>
+                <div class="dialog_toolbar">
+                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal('cui_dialog')"><span>Close</span></button>
+                </div>
+            </div>
+            <div class="dialog_body">
+                <div class="body_root">
+                    <div class="cui_items_wrap" data-direction="center">
+                        <div class="item_content">
+                            <button type="button" class="cui_button primary"><span>Dongwoo</span></button>
+                            <button type="button" class="cui_button primary"><span>Partner</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    //모달 열기
+    $("#dialog").fadeIn()
+    function modal(id){
+      $("#" + id).fadeIn()
+    }
+
+    //모달 닫기
+    $('.modal-close').on('click', function(e){
+      e.preventDefault();
+      const modal = $(this).parents('.cui_dialog');
+      modal.fadeOut();
+    });
+
+</script>
+</html>

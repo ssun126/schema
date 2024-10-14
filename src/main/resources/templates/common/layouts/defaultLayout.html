@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{common/fragments/config :: ConfigFragment}">
+    <title>Title</title>
+</head>
+<body>
+<div class="cui_app">
+    <header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
+    <div class="cui_container center">
+        <aside th:replace="~{common/fragments/aside :: AsideFragment}"></aside>
+
+        <th:block layout:fragment="Content"></th:block>
+    </div>
+    <!--<footer th:replace="~{common/fragments/footer :: FooterFragment}"></footer>-->
+</div>
+</body>
+
+</html>

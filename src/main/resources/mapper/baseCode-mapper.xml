@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BaseCode">
+    <insert id="save" parameterType="baseCode">
+        insert into SYS_BASE_CODE(CODEGROUP, CODE, CODENAME, SORTKEY)
+        values (#{CODEGROUP}, #{CODE}, #{CODENAME}, #{SORTKEY})
+    </insert>
+    <select id="baseCode" parameterType="baseCode" resultType="baseCode">
+        select * from SYS_BASE_CODE where CODEGROUP=#{CODEGROUP} and ISUSE ='Y'
+    </select>
+    <select id="findAll" resultType="baseCode">
+        select CODEGROUP, CODE, CODENAME, SORTKEY from SYS_BASE_CODE
+    </select>
+    <delete id="delete" parameterType="int">
+        delete from SYS_BASE_CODE where CODEID=#{CODEID}
+    </delete>
+    <select id="findByCodeName" parameterType="baseCode" resultType="baseCode">
+        select * from SYS_BASE_CODE where CODENAME LIKE '%' || #{CODENAME} ||'%'
+    </select>
+    <select id="findByCodeGroup" parameterType="baseCode" resultType="baseCode">
+        select * from SYS_BASE_CODE where CODEGROUP LIKE '%' || #{CODEGROUP} ||'%'
+    </select>
+    <update id="update" parameterType="baseCode">
+        update SYS_BASE_CODE set CODE=#{CODE}
+        where CODEID=#{CODEID}
+    </update>
+</mapper>

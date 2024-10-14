@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Spring</title>
+</head>
+<body>
+    <span th:text="#{home.welcome}"></span>
+    <a href="/member/agree">회원가입</a>
+    <a href="/login">로그인</a>
+    <a href="/member">회원목록</a>
+    <br>
+    <a href="/board/save">글작성</a>
+    <a href="/board/list">글목록</a>
+
+    <ul>
+        <li><a href="?lang=en" data-th-text="#{home.lang.en}"></a></li>
+        <li><a href="?lang=jp" data-th-text="#{home.lang.jp}"></a></li>
+        <li><a href="?lang=kr" data-th-text="#{home.lang.kr}"></a></li>
+    </ul>
+</body>
+</html>
