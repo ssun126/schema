@@ -1,0 +1,162 @@
+.cui_alert {
+    position      : relative;
+    z-index       : 0;
+    display       : flex;
+    flex-shrink   : 0;
+    width         : 100%;
+    padding       : 12px;
+    color         : var(--text-primary);
+    border-radius : 8px;
+    background    : var(--alert-bg);
+
+    &:before {
+        @include icon-font;
+        font-size    : $icon-size;
+        margin-right : 8px;
+    }
+
+    &:after {
+        position      : absolute;
+        z-index       : -1;
+        top           : 0;
+        right         : 0;
+        bottom        : 0;
+        left          : 0;
+        content       : "";
+        border-radius : inherit;
+    }
+
+    .alert_message {
+        line-height : 22px;
+        flex-grow   : 1;
+        padding     : 1px 0;
+
+        p {
+            line-height : inherit;
+            margin      : 0;
+        }
+
+        @include reset-ul;
+    }
+
+    .alert_action {
+        display      : flex;
+        flex-shrink  : 0;
+        margin       : -2px -6px -2px 12px;
+        --control-bg : transparent;
+
+        .ui_button {
+            font-size : $text-font-size-sm;
+            height    : $control-size-sm;
+        }
+
+        .ui_icon_button {
+            font-size : $icon-size-sm;
+            width     : $control-size-sm;
+            height    : $control-size-sm;
+        }
+    }
+
+    &.alert_basic {
+        box-shadow : none;
+    }
+
+    &.alert_filled {
+        color      : $white;
+        box-shadow : 0 3px 10px rgba(0, 0, 0, 0.1);
+
+        .alert_action {
+            .ui_button, .ui_icon_button {
+                color : inherit;
+            }
+        }
+    }
+
+    &.alert_text {
+        font-size    : $text-font-size-sm;
+        line-height  : 20px;
+        padding      : 0;
+        border-right : 0;
+        background   : transparent;
+
+        &:before, &:after {
+            display : none;
+        }
+    }
+
+    &.alert_modal {
+        line-height    : 20px;
+        display        : flex;
+        align-items    : center;
+        flex-direction : column;
+        margin         : 0;
+        text-align     : center;
+
+        &:before {
+            font-size       : 40px;
+            display         : flex;
+            align-items     : center;
+            justify-content : center;
+            width           : 40px;
+            height          : 40px;
+            margin          : 0 0 8px;
+            color           : var(--icon-endpoint);
+        }
+
+        &:after {
+            display : none;
+        }
+
+        p {
+            line-height : inherit;
+            margin      : 0;
+        }
+    }
+
+    // 상태
+    $type         : (
+            "info" $ci_info_circle_fill $alert-info-color,
+            "success" $ci_check_circle_fill $alert-success-color,
+            "error" $ci_exclamation_circle_fill $alert-error-color,
+            "warning" $ci_triangle_exclamation_fill $alert-warning-color,
+    );
+
+    @each $name, $icon, $color in $type {
+        &[data-type="#{$name}"] {
+            &:before {
+                content : $icon;
+            }
+
+            &.alert_basic {
+                &:before {
+                    color : $color;
+                }
+
+                &:after {
+                    background : rgba($color, 0.05);
+                }
+            }
+
+            &.alert_outlined {
+                &:before {
+                    color : $color;
+                }
+
+                &:after {
+                    border : 1px solid $color;
+                }
+            }
+
+            &.alert_filled {
+                &:after {
+                    background : $color;
+                }
+            }
+
+            &.alert_text {
+                color : $color;
+            }
+        }
+    }
+
+}

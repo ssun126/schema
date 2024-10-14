@@ -1,0 +1,159 @@
+/* Button */
+.cui_button {
+    font-family        : inherit;
+    font-size          : inherit;
+    font-weight        : normal;
+    line-height        : 1;
+    position           : relative;
+    z-index            : 0;
+    display            : inline-flex;
+    align-items        : center;
+    flex-shrink        : 0;
+    justify-content    : center;
+    box-sizing         : border-box;
+    min-width          : 66px;
+    max-width          : 100%;
+    height             : var(--control-size);
+    margin             : 0;
+    padding            : 0 var(--control-x-padding);
+    cursor             : pointer;
+    user-select        : none;
+    vertical-align     : middle;
+    text-decoration    : none;
+    border             : none;
+    border-radius      : var(--control-radius);
+    background         : transparent;
+    background         : var(--control-bg);
+    box-shadow         : none;
+    touch-action       : manipulation;
+    -webkit-appearance : none;
+    width: fit-content;
+
+    &:after {
+        position       : absolute;
+        z-index        : -1;
+        top            : 0;
+        right          : 0;
+        bottom         : 0;
+        left           : 0;
+        display        : block;
+        box-sizing     : border-box;
+        width          : 100%;
+        height         : 100%;
+        content        : '';
+        transition     : all 150ms $cubic-bezier 0ms;
+        pointer-events : none;
+        border         : 1px solid var(--control-border);
+        border-radius  : inherit;
+    }
+
+    &:before {
+        @include icon-font;
+        margin : 0 4px 0 -2px;
+        color  : var(--icon-primary);
+    }
+
+    span {
+        font-style : normal;
+        @include area-active('.cui_button', '.icon') {
+            @include clip;
+        }
+    }
+
+    &:not(:disabled):hover {
+        &:after {
+            border-color : var(--control-border-hover);
+        }
+    }
+
+    &:disabled {
+        cursor       : default;
+        color        : var(--control-disabled-text);
+        border-color : var(--control-disabled-border);
+        background   : var(--control-disabled-bg);
+    }
+
+    &.icon {
+        min-width : var(--control-size);
+        padding   : 0;
+
+        &:before {
+            margin : 0;
+        }
+
+        span {
+            @include clip;
+        }
+    }
+
+    &.primary {
+        color      : var(--primary-text);
+        background : var(--primary);
+
+        &:before {
+            color : var(--primary-text);
+        }
+
+        &:after {
+            border-color : var(--primary);
+        }
+
+        &:not(:disabled):hover {
+            &:after {
+                border-color : var(--primary);
+                background   : var(--control-bg-hover);
+            }
+        }
+
+        &:disabled {
+            opacity : 0.5;
+        }
+    }
+
+    &.secondary {
+        color      : var(--primary);
+        background : transparent;
+
+        &:before {
+            color : inherit;
+        }
+
+        &:after {
+            border-color : var(--primary);
+        }
+
+        &:not(:disabled):hover {
+            &:after {
+                border-color : var(--primary);
+                background   : rgba(var(--primary-rgb), 0.1);
+            }
+        }
+
+        &:disabled {
+            opacity : 0.5;
+        }
+    }
+
+    &.endpoint {
+        background : transparent;
+
+        &:after {
+            border : none;
+        }
+
+        &.icon {
+            border-radius : 50%;
+        }
+
+        &:not(:disabled):hover {
+            &:after {
+                background : var(--hover-fill)
+            }
+        }
+
+        &:disabled {
+            background : var(--control-disabled-bg);
+        }
+    }
+
+}

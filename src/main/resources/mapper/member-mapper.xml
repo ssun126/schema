@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Member">
+    <insert id="save" parameterType="member">
+        insert into USER_INFO(USER_Email, USER_Password, USER_Name, USER_Mobile)
+        values (#{USER_Email}, #{USER_Password}, #{USER_Name}, #{USER_Mobile})
+    </insert>
+    <select id="login" parameterType="member" resultType="member">
+        select * from USER_INFO where USER_Id=#{USER_Id} and USER_Password=#{USER_Password}
+    </select>
+    <select id="findAll" resultType="member">
+        select USER_Email, USER_Password, USER_Name, USER_Mobile from USER_INFO
+    </select>
+    <select id="findById" parameterType="int" resultType="member">
+        select * from USER_INFO where USER_IDX=#{id}
+    </select>
+    <delete id="delete" parameterType="int">
+        delete from USER_INFO where USER_IDX=#{id}
+    </delete>
+    <select id="findByMemberEmail" parameterType="String" resultType="member">
+        select * from USER_INFO where USER_Email=#{loginEmail}
+    </select>
+    <select id="findByMemberId" parameterType="String" resultType="member">
+        select * from USER_INFO where USER_Id=#{USER_Id}
+    </select>
+    <update id="update" parameterType="member">
+        update USER_INFO set USER_Mobile=#{USER_Mobile}
+        where USER_IDX=#{USER_idx}
+    </update>
+</mapper>

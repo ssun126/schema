@@ -1,0 +1,37 @@
+/* LNB */
+.cui_lnb {
+    position     : relative;
+    z-index      : 20;
+    display      : flex;
+    min-height   : 0;
+    border-right : 1px solid var(--border-theme);
+
+    .lnb_root {
+        position       : relative;
+        display        : flex;
+        flex-direction : column;
+        width          : 100%;
+        padding-bottom : 6px;
+        background     : var(--paper-primary);
+    }
+
+    //타이틀
+    .lnb_head {
+        flex          : 0 0 auto;
+        padding       : 12px var(--lnb-space);
+        border-bottom : 1px solid var(--border-theme);
+
+        .lnb_title {
+            font-size   : 18px;
+            font-weight : $text-font-weight-bold;
+            line-height : 28px;
+            margin      : 0;
+        }
+    }
+
+    .cui_nav {
+        overflow : hidden auto;
+        flex     : 0 1 auto;
+        height   : 100%;
+    }
+}

@@ -1,0 +1,51 @@
+@mixin reset-default {
+    margin  : 0;
+    padding : 0;
+}
+
+@mixin reset-ul {
+    ul {
+        margin     : 0;
+        padding    : 0;
+        list-style : none;
+    }
+}
+
+@mixin reset-this-list {
+    margin     : 0;
+    padding    : 0;
+    list-style : none;
+}
+
+@mixin reset-link {
+    a {
+        color           : inherit;
+        text-decoration : none;
+    }
+}
+
+@mixin reset-text-field {
+    -webkit-appearance : none;
+    width              : 100%;
+    margin             : 0;
+    border-radius      : inherit;
+    border             : none;
+    background         : none;
+    font-family        : inherit;
+    font-size          : inherit;
+    color              : inherit;
+    text-indent        : 0;
+    line-height        : 1;
+    outline-width      : 0;
+
+    &:disabled {
+        pointer-events : none;
+    }
+}
+
+@mixin reset-button {
+    border      : none;
+    background  : none;
+    user-select : none;
+    cursor      : pointer;
+}

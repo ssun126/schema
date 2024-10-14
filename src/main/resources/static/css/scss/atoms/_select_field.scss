@@ -1,0 +1,73 @@
+/* select_field */
+.cui_select_field {
+    position            : relative;
+    display             : inline-flex;
+    flex-shrink         : 0;
+    width               : auto;
+    max-width           : 100%;
+    height              : var(--control-size);
+    margin              : 0;
+    padding             : 0 calc($icon-size + 1px) 0 var(--control-x-padding);
+    cursor              : pointer;
+    user-select         : none;
+    vertical-align      : top;
+    text-indent         : 0;
+    color               : inherit;
+    border              : 1px solid var(--control-border);
+    border-radius       : var(--control-radius);
+    outline             : none;
+    background-color    : var(--control-bg);
+    background-image    : url("#{$images-src}components/select/icon_select.svg");
+    background-repeat   : no-repeat;
+    background-position : calc(100% - 1px) center;
+    -webkit-appearance  : none;
+
+    &.wide {
+        width : 100%;
+    }
+
+    @include this-dark-mode {
+        background-image : url("#{$images-src}components/select/icon_select_dark.svg");
+    }
+
+    &::-ms-expand {
+        display : none;
+    }
+
+    &::placeholder {
+        color : var(--control-placeholder);
+    }
+
+    @include hover {
+        border-color : var(--control-border-hover);
+    }
+
+    &:focus-visible {
+        border-color : var(--control-border-focus);
+    }
+
+    &:disabled {
+        cursor           : default;
+        pointer-events   : none;
+        opacity          : 1;
+        color            : var(--control-disabled-text);
+        border-color     : var(--control-disabled-border);
+        background-color : var(--control-disabled-bg);
+        background-image : url("#{$images-src}components/select/icon_select_disabled.svg");
+
+        @include this-dark-mode {
+            background-image : url("#{$images-src}components/select/icon_select_disabled_dark.svg");
+        }
+    }
+
+    option {
+        @include this-dark-mode {
+            background : $gray-650;
+        }
+    }
+
+    &.full {
+        flex-shrink : 1;
+        width       : 100%;
+    }
+}

@@ -1,0 +1,32 @@
+.cui_jqGrid_section {
+    border-radius:8px;
+    border:1px solid var(--primary);
+    overflow:hidden;
+    .cui_jqGrid_head {
+        padding:4px 12px;
+        min-height:calc(var(--control-size) + 8px);
+        background:var(--primary);
+        color:#fff;
+        display:flex; align-items:center;
+        .jqGrid_label {
+            flex:0 1 auto;
+            @include text-truncate;
+
+        }
+        .jqGrid_aside{
+            flex:0 0 auto;
+            margin-left:auto;
+
+            .cui_button.endpoint:not(:disabled):hover:after{
+                background:rgb(var(--default-inverse), 0.2);
+            }
+
+            [data-cui-icon]{
+                &:before{
+                    color:#fff;
+                }
+
+            }
+        }
+    }
+}

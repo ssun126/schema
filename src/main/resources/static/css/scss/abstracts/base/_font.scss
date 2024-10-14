@@ -1,0 +1,51 @@
+// 텍스트 폰트
+$fonts : (
+        "Regular" $text-font-weight,
+        "Medium" $text-font-weight-medium,
+        "Bold" $text-font-weight-bold,
+);
+
+// Noto Sans KR
+@each $weight, $value in $fonts {
+    @font-face {
+        font-family : $custom-font-family;
+        font-style  : normal;
+        font-weight : $value;
+        src         : url("#{$font-src}#{$custom-font-family}-#{$weight}.woff2") format("woff2"),
+        url("#{$font-src}#{$custom-font-family}-#{$weight}.woff") format("woff"),
+        url("#{$font-src}#{$custom-font-family}-#{$weight}.ttf") format("truetype");
+    }
+}
+
+// 역슬래쉬 특수문자
+@each $weight, $value in $fonts {
+    @font-face {
+        font-family   : $custom-font-family;
+        font-style    : normal;
+        font-weight   : $value;
+        src           : url("#{$font-src}#{$custom-font-family-won}-#{$weight}.woff2") format("woff2"),
+        url("#{$font-src}#{$custom-font-family-won}-#{$weight}.woff") format("woff"),
+        url("#{$font-src}#{$custom-font-family-won}-#{$weight}.ttf") format("truetype");
+        unicode-range : U+005C;
+    }
+}
+
+// 아이콘 폰트
+@font-face {
+    font-family : $icon-font-family;
+    font-style  : normal;
+    font-weight : normal;
+    src         : url("#{$font-src}#{$icon-font-family}.woff2") format("woff2"),
+    url("#{$font-src}#{$icon-font-family}.woff") format("woff"),
+    url("#{$font-src}#{$icon-font-family}.ttf") format("truetype");
+}
+
+// LNB 아이콘 폰트
+@font-face {
+    font-family : $menu-icon-font-family;
+    font-style  : normal;
+    font-weight : normal;
+    src         : url("#{$font-src}#{$menu-icon-font-family}.woff2") format("woff2"),
+    url("#{$font-src}#{$menu-icon-font-family}.woff") format("woff"),
+    url("#{$font-src}#{$menu-icon-font-family}.ttf") format("truetype");
+}

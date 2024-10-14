@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Menu">
+    <insert id="save" parameterType="menu">
+        insert into SYS_MENU(USER_Email, USER_Password, USER_Name, USER_Mobile)
+        values (#{USER_Email}, #{USER_Password}, #{USER_Name}, #{USER_Mobile})
+    </insert>
+    <select id="menu" parameterType="menu" resultType="menu">
+        select * from SYS_MENU where USER_Id=#{USER_Id} and USER_Password=#{USER_Password}
+    </select>
+    <select id="findAll" resultType="menu">
+        select USER_Email, USER_Password, USER_Name, USER_Mobile from SYS_MENU
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from SYS_MENU where USER_IDX=#{id}
+    </delete>
+    <select id="findByMemberEmail" parameterType="String" resultType="menu">
+        select * from SYS_MENU where USER_Email=#{menuEmail}
+    </select>
+    <select id="findByMemberId" parameterType="String" resultType="menu">
+        select * from SYS_MENU where USER_Id=#{USER_Id}
+    </select>
+    <update id="update" parameterType="menu">
+        update SYS_MENU set USER_Mobile=#{USER_Mobile}
+        where USER_IDX=#{USER_idx}
+    </update>
+
+    <select id="findUserMenu" parameterType="menu" resultType="menu">
+        select * from SYS_MENU where USER_IDX=#{id}
+    </select>
+</mapper>

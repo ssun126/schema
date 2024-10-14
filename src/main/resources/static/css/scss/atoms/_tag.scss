@@ -1,0 +1,13 @@
+/* Tag */
+.cui_tag {
+    position       : relative;
+    display        : inline-flex;
+    align-items    : center;
+    flex-shrink    : 0;
+    max-width      : 100%;
+    height         : $tag-size;
+    vertical-align : top;
+    color          : var(--text-primary);
+    border-radius  : $radius-sm;
+
+}

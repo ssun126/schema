@@ -1,0 +1,117 @@
+.cui_dialog_dim {
+    position   : fixed;
+    z-index    : 103;
+    top        : 0;
+    right      : 0;
+    bottom     : 0;
+    left       : 0;
+    background : rgba($black, 0.3);
+}
+
+.cui_dialog {
+    position             : absolute;
+    z-index              : 104;
+    min-width            : 240px;
+    min-height           : 80px;
+    --cui-dialog-padding : 12px;
+
+    .dialog_title {
+        display     : flex;
+        align-items : center;
+        flex        : 1 1 100%;
+        min-width   : 0;
+        gap         : 8px;
+
+        .main_label, .sub_label {
+            @include text-truncate;
+            line-height : 24px;
+        }
+
+        .main_label {
+            font-size   : $text-font-size-lg;
+            font-weight : $text-font-weight-bold;
+            flex        : 0 0 auto;
+            max-width   : 100%;
+        }
+
+        .sub_label {
+            flex : 1 1 auto;
+        }
+    }
+
+    .dialog_toolbar {
+        display     : flex;
+        align-items : center;
+        margin-left : auto;
+        gap         : 4px;
+    }
+
+    .dialog_head {
+        display       : flex;
+        align-items   : center;
+        flex-shrink   : 0;
+        height        : 37px;
+        padding       : 4px 6px 4px var(--cui-dialog-padding);
+        cursor        : move;
+        border-bottom : 1px solid var(--border-primary);
+        gap           : 16px;
+    }
+
+    .dialog_body {
+        flex       : 1 1 100%;
+        min-height : 0;
+
+        .body_root {
+            display        : flex;
+            flex-direction : column;
+            width          : 100%;
+            height         : 100%;
+            padding        : var(--cui-dialog-padding);
+            gap            : 12px;
+
+            & > * {
+                flex : 0 0 auto;
+            }
+
+            iframe {
+                display : block;
+                width   : 100%;
+                height  : 100%;
+                margin  : calc(var(--cui-dialog-padding) * -1);
+                padding : 0;
+                border  : 0;
+            }
+        }
+    }
+
+    .dialog_foot {
+        display         : flex;
+        flex-shrink     : 0;
+        justify-content : flex-end;
+        padding         : 8px 12px;
+        border-top      : 1px solid var(--border-primary);
+
+        .dialog_close_time_selector {
+            font-size   : $text-font-size-sm;
+            display     : flex;
+            align-items : center;
+            gap         : 8px;
+
+            .cui_select_field {
+                width : auto;
+            }
+        }
+    }
+
+    .dialog_container {
+        display        : flex;
+        overflow       : hidden;
+        flex-direction : column;
+        width          : 100%;
+        height         : 100%;
+        border         : 1px solid var(--border-secondary);
+        border-radius  : 8px;
+        background     : var(--bg-primary);
+    }
+
+}

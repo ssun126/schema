@@ -1,0 +1,32 @@
+[data-module="portal"] {
+    background : rgb(var(--primary-rgb), 0.08);
+
+    .cui_main {
+        display               : grid;
+        padding               : 20px;
+        grid-template-columns : repeat(auto-fill, minmax(320px, 1fr));
+        grid-auto-rows        : 258px;
+        gap                   : 12px;
+        grid-auto-flow        : row dense;
+
+        .widget_card {
+            border-color : var(--border-theme);
+
+            .widget_head {
+                border-color : var(--border-theme);
+            }
+
+            @for $i from 1 to 4 {
+                &[data-x-size="#{$i}"] {
+                    grid-column : auto / span #{$i};
+                }
+            }
+            @for $i from 1 to 12 {
+                &[data-y-size="#{$i}"] {
+                    grid-row : auto / span #{$i};
+                }
+            }
+        }
+    }
+
+}

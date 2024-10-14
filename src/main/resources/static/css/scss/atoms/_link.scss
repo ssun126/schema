@@ -1,0 +1,14 @@
+.cui_link {
+    color:var(--primary);
+    &:hover{
+        text-decoration:underline;
+    }
+    &[data-cui-icon]{
+        position:relative;
+        padding-right:22px;
+        &:before{
+            position:absolute;
+            right:0;
+        }
+    }
+}

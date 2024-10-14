@@ -1,0 +1,184 @@
+.widget_card {
+    display        : flex;
+    flex-direction : column;
+    height         : 100%;
+    border         : 1px solid var(--border-primary);
+    border-radius  : 12px;
+    background     : var(--paper-primary);
+    box-shadow     : 0 0 4px rgba(0, 0, 0, 0.08);
+
+    .widget_head {
+        display       : flex;
+        align-items   : center;
+        flex          : 0 0 auto;
+        height        : 45px;
+        padding       : 0 var(--widget-padding);
+        border-bottom : 1px solid var(--border-primary);
+
+        .title {
+            display: flex;
+            align-items: center;
+            flex: 1 1 100%;
+            min-width: 0;
+            gap: 8px;
+            span {
+                font-size: 15px;
+                font-weight: 700;
+                flex: 0 0 auto;
+                max-width: 100%;
+                text-transform : uppercase;
+                @include text-truncate;
+            }
+        }
+
+        .actions {
+            flex      : 0 0 auto;
+            transform : translateX(8px);
+            margin-left:auto;
+
+            .cui_button {
+            }
+        }
+    }
+
+    .widget_content {
+        @include scrollbar;
+        position : relative;
+        overflow : hidden auto;
+        flex     : 0 1 auto;
+        height   : 100%;
+        padding  : 8px 0;
+    }
+
+    .post_content {
+        ul {
+            @include reset-this-list;
+
+            .post_item {
+                line-height : 20px;
+                display     : flex;
+                align-items : center;
+                padding     : 6px var(--widget-padding);
+                gap         : 12px;
+
+                @include hover {
+                    background : var(--hover-fill);
+                }
+
+                .item_title {
+                    flex  : 0 1 auto;
+                    width : 100%;
+                    @include text-truncate;
+                }
+
+                .item_user {
+                    flex : 0 0 auto;
+                }
+
+                .item_date {
+                    flex  : 0 0 auto;
+                    color : var(--text-endpoint);
+                }
+            }
+        }
+    }
+
+    .bar_content {
+        ul {
+            @include reset-this-list;
+            display        : flex;
+            flex-direction : column;
+            padding        : 6px var(--widget-padding);
+            gap            : 6px;
+
+            .bar_item {
+                line-height : 20px;
+                display     : flex;
+                align-items : center;
+                flex        : 0 0 auto;
+                padding     : 12px var(--widget-padding);
+                background  : rgba(var(--default), 0.03);
+                gap         : 12px;
+
+                @include hover {
+                    background : var(--hover-fill);
+                }
+
+                span {
+                    flex  : 0 1 auto;
+                    width : 100%;
+
+                }
+
+                em {
+                    font-weight : $text-font-weight-bold;
+                    font-style  : normal;
+                    color       : var(--primary);
+                }
+            }
+        }
+    }
+
+    .table_content {
+        display         : flex;
+        flex-direction  : column;
+        flex-wrap       : wrap;
+        justify-content : space-around;
+        min-height      : 100%;
+        padding         : var(--widget-padding);
+
+        .cui_table {
+            width : 100%;
+        }
+    }
+
+    .card_content {
+        ul {
+            @include reset-this-list;
+            display               : grid;
+            min-height            : 100%;
+            padding               : calc(var(--widget-padding) - 8px) var(--widget-padding);
+            grid-template-columns : 1fr 1fr;
+            grid-auto-rows        : 82px;
+            gap                   : 4px;
+
+            .link_item {
+                display         : flex;
+                align-items     : center;
+                flex-direction  : column;
+                justify-content : center;
+                height          : 100%;
+                padding         : 8px;
+                border-radius   : 8px;
+                background      : rgba(var(--default), 0.03);
+                gap             : 8px;
+
+                &:hover {
+                    background : var(--hover-fill);
+                }
+            }
+        }
+
+    }
+
+    .banner_content {
+        position      : absolute;
+        top           : 0;
+        right         : 0;
+        bottom        : 0;
+        left          : 0;
+        display       : block;
+        overflow      : hidden;
+        border-radius : var(--widget-radius);
+
+        img {
+            display         : block;
+            width           : 100%;
+            height          : 100%;
+            object-position : center;
+            object-fit      : cover;
+        }
+    }
+
+
+}

@@ -1,0 +1,15 @@
+@use "sass:math";
+@use "sass:selector";
+
+@mixin unify-parent($child) {
+    @at-root #{selector.unify(&, $child)} {
+        @content;
+    }
+}
+
+@mixin area-active($target, $active) {
+    $this-selector : selector.replace(&, $target, "#{$target}#{$active}");
+    @at-root #{$this-selector} {
+        @content;
+    }
+}

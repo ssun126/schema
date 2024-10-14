@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
+    <style>
+        .cui_dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+    <!-- [종료] 퍼블본용 style. 개발 반영되면 안됨 -->
+</head>
+<body>
+        <div class="cui_content" data-module="join">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title center"><span>회원가입</span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+                    <div class="cui_step">
+                        <ol>
+                            <li>
+                                <i data-cui-icon="file_search"></i>
+                                <span>정보수집 동의</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="lock"></i>
+                                <span>ID/PW 및 벤더정보</span>
+                            </li>
+                            <li class="active">
+                                <i data-cui-icon="receipt"></i>
+                                <span>워런티 협약</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="task"></i>
+                                <span>동우 승인</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>워런티 협약 상태</span></legend>
+                            <div class="cui_items_wrap" data-direction="right" >
+                                <div class="item_content">
+                                    <button type="button" class="cui_button secondary"><span>양식다운로드</span></button>
+                                </div>
+                            </div>
+                            <table class="cui_table center">
+                                <thead>
+                                <tr>
+                                    <th><span>제출일</span></th>
+                                    <th><span>승인일</span></th>
+                                    <th><span>관리상태</span></th>
+                                    <th><span>양식첨부</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><p>2024-07-01</p></td>
+                                    <td><p>2024-07-01</p></td>
+                                    <td><p>검토중 Waitting</p></td>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="center" >
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button"><span>첨부</span></button>
+                                                <button type="button" class="cui_button"><span>보기</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="right" >
+                            <div class="item_content">
+                                <a href="#" class="cui_button primary" onClick="modal('dialog')"><span>승인요청</span></a>
+                            </div>
+                        </div>
+                    </form>
+                    <div>
+                        <div class="cui_bullet_title"><span>반려 사유</span></div>
+                        <div class="cui_border_box">
+                            반려사유 내용 출력
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="cui_dialog" style="width:420px;display:none" id="dialog">
+        <div class="dialog_container">
+            <div class="dialog_body">
+                <div class="body_root">
+                    <div class="cui_alert alert_modal" data-type="success" role="alert">승인 요청 되었습니다.</div>
+                    <div class="cui_items_wrap" data-direction="center">
+                        <div class="item_content">
+                            <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //모달 열기
+    function modal(id){
+      $("#" + id).fadeIn()
+    }
+
+    //모달 닫기
+    $('.modal-close').on('click', function(e){
+      e.preventDefault();
+      const modal = $(this).parents('.cui_dialog');
+      modal.fadeOut();
+    });
+
+    // 이메일 입력값을 가져오고,
+    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+    // 사용 가능 여부를 이메일 입력창 아래에 표시
+        const emailCheck = () => {
+            const email = document.getElementById("USER_Email").value;
+            const checkResult = document.getElementById("check-result");
+            console.log("입력한 이메일", email);
+            $.ajax({
+                // 요청방식: post, url: "email-check", 데이터: 이메일
+                type: "post",
+                url: "/member/email-check",
+                data: {
+                    "USER_Email": email
+                },
+                success: function(res) {
+                    console.log("요청성공", res);
+                    if (res == "ok") {
+                        console.log("사용가능한 이메일");
+                        checkResult.style.color = "green";
+                        checkResult.innerHTML = "사용가능한 이메일";
+                    } else {
+                        console.log("이미 사용중인 이메일");
+                        checkResult.style.color = "red";
+                        checkResult.innerHTML = "이미 사용중인 이메일";
+                    }
+                },
+                error: function(err) {
+                    console.log("에러발생", err);
+                }
+            });
+        }
+</script>
+</html>
