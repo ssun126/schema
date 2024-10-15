@@ -1,0 +1,71 @@
+@use "sass:math";
+@use "sass:selector";
+
+
+@mixin clear($pseudo: after) {
+    &:#{$pseudo} {
+        content : "";
+        display : table;
+        clear   : both;
+    }
+}
+
+@mixin clip {
+    position   : absolute !important;
+    overflow   : hidden !important;
+    clip       : rect(0, 0, 0, 0) !important;
+    width      : 1px !important;
+    height     : 1px !important;
+    margin     : -1px !important;
+    padding    : 0 !important;
+    border     : none !important;
+    background : none !important;
+}
+
+@mixin image-cover {
+    width           : 100%;
+    height          : 100%;
+    border-radius   : inherit;
+    border          : none;
+    color           : transparent;
+    text-align      : center;
+    object-fit      : cover;
+    object-position : center center;
+}
+
+@mixin hover() {
+    &:hover,
+    &:focus-within {
+        @content;
+    }
+    //&:hover {
+    //    @content;
+    //}
+}
+
+
+@mixin text-truncate {
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    white-space   : nowrap;
+}
+
+@mixin multi-text-truncate($rows) {
+    display            : block;
+    display            : -webkit-box;
+    -webkit-box-orient : vertical;
+    -webkit-line-clamp : $rows;
+    overflow           : hidden;
+}
+
+@mixin this-dark-mode {
+    html[data-mode="dark"] & {
+        @content;
+    }
+}
+
+@mixin this-light-mode {
+    html:not([data-mode="dark"]) & {
+        @content;
+    }
+}

@@ -1,0 +1,189 @@
+:root {
+    --lnb-space             : 24px;
+    --main-space            : 30px;
+    --vertical-space        : 18px;
+
+    --control-size          : #{$control-size};
+    --control-x-padding     : 12px;
+    --control-radius        : #{$radius};
+    --control-primary-hover : rgba(var(--default), 0.1);
+    --gnb-radius            : #{$radius-lg};
+    --gnb-gap               : #{$gap-xl};
+    --font-size             : #{$text-font-size};
+    --line-height           : 20px;
+
+    --widget-padding        : 20px;
+    --widget-radius         : 12px;
+
+    //color
+    --primary               : #{$theme-primary-color};
+    --primary-rgb           : #{to-rgb($theme-primary-color)};
+    --primary-hover         : #{$theme-primary-hover};
+    --primary-hover-rgb     : #{to-rgb($theme-primary-hover)};
+    --primary-text          : #{$theme-primary-text};
+    --primary-text-rgb      : #{to-rgb($theme-primary-text)};
+}
+
+@mixin light {
+    --secondary                  : #{$theme-secondary-color};
+    --endpoint                   : #{$theme-endpoint-color};
+    --border-theme               : rgb(var(--primary-rgb), 0.3);
+
+    // 기본
+    --default                    : #{to-rgb($black)};
+    --default-inverse            : #{to-rgb($white)};
+
+    // text
+    --text-primary               : #{$gray-800};
+    --text-secondary             : #{$gray-600};
+    --text-endpoint              : #{$gray-400};
+
+    // border
+    --border-primary             : #{$gray-150};
+    --border-secondary           : #{$gray-200};
+    --border-endpoint            : #{$gray-300};
+
+    // icon
+    --icon-primary               : #{$gray-500};
+    --icon-secondary             : #{$gray-300};
+    --icon-endpoint              : #{$gray-250};
+
+    // body background
+    --bg-primary                 : #{$white};
+
+    // paper
+    --paper-primary              : #{$white};
+    --paper-secondary            : #{$gray-100};
+    --paper-endpoint             : #{$gray-200};
+
+    // control
+    --control-bg                 : #{$white};
+    --control-border             : #{$gray-250};
+    --control-bg-hover           : rgba(var(--default), 0.05);
+    --control-bg-focus           : rgba(var(--default), 0.05);
+    --control-bg-pressed         : rgba(var(--default), 0.1);
+    --control-border-hover       : #{$gray-600};
+    --control-border-focus       : #{$gray-600};
+    --control-placeholder        : #{$gray-400};
+    --control-disabled-bg        : rgba(var(--default), 0.05);
+    --control-disabled-border    : #{$gray-200};
+    --control-disabled-text      : #{$gray-400};
+
+    // checkbox
+    --checkbox                   : #{$gray-300};
+    --checkbox-disabled          : #{$gray-200};
+    --checkbox-disabled-text     : #{$gray-400};
+
+    // switch
+    --switch-track               : rgba(var(--default), 0.38);
+
+    // toggle
+    --toggle-bg-pressed          : #{$gray-600};
+    --toggle-text-pressed        : #{$white};
+
+    // effect
+    --hover-fill                 : rgba(var(--default), 0.05);
+    --active-fill                : rgba(var(--default), 0.1);
+    --hover-theme                : rgba(var(--primary-rgb), 0.07);
+
+    // contextmenu
+    --contextmenu-bg-primary     : #{$white};
+    --contextmenu-shadow         : 0 3px 12px rgba(#{to-rgb($black)}, 0.12);
+    --contextmenu-border-primary : #{$gray-200};
+
+    //step list
+    --step-list                  : #{$gray-200};
+
+    //scrollbar
+    --scrollbar-color            : #{$gray-200};
+    --scrollbar-hover-color      : #{$gray-250};
+}
+
+@mixin dark {
+    --endpoint                   : #{$gray-800};
+    --border-theme               : #{$gray-700};
+
+    // 기본
+    --default                    : #{to-rgb($white)};
+    --default-inverse            : #{to-rgb($black)};
+
+    // text
+    --text-primary               : #{$gray-200};
+    --text-secondary             : #{$gray-400};
+    --text-endpoint              : #{$gray-500};
+
+    // border
+    --border-primary             : #{$gray-700};
+    --border-secondary           : #{$gray-650};
+    --border-endpoint            : #{$gray-500};
+
+    // icon
+    --icon-primary               : #{$gray-500};
+    --icon-secondary             : #{$gray-400};
+    --icon-endpoint              : #{$gray-600};
+
+    // body background
+    --bg-primary                 : #{$gray-900};
+
+    // paper
+    --paper-primary              : #{$gray-800};
+    --paper-secondary            : #{$gray-900};
+    --paper-endpoint             : #{$gray-650};
+
+    // control
+    --control-bg                 : transparent;
+    --control-border             : #{$gray-600};
+    --control-bg-hover           : rgba(var(--default), 0.07);
+    --control-bg-focus           : rgba(var(--default), 0.07);
+    --control-bg-pressed         : rgba(var(--default), 0.14);
+    --control-border-hover       : #{$gray-250};
+    --control-border-focus       : #{$gray-250};
+    --control-placeholder        : #{$gray-500};
+    --control-disabled-bg        : rgba(var(--default), 0.05);
+    --control-disabled-border    : #{$gray-500};
+    --control-disabled-text      : #{$gray-500};
+
+    // checkbox
+    --checkbox                   : #{$gray-400};
+    --checkbox-disabled          : #{$gray-650};
+    --checkbox-disabled-text     : #{$gray-500};
+
+    // switch
+    --switch-track               : rgba(var(--default), 0.15);
+
+    // toggle
+    --toggle-bg-pressed          : #{$gray-250};
+    --toggle-text-pressed        : #{$gray-900};
+
+    // effect
+    --hover-fill                 : rgba(var(--default), 0.07);
+    --active-fill                : rgba(var(--default), 0.12);
+    --hover-theme                : rgba(var(--default), 0.07);
+
+    // contextmenu
+    --contextmenu-bg-primary     : #{$gray-700};
+    --contextmenu-shadow         : 0 3px 12px rgba(#{to-rgb($black)}, 0.36);
+    --contextmenu-border-primary : #{$gray-650};
+
+    //step list
+    --step-list                  : #{$gray-700};
+
+    //scrollbar
+    --scrollbar-color            : #{$gray-200};
+    --scrollbar-hover-color      : #{$gray-150};
+}
+
+
+html {
+    @include light;
+}
+
+html[data-mode="dark"] {
+    @include dark;
+}
+
+@media (prefers-color-scheme : dark) {
+    html[data-mode="device"] {
+        @include dark;
+    }
+}

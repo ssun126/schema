@@ -1,0 +1,87 @@
+/* Text Field */
+.cui_text_field {
+    @include reset-text-field;
+    position      : relative;
+    display       : flex;
+    align-items   : center;
+    width         : 100%;
+    padding       : 0 var(--control-x-padding);
+    transition    : border-color 150ms $cubic-bezier 0ms;
+    border        : 1px solid var(--control-border);
+    border-radius : var(--control-radius);
+    background    : var(--control-bg);
+
+    &.right {
+        text-align : right;
+    }
+
+    $type         : (
+            "short" 60px,
+            "small" 160px,
+            "medium" 240px,
+            "large" 320px,
+            "basic" 200px,
+    );
+
+    @each $name, $width in $type {
+        &[data-ui-size="#{$name}"] {
+            width : $width;
+        }
+    }
+
+    &::placeholder {
+        color : var(--control-placeholder);
+    }
+
+    &:hover {
+        border-color : var(--control-border-hover);
+    }
+
+    &:focus {
+        border-color : var(--control-border-focus);
+    }
+
+    &:disabled {
+        color        : var(--control-disabled-text);
+        border-color : var(--control-disabled-border);
+        background   : var(--control-disabled-bg);
+    }
+
+    &:read-only {
+        cursor       : default;
+        color        : var(--control-disabled-text);
+        border-color : var(--control-disabled-border);
+    }
+
+    // text input
+    @include unify-parent("input") {
+        height : var(--control-size);
+    }
+
+    // textarea
+    @include unify-parent("textarea") {
+        min-height : 52px;
+        padding    : var(--control-x-padding);
+        resize     : vertical;
+
+    }
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button {
+        display : none;
+    }
+}
+
+.cui_textarea {
+    @include reset-text-field;
+    min-height    : var(--control-size);
+    padding       : var(--control-x-padding);
+    transition    : border-color 150ms $cubic-bezier 0ms;
+    border        : 1px solid var(--control-border);
+    border-radius : var(--control-radius);
+    background    : var(--control-bg);
+}
+
+.cui_file_field {
+    line-height : var(--control-size);
+}

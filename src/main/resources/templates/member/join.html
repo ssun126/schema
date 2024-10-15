@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+        <div class="cui_content " data-module="join">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title center"><span>회원가입</span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+                    <div class="cui_step">
+                        <ol>
+                            <li>
+                                <i data-cui-icon="file_search"></i>
+                                <span>정보수집 동의</span>
+                            </li>
+                            <li class="active">
+                                <i data-cui-icon="lock"></i>
+                                <span>ID/PW 및 벤더정보</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="receipt"></i>
+                                <span>워런티 협약</span>
+                            </li>
+                            <li>
+                                <i data-cui-icon="task"></i>
+                                <span>동우 승인</span>
+                            </li>
+                        </ol>
+                    </div>
+                    <form class="cui_form_field" data-legend="true" action="/member/save" method="post">
+                        <fieldset>
+                            <legend><span>기본정보</span></legend>
+                            <div class="cui_alert alert_basic" data-type="info" role="alert">
+                                <div class="alert_message">
+                                    <p>최초등록 업체입니다.</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="info" role="alert">
+                                <div class="alert_message">
+                                    <p>기등록 업체입니다.</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert">
+                                <div class="alert_message">
+                                    <p>업체코드 내역이 없어 가입이 불가합니다.</p>
+                                </div>
+                            </div>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>Vendor 번호 및 사업자등록번호 검색</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <select class="cui_select_field">
+                                                    <option value="">Vender 번호</option>
+                                                </select>
+                                                <input class="cui_text_field" type="text">
+                                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>귀사 정보</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="COVISION" disabled>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>Vendor 업종 형태</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>국가</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="KOREA" disabled>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>공동 업무자 정보</span></legend>
+                            <table class="cui_table center">
+                                <thead>
+                                <tr>
+                                    <th><span>성명(영문)</span></th>
+                                    <th><span>직위</span></th>
+                                    <th><span>부서명</span></th>
+                                    <th><span>email</span></th>
+                                    <th><span>연락처</span></th>
+                                    <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><input type="text" class="cui_text_field" name="USER_Name" placeholder="이름"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_Email" placeholder="이메일" id="USER_Email" onblur="emailCheck()"><p id="check-result"></p></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_Mobile" placeholder="전화번호"></td>
+                                    <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>ID/PW</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>ID</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>중복검사</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>담당자</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <select class="cui_select_field wide">
+                                                    <option value="">담당자 목록</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>PW</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="password">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>PW 확인</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="password">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>ID/PW 추가사유</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field wide" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>업체정보</span></legend>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert">
+                                <div class="alert_message">
+                                    <p>동일 사업부/공장에서 업무자별 ID 생성은 승인 불가 합니다</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert">
+                                <div class="alert_message">
+                                    <p>ID/PW 문의는 Main 담당자 또는 '공동업무자'에게 문의 바랍니다.</p>
+                                </div>
+                            </div>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>회사명 (한글 또는 해당국가 언어)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>제조 공장명</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>사업자 등록번호</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>회사주소 (영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>CEO 성명(영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>CEO 연락처(영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>접속 목적</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <textarea class="cui_textarea"></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>접속 목적</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="column">
+                                            <div class="item_content">
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="right" >
+                            <div class="item_content">
+                                <a href="/member/warranty" class="cui_button primary"><span>다음</span></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+<!--<form action="/member/save" method="post">
+    <input type="text" name="USER_Email" placeholder="이메일" id="USER_Email">
+
+    <input type="text" name="USER_Password" placeholder="비밀번호">
+    <input type="text" name="USER_Name" placeholder="이름">
+    <input type="text" name="USER_Mobile" placeholder="전화번호">
+    <input type="submit" value="회원가입">
+</form>-->
+</body>
+<script>
+    // 이메일 입력값을 가져오고,
+    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+    // 사용 가능 여부를 이메일 입력창 아래에 표시
+        const emailCheck = () => {
+            const email = document.getElementById("USER_Email").value;
+            const checkResult = document.getElementById("check-result");
+            console.log("입력한 이메일", email);
+            $.ajax({
+                // 요청방식: post, url: "email-check", 데이터: 이메일
+                type: "post",
+                url: "/member/email-check",
+                data: {
+                    "USER_Email": email
+                },
+                success: function(res) {
+                    console.log("요청성공", res);
+                    if (res == "ok") {
+                        console.log("사용가능한 이메일");
+                        checkResult.style.color = "green";
+                        checkResult.innerHTML = "사용가능한 이메일";
+                    } else {
+                        console.log("이미 사용중인 이메일");
+                        checkResult.style.color = "red";
+                        checkResult.innerHTML = "이미 사용중인 이메일";
+                    }
+                },
+                error: function(err) {
+                    console.log("에러발생", err);
+                }
+            });
+        }
+</script>
+</html>

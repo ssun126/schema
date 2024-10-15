@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http:www.thymeleaf.org"
+      th:fragment="HeaderFragment">
+<head>
+    <meta charset="UTF-8">
+    <title>동우화인캠</title>
+</head>
+    <div class="cui_global">
+        <h1 class="global_logo">
+            <a href="#" onclick="goMain()"><span class="blind">동우화인캠</span></a>
+        </h1>
+        <nav class="cui_gnb" role="navigation">
+            <ul>
+                <li>
+                    <a href="#"><span>Company Information</span></a>
+                    <ul>
+                        <li>
+                            <a href="#"><span>menu1</span></a>
+                            <ul>
+                                <li><a href="#"><span>menu1-1</span></a></li>
+                                <li><a href="#"><span>menu1-2</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span>menu2</span></a></li>
+                        <li><a href="#"><span>menu3</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><span>Audit Management</span></a></li>
+                <li><a href="#"><span>Part Management</span></a></li>
+                <li><a href="#"><span>Quality Control</span></a></li>
+                <li>
+                    <a href="#"><span>Q&A</span></a>
+                    <ul>
+                        <li>
+                            <a href="#"><span>menu1</span></a>
+                            <ul>
+                                <li><a href="#"><span>menu1-1</span></a></li>
+                                <li><a href="#"><span>menu1-2</span></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#"><span>menu2</span></a></li>
+                        <li><a href="#"><span>menu3</span></a></li>
+                    </ul>
+                </li>
+                <li class="more">
+                    <a href="#" class="toggle"><span>더보기</span></a>
+                    <ul></ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="global_utility">
+            <div class="utility_profile" onclick="myPage()">
+                <div class="info">
+                    <strong><span id="logonName" th:text="${session.loginName}"></span></strong>
+                    <span th:text="${session.loginId}"></span>
+                </div>
+            </div>
+            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="logout()"><span>로그아웃</span></button>
+        </div>
+    </div>
+<script>
+    const goMain = () => {
+        location.href = "/main";
+    }
+
+    const myPage = () => {
+        location.href = "/member/myPage";
+    }
+
+    const logout = () => {
+        location.href = "/logout";
+    }
+
+    $('#logout').style.display = 'none';
+    $('.global_utility').style.display = 'none';
+    if( !$("#logonName").empty()){
+        $('.global_utility').style.display = 'block';
+    }
+
+     // $(function(){
+        const baseCodeDTO = { "CODEGROUP":"language" };
+        $.ajax({
+            url:"/baseCode/get",
+            type:"GET",
+            data:baseCodeDTO,
+            success:function (data) {
+                console.log(JSON.stringify(data));
+                $("#multiLanguage").html("");
+                $.each(data, function(index, item) {
+                    console.log("Code ID: " + item.code);
+                    console.log("Code Name: " + item.codename);
+                    console.log("Multi Code Name: " + item.multicodename);
+                    console.log("Sort Key: " + item.sortkey);
+                    console.log("-----------");
+                    $("#multiLanguage").append("<option value='" + item.code + "'>" + item.codename + "</option>");
+                });
+            }
+        });
+   // });
+</script>
+</html>

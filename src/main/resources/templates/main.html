@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mainLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>포털</title>
+</head>
+<body>
+<div class="cui_app">
+
+    <div class="cui_container center_wide" data-module="portal">
+        <div class="cui_content">
+            <div class="cui_main">
+                <div class="widget_card"  data-x-size="2" >
+                    <div class="widget_content">
+                        <div class="banner_content">
+                            <img src="../../images/sample/photo/4.jpg">
+                        </div>
+                    </div>
+                </div>
+                <div class="widget_card" >
+                    <div class="widget_head">
+                        <h3 class="title"><span>메뉴얼 다운로드</span></h3>
+                    </div>
+                    <div class="widget_content">
+                        <div class="card_content">
+                            <ul>
+                                <li>
+                                    <a href="#" class="link_item">
+                                        <i data-cui-icon="document"></i>
+                                        <span>국문 메뉴얼</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="link_item">
+                                        <i data-cui-icon="document"></i>
+                                        <span>영문 메뉴얼</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="link_item">
+                                        <i data-cui-icon="document"></i>
+                                        <span>일문 메뉴얼</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="link_item">
+                                        <i data-cui-icon="document"></i>
+                                        <span>중문 메뉴얼</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget_card">
+                    <div class="widget_head">
+                        <h3 class="title"><span>Audit 승인대기</span></h3>
+                    </div>
+                    <div class="widget_content">
+                        <div class="bar_content">
+                            <ul>
+                                <li class="bar_item">
+                                    <span>ISO 인증</span>
+                                    <em>1</em>
+                                </li>
+                                <li class="bar_item">
+                                    <span>노동인권</span>
+                                    <em>1</em>
+                                </li>
+                                <li class="bar_item">
+                                    <span>안전보건/환경관리</span>
+                                    <em>1</em>
+                                </li>
+                                <li class="bar_item">
+                                    <span>품질관리</span>
+                                    <em>1</em>
+                                </li>
+                                <li class="bar_item">
+                                    <span>분쟁/책임광물</span>
+                                    <em>1</em>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget_card">
+                    <div class="widget_head">
+                        <h3 class="title"><span>Part 승인대기</span></h3>
+                    </div>
+                    <div class="widget_content">
+                        <div class="table_content">
+                            <table class="cui_table center">
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><span>목록</span></th>
+                                    <th><span>검토중</span></th>
+                                    <th><span>승인</span></th>
+                                    <th><span>반려</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span>10</span></td>
+                                    <td><span>1</span></td>
+                                    <td><span>9</span></td>
+                                    <td><span>0</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget_card">
+                    <div class="widget_head">
+                        <h3 class="title"><span>회원가입 승인대기</span></h3>
+                    </div>
+                    <div class="widget_content">
+                        <div class="table_content">
+                            <table class="cui_table center">
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><span>신규등록</span></th>
+                                    <th><span>ID추가</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span>10</span></td>
+                                    <td><span>1</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget_card" data-x-size="2" >
+                    <div class="widget_head">
+                        <h3 class="title"><span>공지사항</span></h3>
+                        <div class="actions">
+                            <a href="#" class="cui_button icon endpoint" data-cui-icon="pen_square" data-tooltip-title="등록"><span>등록</span></a>
+                            <a href="#" class="cui_button icon endpoint" data-cui-icon="chevron_right" data-tooltip-title="더보기"><span>더보기</span></a>
+                        </div>
+                    </div>
+                    <div class="widget_content">
+                        <div class="post_content">
+                            <ul>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="widget_card">
+                    <div class="widget_head">
+                        <h3 class="title"><span>QNA</span></h3>
+                        <div class="actions">
+                            <a href="#" class="cui_button icon endpoint" data-cui-icon="pen_square" data-tooltip-title="등록"><span>등록</span></a>
+                            <a href="#" class="cui_button icon endpoint" data-cui-icon="chevron_right" data-tooltip-title="더보기"><span>더보기</span></a>
+                        </div>
+                    </div>
+                    <div class="widget_content">
+                        <div class="post_content">
+                            <ul>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="post_item">
+                                        <span class="item_title">[경사] CS사업본부 CS사업1팀 전수지 대리 결혼식 안내</span>
+                                        <span class="item_user">인사팀</span>
+                                        <time class="item_date">2024-09-09</time>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

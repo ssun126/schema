@@ -1,0 +1,5 @@
+.cui_border_box {
+    padding       : var(--vertical-space);
+    border        : 1px solid var(--border-primary);
+    border-radius : calc(var(--vertical-space) / 2);
+}

@@ -1,0 +1,17 @@
+.cui_title {
+    font-size : 24px;
+
+    &.center {
+        width      : 100%;
+        text-align : center;
+    }
+}
+
+.cui_bullet_title {
+    @include bullet-title;
+    margin-bottom:6px;
+
+    & + .cui_border_box {
+        margin-top : 12px;
+    }
+}

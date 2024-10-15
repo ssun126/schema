@@ -1,0 +1,74 @@
+@use "sass:math";
+
+@mixin control-outlined($color:var(--control-border)) {
+    z-index : 0;
+
+}
+
+@mixin control-fill($effect:true, $hover:var(--control-bg-hover), $pressed:var(--control-bg-pressed)) {
+    background : var(--control-bg-secondary);
+    z-index    : 0;
+
+    &:after {
+        content        : "";
+        position       : absolute;
+        top            : 0;
+        bottom         : 0;
+        left           : 0;
+        right          : 0;
+        border-radius  : inherit;
+        background     : transparent;
+        transition     : all 150ms $cubic-bezier 0ms;
+        z-index        : -1;
+        pointer-events : none;
+    }
+
+    @if $effect {
+        @include hover {
+            &:after {
+                background : $hover;
+            }
+        }
+    }
+
+    @if $pressed != false {
+        &[aria-pressed="true"], &[aria-selected="true"] {
+            &:after {
+                background : $pressed;
+            }
+        }
+    }
+}
+
+@mixin icon-button-hover($z-index:0, $pressed:false, $radius:50%,$inset:-2px,$color:var(--control-bg-hover)) {
+    z-index       : $z-index;
+    border-radius : $radius;
+
+    &:after {
+        content        : "";
+        position       : absolute;
+        top            : $inset;
+        bottom         : $inset;
+        left           : $inset;
+        right          : $inset;
+        border-radius  : inherit;
+        background     : transparent;
+        transition     : background-color 150ms $cubic-bezier 0ms;
+        z-index        : -1;
+        pointer-events : none;
+    }
+
+    @include hover {
+        &:after {
+            background : $color;
+        }
+    }
+
+    @if ($pressed == true) {
+        &[aria-pressed="true"] {
+            &:after {
+                background : var(--control-bg-pressed);
+            }
+        }
+    }
+}

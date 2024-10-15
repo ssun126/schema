@@ -1,0 +1,85 @@
+// 이미지, 폰트 경로
+//$root-src                    : "..";
+$images-src              : "../images/";
+$font-src                : "../font/";
+
+// font
+$custom-font-family-won  : "Won";
+$custom-font-family      : "NotoSans";
+$icon-font-family        : "CovisionIconFont";
+$menu-icon-font-family   : "CovisionMenuIconFont";
+$font-family             : $custom-font-family, -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", helvetica, "Apple SD Gothic Neo", sans-serif;
+$text-font-size-lg       : 15px;
+$text-font-size          : 14px;
+$text-font-size-sm       : 13px;
+$text-font-size-xs       : 12px;
+$text-font-size-xxs      : 11px;
+$text-font-weight        : 400;
+$text-font-weight-medium : 500;
+$text-font-weight-bold   : 700;
+
+$menu-icon-font-size     : 20px;
+
+// Gap
+$gap-xs                  : 2px;
+$gap-sm                  : 4px;
+$gap                     : 8px;
+$gap-lg                  : 12px;
+$gap-xl                  : 16px;
+$gap-xxl                 : 20px;
+
+// icon
+$icon-size               : 24px;
+$icon-size-sm            : 18px;
+
+// border-radius
+$radius-xs               : 2px;
+$radius-sm               : 3px;
+$radius                  : 4px;
+$radius-lg               : 8px;
+$radius-xl               : 12px;
+
+// button
+$button-min-width        : 72px;
+
+// control
+$control-size            : 32px;
+$control-size-sm         : 28px;
+$control-size-xs         : 24px;
+$control-size-xxs        : 20px;
+
+// checkbox
+$checkbox-area           : 20px;
+
+// switch
+$switch-size             : 34px;
+$switch-track            : 14px;
+$switch-switch           : 20px;
+$switch-track-color      : rgba($black, 0.38);
+
+// tag
+$tag-size                : 24px;
+$tag-font-size           : 13px;
+$tag-size-sm             : 20px;
+$tag-font-size-sm        : 12px;
+
+// chip
+$chip-size               : 28px;
+
+// badge
+$badge-size              : 20px;
+
+// global
+$global-height           : 61px;
+
+// animation - ease-in-out
+$cubic-bezier            : cubic-bezier(0.4, 0, 0.2, 1);
+
+// layout width
+$window-min-width        : 1280px;
+$lnb-width               : 260px;
+$main-min-width          : $window-min-width - $lnb-width;
+
+// scrollbar
+$scrollbar-track-size    : 16px;
+$scrollbar-thumb-size    : 8px;

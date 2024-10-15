@@ -1,0 +1,63 @@
+/* Head */
+.cui_head {
+    display     : flex;
+    flex-shrink : 0;
+    box-sizing  : border-box;
+    gap         : 16px;
+
+    & > * {
+        box-sizing : border-box;
+    }
+
+    .head_content {
+        display   : flex;
+        flex      : 1 1 100%;
+        min-width : 0;
+        gap       : 16px;
+    }
+
+
+    .head_path {
+        line-height : 24px;
+        min-width   : 0;
+        color       : var(--text-secondary);
+
+        ul {
+            display     : flex;
+            align-items : center;
+            flex-wrap   : wrap;
+            padding-top : 5px;
+            gap         : 0 2px;
+
+            li {
+                line-height     : 20px;
+                display         : flex;
+                align-items     : center;
+                flex-shrink     : 0;
+                justify-content : center;
+
+                &:before {
+                    @include icon-font;
+                    font-size   : 14px;
+                    line-height : 24px;
+                    content     : $ci_angle_right;
+                    text-indent : 0;
+                    color       : var(--icon-endpoint);
+                }
+
+                &:first-child {
+                    &:before {
+                        display : none;
+                    }
+                }
+            }
+        }
+    }
+
+    .head_aside {
+        display     : flex;
+        flex-shrink : 0;
+        margin-left : auto;
+        gap         : 8px;
+    }
+}

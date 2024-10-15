@@ -1,0 +1,68 @@
+@charset "utf-8";
+/*!
+ * Covision U
+ * Copyright 2024. Covision corp. All Rights Reserved.
+ * ㈜코비젼의 지적 재산권으로 허가 없는 사용/복제/변형/배포를 불허합니다.
+ */
+
+//scss 내장 변수 및 함수
+@import "./scss/abstracts/function/function";
+@import "./scss/abstracts/mixin/reset";
+@import "./scss/abstracts/mixin/basic";
+@import "./scss/abstracts/mixin/selector";
+@import "./scss/abstracts/mixin/components";
+@import "./scss/abstracts/mixin/effect";
+@import "./scss/abstracts/variables/z-index";
+@import "./scss/abstracts/variables/color";
+@import "./scss/abstracts/variables/variables";
+@import "./scss/abstracts/variables/icon";
+
+/* base */
+@import "./scss/abstracts/base/properties";
+@import "./scss/abstracts/base/font";
+@import "./scss/abstracts/base/icon";
+@import "./scss/abstracts/base/default";
+
+/* plugins */
+
+/* atoms */
+@import "./scss/atoms/title";
+@import "./scss/atoms/button";
+@import "./scss/atoms/text_field";
+@import "./scss/atoms/select_field";
+@import "./scss/atoms/checkbox";
+@import "./scss/atoms/tooltip";
+@import "./scss/atoms/table";
+@import "./scss/atoms/step";
+@import "./scss/atoms/alert";
+@import "./scss/atoms/box";
+@import "./scss/atoms/tag";
+@import "./scss/atoms/tab";
+@import "./scss/atoms/link";
+
+/* molecules */
+@import "./scss/molecules/head";
+@import "./scss/molecules/nav";
+@import "./scss/molecules/toolbar";
+@import "./scss/molecules/item_wrap";
+@import "./scss/molecules/field_wrap";
+@import "./scss/molecules/attachments";
+
+/* organisms */
+@import "./scss/organisms/global";
+@import "./scss/organisms/main";
+@import "./scss/organisms/lnb";
+@import "./scss/organisms/search";
+@import "./scss/organisms/form";
+@import "./scss/organisms/widget";
+@import "./scss/organisms/dialog";
+
+/* components(template) */
+@import "./scss/plugins/jqGrid";
+@import "./scss/template/layout";
+
+/* pages */
+@import "./scss/page/login";
+@import "./scss/page/join";
+@import "./scss/page/portal";
+
