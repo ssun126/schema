@@ -35,3 +35,13 @@ out/
 
 ### VS Code ###
 .vscode/
+/.smarttomcat/SQM/conf/catalina.policy
+/.smarttomcat/SQM/conf/catalina.properties
+/.smarttomcat/SQM/conf/context.xml
+/.smarttomcat/SQM/conf/jaspic-providers.xml
+/.smarttomcat/SQM/conf/jaspic-providers.xsd
+/.smarttomcat/SQM/conf/logging.properties
+/.smarttomcat/SQM/conf/server.xml
+/.smarttomcat/SQM/conf/tomcat-users.xml
+/.smarttomcat/SQM/conf/tomcat-users.xsd
+/.smarttomcat/SQM/conf/web.xml

@@ -35,6 +35,7 @@ public class LoginController {
             
             // 권한 가져오기
             model.addAttribute("role", "admin");
+            model.addAttribute("isSuccess", isSuccess);
 
             return "main";
         } else {

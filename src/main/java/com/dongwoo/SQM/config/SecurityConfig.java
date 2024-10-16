@@ -16,12 +16,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-@Configuration
+/*@Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@RequiredArgsConstructor*/
 public class SecurityConfig {
 
-    private final LoginService loginService;
+ /*   private final LoginService loginService;
 
     private final CustomLoginSuccessHandler customLoginSuccessHandler;
 
@@ -31,7 +31,7 @@ public class SecurityConfig {
 
     private final CustomAuthenticationEntryPointHandler customAuthenticationEntryPointHandler;
 
-    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;*/
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -42,7 +42,7 @@ public class SecurityConfig {
     MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
         return new MvcRequestMatcher.Builder(introspector);
     }
-
+/*
     @Bean
     public SecurityFilterChain config(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
@@ -52,6 +52,7 @@ public class SecurityConfig {
                 mvc.pattern("/"),
                 mvc.pattern("/**"),
                 mvc.pattern("/login"),
+                mvc.pattern("/main"),
                 mvc.pattern("/logout"),
                 mvc.pattern("/member/**"),
                 mvc.pattern("/css/**"),
@@ -77,7 +78,7 @@ public class SecurityConfig {
         // form login 중복 실행 방지
         http.formLogin(login -> login
                 .loginProcessingUrl("/login")
-                .successForwardUrl("/dashboard")
+                .successForwardUrl("/main")
                 .successHandler(customLoginSuccessHandler)
                 .failureHandler(customLoginFailHandler)
         );
@@ -107,8 +108,8 @@ public class SecurityConfig {
 
         // build
         return http.build();
-    }
-
+    }*/
+/*
     @Bean
     public CustomAuthenticationProvider customAuthenticationProvider() {
         return new CustomAuthenticationProvider(bCryptPasswordEncoder(), loginService);
@@ -118,6 +119,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager() {
         CustomAuthenticationProvider authProvider = customAuthenticationProvider();
         return new ProviderManager(authProvider);
-    }
+    }*/
 
 }
