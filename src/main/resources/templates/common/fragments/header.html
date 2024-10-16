@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http:www.thymeleaf.org"
-      th:fragment="HeaderFragment">
+      th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>동우화인캠</title>
+    <title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">Default_Title</title>
 </head>
     <div class="cui_global">
         <h1 class="global_logo">

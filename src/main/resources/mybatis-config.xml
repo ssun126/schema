@@ -4,11 +4,11 @@
 <configuration>
     <typeAliases>
         <typeAlias type="com.dongwoo.SQM.board.dto.BoardDTO" alias="board"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.system.member.dto.MemberDTO" alias="member"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.system.login.dto.LoginDTO" alias="login"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.system.menu.dto.MenuDTO" alias="menu"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.MemberDTO" alias="member"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.LoginDTO" alias="login"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.MenuDTO" alias="menu"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.common.dto.ExcelDTO" alias="excel"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.system.multiLanguage.dto.LanguageDTO" alias="language"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.system.code.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.LanguageDTO" alias="language"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
     </typeAliases>
 </configuration>

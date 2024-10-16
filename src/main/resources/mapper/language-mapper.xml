@@ -4,6 +4,6 @@
 
 <mapper namespace="Language">
     <select id="findByKeyAndLocale" parameterType="language" resultType="language">
-        select * from Languages where MESSAGE_KEY=#{MESSAGE_KEY} and LOCALE = #{LOCALE}
+        SELECT * FROM LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
     </select>
 </mapper>

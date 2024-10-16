@@ -4,55 +4,33 @@
 
 <mapper namespace="Login">
     <insert id="save" parameterType="login">
-        insert into USER_INFO(USER_Email, USER_Password, USER_Name, USER_Mobile)
-        values (#{USER_Email}, #{USER_Password}, #{USER_Name}, #{USER_Mobile})
+        insert into USER_INFO(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
+        values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
     </insert>
     <select id="login" parameterType="login" resultType="login">
-        select * from USER_INFO where USER_Id=#{USER_Id} and USER_Password=#{USER_Password}
+        select * from USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
     </select>
     <select id="findAll" resultType="login">
-        select USER_Email, USER_Password, USER_Name, USER_Mobile from USER_INFO
+        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from USER_INFO
     </select>
-    <select id="findById" parameterType="int" resultType="member">
-        select * from USER_INFO where USER_IDX=#{id}
+    <select id="findById" parameterType="String" resultType="member">
+        select * from USER_INFO where USER_ID=#{USER_ID}
     </select>
-    <delete id="delete" parameterType="int">
-        delete from USER_INFO where USER_IDX=#{id}
+    <delete id="delete" parameterType="String">
+        delete from USER_INFO where USER_ID=#{USER_ID}
     </delete>
-    <select id="findByMemberEmail" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_Email=#{loginEmail}
+    <select id="findByLoginEmail" parameterType="String" resultType="login">
+        select * from USER_INFO where USER_EMAIL=#{loginEmail}
     </select>
-    <select id="findByMemberId" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_Id=#{USER_Id}
+    <select id="findByLoginId" parameterType="String" resultType="login">
+        select * from USER_INFO where USER_ID=#{USER_ID}
+    </select>
+    <select id="findByLoginName" parameterType="String" resultType="login">
+        select * from USER_INFO where USER_NAME=#{USER_NAME}
     </select>
     <update id="update" parameterType="login">
         update USER_INFO set USER_Mobile=#{USER_Mobile}
         where USER_IDX=#{USER_idx}
     </update>
 
-    <select id="findUserMenu" parameterType="login" resultType="menu">
-        SELECT N.MENU_ID
-            , N.MENU_CLASS_ID
-            , NVL(M.LANGUAGE_CODE_DATA, N.MENU_NAME) AS MENU_NAME
-            , N.MENU_TYPE
-            , N.VIEW_ID
-            , N.PARENT_MENU_ID
-            , N.SEQUENCE
-            , N.DEPTH
-        FROM SYS_MENU N
-        LEFT OUTER JOIN SYS_MULTI_LANGUAGE M
-            ON N.MENU_ID = M.LANGUAGE_CODE_ID
-            AND M.LANGUAGE = #{LANGUAGE}
-            AND M.SITE_ID = #{SITE_ID}
-            AND M.IS_USABLE = 'Usable'
-        <!-- AND N.MENU_CLASS_ID = M.LANGUAGE_CODE_TYPE -->
-        WHERE N.MENU_CLASS_ID = 'STDITG'
-        AND N.SITE_ID = #{SITE_ID}
-        AND N.IS_USABLE = 'Usable'
-        AND N.MENU_ID IN (SELECT A.MENU_ID
-            FROM SYS_USER_CLASS_MENU_REL A
-            WHERE A.SITE_ID = #{SITE_ID}
-            AND A.USER_ID = #{USERID}
-            AND A.IS_USABLE = 'Usable')
-    </select>
 </mapper>

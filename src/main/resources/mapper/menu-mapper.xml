@@ -4,24 +4,24 @@
 
 <mapper namespace="Menu">
     <insert id="save" parameterType="menu">
-        insert into SYS_MENU(USER_Email, USER_Password, USER_Name, USER_Mobile)
-        values (#{USER_Email}, #{USER_Password}, #{USER_Name}, #{USER_Mobile})
+        insert into SYS_MENU(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
+        values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
     </insert>
     <select id="menu" parameterType="menu" resultType="menu">
-        select * from SYS_MENU where USER_Id=#{USER_Id} and USER_Password=#{USER_Password}
+        select * from SYS_MENU where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
     </select>
     <select id="findAll" resultType="menu">
-        select USER_Email, USER_Password, USER_Name, USER_Mobile from SYS_MENU
+        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from SYS_MENU
     </select>
 
     <delete id="delete" parameterType="int">
         delete from SYS_MENU where USER_IDX=#{id}
     </delete>
     <select id="findByMemberEmail" parameterType="String" resultType="menu">
-        select * from SYS_MENU where USER_Email=#{menuEmail}
+        select * from SYS_MENU where USER_EMAIL=#{menuEmail}
     </select>
     <select id="findByMemberId" parameterType="String" resultType="menu">
-        select * from SYS_MENU where USER_Id=#{USER_Id}
+        select * from SYS_MENU where USER_ID=#{USER_ID}
     </select>
     <update id="update" parameterType="menu">
         update SYS_MENU set USER_Mobile=#{USER_Mobile}

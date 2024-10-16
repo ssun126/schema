@@ -5,8 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="../../plugin/jqGrid/jQuery.jqGrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../plugin/jqGrid/ui.jqGrid.css" >
     <link rel="stylesheet" type="text/css" href="../../css/style.css" >
-    <script type="text/javascript" src="../../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../plugin/jquery/jquery.min-1.11.1.js"></script>
+    <script type="text/javascript" src="../../plugin/jqueryUi/jquery-ui.js"></script>
+    <script type="text/javascript" src="../../plugin/jqGrid/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="../../js/app.js"></script>
     <title>로그인</title>
     <!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
     <style>
@@ -41,10 +46,10 @@
                                 </div>
                                 <h1 class="login_form_logo"><span>동우화인캠</span></h1>
                                 <div class="cui_items_wrap" data-direction="left">
-                                    <input name="USER_Id" class="cui_text_field" type="text" placeholder="ID">
+                                    <input name="USER_ID" class="cui_text_field" type="text" placeholder="ID">
                                 </div>
                                 <div class="cui_items_wrap" data-direction="left">
-                                    <input name="USER_Password" class="cui_text_field" type="password" placeholder="PW">
+                                    <input name="PASSWORD" class="cui_text_field" type="password" placeholder="PW">
                                 </div>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <button type="submit" class="cui_button primary"><span>LOGIN</span></button>
@@ -71,7 +76,7 @@
         <div class="dialog_container">
             <div class="dialog_head">
                 <div class="dialog_title">
-                    <div class="main_label">ID/PW 찾기</div>
+                    <div class="main_label">ID/PW 찾기<span th:text="#{login.findIdPW}"></span></div>
                 </div>
                 <div class="dialog_toolbar">
                     <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal('cui_dialog')"><span>Close</span></button>
@@ -94,7 +99,6 @@
 </body>
 <script>
     //모달 열기
-    $("#dialog").fadeIn()
     function modal(id){
       $("#" + id).fadeIn()
     }
