@@ -26,6 +26,7 @@ public class DBMessageSource extends AbstractMessageSource {
             message = languageRepository.findByKeyAndLocale(key, DEFAULT_LOCALE_CODE);
         }
         log.info("key??? "+key);
+        log.info("locale.getLanguage()??? "+locale.getLanguage());
         if (message == null) {
             throw new IllegalArgumentException("Message is null");
 
