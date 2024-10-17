@@ -21,8 +21,8 @@ thymeleaf:
 # database
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521/xe
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe
     username: C##NSQM
     password: 12345
   messages:
@@ -35,3 +35,5 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   config-location: classpath:mybatis-config.xml
 
+Logging:
+  config: classpath:logback-spring.xml
