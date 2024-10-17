@@ -54,4 +54,14 @@ public class MemberService {
         }
     }
 
+    public String vendorCheck(String vendorCode) {
+//        MemberDTO memberDTO = memberRepository.findByMemberEmail(vendorCode);
+//        if (memberDTO == null) {
+//            return "ok";
+//        } else {
+//            return "no";
+//        }
+        return "ok";
+    }
+
 }

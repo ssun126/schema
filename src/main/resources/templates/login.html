@@ -55,6 +55,11 @@
                                     <button type="submit" class="cui_button primary"><span>LOGIN</span></button>
                                 </div>
                             </form>
+                            <!-- 로그인 실패 메시지 표시 -->
+                            <div th:if="${loginError}" style="color: red;">
+                                <p th:text="${loginError}"></p>
+                            </div>
+
                             <div class="login_form_settings">
                                 <a href="#" onClick="modal('dialog')" class="cui_button endpoint" data-cui-icon="search"><span>ID/PW 찾기</span></a>
                                 <a href="/member/unlock" class="cui_button endpoint" data-cui-icon="lock"><span>PW 잠김해제</span></a>

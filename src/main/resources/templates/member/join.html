@@ -39,17 +39,17 @@
                     <form class="cui_form_field" data-legend="true" action="/member/save" method="post">
                         <fieldset>
                             <legend><span>기본정보</span></legend>
-                            <div class="cui_alert alert_basic" data-type="info" role="alert">
+                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="firstCompany">
                                 <div class="alert_message">
                                     <p>최초등록 업체입니다.</p>
                                 </div>
                             </div>
-                            <div class="cui_alert alert_basic" data-type="info" role="alert">
+                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="registeredCompany">
                                 <div class="alert_message">
                                     <p>기등록 업체입니다.</p>
                                 </div>
                             </div>
-                            <div class="cui_alert alert_basic" data-type="warning" role="alert">
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id="noCompanyCode">
                                 <div class="alert_message">
                                     <p>업체코드 내역이 없어 가입이 불가합니다.</p>
                                 </div>
@@ -65,11 +65,12 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <select class="cui_select_field">
-                                                    <option value="">Vender 번호</option>
+                                                <select class="cui_select_field" id = "searchCustomerType">
+                                                    <option value="VendorNum">Vendor 번호</option>
+                                                    <option value="BusinessNum">사업자등록 번호</option>
                                                 </select>
-                                                <input class="cui_text_field" type="text">
-                                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+                                                <input class="cui_text_field" type="text"  id = "searchCustomer">
+                                                <button type="button" class="cui_button icon" data-cui-icon="search" onblur="vendorCheck()"><span>검색</span></button>
                                             </div>
                                         </div>
                                     </td>
@@ -89,10 +90,10 @@
                                     <td>
                                         <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                             <div class="item_content">
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" value="Logistics"><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" value="Manufacturer"><i></i><span>물류사</span></label>
+<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>-->
+<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>-->
                                             </div>
                                         </div>
                                     </td>
@@ -316,36 +317,85 @@
 </form>-->
 </body>
 <script>
-    // 이메일 입력값을 가져오고,
-    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
-    // 사용 가능 여부를 이메일 입력창 아래에 표시
-        const emailCheck = () => {
-            const email = document.getElementById("USER_EMAIL").value;
-            const checkResult = document.getElementById("check-result");
-            console.log("입력한 이메일", email);
-            $.ajax({
-                // 요청방식: post, url: "email-check", 데이터: 이메일
-                type: "post",
-                url: "/member/email-check",
-                data: {
-                    "USER_EMAIL": email
-                },
-                success: function(res) {
-                    console.log("요청성공", res);
-                    if (res == "ok") {
-                        console.log("사용가능한 이메일");
-                        checkResult.style.color = "green";
-                        checkResult.innerHTML = "사용가능한 이메일";
-                    } else {
-                        console.log("이미 사용중인 이메일");
-                        checkResult.style.color = "red";
-                        checkResult.innerHTML = "이미 사용중인 이메일";
-                    }
-                },
-                error: function(err) {
-                    console.log("에러발생", err);
-                }
-            });
-        }
+
+$(document).ready(function() {
+  $('#firstCompany').hide();
+  $('#registeredCompany').hide();
+  $('#noCompanyCode').hide();
+});
+
+  // Vendor 번호,사업자 등록번호 체크
+  // 입력값을 서버로 전송하고 똑같은 Vendor 번호,사업자 등록번호가 있는지 체크한 후
+  // 사용 가능 여부를 경고창에 표시
+
+  const vendorCheck = () => {
+  const type = document.getElementById("searchCustomerType").value;
+  const searchCustomer = document.getElementById("searchCustomer").value;
+  alert(type);
+
+        //  const email = document.getElementById("USER_EMAIL").value;
+        //  const checkResult = document.getElementById("check-result");
+        //  console.log("입력한 이메일", email);
+          $.ajax({
+              // 요청방식: post, url: "email-check", 데이터:  Vendor 번호,사업자 등록번호 체크
+              type: "post",
+              url: "/member/vendor-check",
+              data: {
+                  "vendorCode": searchCustomer
+              },
+              success: function(res) {
+                  console.log("요청성공", res);
+                  if (res == "ok") {
+                  alert(1);
+                   $('#firstCompany').show();
+<!--                      console.log("사용가능한 이메일");-->
+<!--                      checkResult.style.color = "green";-->
+<!--                      checkResult.innerHTML = "사용가능한 이메일";-->
+                  } else {
+<!--                      console.log("이미 사용중인 이메일");-->
+<!--                      checkResult.style.color = "red";-->
+<!--                      checkResult.innerHTML = "이미 사용중인 이메일";-->
+                    alert(2);
+                  }
+              },
+              error: function(err) {
+                  console.log("에러발생", err);
+              }
+          });
+      }
+
+
+
+  // 이메일 입력값을 가져오고,
+  // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+  // 사용 가능 여부를 이메일 입력창 아래에 표시
+      const emailCheck = () => {
+          const email = document.getElementById("USER_EMAIL").value;
+          const checkResult = document.getElementById("check-result");
+          console.log("입력한 이메일", email);
+          $.ajax({
+              // 요청방식: post, url: "email-check", 데이터: 이메일
+              type: "post",
+              url: "/member/email-check",
+              data: {
+                  "USER_EMAIL": email
+              },
+              success: function(res) {
+                  console.log("요청성공", res);
+                  if (res == "ok") {
+                      console.log("사용가능한 이메일");
+                      checkResult.style.color = "green";
+                      checkResult.innerHTML = "사용가능한 이메일";
+                  } else {
+                      console.log("이미 사용중인 이메일");
+                      checkResult.style.color = "red";
+                      checkResult.innerHTML = "이미 사용중인 이메일";
+                  }
+              },
+              error: function(err) {
+                  console.log("에러발생", err);
+              }
+          });
+      }
 </script>
 </html>

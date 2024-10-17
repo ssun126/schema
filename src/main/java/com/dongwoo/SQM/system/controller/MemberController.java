@@ -107,4 +107,11 @@ public class MemberController {
         return checkResult;
     }
 
+    @PostMapping("/member/vendor-check")
+    public @ResponseBody String vendorCheck(@RequestParam("vendorCode") String vendorCode) {
+        System.out.println("vendorCode = " + vendorCode);
+        String checkVendorResult = memberService.vendorCheck(vendorCode);
+        return checkVendorResult;
+    }
+
 }
