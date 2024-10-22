@@ -1,2 +1,2 @@
-# shema
-shema project
+# schema
+schema project
