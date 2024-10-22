@@ -8,12 +8,12 @@
 </head>
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#" onclick="goMain()"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
                 <li>
-                    <a href="#"><span>Company Information</span></a>
+                    <a href="#" onclick="goMenu('companyInfo')"><span>Company Information</span></a>
                     <ul>
                         <li>
                             <a href="#"><span>menu1</span></a>
@@ -26,11 +26,11 @@
                         <li><a href="#"><span>menu3</span></a></li>
                     </ul>
                 </li>
-                <li><a href="#"><span>Audit Management</span></a></li>
-                <li><a href="#"><span>Part Management</span></a></li>
-                <li><a href="#"><span>Quality Control</span></a></li>
+                <li><a href="#" onclick="goMenu('auditMgmt')"><span>Audit Management</span></a></li>
+                <li><a href="#" onclick="goMenu('partMgmt')"><span>Part Management</span></a></li>
+                <li><a href="#" onclick="goMenu('qualityCtrl')"><span>Quality Control</span></a></li>
                 <li>
-                    <a href="#"><span>Q&A</span></a>
+                    <a href="#" onclick="goMenu('board')"><span>Q&A</span></a>
                     <ul>
                         <li>
                             <a href="#"><span>menu1</span></a>
@@ -43,6 +43,7 @@
                         <li><a href="#"><span>menu3</span></a></li>
                     </ul>
                 </li>
+                <li><a href="#" onclick="goMenu('admin/siteMgr')"><span>Site Manager</span></a></li>
                 <li class="more">
                     <a href="#" class="toggle"><span>더보기</span></a>
                     <ul></ul>
@@ -50,32 +51,25 @@
             </ul>
         </nav>
         <div class="global_utility">
-            <div class="utility_profile" onclick="myPage()">
+            <div class="utility_profile" onclick="goMenu('member/myPage')">
                 <div class="info">
                     <strong><span id="logonName" th:text="${session.loginName}"></span></strong>
                     <span th:text="${session.loginId}"></span>
                 </div>
             </div>
-            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="logout()"><span>로그아웃</span></button>
+            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('logout')"><span>로그아웃</span></button>
         </div>
     </div>
 <script>
-    const goMain = () => {
-        location.href = "/main";
+
+    const goMenu = (menuPage) => {
+        location.href = "/"+menuPage;
     }
 
-    const myPage = () => {
-        location.href = "/member/myPage";
-    }
-
-    const logout = () => {
-        location.href = "/logout";
-    }
-
-    $('#logout').style.display = 'none';
-    $('.global_utility').style.display = 'none';
+    $('#logout').css('display','none');
+    $('.global_utility').css('display','none');
     if( !$("#logonName").empty()){
-        $('.global_utility').style.display = 'block';
+        $('.global_utility').css('display','block');
     }
 
      // $(function(){
@@ -85,14 +79,14 @@
             type:"GET",
             data:baseCodeDTO,
             success:function (data) {
-                console.log(JSON.stringify(data));
+                //console.log(JSON.stringify(data));
                 $("#multiLanguage").html("");
                 $.each(data, function(index, item) {
-                    console.log("Code ID: " + item.code);
-                    console.log("Code Name: " + item.codename);
-                    console.log("Multi Code Name: " + item.multicodename);
-                    console.log("Sort Key: " + item.sortkey);
-                    console.log("-----------");
+                    //console.log("Code ID: " + item.code);
+                    //console.log("Code Name: " + item.codename);
+                    //console.log("Multi Code Name: " + item.multicodename);
+                    //console.log("Sort Key: " + item.sortkey);
+                    //console.log("-----------");
                     $("#multiLanguage").append("<option value='" + item.code + "'>" + item.codename + "</option>");
                 });
             }
