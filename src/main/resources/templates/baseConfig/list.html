@@ -3,7 +3,12 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/mainLayout}"
       layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>기초설정</title>
+</head>
 <body>
+<div class="cui_app">
     <div class="cui_container" data-module="">
         <div class="cui_lnb">
             <div class="lnb_root">
@@ -14,18 +19,18 @@
                     <nav class="nav_root">
                         <ul>
                             <li>
-                                <a href="#" class="nav_item" aria-selected="true">
+                                <a href="#" class="nav_item">
                                     <span class="nav_label">동우 사용자 관리</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/siteMgr/baseConfig" class="nav_item">
-                                    <span class="nav_label" onclick="goMenu('/baseConfig')">기초설정</span>
+                                <a href="#" class="nav_item" aria-selected="true">
+                                    <span class="nav_label">기초설정</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="nav_item">
-                                    <span class="nav_label" onclick="goMenu('/baseCode')">기초코드</span>
+                                    <span class="nav_label">기초코드</span>
                                 </a>
                             </li>
                             <li>
@@ -52,61 +57,28 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title"><span>동우 사용자 관리</span></h2>
+                        <h2 class="cui_title"><span>기초설정</span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
                     <div class="cui_search">
                         <div class="search_list cui_grid_wrap ">
-                            <div class="cui_items_wrap required_field">
-                                <strong class="item_label">아이디</strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="아이디를 입력해주세요">
-                                </div>
-                            </div>
                             <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">이름</strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="이름을 입력해주세요">
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">사업부</strong>
+                                <strong class="item_label">업무구분</strong>
                                 <div class="item_content">
                                     <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
                                         <option value="">제목</option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">이메일</strong>
+                            <div class="cui_items_wrap" data-size="2">
+                                <strong class="item_label">검색조건</strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="email" placeholder="이메일을 입력해주세요">
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">구분</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
+                                    <select class="cui_select_field">
+                                        <option value="">검색조건 옵션1</option>
+                                        <option value="">검색조건 옵션2</option>
                                     </select>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">상태</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                    </select>
+                                    <input class="cui_text_field" type="text" >
                                 </div>
                             </div>
                         </div>
@@ -119,15 +91,14 @@
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                            <button type="button" class="cui_button"><span>엑셀 다운</span></button>
-                            <button type="button" class="cui_button secondary"><span>신규 추가</span></button>
+                            <button type="button" class="cui_button secondary"><span>추가</span></button>
                         </div>
                     </div>
                     <table class="cui_table center">
                         <colgroup>
-                            <col style="width:220px;">
                             <col style="width:140px;">
-                            <col>
+                            <col style="width:140px;">
+                            <col style="width:140px;">
                             <col>
                             <col style="width:120px;">
                             <col style="width:80px;">
@@ -135,31 +106,31 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>아이디</span></th>
-                            <th><span>이름</span></th>
-                            <th><span>사업부</span></th>
-                            <th><span>이메일</span></th>
-                            <th><span>구분</span></th>
+                            <th><span>업무구분</span></th>
+                            <th><span>설정키</span></th>
+                            <th><span>설정값</span></th>
+                            <th><span>설명</span></th>
+                            <th><span>등록자</span></th>
                             <th><span>상태</span></th>
                             <th><span>등록일</span></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td><button type="button" class="cui_button endpoint">covision</button></td>
+                            <td><span>기본</span></td>
+                            <td><button type="button" class="cui_button endpoint">key1</button></td>
+                            <td><span>Y</span></td>
+                            <td><span>기본 key 설명</span></td>
                             <td><span>홍길동</span></td>
-                            <td><span>반도체</span></td>
-                            <td><span>test@gamil.com</span></td>
-                            <td><span>관리자</span></td>
                             <td><span>사용</span></td>
                             <td><span>2024-08-29</span></td>
                         </tr>
                         <tr>
-                            <td><button type="button" class="cui_button endpoint">covision</button></td>
+                            <td><span>기본</span></td>
+                            <td><button type="button" class="cui_button endpoint">key1</button></td>
+                            <td><span>Y</span></td>
+                            <td><span>기본 key 설명</span></td>
                             <td><span>홍길동</span></td>
-                            <td><span>반도체</span></td>
-                            <td><span>test@gamil.com</span></td>
-                            <td><span>관리자</span></td>
                             <td><span>사용</span></td>
                             <td><span>2024-08-29</span></td>
                         </tr>
@@ -169,5 +140,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
