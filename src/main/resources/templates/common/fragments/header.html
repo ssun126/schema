@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"
+<html lang="kr"
       xmlns:th="http:www.thymeleaf.org"
       th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
@@ -30,7 +30,7 @@
                 <li><a href="#" onclick="goMenu('partMgmt')"><span>Part Management</span></a></li>
                 <li><a href="#" onclick="goMenu('qualityCtrl')"><span>Quality Control</span></a></li>
                 <li>
-                    <a href="#" onclick="goMenu('board')"><span>Q&A</span></a>
+                    <a href="#" onclick="goMenu('board/list')"><span>Q&A</span></a>
                     <ul>
                         <li>
                             <a href="#"><span>menu1</span></a>
@@ -66,31 +66,9 @@
         location.href = "/"+menuPage;
     }
 
-    $('#logout').css('display','none');
-    $('.global_utility').css('display','none');
-    if( !$("#logonName").empty()){
-        $('.global_utility').css('display','block');
-    }
+    //console.log("multiLang====="+MULTI_LANGUAGE_DATA['login.findIdPW']['KR']);
 
-     // $(function(){
-        const baseCodeDTO = { "CODEGROUP":"language" };
-        $.ajax({
-            url:"/baseCode/get",
-            type:"GET",
-            data:baseCodeDTO,
-            success:function (data) {
-                //console.log(JSON.stringify(data));
-                $("#multiLanguage").html("");
-                $.each(data, function(index, item) {
-                    //console.log("Code ID: " + item.code);
-                    //console.log("Code Name: " + item.codename);
-                    //console.log("Multi Code Name: " + item.multicodename);
-                    //console.log("Sort Key: " + item.sortkey);
-                    //console.log("-----------");
-                    $("#multiLanguage").append("<option value='" + item.code + "'>" + item.codename + "</option>");
-                });
-            }
-        });
-   // });
+    // $('.global_icon').css('display','none');
+
 </script>
 </html>
