@@ -15,7 +15,7 @@
         <typeAlias type="com.dongwoo.SQM.system.dto.LoginDTO" alias="login"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.MenuDTO" alias="menu"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.common.dto.ExcelDTO" alias="excel"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.system.dto.LanguageDTO" alias="language"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.MultiLanguageDTO" alias="multiLanguage"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
     </typeAliases>
 </configuration>

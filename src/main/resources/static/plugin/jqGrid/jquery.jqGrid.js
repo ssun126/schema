@@ -2597,15 +2597,15 @@
                                 ts.p.datastr = null;
                                 endReq();
                                 break;
-                            case "mica": //khp
+                            case "schema": //khp
                                 beginReq();
                                 var data = "";
                                 if (ts.p.postData.searchField) {
-                                    data = Mica.require('dataSet').dataOK(ts.p.postData.dataSetID);
+                                    data = Schema.require('dataSet').dataOK(ts.p.postData.dataSetID);
                                     ts.p.data = data.result.rows;//khp 4.20
                                     data = addLocalData();
                                 }
-                                else data = Mica.require('dataSet').paging(ts.p.postData);
+                                else data = Schema.require('dataSet').paging(ts.p.postData);
 
                                 if ($.isFunction(ts.p.beforeProcessing)) {
                                     if (ts.p.beforeProcessing.call(ts, data, st, xhr) === false) {
@@ -2623,7 +2623,7 @@
                                 if (npage === 1) { endReq(); }
                                 /*
                 beginReq();
-                var req = Mica.require('dataSet').paging(ts.p.postData);
+                var req = Schema.require('dataSet').paging(ts.p.postData);
                 addJSONData(req, ts.grid.bDiv, rcnt, npage > 1, adjust);
                 $(ts).triggerHandler("jqGridLoadComplete", [req]);
                 if (lc) { lc.call(ts, req); }

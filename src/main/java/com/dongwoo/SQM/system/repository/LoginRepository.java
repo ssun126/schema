@@ -53,4 +53,5 @@ public class LoginRepository {
     public List<MenuDTO>  findUserMenu(LoginDTO loginDTO) {
         return sql.selectList("Login.findUserMenu", loginDTO);
     }
+
 }

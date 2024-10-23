@@ -4,6 +4,9 @@ import com.dongwoo.SQM.system.dto.LoginDTO;
 import com.dongwoo.SQM.system.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class LoginController {
 
     private final LoginService loginService;
@@ -22,17 +26,23 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model) {
+    public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model, Authentication authentication) {
         boolean isSuccess = false;
-
+        log.info("PostMapping:::::::::::::::");
         LoginDTO loginResult = loginService.login(loginDTO);
         if (loginResult != null) {
             // login 성공
             session.setAttribute("loginId", loginResult.getUSER_ID());
             session.setAttribute("loginName", loginResult.getUSER_NAME());
+            session.setAttribute("role", loginResult.getUSER_NAME());
 
             isSuccess = true;
-            
+
+            //log.info("authentication=="+authentication);
+            //authentication.setAuthenticated(true);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("authentication======"+authentication);
+
             // 권한 가져오기
             model.addAttribute("role", "admin");
             model.addAttribute("isSuccess", isSuccess);

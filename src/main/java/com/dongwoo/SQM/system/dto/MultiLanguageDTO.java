@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LanguageDTO {
+public class MultiLanguageDTO {
     private int ID;
     private String LOCALE;
     private String MESSAGE_KEY;

@@ -1,7 +1,7 @@
 package com.dongwoo.SQM.system.service;
 
-import com.dongwoo.SQM.system.repository.LanguageRepository;
-import com.dongwoo.SQM.system.dto.LanguageDTO;
+import com.dongwoo.SQM.system.repository.MultiLanguageRepository;
+import com.dongwoo.SQM.system.dto.MultiLanguageDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractMessageSource;
@@ -14,19 +14,19 @@ import java.util.Locale;
 @Component("messageSource")
 public class DBMessageSource extends AbstractMessageSource {
     @Autowired
-    private LanguageRepository languageRepository;
+    private MultiLanguageRepository multiLanguageRepository;
     private static final String DEFAULT_LOCALE_CODE = "kr";
 
 
     @Override
     protected MessageFormat resolveCode(String key, Locale locale) {
-        LanguageDTO message = languageRepository.findByKeyAndLocale(key, locale.getLanguage());
+        MultiLanguageDTO message = multiLanguageRepository.findByKeyAndLocale(key, locale.getLanguage());
 
         if (locale.getLanguage() == null) {
-            message = languageRepository.findByKeyAndLocale(key, DEFAULT_LOCALE_CODE);
+            message = multiLanguageRepository.findByKeyAndLocale(key, DEFAULT_LOCALE_CODE);
         }
-        log.info("key??? "+key);
-        log.info("locale.getLanguage()??? "+locale.getLanguage());
+        /*log.info("key??? "+key);
+        log.info("locale.getLanguage()??? "+locale.getLanguage());*/
         if (message == null) {
             throw new IllegalArgumentException("Message is null");
 

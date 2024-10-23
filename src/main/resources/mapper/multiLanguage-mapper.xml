@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MultiLanguage">
+    <select id="findByKeyAndLocale" parameterType="multiLanguage" resultType="multiLanguage">
+        SELECT * FROM LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
+    </select>
+
+    <select id="findAll" resultType="multiLanguage">
+        SELECT * FROM LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
+    </select>
+
+    <select id="getMultiLanguageList_HashMap" resultType="hashMap">
+        /* MultiLanguage.getMultiLanguageList_HashMap */
+        SELECT ID
+            , NVL(KR,ID) AS KR
+            , NVL(EN,ID) AS EN
+            , NVL(CN,ID) AS CN
+            , NVL(JA,ID) AS JA
+        FROM (SELECT MESSAGE_KEY AS ID
+                , LOCALE
+                , MESSAGE_CONTENT
+            FROM LANGUAGES)
+            PIVOT (MAX(MESSAGE_CONTENT)
+            FOR LOCALE
+            IN ('kr' as KR
+                , 'en' as EN
+                , 'cn' as CN
+                , 'ja' as JA ))
+    </select>
+</mapper>
