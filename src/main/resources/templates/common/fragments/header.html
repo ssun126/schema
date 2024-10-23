@@ -4,12 +4,12 @@
       th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml">
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#" onclick="goMenu('main')"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
                 <li>
-                    <a href="#" onclick="goMenu('companyInfo/main')"><span>Company Information</span></a>
+                    <a href="#" onclick="goMenu('/companyInfo/main')"><span>Company Information</span></a>
                     <ul>
                         <li>
                             <a href="#"><span>menu1</span></a>
@@ -22,9 +22,9 @@
                         <li><a href="#"><span>menu3</span></a></li>
                     </ul>
                 </li>
-                <li><a href="#" onclick="goMenu('auditMgmt')"><span>Audit Management</span></a></li>
-                <li><a href="#" onclick="goMenu('partMgmt')"><span>Part Management</span></a></li>
-                <li><a href="#" onclick="goMenu('qualityCtrl')"><span>Quality Control</span></a></li>
+                <li><a href="#" onclick="goMenu('/auditMgmt')"><span>Audit Management</span></a></li>
+                <li><a href="#" onclick="goMenu('/partMgmt')"><span>Part Management</span></a></li>
+                <li><a href="#" onclick="goMenu('/qualityCtrl')"><span>Quality Control</span></a></li>
                 <li>
                     <a href="#" onclick="goMenu('board/list')"><span>Q&A</span></a>
                     <ul>
@@ -39,7 +39,7 @@
                         <li><a href="#"><span>menu3</span></a></li>
                     </ul>
                 </li>
-                <li><a href="#" onclick="goMenu('admin/siteMgr')"><span>Site Manager</span></a></li>
+                <li><a href="#" onclick="goMenu('/siteMgr')"><span>Site Manager</span></a></li>
                 <li class="more">
                     <a href="#" class="toggle"><span>더보기</span></a>
                     <ul></ul>
@@ -47,13 +47,18 @@
             </ul>
         </nav>
         <div class="global_utility">
-            <div class="utility_profile" onclick="goMenu('member/myPage')">
+            <div class="utility_profile" onclick="goMenu('m/ember/myPage')">
                 <div class="info">
                     <strong><span id="logonName" th:text="${session.loginName}"></span></strong>
                     <span th:text="${session.loginId}"></span>
                 </div>
             </div>
-            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('logout')"><span>로그아웃</span></button>
+            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>
         </div>
     </div>
+<script>
+    const goMenu = (menuPage) => {
+        location.href = menuPage;
+    }
+</script>
 </html>

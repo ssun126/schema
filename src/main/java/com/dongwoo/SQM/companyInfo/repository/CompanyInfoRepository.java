@@ -35,5 +35,4 @@ public class CompanyInfoRepository {
     public void delete(int id) {
         sql.delete("CompanyInfo.delete", id);
     }
-
 }

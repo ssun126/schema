@@ -19,32 +19,31 @@ public class CompanyInfoController {
 
     @GetMapping("/companyInfo/main")
     public String companyInfoMain() {
-        return "/CompanyInfo/main";
+        return "/companyInfo/main";
     }
 
     @PostMapping("/companyInfo/save")
     public String save(CompanyInfoDTO companyInfoDTO) throws IOException {
-        System.out.println("companyInfoDTO = " + companyInfoDTO);
-        companyInfoService.save(companyInfoDTO);
+       // System.out.println("companyInfoDTO = " + companyInfoDTO);
+       // companyInfoService.save(companyInfoDTO);
         return "redirect:/companyInfo/list";
     }
 
     @GetMapping("/companyInfo/list")
     public String findAll(Model model) {
-        List<CompanyInfoDTO> companyInfoDTOList = companyInfoService.findAll();
-        model.addAttribute("companyInfoList", companyInfoDTOList);
-        System.out.println("companyInfoDTOList = " + companyInfoDTOList);
+       // List<CompanyInfoDTO> companyInfoDTOList = companyInfoService.findAll();
+       // model.addAttribute("companyInfoList", companyInfoDTOList);
+        //System.out.println("companyInfoDTOList = " + companyInfoDTOList);
         return "/companyInfo/list";
     }
 
     @GetMapping("/companyInfo/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
-        // 조회수 처리
-        companyInfoService.updateHits(id);
+
         // 상세내용 가져옴
-        CompanyInfoDTO companyInfoDTO = companyInfoService.findById(id);
-        model.addAttribute("companyInfo", companyInfoDTO);
-        System.out.println("companyInfoDTO = " + companyInfoDTO);
+       // CompanyInfoDTO companyInfoDTO = companyInfoService.findById(id);
+       // model.addAttribute("companyInfo", companyInfoDTO);
+        //System.out.println("companyInfoDTO = " + companyInfoDTO);
 //        if (companyInfoDTO.getATTACHED_FILE().equals(1)) {
 //            List<CompanyInfoFileDTO> companyInfoFileDTOList = companyInfoService.findFile(id);
 //            model.addAttribute("companyInfoFileList", companyInfoFileDTOList);
@@ -54,22 +53,22 @@ public class CompanyInfoController {
 
     @GetMapping("/companyInfo/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
-        CompanyInfoDTO companyInfoDTO = companyInfoService.findById(id);
-        model.addAttribute("companyInfo", companyInfoDTO);
+        //CompanyInfoDTO companyInfoDTO = companyInfoService.findById(id);
+        //model.addAttribute("companyInfo", companyInfoDTO);
         return "/companyInfo/update";
     }
 
     @PostMapping("/companyInfo/update/{id}")
     public String update(CompanyInfoDTO companyInfoDTO, Model model) {
-        companyInfoService.update(companyInfoDTO);
-        CompanyInfoDTO dto = companyInfoService.findById(companyInfoDTO.getBOARD_IDX());
-        model.addAttribute("companyInfo", dto);
+        //companyInfoService.update(companyInfoDTO);
+       /* CompanyInfoDTO dto = companyInfoService.findById(companyInfoDTO.getBOARD_IDX());
+        model.addAttribute("companyInfo", dto);*/
         return "/companyInfo/detail";
     }
 
     @GetMapping("/companyInfo/delete/{id}")
     public String delete(@PathVariable("id") int id) {
-        companyInfoService.delete(id);
+        //companyInfoService.delete(id);
         return "redirect:/companyInfo/list";
     }
 }

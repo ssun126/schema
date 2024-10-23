@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CompanyInfo">
+    <insert id="save" parameterType="companyInfo">
+        insert into COMPANYCODE(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
+        values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
+    </insert>
+    <select id="login" parameterType="companyInfo" resultType="companyInfo">
+        select * from COMPANYCODE where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
+    </select>
+    <select id="findAll" resultType="companyInfo">
+        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from COMPANYCODE
+    </select>
+    <select id="findById" parameterType="int" resultType="companyInfo">
+        select * from COMPANYCODE where USER_IDX=#{id}
+    </select>
+    <delete id="delete" parameterType="int">
+        delete from COMPANYCODE where USER_IDX=#{id}
+    </delete>
+    <select id="findByCompanyId" parameterType="String" resultType="companyInfo">
+        select * from COMPANYCODE where USER_ID=#{USER_ID}
+    </select>
+    <update id="update" parameterType="companyInfo">
+        update COMPANYCODE set USER_Mobile=#{USER_Mobile}
+        where USER_IDX=#{USER_idx}
+    </update>
+</mapper>
