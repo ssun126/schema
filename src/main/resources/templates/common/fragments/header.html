@@ -2,10 +2,6 @@
 <html lang="kr"
       xmlns:th="http:www.thymeleaf.org"
       th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">Default_Title</title>
-</head>
     <div class="cui_global">
         <h1 class="global_logo">
             <a href="#" onclick="goMenu('main')"><span class="blind">동우화인캠</span></a>
@@ -13,7 +9,7 @@
         <nav class="cui_gnb" role="navigation">
             <ul>
                 <li>
-                    <a href="#" onclick="goMenu('companyInfo')"><span>Company Information</span></a>
+                    <a href="#" onclick="goMenu('companyInfo/main')"><span>Company Information</span></a>
                     <ul>
                         <li>
                             <a href="#"><span>menu1</span></a>
@@ -60,15 +56,4 @@
             <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('logout')"><span>로그아웃</span></button>
         </div>
     </div>
-<script>
-
-    const goMenu = (menuPage) => {
-        location.href = "/"+menuPage;
-    }
-
-    //console.log("multiLang====="+MULTI_LANGUAGE_DATA['login.findIdPW']['KR']);
-
-    // $('.global_icon').css('display','none');
-
-</script>
 </html>
