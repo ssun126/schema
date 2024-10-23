@@ -22,6 +22,11 @@ public class UserMgrController {
         return "userMgr/list";
     }
 
+    @GetMapping("/userMgr")
+    public String userMgrMain() {
+        return "userMgr/list";
+    }
+
     @PostMapping("/userMgr/save")
     public String save(UserMgrDTO userMgrDTO) throws IOException {
         System.out.println("userMgrDTO = " + userMgrDTO);

@@ -1,7 +1,7 @@
-package com.dongwoo.SQM.system.service;
+package com.dongwoo.SQM.siteMgr.service;
 
-import com.dongwoo.SQM.system.dto.BaseCodeDTO;
-import com.dongwoo.SQM.system.repository.BaseCodeRepository;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.repository.BaseCodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

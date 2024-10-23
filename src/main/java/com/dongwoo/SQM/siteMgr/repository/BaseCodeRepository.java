@@ -1,6 +1,6 @@
-package com.dongwoo.SQM.system.repository;
+package com.dongwoo.SQM.siteMgr.repository;
 
-import com.dongwoo.SQM.system.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;

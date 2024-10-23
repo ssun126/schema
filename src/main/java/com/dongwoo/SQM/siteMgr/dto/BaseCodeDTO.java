@@ -1,4 +1,4 @@
-package com.dongwoo.SQM.system.dto;
+package com.dongwoo.SQM.siteMgr.dto;
 
 import lombok.Getter;
 import lombok.Setter;
