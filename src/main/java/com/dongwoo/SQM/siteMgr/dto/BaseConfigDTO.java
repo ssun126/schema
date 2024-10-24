@@ -20,5 +20,6 @@ public class BaseConfigDTO {
     private String MODIFIERCODE;
     private String REGDATE;
     private String MODIFIDATE;
+    private String USERNAME;
 
 }

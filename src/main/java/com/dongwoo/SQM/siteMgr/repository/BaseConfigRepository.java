@@ -24,6 +24,6 @@ public class BaseConfigRepository {
         data.put("key",key);
         data.put("textval",textval);
 
-        return sql.selectList("BasConfig.findSearch",data);
+        return sql.selectList("BaseConfig.findSearch",data);
     }
 }
