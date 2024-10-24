@@ -26,7 +26,7 @@
                 <li><a href="#" onclick="goMenu('/partMgmt')"><span>Part Management</span></a></li>
                 <li><a href="#" onclick="goMenu('/qualityCtrl')"><span>Quality Control</span></a></li>
                 <li>
-                    <a href="#" onclick="goMenu('board/list')"><span>Q&A</span></a>
+                    <a href="#" onclick="goMenu('/board/list')"><span>Q&A</span></a>
                     <ul>
                         <li>
                             <a href="#"><span>menu1</span></a>
@@ -47,7 +47,7 @@
             </ul>
         </nav>
         <div class="global_utility">
-            <div class="utility_profile" onclick="goMenu('m/ember/myPage')">
+            <div class="utility_profile" onclick="goMenu('/member/myPage')">
                 <div class="info">
                     <strong><span id="logonName" th:text="${session.loginName}"></span></strong>
                     <span th:text="${session.loginId}"></span>
