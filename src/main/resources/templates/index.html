@@ -5,7 +5,7 @@
     <title>SCHEMA</title>
 </head>
 <body>
-    <span th:text="#{home.welcome}"></span>
+    <span >환영합니다.</span><!--th:text="#{home.welcome}"-->
     <a href="/member/agree">회원가입</a>
     <a href="/login">로그인</a>
     <a href="/member">회원목록</a>
@@ -14,9 +14,12 @@
     <a href="/board/list">글목록</a>
 
     <ul>
-        <li><a href="?lang=en" data-th-text="#{home.lang.en}"></a></li>
-        <li><a href="?lang=jp" data-th-text="#{home.lang.jp}"></a></li>
-        <li><a href="?lang=kr" data-th-text="#{home.lang.kr}"></a></li>
+        <li><a href="?lang=en">영어</a></li><!--data-th-text="#{home.lang.en}"-->
+        <li><a href="?lang=jp">일본어</a></li> <!--data-th-text="#{home.lang.jp}"-->
+        <li><a href="?lang=kr">한국어</a></li><!-- data-th-text="#{home.lang.kr}"-->
     </ul>
 </body>
+<script>
+
+</script>
 </html>
