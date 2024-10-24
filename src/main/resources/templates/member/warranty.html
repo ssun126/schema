@@ -46,12 +46,15 @@
                             </li>
                         </ol>
                     </div>
-                    <form class="cui_form_field" data-legend="true">
+
+
+                    <form id="approvalForm" onsubmit="handleSubmit(event)" action="/member/resubmit"  method="post"  class="cui_form_field" data-legend="true">
+
                         <fieldset>
                             <legend><span>워런티 협약 상태</span></legend>
                             <div class="cui_items_wrap" data-direction="right" >
                                 <div class="item_content">
-                                    <button type="button" class="cui_button secondary"><span>양식다운로드</span></button>
+                                    <button type="button" class="cui_button secondary" onclick ="downSamplefile()"><span>양식다운로드</span></button>
                                 </div>
                             </div>
                             <table class="cui_table center">
@@ -65,13 +68,13 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><p>2024-07-01</p></td>
-                                    <td><p>2024-07-01</p></td>
+                                    <td><p>2024-10-24</p></td>
+                                    <td><p>2024-10-24</p></td>
                                     <td><p>검토중 Waitting</p></td>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center" >
                                             <div class="item_content">
-                                                <button type="button" class="cui_button"><span>첨부</span></button>
+                                                <button type="button" class="cui_button"  onclick ="findfile()"><span>첨부</span></button>
                                                 <button type="button" class="cui_button"><span>보기</span></button>
                                             </div>
                                         </div>
@@ -82,7 +85,8 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
-                                <a href="#" class="cui_button primary" onClick="modal('dialog')"><span>승인요청</span></a>
+<!--                                <button  type="submit"  class="cui_button primary" onClick="modal('dialog')"><span>승인요청</span></button>-->
+                                <button type="submit"  class="cui_button primary" ><span>승인요청</span></button>
                             </div>
                         </div>
                     </form>
@@ -99,7 +103,7 @@
         <div class="dialog_container">
             <div class="dialog_body">
                 <div class="body_root">
-                    <div class="cui_alert alert_modal" data-type="success" role="alert">승인 요청 되었습니다.</div>
+                    <div class="cui_alert alert_modal" data-type="success" role="alert"> <p  id="messageContent" th:text="${message}">승인 요청 되었습니다.</p> </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
                             <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
@@ -109,50 +113,132 @@
             </div>
         </div>
     </div>
+
+    <div class="cui_dialog" style="width:280px;display:none" id="dialog2">
+        <div class="dialog_container">
+            <div class="dialog_head">
+                <div class="dialog_title">
+                    <div class="main_label">양식업로드</div>
+                </div>
+                <div class="dialog_toolbar">
+                    <button class="cui_button icon endpoint" data-cui-icon="xmark" onclick ="sevefileClose()"><span>Close</span></button>
+                </div>
+            </div>
+            <div class="dialog_body">
+                <div class="body_root">
+                    <form class="cui_form_field">
+                        <fieldset>
+                            <legend><span>파일 업로드</span></legend>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <div class="item_content">
+                                    <div class="cui_attachments">
+                                        <input type="file" class="cui_file_field">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="center">
+                                <div class="item_content">
+                                    <button type="button" class="cui_button primary" onclick ="sevefile()"><span>저장</span></button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 <script>
-    //모달 열기
-    function modal(id){
-      $("#" + id).fadeIn()
-    }
 
-    //모달 닫기
-    $('.modal-close').on('click', function(e){
-      e.preventDefault();
-      const modal = $(this).parents('.cui_dialog');
-      modal.fadeOut();
-    });
+   // 페이지 로드 후 모달 자동 표시
+   window.onload = function() {
 
-    // 이메일 입력값을 가져오고,
-    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
-    // 사용 가능 여부를 이메일 입력창 아래에 표시
-        const emailCheck = () => {
-            const email = document.getElementById("USER_EMAIL").value;
-            const checkResult = document.getElementById("check-result");
-            console.log("입력한 이메일", email);
-            $.ajax({
-                // 요청방식: post, url: "email-check", 데이터: 이메일
-                type: "post",
-                url: "/member/email-check",
-                data: {
-                    "USER_EMAIL": email
-                },
-                success: function(res) {
-                    console.log("요청성공", res);
-                    if (res == "ok") {
-                        console.log("사용가능한 이메일");
-                        checkResult.style.color = "green";
-                        checkResult.innerHTML = "사용가능한 이메일";
-                    } else {
-                        console.log("이미 사용중인 이메일");
-                        checkResult.style.color = "red";
-                        checkResult.innerHTML = "이미 사용중인 이메일";
-                    }
-                },
-                error: function(err) {
-                    console.log("에러발생", err);
-                }
-            });
-        }
+        var messageElement = document.getElementById('messageContent');
+            if (messageElement && messageElement.innerText.trim() !== "") {
+                document.getElementById('dialog').style.display = 'block';
+            }
+   }
+
+   function handleSubmit(event) {
+       document.getElementById('approvalForm').submit();
+       //modal('dialog');
+       alert("승인 요청 되었습니다.");
+   }
+
+   //모달 열기
+   function modal(id){
+     $("#" + id).fadeIn()
+   }
+
+   //모달 닫기
+   $('.modal-close').on('click', function(e){
+     e.preventDefault();
+     const modal = $(this).parents('.cui_dialog');
+     modal.fadeOut();
+
+     // 닫을때
+     redirectToLogin();
+   });
+
+
+   function redirectToLogin() {
+       window.location.href = "/login"; // 로그인 페이지로 이동
+   }
+
+
+
+   function downSamplefile() {
+      alert("양식파일 등록후 다운로드.")
+   }
+
+   //파일 찾기
+   function findfile() {
+       $("#dialog2").fadeIn()
+   }
+
+   //파일 저장
+   function sevefile() {
+       $("#dialog2").fadeOut()
+       alert("파일저장 경로 협의!")
+   }
+   //파일 저장 닫기
+   function sevefileClose() {
+       $("#dialog2").fadeOut()
+   }
+
+
+
+   // 이메일 입력값을 가져오고,
+   // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+   // 사용 가능 여부를 이메일 입력창 아래에 표시
+       const emailCheck = () => {
+           const email = document.getElementById("USER_EMAIL").value;
+           const checkResult = document.getElementById("check-result");
+           console.log("입력한 이메일", email);
+           $.ajax({
+               // 요청방식: post, url: "email-check", 데이터: 이메일
+               type: "post",
+               url: "/member/email-check",
+               data: {
+                   "USER_EMAIL": email
+               },
+               success: function(res) {
+                   console.log("요청성공", res);
+                   if (res == "ok") {
+                       console.log("사용가능한 이메일");
+                       checkResult.style.color = "green";
+                       checkResult.innerHTML = "사용가능한 이메일";
+                   } else {
+                       console.log("이미 사용중인 이메일");
+                       checkResult.style.color = "red";
+                       checkResult.innerHTML = "이미 사용중인 이메일";
+                   }
+               },
+               error: function(err) {
+                   console.log("에러발생", err);
+               }
+           });
+       }
 </script>
 </html>
