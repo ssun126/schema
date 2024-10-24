@@ -6,6 +6,14 @@
 <head>
     <meta charset="UTF-8">
     <title>기초설정</title>
+    <style>
+        .cui_dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
 </head>
 <body>
 <div class="cui_app">
@@ -61,37 +69,42 @@
                     </div>
                 </div>
                 <div class="cui_body">
-                    <div class="cui_search">
-                        <div class="search_list cui_grid_wrap ">
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">업무구분</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                    </select>
+                    <form id="searchForm" action="/baseconfig/search" method="get">
+                        <div class="cui_search">
+                            <div class="search_list cui_grid_wrap ">
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">업무구분</strong>
+                                    <div class="item_content">
+                                        <select class="cui_select_field wide" name="gubun">
+                                            <option value="">전체</option>
+                                            <option value="basic">기초</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="cui_items_wrap" data-size="2">
+                                    <strong class="item_label">검색조건</strong>
+                                    <div class="item_content">
+                                        <select class="cui_select_field" name="searchkey">
+                                            <option value="key" selected>설정키</option>
+                                            <option value="val">설정값</option>
+                                        </select>
+                                        <input class="cui_text_field" type="text" name="searchval">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="cui_items_wrap" data-size="2">
-                                <strong class="item_label">검색조건</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field">
-                                        <option value="">검색조건 옵션1</option>
-                                        <option value="">검색조건 옵션2</option>
-                                    </select>
-                                    <input class="cui_text_field" type="text" >
-                                </div>
+                            <div class="search_action">
+                                <button type="submit" class="cui_button primary search_btn" ><span>검색</span></button>
                             </div>
                         </div>
-                        <div class="search_action">
-                            <button type="button" class="cui_button primary"><span>검색</span></button>
-                        </div>
-                    </div>
+                    </form>
                     <div class="cui_toolbar">
                         <div class="toolbar_content">
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                            <button type="button" class="cui_button secondary"><span>추가</span></button>
+                            <button type="button" class="cui_button secondary" onclick="modal('PopupBaseConfig')"><span>추가</span></button>
+<!--                            <button type="button" class="cui_button secondary" onclick="BaseConfig_Popup()"><span>추가</span></button>-->
+
                         </div>
                     </div>
                     <table class="cui_table center">
@@ -116,24 +129,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><span>기본</span></td>
-                            <td><button type="button" class="cui_button endpoint">key1</button></td>
-                            <td><span>Y</span></td>
-                            <td><span>기본 key 설명</span></td>
-                            <td><span>홍길동</span></td>
-                            <td><span>사용</span></td>
-                            <td><span>2024-08-29</span></td>
-                        </tr>
-                        <tr>
-                            <td><span>기본</span></td>
-                            <td><button type="button" class="cui_button endpoint">key1</button></td>
-                            <td><span>Y</span></td>
-                            <td><span>기본 key 설명</span></td>
-                            <td><span>홍길동</span></td>
-                            <td><span>사용</span></td>
-                            <td><span>2024-08-29</span></td>
-                        </tr>
+                            <tr th:each="baseConfigList : ${baseConfigList}">
+                                <td style="display:none;" th:text="${baseConfigList.IDX}"><span></span></td>
+                                <td th:text="${baseConfigList.GUBN}"><span></span></td>
+<!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
+                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="modal('PopupBaseConfig')"></button></td>
+                                <td th:text="${baseConfigList.CONFIGVALUE}"><span></span></td>
+                                <td th:text="${baseConfigList.CONFIGSUMMARY}"><span></span></td>
+                                <td th:text="${baseConfigList.USERNAME}"><span></span></td>
+                                <td th:text="${baseConfigList.CONFIGSTATUS}"><span></span></td>
+                                <td th:text="${baseConfigList.REGDATE}"><span></span></td>
+
+                            </tr>
+<!--                        <tr>-->
+<!--                            <td><span>기본</span></td>-->
+<!--                            <td><button type="button" class="cui_button endpoint">key1</button></td>-->
+<!--                            <td><span>Y</span></td>-->
+<!--                            <td><span>기본 key 설명</span></td>-->
+<!--                            <td><span>홍길동</span></td>-->
+<!--                            <td><span>사용</span></td>-->
+<!--                            <td><span>2024-08-29</span></td>-->
+<!--                        </tr>-->
                         </tbody>
                     </table>
                 </div>
@@ -141,5 +157,68 @@
         </div>
     </div>
 </div>
+<div class="cui_dialog" style="width:400px;display:none;" id="PopupBaseConfig">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label">PARTNER ID/PW 찾기</div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_field" data-legend="true">
+                    <fieldset>
+                        <legend><span>ID 찾기</span></legend>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">영문이름</strong>
+                            <div class="item_content">
+                                <input type="text" class="cui_text_field">
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">이메일</strong>
+                            <div class="item_content">
+                                <input type="email" class="cui_text_field">
+                            </div>
+                        </label>
+                        <div class="cui_items_wrap" data-direction="center">
+                            <div class="item_content">
+                                <button type="button" class="cui_button primary"><span>추가</span></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+<script>
+    function BaseConfig_Popup(){
+        let popOption ="width=601,height=436,top=100,left=100";
+        let openUrl = "/BaseConfig/Popup";
+        window.open(openUrl, 'BaseConfig', popOption);
+    }
+
+    //모달 열기
+    function modal(id){
+      $("#" + id).fadeIn()
+    }
+
+    //모달 닫기
+    $('.modal-close').on('click', function(e){
+      e.preventDefault();
+      const modal = $(this).parents('.cui_dialog');
+      modal.fadeOut();
+    });
+
+    //검색
+<!--    $(".search_btn").on("click", function(e){-->
+<!--        if()-->
+<!--    })-->
+
+</script>
 </html>
