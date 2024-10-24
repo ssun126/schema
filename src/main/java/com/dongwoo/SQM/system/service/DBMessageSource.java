@@ -20,17 +20,18 @@ public class DBMessageSource extends AbstractMessageSource {
 
     @Override
     protected MessageFormat resolveCode(String key, Locale locale) {
-        MultiLanguageDTO message = multiLanguageRepository.findByKeyAndLocale(key, locale.getLanguage());
+       /* MultiLanguageDTO message = multiLanguageRepository.findByKeyAndLocale(key, locale.getLanguage());
 
         if (locale.getLanguage() == null) {
             message = multiLanguageRepository.findByKeyAndLocale(key, DEFAULT_LOCALE_CODE);
         }
-        /*log.info("key??? "+key);
-        log.info("locale.getLanguage()??? "+locale.getLanguage());*/
+        log.info("key??? "+key);
+        log.info("locale.getLanguage()??? "+locale.getLanguage());
+        log.info("message??? "+message);
         if (message == null) {
             throw new IllegalArgumentException("Message is null");
-
         }
-        return new MessageFormat(message.getMESSAGE_CONTENT(), locale);
+        return new MessageFormat(message.getMESSAGE_CONTENT(), locale);*/
+        return null;
     }
 }
