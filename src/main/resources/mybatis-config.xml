@@ -20,6 +20,8 @@
         <typeAlias type="com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO" alias="userinfocom"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.UserInfoCompanyDTO" alias="userinfoHis"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.ComPanyCodeDTO" alias="comPanyCode"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO" alias="baseConfig"></typeAlias>
+
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
 
