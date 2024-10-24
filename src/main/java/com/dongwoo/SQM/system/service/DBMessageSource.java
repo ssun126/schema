@@ -1,7 +1,7 @@
 package com.dongwoo.SQM.system.service;
 
-import com.dongwoo.SQM.system.repository.MultiLanguageRepository;
-import com.dongwoo.SQM.system.dto.MultiLanguageDTO;
+import com.dongwoo.SQM.system.repository.LanguageRepository;
+import com.dongwoo.SQM.system.dto.LanguageDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractMessageSource;

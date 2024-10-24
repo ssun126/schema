@@ -36,6 +36,7 @@ public class LoginController {
             session.setAttribute("loginName", loginResult.getUSER_NAME());
             session.setAttribute("role", loginResult.getUSER_NAME());
 
+
             isSuccess = true;
 
             //log.info("authentication=="+authentication);
@@ -46,10 +47,11 @@ public class LoginController {
             // 권한 가져오기
             model.addAttribute("role", "admin");
             model.addAttribute("isSuccess", isSuccess);
-
+            model.addAttribute("loginError", "");
             return "main";
         } else {
             // login 실패
+            model.addAttribute("loginError", "아이디 또는 비밀번호가 올바르지 않습니다.");
             return "/login";
         }
     }

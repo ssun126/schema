@@ -426,13 +426,13 @@
                         <fieldset>
                             <div class="cui_items_wrap" data-direction="left">
                                 <div class="item_content">
-                                    <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>동의합니다.</span></label>
-                                    <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>동의하지 않습니다.</span></label>
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="agree"><i></i><span>동의합니다.</span></label>
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="disagree"><i></i><span>동의하지 않습니다.</span></label>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="right" >
                                 <div class="item_content">
-                                    <a href="/member/join" class="cui_button primary"><span>다음</span></a>
+                                    <a href="#" class="cui_button primary" id="nextButton" ><span>다음</span></a>
                                 </div>
                             </div>
                         </fieldset>
@@ -442,3 +442,19 @@
         </div>
 </body>
 </html>
+
+<script>
+    $(document).ready(function() {
+        $('#nextButton').on('click', function(event) {
+            event.preventDefault();
+
+            const checkedValue = $('input[name="checkbox1"]:checked').val();
+
+            if (checkedValue === 'agree') {
+                window.location.href = "/member/join";
+            } else {
+                alert("동의를 선택해 주세요.");
+            }
+        });
+    });
+</script>
