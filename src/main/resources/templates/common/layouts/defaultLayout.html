@@ -9,7 +9,7 @@
 <div class="cui_app">
     <header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
     <div class="cui_container center">
-        <aside th:replace="~{common/fragments/aside :: ${#authentication.principal.isAdmin()} ? 'AsideFragment-admin' :'AsideFragment'}"></aside>
+        <aside th:replace="~{common/fragments/aside :: AsideFragment-member}"></aside>
 
         <th:block layout:fragment="Content"></th:block>
     </div>

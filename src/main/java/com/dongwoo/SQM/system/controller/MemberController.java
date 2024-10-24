@@ -20,27 +20,27 @@ public class MemberController {
 
     @GetMapping("/member/agree")
     public String agreeForm(Model model) {
-        return "/member/agree";
+        return "member/agree";
     }
 
     @GetMapping("/member/join")
     public String joinForm(Model model) {
-        return "/member/join";
+        return "member/join";
     }
 
     @GetMapping("/member/warranty")
     public String warrantyForm(Model model) {
-        return "/member/warranty";
+        return "member/warranty";
     }
 
     @GetMapping("/member/approve")
     public String approveForm(Model model) {
-        return "/member/approve";
+        return "member/approve";
     }
 
     @GetMapping("/member/find")
     public String findForm(Model model) {
-        return "/member/find";
+        return "member/find";
     }
 
     @PostMapping("/member/save")
