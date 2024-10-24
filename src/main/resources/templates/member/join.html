@@ -36,24 +36,9 @@
                             </li>
                         </ol>
                     </div>
-                    <form class="cui_form_field" data-legend="true" action="/member/save" method="post">
+                    <form id="frmJoin" class="cui_form_field" data-legend="true" action="/member/warranty" method="post">
                         <fieldset>
                             <legend><span>기본정보</span></legend>
-                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="firstCompany">
-                                <div class="alert_message">
-                                    <p>최초등록 업체입니다.</p>
-                                </div>
-                            </div>
-                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="registeredCompany">
-                                <div class="alert_message">
-                                    <p>기등록 업체입니다.</p>
-                                </div>
-                            </div>
-                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id="noCompanyCode">
-                                <div class="alert_message">
-                                    <p>업체코드 내역이 없어 가입이 불가합니다.</p>
-                                </div>
-                            </div>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -69,18 +54,21 @@
                                                     <option value="VendorNum">Vendor 번호</option>
                                                     <option value="BusinessNum">사업자등록 번호</option>
                                                 </select>
-                                                <input class="cui_text_field" type="text"  id = "searchCustomer">
-                                                <button type="button" class="cui_button icon" data-cui-icon="search" onblur="vendorCheck()"><span>검색</span></button>
+                                                <input name ="COMCODE" class="cui_text_field" type="text"  id = "searchCustomer">
+                                                <button type="button" class="cui_button icon" data-cui-icon="search" onclick ="vendorCheck()"><span>검색</span></button>
                                             </div>
                                         </div>
                                     </td>
+                                </tr>
+                                <tr>
+
                                 </tr>
                                 <tr>
                                     <th><span>귀사 정보</span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="COVISION" disabled>
+                                                <input class="cui_text_field" type="text"  id="COMNAME" disabled>
                                             </div>
                                         </div>
                                     </td>
@@ -90,8 +78,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                             <div class="item_content">
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" value="Logistics"><i></i><span>제조사</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" value="Manufacturer"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="VENDORWORKKIND" value="D" id="Manufacturer" ><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="VENDORWORKKIND" value="L" id="Logistics"><i></i><span>물류사</span></label>
 <!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>-->
 <!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>-->
                                             </div>
@@ -103,14 +91,39 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="KOREA" disabled>
+                                                <input class="cui_text_field" type="text"  name="COMNATION" id="COMNATION" disabled>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="firstCompany">
+                                <div class="alert_message">
+                                    <p>최초등록 업체입니다.</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="registeredCompany">
+                                <div class="alert_message">
+                                    <p>기등록 업체입니다.</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id="noCompanyCode">
+                                <div class="alert_message">
+                                    <p>업체코드 내역이 없어 가입이 불가합니다.</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="info" role="alert" id="errCompanyCode">
+                                <div class="alert_message">
+                                    <p id=errCompanyCodeMsg></p>
+                                </div>
+                            </div>
                         </fieldset>
+
+                        <div><br /></div>
+
+                        <div id="joinBasicStep1">
+
                         <fieldset>
                             <legend><span>공동 업무자 정보</span></legend>
                             <table class="cui_table center">
@@ -121,17 +134,17 @@
                                     <th><span>부서명</span></th>
                                     <th><span>email</span></th>
                                     <th><span>연락처</span></th>
-                                    <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
+                                    <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tableBody">
                                 <tr>
-                                    <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" id="USER_EMAIL" onblur="emailCheck()"><p id="check-result"></p></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_Mobile" placeholder="전화번호"></td>
-                                    <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
+                                    <td><input type="text" class="cui_text_field" name="USERNAME" placeholder="이름"  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USERPOSITION" onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USERDEPT"  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USEREMAIL" placeholder="이메일" id="USEREMAIL"  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USERPHONE" placeholder="전화번호"  onblur="setUserSelectReset()"></td>
+                                    <td></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -151,8 +164,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
-                                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>중복검사</span></button>
+                                                <input class="cui_text_field" type="text" name = "USERID" id ="memberID" >
+                                                <button type="button" class="cui_button icon" data-cui-icon="search" onclick ="memberIDCheck()"><span>중복검사</span></button>
                                             </div>
                                         </div>
                                     </td>
@@ -160,8 +173,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <select class="cui_select_field wide">
-                                                    <option value="">담당자 목록</option>
+                                                <select class="cui_select_field wide" name ="USERSELECT" id="userSelect" >
+                                                    <option value="0">담당자 목록</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -172,7 +185,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="password">
+                                                <input class="cui_text_field" type="password" name ="USERPWD" id="UserPass" placeholder="비밀번호" onblur="passConfirm()">
                                             </div>
                                         </div>
                                     </td>
@@ -180,7 +193,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="password">
+                                                <input class="cui_text_field" type="password" id="UserPassRe" onkeyup="passConfirm()" placeholder="비밀번호 확인" onblur="passConfirm()">
                                             </div>
                                         </div>
                                     </td>
@@ -190,26 +203,41 @@
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field wide" type="text">
+                                                <input name="IDPWADDREASON"  class="cui_text_field wide" type="text">
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
-                        </fieldset>
-                        <fieldset>
-                            <legend><span>업체정보</span></legend>
-                            <div class="cui_alert alert_basic" data-type="warning" role="alert">
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id = "dupliCation">
                                 <div class="alert_message">
                                     <p>동일 사업부/공장에서 업무자별 ID 생성은 승인 불가 합니다</p>
                                 </div>
                             </div>
-                            <div class="cui_alert alert_basic" data-type="warning" role="alert">
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="missPass">
                                 <div class="alert_message">
                                     <p>ID/PW 문의는 Main 담당자 또는 '공동업무자'에게 문의 바랍니다.</p>
                                 </div>
                             </div>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="selectOwner">
+                                <div class="alert_message">
+                                    <p>담당자를 선택해 주세요.</p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="IdVAL">
+                                <div class="alert_message">
+                                    <p><span id ="IdValidatorMsg"></span></p>
+                                </div>
+                            </div>
+                            <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="PassVAL">
+                                <div class="alert_message">
+                                    <p><span id ="confirmMsg"></span></p>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>업체정보</span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -223,7 +251,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+                                                <input class="cui_text_field" type="text" name = "COMPANYNAME" id="COMPANYNAME">
                                             </div>
                                         </div>
                                     </td>
@@ -231,7 +259,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+                                                <input class="cui_text_field" type="text" name = "FACTORYNAME" id="FACTORYNAME">
                                             </div>
                                         </div>
                                     </td>
@@ -241,7 +269,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+                                                <input class="cui_text_field" type="text"  name = "BUSNUMBER" id="BUSNUMBER">
                                             </div>
                                         </div>
                                     </td>
@@ -249,7 +277,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+                                                <input class="cui_text_field" type="text"  name = "COMADDRESS" id="COMADDRESS">
                                             </div>
                                         </div>
                                     </td>
@@ -259,7 +287,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+                                                <input class="cui_text_field" type="text"  name = "COMCEONAME" id="COMCEONAME">
                                             </div>
                                         </div>
                                     </td>
@@ -267,7 +295,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+                                                <input class="cui_text_field" type="text" name = "COMCEOPHONE" id="COMCEOPHONE">
                                             </div>
                                         </div>
                                     </td>
@@ -289,8 +317,8 @@
                                             <div class="item_content">
                                                 <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
                                                 <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+<!--                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>-->
+<!--                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>-->
                                             </div>
                                         </div>
                                     </td>
@@ -298,10 +326,18 @@
                                 </tbody>
                             </table>
                         </fieldset>
+
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
-                                <a href="/member/warranty" class="cui_button primary"><span>다음</span></a>
+<!--                                <a href="/member/warranty" class="cui_button primary"><span>다음</span></a>-->
+
+                                <a href="#" onclick="return chk_form()" class="cui_button primary"><span>다음</span></a>
+
+
+
+
                             </div>
+                        </div>
                         </div>
                     </form>
                 </div>
@@ -318,84 +354,422 @@
 </body>
 <script>
 
-$(document).ready(function() {
-  $('#firstCompany').hide();
-  $('#registeredCompany').hide();
-  $('#noCompanyCode').hide();
-});
+    $(document).ready(function() {
 
-  // Vendor 번호,사업자 등록번호 체크
-  // 입력값을 서버로 전송하고 똑같은 Vendor 번호,사업자 등록번호가 있는지 체크한 후
-  // 사용 가능 여부를 경고창에 표시
+         hideCompanyStatusInfo();
+         hideMemberInfo();
+         $('#searchCustomer').focus();
+         $('#joinBasicStep1').hide();
 
-  const vendorCheck = () => {
-  const type = document.getElementById("searchCustomerType").value;
-  const searchCustomer = document.getElementById("searchCustomer").value;
-  alert(type);
+         $('#addRowButton').on('click', function() {
+            // 공동 업무자 정보 생성
+            const newRow = `
+                <tr>
+                    <td><input type="text" class="cui_text_field" name="USERNAME" placeholder="이름"  onblur="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USERPOSITION" onblur="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USERDEPT" onblur="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USEREMAIL" placeholder="이메일"  onblur="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USERPHONE" placeholder="전화번호"  onblur="setUserSelectReset()"></td>
+                    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
+                </tr>
+            `;
 
-        //  const email = document.getElementById("USER_EMAIL").value;
-        //  const checkResult = document.getElementById("check-result");
-        //  console.log("입력한 이메일", email);
-          $.ajax({
-              // 요청방식: post, url: "email-check", 데이터:  Vendor 번호,사업자 등록번호 체크
-              type: "post",
-              url: "/member/vendor-check",
-              data: {
-                  "vendorCode": searchCustomer
-              },
-              success: function(res) {
-                  console.log("요청성공", res);
-                  if (res == "ok") {
-                  alert(1);
-                   $('#firstCompany').show();
-<!--                      console.log("사용가능한 이메일");-->
-<!--                      checkResult.style.color = "green";-->
-<!--                      checkResult.innerHTML = "사용가능한 이메일";-->
-                  } else {
-<!--                      console.log("이미 사용중인 이메일");-->
-<!--                      checkResult.style.color = "red";-->
-<!--                      checkResult.innerHTML = "이미 사용중인 이메일";-->
-                    alert(2);
-                  }
-              },
-              error: function(err) {
-                  console.log("에러발생", err);
-              }
-          });
+            $('#tableBody').append(newRow);
+            setUserSelectReset();
+        });
+
+        // 공동 업무자 정보 삭제
+        $(document).on('click', '#delRowButton', function() {
+            $(this).closest('tr').remove();
+            setUserSelectReset() //담당자 목록 컨트롤 바인딩 초기화
+        });
+
+        // 아이디 입력창 정보 가져오기
+        let elInputUsername = document.querySelector('#memberID');
+
+        //ID /PASS 유효성 //
+        elInputUsername.onkeyup = function (event) {
+
+        if (event.key === 'Enter' || event.keyCode === 13) {
+           return;
+        }
+
+         var correctColor = "#18AD72";
+         var wrongColor = "#E40087" ;
+
+          IdValidatorMsg.style.color = wrongColor;
+
+          // 값을 입력한 경우
+          if (elInputUsername.value.length !== 0) {
+            // 영어 또는 숫자 외의 값을 입력했을 경우
+            if(onlyNumberAndEnglish(elInputUsername.value) === false) {
+                $('#IdVAL').show();
+                IdValidatorMsg.innerHTML = "영어 또는 숫자만 가능합니다.";
+            }
+            // 글자 수가 4~12글자가 아닐 경우
+            else if(idLength(elInputUsername.value) === false) {
+                $('#IdVAL').show();
+                IdValidatorMsg.innerHTML = "아이디는 6~12글자이어야 합니다.";
+            }
+            // 조건을 모두 만족할 경우
+            else if(idLength(elInputUsername.value) || onlyNumberAndEnglish(elInputUsername.value)) {
+
+               $('#IdVAL').show();
+               IdValidatorMsg.style.color = correctColor;
+               IdValidatorMsg.innerHTML = "사용할 수 있는 아이디입니다.[중복 체크를 해 주세요]";
+            }
+          }
+          // 값을 입력하지 않은 경우 (지웠을 때)
+          else {
+                $('#IdVAL').hide();
+          }
+        }
+    });
+
+
+    // 데이터를 <select>에 추가
+    function setUserSelect(users) {
+
+        var userSelect = document.getElementById('userSelect');
+
+        users.forEach(function(user) {
+
+            var option = document.createElement('option');
+            //option.value = user.email;  // 이메일을 value 값으로 설정
+            option.value = user.name;  // 이름을 value 값으로 설정  //추후 동명이인 처리시 고민해보자
+            option.textContent = user.name;  // 이름을 표시
+
+            userSelect.appendChild(option);
+        });
+    }
+
+    //담당자 리셋
+    function setUserSelectReset() {
+
+       $("#userSelect option").remove();
+       $("#userSelect").append("<option value='0'>담당자 목록</option>");
+
+       var userList = extractData() ;
+       setUserSelect(userList);
+
+       $('#selectOwner').show();
+    }
+
+    // 공동 업무자 정보 데이터 추출
+    function extractData() {
+
+        var rows = document.querySelectorAll('#tableBody tr');
+        var userList = [];
+
+        rows.forEach(function(row) {
+            var userData = {};
+            var name = row.querySelector('input[name="USERNAME"]').value;
+            var email = row.querySelector('input[name="USEREMAIL"]').value;
+
+            userData.name = name;
+            userData.email = email;
+
+            userList.push(userData);
+        });
+
+        return userList;
+    }
+
+
+    //밴더 사업자 검색후 표기 초기화
+    function hideCompanyStatusInfo () {
+      $('#firstCompany').hide();
+      $('#registeredCompany').hide();
+      $('#noCompanyCode').hide();
+      $('#errCompanyCode').hide();
+    }
+
+    function hideMemberInfo () {
+      $('#IdVAL').hide();
+      $('#dupliCation').hide();
+      $('#missPass').hide();
+    }
+
+
+    // 기본 정보 조회 Vendor 번호,사업자 등록번호 체크
+    const vendorCheck = () => {
+    const searchType = document.getElementById("searchCustomerType").value;
+    const searchCustomer = document.getElementById("searchCustomer").value;
+
+      hideCompanyStatusInfo();
+
+      if (!searchCustomer) {
+         $('#searchCustomer').focus();
+         if(searchType == "VendorNum"){
+             alert("Vendor 번호를 입력해주세요.");
+         } else{
+             alert("사업자등록번호를 입력해주세요.");
+         }
+        return;
       }
 
-
-
-  // 이메일 입력값을 가져오고,
-  // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
-  // 사용 가능 여부를 이메일 입력창 아래에 표시
-      const emailCheck = () => {
-          const email = document.getElementById("USER_EMAIL").value;
-          const checkResult = document.getElementById("check-result");
-          console.log("입력한 이메일", email);
-          $.ajax({
-              // 요청방식: post, url: "email-check", 데이터: 이메일
-              type: "post",
-              url: "/member/email-check",
-              data: {
-                  "USER_EMAIL": email
-              },
-              success: function(res) {
-                  console.log("요청성공", res);
-                  if (res == "ok") {
-                      console.log("사용가능한 이메일");
-                      checkResult.style.color = "green";
-                      checkResult.innerHTML = "사용가능한 이메일";
-                  } else {
-                      console.log("이미 사용중인 이메일");
-                      checkResult.style.color = "red";
-                      checkResult.innerHTML = "이미 사용중인 이메일";
-                  }
-              },
-              error: function(err) {
-                  console.log("에러발생", err);
-              }
-          });
+      if(searchType == "VendorNum"){
+            document.getElementById('BUSNUMBER').readOnly = false;
+      } else{
+            document.getElementById('BUSNUMBER').readOnly = true;
       }
+
+      var sUrl = "/member/vendor-check" ;
+
+      $.ajax({
+          // 요청방식: post, url: "vendor-check", 데이터:  Vendor 번호,사업자 등록번호 체크
+          type: "post",
+          url:   sUrl,
+          data: {
+              "searchCode": searchCustomer
+              ,"searchType" : searchType
+          },
+          success: function(res) {
+              console.log("요청성공", res);
+
+              if (res.status == "ok") {
+               $('#registeredCompany').show(); //기등록 업체입니다.
+               $('#joinBasicStep1').show();
+
+                //공동업무자정보
+                //ID /PASS
+                bindCompanyInfo(res);           //정보 바인딩. ★
+
+              } else if (res.status == "not") {
+
+                $('#noCompanyCode').show();
+                $('#joinBasicStep1').hide();
+
+                document.getElementById('Logistics').checked = false;
+                document.getElementById('Manufacturer').checked = false;
+                document.getElementById("COMNAME").value = "" ;
+                document.getElementById("COMNATION").value = "";
+
+              } else if (res.status == "no") {
+
+                $('#firstCompany').show();
+                $('#joinBasicStep1').show();
+                bindCompanyInfo(res);             //정보 바인딩. ★
+
+              }else {
+                $('#errCompanyCode').show();
+                //$('#joinBasicStep1').hide();  //기존 신청 정보 수정 가능하게.
+                $('#joinBasicStep1').show();  //기존 신청 정보 수정 가능하게.
+
+                bindCompanyInfo(res); //따로 뽑자.  //정보 바인딩. ★
+                errCompanyCodeMsg.innerHTML = "["+ res.status + "] 중인 정보가 있습니다. 관리자에게 문의하세요" ;
+              }
+          },
+          error: function(err) {
+              console.log("에러발생", err);
+          }
+      });
+    }
+
+
+    //기본정보 바인딩
+    function bindCompanyInfo(companyInfo) {
+
+        if (companyInfo) {
+            document.getElementById("COMNAME").value = companyInfo.COMNAME ;   //귀사정보
+
+            // (D:제조사, L:물류사)
+            var  selectedOption = companyInfo.VENDORWORKKIND ;
+            if (selectedOption === "D") {  //(D:제조사, L:물류사)
+              document.getElementById('Manufacturer').checked = true;
+              document.getElementById('Logistics').checked = false;
+            } else if (selectedOption === "L") {
+              document.getElementById('Manufacturer').checked = false;
+              document.getElementById('Logistics').checked = true;
+
+            }else{
+              document.getElementById('Logistics').checked = false;
+              document.getElementById('Manufacturer').checked = false;
+            }
+            document.getElementById("COMNATION").value =  companyInfo.COMNATION;  //국가
+            document.getElementById("COMPANYNAME").value =  companyInfo.COMPANYNAME;  //회사명
+            document.getElementById("FACTORYNAME").value =  companyInfo.FACTORYNAME; //제조 공장명
+            document.getElementById("BUSNUMBER").value =  companyInfo.BUSNUMBER;  //사업자등록번호
+            document.getElementById("COMADDRESS").value =  companyInfo.COMADDRESS;   //회사주소
+            document.getElementById("COMCEONAME").value =  companyInfo.COMCEONAME;   //CEO 성명 (영문)
+            document.getElementById("COMCEOPHONE").value =  companyInfo.COMCEOPHONE; //CEO 연락처 (영문)
+        }
+    }
+    //바인딩 초기화도 만들것.!!
+
+
+    // member ID 체크
+    //01 .memberID 키에
+    // IdValidatorMsg.innerHTML = "사용할 수 있는 아이디입니다"; 이거 일때 체크 걸자. 안되면 가입도 안된다.
+    // 버튼 클릭시 memberIDCheck() 중복검사.
+
+    const memberIDCheck = () => {
+
+    const searchID = document.getElementById("memberID").value;
+
+    const message = document.getElementById('IdValidatorMsg').innerHTML;
+
+    if(message != "사용할 수 있는 아이디입니다.[중복 체크를 해 주세요]"){
+        //alert('중복 체크 완료!')
+        return;
+    }
+
+      //$('#dupliCation').hide();
+      //$('#missPass').hide();
+
+      $.ajax({
+          // 요청방식: post, url: "vendor-check", 데이터:  member ID 중복체크
+          type: "post",
+          url:  "/member/id-check",
+          data: {
+              "memberID": searchID
+          },
+          success: function(res) {
+
+              hideMemberInfo();// 정보 숨기기.
+<!--   $('#IdVAL').hide();-->  //유효성 검사 메세지.
+<!--   $('#dupliCation').hide();--> //중복    <p>동일 사업부/공장에서 업무자별 ID 생성은 승인 불가 합니다</p>
+<!--   $('#missPass').hide();-->  <p>ID/PW 문의는 Main 담당자 또는 '공동업무자'에게 문의 바랍니다.</p>
+
+              $('#IdVAL').show();
+
+              if (res == "ok") {
+                document.getElementById('IdValidatorMsg').innerHTML = "사용할 수 있는 아이디입니다."
+              } else {
+               IdValidatorMsg.style.color = "#E40087";
+               document.getElementById('IdValidatorMsg').innerHTML = "동일한 아이디가 존재합니다."
+              }
+          },
+          error: function(err) {
+              console.log("에러발생", err);
+          }
+      });
+    }
+
+    // 이메일 입력값을 가져오고,
+    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+    // 사용 가능 여부를 이메일 입력창 아래에 표시
+    const emailCheck = () => {
+      const email = document.getElementById("USEREMAIL").value;
+      const checkResult = document.getElementById("check-result");
+      console.log("입력한 이메일", email);
+      $.ajax({
+          // 요청방식: post, url: "email-check", 데이터: 이메일
+          type: "post",
+          url: "/member/email-check",
+          data: {
+              "USEREMAIL": email
+          },
+          success: function(res) {
+              console.log("요청성공", res);
+              if (res == "ok") {
+                  console.log("사용가능한 이메일");
+                  checkResult.style.color = "green";
+                  checkResult.innerHTML = "사용가능한 이메일";
+              } else {
+                  console.log("이미 사용중인 이메일");
+                  checkResult.style.color = "red";
+                  checkResult.innerHTML = "이미 사용중인 이메일";
+              }
+          },
+          error: function(err) {
+              console.log("에러발생", err);
+          }
+      });
+    }
+
+
+    document.getElementById('searchCustomer').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            vendorCheck();
+        }
+    });
+
+    document.getElementById('memberID').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.keyCode === 13) {
+            memberIDCheck();
+        }
+    });
+
+    document.getElementById('userSelect').addEventListener('change', function() {
+    const selectedValue = this.value;
+        if (selectedValue == "0") {
+            $('#selectOwner').show()
+        } else {
+         $('#selectOwner').hide()
+        }
+    });
+
+
+    // Member / Pass 가입 ///////////////////
+
+    <!--1. 회원가입 항목 조건-->
+    <!--아이디 : 4~12글자, 영어나 숫자만 가능하다.-->
+    <!--비밀번호 : 8글자 이상, 영문, 숫자, 특수문자를 모두 사용해야 한다.-->
+    <!--비밀번호 확인 : 비밀번호와 일치해야 한다.-->
+
+    //2-1. 아이디 : 글자 수 제한 (6글자 이상, 12글자 이하)
+    function idLength(value) {
+      return value.length >= 6 && value.length <= 12
+    }
+    //4글자 이상 또는 12글자 이하인 경우 true, 아니면 false를 리턴한다.
+
+
+    //2-2. 아이디 : 영어 또는 숫자만 가능
+
+    function onlyNumberAndEnglish(str) {
+      return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(str);
+    }
+    //영어 또는 숫자가 들어간 경우 true, 아니면 false를 리턴한다.
+    //test() : 문자열에 일치하는 부분이 있는지 확인한다. true 또는 false를 반환
+
+    //2-3.Pass 유효성  , 비교
+	function passConfirm() {
+        var UserPass = document.getElementById('UserPass');
+        var UserPassRe = document.getElementById('UserPassRe');
+        var confirmMsg = document.getElementById('confirmMsg');
+        var correctColor = "#18AD72";
+        var wrongColor = "#E40087" ;
+
+        // 정규식: 정확히 6자리 숫자와 영문 (대문자 또는 소문자) 포함
+        const regex = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{6}$/;
+
+        if (regex.test(UserPass.value)) {
+            confirmMsg.style.color = correctColor;
+            //confirmMsg.innerHTML =  "비밀번호가 유효합니다.";
+
+            if (UserPass.value === UserPassRe.value) {
+                confirmMsg.style.color = correctColor;
+                confirmMsg.innerHTML = "비밀번호가 일치합니다.";
+            } else {
+                confirmMsg.style.color = wrongColor;
+                confirmMsg.innerHTML = "비밀번호가 일치하지 않습니다.";
+            }
+
+        } else {
+            confirmMsg.style.color = wrongColor;
+            confirmMsg.innerHTML = "비밀번호는 6자리의 숫자와 영문자로만 구성되어야 합니다.";
+        }
+    }
+
+    // submit 전 한번더 체크할것 있으면 여기다...
+    function chk_form() {
+<!--        if(document.getElementById("name").value==''){-->
+<!--            alert("성명을 입력해주십시오.");-->
+<!--            return false;-->
+<!--        }-->
+<!--        if(document.getElementById("password").value==''){-->
+<!--            alert("비밀번호를 입력해주십시오.");-->
+<!--            return false;-->
+<!--        }-->
+<!--        if ( ! $('input[name=agreeBtm]:checked').val()) {-->
+<!--            alert('개인정보 활용에 동의해주십시오.');-->
+<!--            return false;-->
+<!--        }-->
+        document.getElementById('frmJoin').submit();
+    }
+
+
+
 </script>
 </html>

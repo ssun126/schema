@@ -17,5 +17,10 @@
         <typeAlias type="com.dongwoo.SQM.common.dto.ExcelDTO" alias="excel"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.LanguageDTO" alias="language"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.UserInfoDTO" alias="userinfo"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO" alias="userinfocom"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.UserInfoCompanyDTO" alias="userinfoHis"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.system.dto.ComPanyCodeDTO" alias="comPanyCode"></typeAlias>
+
     </typeAliases>
 </configuration>

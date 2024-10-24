@@ -1,11 +1,14 @@
 package com.dongwoo.SQM.system.service;
 
-import com.dongwoo.SQM.system.dto.MemberDTO;
+import com.dongwoo.SQM.system.dto.*;
 import com.dongwoo.SQM.system.repository.MemberRepository;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +23,6 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public MemberDTO findById(int id) {
-        return memberRepository.findById(id);
-    }
 
     public void delete(int id) {
         memberRepository.delete(id);
@@ -32,9 +32,7 @@ public class MemberService {
         return memberRepository.findByMemberEmail(loginEmail);
     }
 
-    public MemberDTO findByMemberId(String loginId) {
-        return memberRepository.findByMemberId(loginId);
-    }
+
 
     public boolean update(MemberDTO memberDTO) {
         int result = memberRepository.update(memberDTO);
@@ -54,14 +52,88 @@ public class MemberService {
         }
     }
 
-    public String vendorCheck(String vendorCode) {
-//        MemberDTO memberDTO = memberRepository.findByMemberEmail(vendorCode);
+
+    // 저장후 만들어진 USERIDX 받아오자.
+    public UserInfoDTO findByUserId(String loginId) {
+        return memberRepository.findByUserId(loginId);
+    }
+
+    // 저장후 공동 사용자 만들어진 COMUSERIDX 받아오자.
+    public UserInfoCompanyUserDTO findByCompanyUserName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return memberRepository.findByCompanyName(userInfoCompanyUserDTO);
+    }
+
+    public MemberDTO findByMemberId(String loginId) {
+        return memberRepository.findByMemberId(loginId);
+    }
+
+    //사용자 저장
+    public int saveUserInfo(UserInfoDTO userInfoDTO) {
+        return memberRepository.save(userInfoDTO);
+    }
+
+    //공동 사용자 저장 company
+    public int saveUserInfoCompany(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return memberRepository.companysave(userInfoCompanyUserDTO);
+    }
+
+    //사용자 추가정보 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  정보 저장. company
+    public int saveUserInfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
+        return memberRepository.saveUserinfoCompanyHis(userInfoCompanyDTO);
+    }
+
+    //COMPANYCODE 정보 업데이트
+    public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
+        return memberRepository.updateCompanyCode(comPanyCodeDTO);
+    }
+
+
+    //사용자 ID 중복체크
+    public String idCheck(String USER_ID) {
+        MemberDTO memberDTO = memberRepository.findByMemberId(USER_ID);
+        if (memberDTO == null) {
+            return "ok";
+        } else {
+            return "no";
+        }
+    }
+
+
+    //ID 상세정보.
+    public MemberDTO findById(int id) {
+        return memberRepository.findById(id);
+    }
+
+
+    //00.최초 가입여부 (COMPANYCODE)검색 IF 받아서 기초정보만 있다.
+    //없으면  - > 업체코드 내역이 없어 가입이 불가합니다.
+    public MemberDTO basicvendorNumCheck(String searchType ,String searchCode ) {
+
+        MemberDTO memberDTO  = null;
+        if(Objects.equals(searchType, "VendorNum")) {
+            memberDTO = memberRepository.findByComPanyCode(searchCode);
+        }else {
+            memberDTO = memberRepository.findByBusNumber(searchCode);
+        }
+        return memberDTO ;
+    }
+
+    //01.코드 검색 COMPANYCODE
+    public MemberDTO vendorNumCheck(String vendorCode) {
+        MemberDTO memberDTO = memberRepository.findByUserInfoCompany(vendorCode);
+        return memberDTO ;
+    }
+
+    //TODO : 사업자 번호 검색
+    //02.사업자 번호 검색 COMPANYCODE
+    public String businessNumCheck(String vendorCode) {
+//        MemberDTO memberDTO = memberRepository.findByComPanyCode(vendorCode);
 //        if (memberDTO == null) {
 //            return "ok";
 //        } else {
 //            return "no";
 //        }
-        return "ok";
+        return "no";
     }
 
 }
