@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class LoginController {
         return "/login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model, Authentication authentication) {
         boolean isSuccess = false;
         log.info("PostMapping:::::::::::::::");
@@ -36,12 +37,15 @@ public class LoginController {
             session.setAttribute("loginName", loginResult.getUSER_NAME());
             session.setAttribute("role", loginResult.getUSER_NAME());
 
+            //authentication.setAuthenticated(true);
+
             isSuccess = true;
 
             //log.info("authentication=="+authentication);
             //authentication.setAuthenticated(true);
+            log.info("authentication1======"+authentication);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("authentication======"+authentication);
+            log.info("authentication2======"+authentication);
 
             // 권한 가져오기
             model.addAttribute("role", "admin");
@@ -50,13 +54,14 @@ public class LoginController {
             return "main";
         } else {
             // login 실패
-            return "/login";
+            return "login";
         }
     }
 
     @GetMapping("/logout")
     public String logout(@ModelAttribute LoginDTO loginDTO, HttpSession session) {
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.info("authentication3======"+auth);
         // login 세션 삭제
         String sessionId = (String) session.getAttribute("loginId");
         session.removeAttribute(sessionId);
