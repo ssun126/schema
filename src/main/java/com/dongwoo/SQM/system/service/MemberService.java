@@ -58,9 +58,18 @@ public class MemberService {
         return memberRepository.findByUserId(loginId);
     }
 
+    public UserInfoDTO findByUserIdx(int loginIdx) {
+        return memberRepository.findByUserIdx(loginIdx);
+    }
+
+
     // 저장후 공동 사용자 만들어진 COMUSERIDX 받아오자.
     public UserInfoCompanyUserDTO findByCompanyUserName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.findByCompanyName(userInfoCompanyUserDTO);
+    }
+    // 공동 사용자 전체
+    public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return memberRepository.findByCompanyUserAll(userInfoCompanyUserDTO);
     }
 
     public MemberDTO findByMemberId(String loginId) {
@@ -122,18 +131,6 @@ public class MemberService {
     public MemberDTO vendorNumCheck(String vendorCode) {
         MemberDTO memberDTO = memberRepository.findByUserInfoCompany(vendorCode);
         return memberDTO ;
-    }
-
-    //TODO : 사업자 번호 검색
-    //02.사업자 번호 검색 COMPANYCODE
-    public String businessNumCheck(String vendorCode) {
-//        MemberDTO memberDTO = memberRepository.findByComPanyCode(vendorCode);
-//        if (memberDTO == null) {
-//            return "ok";
-//        } else {
-//            return "no";
-//        }
-        return "no";
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -244,7 +245,7 @@ public class MemberController {
 
 
     @PostMapping("/member/vendor-check")
-    public @ResponseBody Map<String, String> vendorCheck(@RequestParam("searchCode") String searchCode ,String searchType) {
+    public @ResponseBody Map<String, Object> vendorCheck(@RequestParam("searchCode") String searchCode ,String searchType) {
         System.out.println("vendorCode = " + searchCode);
 
         //마스터등록 여부 확인
@@ -253,12 +254,12 @@ public class MemberController {
         String checkResult = "N";
 
 
-        Map<String, String> response = new HashMap<>();
+        Map<String, Object> response = new HashMap<>();
 
 
         if(memberDTO != null) {
 
-            //등록중인건이 있는지 체크.
+            //등록중인건이 있는지 체크. USER_INFO_COMPANY
             MemberDTO comPanyDTO  = memberService.vendorNumCheck(searchCode);
 
             if(comPanyDTO == null ){
@@ -266,21 +267,34 @@ public class MemberController {
             }else {
                 USERSTATUS = comPanyDTO.getUSERSTATUS();
 
+                //USERINFO 를 검색하자.   USER_INFO_COMPANY.USERIDX
+                UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSERIDX());
+
+                //ID /PASS 업체 정보 바인딩 항목
+                response.put("USERID", userUserinfoDTO.getUSERID());
+                response.put("USERNAME", userUserinfoDTO.getUSERNAME());
+                response.put("USERPWD", userUserinfoDTO.getUSERPWD());
+                response.put("IDPWADDREASON", comPanyDTO.getIDPWADDREASON());
+
+
+                //공동 작업자 가져오기.   where.   밴더 코드 : COMCODE
+                UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+                parmaDTO.setCOMCODE(comPanyDTO.getCOMCODE()); //위에서 만들어진 사용자 IDX
+                List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserAll(parmaDTO);
+                response.put("companyUserList", companyUserList);
+
                 if(USERSTATUS.equals("2")) {
                     checkResult = "ok";  //기가입 업체.
                 }else{
                     //메세지 리턴.
                     switch(USERSTATUS) {
                         case "0":
-                            System.out.println("대기");
                             checkResult = "대기";
                             break;
                         case "1":
-                            System.out.println("검토중");
                             checkResult = "검토중";
                             break;
                         case "3":
-                            System.out.println("반려");
                             checkResult = "반려";
                             break;
                         default:
@@ -294,8 +308,9 @@ public class MemberController {
         }
 
         response.put("status", checkResult);
-        if(memberDTO != null ) {
-            //바인딩 항목
+        if(memberDTO != null ) { //마스터 등록이 있으면.
+
+            //업체 정보 바인딩 항목
             response.put("COMCODE", memberDTO.getCOMCODE()); //Vendor
             response.put("COMNAME", memberDTO.getCOMNAME()); //귀사정보
             response.put("VENDORWORKKIND", memberDTO.getVENDORWORKKIND()); //업종형태
@@ -307,11 +322,11 @@ public class MemberController {
             response.put("COMADDRESS", memberDTO.getCOMADDRESS());  //회사주소
             response.put("COMCEONAME", memberDTO.getCOMCEONAME());  //CEO 성명 (영문)
             response.put("COMCEOPHONE", memberDTO.getCOMCEOPHONE());  //CEO 연락처 (영문)
+            response.put("COMCEOEMAIL", memberDTO.getCOMCEOEMAIL());  //CEO e-mail (영문)
         }
-        //response.put("VENDORWORKKIND", memberDTO.getVENDORWORKKIND());  //접속목적
+        //response.put("VENDORWORKKIND", memberDTO.getVENDORWORKKIND());  //접속목적 코드화 받아서 동적 생성해야됨
 
         return response;
     }
-
 
 }

@@ -41,6 +41,7 @@ public class MemberRepository {
     //User ID 생성 된 USERIDX. 가져오기  10.23
     public UserInfoDTO findByUserId(String userId) { return sql.selectOne("Member.findByUserId", userId); }
 
+    public UserInfoDTO findByUserIdx(int userIdx) { return sql.selectOne("Member.findByUserIdx", userIdx); }
 
     //User 공동 사용자 정보 생성. 10.23
     public int companysave(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
@@ -66,6 +67,9 @@ public class MemberRepository {
     //public UserInfoCompanyUserDTO findByCompanyUserIdx(int userIdx) { return sql.selectOne("Member.findByCompanyUserIdx", userIdx); }
     //User ID 생성 된 COMUSERIDX. 공동 사용자 가져오기  10.24
     public UserInfoCompanyUserDTO findByCompanyName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) { return sql.selectOne("Member.findByCompanyUserName", userInfoCompanyUserDTO ); }
+    //공동 사용자 전체 가져오기  10.24
+    public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return sql.selectList("Member.findByCompanyUserAll", userInfoCompanyUserDTO ); }
 
 
     //최초가입 여부 (마스터 코드 등록여부) "COMCODE" 로 검색

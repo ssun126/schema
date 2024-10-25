@@ -18,6 +18,10 @@
     <select id="findByUserId" parameterType="String" resultType="userinfo">
         select * from USERINFO where USERID=#{userid}
     </select>
+    <!-- USERINFO 가입된정보 가져가기 -->
+    <select id="findByUserIdx" parameterType="Int" resultType="userinfo">
+        select * from USERINFO where USERIDX=#{useridx}
+    </select>
 
     <!-- USERINFOCOMPANYUSER  공동 작업자 저장!!-->
     <insert id="saveUserinfoCompanyUser" parameterType="userinfocom">
@@ -30,13 +34,17 @@
         select * from USERINFOCOMPANYUSER where COMCODE=#{COMCODE} and USERNAME=#{USERNAME}
     </select>
 
+    <!-- USERINFOCOMPANYUSER 가입된정보 공동 작업자 전체 가져오기 -->
+    <select id="findByCompanyUserAll" parameterType="String" resultType="userinfocom">
+        select * from USERINFOCOMPANYUSER where COMCODE=#{COMCODE}
+    </select>
+
 
     <!-- USERINFOCOMPANYUSER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
     <insert id="saveUserinfoCompanyHis" parameterType="userinfoHis">
         insert into USERINFOCOMPANY(USERIDX
         , COMCODE , COMUSERIDX , IDPWADDREASON ,USERSTATUS ,USEROKDATE , RETRUNREASON )
-        values ( (SELECT NVL(MAX(COMUSERIDX), 0) + 1 FROM USERINFOCOMPANY)
-        , #{COMCODE} ,#{COMUSERIDX} ,  #{IDPWADDREASON} , #{USERSTATUS} , #{USEROKDATE}, #{RETRUNREASON}  )
+        values ( #{USERIDX} , #{COMCODE} ,#{COMUSERIDX} ,  #{IDPWADDREASON} , #{USERSTATUS} , #{USEROKDATE}, #{RETRUNREASON} )
     </insert>
 
     <!-- updateCompanyCode COMPANYCODE 회사코드 업데이트-->
