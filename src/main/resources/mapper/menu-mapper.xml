@@ -10,7 +10,7 @@
     <select id="menu" parameterType="menu" resultType="menu">
         select * from SYS_MENU where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
     </select>
-    <select id="findAll" resultType="menu">
+    <select id="findAll" resultType="List">
         select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from SYS_MENU
     </select>
 

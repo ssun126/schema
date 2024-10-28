@@ -48,7 +48,10 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .permitAll());
+                        .permitAll())
+                .sessionManagement((auth)->auth
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(true));
 
         return http.build();
     }
