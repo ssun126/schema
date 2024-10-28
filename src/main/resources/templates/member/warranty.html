@@ -48,7 +48,7 @@
                     </div>
 
 
-                    <form id="approvalForm" onsubmit="handleSubmit(event)" action="/member/resubmit"  method="post"  class="cui_form_field" data-legend="true">
+                    <form id="approvalForm" onsubmit="handleSubmit(event)" action="/member/resubmit"  method="post" enctype="multipart/form-data" class="cui_form_field" data-legend="true">
 
                         <fieldset>
                             <legend><span>워런티 협약 상태</span></legend>
@@ -68,9 +68,15 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><p>2024-10-24</p></td>
-                                    <td><p>2024-10-24</p></td>
-                                    <td><p>검토중 Waitting</p></td>
+                                    <td><p name="COMAPPDATE" id="COMAPPDATE"> <span th:text="${memberDTO.COMAPPDATE}"></span> </p></td>
+                                    <td><p name="COMOKDATE" id="COMOKDATE"> <span th:text="${memberDTO.COMOKDATE}"></span> </p></td>
+                                    <td><p name="COMSTATUS" id="COMSTATUS"> <span th:text="${memberDTO.COMSTATUS}"></span> </p></td>
+
+                                    <!-- 값 제출용 숨겨진 input -->
+                                    <input type="hidden" name="COMAPPDATE" id="hiddenCOMAPPDATE">
+                                    <input type="hidden" name="COMOKDATE" id="hiddenCOMOKDATE">
+                                    <input type="hidden" name="COMSTATUS" id="hiddenCOMSTATUS">
+
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center" >
                                             <div class="item_content">
@@ -93,7 +99,7 @@
                     <div>
                         <div class="cui_bullet_title"><span>반려 사유</span></div>
                         <div class="cui_border_box">
-                            반려사유 내용 출력
+                            <p name="RETRUNREASON" id="RETRUNREASON"><span th:text="${memberDTO.RETRUNREASON}"></span> </p>
                         </div>
                     </div>
                 </div>
@@ -132,7 +138,8 @@
                             <div class="cui_items_wrap" data-direction="left">
                                 <div class="item_content">
                                     <div class="cui_attachments">
-                                        <input type="file" class="cui_file_field">
+                                        <input type="file" name ="COMFILENAME" id="COMFILENAME" th:field="*{memberDTO.COMFILENAME}" class="cui_file_field">
+                                        <input type="hidden" name ="COMFILEPATH" id="COMFILEPATH"  class="cui_file_field">
                                     </div>
                                 </div>
                             </div>
@@ -161,6 +168,13 @@
    }
 
    function handleSubmit(event) {
+
+       //
+       document.getElementById("hiddenCOMAPPDATE").value = document.getElementById("COMAPPDATE").textContent;
+       document.getElementById("hiddenCOMOKDATE").value = document.getElementById("COMOKDATE").textContent;
+       document.getElementById("hiddenCOMSTATUS").value = document.getElementById("COMSTATUS").textContent;
+
+
        document.getElementById('approvalForm').submit();
        //modal('dialog');
        alert("승인 요청 되었습니다.");
@@ -200,8 +214,9 @@
    //파일 저장
    function sevefile() {
        $("#dialog2").fadeOut()
-       alert("파일저장 경로 협의!")
+       //alert("파일저장 경로 협의!")
    }
+
    //파일 저장 닫기
    function sevefileClose() {
        $("#dialog2").fadeOut()

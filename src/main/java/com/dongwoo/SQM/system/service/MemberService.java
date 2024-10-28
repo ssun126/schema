@@ -113,6 +113,12 @@ public class MemberService {
         return memberRepository.findById(id);
     }
 
+    //warranty 조회
+    public MemberDTO getCOMPANYCODE(String searchCode ) {
+        MemberDTO memberDTO = memberRepository.findByComPanyCode(searchCode);
+        return memberDTO ;
+    }
+
 
     //00.최초 가입여부 (COMPANYCODE)검색 IF 받아서 기초정보만 있다.
     //없으면  - > 업체코드 내역이 없어 가입이 불가합니다.
@@ -127,7 +133,7 @@ public class MemberService {
         return memberDTO ;
     }
 
-    //01.코드 검색 COMPANYCODE
+    //01.코드 검색 USERINFOCOMPANY 진행중인 업체코드 COMCODE 등록 여부
     public MemberDTO vendorNumCheck(String vendorCode) {
         MemberDTO memberDTO = memberRepository.findByUserInfoCompany(vendorCode);
         return memberDTO ;

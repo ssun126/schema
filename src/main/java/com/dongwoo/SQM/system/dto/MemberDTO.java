@@ -20,7 +20,6 @@ public class MemberDTO {
     private String USER_NAME;
     private String USER_Mobile;
 
-
     private int USERIDX;
     private String USERID;
     private String USERPWD;  //비밀번호 (SHA 암호화)
@@ -31,7 +30,6 @@ public class MemberDTO {
     private String REGDWUSERIDX;
     private String UPDWUSERIDX;
     private String DELDWUSERIDX;
-
 
     private String USERPOSITION;
     private String USERDEPT;
@@ -59,13 +57,16 @@ public class MemberDTO {
     private String COMCEONAME	;
     private String COMCEOPHONE	;
     private String COMCEOEMAIL	;
+
     private String COMSTATUS	;
     private String COMAPPDATE	;
     private String COMOKDATE	;
     private String COMFILENAME	;
     private String COMFILEPATH	;
-    private int COMAUDITPOINT		;
+
+    private int COMAUDITPOINT	;
     private String COMAUDITLEVEL;
+
     private String TANTALUMYN;
     private String TUNGSTENYN;
     private String TINYN	;

@@ -112,18 +112,61 @@ public class MemberController {
 
     //회원 가입 정보 입력후 유효성 검사 완료 했을때  세션에 담고 다음버튼으로 warranty 페이지 이동
     @PostMapping("/member/warranty")
-    public String JoinWarranty(@ModelAttribute MemberDTO memberDTO, HttpSession session) {
-        session.setAttribute("joinData", memberDTO);
-        return "redirect:/member/warranty"; // warranty 페이지로 리다이렉트
+    public String JoinWarranty(@ModelAttribute MemberDTO memberDTO, HttpSession session , Model model) {
+        session.setAttribute("joinData", memberDTO);  //
+
+//기가입 정보 조회
+
+        MemberDTO comPanyDTO  = memberService.getCOMPANYCODE(memberDTO.getCOMCODE());
+
+
+        memberDTO.setCOMAPPDATE(comPanyDTO.getCOMAPPDATE()); //워런티 협약상태 제출일
+        memberDTO.setCOMOKDATE(comPanyDTO.getCOMOKDATE());  // 워런티 협약상태 승일일 또는 반려일
+        memberDTO.setCOMSTATUS(comPanyDTO.getCOMSTATUS());  // 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+
+        memberDTO.setCOMFILENAME(comPanyDTO.getCOMFILENAME());  // 워런티 파일 이름
+        memberDTO.setCOMFILEPATH(comPanyDTO.getCOMFILEPATH());  // 워런티 파일 Path
+
+        model.addAttribute("comPanyDTO", comPanyDTO);
+
+//
+        //return "redirect:/member/warranty"; // warranty 페이지로 리다이렉트
+        //제출일 ,승인일 ,관리상태  , 파일  ,  반려사유 리턴해서 보여줘야됨.
+
+        return "/member/warranty";
     }
 
 
     //파일 업로드 후 최종 제출
     @PostMapping("/member/resubmit")
-    public String resubmitData(HttpSession session,Model model,RedirectAttributes redirectAttributes) {
+    public String resubmitData(@ModelAttribute MemberDTO memberFileDTO , HttpSession session,Model model) {
 
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("joinData");
 
+        //세션 정보 삭제후 다시 들어온거..!!
+        if (session.getAttribute("joinData") != null) {
+            System.out.println("joinData 속성이 세션에 존재합니다.");
+        } else {
+            System.out.println("joinData 속성이 세션에 없습니다.");
+            return "/login";
+        }
+
+        memberDTO.setCOMFILENAME(memberFileDTO.getCOMFILENAME());
+        memberDTO.setCOMFILENAME("파일경로~");
+        //실제 파일 저장 처리//
+
+//TEST 2024.10.28 작업중.================================================================
+        session.removeAttribute("joinData");
+        model.addAttribute("승인 요청 되었습니다.", "저장완료");
+        //return "/member/warranty";
+
+        //return "redirect:/member/warranty";
+        return "member/warranty";
+
+//TEST //TEST 2024.10.28 작업중.=========================================================
+
+
+/*
         // 데이터 처리
         String COMCODE = memberDTO.getCOMCODE();
         String USERID = memberDTO.getUSERID();
@@ -224,14 +267,19 @@ public class MemberController {
         //업데이트
 
         // 세션에서 데이터 삭제
-        session.removeAttribute("data");
-
+        session.removeAttribute("joinData");
+        System.out.println("joinData 속성.세션 삭제");
+        
         //redirectAttributes.addFlashAttribute("message", "승인 요청 되었습니다.");
         model.addAttribute("승인 요청 되었습니다.", "저장완료");
         //return "/member/warranty";
 
         //return "redirect:/member/warranty";
         return "/login";
+
+
+
+ */
     }
 
 
