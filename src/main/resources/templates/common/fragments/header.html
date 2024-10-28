@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="kr"
       xmlns:th="http:www.thymeleaf.org"
-      th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml">
+      th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="cui_global">
         <h1 class="global_logo">
             <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
@@ -49,11 +49,11 @@
         <div class="global_utility">
             <div class="utility_profile" onclick="goMenu('/member/myPage')">
                 <div class="info">
-                    <strong><span id="logonName" th:text="${session.loginName}"></span></strong>
-                    <span th:text="${session.loginId}"></span>
+                    <strong><span id="logonName"  sec:authorize="isAuthenticated()" sec:authentication="name"></span></strong>
+                    <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
                 </div>
             </div>
-            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>
+            <button sec:authorize="isAuthenticated()" type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>
         </div>
     </div>
 <script>

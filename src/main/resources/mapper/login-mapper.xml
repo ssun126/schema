@@ -4,33 +4,33 @@
 
 <mapper namespace="Login">
     <insert id="save" parameterType="login">
-        insert into USER_INFO(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
+        insert into USR_INFO(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
         values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
     </insert>
 
     <select id="login" parameterType="login" resultType="login">
-        select * from USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
+        select * from USR_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
     </select>
     <select id="findAll" resultType="login">
-        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from USER_INFO
+        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from USR_INFO
     </select>
     <select id="findById" parameterType="String" resultType="member">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        select * from USR_INFO where USER_ID=#{USER_ID}
     </select>
     <delete id="delete" parameterType="String">
-        delete from USER_INFO where USER_ID=#{USER_ID}
+        delete from USR_INFO where USER_ID=#{USER_ID}
     </delete>
     <select id="findByLoginEmail" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_EMAIL=#{loginEmail}
+        select * from USR_INFO where USER_EMAIL=#{loginEmail}
     </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        select * from USR_INFO where USER_ID=#{USER_ID}
     </select>
     <select id="findByLoginName" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_NAME=#{USER_NAME}
+        select * from USR_INFO where USER_NAME=#{USER_NAME}
     </select>
     <update id="update" parameterType="login">
-        update USER_INFO set USER_Mobile=#{USER_Mobile}
+        update USR_INFO set USER_Mobile=#{USER_Mobile}
         where USER_IDX=#{USER_idx}
     </update>
 
