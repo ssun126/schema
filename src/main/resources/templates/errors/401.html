@@ -1,7 +1,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>403 Forbidden - 접근 금지됨</title>
+    <title>401 Unauthorized - 접근 거부됨</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,14 +45,14 @@
 </head>
 <body>
 <div class="error-container">
-    <h1>403</h1>
-    <p>접근이 금지되었습니다.</p>
-    <button class="back-button" onclick="goBack()">뒤로 가기</button>
+    <h1>401</h1>
+    <p>접근이 거부되었습니다</p>
+    <button class="back-button" onclick="fn_go_login()">뒤로 가기</button>
 </div>
 
 <script>
-    function goBack() {
-        window.history.back();
+    function fn_go_login() {
+        location.href = "/login";
     }
 </script>
 </body>
