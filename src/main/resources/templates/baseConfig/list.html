@@ -77,7 +77,7 @@
                                     <div class="item_content">
                                         <select class="cui_select_field wide" name="gubun">
                                             <option value="">전체</option>
-                                            <option value="basic">기초</option>
+                                            <option value="Basic">기초</option>
                                         </select>
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                            <button type="button" class="cui_button secondary" onclick="modal('PopupBaseConfig')"><span>추가</span></button>
+                         <button type="button" class="cui_button secondary" onclick="modal('PopupBaseConfig','add')"><span>추가</span></button>
 <!--                            <button type="button" class="cui_button secondary" onclick="BaseConfig_Popup()"><span>추가</span></button>-->
 
                         </div>
@@ -129,27 +129,27 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="baseConfigList : ${baseConfigList}">
-                                <td style="display:none;" th:text="${baseConfigList.IDX}"><span></span></td>
-                                <td th:text="${baseConfigList.GUBN}"><span></span></td>
-<!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
-                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="modal('PopupBaseConfig')"></button></td>
-                                <td th:text="${baseConfigList.CONFIGVALUE}"><span></span></td>
-                                <td th:text="${baseConfigList.CONFIGSUMMARY}"><span></span></td>
-                                <td th:text="${baseConfigList.USERNAME}"><span></span></td>
-                                <td th:text="${baseConfigList.CONFIGSTATUS}"><span></span></td>
-                                <td th:text="${baseConfigList.REGDATE}"><span></span></td>
+                        <tr th:each="baseConfigList : ${baseConfigList}">
+                            <td style="display:none;" th:text="${baseConfigList.IDX}"><span></span></td>
+                            <td th:text="${baseConfigList.GUBN}"><span></span></td>
+                            <!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
+                            <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" th:onclick="modal('PopupBaseConfig',[[${baseConfigList.IDX}]])"></button></td>
+                            <td th:text="${baseConfigList.CONFIGVALUE}"><span></span></td>
+                            <td th:text="${baseConfigList.CONFIGSUMMARY}"><span></span></td>
+                            <td th:text="${baseConfigList.USERNAME}"><span></span></td>
+                            <td th:text="${baseConfigList.CONFIGSTATUS}"><span></span></td>
+                            <td th:text="${baseConfigList.REGDATE}"><span></span></td>
 
-                            </tr>
-<!--                        <tr>-->
-<!--                            <td><span>기본</span></td>-->
-<!--                            <td><button type="button" class="cui_button endpoint">key1</button></td>-->
-<!--                            <td><span>Y</span></td>-->
-<!--                            <td><span>기본 key 설명</span></td>-->
-<!--                            <td><span>홍길동</span></td>-->
-<!--                            <td><span>사용</span></td>-->
-<!--                            <td><span>2024-08-29</span></td>-->
-<!--                        </tr>-->
+                        </tr>
+                        <!--                        <tr>-->
+                        <!--                            <td><span>기본</span></td>-->
+                        <!--                            <td><button type="button" class="cui_button endpoint">key1</button></td>-->
+                        <!--                            <td><span>Y</span></td>-->
+                        <!--                            <td><span>기본 key 설명</span></td>-->
+                        <!--                            <td><span>홍길동</span></td>-->
+                        <!--                            <td><span>사용</span></td>-->
+                        <!--                            <td><span>2024-08-29</span></td>-->
+                        <!--                        </tr>-->
                         </tbody>
                     </table>
                 </div>
@@ -161,7 +161,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label">PARTNER ID/PW 찾기</div>
+                <div class="main_label">기초설정</div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
@@ -169,24 +169,51 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true">
+                <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/baseconfig/action">
                     <fieldset>
-                        <legend><span>ID 찾기</span></legend>
+<!--                        <legend><span>ID 찾기</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">영문이름</strong>
+                            <strong class="item_label">구분</strong>
                             <div class="item_content">
-                                <input type="text" class="cui_text_field">
+                                <select class="cui_select_field wide" name="GUBN">
+                                    <option value="Basic">기초</option>
+                                </select>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">이메일</strong>
+                            <strong class="item_label">설정키</strong>
                             <div class="item_content">
-                                <input type="email" class="cui_text_field">
+                                <input name="CONFIGCODE" class="cui_text_field fixdata">
                             </div>
                         </label>
-                        <div class="cui_items_wrap" data-direction="center">
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">설정값</strong>
                             <div class="item_content">
-                                <button type="button" class="cui_button primary"><span>추가</span></button>
+                                <input name="CONFIGVALUE" class="cui_text_field ">
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">상태</strong>
+                            <div class="item_content">
+                                <select class="cui_select_field wide " name="CONFIGSTATUS">
+                                    <option value="Y">Y</option>
+                                    <option value="N">N</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">설명</strong>
+                            <div class="item_content">
+                                <textarea  style="height:80px;" class="cui_text_field" name="CONFIGSUMMARY"></textarea>
+                                <input name="USERID" style="display:none;">
+                                <input name="IDX" value=0 style="display:none;">
+                            </div>
+                        </label>
+                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                            <div class="item_content">
+                                <button type="submit" id="ConfigAdd" name="INFOFLAG" value="Add" class="cui_button primary"><span>추가</span></button>
+                                <button type="submit" id="ConfigMod" name="INFOFLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
+                                <button type="submit" id="ConfigDel" name="INFOFLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -203,9 +230,77 @@
         window.open(openUrl, 'BaseConfig', popOption);
     }
 
+    //모달 초기화
+    function modal_init(flag){
+        if(flag=="MODIFY"){
+           $(".fixdata").attr("readonly",true);
+           //버튼 바꾸기
+             $("#ConfigAdd").css("display","none");
+            $("#ConfigMod").css("display","block");
+            $("#ConfigDel").css("display","block");
+
+        }else{
+            //초기화
+            document.getElementsByName("CONFIGCODE")[0].value = "";
+            document.getElementsByName("CONFIGVALUE")[0].value = "";
+            document.getElementsByName("CONFIGSUMMARY")[0].value = "";
+            $("select[name=GUBN] option:eq(0)").prop("selected", true);
+            $("select[name=CONFIGSTATUS] option:eq(0)").prop("selected", true);
+            $(".fixdata").attr("readonly",false);
+
+            //버튼 바꾸기
+            $("#ConfigAdd").css("display","block");
+            $("#ConfigMod").css("display","none");
+            $("#ConfigDel").css("display","none");
+        }
+
+    }
+
+
     //모달 열기
-    function modal(id){
-      $("#" + id).fadeIn()
+    function modal(id, status){
+      if(status !='add'){
+       var sUrl = "/baseConfig/baseConfig_Info" ;
+
+        $.ajax({
+          type: "post",
+          url:   sUrl,
+          data: {
+              "status": status
+          },
+          success: function(res) {
+              console.log("요청성공", res);
+
+              if (res.status == "ok") {
+                //공동업무자정보
+                //ID /PASS
+                bindBasConfigInfo(res);           //정보 바인딩. ★
+                $("#" + id).fadeIn();
+                modal_init("MODIFY");
+
+              }
+          },
+          error: function(err) {
+              console.log("에러발생", err);
+          }
+        });
+      }else{
+        modal_init();
+        $("#" + id).fadeIn();
+      }
+    }
+
+    function bindBasConfigInfo(baseConfig){
+        if(baseConfig != null){
+            document.getElementsByName("CONFIGCODE")[0].value = baseConfig.CONFIGCODE ;
+            document.getElementsByName("CONFIGVALUE")[0].value = baseConfig.CONFIGVALUE ;
+            document.getElementsByName("CONFIGSUMMARY")[0].value = baseConfig.CONFIGSUMMARY ;
+            document.getElementsByName("IDX")[0].value = baseConfig.IDX ;
+
+            $("select[name=GUBN]").val(baseConfig.GUBN).prop("selected", true);
+            $("select[name=STATUS]").val(baseConfig.CONFIGSTATUS).prop("selected", true);
+
+        }
     }
 
     //모달 닫기
@@ -213,6 +308,7 @@
       e.preventDefault();
       const modal = $(this).parents('.cui_dialog');
       modal.fadeOut();
+      modal_init();
     });
 
     //검색

@@ -5,14 +5,19 @@ import com.dongwoo.SQM.siteMgr.service.BaseConfigService;
 import com.fasterxml.jackson.annotation.JsonTypeId;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -50,9 +55,61 @@ public class BaseConfigController {
         return "/baseConfig/list";
     }
 
-    @GetMapping("/BaseConfig/Popup")
-    public String baseConfig_Popup(){
-        return "/baseConfig/BaseConfigPopUp";
+    @RequestMapping(value = "/BaseConfig/Popup",method = RequestMethod.GET)
+    public ModelAndView baseConfig_Popup(Locale locale, Model model){
+        String returnUrl = "/baseConfig/BaseConfigPopUp";
+        ModelAndView mav = new ModelAndView(returnUrl);
+        return mav;
     }
+
+
+    @PostMapping("/baseConfig/baseConfig_Info")
+    public @ResponseBody Map<String, String> getBaseConfig_Info(@RequestParam("status") String idx) {
+        System.out.println("status = " + idx);
+        BaseConfigDTO baseConfigDTO = BaseConfigService.getBaseConfig_Info(idx);
+        log.info("================test22222222aa");
+
+        HashMap<String,String> response = new HashMap<>();
+
+        if(baseConfigDTO != null) {
+            response.put("status", "ok");
+            response.put("IDX", String.valueOf(baseConfigDTO.getIDX()));
+            response.put("GUBN", String.valueOf(baseConfigDTO.getGUBN()));
+            response.put("CONFIGCODE", String.valueOf(baseConfigDTO.getCONFIGCODE()));
+            response.put("CONFIGVALUE", String.valueOf(baseConfigDTO.getCONFIGVALUE()));
+            response.put("CONFIGSUMMARY", String.valueOf(baseConfigDTO.getCONFIGSUMMARY()));
+            response.put("CONFIGSTATUS", String.valueOf(baseConfigDTO.getCONFIGSTATUS()));
+        }
+        return response;
+    }
+
+    @GetMapping("/baseconfig/action")
+    public String save(@ModelAttribute BaseConfigDTO baseConfigDTO,HttpSession session) {
+        log.info("test111111");
+        log.info(baseConfigDTO.getUSERID());
+        String sUserID = (String) session.getAttribute("loginId");
+        if(sUserID==null) sUserID="1";
+        log.info(sUserID);
+        baseConfigDTO.setUSERID(sUserID);
+
+        //String sFlag = httpServletRequest.getParameter("baseConfigFlag");
+        String sFlag = baseConfigDTO.getINFOFLAG();
+        log.info(sFlag);
+        // add : 추가, Mod : 수정, Del :  삭제
+        if(sFlag.equals("Add")) {
+            log.info("test= 추가");
+            BaseConfigService.save(baseConfigDTO);
+            log.info("test= 추가끝");
+        }else if(sFlag.equals("Mod")){
+            BaseConfigService.update(baseConfigDTO);
+        }else{
+            int sidx = baseConfigDTO.getIDX();
+            BaseConfigService.delete(sidx);
+        }
+
+
+        return  "redirect:/siteMgr/baseConfig";
+    }
+
 
 }
