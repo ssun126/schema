@@ -2,7 +2,6 @@ package com.dongwoo.SQM.siteMgr.controller;
 
 import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.service.BaseConfigService;
-import com.fasterxml.jackson.annotation.JsonTypeId;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
