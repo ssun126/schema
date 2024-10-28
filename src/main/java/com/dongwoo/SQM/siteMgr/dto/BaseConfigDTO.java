@@ -21,5 +21,7 @@ public class BaseConfigDTO {
     private String REGDATE;
     private String MODIFIDATE;
     private String USERNAME;
+    private String USERID;
+    private String INFOFLAG;
 
 }
