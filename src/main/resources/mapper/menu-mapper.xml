@@ -10,8 +10,12 @@
     <select id="menu" parameterType="menu" resultType="menu">
         select * from SYS_MENU where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
     </select>
-    <select id="findAll" resultType="List">
-        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from SYS_MENU
+    <select id="getAllMenu" resultType="HashMap">
+        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from MENUS ORDER BY PAGE_IDX
+    </select>
+
+    <select id="getAllSubMenu" resultType="HashMap">
+        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from SUB_MENU
     </select>
 
     <delete id="delete" parameterType="int">

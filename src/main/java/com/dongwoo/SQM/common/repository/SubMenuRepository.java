@@ -10,12 +10,12 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class SecurityUrlMatcherRepository {
+public class SubMenuRepository {
 
     private final SqlSessionTemplate sql;
 
 
-    public List<SecurityUrlMatcherDTO> getAllMenu() {
-        return sql.selectList("Menu.getAllMenu");
+    public List<SecurityUrlMatcherDTO> getAllSubMenu() {
+        return sql.selectList("Menu.getAllSubMenu");
     }
 }

@@ -30,9 +30,8 @@ public class AccountService  implements UserDetailsService {
         LoginDTO account = new LoginDTO();
         account.setUSER_ID(username);
         account = userMapper.findByLoginId(username);
-        log.info("account======="+account);
         if(account != null){
-            List<GrantedAuthority> authorities = new ArrayList();
+            List<GrantedAuthority> authorities = new ArrayList<>();
             //패스워드 암호화 저장이 되지 않아 여기서 암호화하여 넘겨줌(임시)
             return new User(account.getUSER_ID(), encoder.encode(account.getPassword()), authorities);
         }

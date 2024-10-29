@@ -38,6 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**").permitAll() //resource 허용
                         .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**").permitAll()
+                        // 관리자 권한만 가능
+                        .requestMatchers("/dwuser/**").hasRole("dwuser")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -48,10 +50,12 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout") // 로그아웃 후 리다이렉트할 URL
+                        .invalidateHttpSession(true) // 세션 무효화
                         .permitAll())
                 .sessionManagement((auth)->auth
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(true));
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(true)); // 추가 로그인 차단
 
         return http.build();
     }
