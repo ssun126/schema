@@ -4,26 +4,72 @@
 
 <mapper namespace="BaseCode">
     <insert id="save" parameterType="baseCode">
-        insert into SYS_BASE_CODE(CODEGROUP, CODE, CODENAME, SORTKEY)
-        values (#{CODEGROUP}, #{CODE}, #{CODENAME}, #{SORTKEY})
+        INSERT INTO BASE_CODE(BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,REG_DW_USER_IDX,UP_DW_USER_IDX ,REG_DATE,UP_DATE,BASE_OPTION)
+        VALUES (SEQ_BASECODE.NEXTVAL, #{GROUP_CODE},#{GUBN},#{BASE_CODE},#{BASE_NAME},#{BASE_VALUE},#{BASE_SUMMARY},#{BASE_STATUS},#{BASE_SORT},#{REG_DW_USER_IDX},#{UP_DW_USER_IDX},to_date(sysdate,'yyyy-mm-dd hh24:mi:SS'),to_date(sysdate,'yyyy-mm-dd hh24:mi:SS'),#{BASE_OPTION})
     </insert>
     <select id="baseCode" parameterType="baseCode" resultType="baseCode">
-        select * from SYS_BASE_CODE where CODEGROUP=#{CODEGROUP} and ISUSE ='Y'
+        select * from BASE_CODE where CODEGROUP=#{CODEGROUP}
     </select>
     <select id="findAll" resultType="baseCode">
-        select CODEGROUP, CODE, CODENAME, SORTKEY from SYS_BASE_CODE
+        SELECT BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,ui.USERNAME as REGISTER_NAME ,bc.REG_DATE ,BASE_OPTION
+        FROM base_code bc
+        INNER JOIN USERINFO ui ON bc.REG_DW_USER_IDX = ui.USERIDX
+
     </select>
+    <select id="getBaseCode_Info" parameterType="String" resultType="baseCode">
+        select BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,u.USERNAME as REGISTER_NAME ,b.REG_DATE ,BASE_OPTION
+         FROM BASE_CODE b
+        LEFT OUTER JOIN USERINFO u
+        ON b.BASE_CODE_IDX = u.USERIDX where BASE_CODE_IDX = #{idx}
+    </select>
+
     <delete id="delete" parameterType="int">
-        delete from SYS_BASE_CODE where CODEID=#{CODEID}
+        delete from BASE_CODE where BASE_CODE_IDX=#{BASE_CODE_IDX}
     </delete>
+
+    <update id="update" parameterType="baseCode">
+        update BASE_CODE
+        set GUBN=#{GUBN},BASE_NAME=#{BASE_NAME},BASE_VALUE=#{BASE_VALUE}
+        ,BASE_SUMMARY=#{BASE_SUMMARY},BASE_STATUS=#{BASE_STATUS},BASE_SORT=#{BASE_SORT}
+        ,UP_DW_USER_IDX=#{REG_DW_USER_IDX},UP_DATE=to_date(sysdate,'yyyy-mm-dd hh24:mi:SS')
+        ,BASE_OPTION =#{BASE_OPTION}
+        where BASE_CODE_IDX=#{BASE_CODE_IDX}
+    </update>
+
+    <select id="getbaseGubunList" resultType="baseCode">
+        SELECT BASE_CODE, BASE_NAME FROM BASE_CODE bc
+        WHERE GROUP_CODE != BASE_CODE AND BASE_OPTION = 'SYSTEM'
+        ORDER BY BASE_SORT
+    </select>
+
+    <select id = "getbaseGroupCDList" resultType="baseCode">
+        SELECT GROUP_CODE, BASE_NAME FROM BASE_CODE bc WHERE GROUP_CODE = BASE_CODE
+    </select>
+
+
+
+    <select id="findSearch" parameterType="hashMap" resultType="baseCode">
+        SELECT BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,ui.USERNAME as REGISTER_NAME ,bc.REG_DATE ,BASE_OPTION
+        FROM base_code bc
+        INNER JOIN USERINFO ui ON bc.REG_DW_USER_IDX = ui.USERIDX
+        WHERE 1=1
+        <if test="gubun != '' ">
+            and GUBN = #{gubun}
+        </if>
+        <if test="key.equals('key') and textval != ''">
+            and GROUP_CODE like '%' ||  #{textval} || '%'
+        </if>
+        <if test="key.equals('val') and textval != ''">
+            and BASE_CODE like '%' ||  #{textval} || '%'
+        </if>
+
+    </select>
+
+
     <select id="findByCodeName" parameterType="baseCode" resultType="baseCode">
         select * from SYS_BASE_CODE where CODENAME LIKE '%' || #{CODENAME} ||'%'
     </select>
     <select id="findByCodeGroup" parameterType="baseCode" resultType="baseCode">
         select * from SYS_BASE_CODE where CODEGROUP LIKE '%' || #{CODEGROUP} ||'%'
     </select>
-    <update id="update" parameterType="baseCode">
-        update SYS_BASE_CODE set CODE=#{CODE}
-        where CODEID=#{CODEID}
-    </update>
 </mapper>
