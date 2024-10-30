@@ -29,7 +29,8 @@ public class LoginController {
     @PostMapping("/auth/login")
     public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model, Authentication authentication) {
         boolean isSuccess = false;
-        log.info("PostMapping:::::::::::::::");
+        log.info("PostMapping:::::::::::::::"+loginDTO);
+
         LoginDTO loginResult = loginService.login(loginDTO);
         if (loginResult != null) {
             // login 성공

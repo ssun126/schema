@@ -34,7 +34,7 @@ public class AccountService  implements UserDetailsService {
         if(account != null){
             List<GrantedAuthority> authorities = new ArrayList();
             //패스워드 암호화 저장이 되지 않아 여기서 암호화하여 넘겨줌(임시)
-            return new User(account.getUSER_ID(), encoder.encode(account.getPassword()), authorities);
+            return new User(account.getUSER_ID(), encoder.encode(account.getUSER_PWD()), authorities);
         }
         return null;
     }

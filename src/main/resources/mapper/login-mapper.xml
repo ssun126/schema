@@ -4,15 +4,15 @@
 
 <mapper namespace="Login">
     <insert id="save" parameterType="login">
-        insert into USER_INFO(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
-        values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
+        insert into USER_INFO(USER_EMAIL, USER_PWD, USER_NAME)
+        values (#{USER_EMAIL}, #{USER_PWD}, #{USER_NAME})
     </insert>
 
     <select id="login" parameterType="login" resultType="login">
-        select * from USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
+        select * from USER_INFO where USER_ID=#{USER_ID} and USER_PWD=#{USER_PWD}
     </select>
     <select id="findAll" resultType="login">
-        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from USER_INFO
+        select USER_EMAIL, USER_PWD, USER_NAME, USER_Mobile from USER_INFO
     </select>
     <select id="findById" parameterType="String" resultType="member">
         select * from USER_INFO where USER_ID=#{USER_ID}
@@ -21,7 +21,7 @@
         delete from USER_INFO where USER_ID=#{USER_ID}
     </delete>
     <select id="findByLoginEmail" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_EMAIL=#{loginEmail}
+        select * from USER_INFO where USER_EMAIL=#{USER_EMAIL}
     </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
         select * from USER_INFO where USER_ID=#{USER_ID}
