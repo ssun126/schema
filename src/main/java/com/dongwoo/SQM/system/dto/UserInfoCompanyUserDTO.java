@@ -9,15 +9,15 @@ import lombok.ToString;
 @ToString
 public class UserInfoCompanyUserDTO {
 
-   //USERINFOCOMPANYUSER
-   private int  COMUSERIDX;    //공동 사용자 idx
-   private int  USERIDX		;   //로그인 사용자.
-   private String  COMCODE	;    // 업체코드 (벤더코드)
-   private String  USERNAME	;
-   private String  USERPOSITION;
-   private String  USERDEPT		;
-   private String  USEREMAIL	;
-   private String  USERPHONE;
+   //USER_INFO_COMPANY_USER
+   private int  COM_USER_IDX;    //공동 사용자 idx
+   private int  USER_IDX		;   //로그인 사용자.
+   private String  COM_CODE	;    // 업체코드 (벤더코드)
+   private String  USER_NAME	;
+   private String  USER_POSITION;
+   private String  USER_DEPT	;
+   private String  USER_EMAIL	;
+   private String  USER_PHONE   ;
 
 }
 

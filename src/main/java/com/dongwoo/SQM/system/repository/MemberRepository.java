@@ -30,29 +30,48 @@ public class MemberRepository {
         sql.delete("Member.delete", id);
     }
 
-
-
     //User ID 생성. 10.23
     public int save(UserInfoDTO userInfoDTO) {
         System.out.println("userInfoDTO = " + userInfoDTO);
-        return sql.insert("Member.saveUserinfo", userInfoDTO);
+
+        UserInfoDTO findUserDto = sql.selectOne("Member.findByUserId", userInfoDTO);
+
+        if(findUserDto == null) {
+            return sql.insert("Member.saveUserinfo", userInfoDTO);
+        }else {
+            return sql.update("Member.updateUserinfo", userInfoDTO);
+        }
     }
 
-    //User ID 생성 된 USERIDX. 가져오기  10.23
+    //User ID 생성 된 USER_IDX. 가져오기  10.23
     public UserInfoDTO findByUserId(String userId) { return sql.selectOne("Member.findByUserId", userId); }
 
-    public UserInfoDTO findByUserIdx(int userIdx) { return sql.selectOne("Member.findByUserIdx", userIdx); }
+    public UserInfoDTO findByUserIdx(int USER_IDX) { return sql.selectOne("Member.findByUserIdx", USER_IDX); }
 
     //User 공동 사용자 정보 생성. 10.23
-    public int companysave(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
-        System.out.println("userInfoCompanyUserDTO = " + userInfoCompanyUserDTO);
-        return sql.insert("Member.saveUserinfoCompanyUser", userInfoCompanyUserDTO);
+    public int saveCompanyUser(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+
+        // 여기서 키값은  회사번호 COM_CODE , 사용자명 USER_NAME 으로 검색해서.
+        UserInfoCompanyUserDTO findCompanyUserDto = sql.selectOne("Member.findByCompanyUserName", userInfoCompanyUserDTO );
+        if(findCompanyUserDto == null) {
+            return sql.insert("Member.saveUserinfoCompanyUser", userInfoCompanyUserDTO);
+        }else {
+            userInfoCompanyUserDTO.setCOM_USER_IDX(findCompanyUserDto.getCOM_USER_IDX()); //기존 유저 COM_USER_IDX 설정
+            return sql.update("Member.updateUserinfoCompanyUser", userInfoCompanyUserDTO);
+            //가입-> 수정시 공동 사용자가 지워지는 경우 생각해보자!!
+        }
     }
 
     //User history. 10.23
     public int saveUserinfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
-        System.out.println("userInfoCompanyUserDTO = " + userInfoCompanyDTO);
-        return sql.insert("Member.saveUserinfoCompanyHis", userInfoCompanyDTO);
+
+        MemberDTO finduserInfoCompanyDTO = sql.selectOne("Member.findByUserInfoCompany", userInfoCompanyDTO.getCOM_CODE());
+        if(finduserInfoCompanyDTO == null) {
+            return sql.insert("Member.saveUserinfoCompanyHis", userInfoCompanyDTO);
+        }else {
+            return sql.update("Member.updateUserinfoCompanyHis", userInfoCompanyDTO);
+        }
+
     }
 
     //User history. 10.23
@@ -63,24 +82,26 @@ public class MemberRepository {
 
 
 
-    //User ID 생성 된 USERIDX. 가져오기  10.23
-    //public UserInfoCompanyUserDTO findByCompanyUserIdx(int userIdx) { return sql.selectOne("Member.findByCompanyUserIdx", userIdx); }
-    //User ID 생성 된 COMUSERIDX. 공동 사용자 가져오기  10.24
-    public UserInfoCompanyUserDTO findByCompanyName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) { return sql.selectOne("Member.findByCompanyUserName", userInfoCompanyUserDTO ); }
+    //User ID 생성 된 USER_IDX. 가져오기  10.23
+    //public UserInfoCompanyUserDTO findByCompanyUSER_IDX(int USER_IDX) { return sql.selectOne("Member.findByCompanyUSER_IDX", USER_IDX); }
+    //User ID 생성 된 COM_USER_IDX. 공동 사용자 가져오기  10.24
+    public UserInfoCompanyUserDTO findByCompanyUserName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return sql.selectOne("Member.findByCompanyUserName", userInfoCompanyUserDTO );
+    }
     //공동 사용자 전체 가져오기  10.24
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return sql.selectList("Member.findByCompanyUserAll", userInfoCompanyUserDTO ); }
 
 
-    //최초가입 여부 (마스터 코드 등록여부) "COMCODE" 로 검색
-    public MemberDTO findByComPanyCode(String comCode) { return sql.selectOne("Member.findByComPanyCode", comCode); }
+    //최초가입 여부 (마스터 코드 등록여부) "COM_CODE" 로 검색
+    public MemberDTO findByComPanyCode(String COM_CODE) { return sql.selectOne("Member.findByCompanyCode", COM_CODE); }
 
-    //최초가입 여부 (마스터 코드 등록여부) "BUSNUMBER" 로 검색
-    public MemberDTO findByBusNumber(String busNumber) { return sql.selectOne("Member.findByBusNumber", busNumber); }
+    //최초가입 여부 (마스터 코드 등록여부) "BUS_NUMBER" 로 검색
+    public MemberDTO findByBUS_NUMBER(String BUS_NUMBER) { return sql.selectOne("Member.findByBUSNUMBER", BUS_NUMBER); }
 
 
     //USERINFOCOMPANY
-    public MemberDTO findByUserInfoCompany(String comCode) { return sql.selectOne("Member.findByUserInfoCompany", comCode); }
+    public MemberDTO findByUserInfoCompany(String COM_CODE) { return sql.selectOne("Member.findByUserInfoCompany", COM_CODE); }
 
     //ID 중복체크
     public MemberDTO findByMemberId(String loginId) { return sql.selectOne("Member.findByMemberId", loginId); }

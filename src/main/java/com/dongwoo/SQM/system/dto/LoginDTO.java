@@ -24,7 +24,7 @@ public class LoginDTO implements UserDetails {
    //USERINFO
    private int USERIDX;
    private String USERID;
-   private String USERPWD;  //비밀번호 (SHA 암호화)
+   private String USER_PWD;  //비밀번호 (SHA 암호화)
    private String USERNAME;
    private String USERGUBN; //(0:동우화인켐, 1:업체)
 

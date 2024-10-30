@@ -9,70 +9,70 @@ import lombok.ToString;
 @ToString
 public class MemberDTO {
 
-    private String REGDATE	;
+    private String REG_DATE	;
     private String UPDATE	;
-    private String DELDATE	;
+    private String DEL_DATE	;
 
-    private int USER_idx;
+   // private int USER_idx;
     private String USER_ID;
     private String USER_EMAIL;
     private String PASSWORD;
-    private String USER_NAME;
+    //private String USER_NAME;
     private String USER_Mobile;
 
-    private int USERIDX;
-    private String USERID;
-    private String USERPWD;  //비밀번호 (SHA 암호화)
-    private String USERNAME;
-    private String USERGUBN; //(0:동우화인켐, 1:업체)
+    private int USER_IDX;
+    //private String USERID;
+    private String USER_PWD;  //비밀번호 (SHA 암호화)
+    private String USER_NAME;
+    private String USER_GUBN; //(0:동우화인켐, 1:업체)
 
-    private String USERSTATUS; // 사용자 상태 (Y:사용, N:미사용)
-    private String REGDWUSERIDX;
-    private String UPDWUSERIDX;
-    private String DELDWUSERIDX;
+    private String USER_STATUS; // 사용자 상태 (Y:사용, N:미사용)
+    private String REG_DW_USER_IDX;
+    private String UP_DW_USER_IDX;
+    private String DEL_DW_USER_IDX;
 
-    private String USERPOSITION;
-    private String USERDEPT;
-    private String USEREMAIL;
-    private String USERPHONE;
+    private String USER_POSITION;
+    private String USER_DEPT;
+    //private String USER_EMAIL;
+    private String USER_PHONE;
     private String USERSELECT;  //선택
 
-    private String COMCODE;  // 업체코드 (벤더코드) ★
-    private int COMUSERIDX;
+    private String COM_CODE;  // 업체코드 (벤더코드) ★
+    private int COM_USER_IDX;
 
-    private String IDPWADDREASON;
-    private String USEROKDATE;
-    private String RETRUNREASON;
+    private String ID_PW_ADD_REASON;
+    private String USER_OK_DATE;
+    private String RETURN_REASON;
 
-    private String COMNAME	;
-    private String COMNATION;
-    private String USEYN	;
+    private String COM_NAME	;
+    private String COM_NATION;
+    private String COM_STATUS	;
 
-    private String VENDORWORKKIND;
+    private String VENDOR_WORK_KIND;
 
-    private String COMPANYNAME	;
-    private String FACTORYNAME	;
-    private String BUSNUMBER	;
-    private String COMADDRESS	;
-    private String COMCEONAME	;
-    private String COMCEOPHONE	;
-    private String COMCEOEMAIL	;
+    private String COMPANY_NAME	;
+    private String FACTORY_NAME	;
+    private String BUS_NUMBER	;
+    private String COM_ADDRESS	;
+    private String COM_CEO_NAME	;
+    private String COM_CEO_PHONE	;
+    private String COM_CEO_EMAIL	;
 
-    private String COMSTATUS	;
-    private String COMAPPDATE	;
-    private String COMOKDATE	;
-    private String COMFILENAME	;
-    private String COMFILEPATH	;
+    private String COM_MANAGE_STATUS	;
+    private String COM_APP_DATE	;
+    private String COM_OK_DATE	;
+    private String COM_FILE_NAME	;
+    private String COM_FILE_PATH	;
 
-    private int COMAUDITPOINT	;
-    private String COMAUDITLEVEL;
+    private int COM_AUDIT_POINT	;
+    private String COM_AUDIT_LEVEL;
 
-    private String TANTALUMYN;
-    private String TUNGSTENYN;
-    private String TINYN	;
-    private String GOLDYN	;
-    private String COBALTYN	;
-    private String MICAYN	;
+    private String TANTALUM_YN;
+    private String TUNGSTEN_YN;
+    private String TIN_YN	;
+    private String GOLD_YN	;
+    private String COBALT_YN	;
+    private String MICA_YN	;
 
 }
 

@@ -53,7 +53,7 @@ public class MemberService {
     }
 
 
-    // 저장후 만들어진 USERIDX 받아오자.
+    // 저장후 만들어진 USER_IDX 받아오자.
     public UserInfoDTO findByUserId(String loginId) {
         return memberRepository.findByUserId(loginId);
     }
@@ -63,9 +63,9 @@ public class MemberService {
     }
 
 
-    // 저장후 공동 사용자 만들어진 COMUSERIDX 받아오자.
+    // 저장후 공동 사용자 만들어진 COM_USER_IDX 받아오자.
     public UserInfoCompanyUserDTO findByCompanyUserName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
-        return memberRepository.findByCompanyName(userInfoCompanyUserDTO);
+        return memberRepository.findByCompanyUserName(userInfoCompanyUserDTO);
     }
     // 공동 사용자 전체
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
@@ -81,9 +81,9 @@ public class MemberService {
         return memberRepository.save(userInfoDTO);
     }
 
-    //공동 사용자 저장 company
+    //공동 사용자 저장 USER_INFO_COMPANY_USER
     public int saveUserInfoCompany(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
-        return memberRepository.companysave(userInfoCompanyUserDTO);
+        return memberRepository.saveCompanyUser(userInfoCompanyUserDTO);
     }
 
     //사용자 추가정보 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  정보 저장. company
@@ -128,12 +128,12 @@ public class MemberService {
         if(Objects.equals(searchType, "VendorNum")) {
             memberDTO = memberRepository.findByComPanyCode(searchCode);
         }else {
-            memberDTO = memberRepository.findByBusNumber(searchCode);
+            memberDTO = memberRepository.findByBUS_NUMBER(searchCode);
         }
         return memberDTO ;
     }
 
-    //01.코드 검색 USERINFOCOMPANY 진행중인 업체코드 COMCODE 등록 여부
+    //01.코드 검색 USERINFOCOMPANY 진행중인 업체코드 COM_CODE 등록 여부
     public MemberDTO vendorNumCheck(String vendorCode) {
         MemberDTO memberDTO = memberRepository.findByUserInfoCompany(vendorCode);
         return memberDTO ;

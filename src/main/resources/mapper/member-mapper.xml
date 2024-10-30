@@ -10,92 +10,130 @@
 
     <!-- USERINFO 저장!!-->
     <insert id="saveUserinfo" parameterType="userinfo">
-        insert into USERINFO(USERIDX , USERID , USERPWD , USERNAME ,USERGUBN ,USERSTATUS ,REGDWUSERIDX  ,REGDATE,"UPDATE")
-        values ( (SELECT NVL(MAX(USERIDX), 0) + 1 FROM USERINFO) , #{USERID} ,  #{USERPWD} ,  #{USERNAME} , #{USERGUBN} , #{USERSTATUS} , #{REGDWUSERIDX} , sysdate,sysdate )
+        insert into USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS ,REG_DW_USER_IDX  ,REG_DATE,UP_DATE)
+        values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS} , #{REG_DW_USER_IDX} , sysdate,sysdate )
     </insert>
+
+    <!-- USER_ID 중복 체크 후 업데이트 -->
+    <update id="updateUserinfo" parameterType="userinfo">
+        UPDATE USER_INFO
+            SET USER_PWD = #{USER_PWD},
+            USER_NAME = #{USER_NAME},
+            USER_GUBN = #{USER_GUBN},
+            USER_STATUS = #{USER_STATUS},
+            UP_DATE = SYSDATE
+        WHERE USER_ID = #{USER_ID}
+    </update>
+
 
     <!-- USERINFO 가입된정보 가져가기 -->
     <select id="findByUserId" parameterType="String" resultType="userinfo">
-        select * from USERINFO where USERID=#{userid}
+        select * from USER_INFO where USER_ID=#{USER_ID}
     </select>
-    <!-- USERINFO 가입된정보 가져가기 -->
+    <!-- USER_INFO 가입된정보 가져가기 -->
     <select id="findByUserIdx" parameterType="Int" resultType="userinfo">
-        select * from USERINFO where USERIDX=#{useridx}
+        select * from USER_INFO where USER_IDX=#{USER_IDX}
     </select>
 
-    <!-- USERINFOCOMPANYUSER  공동 작업자 저장!!-->
+    <!-- USER_INFO_COMPANY_USER  공동 작업자 저장!!-->
     <insert id="saveUserinfoCompanyUser" parameterType="userinfocom">
-        insert into USERINFOCOMPANYUSER(COMUSERIDX , USERIDX , COMCODE , USERNAME ,USERPOSITION ,USERDEPT , USEREMAIL,USERPHONE )
-        values ( (SELECT NVL(MAX(COMUSERIDX), 0) + 1 FROM USERINFOCOMPANYUSER) , #{USERIDX} ,#{COMCODE} ,  #{USERNAME} , #{USERPOSITION} , #{USERDEPT}, #{USEREMAIL} , #{USERPHONE}  )
+        insert into USER_INFO_COMPANY_USER(COM_USER_IDX , USER_IDX , COM_CODE , USER_NAME ,USER_POSITION ,USER_DEPT , USER_EMAIL,USER_PHONE )
+        values ( (SELECT NVL(MAX(COM_USER_IDX), 0) + 1 FROM USER_INFO_COMPANY_USER) , #{USER_IDX} ,#{COM_CODE} ,  #{USER_NAME} , #{USER_POSITION} , #{USER_DEPT}, #{USER_EMAIL} , #{USER_PHONE}  )
     </insert>
 
-    <!-- USERINFOCOMPANYUSER 가입된정보 공동 작업자  COMUSERIDX -->
+    <update id="updateUserinfoCompanyUser" parameterType="userinfocom">
+        UPDATE USER_INFO_COMPANY_USER
+        SET COM_CODE = #{COM_CODE},
+            USER_NAME = #{USER_NAME},
+            USER_POSITION = #{USER_POSITION},
+            USER_DEPT = #{USER_DEPT},
+            USER_EMAIL = #{USER_EMAIL},
+            USER_PHONE = #{USER_PHONE}
+        WHERE USER_IDX = #{COM_USER_IDX}
+    </update>
+
+
+
+    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
     <select id="findByCompanyUserName" parameterType="String" resultType="userinfocom">
-        select * from USERINFOCOMPANYUSER where COMCODE=#{COMCODE} and USERNAME=#{USERNAME}
+        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_NAME=#{USER_NAME}
     </select>
 
-    <!-- USERINFOCOMPANYUSER 가입된정보 공동 작업자 전체 가져오기 -->
+    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자 전체 가져오기 -->
     <select id="findByCompanyUserAll" parameterType="String" resultType="userinfocom">
-        select * from USERINFOCOMPANYUSER where COMCODE=#{COMCODE}
+        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
     </select>
 
 
-    <!-- USERINFOCOMPANYUSER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
+    <!-- USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
     <insert id="saveUserinfoCompanyHis" parameterType="userinfoHis">
-        insert into USERINFOCOMPANY(USERIDX
-        , COMCODE , COMUSERIDX , IDPWADDREASON ,USERSTATUS ,USEROKDATE , RETRUNREASON )
-        values ( #{USERIDX} , #{COMCODE} ,#{COMUSERIDX} ,  #{IDPWADDREASON} , #{USERSTATUS} , #{USEROKDATE}, #{RETRUNREASON} )
+        insert into USER_INFO_COMPANY(USER_IDX
+        , COM_CODE , COM_USER_IDX , ID_PW_ADD_REASON ,USER_STATUS ,USER_OK_DATE , RETURN_REASON )
+        values ( #{USER_IDX} , #{COM_CODE} ,#{COM_USER_IDX} ,  #{ID_PW_ADD_REASON} , #{USER_STATUS} , #{USER_OK_DATE}, #{RETURN_REASON} )
     </insert>
 
-    <!-- updateCompanyCode COMPANYCODE 회사코드 업데이트-->
-    <update id="updateCompanyCode" parameterType="comPanyCode">
-        update COMPANYCODE set
-             VENDORWORKKIND=#{VENDORWORKKIND}
-            ,COMUSERIDX=#{COMUSERIDX}
-            ,COMPANYNAME=#{COMPANYNAME}
-            ,FACTORYNAME=#{FACTORYNAME}
-            ,BUSNUMBER=#{BUSNUMBER}
-            ,COMADDRESS=#{COMADDRESS}
-            ,COMCEONAME=#{COMCEONAME}
-            ,COMCEOPHONE=#{COMCEOPHONE}
-            ,COMCEOEMAIL=#{COMCEOEMAIL}
-            ,COMFILENAME=#{COMFILENAME}
-            ,COMFILEPATH=#{COMFILEPATH}
-            ,"UPDATE" =sysdate
-            ,UPDWUSERIDX =#{UPDWUSERIDX}
-        where COMCODE=#{COMCODE}
+    <update id="updateUserinfoCompanyHis" parameterType="userinfoHis">
+        UPDATE USER_INFO_COMPANY
+        SET COM_CODE = #{COM_CODE},
+            COM_USER_IDX = #{COM_USER_IDX},
+            ID_PW_ADD_REASON = #{ID_PW_ADD_REASON},
+            USER_STATUS = #{USER_STATUS},
+            USER_OK_DATE = #{USER_OK_DATE},
+            RETURN_REASON = #{RETURN_REASON}
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
+
+    <!-- updateCompany_Code COMPANY_CODE 회사코드 업데이트-->
+    <update id="updateCompanyCode" parameterType="companycode">
+        update COMPANY_CODE set
+             VENDOR_WORK_KIND=#{VENDOR_WORK_KIND}
+            ,COM_USER_IDX=#{COM_USER_IDX}
+            ,COMPANY_NAME=#{COMPANY_NAME}
+            ,FACTORY_NAME=#{FACTORY_NAME}
+            ,BUS_NUMBER=#{BUS_NUMBER}
+            ,COM_ADDRESS=#{COM_ADDRESS}
+            ,COM_CEO_NAME=#{COM_CEO_NAME}
+            ,COM_CEO_PHONE=#{COM_CEO_PHONE}
+            ,COM_CEO_EMAIL=#{COM_CEO_EMAIL}
+            ,COM_FILE_NAME=#{COM_FILE_NAME}
+            ,COM_FILE_PATH=#{COM_FILE_PATH}
+            ,UP_DATE =sysdate
+            ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+            ,COM_APP_DATE = sysdate
+            ,COM_MANAGE_STATUS =#{COM_MANAGE_STATUS}
+        where COM_CODE=#{COM_CODE}
     </update>
 
 
 
 
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->
-    <select id="findByComPanyCode" parameterType="String" resultType="member">
-            select * from COMPANYCODE where COMCODE=#{comCode}
+    <select id="findByCompanyCode" parameterType="String" resultType="member">
+            select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
 
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->
-    <select id="findByBusNumber" parameterType="String" resultType="member">
-        select * from COMPANYCODE where BUSNUMBER=#{busNumber}
+    <select id="findByBUSNUMBER" parameterType="String" resultType="member">
+        select * from COMPANY_CODE where BUS_NUMBER=#{BUS_NUMBER}
     </select>
 
 
-    <!--진행중인 업체코드 COMCODE 등록 여부 -->
-    <!--관리상태 USERSTATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
+    <!--진행중인 업체코드 COM_CODE 등록 여부 -->
+    <!--관리상태 USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findByUserInfoCompany" parameterType="String" resultType="member">
-        select * from USERINFOCOMPANY where COMCODE=#{comCode}
+        select * from USER_INFO_COMPANY where COM_CODE=#{COM_CODE}
     </select>
 
     <!--사용자 ID 중복 체크 -->
     <select id="findByMemberId" parameterType="String" resultType="member">
-        select * from USERINFO where USERID=#{loginId}
+        select * from USER_INFO where USER_ID=#{loginId}
     </select>
 
 
    <!--사업자 번호 등록여부 검색-->
-    <select id="findByBusnumber" parameterType="String" resultType="member">
-        select * from COMPANYCODE where BUSNUMBER=#{loginEmail}
-    </select>
+<!--    <select id="findByBUSNUMBER" parameterType="String" resultType="member">-->
+<!--        select * from COMPANY_CODE where BUS_NUMBER=#{loginEmail}-->
+<!--    </select>-->
 
     <select id="login" parameterType="member" resultType="member">
         select * from USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
