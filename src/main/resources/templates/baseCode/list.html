@@ -85,11 +85,11 @@
                                 <div class="cui_items_wrap" data-size="2">
                                     <strong class="item_label">검색조건</strong>
                                     <div class="item_content">
-                                        <select class="cui_select_field" name="searchkey">
-                                            <option value="codegroup" selected>코드그룹</option>
-                                            <option value="code">코드</option>
+                                        <select class="cui_select_field" name="SEARCHKEY">
+                                            <option value="CODEGROUP" selected>코드그룹</option>
+                                            <option value="BASECODE">코드</option>
                                         </select>
-                                        <input class="cui_text_field" type="text" name="searchval">
+                                        <input class="cui_text_field" type="text" name="SEARCHVAL">
                                     </div>
                                 </div>
                             </div>
@@ -183,6 +183,7 @@
                             <strong class="item_label">코드그룹</strong>
                             <div class="item_content">
                                 <select class="cui_select_field wide" id="GROUP_CODE" th:name="GROUP_CODE">
+                                    <option value="GroupAdd">코드그룹추가</option>
                                     <option th:each="baeGroupCDList : ${baeGroupCDList}" th:value="${baeGroupCDList.GROUP_CODE}"
                                             th:text="${baeGroupCDList.BASE_NAME}"></option>
                                 </select>

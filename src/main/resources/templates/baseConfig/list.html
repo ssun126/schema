@@ -77,7 +77,8 @@
                                     <div class="item_content">
                                         <select class="cui_select_field wide" name="gubun">
                                             <option value="">전체</option>
-                                            <option value="Basic">기초</option>
+                                            <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
+                                                    th:text="${baseGubunList.BASE_NAME}"></option>
                                         </select>
                                     </div>
                                 </div>
@@ -176,7 +177,8 @@
                             <strong class="item_label">구분</strong>
                             <div class="item_content">
                                 <select class="cui_select_field wide" name="GUBN">
-                                    <option value="Basic">기초</option>
+                                    <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
+                                            th:text="${baseGubunList.BASE_NAME}"></option>
                                 </select>
                             </div>
                         </label>

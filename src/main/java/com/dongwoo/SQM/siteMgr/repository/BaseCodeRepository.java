@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -31,6 +32,15 @@ public class BaseCodeRepository {
 
     public BaseCodeDTO getBaseCode_Info(String idx){
         return sql.selectOne("BaseCode.getBaseCode_Info",idx);
+    }
+
+    public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextval){
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("sGubun",sGubun);
+        data.put("sKey",sKey);
+        data.put("sTextval",sTextval);
+
+        return sql.selectList("BaseCode.findSearch",data);
     }
 
     public BaseCodeDTO findByCodeName(BaseCodeDTO baseCodeDTO) {

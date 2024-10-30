@@ -1,6 +1,8 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
+import com.dongwoo.SQM.siteMgr.service.BaseCodeService;
 import com.dongwoo.SQM.siteMgr.service.BaseConfigService;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,7 @@ public class BaseConfigController {
 
     private static final Logger log = LoggerFactory.getLogger(BaseConfigController.class);
     private final BaseConfigService BaseConfigService;
+    private final BaseCodeService baseCodeService;
 
 //    @GetMapping("/baseConfig")
 //    public String baseConfig(){
@@ -36,6 +39,8 @@ public class BaseConfigController {
     public String findAll(Model model){
         List<BaseConfigDTO> baseConfigDTOList = BaseConfigService.findAll();
         model.addAttribute("baseConfigList",baseConfigDTOList);
+        List<BaseCodeDTO> baseGubunList = baseCodeService.getbaseGubunList();
+        model.addAttribute("baseGubunList",baseGubunList);
         log.info("================test22222222");
         //return "/siteMgr/baseConfig";
         return "/baseConfig/list";
@@ -49,6 +54,8 @@ public class BaseConfigController {
 
         List<BaseConfigDTO> baseConfigDTOList = BaseConfigService.findSearch(sGubun,sSearchKey,sSearchVal);
         model.addAttribute("baseConfigList",baseConfigDTOList);
+        List<BaseCodeDTO> baseGubunList = baseCodeService.getbaseGubunList();
+        model.addAttribute("baseGubunList",baseGubunList);
         log.info("================test22222222");
         //return "/siteMgr/baseConfig";
         return "/baseConfig/list";

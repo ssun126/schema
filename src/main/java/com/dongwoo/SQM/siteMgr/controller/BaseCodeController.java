@@ -3,6 +3,7 @@ package com.dongwoo.SQM.siteMgr.controller;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.service.BaseCodeService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -94,6 +96,14 @@ public class BaseCodeController {
         // add : 추가, Mod : 수정, Del :  삭제
         if(sFlag.equals("Add")) {
             log.info("test= 추가");
+            //코드그룹 추가 일 경우 그룹코드와 코드가 동일하게 저장된다
+            String sGROUP_CODE= baseCodeDTO.getGROUP_CODE();
+            log.info(sGROUP_CODE);
+            log.info(baseCodeDTO.getBASE_CODE());
+            if(Objects.equals(sGROUP_CODE, "GroupAdd"))
+                baseCodeDTO.setGROUP_CODE(baseCodeDTO.getBASE_CODE());
+            log.info(baseCodeDTO.getGROUP_CODE());
+
             baseCodeDTO.setREG_DW_USER_IDX(1);
             baseCodeService.save(baseCodeDTO);
             log.info("test= 추가끝");
@@ -107,6 +117,25 @@ public class BaseCodeController {
 
 
         return  "redirect:/siteMgr/baseCode";
+    }
+
+    @GetMapping("/basecode/search")
+    public String findSearch(Model model, HttpServletRequest request){
+        String sGubun = request.getParameter("GUBUN");
+        String sSearchKey = request.getParameter("SEARCHKEY");
+        String sSearchVal = request.getParameter("SEARCHVAL");
+
+        List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findSearch(sGubun,sSearchKey,sSearchVal);
+        model.addAttribute("baseCodeList",baseCodeDTOList);
+        List<BaseCodeDTO> baseGubunList = baseCodeService.getbaseGubunList();
+        List<BaseCodeDTO> baseGroupCDList = baseCodeService.getbaseGroupCDList();
+        //검색,모달 업무구분 리스트
+        model.addAttribute("baseGubunList",baseGubunList);
+        //모달 그룹코드 리스트
+        model.addAttribute("baeGroupCDList",baseGroupCDList);
+        log.info("111get List = {}", baseCodeDTOList);
+        //return "/siteMgr/baseConfig";
+        return "/baseCode/list";
     }
 
 

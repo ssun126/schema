@@ -38,12 +38,13 @@
 
     <select id="getbaseGubunList" resultType="baseCode">
         SELECT BASE_CODE, BASE_NAME FROM BASE_CODE bc
-        WHERE GROUP_CODE != BASE_CODE AND BASE_OPTION = 'SYSTEM'
+        WHERE GROUP_CODE != BASE_CODE AND BASE_OPTION = 'SYSTEM' AND BASE_STATUS ='Y'
         ORDER BY BASE_SORT
     </select>
 
     <select id = "getbaseGroupCDList" resultType="baseCode">
-        SELECT GROUP_CODE, BASE_NAME FROM BASE_CODE bc WHERE GROUP_CODE = BASE_CODE
+        SELECT GROUP_CODE, BASE_NAME FROM BASE_CODE bc
+        WHERE GROUP_CODE = BASE_CODE AND BASE_STATUS ='Y'
     </select>
 
 
@@ -53,14 +54,14 @@
         FROM base_code bc
         INNER JOIN USERINFO ui ON bc.REG_DW_USER_IDX = ui.USERIDX
         WHERE 1=1
-        <if test="gubun != '' ">
-            and GUBN = #{gubun}
+        <if test="sGubun != '' ">
+            and GUBN = #{sGubun}
         </if>
-        <if test="key.equals('key') and textval != ''">
-            and GROUP_CODE like '%' ||  #{textval} || '%'
+        <if test="sKey.equals('CODEGROUP') and sTextval != ''">
+            and GROUP_CODE like '%' ||  #{sTextval} || '%'
         </if>
-        <if test="key.equals('val') and textval != ''">
-            and BASE_CODE like '%' ||  #{textval} || '%'
+        <if test="sKey.equals('BASECODE') and sTextval != ''">
+            and BASE_CODE like '%' ||  #{sTextval} || '%'
         </if>
 
     </select>

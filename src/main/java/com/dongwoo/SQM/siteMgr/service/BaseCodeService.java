@@ -31,6 +31,10 @@ public class BaseCodeService {
         return baseCodeRepository.getBaseCode_Info(idx);
     }
 
+    public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextVal) {
+        return baseCodeRepository.findSearch(sGubun,sKey,sTextVal);
+    }
+
     public BaseCodeDTO findByCodeName(BaseCodeDTO baseCodeDTO) {
         return baseCodeRepository.findByCodeName(baseCodeDTO);
     }
