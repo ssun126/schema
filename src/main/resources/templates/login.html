@@ -46,7 +46,7 @@
                                 </div>
                                 <h1 class="login_form_logo"><span>동우화인캠</span></h1>
                                 <div class="cui_items_wrap" data-direction="left">
-                                    <input name="username" class="cui_text_field" type="text" placeholder="ID">
+                                    <input name="USER_NAME" class="cui_text_field" type="text" placeholder="ID">
                                 </div>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <input name="password" class="cui_text_field" type="password" placeholder="PW">
@@ -224,6 +224,24 @@
       modal.fadeOut();
     });
 
+    //로그인 처리
+  <!--  const data = {
+        username: $('#user').val(),
+        password: $('#pwd').val()
+    };
 
+    $.ajax({
+        type: 'POST',
+        url: '/auth/login',
+        dataType: 'json',
+        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+        data: data
+    }).done(function (res) {
+        alert("로그인 되었습니다.");
+        location.href = "/main"
+    }).fail(function (error) {
+        alert(JSON.stringify(error));
+    });
+-->
 </script>
 </html>

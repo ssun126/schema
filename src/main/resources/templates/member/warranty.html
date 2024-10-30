@@ -48,7 +48,7 @@
                     </div>
 
 
-                    <form id="approvalForm" onsubmit="handleSubmit(event)" action="/member/resubmit"  method="post"  class="cui_form_field" data-legend="true">
+                    <form id="approvalForm" onsubmit="handleSubmit(event)" action="/member/resubmit"  method="post" enctype="multipart/form-data" class="cui_form_field" data-legend="true">
 
                         <fieldset>
                             <legend><span>워런티 협약 상태</span></legend>
@@ -68,14 +68,23 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><p>2024-10-24</p></td>
-                                    <td><p>2024-10-24</p></td>
-                                    <td><p>검토중 Waitting</p></td>
+                                    <td><p name="COM_APP_DATE" id="COM_APP_DATE"> <span th:text="${memberDTO.COM_APP_DATE}"></span> </p></td>
+                                    <td><p name="COM_OK_DATE" id="COM_OK_DATE"> <span th:text="${memberDTO.COM_OK_DATE}"></span> </p></td>
+                                    <td><p name="COM_MANAGE_STATUS" id="COM_MANAGE_STATUS"> <span th:text="${memberDTO.COM_MANAGE_STATUS}"></span> </p></td>
+
+                                    <!-- 값 제출용 숨겨진 input -->
+                                    <input type="hidden" name="COM_APP_DATE" id="hiddenCOM_APP_DATE">
+                                    <input type="hidden" name="COM_OK_DATE" id="hiddenCOM_OK_DATE">
+                                    <input type="hidden" name="COM_MANAGE_STATUS" id="hiddenCOM_MANAGE_STATUS">
+                                    <input type="hidden" name ="COM_FILE_PATH" id="COM_FILE_PATH" >
+                                    <input type="hidden" name ="COM_FILE_NAME" id="COM_FILE_NAME"  th:value="${memberDTO.COM_FILE_NAME}" >
+
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center" >
                                             <div class="item_content">
                                                 <button type="button" class="cui_button"  onclick ="findfile()"><span>첨부</span></button>
-                                                <button type="button" class="cui_button"><span>보기</span></button>
+                                                <button type="button" class="cui_button"  onclick ="downloadFile()"><span>보기</span></button>
+<!--                                                <span id="file-name-display" class="file-name-display"> </span>-->
                                             </div>
                                         </div>
                                     </td>
@@ -85,25 +94,29 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
-<!--                                <button  type="submit"  class="cui_button primary" onClick="modal('dialog')"><span>승인요청</span></button>-->
-                                <button type="submit"  class="cui_button primary" ><span>승인요청</span></button>
+                                <button  type="submit" name ="request" id="request"  class="cui_button primary" onClick="modal('dialog')">
+                                    <span th:if="${memberDTO.COM_APP_DATE != ''}" th:text="'수정요청'"></span>
+                                    <span th:if="${memberDTO.COM_APP_DATE == ''}" th:text="'승인요청'"></span>
+                                </button>
                             </div>
                         </div>
                     </form>
+
                     <div>
                         <div class="cui_bullet_title"><span>반려 사유</span></div>
                         <div class="cui_border_box">
-                            반려사유 내용 출력
+                            <p name="RETURN_REASON" id="RETURN_REASON"><span th:text="${memberDTO.RETURN_REASON}"></span> </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     <div class="cui_dialog" style="width:420px;display:none" id="dialog">
         <div class="dialog_container">
             <div class="dialog_body">
                 <div class="body_root">
-                    <div class="cui_alert alert_modal" data-type="success" role="alert"> <p  id="messageContent" th:text="${message}">승인 요청 되었습니다.</p> </div>
+                    <div class="cui_alert alert_modal" data-type="success" role="alert"> <p id="messageContent" th:text="${resultMsg}"></p> </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
                             <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
@@ -126,19 +139,19 @@
             </div>
             <div class="dialog_body">
                 <div class="body_root">
-                    <form class="cui_form_field">
+                    <form id="uploadForm" class="cui_form_field" method="POST" enctype="multipart/form-data" action="/member/warrantyfileupload">
                         <fieldset>
                             <legend><span>파일 업로드</span></legend>
                             <div class="cui_items_wrap" data-direction="left">
                                 <div class="item_content">
                                     <div class="cui_attachments">
-                                        <input type="file" class="cui_file_field">
+                                        <input type="file" name ="findfile" id="findfile"  class="cui_file_field" onchange="setFileName()">
                                     </div>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="center">
                                 <div class="item_content">
-                                    <button type="button" class="cui_button primary" onclick ="sevefile()"><span>저장</span></button>
+                                    <button type="button"  class="cui_button primary" onclick ="sevefile()"><span>저장</span></button>
                                 </div>
                             </div>
                         </fieldset>
@@ -151,24 +164,37 @@
 </body>
 <script>
 
-   // 페이지 로드 후 모달 자동 표시
    window.onload = function() {
+    var messageElement = document.getElementById('messageContent');
+        if (messageElement && messageElement.innerText.trim() !== "") {
+            document.getElementById('dialog').style.display = 'block';
 
-        var messageElement = document.getElementById('messageContent');
-            if (messageElement && messageElement.innerText.trim() !== "") {
-                document.getElementById('dialog').style.display = 'block';
-            }
+            const button = document.getElementById('request');
+            button.style.display = 'none';
+        }
    }
 
    function handleSubmit(event) {
+
+       document.getElementById("hiddenCOM_APP_DATE").value = document.getElementById("COM_APP_DATE").textContent;
+       document.getElementById("hiddenCOM_OK_DATE").value = document.getElementById("COM_OK_DATE").textContent;
+       document.getElementById("hiddenCOM_MANAGE_STATUS").value = document.getElementById("COM_MANAGE_STATUS").textContent;
+
+        const hiddenInput = document.getElementById('COM_FILE_NAME');
+        var fileName = hiddenInput.value;
+
+        if(fileName == ""){
+            alert('첨부된 파일이 없습니다.') ;
+            return;
+        }
+
+
        document.getElementById('approvalForm').submit();
-       //modal('dialog');
-       alert("승인 요청 되었습니다.");
    }
 
    //모달 열기
    function modal(id){
-     $("#" + id).fadeIn()
+     $("#" + id).fadeIn();
    }
 
    //모달 닫기
@@ -186,26 +212,116 @@
        window.location.href = "/login"; // 로그인 페이지로 이동
    }
 
-
-
    function downSamplefile() {
-      alert("양식파일 등록후 다운로드.")
+      alert("양식파일 등록후 다운로드.");
    }
 
    //파일 찾기
    function findfile() {
-       $("#dialog2").fadeIn()
+       $("#dialog2").fadeIn();
    }
 
-   //파일 저장
+
+   //warranty 파일 업로드
    function sevefile() {
-       $("#dialog2").fadeOut()
-       alert("파일저장 경로 협의!")
+
+        const input = document.getElementById('findfile');
+        if (input.files.length == 0) {
+            alert('선택된 파일 없음');
+            return;
+        }
+
+
+       var formData = new FormData(document.getElementById("uploadForm"));
+
+        fetch("/member/warrantyfileupload", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();  // 또는 response.json() depending on your server response type
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(data => {
+            console.log("파일 업로드 성공:", data);
+            // 추가적인 성공 메시지나 UI 업데이트
+            alert('파일 업로드 성공')
+            $("#dialog2").fadeOut() ;
+            //화면닫기.
+        })
+        .catch(error => {
+            alert('파일 업로드 실패! 관리자에게 문의하세요')
+            console.error("파일 업로드 실패:", error);
+            $("#dialog2").fadeOut() ;
+        });
    }
-   //파일 저장 닫기
+
+
+   //warranty 파일 다운로드
+    function downloadFile() {
+
+        const hiddenInput = document.getElementById('COM_FILE_NAME');
+        var fileName = hiddenInput.value;
+
+        if(fileName == ""){
+            alert('첨부된 파일이 없습니다.') ;
+            return;
+        }
+
+        fetch(`/member/download?fileName=${encodeURIComponent(fileName)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/octet-stream'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob(); // 파일을 Blob으로 변환
+        })
+        .then(blob => {
+            // Blob URL 생성
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName; // 다운로드할 파일 이름
+            document.body.appendChild(a); // 앵커 요소 추가
+            a.click(); // 다운로드 시작
+            a.remove(); // 앵커 요소 제거
+            window.URL.revokeObjectURL(url); // Blob URL 해제
+        })
+        .catch(error => {
+            console.error('파일 다운로드 실패:', error);
+        });
+    }
+
+
+   //모달 파일 저장 닫기
    function sevefileClose() {
-       $("#dialog2").fadeOut()
+       $("#dialog2").fadeOut();
    }
+
+
+   //파일 업로드후
+   function setFileName() {
+        const input = document.getElementById('findfile');
+        //const fileNameDisplay = document.getElementById('file-name-display');
+        const hiddenInput = document.getElementById('COM_FILE_NAME');
+
+        if (input.files.length > 0) {
+            const fileName = input.files[0].name; // 선택된 파일명
+            //fileNameDisplay.textContent = fileName; // 화면에 파일명 표시
+            hiddenInput.value = fileName; // 숨겨진 입력 필드에 파일명 저장
+        } else {
+            //fileNameDisplay.textContent = '선택된 파일 없음';
+            hiddenInput.value = ''; // 파일이 선택되지 않은 경우 숨겨진 입력 필드 초기화
+        }
+    }
+
+
 
 
 
