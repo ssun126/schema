@@ -21,18 +21,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountService  implements UserDetailsService {
 
-    private final LoginRepository userMapper;
+    private final LoginRepository userRepository;
     private final BCryptPasswordEncoder encoder;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("username======="+username);
-        LoginDTO account = new LoginDTO();
-        account.setUSER_ID(username);
-        account = userMapper.findByLoginId(username);
+        LoginDTO account = userRepository.findByLoginId(username);
+
         if(account != null){
+            log.info("account.getUSER_NAME()==="+account.getUSER_NAME());
             List<GrantedAuthority> authorities = new ArrayList<>();
             //패스워드 암호화 저장이 되지 않아 여기서 암호화하여 넘겨줌(임시)
+
             return new User(account.getUSER_ID(), encoder.encode(account.getUSER_PWD()), authorities);
         }
         return null;
@@ -44,13 +46,13 @@ public class AccountService  implements UserDetailsService {
         LoginDTO checkUser = new LoginDTO();
         checkUser.setUSER_ID(userId);
 
-        if (userMapper.login(checkUser) != null){
+        if (userRepository.login(checkUser) != null){
             return false;
         }
         LoginDTO newUser = new LoginDTO();
         newUser.setUSER_ID(userId);
         newUser.setPASSWORD(encoder.encode(userPwd));
-        userMapper.save(newUser);
+        userRepository.save(newUser);
         return true;
     }
 
