@@ -18,7 +18,7 @@ public class BoardDTO {
     private String BOARD_DESC;
     private int BOARD_HITS;
     private String INPUT_DATE;
-    private int ATTACHED_FILE;
-    private List<MultipartFile> BOARD_FILE;
+    private String FILE_NAME; // 파일 이름
+    private String FILE_PATH; // 파일이 저장된 경로
 
 }
