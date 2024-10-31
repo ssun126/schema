@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	main.init();
 });
-var main = {
+const main = {
 	init: function() {
 		this.style();
 		this.event();
@@ -15,7 +15,7 @@ var main = {
 	resize:function(){
 	},
 	setMultiLang : function() {
-    	var data = {};
+    	const data = {};
         if (navigator.appName == "Netscape") {
         	data.LANG = navigator.language;
         } else {
@@ -35,7 +35,7 @@ var main = {
     		type : "post",
     		success : function(data) {
         		localStorage.setItem("MULTI_LANGUAGE_DATA", JSON.stringify(data));
-        		Schema.require("lang").init();
+        		//Schema.require("lang").init();
         		setTimeout(main.getMessage(), 500);
     		},
     		error : function() {
@@ -44,9 +44,9 @@ var main = {
     	});
 	},
 	getMessage: function(){
-		var msg = window.location.search.substr(1);
+		const msg = window.location.search.substr(1);
 		// msg = decodeURI(msg);
-		main.setMessage(schemaCommon.lang(msg));
+		//main.setMessage(schemaCommon.lang(msg));
 	},
 	setMessage: function(msg){
 		if(msg == ""){
@@ -56,5 +56,12 @@ var main = {
 		}
 	}
 }
+
+//모달 닫기
+$('.modal-close').on('click', function(e){
+    e.preventDefault();
+    const modal = $(this).parents('.cui_dialog');
+    modal.fadeOut();
+});
 
 
