@@ -1,6 +1,7 @@
 package com.dongwoo.SQM.siteMgr.service;
 
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,16 @@ public class UserMgrService {
         userMgrRepository.save(UserMgrDTO);
     }
 
-    public List<UserMgrDTO> findAll() {
-        return userMgrRepository.findAll();
+    //동우 사용자 검색 2024.10.30
+    public List<UserMgrDTO> findUserMgrSearch(UserMgrParamDTO usermgrdto) {
+        return userMgrRepository.findUserMgrSearch(usermgrdto);
     }
+
+    //동우 사용자 한명 조회
+    public UserMgrDTO findUserMgrById(String USER_ID) {
+        return userMgrRepository.findUserMgrById(USER_ID);
+    }
+
 
     public void updateHits(int id) {
         userMgrRepository.updateHits(id);

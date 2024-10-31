@@ -105,8 +105,6 @@
     </update>
 
 
-
-
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->
     <select id="findByCompanyCode" parameterType="String" resultType="member">
             select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
@@ -128,12 +126,6 @@
     <select id="findByMemberId" parameterType="String" resultType="member">
         select * from USER_INFO where USER_ID=#{loginId}
     </select>
-
-
-   <!--사업자 번호 등록여부 검색-->
-<!--    <select id="findByBUSNUMBER" parameterType="String" resultType="member">-->
-<!--        select * from COMPANY_CODE where BUS_NUMBER=#{loginEmail}-->
-<!--    </select>-->
 
     <select id="login" parameterType="member" resultType="member">
         select * from USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}

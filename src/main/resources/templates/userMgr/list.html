@@ -3,6 +3,17 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/mainLayout}"
       layout:fragment="Content">
+<!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
+<style>
+    .cui_dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<!-- [종료] 퍼블본용 style. 개발 반영되면 안됨 -->
+
 <body>
     <div class="cui_container" data-module="">
         <div class="cui_lnb">
@@ -15,7 +26,7 @@
                         <ul>
                             <li>
                                 <a href="#" class="nav_item" aria-selected="true" onclick="goMenu('/userMgr')">
-                                    <span class="nav_label">동우 사용자 관리</span>
+                                    <span class="nav_label">동우 사용자 관리_sylee</span>
                                 </a>
                             </li>
                             <li>
@@ -55,119 +66,307 @@
                         <h2 class="cui_title"><span>동우 사용자 관리</span></h2>
                     </div>
                 </div>
+
                 <div class="cui_body">
-                    <div class="cui_search">
-                        <div class="search_list cui_grid_wrap ">
-                            <div class="cui_items_wrap required_field">
-                                <strong class="item_label">아이디</strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="아이디를 입력해주세요">
+<!--                    <form id="searchForm"  method="post">-->
+                        <div class="cui_search">
+                            <div class="search_list cui_grid_wrap ">
+                                <div class="cui_items_wrap required_field">
+                                    <strong class="item_label">아이디</strong>
+                                    <div class="item_content">
+                                        <input id="userid" name="USER_ID" class="cui_text_field" type="text" placeholder="아이디를 입력해주세요">
+                                    </div>
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">이름</strong>
+                                    <div class="item_content">
+                                        <input id ="username" name = "USER_NAME" class="cui_text_field" type="text" placeholder="이름을 입력해주세요">
+                                    </div>
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">사업부</strong>
+                                    <div class="item_content">
+                                        <select id="deptcode" name = "DEPT_CODE" class="cui_select_field wide">
+                                            <option value="15">인사팀</option>
+                                            <option value="16">개발팀</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">이메일</strong>
+                                    <div class="item_content">
+                                        <input id = "email" name = "EMAIL" class="cui_text_field" type="email" placeholder="이메일을 입력해주세요">
+                                    </div>
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">구분</strong>
+                                    <div class="item_content">
+                                        <select id = "userlevel" name = "USER_LEVEL" class="cui_select_field wide">
+                                            <option value="100">관리자</option>
+                                            <option value="1">사용자</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">상태</strong>
+                                    <div class="item_content">
+                                        <select id = "userStatus" name = "USER_STATUS" class="cui_select_field wide">
+                                            <option value="Y">사용</option>
+                                            <option value="N">미사용</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">이름</strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="이름을 입력해주세요">
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">사업부</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">이메일</strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="email" placeholder="이메일을 입력해주세요">
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">구분</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">상태</strong>
-                                <div class="item_content">
-                                    <select class="cui_select_field wide">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                    </select>
-                                </div>
+                            <div class="search_action">
+                                <button type="button" id = "searchUser"  onclick="fetchData()" class="cui_button primary"><span>검색</span></button>
                             </div>
                         </div>
-                        <div class="search_action">
-                            <button type="button" class="cui_button primary"><span>검색</span></button>
+                        <div class="cui_toolbar">
+                            <div class="toolbar_content">
+                                <div class="toolbar_default"></div>
+                            </div>
+                            <div class="toolbar_aside">
+                                <button type="button" class="cui_button"><span>엑셀 다운</span></button>
+                                <button type="button" class="cui_button secondary"><span>신규 추가</span></button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="cui_toolbar">
-                        <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
-                        </div>
-                        <div class="toolbar_aside">
-                            <button type="button" class="cui_button"><span>엑셀 다운</span></button>
-                            <button type="button" class="cui_button secondary"><span>신규 추가</span></button>
-                        </div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:220px;">
-                            <col style="width:140px;">
-                            <col>
-                            <col>
-                            <col style="width:120px;">
-                            <col style="width:80px;">
-                            <col style="width:110px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>아이디</span></th>
-                            <th><span>이름</span></th>
-                            <th><span>사업부</span></th>
-                            <th><span>이메일</span></th>
-                            <th><span>구분</span></th>
-                            <th><span>상태</span></th>
-                            <th><span>등록일</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><button type="button" class="cui_button endpoint">covision</button></td>
-                            <td><span>홍길동</span></td>
-                            <td><span>반도체</span></td>
-                            <td><span>test@gamil.com</span></td>
-                            <td><span>관리자</span></td>
-                            <td><span>사용</span></td>
-                            <td><span>2024-08-29</span></td>
-                        </tr>
-                        <tr>
-                            <td><button type="button" class="cui_button endpoint">covision</button></td>
-                            <td><span>홍길동</span></td>
-                            <td><span>반도체</span></td>
-                            <td><span>test@gamil.com</span></td>
-                            <td><span>관리자</span></td>
-                            <td><span>사용</span></td>
-                            <td><span>2024-08-29</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <table class="cui_table center" id="userTable">
+                            <colgroup>
+                                <col style="width:220px;">
+                                <col style="width:140px;">
+                                <col>
+                                <col>
+                                <col style="width:120px;">
+                                <col style="width:80px;">
+                                <col style="width:110px;">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th><span>아이디</span></th>
+                                <th><span>이름</span></th>
+                                <th><span>사업부</span></th>
+                                <th><span>이메일</span></th>
+                                <th><span>구분</span></th>
+                                <th><span>상태</span></th>
+                                <th><span>등록일</span></th>
+                            </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                            <tr>
+                                <td><button type="button" class="cui_button endpoint"></button></td>
+                                <td><span></span></td>
+                                <td><span></span></td>
+                                <td><span></span></td>
+                                <td><span></span></td>
+                                <td><span></span></td>
+                                <td><span></span></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+<!--                   </form>-->
                 </div>
+
             </div>
         </div>
     </div>
 </body>
+
+
+
+<div class="cui_dialog" style="width:520px;display:none;" id="dialogUserUpdate">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label">PARTNER ID/PW 찾기</div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form id="updateForm" method="POST" action="/userMgr/updateUserMgr" class="cui_form_field" data-legend="true">
+                    <fieldset>
+                        <legend><span>사용자 수정</span></legend>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">아이디</strong>
+                            <div class="item_content">
+                                <input id="user_id" name = "USER_ID" type="text" class="cui_text_field">
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">이름</strong>
+                            <div class="item_content">
+                                <input id="user_name" name = "USER_NAME" type="text" class="cui_text_field">
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">사업부</strong>
+                            <div class="item_content">
+                                <select id="dept_code" name = "DEPT_CODE" class="cui_select_field wide">
+                                    <option value="15">인사팀</option>
+                                    <option value="16">개발팀</option>
+                                </select>
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">이메일</strong>
+                            <div class="item_content">
+                                <input id="e_mail" name = "EMAIL" type="text" class="cui_text_field">
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">구분</strong>
+                            <div class="item_content">
+                                <select id="user_level" name = "USER_LEVEL" class="cui_select_field wide">
+                                    <option value="100">관리자</option>
+                                    <option value="1">사용자</option>
+                                </select>
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">상태</strong>
+                            <div class="item_content">
+                                <select id="manage_system_yn" name = "MANAGE_SYSTEM_YN" class="cui_select_field wide">
+                                    <option value="Y">사용</option>
+                                    <option value="N">미사용</option>
+                                </select>
+                            </div>
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center">
+                            <div class="item_content">
+                                <button type="button" class="cui_button primary" onClick="save()"><span>저장</span></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    //모달 열기 조회
+    function modal(id,userid){
+      $("#" + id).fadeIn();
+      getUserData(userid);
+    }
+
+    //모달 닫기
+    $('.modal-close').on('click', function(e){
+      e.preventDefault();
+      const modal = $(this).parents('.cui_dialog');
+      modal.fadeOut();
+
+    });
+
+    //수정
+    function save() {
+        // 여기서 추가 검증을 할 수 있습니다.
+        document.getElementById("updateForm").submit();
+    }
+
+
+function getUserData(userid) {
+
+    $.ajax({
+        type: "POST",
+        url: "/userMgr/getUserInfoByID",
+        contentType: "application/json",
+        data: JSON.stringify({ "USER_ID": userid }),
+        success: function(res) {
+            console.log("요청 성공", res);
+            if (res) {
+                document.getElementById('user_id').value = res.user_ID;
+                document.getElementById('user_name').value = res.user_NAME;
+                document.getElementById('dept_code').value = res.dept_CODE;
+                document.getElementById('e_mail').value = res.EMAIL;
+                document.getElementById('user_level').value = res.user_LEVEL;
+                document.getElementById('manage_system_yn').value = res.manage_SYSTEM_YN;
+            } else {
+                alert("사용자 정보를 찾을 수 없습니다.");
+            }
+        },
+        error: function(err) {
+            console.log("에러 발생", err);
+        }
+    });
+}
+
+
+
+
+        function fetchData() {
+           const dto = {
+               "USER_ID": document.getElementById('userid').value,
+               "USER_NAME": document.getElementById('username').value,
+               "DEPT_CODE": document.getElementById('deptcode').value,
+               "EMAIL": document.getElementById('email').value,
+               "USER_LEVEL": document.getElementById('userlevel').value,
+               "USER_STATUS": document.getElementById('userStatus').value
+           };
+
+           fetch('/userMgr/getUserInfo', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+               },
+               body: JSON.stringify(dto)
+           })
+           .then(response => {
+               if (!response.ok) {
+                   throw new Error('Network response was not ok');
+               }
+               return response.json();
+           })
+           .then(data => {
+                console.log('응답 데이터:', data);
+                if (data && Array.isArray(data)) {
+                     populateTable(data);
+                } else {
+                     alert("nodata");
+                }
+           })
+           .catch(error => {
+               console.error('데이터 조회 실패:', error);
+           });
+        }
+
+     function populateTable(data) {
+      const tableBody = $("#userTableBody");
+         tableBody.empty();
+
+         data.forEach(user => {
+             const row = `
+                 <tr>
+                     <td><button type="button" class="cui_button endpoint" onClick="modal('dialogUserUpdate','${user.user_ID}')" >${user.user_ID}</button></td>
+                     <td><span>${user.user_NAME}</span></td>
+                     <td><span>${user.dept_CODE}</span></td>
+                     <td><span>${user.email}</span></td>
+                     <td><span>${user.user_LEVEL}</span></td>
+                     <td><span>${user.user_STATUS}</span></td>
+                     <td><span>${user.reg_DATE}</span></td>
+                 </tr>
+             `;
+             tableBody.append(row);
+         });
+     }
+
+</script>
+
+
+
+
+
 </html>
+

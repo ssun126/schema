@@ -21,9 +21,12 @@
         <typeAlias type="com.dongwoo.SQM.system.dto.UserInfoCompanyDTO" alias="userinfoHis"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.ComPanyCodeDTO" alias="comPanyCode"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO" alias="baseConfig"></typeAlias>
-
+        <typeAlias type="com.dongwoo.SQM.siteMgr.dto.UserMgrDTO" alias="userMgr"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO" alias="userMgrParam"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
+
+
 
     </typeAliases>
 </configuration>
