@@ -17,16 +17,36 @@
         ON b.REGDWUSERIDX = u.USERIDX
         WHERE 1=1
         <if test="gubun != '' ">
-            and GUBN = concat('%', #{gubun}, '%')
+            and GUBN = #{gubun}
         </if>
-        <if test="key.equals('key') ">
-            and CONFIGCODE like concat('%', #{key}, '%')
+        <if test="key.equals('key') and textval != ''">
+            and CONFIGCODE like '%' ||  #{textval} || '%'
         </if>
-        <if test="key.equals('val') ">
-            and CONFIGCODE like concat('%', #{textval}, '%')
+        <if test="key.equals('val') and textval != ''">
+            and CONFIGVALUE like '%' ||  #{textval} || '%'
         </if>
-        <if test="textval != ''">
-            and CONFIGVALUE like  concat('%', #{textval}, '%')
-        </if>
+
     </select>
+
+    <select id="getBaseConfig_Info" parameterType="String" resultType="baseConfig">
+        select BASECONFIGIDX as IDX,GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,b.REGDATE,u.USERID
+        FROM BASECONFIG b
+        LEFT OUTER JOIN USERINFO u
+        ON b.REGDWUSERIDX = u.USERIDX where BASECONFIGIDX = #{idx}
+    </select>
+
+    <insert id="save" parameterType="baseConfig">
+        INSERT into BASECONFIG(BASECONFIGIDX, GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,REGDWUSERIDX,UPDWUSERIDX,REGDATE,"UPDATE")
+        VALUES (SEQUENCE_BASECONFIG.NEXTVAL,#{GUBN},#{CONFIGCODE},#{CONFIGVALUE},#{CONFIGSUMMARY},#{CONFIGSTATUS},#{USERID},#{USERID},to_date(sysdate,'yyyy-mm-dd hh24:mi:SS'),to_date(sysdate,'yyyy-mm-dd hh24:mi:SS'))
+    </insert>
+    <update id="update" parameterType="baseConfig">
+        update BASECONFIG
+        set GUBN=#{GUBN},CONFIGCODE=#{CONFIGCODE},CONFIGVALUE=#{CONFIGVALUE}
+        ,CONFIGSUMMARY=#{CONFIGSUMMARY},CONFIGSTATUS=#{CONFIGSTATUS},UPDWUSERIDX=#{USERID},"UPDATE"=to_date(sysdate,'yyyy-mm-dd hh24:mi:SS')
+        where BASECONFIGIDX=#{IDX}
+    </update>
+    <delete id="delete" parameterType="int">
+        delete from BASECONFIG where BASECONFIGIDX=#{IDX}
+    </delete>
+
 </mapper>

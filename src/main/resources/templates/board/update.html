@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mainLayout}"
+      layout:fragment="Content">
 <body>
 <form th:action="@{|/board/update/${board.BOARD_IDX}|}" method="post" name="updateForm">
     <input type="hidden" name="BOARD_IDX" th:value="${board.BOARD_IDX}">
@@ -11,6 +10,7 @@
     title: <input type="text" name="BOARD_TITLE" th:value="${board.BOARD_TITLE}"><br>
     pass: <input type="text" name="BOARD_PASS" id="board-pass"><br>
     contents: <textarea name="BOARD_DESC" cols="30" rows="10" th:text="${board.BOARD_DESC}"></textarea><br>
+    <input type="file" name="file">
     <input type="button" value="수정" onclick="board_update()">
 </form>
 </body>
@@ -24,5 +24,7 @@
             alert("비밀번호가 틀립니다!!");
         }
     }
+
+
 </script>
 </html>

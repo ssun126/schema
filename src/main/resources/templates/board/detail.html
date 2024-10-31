@@ -1,18 +1,8 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>detail</title>
-    <style>
-        table, tr, td, th {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-        }
-    </style>
-</head>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mainLayout}"
+      layout:fragment="Content">
 <body>
 <table>
     <tr>
@@ -39,11 +29,9 @@
         <th>contents</th>
         <td th:text="${board.BOARD_DESC}"></td>
     </tr>
-    <tr th:if="${board.ATTACHED_FILE == 1}">
-        <th>image</th>
-        <td th:each="boardFile: ${boardFileList}">
-            <img th:src="@{|/upload/${boardFile.FILE_NAME}|}" alt="" width="200" height="200">
-        </td>
+    <tr th:if="${board.FILE_NAME != null}">
+        <th>attach</th>
+        <td><a th:href="@{/board/download/{filename}(filename=${board.FILE_NAME})}"><span th:text="${board.FILE_NAME}"></span>다운로드</a></td>
     </tr>
 </table>
 <button onclick="listReq()">목록</button>

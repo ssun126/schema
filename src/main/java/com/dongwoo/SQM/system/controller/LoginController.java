@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,7 +70,22 @@ public class LoginController {
     }
 
     @GetMapping("/main")
-    public String goMain() {
+    public String goMain(LoginDTO loginDTO, HttpSession session) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.info("authentication4======"+auth);
+
+        if(auth.isAuthenticated()){
+            // login 성공
+            //UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+            //log.info("UserDTO======"+userDetails);
+
+            /*session.setAttribute("loginID", userDetails.getUSER_ID());
+            session.setAttribute("loginName",userDetails.getUSER_NAME());
+            session.setAttribute("usrRole",userDetails.getROLE());*/
+
+            log.info("loginName======"+session.getAttribute("loginName"));
+        }
+
         return "main";
     }
 

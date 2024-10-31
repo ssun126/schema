@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,4 +25,21 @@ public class BaseConfigRepository {
 
         return sql.selectList("BaseConfig.findSearch",data);
     }
+
+    public BaseConfigDTO getBaseConfig_Info(String idx){
+        return sql.selectOne("BaseConfig.getBaseConfig_Info",idx);
+    }
+
+    public int save(BaseConfigDTO baseConfigDTO) {
+        return sql.insert("BaseConfig.save", baseConfigDTO);
+    }
+
+    public void update(BaseConfigDTO baseConfigDTO) {
+        sql.update("BaseConfig.update", baseConfigDTO);
+    }
+
+    public void delete(int CODEID) {
+        sql.delete("BaseConfig.delete", CODEID);
+    }
+
 }

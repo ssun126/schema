@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html lang="kr"
       xmlns:th="http:www.thymeleaf.org"
-      th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml">
+      th:fragment="HeaderFragment" xmlns:layout="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
     <div class="cui_global">
         <h1 class="global_logo">
             <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
-            <ul>
-                <li>
-                    <a href="#" onclick="goMenu('/companyInfo/main')"><span>Company Information</span></a>
-                    <ul>
+            <ul th:each="page, index : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).menuList}" class="nav-item sec" >
+                <li th:each="subPage, subIndex : ${page}" th:class="'menu-sub ' + ${subPage.PAGE_URL}">
+                    <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
+                    <!--<ul class="menu-sub-nav">
                         <li>
-                            <a href="#"><span>menu1</span></a>
-                            <ul>
-                                <li><a href="#"><span>menu1-1</span></a></li>
-                                <li><a href="#"><span>menu1-2</span></a></li>
-                            </ul>
+                            <a th:href="'/' + ${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
                         </li>
-                        <li><a href="#"><span>menu2</span></a></li>
-                        <li><a href="#"><span>menu3</span></a></li>
-                    </ul>
+                    </ul>-->
                 </li>
-                <li><a href="#" onclick="goMenu('/auditMgmt')"><span>Audit Management</span></a></li>
+                <!--<li><a href="#" onclick="goMenu('/auditMgmt')"><span>Audit Management</span></a></li>
                 <li><a href="#" onclick="goMenu('/partMgmt')"><span>Part Management</span></a></li>
                 <li><a href="#" onclick="goMenu('/qualityCtrl')"><span>Quality Control</span></a></li>
                 <li>
@@ -39,7 +33,7 @@
                         <li><a href="#"><span>menu3</span></a></li>
                     </ul>
                 </li>
-                <li><a href="#" onclick="goMenu('/siteMgr')"><span>Site Manager</span></a></li>
+                <li><a href="#" onclick="goMenu('/siteMgr')"><span>Site Manager</span></a></li>-->
                 <li class="more">
                     <a href="#" class="toggle"><span>더보기</span></a>
                     <ul></ul>
@@ -49,11 +43,15 @@
         <div class="global_utility">
             <div class="utility_profile" onclick="goMenu('/member/myPage')">
                 <div class="info">
-                    <strong><span id="logonName" th:text="${session.loginName}"></span></strong>
-                    <span th:text="${session.loginId}"></span>
+                    <strong> <span th:text="${session.loginName}"></span></strong>
+                    <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
+                    <span sec:authorize="hasRole('user')">사용자</span>
+                    <span sec:authorize="hasRole('dwuser')">DW사용자</span>
+                    <span sec:authorize="hasRole('admin')">관리자</span>
+                    <span sec:authorize="hasRole('ROLE_USER')">사용자</span>
                 </div>
             </div>
-            <button type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>
+            <button sec:authorize="isAuthenticated()" type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>
         </div>
     </div>
 <script>

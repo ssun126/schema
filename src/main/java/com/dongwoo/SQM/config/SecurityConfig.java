@@ -36,8 +36,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**").permitAll() //resource 허용
-                        .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**","/userMgr/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
+                        .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**").permitAll()
+                        // 관리자 권한만 가능
+                        .requestMatchers("/dwuser/**").hasRole("dwuser")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -48,7 +50,12 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .permitAll());
+                        .logoutSuccessUrl("/login?logout") // 로그아웃 후 리다이렉트할 URL
+                        .invalidateHttpSession(true) // 세션 무효화
+                        .permitAll())
+                .sessionManagement((auth)->auth
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)); // 추가 로그인 차단
 
         return http.build();
     }

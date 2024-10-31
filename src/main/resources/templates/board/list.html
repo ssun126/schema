@@ -1,36 +1,58 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        table, tr, td, th {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 10px;
-        }
-    </style>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mainLayout}"
+      layout:fragment="Content">
 <body>
-<a href="/board/save">글쓰기</a>
-<table>
-    <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>작성자</th>
-        <th>작성시간</th>
-        <th>조회수</th>
-    </tr>
-    <tr th:each="board: ${boardList}">
-        <td th:text="${board.BOARD_IDX}"></td>
-        <td>
-            <a th:text="${board.BOARD_TITLE}" th:href="@{|/board/${board.BOARD_IDX}|}"></a>
-        </td>
-        <td th:text="${board.INPUT_USER_ID}"></td>
-        <td th:text="${board.INPUT_DATE}"></td>
-        <td th:text="${board.BOARD_HITS}"></td>
-    </tr>
-</table>
+<div class="cui_container" data-module="">
+    <div class="cui_lnb">
+        <div class="lnb_root">
+            <div class="lnb_head">
+                <h2 class="lnb_title"><span>Board</span></h2>
+            </div>
+            <div class="cui_nav">
+                <nav class="nav_root">
+                    <ul>
+                        <li>
+                            <a href="#" class="nav_item" aria-selected="true">
+                                <span class="nav_label">공지사항</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div class="cui_content">
+        <div class="cui_main">
+            <div class="cui_head">
+                <div class="head_content">
+                    <h2 class="cui_title"><span>공지사항</span></h2>
+                </div>
+            </div>
+            <div class="cui_body">
+                <a href="/board/save">글쓰기</a>
+                <table>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성시간</th>
+                        <th>조회수</th>
+                    </tr>
+                    <tr th:each="board: ${boardList}">
+                        <td th:text="${board.BOARD_IDX}"></td>
+                        <td>
+                            <a th:text="${board.BOARD_TITLE}" th:href="@{|/board/${board.BOARD_IDX}|}"></a>
+                        </td>
+                        <td th:text="${board.INPUT_USER_ID}"></td>
+                        <td th:text="${board.INPUT_DATE}"></td>
+                        <td th:text="${board.BOARD_HITS}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

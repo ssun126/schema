@@ -4,22 +4,25 @@
 
 <mapper namespace="Board">
     <insert id="save" parameterType="board">
-        INSERT INTO BOARD_INFO(BOARD_TITLE, BOARD_TYPE, INPUT_USER_ID, BOARD_PASS, BOARD_DESC, INPUT_DATE)
-        values(#{BOARD_TITLE}, 'QNA', #{INPUT_USER_ID}, #{BOARD_PASS}, #{BOARD_DESC}, sysdate)
+        INSERT INTO BOARD_INFO(BOARD_TITLE, BOARD_TYPE, INPUT_USER_ID, BOARD_PASS, BOARD_DESC, INPUT_DATE, FILE_NAME, FILE_PATH)
+        values(#{BOARD_TITLE}, 'QNA', #{INPUT_USER_ID}, #{BOARD_PASS}, #{BOARD_DESC}, sysdate, #{FILE_NAME}, #{FILE_PATH})
     </insert>
     <select id="findAll" resultType="board">
-        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_HITS, ATTACHED_FILE
+        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_HITS, FILE_NAME, FILE_PATH
         from BOARD_INFO order by BOARD_IDX DESC
     </select>
     <update id="updateHits" parameterType="int">
         update BOARD_INFO set BOARD_HITS=BOARD_HITS+1 where BOARD_IDX=#{id}
     </update>
     <select id="findById" parameterType="int" resultType="board">
-        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_DESC, BOARD_HITS, BOARD_PASS, INPUT_DATE, ATTACHED_FILE
+        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_DESC, BOARD_HITS, BOARD_PASS, INPUT_DATE, FILE_NAME
         from BOARD_INFO where BOARD_IDX=#{id}
     </select>
     <update id="update">
         update BOARD_INFO set BOARD_TITLE=#{BOARD_TITLE}, BOARD_DESC=#{BOARD_DESC} where BOARD_IDX=#{BOARD_IDX}
+    </update>
+    <update id="updateFile">
+        update BOARD_INFO set FILE_NAME=#{FILE_NAME} ,FILE_PATH=#{FILE_PATH} where BOARD_IDX=#{BOARD_IDX}
     </update>
 <!--    <delete id="delete" parameterType="Long">-->
 <!--        delete from BOARD_INFO where BOARD_IDX=#{id}-->

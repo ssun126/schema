@@ -1,10 +1,12 @@
 package com.dongwoo.SQM.siteMgr.repository;
 
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -18,6 +20,27 @@ public class BaseCodeRepository {
 
     public List<BaseCodeDTO> findAll() {
         return sql.selectList("BaseCode.findAll");
+    }
+
+    public List<BaseCodeDTO> getbaseGubunList() {
+        return sql.selectList("BaseCode.getbaseGubunList");
+    }
+
+    public List<BaseCodeDTO> getbaseGroupCDList(){
+        return sql.selectList("BaseCode.getbaseGroupCDList");
+    }
+
+    public BaseCodeDTO getBaseCode_Info(String idx){
+        return sql.selectOne("BaseCode.getBaseCode_Info",idx);
+    }
+
+    public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextval){
+        HashMap<String,Object> data = new HashMap<String,Object>();
+        data.put("sGubun",sGubun);
+        data.put("sKey",sKey);
+        data.put("sTextval",sTextval);
+
+        return sql.selectList("BaseCode.findSearch",data);
     }
 
     public BaseCodeDTO findByCodeName(BaseCodeDTO baseCodeDTO) {

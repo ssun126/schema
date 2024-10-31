@@ -1,6 +1,7 @@
 package com.dongwoo.SQM.siteMgr.service;
 
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.repository.BaseCodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,20 @@ public class BaseCodeService {
 
     public List<BaseCodeDTO> findAll() {
         return baseCodeRepository.findAll();
+    }
+    public List<BaseCodeDTO> getbaseGubunList() {
+        return baseCodeRepository.getbaseGubunList();
+    }
+    public List<BaseCodeDTO> getbaseGroupCDList() {
+        return baseCodeRepository.getbaseGroupCDList();
+    }
+
+    public BaseCodeDTO getBaseCode_Info(String idx) {
+        return baseCodeRepository.getBaseCode_Info(idx);
+    }
+
+    public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextVal) {
+        return baseCodeRepository.findSearch(sGubun,sKey,sTextVal);
     }
 
     public BaseCodeDTO findByCodeName(BaseCodeDTO baseCodeDTO) {
