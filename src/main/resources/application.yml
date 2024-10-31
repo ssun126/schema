@@ -13,12 +13,7 @@ server:
     include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
 
 # thymeleaf
-thymeleaf:
-  enable: true
-  cache: false
-  prefix: classpath:/templates/
-  suffix: .html
-  check-template-location: true
+
 
 # database
 spring:
@@ -30,7 +25,19 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
-
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  thymeleaf:
+    enable: true
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    freemarker:
+      cache: false
+    check-template-location: true
 
 # mybatis
 mybatis:
@@ -39,3 +46,6 @@ mybatis:
 
 Logging:
   config: classpath:logback-spring.xml
+
+Upload:
+  path: classpath:/templates/upload/
