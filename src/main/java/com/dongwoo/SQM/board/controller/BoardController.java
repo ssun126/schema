@@ -1,6 +1,8 @@
 package com.dongwoo.SQM.board.controller;
 
 import com.dongwoo.SQM.board.dto.BoardDTO;
+import com.dongwoo.SQM.board.dto.Criteria;
+import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,50 +32,24 @@ import java.util.UUID;
 public class BoardController {
     private final BoardService boardService;
 
-    @GetMapping("/board/save")
-    public String save() {
-        return "/Board/save";
-    }
-
-    @PostMapping("/board/save")
-    public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
-        log.info("boardDTO = " + boardDTO);
-        // 파일 업로드 처리 시작
-        UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
-
-        String directory = "D:/devp/";
-        String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
-
-        File saveFile = new File(directory, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
-
-        file.transferTo(saveFile);
-
-        boardDTO.setFILE_NAME(fileName);
-        boardDTO.setFILE_PATH(directory+fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
-        // 파일 업로드 처리 끝
-
-
-        boardService.save(boardDTO);
-        return "redirect:/board/list";
-    }
-
-    @GetMapping("/board/list")
-    public String findAll(Model model) {
-        List<BoardDTO> boardDTOList = boardService.findAll();
+    @GetMapping("/user/board/qa")
+    public String list(Criteria criteria, Model model) {
+        List<BoardDTO> boardDTOList = boardService.getList(criteria);
         model.addAttribute("boardList", boardDTOList);
+        model.addAttribute("pageMaker", new PageDTO(boardService.getTotal(), 10, criteria));
         log.info("boardDTOList = " + boardDTOList);
-        return "/board/list";
+        return "board/list";
     }
 
-    @GetMapping("/board/{id}")
+    @GetMapping("/user/board/qa/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
-        // 조회수 처리
+        // 조회수 처리.
         boardService.updateHits(id);
         // 상세내용 가져옴
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
 
-        return "/board/detail";
+        return "board/detail";
     }
 
     @GetMapping("/board/download/{filename}")
@@ -101,14 +77,40 @@ public class BoardController {
         }
     }
 
-    @GetMapping("/board/update/{id}")
+    @GetMapping("/board/qa/save")
+    public String save() {
+        return "/Board/save";
+    }
+
+    @PostMapping("/board/qa/save")
+    public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
+        log.info("boardDTO = " + boardDTO);
+        // 파일 업로드 처리 시작
+        UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
+
+        String directory = "D:/devp/";
+        String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
+
+        File saveFile = new File(directory, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
+
+        file.transferTo(saveFile);
+
+        boardDTO.setFILE_NAME(fileName);
+        boardDTO.setFILE_PATH(directory+fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
+        // 파일 업로드 처리 끝
+
+        boardService.save(boardDTO);
+        return "redirect:/user/board/qa/list";
+    }
+
+    @GetMapping("/board/qa/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
         return "/board/update";
     }
 
-    @PostMapping("/board/update/{id}")
+    @PostMapping("/board/qa/update/{id}")
     public String update(BoardDTO boardDTO, Model model) {
         boardService.update(boardDTO);
         BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
@@ -116,7 +118,7 @@ public class BoardController {
         return "/board/detail";
     }
 
-    @GetMapping("/board/delete/{id}")
+    @GetMapping("/board/qa/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         boardService.delete(id);
         return "redirect:/board/list";

@@ -24,6 +24,24 @@
     <update id="updateFile">
         update BOARD_INFO set FILE_NAME=#{FILE_NAME} ,FILE_PATH=#{FILE_PATH} where BOARD_IDX=#{BOARD_IDX}
     </update>
+    <select id="getList" resultType="board">
+        <![CDATA[
+        SELECT RN, BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS
+        FROM
+        (
+            /*알리아스를 붙인 컬럼에 WHERE절에서 접근할 때에는 FROM 절에 작성된 테이블의 컬럼과 동일한 이름으로만 사용이 가능하다.*/
+            SELECT /*+ INDEX_DESC(BOARD_INFO PK_BOARD) */
+            ROWNUM RN, BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS
+            FROM BOARD_INFO
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE RN > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    <select id="getTotal" resultType="int">
+        select count(*) CNT
+        from BOARD_INFO
+    </select>
 <!--    <delete id="delete" parameterType="Long">-->
 <!--        delete from BOARD_INFO where BOARD_IDX=#{id}-->
 <!--    </delete>-->

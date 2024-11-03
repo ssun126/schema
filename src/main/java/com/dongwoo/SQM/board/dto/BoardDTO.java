@@ -1,9 +1,9 @@
 package com.dongwoo.SQM.board.dto;
 
+import com.dongwoo.SQM.board.repository.BoardRepository;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,4 +21,7 @@ public class BoardDTO {
     private String FILE_NAME; // 파일 이름
     private String FILE_PATH; // 파일이 저장된 경로
 
+    /*public List<BoardDTO> getList(Criteria criteria){
+        return BoardRepository.getList(criteria);
+    }*/
 }

@@ -2,6 +2,7 @@ package com.dongwoo.SQM.board.service;
 
 import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.BoardFileDTO;
+import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,4 +41,13 @@ public class BoardService {
     public List<BoardFileDTO> findFile(int id) {
         return boardRepository.findFile(id);
     }
+
+    public List<BoardDTO> getList(Criteria cri) {
+        return boardRepository.getList(cri);
+    }
+
+    public int getTotal() {
+        return boardRepository.getTotal();
+    }
+
 }

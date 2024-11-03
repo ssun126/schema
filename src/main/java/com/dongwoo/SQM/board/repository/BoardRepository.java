@@ -2,6 +2,7 @@ package com.dongwoo.SQM.board.repository;
 
 import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.BoardFileDTO;
+import com.dongwoo.SQM.board.dto.Criteria;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -43,5 +44,13 @@ public class BoardRepository {
 
     public List<BoardFileDTO> findFile(int id) {
         return sql.selectList("Board.findFile", id);
+    }
+
+    public List<BoardDTO> getList(Criteria criteria) {
+        return sql.selectList("Board.getList", criteria);
+    }
+
+    public int getTotal(){
+        return sql.selectOne("Board.getTotal");
     }
 }
