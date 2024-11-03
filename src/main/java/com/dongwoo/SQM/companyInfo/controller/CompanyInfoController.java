@@ -17,9 +17,9 @@ import java.util.List;
 public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
 
-    @GetMapping("/user/companyInfo/main")
-    public String companyInfoMain() {
-        return "/companyInfo/main";
+    @GetMapping("/user/companyInfo/company")
+    public String isoAuthMain(Model model) {
+        return "companyInfo/main";
     }
 
     @PostMapping("/companyInfo/save")
