@@ -76,13 +76,6 @@ public class LoginController {
 
         if(auth.isAuthenticated()){
             // login 성공
-            //UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-            //log.info("UserDTO======"+userDetails);
-
-            /*session.setAttribute("loginID", userDetails.getUSER_ID());
-            session.setAttribute("loginName",userDetails.getUSER_NAME());
-            session.setAttribute("usrRole",userDetails.getROLE());*/
-
             log.info("loginName======"+session.getAttribute("loginName"));
         }
 

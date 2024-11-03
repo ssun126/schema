@@ -2,6 +2,7 @@ package com.dongwoo.SQM.common.component;
 
 import com.dongwoo.SQM.common.dto.MenuStaticValue;
 import com.dongwoo.SQM.common.dto.SecurityUrlMatcherDTO;
+import com.dongwoo.SQM.common.dto.SubMenuDTO;
 import com.dongwoo.SQM.common.service.SecurityUrlMatcherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -22,5 +23,8 @@ public class DemoInitializer implements ApplicationRunner {
         // 전체 메뉴-권한 정보 리스트 조회/저장
         List<SecurityUrlMatcherDTO> menuList =  securityUrlMatcherService.getAllMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.menuList = Collections.singletonList(menuList);
+
+        List<SubMenuDTO> subMenuList =  securityUrlMatcherService.getAllSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.subMenuList = Collections.singletonList(subMenuList);
     }
 }

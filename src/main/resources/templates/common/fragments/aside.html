@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="kr"
       xmlns:th="http:www.thymeleaf.org">
-    <div class="cui_lnb" th:fragment="AsideFragment-member">
+    <div class="cui_lnb" th:fragment="AsideFragment">
         <div class="lnb_root">
-            <div class="lnb_head">
-                <h2 class="lnb_title"><span>회원가입</span></h2>
+            <div class="lnb_head" th:each="menuPage : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).menuList}"><span></span>
+                <h2 class="lnb_title"><span th:each="subMenu : ${menuPage}" th:if="${subMenu != null && #strings.length(currentUrl) >= 7 && #strings.length(subMenu.PAGE_URL) >= 7 && #strings.substring(currentUrl, 0, 7) == #strings.substring(subMenu.PAGE_URL, 0, 7)}" th:text="${subMenu.GNB_NM}"></span></h2>
             </div>
             <div class="cui_nav">
                 <nav class="nav_root">
-                    <ul>
-                        <li>
-                            <a href="#" class="nav_item">
-                                <span class="nav_label">회원가입</span>
+                    <ul th:each="page : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).subMenuList}">
+                        <li th:each="subPage : ${page}" th:if="${subPage != null && #strings.length(currentUrl) >= 9 && #strings.length(subPage.PAGE_URL) >= 9 && #strings.substring(currentUrl, 0, 9) == #strings.substring(subPage.PAGE_URL, 0, 9)}">
+                            <a th:href="${subPage.PAGE_URL}" class="nav_item" th:attr="aria-selected=${#strings.substring(currentUrl, 0, (subPage.PAGE_URL.length > currentUrl.length ? currentUrl.length-1:subPage.PAGE_URL.length)) == #strings.substring(subPage.PAGE_URL, 0, (subPage.PAGE_URL.length > currentUrl.length ? currentUrl.length-1:subPage.PAGE_URL.length))? 'true' : 'false'}">
+                                <span class="nav_label"><span th:text="${subPage.PAGE_NM}"></span></span>
                             </a>
                         </li>
                     </ul>
@@ -19,22 +19,8 @@
             </div>
         </div>
     </div>
-    <div class="cui_lnb" th:fragment="AsideFragment-admin">
-        <div class="lnb_root">
-            <div class="lnb_head">
-                <h2 class="lnb_title"><span>Site Management</span></h2>
-            </div>
-            <div class="cui_nav">
-                <nav class="nav_root">
-                    <ul>
-                        <li>
-                            <a href="#" class="nav_item">
-                                <span class="nav_label">사용자 관리</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
+<script>
+    /* JavaScript를 통해 GNB_NM 값을 설정 */
+    $('#gnbTitle').text('Default Title');
+</script>
 </html>

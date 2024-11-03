@@ -19,6 +19,4 @@ public class SecurityUrlMatcherDTO {
     private int GNB_IDX;
     private String GNB_NM;
     private String AUTH_ROLE_NM;
-
-
 }

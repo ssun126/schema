@@ -43,12 +43,13 @@
         <div class="global_utility">
             <div class="utility_profile" onclick="goMenu('/member/myPage')">
                 <div class="info">
-                    <strong> <span th:text="${session.loginName}"></span></strong>
+                    <strong> <span th:text="${session.loginName}"></span><span th:text="${currentUrl}"></span></strong>
                     <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
                     <span sec:authorize="hasRole('user')">사용자</span>
                     <span sec:authorize="hasRole('dwuser')">DW사용자</span>
                     <span sec:authorize="hasRole('admin')">관리자</span>
                     <span sec:authorize="hasRole('ROLE_USER')">사용자</span>
+
                 </div>
             </div>
             <button sec:authorize="isAuthenticated()" type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>

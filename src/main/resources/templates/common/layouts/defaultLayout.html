@@ -8,9 +8,8 @@
 <body>
 <div class="cui_app">
     <header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
-    <div class="cui_container center">
-        <aside th:replace="~{common/fragments/aside :: AsideFragment-member}"></aside>
-
+    <div class="cui_container">
+        <aside th:replace="~{common/fragments/aside :: AsideFragment(currentAside=${currentAside})}"></aside>
         <th:block layout:fragment="Content"></th:block>
     </div>
     <!--<footer th:replace="~{common/fragments/footer :: FooterFragment}"></footer>-->
