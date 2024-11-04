@@ -91,7 +91,7 @@ public class UserMgrController {
     }
 
 
-    //동우 유저검색
+    //동우 유저검색 LIST
     @PostMapping("/userMgr/getUserInfo")
     public ResponseEntity<?> getUserInfo(@RequestBody UserMgrParamDTO userMgrParamDTO ) {
         try {
@@ -108,8 +108,7 @@ public class UserMgrController {
         }
     }
 
-
-    //사용자 조회 ID
+    //사용자 조회 ID POP
     @PostMapping("/userMgr/getUserInfoByID")
     public ResponseEntity<UserMgrDTO> getUserInfo(@RequestBody Map<String, String> params) {
         String userId = params.get("USER_ID");
@@ -117,28 +116,64 @@ public class UserMgrController {
         UserMgrDTO userDto = userMgrService.findUserMgrById(userId);
 
         if (userDto != null) {
-            return ResponseEntity.ok(userDto); // 사용자 정보를 응답으로 반환
+            return ResponseEntity.ok(userDto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 사용자 정보를 찾을 수 없을 때
         }
     }
 
-    // 사용자 정보를 업데이트하는 메서드
-    @PostMapping("/userMgr/updateUserMgr")
-    public String updateUserMgr(@ModelAttribute UserMgrParamDTO userUpdateDto, Model model) {
-        // 사용자 정보를 업데이트하는 로직
-        // 예를 들어, DB에서 사용자 정보를 수정하는 서비스 메서드 호출
-
-        // UserService는 사용자 정보를 수정하는 서비스입니다.
-        // userService.updateUser(userUpdateDto);
-
-
-
-
-        // 업데이트가 완료된 후의 로직
-        model.addAttribute("message", "사용자 정보가 성공적으로 업데이트되었습니다.");
-        return "redirect:/userMgr/list"; // 성공 시, 사용자 관리 페이지로 리다이렉트
+    public static String checkValue(String value) {
+        if ("on".equals(value)) {
+            return "Y";
+        } else {
+            return "N";
+        }
     }
 
+
+
+    @PostMapping("/userMgr/updateUserMgr")
+    @ResponseBody
+    public String updateUserMgr(@ModelAttribute UserMgrDTO userMgrDTO ,Model model) {
+
+        //체크 박스처리 길이 길다.
+        //region
+        userMgrDTO.setMANAGE_SYSTEM_YN(checkValue(userMgrDTO.getMANAGE_SYSTEM_YN())) ; //이거 용도가 화면에 안보임.
+
+        userMgrDTO.setMANAGE_ISO_YN_01(checkValue(userMgrDTO.getMANAGE_ISO_YN_01())) ;
+        userMgrDTO.setMANAGE_ISO_YN_02(checkValue(userMgrDTO.getMANAGE_ISO_YN_02())) ;
+        userMgrDTO.setMANAGE_ISO_YN_03(checkValue(userMgrDTO.getMANAGE_ISO_YN_03())) ;
+        userMgrDTO.setMANAGE_ISO_YN_04(checkValue(userMgrDTO.getMANAGE_ISO_YN_04())) ;
+        userMgrDTO.setMANAGE_ISO_YN_05(checkValue(userMgrDTO.getMANAGE_ISO_YN_05())) ;
+        userMgrDTO.setMANAGE_ISO_YN_06(checkValue(userMgrDTO.getMANAGE_ISO_YN_06())) ;
+        userMgrDTO.setMANAGE_ISO_YN_07(checkValue(userMgrDTO.getMANAGE_ISO_YN_07())) ;
+        userMgrDTO.setMANAGE_ISO_YN_08(checkValue(userMgrDTO.getMANAGE_ISO_YN_08())) ;
+        userMgrDTO.setMANAGE_ISO_YN_09(checkValue(userMgrDTO.getMANAGE_ISO_YN_09())) ;
+
+        userMgrDTO.setMANAGE_PART_YN(checkValue(userMgrDTO.getMANAGE_PART_YN())) ;
+
+        userMgrDTO.setMANAGE_COA_YN_01(checkValue(userMgrDTO.getMANAGE_COA_YN_01())) ;
+        userMgrDTO.setMANAGE_COA_YN_02(checkValue(userMgrDTO.getMANAGE_COA_YN_02())) ;
+        userMgrDTO.setMANAGE_COA_YN_03(checkValue(userMgrDTO.getMANAGE_COA_YN_03())) ;
+        userMgrDTO.setMANAGE_COA_YN_04(checkValue(userMgrDTO.getMANAGE_COA_YN_04())) ;
+
+        userMgrDTO.setMANAGE_CHANGE_YN_01(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_01())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_02(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_02())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_03(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_03())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_04(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_04())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_05(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_05())) ;
+
+        //endregion
+
+        String  info_flag =  userMgrDTO.getINFO_FLAG();
+        if (info_flag.equals("U")) {
+            userMgrService.updateUserMgr(userMgrDTO);
+        } else {
+            userMgrService.insertUserMgr(userMgrDTO);
+        }
+
+        model.addAttribute("message", "사용자 정보가 성공적으로 업데이트되었습니다.");
+        return "ok";
+    }
 
 }

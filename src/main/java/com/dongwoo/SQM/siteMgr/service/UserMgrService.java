@@ -26,6 +26,15 @@ public class UserMgrService {
     public UserMgrDTO findUserMgrById(String USER_ID) {
         return userMgrRepository.findUserMgrById(USER_ID);
     }
+    //사용자 업데이트
+    public void updateUserMgr(UserMgrDTO userMgrDTO) {
+        userMgrRepository.updateUserMgr(userMgrDTO);
+    }
+
+    //사용자 추가
+    public void insertUserMgr(UserMgrDTO userMgrDTO) {
+        userMgrRepository.insertUserMgr(userMgrDTO);
+    }
 
 
     public void updateHits(int id) {

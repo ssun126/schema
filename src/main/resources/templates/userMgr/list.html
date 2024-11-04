@@ -3,6 +3,7 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/mainLayout}"
       layout:fragment="Content">
+
 <!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
 <style>
     .cui_dialog {
@@ -11,6 +12,30 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
+    .cui_checkbox_group {
+         gap: 0px; /* 체크박스 사이의 간격 조정 */
+         grid-template-columns: 300px 200px 200px; /* 각 열의 너비를 수동으로 설정 */
+
+    }
+
+    .cui_grid_wrap_member {
+        $grid-columns-max     : 326px;
+        display               : grid;
+        align-items           : start;
+        gap                   : 12px 24px;
+<!--        grid-template-columns : repeat(auto-fill, $grid-columns-max);-->
+        grid-template-columns: 300px 200px 200px; /* 각 열의 너비를 수동으로 설정 */
+
+        @for $i from 1 to 4 {
+            & > [data-size="#{$i}"] {
+                grid-column : auto / span #{$i};
+            }
+        }
+    }
+
+
+
 </style>
 <!-- [종료] 퍼블본용 style. 개발 반영되면 안됨 -->
 
@@ -87,6 +112,7 @@
                                     <strong class="item_label">사업부</strong>
                                     <div class="item_content">
                                         <select id="deptcode" name = "DEPT_CODE" class="cui_select_field wide">
+                                            <option value=""></option>
                                             <option value="15">인사팀</option>
                                             <option value="16">개발팀</option>
                                         </select>
@@ -102,6 +128,7 @@
                                     <strong class="item_label">구분</strong>
                                     <div class="item_content">
                                         <select id = "userlevel" name = "USER_LEVEL" class="cui_select_field wide">
+                                            <option value=""></option>
                                             <option value="100">관리자</option>
                                             <option value="1">사용자</option>
                                         </select>
@@ -111,6 +138,7 @@
                                     <strong class="item_label">상태</strong>
                                     <div class="item_content">
                                         <select id = "userStatus" name = "USER_STATUS" class="cui_select_field wide">
+                                            <option value=""></option>
                                             <option value="Y">사용</option>
                                             <option value="N">미사용</option>
                                         </select>
@@ -118,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="search_action">
-                                <button type="button" id = "searchUser"  onclick="fetchData()" class="cui_button primary"><span>검색</span></button>
+                                <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span>검색</span></button>
                             </div>
                         </div>
                         <div class="cui_toolbar">
@@ -127,7 +155,7 @@
                             </div>
                             <div class="toolbar_aside">
                                 <button type="button" class="cui_button"><span>엑셀 다운</span></button>
-                                <button type="button" class="cui_button secondary"><span>신규 추가</span></button>
+                                <button type="button" class="cui_button secondary" onClick="modal('dialogUserUpdate','')"><span>신규 추가</span></button>
                             </div>
                         </div>
                         <table class="cui_table center" id="userTable">
@@ -174,25 +202,28 @@
 
 
 
-<div class="cui_dialog" style="width:520px;display:none;" id="dialogUserUpdate">
+<div class="cui_dialog" style="width:720px;display:none;" id="dialogUserUpdate">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label">PARTNER ID/PW 찾기</div>
+                <div class="main_label"><span id="popTitle">사용자 수정</span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
             </div>
         </div>
+
         <div class="dialog_body">
             <div class="body_root">
                 <form id="updateForm" method="POST" action="/userMgr/updateUserMgr" class="cui_form_field" data-legend="true">
                     <fieldset>
-                        <legend><span>사용자 수정</span></legend>
+<!--                        <legend><span>사용자 수정</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">아이디</strong>
                             <div class="item_content">
                                 <input id="user_id" name = "USER_ID" type="text" class="cui_text_field">
+                                <input id="user_idx" name="USER_IDX" class="cui_text_field" type="hidden" >
+                                <input id="info_flag" name="INFO_FLAG" class="cui_text_field" type="hidden" >
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -232,12 +263,85 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">상태</strong>
                             <div class="item_content">
-                                <select id="manage_system_yn" name = "MANAGE_SYSTEM_YN" class="cui_select_field wide">
+                                <select id="user_status" name = "USER_STATUS" class="cui_select_field wide">
                                     <option value="Y">사용</option>
                                     <option value="N">미사용</option>
                                 </select>
                             </div>
                         </label>
+
+                        <div class="cui_grid_wrap_member" >
+                            <table class="cui_checkbox_group" style="width: 100%; table-layout: fixed;">
+                                <tr>
+                                    <td id="tditdm1" style="width: 45%;">
+                                        <div class="cui_items_wrap" data-direction="column" style="flex: 1; margin-right: 10px;">
+                                            <div class="item_label"><span>Audit Management</span></div>
+                                            <div class="item_content">
+
+                                                <div id = "chkIos" >
+<!--                                                    <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>MANAGE_SYSTEM_YN</span></label>-->
+
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_01" name = "MANAGE_ISO_YN_01"><i></i><span>ISO/노동환경
+                                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_02" name = "MANAGE_ISO_YN_02"><i></i><span>ISO/환경안전(평택공장)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_03" name = "MANAGE_ISO_YN_03"><i></i><span>ISO/환경안전(신흥공장)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_04" name = "MANAGE_ISO_YN_04"><i></i><span>ISO/환경안전(삼기공장)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_05" name = "MANAGE_ISO_YN_05"><i></i><span>ISO/품질체계/분쟁.책임광물(반도체)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_06" name = "MANAGE_ISO_YN_06"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단소재)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_07" name = "MANAGE_ISO_YN_07"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단-삼기)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_08" name = "MANAGE_ISO_YN_08"><i></i><span>ISO/품질체계/분쟁.책임광물(옵티칼)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_09" name = "MANAGE_ISO_YN_09"><i></i><span>ISO/품질체계/분쟁.책임광물(통신디바이스)</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td id ="tditdm2" style="width: 30%;align-content: baseline;">
+                                        <div id = "chkmiddle" class="cui_items_wrap" data-direction="column"  style="flex: 1; margin-right: 5px;">
+
+                                            <div class="item_label"><span>Part Management</span></div>
+                                            <div class="item_content">
+
+                                                <div id = "chkCoa" style="display: flex; flex-direction: column;">
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_part_yn" name = "MANAGE_PART_YN"><i></i><span>PART 관리자</span></label>
+                                                </div>
+                                            </div>
+                                            <div class="item_label"><span> </span></div>
+                                            <div class="item_label"><span>CoA 관리</span></div>
+                                            <div class="item_content" >
+
+                                                <div id = "chkCoa2" class="cui_checkbox_group"  style="display: flex; flex-direction: column;" data-direction="column">
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_01" name = "MANAGE_COA_YN_01"><i></i><span>COA 반도체</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_02" name = "MANAGE_COA_YN_02"><i></i><span>COA 첨단소재</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_03" name = "MANAGE_COA_YN_03"><i></i><span>COA 첨단-삼기</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_04" name = "MANAGE_COA_YN_04"><i></i><span>COA 통신디바이스</span></label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+
+                                    <td id ="tditdm3" style="width: 25%;align-content: baseline;">
+                                        <div id = "chkend"  class="cui_items_wrap" data-direction="column"  style="flex: 1; margin-right: 5px;">
+
+                                            <div class="item_label"><span>변경점 관리</span></div>
+                                            <div class="item_content" >
+
+                                                <div id = "chkchange" class="cui_checkbox_group"  style="display: flex; flex-direction: column;" data-direction="column">
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_01" name = "MANAGE_CHANGE_YN_01"><i></i><span>변경점관리 반도체</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_02" name = "MANAGE_CHANGE_YN_02"><i></i><span>첨단소재</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_03" name = "MANAGE_CHANGE_YN_03"><i></i><span>첨단-삼기</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_04" name = "MANAGE_CHANGE_YN_04"><i></i><span>옵티칼</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_05" name = "MANAGE_CHANGE_YN_05"><i></i><span>통신디바이스</span></label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
@@ -254,12 +358,19 @@
 
 
 
+
 <script>
 
     //모달 열기 조회
     function modal(id,userid){
       $("#" + id).fadeIn();
-      getUserData(userid);
+      if (!userid) {
+        initPopform('I') ;
+      }else{
+        initPopform('U') ;
+        getUserData(userid);
+      }
+
     }
 
     //모달 닫기
@@ -267,100 +378,295 @@
       e.preventDefault();
       const modal = $(this).parents('.cui_dialog');
       modal.fadeOut();
-
     });
 
-    //수정
-    function save() {
-        // 여기서 추가 검증을 할 수 있습니다.
-        document.getElementById("updateForm").submit();
+     function initPopform(type) {
+
+        if(type =="U"){
+            document.getElementById('popTitle').innerHTML = "사용자 수정";
+            document.getElementById('user_id').readOnly = true ;
+            document.getElementById('user_name').readOnly = true ;
+            document.getElementById('info_flag').value = "U";
+        }else{
+            document.getElementById('info_flag').value = "I";
+            document.getElementById('popTitle').innerHTML = "사용자 등록";
+            document.getElementById('user_id').readOnly = false ;
+            document.getElementById('user_name').readOnly = false ;
+            document.getElementById('e_mail').value = "";
+            document.getElementById('user_id').value = "" ;
+            document.getElementById('user_name').value = "" ;
+
+            $('#manage_iso_yn_01').prop('checked',false);
+            $('#manage_iso_yn_02').prop('checked',false);
+            $('#manage_iso_yn_03').prop('checked',false);
+            $('#manage_iso_yn_04').prop('checked',false);
+            $('#manage_iso_yn_05').prop('checked',false);
+            $('#manage_iso_yn_06').prop('checked',false);
+            $('#manage_iso_yn_07').prop('checked',false);
+            $('#manage_iso_yn_08').prop('checked',false);
+            $('#manage_iso_yn_09').prop('checked',false);
+
+            $('#manage_part_yn').prop('checked', false);
+
+            $('#manage_coa_yn_01').prop('checked',false);
+            $('#manage_coa_yn_02').prop('checked',false);
+            $('#manage_coa_yn_03').prop('checked',false);
+            $('#manage_coa_yn_04').prop('checked',false);
+
+            $('#manage_change_yn_01').prop('checked', false);
+            $('#manage_change_yn_02').prop('checked', false);
+            $('#manage_change_yn_03').prop('checked', false);
+            $('#manage_change_yn_04').prop('checked', false);
+            $('#manage_change_yn_05').prop('checked', false);
+        }
     }
 
 
-function getUserData(userid) {
+      function save() {
+        var Validator = true ;
+        var IdValidatorMsg ="";
 
-    $.ajax({
-        type: "POST",
-        url: "/userMgr/getUserInfoByID",
-        contentType: "application/json",
-        data: JSON.stringify({ "USER_ID": userid }),
-        success: function(res) {
-            console.log("요청 성공", res);
-            if (res) {
-                document.getElementById('user_id').value = res.user_ID;
-                document.getElementById('user_name').value = res.user_NAME;
-                document.getElementById('dept_code').value = res.dept_CODE;
-                document.getElementById('e_mail').value = res.EMAIL;
-                document.getElementById('user_level').value = res.user_LEVEL;
-                document.getElementById('manage_system_yn').value = res.manage_SYSTEM_YN;
-            } else {
-                alert("사용자 정보를 찾을 수 없습니다.");
+        if(document.getElementById('info_flag').value == "I"){
+         Validator = false ;
+         const user_id = document.getElementById('user_id').value ;
+         const user_name = document.getElementById('user_name').value ;
+
+            if (user_name.length == 0) {
+                IdValidatorMsg = "이름을 입력해 주세요.";
+                alert(IdValidatorMsg);
+                $('#user_name').focus();
+                return;
             }
-        },
-        error: function(err) {
-            console.log("에러 발생", err);
+
+            // 영어 또는 숫자 외의 값을 입력했을 경우
+            if(onlyNumberAndEnglish(user_id) === false) {
+                IdValidatorMsg = "아이디는 영어 또는 숫자만 가능합니다.";
+                alert(IdValidatorMsg);
+                $('#user_id').focus();
+            }
+            // 글자 수가 4~12글자가 아닐 경우
+            else if(idLength(user_id) === false) {
+                IdValidatorMsg ="아이디는 6~12글자이어야 합니다.";
+                alert(IdValidatorMsg);
+                $('#user_id').focus();
+            }
+            // 조건을 모두 만족할 경우
+            else if(idLength(user_id) || onlyNumberAndEnglish(user_id)) {
+                document.getElementById('user_idx').value = 0;
+
+                memberIDCheck(user_id).then(function(isValid) {
+                    if (isValid) {
+
+                       $.ajax({
+                            type: "post",
+                            url: "/userMgr/updateUserMgr",
+                            data: $('#updateForm').serialize(),
+                            success: function(response) {
+
+                               alert("사용자 정보가 추가 되었습니다.");
+                               $("#dialogUserUpdate").fadeOut();
+                               fetchDataLis();
+                            },
+                            error: function(err) {
+                                console.log("에러발생", err);
+                                alert("업데이트 중 오류가 발생했습니다.");
+                            }
+                        });
+                    }
+                });
+            }
+        }else{
+            //document.getElementById("updateForm").submit();
+             $.ajax({
+                type: "post",
+                url: "/userMgr/updateUserMgr",
+                data: $('#updateForm').serialize(),
+                success: function(response) {
+
+                   alert("사용자 정보가 수정 되었습니다.");
+                   $("#dialogUserUpdate").fadeOut();
+                   fetchDataLis();
+                },
+                error: function(err) {
+                    console.log("에러발생", err);
+                    alert("업데이트 중 오류가 발생했습니다.");
+                }
+            });
         }
+    }
+
+
+    //2-1. 아이디 : 글자 수 제한 (6글자 이상, 12글자 이하)
+    function idLength(value) {
+      return value.length >= 6 && value.length <= 12
+    }
+    //6글자 이상 또는 12글자 이하인 경우 true, 아니면 false를 리턴한다.
+
+
+    //2-2. 아이디 : 영어 또는 숫자만 가능
+    function onlyNumberAndEnglish(str) {
+      return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(str);
+    }
+
+   function memberIDCheck(searchID) {
+    return new Promise(function(resolve, reject) {
+        $.ajax({
+            type: "post",
+            url: "/member/id-check",
+            data: {
+                "memberID": searchID
+            },
+            success: function(res) {
+                if (res == "ok") {
+                    resolve(true);
+                } else {
+                    alert("동일한 아이디가 존재합니다.");
+                    $('#user_id').focus();
+                    resolve(false);
+                }
+            },
+            error: function(err) {
+                console.log("에러발생", err);
+                reject(err);
+            }
+        });
     });
 }
 
 
+    function getUserData(userid) {
+
+        const deptSelect = $('#dept_code');
+        const levelSelect = $('#user_level');
+        const userStatusSelect = $('#user_status');
 
 
-        function fetchData() {
-           const dto = {
-               "USER_ID": document.getElementById('userid').value,
-               "USER_NAME": document.getElementById('username').value,
-               "DEPT_CODE": document.getElementById('deptcode').value,
-               "EMAIL": document.getElementById('email').value,
-               "USER_LEVEL": document.getElementById('userlevel').value,
-               "USER_STATUS": document.getElementById('userStatus').value
-           };
+        document.getElementById('user_id').readOnly = true;
+        document.getElementById('user_name').readOnly = true;
 
-           fetch('/userMgr/getUserInfo', {
-               method: 'POST',
-               headers: {
-                   'Content-Type': 'application/json',
-               },
-               body: JSON.stringify(dto)
-           })
-           .then(response => {
-               if (!response.ok) {
-                   throw new Error('Network response was not ok');
-               }
-               return response.json();
-           })
-           .then(data => {
-                console.log('응답 데이터:', data);
-                if (data && Array.isArray(data)) {
-                     populateTable(data);
+        $.ajax({
+            type: "POST",
+            url: "/userMgr/getUserInfoByID",
+            contentType: "application/json",
+            data: JSON.stringify({ "USER_ID": userid }),
+            success: function(res) {
+                console.log("요청 성공", res);
+                if (res) {
+                    document.getElementById('user_id').value = res.user_ID;
+                    document.getElementById('user_idx').value = res.user_IDX;
+                    document.getElementById('user_name').value = res.user_NAME;
+                    document.getElementById('e_mail').value = res.email;
+
+                    //document.getElementById('dept_code').value = res.dept_CODE;
+                    //document.getElementById('user_level').value = res.user_LEVEL;
+                    //document.getElementById('manage_system_yn').value = res.manage_SYSTEM_YN;
+
+                    //이름으로
+                    deptSelect.find('option').filter(function() {
+                        return $(this).text() === res.dept_CODE;
+                    }).prop('selected', true);
+
+                    levelSelect.find('option').filter(function() {
+                        return $(this).text() === res.user_LEVEL;
+                    }).prop('selected', true);
+
+                    userStatusSelect.find('option').filter(function() {
+                        return $(this).text() === res.user_STATUS;
+                    }).prop('selected', true);
+
+                    $('#manage_iso_yn_01').prop('checked', res.manage_ISO_YN_01 === 'Y');
+                    $('#manage_iso_yn_02').prop('checked', res.manage_ISO_YN_02 === 'Y');
+                    $('#manage_iso_yn_03').prop('checked', res.manage_ISO_YN_03 === 'Y');
+                    $('#manage_iso_yn_04').prop('checked', res.manage_ISO_YN_04 === 'Y');
+                    $('#manage_iso_yn_05').prop('checked', res.manage_ISO_YN_05 === 'Y');
+                    $('#manage_iso_yn_06').prop('checked', res.manage_ISO_YN_06 === 'Y');
+                    $('#manage_iso_yn_07').prop('checked', res.manage_ISO_YN_07 === 'Y');
+                    $('#manage_iso_yn_08').prop('checked', res.manage_ISO_YN_08 === 'Y');
+                    $('#manage_iso_yn_09').prop('checked', res.manage_ISO_YN_09 === 'Y');
+
+                    $('#manage_part_yn').prop('checked', res.manage_PART_YN === 'Y');
+
+                    $('#manage_coa_yn_01').prop('checked', res.manage_COA_YN_01 === 'Y');
+                    $('#manage_coa_yn_02').prop('checked', res.manage_COA_YN_02 === 'Y');
+                    $('#manage_coa_yn_03').prop('checked', res.manage_COA_YN_03 === 'Y');
+                    $('#manage_coa_yn_04').prop('checked', res.manage_COA_YN_04 === 'Y');
+
+                    $('#manage_change_yn_01').prop('checked', res.manage_CHANGE_YN_01 === 'Y');
+                    $('#manage_change_yn_02').prop('checked', res.manage_CHANGE_YN_02 === 'Y');
+                    $('#manage_change_yn_03').prop('checked', res.manage_CHANGE_YN_03 === 'Y');
+                    $('#manage_change_yn_04').prop('checked', res.manage_CHANGE_YN_04 === 'Y');
+                    $('#manage_change_yn_05').prop('checked', res.manage_CHANGE_YN_05 === 'Y');
+
                 } else {
-                     alert("nodata");
+                    alert("사용자 정보를 찾을 수 없습니다.");
                 }
-           })
-           .catch(error => {
-               console.error('데이터 조회 실패:', error);
-           });
-        }
+            },
+            error: function(err) {
+                console.log("에러 발생", err);
+            }
+        });
+    }
 
-     function populateTable(data) {
-      const tableBody = $("#userTableBody");
-         tableBody.empty();
 
-         data.forEach(user => {
-             const row = `
-                 <tr>
-                     <td><button type="button" class="cui_button endpoint" onClick="modal('dialogUserUpdate','${user.user_ID}')" >${user.user_ID}</button></td>
-                     <td><span>${user.user_NAME}</span></td>
-                     <td><span>${user.dept_CODE}</span></td>
-                     <td><span>${user.email}</span></td>
-                     <td><span>${user.user_LEVEL}</span></td>
-                     <td><span>${user.user_STATUS}</span></td>
-                     <td><span>${user.reg_DATE}</span></td>
-                 </tr>
-             `;
-             tableBody.append(row);
-         });
-     }
+
+
+    function fetchDataLis() {
+
+       const dto = {
+           "USER_ID": document.getElementById('userid').value,
+           "USER_NAME": document.getElementById('username').value,
+           "DEPT_CODE": document.getElementById('deptcode').value,
+           "EMAIL": document.getElementById('email').value,
+           "USER_LEVEL": document.getElementById('userlevel').value,
+           "USER_STATUS": document.getElementById('userStatus').value
+       };
+
+       fetch('/userMgr/getUserInfo', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(dto)
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response.json();
+       })
+       .then(data => {
+            console.log('응답 데이터:', data);
+            if (data && Array.isArray(data)) {
+                 populateTable(data);
+            } else {
+                 alert("nodata");
+            }
+       })
+       .catch(error => {
+           console.error('데이터 조회 실패:', error);
+       });
+    }
+
+    function populateTable(data) {
+
+     const tableBody = $("#userTableBody");
+     tableBody.empty();
+
+     data.forEach(user => {
+         const row = `
+             <tr>
+                 <td><button type="button" class="cui_button endpoint" onClick="modal('dialogUserUpdate','${user.user_ID}')" >${user.user_ID}</button></td>
+                 <td><span>${user.user_NAME}</span></td>
+                 <td><span>${user.dept_CODE}</span></td>
+                 <td><span>${user.email}</span></td>
+                 <td><span>${user.user_LEVEL}</span></td>
+                 <td><span>${user.user_STATUS}</span></td>
+                 <td><span>${user.reg_DATE}</span></td>
+             </tr>
+         `;
+         tableBody.append(row);
+     });
+    }
 
 </script>
 

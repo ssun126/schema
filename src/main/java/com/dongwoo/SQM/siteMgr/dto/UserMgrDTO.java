@@ -17,6 +17,8 @@ public class UserMgrDTO {
     private String INPUT_DATE;
     private int ATTACHED_FILE;
 
+    private String INFO_FLAG        ;    //insert update type
+
     //USER_INFO
     private int USER_IDX        ;    //-- 사용자 IDX
     private String USER_ID      ;    //-- 아이디 ▼
