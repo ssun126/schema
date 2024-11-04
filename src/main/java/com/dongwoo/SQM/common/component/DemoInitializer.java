@@ -26,5 +26,19 @@ public class DemoInitializer implements ApplicationRunner {
 
         List<SubMenuDTO> subMenuList =  securityUrlMatcherService.getAllSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.subMenuList = Collections.singletonList(subMenuList);
+
+        //관리자
+        List<SecurityUrlMatcherDTO> adminMenuList =  securityUrlMatcherService.getAllAdminMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.adminMenuList = Collections.singletonList(adminMenuList);
+
+        List<SubMenuDTO> adminSubMenuList =  securityUrlMatcherService.getAllAdminSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.adminSubMenuList = Collections.singletonList(adminSubMenuList);
+
+        //사용자
+        List<SecurityUrlMatcherDTO> userMenuList =  securityUrlMatcherService.getAllUserMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.userMenuList = Collections.singletonList(userMenuList);
+
+        List<SubMenuDTO> userSubMenuList =  securityUrlMatcherService.getAllUserSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.userSubMenuList = Collections.singletonList(userSubMenuList);
     }
 }

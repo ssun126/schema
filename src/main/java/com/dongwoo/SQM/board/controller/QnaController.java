@@ -6,7 +6,6 @@ import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ import java.util.UUID;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class BoardController {
+public class QnaController {
     private final BoardService boardService;
 
     /**
@@ -38,14 +37,14 @@ public class BoardController {
      * @param model
      * @return
      */
-    @GetMapping("/user/board/qa")
+    @GetMapping("/admin/board/qa")
     public String list(Criteria criteria, Model model) {
         log.info("criteria============================================="+criteria);
         List<BoardDTO> boardDTOList = boardService.getList(criteria);
         model.addAttribute("boardList", boardDTOList);
         model.addAttribute("pageMaker", new PageDTO(boardService.getTotal(), 10, criteria));
         log.info("boardDTOList = " + boardDTOList);
-        return "board/list";
+        return "board/adminList";
     }
 
     /**
@@ -54,7 +53,7 @@ public class BoardController {
      * @param model
      * @return
      */
-    @GetMapping("/user/board/qa/{id}")
+    @GetMapping("/admin/board/qa/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
         // 조회수 처리.
         boardService.updateHits(id);
@@ -62,10 +61,10 @@ public class BoardController {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
 
-        return "board/detail";
+        return "board/adminDetail";
     }
 
-    @GetMapping("/user/board/download/{filename}")
+    @GetMapping("/admin/board/download/{filename}")
     public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {
         try {
             log.info("filename???????"+filename);
@@ -94,9 +93,9 @@ public class BoardController {
      * Q&A 등록 화면
      * @return
      */
-    @GetMapping("/user/board/qa/save")
+    @GetMapping("/admin/board/qa/save")
     public String save() {
-        return "/Board/save";
+        return "/Board/adminSave";
     }
 
     /**
@@ -106,7 +105,7 @@ public class BoardController {
      * @return
      * @throws IOException
      */
-    @PostMapping("/user/board/qa/save")
+    @PostMapping("/admin/board/qa/save")
     public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
         log.info("boardDTO = " + boardDTO);
         // 파일 업로드 처리 시작
@@ -124,25 +123,25 @@ public class BoardController {
         // 파일 업로드 처리 끝
 
         boardService.save(boardDTO);
-        return "redirect:/user/board/qa/list";
+        return "redirect:/admin/board/qa/list";
     }
 
-    @GetMapping("/user/board/qa/update/{id}")
+    @GetMapping("/admin/board/qa/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
-        return "/board/update";
+        return "/board/adminUpdate";
     }
 
-    @PostMapping("/user/board/qa/update/{id}")
+    @PostMapping("/admin/board/qa/update/{id}")
     public String update(BoardDTO boardDTO, Model model) {
         boardService.update(boardDTO);
         BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
         model.addAttribute("board", dto);
-        return "/board/detail";
+        return "/board/adminDetail";
     }
 
-    @GetMapping("/user/board/qa/delete/{id}")
+    @GetMapping("/admin/board/qa/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         boardService.delete(id);
         return "redirect:/board/list";
