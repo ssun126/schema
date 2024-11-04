@@ -174,7 +174,7 @@
         #{MANAGE_ISO_YN_07}, #{MANAGE_ISO_YN_08}, #{MANAGE_ISO_YN_09},
         #{MANAGE_PART_YN}, #{MANAGE_COA_YN_01}, #{MANAGE_COA_YN_02}, #{MANAGE_COA_YN_03}, #{MANAGE_COA_YN_04},
         #{MANAGE_CHANGE_YN_01}, #{MANAGE_CHANGE_YN_02}, #{MANAGE_CHANGE_YN_03}, #{MANAGE_CHANGE_YN_04}, #{MANAGE_CHANGE_YN_05},
-        0, 0, 0 )
+        'N', 'N', 'N' )
     </insert>
 
     <insert id="insertUserInfoMgr"  parameterType="userMgr" >

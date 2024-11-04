@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.system.controller;
 
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.dto.*;
 import com.dongwoo.SQM.system.service.MemberService;
 import jakarta.servlet.http.HttpSession;
@@ -10,11 +11,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -74,12 +75,17 @@ public class MemberController {
         return "/member/detail";
     }
 
+    //마이페이지 2024.11.24 sylee
     @GetMapping("/member/myPage")
-    public String myPage(HttpSession session, Model model) {
-        // 세션에 저장된 나의 이메일 가져오기
-        String loginId = (String) session.getAttribute("loginId");
+    public String myPage(HttpSession session, Model model,Authentication authentication) {
+        // 세션에 저장된 나의 ID 가져오기
+       // String loginId = (String) session.getAttribute("loginId");//System.out.println("loginId????"+loginId);
+
+        String loginId = authentication.getName(); // 사용자 이름 = ID  2024.11.04 일단 이걸로.
         System.out.println("loginId????"+loginId);
-        MemberDTO memberDTO = memberService.findByMemberId(loginId);
+
+        UserMgrDTO memberDTO = memberService.findByMemberId(loginId);
+
         model.addAttribute("member", memberDTO);
         return "/member/myPage";
     }
