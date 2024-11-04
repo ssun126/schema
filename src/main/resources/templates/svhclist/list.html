@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/mainLayout}"
+      layout:fragment="Content" xmlns="">
+<head>
+  <meta charset="UTF-8">
+  <title>기초설정</title>
+  <style>
+    .cui_dialog {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body>
+<div class="cui_app">
+  <div class="cui_container" data-module="">
+    <div class="cui_lnb">
+      <div class="lnb_root">
+        <div class="lnb_head">
+          <h2 class="lnb_title"><span>Site Management</span></h2>
+        </div>
+        <div class="cui_nav">
+          <nav class="nav_root">
+            <ul>
+              <li>
+                <a href="#" class="nav_item">
+                  <span class="nav_label">동우 사용자 관리</span>
+                </a>
+              </li>
+              <li>
+                <a href="/siteMgr/baseConfig" class="nav_item" aria-selected="true">
+                  <span class="nav_label">기초설정</span>
+                </a>
+              </li>
+              <li>
+                <a href="/siteMgr/baseCode" class="nav_item">
+                  <span class="nav_label">기초코드</span>
+                </a>
+              </li>
+              <li>
+                <a href="/siteMgr/svhcList" class="nav_item">
+                  <span class="nav_label">SVHC 항목 </span>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav_item">
+                  <span class="nav_label">Declaration Letter 항목</span>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav_item" aria-selected="true">
+                  <span class="nav_label">SAMPLE 파일</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="cui_content">
+      <div class="cui_main">
+        <div class="cui_head">
+          <div class="head_content">
+            <h2 class="cui_title"><span>SVHC 항목</span></h2>
+          </div>
+        </div>
+        <div class="cui_body">
+          <div class="cui_toolbar">
+            <div class="toolbar_content">
+              <div class="toolbar_default"></div>
+            </div>
+            <div class="toolbar_aside" style="display:none;">
+              <button type="button" class="cui_button secondary"><span>추가</span></button>
+              <button type="button" class="cui_button secondary"><span>삭제</span></button>
+            </div>
+          </div>
+          <table class="cui_table">
+            <colgroup>
+              <col style="width:120px;">
+              <col>
+            </colgroup>
+            <tbody>
+            <tr>
+              <th><span>양식 다운로드</span></th>
+              <td>
+                <form action="/svhcData/upload" method="post" enctype="multipart/form-data">
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <div class="cui_attachments">
+                      <input type="file" class="cui_file_field">
+
+                    </div>
+                    <div class="item_content">
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+<!--                      <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                    </div>
+                    <button type="button" class="cui_button"><span>SAMPLE</span></button>
+                    <button type="submit" class="cui_button primary"><span>저장</span></button>
+                  </div>
+                </div>
+                </form>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <table class="cui_table">
+            <colgroup>
+              <col style="width:60px;">
+              <col style="width:100px;">
+              <col>
+              <col>
+              <col>
+            </colgroup>
+            <thead>
+            <tr>
+              <th class="center"><label class="cui_checkbox"><input type="checkbox"><i></i></label></th>
+              <th class="center"><span>NO.</span></th>
+              <th><span>물질명</span></th>
+              <th><span>CAS No</span></th>
+              <th><span>EU No.</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="svhcDataList : ${svhcDataList}">
+              <td class="center"><label class="cui_checkbox"><input type="checkbox"><i></i></label></td>
+              <td class="center"th:text="${svhcDataList.SVHC_NUM}"><span></span></td>
+              <td><button type="button" class="cui_button endpoint"  th:text="${svhcDataList.SVHC_NAME}">key1</button></td>
+              <td><span th:text="${svhcDataList.SVHC_CASNUM}">96-24-7</span></td>
+              <td><span th:text="${svhcDataList.SVHC_EUNUM}">202-506-9</span></td>
+            </tr>
+<!--            <tr>-->
+<!--              <td class="center"><label class="cui_checkbox"><input type="checkbox"><i></i></label></td>-->
+<!--              <td class="center"><span>2</span></td>-->
+<!--              <td><button type="button" class="cui_button endpoint">key1</button></td>-->
+<!--              <td><span>96-24-7</span></td>-->
+<!--              <td><span>202-506-9</span></td>-->
+<!--            </tr>-->
+            </tbody>
+          </table>
+
+          <div class="cui_items_wrap" data-direction="right">
+            <div class="item_content">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+
+<!--  $(document).ready(function() {-->
+<!--      //modal_init("Init");-->
+<!--  });-->
+
+<!--    function setBizSection(){-->
+<!--        const sUrl ="/baseCode/getBizSectionList";-->
+<!--        $.ajax({-->
+<!--            type:"post",-->
+<!--            url : sUrl,-->
+<!--            success: function(res){-->
+<!--                if(res.status == "ok"){-->
+<!--                    bindBizSectionList(res);-->
+<!--                }-->
+<!--            },-->
+<!--            error :  function(err){-->
+<!--                console.log("에러발생",err);-->
+<!--            }-->
+
+<!--        });-->
+<!--    }-->
+
+
+  function BaseConfig_Popup(){
+      let popOption ="width=601,height=436,top=100,left=100";
+      let openUrl = "/BaseConfig/Popup";
+      window.open(openUrl, 'BaseConfig', popOption);
+  }
+
+  //모달 초기화
+  function modal_init(flag){
+      if(flag=="MODIFY"){
+         $(".fixdata").attr("readonly",true);
+         //버튼 바꾸기
+           $("#BaseCodeAdd").css("display","none");
+          $("#BaseCodeMod").css("display","block");
+          $("#BaseCodeDel").css("display","block");
+
+      }else{
+          //초기화
+          document.getElementsByName("BASE_CODE")[0].value = "";
+          document.getElementsByName("BASE_NAME")[0].value = "";
+          document.getElementsByName("BASE_VALUE")[0].value = "";
+          document.getElementsByName("BASE_SUMMARY")[0].value = "";
+          document.getElementsByName("BASE_SORT")[0].value = "";
+          document.getElementsByName("BASE_OPTION")[0].value = "";
+          document.getElementsByName("BASE_CODE_IDX")[0].value = 0;
+          $("select[name=GUBN] option:eq(0)").prop("selected", true);
+          $("select[name=GROUP_CODE] option:eq(0)").prop("selected", true);
+          $("select[name=BASE_STATUS] option:eq(0)").prop("selected", true);
+          $(".fixdata").attr("readonly",false);
+
+          //버튼 바꾸기
+          $("#ConfigAdd").css("display","block");
+          $("#ConfigMod").css("display","none");
+          $("#ConfigDel").css("display","none");
+      }
+
+  }
+
+
+  //모달 열기
+  function modal(id, status){
+    if(status !='add'){
+     var sUrl = "/baseCode/baseCode_Info" ;
+
+      $.ajax({
+        type: "post",
+        url:   sUrl,
+        data: {
+            "status": status
+        },
+        success: function(res) {
+            console.log("요청성공", res);
+
+            if (res.status == "ok") {
+              //공동업무자정보
+              //ID /PASS
+              bindBasCodeInfo(res);           //정보 바인딩. ★
+              $("#" + id).fadeIn();
+              modal_init("MODIFY");
+
+            }
+        },
+        error: function(err) {
+            console.log("에러발생", err);
+        }
+      });
+    }else{
+      modal_init();
+      $("#" + id).fadeIn();
+    }
+  }
+
+  function bindBasCodeInfo(baseCode){
+      if(baseCode != null){
+          document.getElementsByName("BASE_CODE")[0].value = baseCode.BASE_CODE ;
+          document.getElementsByName("BASE_NAME")[0].value = baseCode.BASE_NAME ;
+          document.getElementsByName("BASE_VALUE")[0].value = baseCode.BASE_VALUE ;
+          document.getElementsByName("BASE_SUMMARY")[0].value = baseCode.BASE_SUMMARY ;
+          document.getElementsByName("BASE_SORT")[0].value = baseCode.BASE_SORT ;
+          document.getElementsByName("BASE_OPTION")[0].value = baseCode.BASE_OPTION ;
+          document.getElementsByName("BASE_CODE_IDX")[0].value = baseCode.BASE_CODE_IDX ;
+
+          $("select[name=GUBN]").val(baseCode.GUBN).prop("selected", true);
+          $("select[name=GROUP_CODE]").val(baseCode.GROUP_CODE).prop("selected", true);
+          $("select[name=BASE_STATUS]").val(baseCode.BASE_STATUS).prop("selected", true);
+
+
+      }
+  }
+
+  //모달 닫기
+  $('.modal-close').on('click', function(e){
+    e.preventDefault();
+    const modal = $(this).parents('.cui_dialog');
+    modal.fadeOut();
+    modal_init();
+  });
+
+
+
+</script>
+</html>
