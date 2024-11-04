@@ -1,7 +1,6 @@
 package com.dongwoo.SQM.siteMgr.repository;
 
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
-import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -35,7 +34,7 @@ public class BaseCodeRepository {
     }
 
     public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextval){
-        HashMap<String,Object> data = new HashMap<String,Object>();
+        HashMap<String,Object> data = new HashMap<>();
         data.put("sGubun",sGubun);
         data.put("sKey",sKey);
         data.put("sTextval",sTextval);
