@@ -1,6 +1,5 @@
-package com.dongwoo.SQM.config;
+package com.dongwoo.SQM.config.security;
 
-import com.dongwoo.SQM.system.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -39,13 +38,15 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
                         .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**").permitAll()
                         // 관리자 권한만 가능
-                        .requestMatchers("/dwuser/**").hasRole("dwuser")
+                        .requestMatchers("/admin").authenticated()
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")  // ADMIN 권한이 있는것만 가능.
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/main", true)
+                        .successHandler(new LoginSuccessHandler("/"))
                         .permitAll()
                 )
                 .logout(logout -> logout

@@ -1,14 +1,15 @@
 package com.dongwoo.SQM.system.controller;
 
 import com.dongwoo.SQM.system.dto.LoginDTO;
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.system.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,13 +71,17 @@ public class LoginController {
     }
 
     @GetMapping("/main")
-    public String goMain(LoginDTO loginDTO, HttpSession session) {
+    public String goMain(@AuthenticationPrincipal UserCustom user) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("authentication4======"+auth);
+        log.info("user======"+user);
 
         if(auth.isAuthenticated()){
             // login 성공
-            log.info("loginName======"+session.getAttribute("loginName"));
+            log.info("login======"+user.getUSER_NAME());
+            for (GrantedAuthority authority : auth.getAuthorities()) {
+                log.info(authority.getAuthority());
+            }
         }
 
         return "main";
