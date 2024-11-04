@@ -702,9 +702,6 @@
         return;
     }
 
-      //$('#dupliCation').hide();
-      //$('#missPass').hide();
-
       $.ajax({
           // 요청방식: post, url: "vendor-check", 데이터:  member ID 중복체크
           type: "post",
@@ -715,10 +712,6 @@
           success: function(res) {
 
               hideMemberInfo();// 정보 숨기기.
-<!--   $('#IdVAL').hide();-->  //유효성 검사 메세지.
-<!--   $('#dupliCation').hide();--> //중복    <p>동일 사업부/공장에서 업무자별 ID 생성은 승인 불가 합니다</p>
-<!--   $('#missPass').hide();-->  <p>ID/PW 문의는 Main 담당자 또는 '공동업무자'에게 문의 바랍니다.</p>
-
               $('#IdVAL').show();
 
               if (res == "ok") {

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMgr">
+
+    <select id="findAll" resultType="userMgr">
+        SELECT BASECONFIGIDX as IDX,GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,u.USERNAME,b.REGDATE
+        FROM BASECONFIG b
+        LEFT OUTER JOIN USERINFO u
+        ON b.REGDWUSERIDX = u.USERIDX
+
+    </select>
+
+    <select id="findUserMgrById" parameterType="String" resultType="userMgr">
+        SELECT
+        u.USER_IDX,
+        u.USER_ID,
+        u.USER_PWD,
+        u.USER_NAME,
+        u.USER_GUBN,
+        DECODE(u.USER_STATUS,'Y','사용','미사용')  USER_STATUS ,
+        u.REG_DW_USER_IDX,
+        u.UP_DW_USER_IDX,
+        u.DEL_DW_USER_IDX,
+        TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
+        u.UP_DATE,
+        u.DEL_DATE,
+        (select x.base_name from base_code x where dw.DEPT_CODE = x.base_code_idx )  DEPT_CODE ,
+        dw.EMAIL,
+        DECODE(dw.USER_LEVEL,'100','관리자','사용자') USER_LEVEL ,
+        dw.MANAGE_SYSTEM_YN,
+        dw.MANAGE_ISO_YN_01,
+        dw.MANAGE_ISO_YN_02,
+        dw.MANAGE_ISO_YN_03,
+        dw.MANAGE_ISO_YN_04,
+        dw.MANAGE_ISO_YN_05,
+        dw.MANAGE_ISO_YN_06,
+        dw.MANAGE_ISO_YN_07,
+        dw.MANAGE_ISO_YN_08,
+        dw.MANAGE_ISO_YN_09,
+        dw.MANAGE_PART_YN,
+        dw.MANAGE_COA_YN_01,
+        dw.MANAGE_COA_YN_02,
+        dw.MANAGE_COA_YN_03,
+        dw.MANAGE_COA_YN_04,
+        dw.MANAGE_CHANGE_YN_01,
+        dw.MANAGE_CHANGE_YN_02,
+        dw.MANAGE_CHANGE_YN_03,
+        dw.MANAGE_CHANGE_YN_04,
+        dw.MANAGE_CHANGE_YN_05,
+        dw.ALARM_AUDIT_YN,
+        dw.ALARM_PART_YN,
+        dw.ALARM_COA_CHANGE_YN
+        FROM USER_INFO u
+        JOIN USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
+        AND u.USER_ID =#{USER_ID}
+    </select>
+
+    <select id="findUserMgrSearch"  parameterType="userMgrParam" resultType="userMgr">
+        SELECT
+        u.USER_IDX,
+        u.USER_ID,
+        u.USER_PWD,
+        u.USER_NAME,
+        u.USER_GUBN,
+        DECODE(u.USER_STATUS,'Y','사용','미사용')  USER_STATUS ,
+        u.REG_DW_USER_IDX,
+        u.UP_DW_USER_IDX,
+        u.DEL_DW_USER_IDX,
+        TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
+        u.UP_DATE,
+        u.DEL_DATE,
+        (select x.base_name from base_code x where dw.DEPT_CODE = x.base_code_idx )  DEPT_CODE ,
+        dw.EMAIL,
+        DECODE(dw.USER_LEVEL,'100','관리자','사용자') USER_LEVEL ,
+        dw.MANAGE_SYSTEM_YN,
+        dw.MANAGE_ISO_YN_01,
+        dw.MANAGE_ISO_YN_02,
+        dw.MANAGE_ISO_YN_03,
+        dw.MANAGE_ISO_YN_04,
+        dw.MANAGE_ISO_YN_05,
+        dw.MANAGE_ISO_YN_06,
+        dw.MANAGE_ISO_YN_07,
+        dw.MANAGE_ISO_YN_08,
+        dw.MANAGE_ISO_YN_09,
+        dw.MANAGE_PART_YN,
+        dw.MANAGE_COA_YN_01,
+        dw.MANAGE_COA_YN_02,
+        dw.MANAGE_COA_YN_03,
+        dw.MANAGE_COA_YN_04,
+        dw.MANAGE_CHANGE_YN_01,
+        dw.MANAGE_CHANGE_YN_02,
+        dw.MANAGE_CHANGE_YN_03,
+        dw.MANAGE_CHANGE_YN_04,
+        dw.MANAGE_CHANGE_YN_05,
+        dw.ALARM_AUDIT_YN,
+        dw.ALARM_PART_YN,
+        dw.ALARM_COA_CHANGE_YN
+        FROM USER_INFO u
+        JOIN USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
+        WHERE 1=1
+        <if test="USER_ID != null and USER_ID != ''">
+            AND u.USER_ID LIKE '%' || #{USER_ID} || '%'
+        </if>
+        <if test="USER_NAME != null and USER_NAME != ''">
+            AND u.USER_NAME LIKE '%' || #{USER_NAME} || '%'
+        </if>
+        <if test="DEPT_CODE != null and DEPT_CODE != ''">
+            AND dw.DEPT_CODE LIKE '%' || #{DEPT_CODE} || '%'
+        </if>
+        <if test="EMAIL != null and EMAIL != ''">
+            AND dw.EMAIL LIKE '%' || #{EMAIL} || '%'
+        </if>
+        <if test="USER_LEVEL != null and USER_LEVEL != ''">
+            AND dw.USER_LEVEL LIKE '%' || #{USER_LEVEL} || '%'
+        </if>
+        <if test="USER_STATUS != null and USER_STATUS != ''">
+            AND u.USER_STATUS LIKE '%' || #{USER_STATUS} || '%'
+        </if>
+    </select>
+
+    <update id="updateUserMgr"  parameterType="userMgr" >
+         UPDATE USER_INFO_DW
+        SET
+         DEPT_CODE           =#{DEPT_CODE}
+        ,EMAIL               =#{EMAIL}
+        ,USER_LEVEL          =#{USER_LEVEL}
+<!--        ,MANAGE_SYSTEM_YN    =#{MANAGE_SYSTEM_YN}-->
+        ,MANAGE_ISO_YN_01    =#{MANAGE_ISO_YN_01}
+        ,MANAGE_ISO_YN_02    =#{MANAGE_ISO_YN_02}
+        ,MANAGE_ISO_YN_03    =#{MANAGE_ISO_YN_03}
+        ,MANAGE_ISO_YN_04    =#{MANAGE_ISO_YN_04}
+        ,MANAGE_ISO_YN_05    =#{MANAGE_ISO_YN_05}
+        ,MANAGE_ISO_YN_06    =#{MANAGE_ISO_YN_06}
+        ,MANAGE_ISO_YN_07    =#{MANAGE_ISO_YN_07}
+        ,MANAGE_ISO_YN_08    =#{MANAGE_ISO_YN_08}
+        ,MANAGE_ISO_YN_09    =#{MANAGE_ISO_YN_09}
+        ,MANAGE_PART_YN      =#{MANAGE_PART_YN}
+        ,MANAGE_COA_YN_01    =#{MANAGE_COA_YN_01}
+        ,MANAGE_COA_YN_02    =#{MANAGE_COA_YN_02}
+        ,MANAGE_COA_YN_03    =#{MANAGE_COA_YN_03}
+        ,MANAGE_COA_YN_04    =#{MANAGE_COA_YN_04}
+        ,MANAGE_CHANGE_YN_01 =#{MANAGE_CHANGE_YN_01}
+        ,MANAGE_CHANGE_YN_02 =#{MANAGE_CHANGE_YN_02}
+        ,MANAGE_CHANGE_YN_03 =#{MANAGE_CHANGE_YN_03}
+        ,MANAGE_CHANGE_YN_04 =#{MANAGE_CHANGE_YN_04}
+        ,MANAGE_CHANGE_YN_05 =#{MANAGE_CHANGE_YN_05}
+<!--        ,ALARM_AUDIT_YN      =#{ALARM_AUDIT_YN}-->
+<!--        ,ALARM_PART_YN       =#{ALARM_PART_YN}-->
+<!--        ,ALARM_COA_CHANGE_YN =#{ALARM_COA_CHANGE_YN}-->
+        WHERE USER_IDX =#{USER_IDX}
+    </update>
+
+    <update id="updateUserInfoMgr"  parameterType="userMgr" >
+    UPDATE USER_INFO
+    SET
+        USER_STATUS=#{USER_STATUS}
+        ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+        ,UP_DATE = sysdate
+    WHERE USER_IDX =#{USER_IDX}
+    </update>
+
+    <insert id="insertUserinfoDwMgr"  parameterType="userMgr" >
+        INSERT INTO USER_INFO_DW (
+        USER_IDX, DEPT_CODE, EMAIL, USER_LEVEL,
+        MANAGE_SYSTEM_YN, MANAGE_ISO_YN_01, MANAGE_ISO_YN_02, MANAGE_ISO_YN_03, MANAGE_ISO_YN_04, MANAGE_ISO_YN_05, MANAGE_ISO_YN_06,
+        MANAGE_ISO_YN_07, MANAGE_ISO_YN_08, MANAGE_ISO_YN_09,
+        MANAGE_PART_YN, MANAGE_COA_YN_01, MANAGE_COA_YN_02, MANAGE_COA_YN_03, MANAGE_COA_YN_04,
+        MANAGE_CHANGE_YN_01, MANAGE_CHANGE_YN_02, MANAGE_CHANGE_YN_03, MANAGE_CHANGE_YN_04, MANAGE_CHANGE_YN_05,
+        ALARM_AUDIT_YN, ALARM_PART_YN, ALARM_COA_CHANGE_YN
+        ) VALUES (
+        #{USER_IDX}, #{DEPT_CODE}, #{EMAIL}, #{USER_LEVEL},
+        #{MANAGE_SYSTEM_YN}, #{MANAGE_ISO_YN_01}, #{MANAGE_ISO_YN_02}, #{MANAGE_ISO_YN_03}, #{MANAGE_ISO_YN_04}, #{MANAGE_ISO_YN_05}, #{MANAGE_ISO_YN_06},
+        #{MANAGE_ISO_YN_07}, #{MANAGE_ISO_YN_08}, #{MANAGE_ISO_YN_09},
+        #{MANAGE_PART_YN}, #{MANAGE_COA_YN_01}, #{MANAGE_COA_YN_02}, #{MANAGE_COA_YN_03}, #{MANAGE_COA_YN_04},
+        #{MANAGE_CHANGE_YN_01}, #{MANAGE_CHANGE_YN_02}, #{MANAGE_CHANGE_YN_03}, #{MANAGE_CHANGE_YN_04}, #{MANAGE_CHANGE_YN_05},
+        0, 0, 0 )
+    </insert>
+
+    <insert id="insertUserInfoMgr"  parameterType="userMgr" >
+        insert into USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS
+        ,REG_DW_USER_IDX  ,REG_DATE,UP_DATE)
+        values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS}
+        , #{REG_DW_USER_IDX} , sysdate,sysdate )
+    </insert>
+
+    <!-- USERINFO 가입된정보 가져가기 -->
+    <select id="findByUserId" parameterType="String" resultType="userMgr">
+        select * from USER_INFO where USER_ID=#{USER_ID}
+    </select>
+
+
+
+</mapper>
