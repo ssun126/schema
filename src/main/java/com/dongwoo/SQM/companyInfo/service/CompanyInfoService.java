@@ -1,5 +1,7 @@
 package com.dongwoo.SQM.companyInfo.service;
 
+import com.dongwoo.SQM.board.dto.BoardDTO;
+import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.repository.CompanyInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,13 @@ public class CompanyInfoService {
 
     public List<CompanyInfoDTO> findAll() {
         return companyInfoRepository.findAll();
+    }
+
+    public List<CompanyInfoDTO> getList(Criteria cri) {
+        return companyInfoRepository.getList(cri);
+    }
+    public int getTotal() {
+        return companyInfoRepository.getTotal();
     }
 
     public void updateHits(int id) {

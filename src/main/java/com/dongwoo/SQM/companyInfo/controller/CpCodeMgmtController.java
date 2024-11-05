@@ -1,8 +1,12 @@
 package com.dongwoo.SQM.companyInfo.controller;
 
+import com.dongwoo.SQM.board.dto.BoardDTO;
+import com.dongwoo.SQM.board.dto.Criteria;
+import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
+import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class CpCodeMgmtController {
@@ -20,8 +26,13 @@ public class CpCodeMgmtController {
 
     @GetMapping("/admin/companyInfo/cpCode")
     //@PreAuthorize("hasRole('ADMIN')")
-    public String cpCodeMgmtMain(Model model) {
-        return "companyInfo/main";
+    public String cpCodeMgmtMain(Criteria criteria, Model model) {
+        log.info("criteria============================================="+criteria);
+        List<CompanyInfoDTO> companyInfoDTOList = companyInfoService.getList(criteria);
+        model.addAttribute("boardList", companyInfoDTOList);
+        model.addAttribute("pageMaker", new PageDTO(companyInfoService.getTotal(), 10, criteria));
+        log.info("boardDTOList = " + companyInfoDTOList);
+        return "cpCodeMgmt/main";
     }
 
     @PostMapping("/admin/companyInfo/save")

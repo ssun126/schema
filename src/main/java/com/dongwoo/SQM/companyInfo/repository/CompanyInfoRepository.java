@@ -1,5 +1,7 @@
 package com.dongwoo.SQM.companyInfo.repository;
 
+import com.dongwoo.SQM.board.dto.BoardDTO;
+import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -18,6 +20,13 @@ public class CompanyInfoRepository {
 
     public List<CompanyInfoDTO> findAll() {
         return sql.selectList("CompanyInfo.findAll");
+    }
+
+    public List<CompanyInfoDTO> getList(Criteria criteria) {
+        return sql.selectList("CompanyInfo.getList", criteria);
+    }
+    public int getTotal(){
+        return sql.selectOne("CompanyInfo.getTotal");
     }
 
     public void updateHits(int id) {
