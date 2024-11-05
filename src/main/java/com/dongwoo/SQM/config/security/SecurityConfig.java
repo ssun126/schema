@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.config.security;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -36,10 +37,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
-                        .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**").permitAll()
+                        .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**","/userMgr/**").permitAll()
                         // 관리자 권한만 가능
-                        .requestMatchers("/admin").authenticated()
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")  // ADMIN 권한이 있는것만 가능.
+                        .requestMatchers("/dwuser/**").hasRole("dwuser")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
