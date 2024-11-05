@@ -176,4 +176,48 @@ public class UserMgrController {
         return "ok";
     }
 
+
+    @PostMapping("/userMgr/updateUserMgrMyPage")
+    @ResponseBody
+    public String updateUserMgrMypage(@ModelAttribute UserMgrDTO userMgrDTO ,Model model) {
+
+        //체크 박스처리 길이 길다.
+        //region
+        userMgrDTO.setMANAGE_SYSTEM_YN(checkValue(userMgrDTO.getMANAGE_SYSTEM_YN())) ;
+
+        userMgrDTO.setMANAGE_ISO_YN_01(checkValue(userMgrDTO.getMANAGE_ISO_YN_01())) ;
+        userMgrDTO.setMANAGE_ISO_YN_02(checkValue(userMgrDTO.getMANAGE_ISO_YN_02())) ;
+        userMgrDTO.setMANAGE_ISO_YN_03(checkValue(userMgrDTO.getMANAGE_ISO_YN_03())) ;
+        userMgrDTO.setMANAGE_ISO_YN_04(checkValue(userMgrDTO.getMANAGE_ISO_YN_04())) ;
+        userMgrDTO.setMANAGE_ISO_YN_05(checkValue(userMgrDTO.getMANAGE_ISO_YN_05())) ;
+        userMgrDTO.setMANAGE_ISO_YN_06(checkValue(userMgrDTO.getMANAGE_ISO_YN_06())) ;
+        userMgrDTO.setMANAGE_ISO_YN_07(checkValue(userMgrDTO.getMANAGE_ISO_YN_07())) ;
+        userMgrDTO.setMANAGE_ISO_YN_08(checkValue(userMgrDTO.getMANAGE_ISO_YN_08())) ;
+        userMgrDTO.setMANAGE_ISO_YN_09(checkValue(userMgrDTO.getMANAGE_ISO_YN_09())) ;
+
+        userMgrDTO.setMANAGE_PART_YN(checkValue(userMgrDTO.getMANAGE_PART_YN())) ;
+
+        userMgrDTO.setMANAGE_COA_YN_01(checkValue(userMgrDTO.getMANAGE_COA_YN_01())) ;
+        userMgrDTO.setMANAGE_COA_YN_02(checkValue(userMgrDTO.getMANAGE_COA_YN_02())) ;
+        userMgrDTO.setMANAGE_COA_YN_03(checkValue(userMgrDTO.getMANAGE_COA_YN_03())) ;
+        userMgrDTO.setMANAGE_COA_YN_04(checkValue(userMgrDTO.getMANAGE_COA_YN_04())) ;
+
+        userMgrDTO.setMANAGE_CHANGE_YN_01(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_01())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_02(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_02())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_03(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_03())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_04(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_04())) ;
+        userMgrDTO.setMANAGE_CHANGE_YN_05(checkValue(userMgrDTO.getMANAGE_CHANGE_YN_05())) ;
+
+        userMgrDTO.setALARM_AUDIT_YN(checkValue(userMgrDTO.getALARM_AUDIT_YN())); ;
+        userMgrDTO.setALARM_PART_YN(checkValue(userMgrDTO.getALARM_PART_YN())); ;
+        userMgrDTO.setALARM_COA_CHANGE_YN(checkValue(userMgrDTO.getALARM_COA_CHANGE_YN())); ;
+
+        //endregion
+
+        userMgrService.updateUserMgrMyPage(userMgrDTO);
+
+        model.addAttribute("message", "사용자 정보가 성공적으로 업데이트되었습니다.");  //
+        return "ok";
+    }
+
 }

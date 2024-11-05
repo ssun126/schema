@@ -34,6 +34,12 @@ public class UserMgrRepository {
         sql.update("userMgr.updateUserMgr", userMgrDTO);
     }
 
+    //동우 사용자 업데이트 My page
+    public void updateUserMgrMyPage(UserMgrDTO userMgrDTO) {
+        sql.update("userMgr.updateUserMgrMyPage", userMgrDTO);
+    }
+
+
     //동우 사용자 추가
     public void insertUserMgr(UserMgrDTO userMgrDTO) {
 

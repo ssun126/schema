@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="cui_body">
-                    <form class="cui_form_field">
+                    <form id="updateForm" method="POST" action="/userMgr/updateUserMgrMyPage"  class="cui_form_field">
                         <fieldset>
                             <legend><span>사용자 정보</span></legend>
                             <table class="cui_table">
@@ -83,7 +83,9 @@
                                 <tbody>
                                 <tr>
                                     <th><span>ID</span></th>
-                                    <td><p th:text="${member.USER_ID}"></p></td>
+                                    <td><p th:text="${member.USER_ID}"></p>
+                                        <input id="user_idx" name="USER_IDX" th:value="${member.USER_IDX}" class="cui_text_field" type="hidden" >
+                                    </td>
                                     <th><span>사용자명</span></th>
                                     <td><p th:text="${member.USER_NAME}"></p></td>
                                 </tr>
@@ -124,7 +126,7 @@
                                                             <div class="item_content">
 
                                                                 <div id = "chkCoa1" style="display: flex; flex-direction: column;">
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_system_yn" name = "MANAGE_SYSTEM_YN"><i></i><span>System 관리</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" readonly  th:checked="${member.MANAGE_SYSTEM_YN == 'Y'}" id="manage_system_yn" name = "MANAGE_SYSTEM_YN"  onClick="return false;" ><i></i><span>System 관리</span></label>
                                                                 </div>
                                                             </div>
 
@@ -140,17 +142,17 @@
 
                                                                 <div id = "chkIos" >
 
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_01" name = "MANAGE_ISO_YN_01"><i></i><span>ISO/노동환경
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_01 == 'Y'}" id="manage_iso_yn_01" name = "MANAGE_ISO_YN_01"><i></i><span>ISO/노동환경
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                     </span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_02" name = "MANAGE_ISO_YN_02"><i></i><span>ISO/환경안전(평택공장)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_03" name = "MANAGE_ISO_YN_03"><i></i><span>ISO/환경안전(신흥공장)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_04" name = "MANAGE_ISO_YN_04"><i></i><span>ISO/환경안전(삼기공장)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_05" name = "MANAGE_ISO_YN_05"><i></i><span>ISO/품질체계/분쟁.책임광물(반도체)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_06" name = "MANAGE_ISO_YN_06"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단소재)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_07" name = "MANAGE_ISO_YN_07"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단-삼기)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_08" name = "MANAGE_ISO_YN_08"><i></i><span>ISO/품질체계/분쟁.책임광물(옵티칼)</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_09" name = "MANAGE_ISO_YN_09"><i></i><span>ISO/품질체계/분쟁.책임광물(통신디바이스)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_02 == 'Y'}" id="manage_iso_yn_02" name = "MANAGE_ISO_YN_02"><i></i><span>ISO/환경안전(평택공장)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_03 == 'Y'}" id="manage_iso_yn_03" name = "MANAGE_ISO_YN_03"><i></i><span>ISO/환경안전(신흥공장)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_04 == 'Y'}" id="manage_iso_yn_04" name = "MANAGE_ISO_YN_04"><i></i><span>ISO/환경안전(삼기공장)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_05 == 'Y'}" id="manage_iso_yn_05" name = "MANAGE_ISO_YN_05"><i></i><span>ISO/품질체계/분쟁.책임광물(반도체)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_06 == 'Y'}" id="manage_iso_yn_06" name = "MANAGE_ISO_YN_06"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단소재)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_07 == 'Y'}" id="manage_iso_yn_07" name = "MANAGE_ISO_YN_07"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단-삼기)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_08 == 'Y'}" id="manage_iso_yn_08" name = "MANAGE_ISO_YN_08"><i></i><span>ISO/품질체계/분쟁.책임광물(옵티칼)</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox"  th:checked="${member.MANAGE_ISO_YN_09 == 'Y'}" id="manage_iso_yn_09" name = "MANAGE_ISO_YN_09"><i></i><span>ISO/품질체계/분쟁.책임광물(통신디바이스)</span></label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -163,7 +165,7 @@
                                                             <div class="item_content">
 
                                                                 <div id = "chkCoa" style="display: flex; flex-direction: column;">
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_part_yn" name = "MANAGE_PART_YN"><i></i><span>PART 관리자</span></label>
+<!--                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${userMgrDTO.MANAGE_PART_YN == 'Y'}" id="manage_part_yn" name = "MANAGE_PART_YN"><i></i><span>PART 관리자</span></label>-->
                                                                 </div>
                                                             </div>
                                                             <div class="item_label"><span> </span></div>
@@ -171,10 +173,10 @@
                                                             <div class="item_content" >
 
                                                                 <div id = "chkCoa2" class="cui_checkbox_group"  style="display: flex; flex-direction: column;" data-direction="column">
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_01" name = "MANAGE_COA_YN_01"><i></i><span>COA 반도체</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_02" name = "MANAGE_COA_YN_02"><i></i><span>COA 첨단소재</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_03" name = "MANAGE_COA_YN_03"><i></i><span>COA 첨단-삼기</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_04" name = "MANAGE_COA_YN_04"><i></i><span>COA 통신디바이스</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_COA_YN_01 == 'Y'}" id="manage_coa_yn_01" name = "MANAGE_COA_YN_01"><i></i><span>COA 반도체</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_COA_YN_02 == 'Y'}" id="manage_coa_yn_02" name = "MANAGE_COA_YN_02"><i></i><span>COA 첨단소재</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_COA_YN_03 == 'Y'}" id="manage_coa_yn_03" name = "MANAGE_COA_YN_03"><i></i><span>COA 첨단-삼기</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_COA_YN_04 == 'Y'}" id="manage_coa_yn_04" name = "MANAGE_COA_YN_04"><i></i><span>COA 통신디바이스</span></label>
                                                                 </div>
                                                             </div>
 
@@ -188,11 +190,11 @@
                                                             <div class="item_content" >
 
                                                                 <div id = "chkchange" class="cui_checkbox_group"  style="display: flex; flex-direction: column;" data-direction="column">
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_01" name = "MANAGE_CHANGE_YN_01"><i></i><span>변경점관리 반도체</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_02" name = "MANAGE_CHANGE_YN_02"><i></i><span>첨단소재</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_03" name = "MANAGE_CHANGE_YN_03"><i></i><span>첨단-삼기</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_04" name = "MANAGE_CHANGE_YN_04"><i></i><span>옵티칼</span></label>
-                                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_05" name = "MANAGE_CHANGE_YN_05"><i></i><span>통신디바이스</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_CHANGE_YN_01 == 'Y'}" id="manage_change_yn_01" name = "MANAGE_CHANGE_YN_01"><i></i><span>변경점관리 반도체</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_CHANGE_YN_02 == 'Y'}" id="manage_change_yn_02" name = "MANAGE_CHANGE_YN_02"><i></i><span>첨단소재</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_CHANGE_YN_03 == 'Y'}" id="manage_change_yn_03" name = "MANAGE_CHANGE_YN_03"><i></i><span>첨단-삼기</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_CHANGE_YN_04 == 'Y'}" id="manage_change_yn_04" name = "MANAGE_CHANGE_YN_04"><i></i><span>옵티칼</span></label>
+                                                                    <label class="cui_checkbox"><input type="checkbox" th:checked="${member.MANAGE_CHANGE_YN_05 == 'Y'}" id="manage_change_yn_05" name = "MANAGE_CHANGE_YN_05"><i></i><span>통신디바이스</span></label>
                                                                 </div>
                                                             </div>
 
@@ -212,9 +214,9 @@
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content wrap">
-                                                <label class="cui_checkbox"><input type="checkbox" id="ALARM_AUDIT_YN" name = "ALARM_AUDIT_YN"><i></i><span>Audit Management</span></label>
-                                                <label class="cui_checkbox"><input type="checkbox" id="ALARM_PART_YN" name = "ALARM_PART_YN"><i></i><span>Part Management</span></label>
-                                                <label class="cui_checkbox"><input type="checkbox" id="ALARM_COA_CHANGE_YN" name = "ALARM_COA_CHANGE_YN"><i></i><span>COA 관리 / 변경점 관리</span></label>
+                                                <label class="cui_checkbox"><input type="checkbox" th:checked="${member.ALARM_AUDIT_YN == 'Y'}" id="alarm_audit_yn" name = "ALARM_AUDIT_YN"><i></i><span>Audit Management</span></label>
+                                                <label class="cui_checkbox"><input type="checkbox" th:checked="${member.ALARM_PART_YN == 'Y'}" id="alarm_part_yn" name = "ALARM_PART_YN"><i></i><span>Part Management</span></label>
+                                                <label class="cui_checkbox"><input type="checkbox" th:checked="${member.ALARM_COA_CHANGE_YN == 'Y'}" id="alarm_coa_change_yn" name = "ALARM_COA_CHANGE_YN"><i></i><span>COA 관리 / 변경점 관리</span></label>
                                             </div>
                                         </div>
                                     </td>
@@ -224,7 +226,8 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="center" >
                             <div class="item_content">
-                                <a href="#" class="cui_button primary"><span>저장</span></a>
+<!--                                <a href="#" class="cui_button primary"><span>저장</span></a>-->
+                                <button type="button" class="cui_button primary" onClick="save()"><span>저장</span></button>
                                 <a href="#" class="cui_button"><span>비밀번호 변경</span></a>
                             </div>
                         </div>
@@ -233,5 +236,84 @@
             </div>
         </div>
     </div>
+
+
+    <!--==alert==-->
+    <div class="cui_dialog" style="width:420px;display:none" id="dialog">
+        <div class="dialog_container">
+            <div class="dialog_body">
+                <div class="body_root">
+                    <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert"> <p id="messageContent" ></p> </div>
+                    <div class="cui_items_wrap" data-direction="center">
+                        <div class="item_content">
+                            <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--==alert==-->
 </body>
+
+
+
+<script>
+
+ //모달 열기
+  function modal(id){
+    $("#" + id).fadeIn();
+  }
+
+  //모달 닫기
+  $('.modal-close').on('click', function(e){
+    e.preventDefault();
+    const modal = $(this).parents('.cui_dialog');
+    modal.fadeOut();
+
+  });
+
+   function save() {
+      $.ajax({
+         type: "post",
+         url: "/userMgr/updateUserMgrMyPage",
+         data: $('#updateForm').serialize(),
+         success: function(response) {
+            showAlert('success', '사용자 정보가 수정되었습니다.');
+         },
+         error: function(err) {
+           console.log("에러발생", err);
+           showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+         }
+     });
+   }
+
+    //모달alert
+    function showAlert(type, message) {
+        var alertDiv = document.querySelector('.cui_alert');
+        alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
+        document.getElementById('messageContent').innerText = message;  // 메시지 설정
+        modal('dialog');  // 다이얼로그를 띄우는 함수 호출
+    }
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </html>
