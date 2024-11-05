@@ -1,4 +1,4 @@
-package com.dongwoo.SQM.config;
+package com.dongwoo.SQM.config.security;
 
 
 import lombok.RequiredArgsConstructor;
@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/main", true)
+                        .successHandler(new LoginSuccessHandler("/"))
                         .permitAll()
                 )
                 .logout(logout -> logout

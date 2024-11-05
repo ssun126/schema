@@ -4,7 +4,7 @@
       layout:decorate="~{common/layouts/mainLayout}"
       layout:fragment="Content">
 <body>
-    <form id="fileUploadForm" action="/board/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
+    <form id="fileUploadForm" action="/user/board/qa/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
         제목: <input type="text" name="BOARD_TITLE"><br>
         작성자: <input type="text" name="INPUT_USER_ID"><br>
         비밀번호: <input type="text" name="BOARD_PASS"><br>
@@ -31,7 +31,7 @@
              var formData = new FormData($('#fileUploadForm')[0]);
 
             $.ajax({
-                url: '/board/save',  // 업로드 경로
+                url: '/user/board/qa/save',  // 업로드 경로
                 type: 'POST',
                 data: formData,
                 contentType: false,

@@ -15,8 +15,15 @@ public class SubMenuRepository {
 
     private final SqlSessionTemplate sql;
 
-
     public List<SubMenuDTO> getAllSubMenu() {
         return sql.selectList("Menu.getAllSubMenu");
+    }
+
+    public List<SubMenuDTO> getAllAdminSubMenu() {
+        return sql.selectList("Menu.getAllAdminSubMenu");
+    }
+
+    public List<SubMenuDTO> getAllUserSubMenu() {
+        return sql.selectList("Menu.getAllUserSubMenu");
     }
 }

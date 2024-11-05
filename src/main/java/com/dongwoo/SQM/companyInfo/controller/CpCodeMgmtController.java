@@ -11,32 +11,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class CompanyInfoController {
+public class CpCodeMgmtController {
     private final CompanyInfoService companyInfoService;
 
-    @GetMapping("/user/companyInfo/company")
-    public String isoAuthMain(Model model) {
-        return "companyInfo/main";
-    }
 
-    @GetMapping("/admin/companyInfo/company")
+    @GetMapping("/admin/companyInfo/cpCodeMgmt")
     @PreAuthorize("hasRole('ADMIN')")
-    public String isoAuthAdminMain(Model model) {
+    public String cpCodeMgmtMain(Model model) {
         return "companyInfo/main";
     }
 
-    @PostMapping("/companyInfo/save")
+    @PostMapping("/admin/companyInfo/save")
     public String save(CompanyInfoDTO companyInfoDTO) throws IOException {
        // System.out.println("companyInfoDTO = " + companyInfoDTO);
        // companyInfoService.save(companyInfoDTO);
         return "redirect:/companyInfo/list";
     }
 
-    @GetMapping("/companyInfo/list")
+    @GetMapping("/admin/companyInfo/list")
     public String findAll(Model model) {
        // List<CompanyInfoDTO> companyInfoDTOList = companyInfoService.findAll();
        // model.addAttribute("companyInfoList", companyInfoDTOList);
@@ -44,7 +39,7 @@ public class CompanyInfoController {
         return "/companyInfo/list";
     }
 
-    @GetMapping("/companyInfo/{id}")
+    @GetMapping("/admin/companyInfo/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
 
         // 상세내용 가져옴
@@ -58,14 +53,14 @@ public class CompanyInfoController {
         return "/companyInfo/detail";
     }
 
-    @GetMapping("/companyInfo/update/{id}")
+    @GetMapping("/admin/companyInfo/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
         //CompanyInfoDTO companyInfoDTO = companyInfoService.findById(id);
         //model.addAttribute("companyInfo", companyInfoDTO);
         return "/companyInfo/update";
     }
 
-    @PostMapping("/companyInfo/update/{id}")
+    @PostMapping("/admin/companyInfo/update/{id}")
     public String update(CompanyInfoDTO companyInfoDTO, Model model) {
         //companyInfoService.update(companyInfoDTO);
        /* CompanyInfoDTO dto = companyInfoService.findById(companyInfoDTO.getBOARD_IDX());
@@ -73,7 +68,7 @@ public class CompanyInfoController {
         return "/companyInfo/detail";
     }
 
-    @GetMapping("/companyInfo/delete/{id}")
+    @GetMapping("/admin/companyInfo/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         //companyInfoService.delete(id);
         return "redirect:/companyInfo/list";

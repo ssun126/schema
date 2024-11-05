@@ -31,7 +31,7 @@
     </tr>
     <tr th:if="${board.FILE_NAME != null}">
         <th>attach</th>
-        <td><a th:href="@{/board/download/{filename}(filename=${board.FILE_NAME})}"><span th:text="${board.FILE_NAME}"></span>다운로드</a></td>
+        <td><a th:href="@{/user/board/download/{filename}(filename=${board.FILE_NAME})}"><span th:text="${board.FILE_NAME}"></span>다운로드</a></td>
     </tr>
 </table>
 <button onclick="listReq()">목록</button>
@@ -40,13 +40,13 @@
 </body>
 <script th:inline="javascript">
     const listReq = () => {
-        location.href = "/board/list";
+        location.href = "/user/board/qa";
     }
     const updateReq = () => {
-        location.href = `/board/update/[[${board.BOARD_IDX}]]`;
+        location.href = `/user/board/update/[[${board.BOARD_IDX}]]`;
     }
     const deleteReq = () => {
-        location.href = `/board/delete/[[${board.BOARD_IDX}]]`;
+        location.href = `/user/board/delete/[[${board.BOARD_IDX}]]`;
     }
 </script>
 </html>
