@@ -21,11 +21,11 @@ public class DemoInitializer implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 
         // 전체 메뉴-권한 정보 리스트 조회/저장
-        List<SecurityUrlMatcherDTO> menuList =  securityUrlMatcherService.getAllMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+       /* List<SecurityUrlMatcherDTO> menuList =  securityUrlMatcherService.getAllMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.menuList = Collections.singletonList(menuList);
 
         List<SubMenuDTO> subMenuList =  securityUrlMatcherService.getAllSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
-        MenuStaticValue.subMenuList = Collections.singletonList(subMenuList);
+        MenuStaticValue.subMenuList = Collections.singletonList(subMenuList);*/
 
         //관리자
         List<SecurityUrlMatcherDTO> adminMenuList =  securityUrlMatcherService.getAllAdminMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행

@@ -14,20 +14,20 @@
         select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from MENUS ORDER BY PAGE_IDX
     </select>
     <select id="getAllAdminMenu" resultType="HashMap">
-        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from MENUS WHERE AUTH_ROLE_NM ='ADMIN' ORDER BY PAGE_IDX
+        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from MENUS WHERE AUTH_ROLE_NM ='ADMIN' ORDER BY ORDER_NO
     </select>
     <select id="getAllUserMenu" resultType="HashMap">
-        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from MENUS WHERE AUTH_ROLE_NM ='USER' ORDER BY PAGE_IDX
+        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from MENUS WHERE AUTH_ROLE_NM ='USER' ORDER BY ORDER_NO
     </select>
 
     <select id="getAllSubMenu" resultType="HashMap">
         select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from SUB_MENU ORDER BY PAGE_IDX
     </select>
     <select id="getAllAdminSubMenu" resultType="HashMap">
-        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from SUB_MENU WHERE AUTH_ROLE_NM ='ADMIN' ORDER BY PAGE_IDX
+        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from SUB_MENU WHERE AUTH_ROLE_NM ='ADMIN' ORDER BY GNB_IDX, ORDER_NO
     </select>
     <select id="getAllUserSubMenu" resultType="HashMap">
-        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from SUB_MENU WHERE AUTH_ROLE_NM ='USER' ORDER BY PAGE_IDX
+        select PAGE_IDX, PAGE_NM, PAGE_URL, GNB_IDX, GNB_NM, AUTH_ROLE_NM from SUB_MENU WHERE AUTH_ROLE_NM ='USER' ORDER BY GNB_IDX, ORDER_NO
     </select>
 
     <delete id="delete" parameterType="int">

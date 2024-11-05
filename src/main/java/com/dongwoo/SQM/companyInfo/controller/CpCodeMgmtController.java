@@ -18,8 +18,8 @@ public class CpCodeMgmtController {
     private final CompanyInfoService companyInfoService;
 
 
-    @GetMapping("/admin/companyInfo/cpCodeMgmt")
-    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/companyInfo/cpCode")
+    //@PreAuthorize("hasRole('ADMIN')")
     public String cpCodeMgmtMain(Model model) {
         return "companyInfo/main";
     }
