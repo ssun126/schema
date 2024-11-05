@@ -3,13 +3,17 @@ package com.dongwoo.SQM.siteMgr.controller;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import com.dongwoo.SQM.siteMgr.service.UserMgrService;
+import com.dongwoo.SQM.system.controller.LoginController;
+import com.dongwoo.SQM.system.dto.LoginDTO;
 import com.dongwoo.SQM.system.dto.MemberDTO;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
 import com.dongwoo.SQM.system.dto.UserInfoDTO;
+import com.dongwoo.SQM.system.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -99,7 +103,7 @@ public class UserMgrController {
 
             List<UserMgrDTO> companyUserList = userMgrService.findUserMgrSearch(userMgrParamDTO);
 
-            System.out.println("select companyUserList: " + companyUserList);
+            //System.out.println("select companyUserList: " + companyUserList);
             return ResponseEntity.ok(companyUserList);
         } catch (Exception e) {
             System.out.println("검색 에러!!!: " + e);
@@ -218,6 +222,38 @@ public class UserMgrController {
 
         model.addAttribute("message", "사용자 정보가 성공적으로 업데이트되었습니다.");  //
         return "ok";
+    }
+
+    private final LoginService loginService;
+
+    @PostMapping("/userMgr/updateUserPWS")
+    @ResponseBody
+    public ResponseEntity<?> updateUserPWS(@ModelAttribute UserMgrDTO userMgrDTO , Authentication authentication) {
+
+        try {
+            String loginId = authentication.getName(); // 사용자 이름 = ID  2024.11.04 일단 이걸로.
+            LoginDTO loginDTO = new LoginDTO();
+            loginDTO.setUSER_ID(loginId);
+            loginDTO.setUSER_PWD(userMgrDTO.getUSER_PWD());
+
+            LoginDTO loginResult = loginService.login(loginDTO);
+
+            if (loginResult != null) {
+
+                userMgrDTO.setUSER_PWD(userMgrDTO.getUSER_PWD_NEW());
+                userMgrDTO.setUSER_ID(loginId);
+                userMgrService.updateUserPWS(userMgrDTO);
+                return ResponseEntity.ok("비밀번호가 변경 되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("기존 비밀번호가 틀립니다.");
+            }
+        } catch (Exception e) {
+            System.out.println("검색 에러!!!: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류 발생\"}");
+        }
+
     }
 
 }

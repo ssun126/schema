@@ -183,6 +183,15 @@
         WHERE USER_IDX =#{USER_IDX}
     </update>
 
+    <update id="updateUserPWS"  parameterType="userMgr" >
+        UPDATE USER_INFO
+        SET
+         USER_PWD =#{USER_PWD}
+        ,UP_DATE =sysdate
+        ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+        WHERE USER_ID =#{USER_ID}
+    </update>
+
     <update id="updateUserInfoMgr"  parameterType="userMgr" >
     UPDATE USER_INFO
     SET

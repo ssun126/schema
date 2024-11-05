@@ -31,7 +31,7 @@
 <div class="cui_app">
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
@@ -47,7 +47,7 @@
                     <strong>안녕하세요.</strong>
                 </div>
             </div>
-            <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home"><span>Home</span></button>
+            <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home"  onclick="goMenu('/logout')"><span>Home</span></button>
         </div>
     </div>
     <div class="cui_container center" data-module="join">
@@ -216,197 +216,201 @@
 </body>
 <script>
 
-   window.onload = function() {
-    var messageElement = document.getElementById('messageContent');
-        if (messageElement && messageElement.innerText.trim() !== "") {
-            document.getElementById('dialog').style.display = 'block';
-
-            const button = document.getElementById('request');
-            button.style.display = 'none';
-        }
+    const goMenu = (menuPage) => {
+       location.href = menuPage;
    }
 
-   function handleSubmit(event) {
+  window.onload = function() {
+   var messageElement = document.getElementById('messageContent');
+       if (messageElement && messageElement.innerText.trim() !== "") {
+           document.getElementById('dialog').style.display = 'block';
 
-       document.getElementById("hiddenCOM_APP_DATE").value = document.getElementById("COM_APP_DATE").textContent;
-       document.getElementById("hiddenCOM_OK_DATE").value = document.getElementById("COM_OK_DATE").textContent;
-       document.getElementById("hiddenCOM_MANAGE_STATUS").value = document.getElementById("COM_MANAGE_STATUS").textContent;
-
-        const hiddenInput = document.getElementById('COM_FILE_NAME');
-        var fileName = hiddenInput.value;
-
-        if(fileName == ""){
-            alert('첨부된 파일이 없습니다.') ;
-            return;
-        }
-
-
-       document.getElementById('approvalForm').submit();
-   }
-
-   //모달 열기
-   function modal(id){
-     $("#" + id).fadeIn();
-   }
-
-   //모달 닫기
-   $('.modal-close').on('click', function(e){
-     e.preventDefault();
-     const modal = $(this).parents('.cui_dialog');
-     modal.fadeOut();
-
-     // 닫을때
-     redirectToLogin();
-   });
-
-
-   function redirectToLogin() {
-       window.location.href = "/login"; // 로그인 페이지로 이동
-   }
-
-   function downSamplefile() {
-      alert("양식파일 등록후 다운로드.");
-   }
-
-   //파일 찾기
-   function findfile() {
-       $("#dialog2").fadeIn();
-   }
-
-
-   //warranty 파일 업로드
-   function sevefile() {
-
-        const input = document.getElementById('findfile');
-        if (input.files.length == 0) {
-            alert('선택된 파일 없음');
-            return;
-        }
-
-
-       var formData = new FormData(document.getElementById("uploadForm"));
-
-        fetch("/member/warrantyfileupload", {
-            method: "POST",
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text();  // 또는 response.json() depending on your server response type
-            }
-            throw new Error('Network response was not ok.');
-        })
-        .then(data => {
-            console.log("파일 업로드 성공:", data);
-            // 추가적인 성공 메시지나 UI 업데이트
-            alert('파일 업로드 성공')
-            $("#dialog2").fadeOut() ;
-            //화면닫기.
-        })
-        .catch(error => {
-            alert('파일 업로드 실패! 관리자에게 문의하세요')
-            console.error("파일 업로드 실패:", error);
-            $("#dialog2").fadeOut() ;
-        });
-   }
-
-
-   //warranty 파일 다운로드
-    function downloadFile() {
-
-        const hiddenInput = document.getElementById('COM_FILE_NAME');
-        var fileName = hiddenInput.value;
-
-        if(fileName == ""){
-            alert('첨부된 파일이 없습니다.') ;
-            return;
-        }
-
-        fetch(`/member/download?fileName=${encodeURIComponent(fileName)}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/octet-stream'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.blob(); // 파일을 Blob으로 변환
-        })
-        .then(blob => {
-            // Blob URL 생성
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName; // 다운로드할 파일 이름
-            document.body.appendChild(a); // 앵커 요소 추가
-            a.click(); // 다운로드 시작
-            a.remove(); // 앵커 요소 제거
-            window.URL.revokeObjectURL(url); // Blob URL 해제
-        })
-        .catch(error => {
-            console.error('파일 다운로드 실패:', error);
-        });
-    }
-
-
-   //모달 파일 저장 닫기
-   function sevefileClose() {
-       $("#dialog2").fadeOut();
-   }
-
-
-   //파일 업로드후
-   function setFileName() {
-        const input = document.getElementById('findfile');
-        //const fileNameDisplay = document.getElementById('file-name-display');
-        const hiddenInput = document.getElementById('COM_FILE_NAME');
-
-        if (input.files.length > 0) {
-            const fileName = input.files[0].name; // 선택된 파일명
-            //fileNameDisplay.textContent = fileName; // 화면에 파일명 표시
-            hiddenInput.value = fileName; // 숨겨진 입력 필드에 파일명 저장
-        } else {
-            //fileNameDisplay.textContent = '선택된 파일 없음';
-            hiddenInput.value = ''; // 파일이 선택되지 않은 경우 숨겨진 입력 필드 초기화
-        }
-    }
-
-
-
-
-
-   // 이메일 입력값을 가져오고,
-   // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
-   // 사용 가능 여부를 이메일 입력창 아래에 표시
-       const emailCheck = () => {
-           const email = document.getElementById("USER_EMAIL").value;
-           const checkResult = document.getElementById("check-result");
-           console.log("입력한 이메일", email);
-           $.ajax({
-               // 요청방식: post, url: "email-check", 데이터: 이메일
-               type: "post",
-               url: "/member/email-check",
-               data: {
-                   "USER_EMAIL": email
-               },
-               success: function(res) {
-                   console.log("요청성공", res);
-                   if (res == "ok") {
-                       console.log("사용가능한 이메일");
-                       checkResult.style.color = "green";
-                       checkResult.innerHTML = "사용가능한 이메일";
-                   } else {
-                       console.log("이미 사용중인 이메일");
-                       checkResult.style.color = "red";
-                       checkResult.innerHTML = "이미 사용중인 이메일";
-                   }
-               },
-               error: function(err) {
-                   console.log("에러발생", err);
-               }
-           });
+           const button = document.getElementById('request');
+           button.style.display = 'none';
        }
+  }
+
+  function handleSubmit(event) {
+
+      document.getElementById("hiddenCOM_APP_DATE").value = document.getElementById("COM_APP_DATE").textContent;
+      document.getElementById("hiddenCOM_OK_DATE").value = document.getElementById("COM_OK_DATE").textContent;
+      document.getElementById("hiddenCOM_MANAGE_STATUS").value = document.getElementById("COM_MANAGE_STATUS").textContent;
+
+       const hiddenInput = document.getElementById('COM_FILE_NAME');
+       var fileName = hiddenInput.value;
+
+       if(fileName == ""){
+           alert('첨부된 파일이 없습니다.') ;
+           return;
+       }
+
+
+      document.getElementById('approvalForm').submit();
+  }
+
+  //모달 열기
+  function modal(id){
+    $("#" + id).fadeIn();
+  }
+
+  //모달 닫기
+  $('.modal-close').on('click', function(e){
+    e.preventDefault();
+    const modal = $(this).parents('.cui_dialog');
+    modal.fadeOut();
+
+    // 닫을때
+    redirectToLogin();
+  });
+
+
+  function redirectToLogin() {
+      window.location.href = "/login"; // 로그인 페이지로 이동
+  }
+
+  function downSamplefile() {
+     alert("양식파일 등록후 다운로드.");
+  }
+
+  //파일 찾기
+  function findfile() {
+      $("#dialog2").fadeIn();
+  }
+
+
+  //warranty 파일 업로드
+  function sevefile() {
+
+       const input = document.getElementById('findfile');
+       if (input.files.length == 0) {
+           alert('선택된 파일 없음');
+           return;
+       }
+
+
+      var formData = new FormData(document.getElementById("uploadForm"));
+
+       fetch("/member/warrantyfileupload", {
+           method: "POST",
+           body: formData
+       })
+       .then(response => {
+           if (response.ok) {
+               return response.text();  // 또는 response.json() depending on your server response type
+           }
+           throw new Error('Network response was not ok.');
+       })
+       .then(data => {
+           console.log("파일 업로드 성공:", data);
+           // 추가적인 성공 메시지나 UI 업데이트
+           alert('파일 업로드 성공')
+           $("#dialog2").fadeOut() ;
+           //화면닫기.
+       })
+       .catch(error => {
+           alert('파일 업로드 실패! 관리자에게 문의하세요')
+           console.error("파일 업로드 실패:", error);
+           $("#dialog2").fadeOut() ;
+       });
+  }
+
+
+  //warranty 파일 다운로드
+   function downloadFile() {
+
+       const hiddenInput = document.getElementById('COM_FILE_NAME');
+       var fileName = hiddenInput.value;
+
+       if(fileName == ""){
+           alert('첨부된 파일이 없습니다.') ;
+           return;
+       }
+
+       fetch(`/member/download?fileName=${encodeURIComponent(fileName)}`, {
+           method: 'GET',
+           headers: {
+               'Accept': 'application/octet-stream'
+           }
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response.blob(); // 파일을 Blob으로 변환
+       })
+       .then(blob => {
+           // Blob URL 생성
+           const url = window.URL.createObjectURL(blob);
+           const a = document.createElement('a');
+           a.href = url;
+           a.download = fileName; // 다운로드할 파일 이름
+           document.body.appendChild(a); // 앵커 요소 추가
+           a.click(); // 다운로드 시작
+           a.remove(); // 앵커 요소 제거
+           window.URL.revokeObjectURL(url); // Blob URL 해제
+       })
+       .catch(error => {
+           console.error('파일 다운로드 실패:', error);
+       });
+   }
+
+
+  //모달 파일 저장 닫기
+  function sevefileClose() {
+      $("#dialog2").fadeOut();
+  }
+
+
+  //파일 업로드후
+  function setFileName() {
+       const input = document.getElementById('findfile');
+       //const fileNameDisplay = document.getElementById('file-name-display');
+       const hiddenInput = document.getElementById('COM_FILE_NAME');
+
+       if (input.files.length > 0) {
+           const fileName = input.files[0].name; // 선택된 파일명
+           //fileNameDisplay.textContent = fileName; // 화면에 파일명 표시
+           hiddenInput.value = fileName; // 숨겨진 입력 필드에 파일명 저장
+       } else {
+           //fileNameDisplay.textContent = '선택된 파일 없음';
+           hiddenInput.value = ''; // 파일이 선택되지 않은 경우 숨겨진 입력 필드 초기화
+       }
+   }
+
+
+
+
+
+  // 이메일 입력값을 가져오고,
+  // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
+  // 사용 가능 여부를 이메일 입력창 아래에 표시
+      const emailCheck = () => {
+          const email = document.getElementById("USER_EMAIL").value;
+          const checkResult = document.getElementById("check-result");
+          console.log("입력한 이메일", email);
+          $.ajax({
+              // 요청방식: post, url: "email-check", 데이터: 이메일
+              type: "post",
+              url: "/member/email-check",
+              data: {
+                  "USER_EMAIL": email
+              },
+              success: function(res) {
+                  console.log("요청성공", res);
+                  if (res == "ok") {
+                      console.log("사용가능한 이메일");
+                      checkResult.style.color = "green";
+                      checkResult.innerHTML = "사용가능한 이메일";
+                  } else {
+                      console.log("이미 사용중인 이메일");
+                      checkResult.style.color = "red";
+                      checkResult.innerHTML = "이미 사용중인 이메일";
+                  }
+              },
+              error: function(err) {
+                  console.log("에러발생", err);
+              }
+          });
+      }
 </script>
 </html>

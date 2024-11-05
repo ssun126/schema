@@ -228,7 +228,7 @@
                             <div class="item_content">
 <!--                                <a href="#" class="cui_button primary"><span>저장</span></a>-->
                                 <button type="button" class="cui_button primary" onClick="save()"><span>저장</span></button>
-                                <a href="#" class="cui_button"><span>비밀번호 변경</span></a>
+                                <a href="#" class="cui_button" onClick="modal('dialogPassChange')"><span>비밀번호 변경</span></a>
                             </div>
                         </div>
                     </form>
@@ -238,12 +238,71 @@
     </div>
 
 
+    <div class="cui_dialog" style="width:450px;display:none;" id="dialogPassChange">
+        <div class="dialog_container">
+            <div class="dialog_head">
+                <div class="dialog_title">
+                    <div class="main_label">비밀번호 변경</div>
+                </div>
+                <div class="dialog_toolbar">
+                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                </div>
+            </div>
+            <div class="dialog_body">
+                <div class="body_root">
+                    <form  id="updateChangePass" class="cui_form_field">
+                        <fieldset>
+<!--                            <legend><span>기존 비밀번호</span></legend>-->
+                            <label class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" style="width: 140px;" >기존 비밀번호</strong>
+                                <div class="item_content">
+                                    <input type="password" placeholder="기존 비밀번호" id="user_pwd" name = "USER_PWD" class="cui_text_field" >
+                                </div>
+                            </label>
+                            <label class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" style="width: 140px;">신규 비밀번호</strong>
+                                <div class="item_content">
+                                    <input type="password" placeholder="신규 비밀번호" id="user_pwd_new" name = "USER_PWD_NEW" class="cui_text_field" onkeyup="passConfirm()">
+                                </div>
+                            </label>
+                            <label class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" style="width: 140px;">신규 비밀번호 확인</strong>
+                                <div class="item_content">
+                                    <input type="password" placeholder="비밀번호 확인" id="user_pwd_new_re" name = "USER_PWD_NEW_RE" class="cui_text_field" onkeyup="passConfirm()">
+                                </div>
+                            </label>
+                            <label class="cui_items_wrap" data-direction="left">
+                                <br>
+                                <br>
+                                <br>
+                                <div class="cui_alert alert_basic" data-type="warning" role="alert" style="display:none" id ="PassVAL">
+                                    <div class="alert_message">
+                                        <p><span id ="confirmMsg" ></span></p>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <div class="cui_items_wrap" data-direction="center">
+                                <div class="item_content">
+                                    <button type="button" class="cui_button primary" onClick="savepws()" ><span>저장</span></button>
+                                </div>
+                            </div>
+
+
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--==alert==-->
     <div class="cui_dialog" style="width:420px;display:none" id="dialog">
         <div class="dialog_container">
             <div class="dialog_body">
                 <div class="body_root">
-                    <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert"> <p id="messageContent" ></p> </div>
+                    <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
                             <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
@@ -288,30 +347,72 @@
      });
    }
 
-    //모달alert
+  function savepws() {
+       if(passConfirm()){
+          $.ajax({
+             type: "post",
+             url: "/userMgr/updateUserPWS",
+             data: $('#updateChangePass').serialize(),
+             success: function(response) {
+                $("#dialogPassChange").fadeOut();
+                showAlert('success', response);
+             },
+             error: function(err) {
+               console.log("에러발생", err);
+               showAlert('warning', err.responseText);
+             }
+         });
+    }
+  }
+
+   //2-3.Pass 유효성  , 비교
+	function passConfirm() {
+
+	    var UserPass = document.getElementById('user_pwd');
+        var UserPassNew = document.getElementById('user_pwd_new');
+        var UserPassNewRe = document.getElementById('user_pwd_new_re');
+
+        var confirmMsg = document.getElementById('confirmMsg');
+        var correctColor = "#18AD72";
+        var wrongColor = "#E40087" ;
+
+        // 정규식: 6자리 이상 숫자와 영문 (대문자 또는 소문자) 포함
+        const regex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+
+        if (regex.test(UserPassNew.value)) {
+            confirmMsg.style.color = correctColor;
+            confirmMsg.innerHTML =  "비밀번호가 유효합니다.";
+
+            if (UserPassNew.value === UserPassNewRe.value) {
+                confirmMsg.style.color = correctColor;
+                confirmMsg.innerHTML = "비밀번호가 일치합니다.";
+                $('#PassVAL').hide();
+                return true;
+            } else {
+                confirmMsg.style.color = wrongColor;
+                confirmMsg.innerHTML = "비밀번호가 일치하지 않습니다.";
+                $('#PassVAL').show();
+                return false;
+            }
+
+        } else {
+            confirmMsg.style.color = wrongColor;
+            confirmMsg.innerHTML = "비밀번호는 6자리 이상의 숫자와 영문자로만 구성되어야 합니다.";
+            $('#PassVAL').show();
+            return false;
+        }
+
+    }
+
     function showAlert(type, message) {
-        var alertDiv = document.querySelector('.cui_alert');
+        var alertDiv = document.querySelector('#alertTypeimg');
         alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
         document.getElementById('messageContent').innerText = message;  // 메시지 설정
-        modal('dialog');  // 다이얼로그를 띄우는 함수 호출
+        modal('dialog');
     }
 
 
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
