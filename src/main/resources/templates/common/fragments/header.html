@@ -8,13 +8,13 @@
         </h1>
         <nav class="cui_gnb" role="navigation" th:each="auth : ${#authentication.authorities}" th:if="${auth.authority == 'ADMIN'}" >
             <ul class="nav-item sec" th:each="page, index : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminMenuList}">
-                <li th:each="subPage, subIndex : ${page}" th:if="${subPage.AUTH_ROLE_NM == 'ADMIN'}">
-                    <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}"></span></a>
-                    <!--<ul class="menu-sub-nav">
-                        <li>
-                            <a th:href="'/' + ${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
+                <li th:each="subMenu, subIndex : ${page}" th:if="${subMenu.AUTH_ROLE_NM == 'ADMIN'}">
+                    <a th:href="${subMenu.PAGE_URL}"><span th:text="${subMenu.PAGE_NM}"></span></a>
+                    <ul class="menu-sub-nav" th:each="page : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList}">
+                        <li th:each="subPage : ${page}" th:if="${subPage != null and subMenu.GNB_IDX == subPage.GNB_IDX }">
+                            <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
                         </li>
-                    </ul>-->
+                    </ul>
                 </li>
                 <li class="more">
                     <a href="#" class="toggle"><span>더보기</span></a>
@@ -24,14 +24,13 @@
         </nav>
         <nav class="cui_gnb" role="navigation" th:each="auth : ${#authentication.authorities}" th:if="${auth.authority != 'ADMIN'}" >
             <ul class="nav-item sec" th:each="page, index : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).userMenuList}">
-                <li th:each="subPage, subIndex : ${page}" th:if="${subPage.AUTH_ROLE_NM == 'USER'}">
-                    <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}"></span></a>
-                    <!--<ul class="menu-sub-nav">
-                        <li>
-                            <a th:href="'/' + ${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
+                <li th:each="subMenu, subIndex : ${page}" th:if="${subMenu.AUTH_ROLE_NM == 'USER'}">
+                    <a th:href="${subMenu.PAGE_URL}"><span th:text="${subMenu.PAGE_NM}"></span></a>
+                    <ul class="menu-sub-nav" th:each="page : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
+                        <li th:each="subPage : ${page}" th:if="${subPage != null and subMenu.GNB_IDX == subPage.GNB_IDX }">
+                            <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
                         </li>
-                    </ul>-->
-                </li>
+                    </ul>
                 <li class="more">
                     <a href="#" class="toggle"><span>더보기</span></a>
                     <ul></ul>
@@ -40,9 +39,9 @@
         </nav>
         <div class="global_utility">
             <div class="utility_profile" onclick="goMenu('/member/myPage')">
-                <div class="info">
+                <div class="info"><!--
                     <strong><span th:text="${#authentication.principal.USER_NAME}"></span></strong>
-                    <span sec:authorize="isAuthenticated()" sec:authentication="name"></span><span th:text="${#authentication.authorities}"></span>
+                    <span sec:authorize="isAuthenticated()" sec:authentication="name"></span><span th:text="${#authentication.authorities}"></span>-->
                 </div>
             </div>
             <button sec:authorize="isAuthenticated()" type="button" id="logout" class="global_icon" data-cui-icon="logout" data-tooltip-title="로그아웃" onclick="goMenu('/logout')"><span>로그아웃</span></button>

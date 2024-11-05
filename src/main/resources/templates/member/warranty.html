@@ -1,10 +1,20 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/defaultLayout}"
-      layout:fragment="Content">
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name='generator' content='Schema'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="../../../plugin/jqGrid/jQuery.jqGrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/jqGrid/ui.jqGrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" >
+    <link rel="stylesheet" type="text/css" href="../../../css/schema.css" >
+
+    <script type="text/javascript" src="../../../plugin/jquery/jquery.min-1.11.1.js"></script>
+    <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js"></script>
+    <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="../../../js/app.js"></script>
     <title>회원가입</title>
     <!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
     <style>
@@ -18,6 +28,47 @@
     <!-- [종료] 퍼블본용 style. 개발 반영되면 안됨 -->
 </head>
 <body>
+<div class="cui_app">
+    <div class="cui_global">
+        <h1 class="global_logo">
+            <a href="#"><span class="blind">동우화인캠</span></a>
+        </h1>
+        <nav class="cui_gnb" role="navigation">
+            <ul>
+                <li class="more">
+                    <a href="#" class="toggle"><span>더보기</span></a>
+                    <ul></ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="global_utility">
+            <div class="utility_profile">
+                <div class="info">
+                    <strong>안녕하세요.</strong>
+                </div>
+            </div>
+            <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home"><span>Home</span></button>
+        </div>
+    </div>
+    <div class="cui_container center" data-module="join">
+        <div class="cui_lnb">
+            <div class="lnb_root">
+                <div class="lnb_head">
+                    <h2 class="lnb_title"><span>회원가입</span></h2>
+                </div>
+                <div class="cui_nav">
+                    <nav class="nav_root">
+                        <ul>
+                            <li>
+                                <a href="#" class="nav_item">
+                                    <span class="nav_label">회원가입</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
         <div class="cui_content" data-module="join">
             <div class="cui_main">
                 <div class="cui_head">
@@ -160,7 +211,8 @@
             </div>
         </div>
     </div>
-
+    </div>
+</div>
 </body>
 <script>
 
