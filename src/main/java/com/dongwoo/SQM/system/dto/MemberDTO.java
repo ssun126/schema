@@ -23,6 +23,7 @@ public class MemberDTO {
     private int USER_IDX;
     //private String USERID;
     private String USER_PWD;  //비밀번호 (SHA 암호화)
+    private String USER_PWD_NEW     ;    //-- 신규 비밀번호 (SHA 암호화)
     private String USER_NAME;
     private String USER_GUBN; //(0:동우화인켐, 1:업체)
 

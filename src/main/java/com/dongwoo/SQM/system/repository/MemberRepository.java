@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.system.repository;
 
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -106,6 +107,8 @@ public class MemberRepository {
     //ID 중복체크
     public MemberDTO findByMemberId(String loginId) { return sql.selectOne("Member.findByMemberId", loginId); }
 
+    //MyPage 동우 사용자 조인해서 가져오기.
+    public UserMgrDTO findUserInfoDataById(String  USER_ID) { return sql.selectOne("userMgr.findUserMgrById", USER_ID); }
 
     public MemberDTO findByMemberEmail(String loginEmail) { return sql.selectOne("Member.findByMemberEmail", loginEmail); }
 

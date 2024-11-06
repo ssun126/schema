@@ -31,6 +31,17 @@ public class UserMgrService {
         userMgrRepository.updateUserMgr(userMgrDTO);
     }
 
+    //사용자 업데이트  MyPage
+    public void updateUserMgrMyPage(UserMgrDTO userMgrDTO) {
+        userMgrRepository.updateUserMgrMyPage(userMgrDTO);
+    }
+
+    //사용자  비밀번호 업데이트  MyPage
+    public void updateUserPWS(UserMgrDTO userMgrDTO) {
+        userMgrRepository.updateUserPWS(userMgrDTO);
+    }
+
+
     //사용자 추가
     public void insertUserMgr(UserMgrDTO userMgrDTO) {
         userMgrRepository.insertUserMgr(userMgrDTO);

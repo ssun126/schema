@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.system.service;
 
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.dto.*;
 import com.dongwoo.SQM.system.repository.MemberRepository;
 
@@ -72,9 +73,11 @@ public class MemberService {
         return memberRepository.findByCompanyUserAll(userInfoCompanyUserDTO);
     }
 
-    public MemberDTO findByMemberId(String loginId) {
-        return memberRepository.findByMemberId(loginId);
+    //My page 정보조회
+    public UserMgrDTO findByMemberId(String loginId) {
+        return memberRepository.findUserInfoDataById(loginId);
     }
+
 
     //사용자 저장
     public int saveUserInfo(UserInfoDTO userInfoDTO) {

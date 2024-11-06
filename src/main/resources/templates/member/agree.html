@@ -21,7 +21,7 @@
 <div class="cui_app">
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
@@ -37,7 +37,7 @@
                     <strong>안녕하세요.</strong>
                 </div>
             </div>
-            <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home"><span>Home</span></button>
+            <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home" onclick="goMenu('/main')"><span>Home</span></button>
         </div>
     </div>
     <div class="cui_container center" data-module="join">
@@ -497,6 +497,12 @@
 </html>
 
 <script>
+
+    const goMenu = (menuPage) => {
+        location.href = menuPage;
+    }
+
+
     $(document).ready(function() {
         $('#nextButton').on('click', function(event) {
             event.preventDefault();

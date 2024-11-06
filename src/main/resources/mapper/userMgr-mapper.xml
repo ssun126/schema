@@ -151,6 +151,47 @@
         WHERE USER_IDX =#{USER_IDX}
     </update>
 
+    <update id="updateUserMgrMyPage"  parameterType="userMgr" >
+        UPDATE USER_INFO_DW
+        SET
+<!--        DEPT_CODE           =#{DEPT_CODE}-->
+<!--        ,EMAIL               =#{EMAIL}-->
+<!--        ,USER_LEVEL          =#{USER_LEVEL} , -->
+           MANAGE_SYSTEM_YN    =#{MANAGE_SYSTEM_YN}
+        ,MANAGE_ISO_YN_01    =#{MANAGE_ISO_YN_01}
+        ,MANAGE_ISO_YN_02    =#{MANAGE_ISO_YN_02}
+        ,MANAGE_ISO_YN_03    =#{MANAGE_ISO_YN_03}
+        ,MANAGE_ISO_YN_04    =#{MANAGE_ISO_YN_04}
+        ,MANAGE_ISO_YN_05    =#{MANAGE_ISO_YN_05}
+        ,MANAGE_ISO_YN_06    =#{MANAGE_ISO_YN_06}
+        ,MANAGE_ISO_YN_07    =#{MANAGE_ISO_YN_07}
+        ,MANAGE_ISO_YN_08    =#{MANAGE_ISO_YN_08}
+        ,MANAGE_ISO_YN_09    =#{MANAGE_ISO_YN_09}
+        ,MANAGE_PART_YN      =#{MANAGE_PART_YN}
+        ,MANAGE_COA_YN_01    =#{MANAGE_COA_YN_01}
+        ,MANAGE_COA_YN_02    =#{MANAGE_COA_YN_02}
+        ,MANAGE_COA_YN_03    =#{MANAGE_COA_YN_03}
+        ,MANAGE_COA_YN_04    =#{MANAGE_COA_YN_04}
+        ,MANAGE_CHANGE_YN_01 =#{MANAGE_CHANGE_YN_01}
+        ,MANAGE_CHANGE_YN_02 =#{MANAGE_CHANGE_YN_02}
+        ,MANAGE_CHANGE_YN_03 =#{MANAGE_CHANGE_YN_03}
+        ,MANAGE_CHANGE_YN_04 =#{MANAGE_CHANGE_YN_04}
+        ,MANAGE_CHANGE_YN_05 =#{MANAGE_CHANGE_YN_05}
+            ,ALARM_AUDIT_YN      =#{ALARM_AUDIT_YN}
+            ,ALARM_PART_YN       =#{ALARM_PART_YN}
+            ,ALARM_COA_CHANGE_YN =#{ALARM_COA_CHANGE_YN}
+        WHERE USER_IDX =#{USER_IDX}
+    </update>
+
+    <update id="updateUserPWS"  parameterType="userMgr" >
+        UPDATE USER_INFO
+        SET
+         USER_PWD =#{USER_PWD}
+        ,UP_DATE =sysdate
+        ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+        WHERE USER_ID =#{USER_ID}
+    </update>
+
     <update id="updateUserInfoMgr"  parameterType="userMgr" >
     UPDATE USER_INFO
     SET
@@ -174,7 +215,7 @@
         #{MANAGE_ISO_YN_07}, #{MANAGE_ISO_YN_08}, #{MANAGE_ISO_YN_09},
         #{MANAGE_PART_YN}, #{MANAGE_COA_YN_01}, #{MANAGE_COA_YN_02}, #{MANAGE_COA_YN_03}, #{MANAGE_COA_YN_04},
         #{MANAGE_CHANGE_YN_01}, #{MANAGE_CHANGE_YN_02}, #{MANAGE_CHANGE_YN_03}, #{MANAGE_CHANGE_YN_04}, #{MANAGE_CHANGE_YN_05},
-        0, 0, 0 )
+        'N', 'N', 'N' )
     </insert>
 
     <insert id="insertUserInfoMgr"  parameterType="userMgr" >

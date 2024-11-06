@@ -34,6 +34,17 @@ public class UserMgrRepository {
         sql.update("userMgr.updateUserMgr", userMgrDTO);
     }
 
+    //동우 사용자 업데이트 My page
+    public void updateUserMgrMyPage(UserMgrDTO userMgrDTO) {
+        sql.update("userMgr.updateUserMgrMyPage", userMgrDTO);
+    }
+
+    //동우 사용자 업데이트 My page 비밀번호 변경
+    public void updateUserPWS(UserMgrDTO userMgrDTO) {
+        sql.update("userMgr.updateUserPWS", userMgrDTO);
+    }
+
+
     //동우 사용자 추가
     public void insertUserMgr(UserMgrDTO userMgrDTO) {
 
@@ -41,7 +52,7 @@ public class UserMgrRepository {
         String defultPassWord = "123456t" ;  //기본password
         userMgrDTO.setUSER_PWD(defultPassWord);
         userMgrDTO.setUSER_GUBN(0);  //사용자 구분 (0:동우화인켐, 1:업체)
-        userMgrDTO.setREG_DW_USER_IDX(0);  //등록자 로그인 사용자 처리
+        userMgrDTO.setREG_DW_USER_IDX(0);  //등록자 로그인 사용자 처리  //
         userMgrDTO.setUP_DW_USER_IDX(0);  //수정자  로그인 사용자 처리
         sql.insert("userMgr.insertUserInfoMgr", userMgrDTO);
 

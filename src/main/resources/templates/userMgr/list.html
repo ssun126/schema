@@ -95,8 +95,8 @@
                 <div class="cui_body">
 <!--                    <form id="searchForm"  method="post">-->
                         <div class="cui_search">
-                            <div class="search_list cui_grid_wrap ">
-                                <div class="cui_items_wrap required_field">
+                            <div class="search_list cui_grid_wrap">
+                                <div class="cui_items_wrap required_field"  data-direction="left">
                                     <strong class="item_label">아이디</strong>
                                     <div class="item_content">
                                         <input id="userid" name="USER_ID" class="cui_text_field" type="text" placeholder="아이디를 입력해주세요">
@@ -356,6 +356,22 @@
     </div>
 </div>
 
+<!--==alert==-->
+<div class="cui_dialog" style="width:420px;display:none" id="dialog">
+    <div class="dialog_container">
+        <div class="dialog_body">
+            <div class="body_root">
+                <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
+                <div class="cui_items_wrap" data-direction="center">
+                    <div class="item_content">
+                        <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==alert==-->
 
 
 
@@ -379,6 +395,20 @@
       const modal = $(this).parents('.cui_dialog');
       modal.fadeOut();
     });
+
+
+    function alertModal(id){
+        $("#" + id).fadeIn();
+    }
+
+    //모달alert
+    function showAlert(type, message) {
+        var alertDiv = document.querySelector('#alertTypeimg');
+        alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
+        document.getElementById('messageContent').innerText = message;  // 메시지 설정
+        alertModal('dialog');
+    }
+
 
      function initPopform(type) {
 
@@ -463,13 +493,13 @@
                             data: $('#updateForm').serialize(),
                             success: function(response) {
 
-                               alert("사용자 정보가 추가 되었습니다.");
+                               showAlert('success', '사용자 정보가 추가 되었습니다.');
                                $("#dialogUserUpdate").fadeOut();
                                fetchDataLis();
                             },
                             error: function(err) {
                                 console.log("에러발생", err);
-                                alert("업데이트 중 오류가 발생했습니다.");
+                                showAlert('warning', '업데이트 중 오류가 발생했습니다.');
                             }
                         });
                     }
@@ -482,14 +512,13 @@
                 url: "/userMgr/updateUserMgr",
                 data: $('#updateForm').serialize(),
                 success: function(response) {
-
-                   alert("사용자 정보가 수정 되었습니다.");
+                   showAlert('success', '사용자 정보가 수정되었습니다.');
                    $("#dialogUserUpdate").fadeOut();
                    fetchDataLis();
                 },
                 error: function(err) {
                     console.log("에러발생", err);
-                    alert("업데이트 중 오류가 발생했습니다.");
+                    showAlert('warning', '업데이트 중 오류가 발생했습니다.');
                 }
             });
         }
@@ -550,7 +579,7 @@
             contentType: "application/json",
             data: JSON.stringify({ "USER_ID": userid }),
             success: function(res) {
-                console.log("요청 성공", res);
+                //console.log("요청 성공", res);
                 if (res) {
                     document.getElementById('user_id').value = res.user_ID;
                     document.getElementById('user_idx').value = res.user_IDX;

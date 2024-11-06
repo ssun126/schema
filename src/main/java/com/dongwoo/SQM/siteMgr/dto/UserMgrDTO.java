@@ -23,6 +23,7 @@ public class UserMgrDTO {
     private int USER_IDX        ;    //-- 사용자 IDX
     private String USER_ID      ;    //-- 아이디 ▼
     private String USER_PWD     ;    //-- 비밀번호 (SHA 암호화)
+    private String USER_PWD_NEW     ;    //-- 신규 비밀번호 (SHA 암호화)
     private String USER_NAME    ;    //-- 이름 ▼
     private int USER_GUBN       ;    //-- 사용자 구분 (0:동우화인켐, 1:업체)
     private String USER_STATUS  ;    //-- 사용자 상태 (Y:사용, N:미사용)
