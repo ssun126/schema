@@ -6,6 +6,7 @@ import com.dongwoo.SQM.system.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -355,8 +357,8 @@ public class MemberController {
 
 
     @PostMapping("/member/vendor-check")
-    public @ResponseBody Map<String, Object> vendorCheck(@RequestParam("searchCode") String searchCode ,String searchType) {
-        System.out.println("vendorCode = " + searchCode);
+    public @ResponseBody Map<String, Object> vendorCheck(@RequestParam("searchCode") String searchCode ,@RequestParam("searchType") String searchType) {
+        log.info("vendorCode = " + searchCode);
 
         //마스터등록 여부 확인
         MemberDTO memberDTO = memberService.basicvendorNumCheck(searchType,searchCode);

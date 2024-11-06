@@ -562,7 +562,8 @@
       }
 
       var sUrl = "/member/vendor-check" ;
-
+      console.log("searchCode=="+ searchCustomer);
+      console.log("searchType=="+ searchType);
       $.ajax({
           // 요청방식: post, url: "vendor-check", 데이터:  Vendor 번호,사업자 등록번호 체크
           type: "post",
@@ -572,8 +573,7 @@
               ,"searchType" : searchType
           },
           success: function(res) {
-              console.log("요청성공", res);
-
+              console.log("요청성공????", res.status);
               if (res.status == "ok") {
                $('#registeredCompany').show(); //기등록 업체입니다.
                $('#joinBasicStep1').show();
