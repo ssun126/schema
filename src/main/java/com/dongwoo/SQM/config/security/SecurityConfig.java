@@ -46,7 +46,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/main", true)
-                        .successHandler(new LoginSuccessHandler("/"))
+                        .successHandler(new LoginSuccessHandler("/main"))
                         .permitAll()
                 )
                 .logout(logout -> logout

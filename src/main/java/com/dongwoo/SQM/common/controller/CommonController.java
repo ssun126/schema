@@ -10,4 +10,5 @@ public class CommonController {
         model.addAttribute("msg", "성공");
         return "/common/pages/modal"; // Thymeleaf 템플릿 이름
     }
+
 }

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let isDragging = false;
     let mouseOffset = { x: 0, y: 0 };
-    let dialogOffset = { left: 10, top: 10 }; // 'right' -> 'top'으로 수정
+    let dialogOffset = { left: 0, top: 0 }; // 'right' -> 'top'으로 수정
 
     // 드래그 시작 시 모달의 현재 위치를 계산하여 저장
     modalHeader.addEventListener("mousedown", function (event) {
@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log("modalDialog.style.left========"+modalDialog.style.left);
       // 모달의 현재 위치가 없을 경우 기본값을 0으로 설정
       dialogOffset = {
-        left: modalDialog.style.left === '' ? -50 : Number(modalDialog.style.left.replace('px', '')),
-        right: modalDialog.style.top === '' ? -50 : Number(modalDialog.style.top.replace('px', ''))
+        left: modalDialog.style.left === '' ? 800 : Number(modalDialog.style.left.replace('px', '')),
+        right: modalDialog.style.top === '' ? 400 : Number(modalDialog.style.top.replace('px', ''))
       }
     });
     // 드래그 중일 때 모달 위치 변경

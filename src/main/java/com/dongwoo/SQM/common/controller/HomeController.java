@@ -26,4 +26,24 @@ public class HomeController {
         return "index";
     }
 
+    //페이지 생성 전 링크 연결
+    @GetMapping("/admin/auditMgmt/isoAuth")
+    public String auditMgmIsoAuth() {
+        return "isoAuth/main";
+    }
+
+    @GetMapping("/admin/partMgmt/matApproval")
+    public String partMgmtMatApproval() {
+        return "matApproval/main";
+    }
+
+    @GetMapping("/user/partMgmt/matReg")
+    public String partMgmtMatReg() {
+        return "matReg/main";
+    }
+
+    @GetMapping("/admin/qualityCtrl/changeMgmt")
+    public String qualityCtrlMain() {
+        return "qualityCtrl/main";
+    }
 }

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<body>
+        <div class="cui_content">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title"><span>변경관리</span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>업체 기본정보</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>Vendor 번호 및 사업자등록번호 검색</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="12341234" disabled>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>귀사 정보</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="COVISION" disabled>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>Vendor 업종 형태</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>국가</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="KOREA" disabled>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>회사명 (한글 또는 해당국가 언어)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>제조 공장명</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>사업자 등록번호</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>회사주소 (영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="서울시 강서구 발산">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>CEO 성명(영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="HONG GIL DONG">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>CEO 연락처(영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" type="text" value="010-1234-1234">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="right">
+                            <div class="item_content">
+                                <button type="submit" class="cui_button primary"><span>수정</span></button>
+                            </div>
+                        </div>
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>공동 업무자 정보</span></legend>
+                            <table class="cui_table center">
+                                <thead>
+                                <tr>
+                                    <th><span>담당자 구분</span></th>
+                                    <th><span>성명(영문)</span></th>
+                                    <th><span>직위</span></th>
+                                    <th><span>부서명</span></th>
+                                    <th><span>email</span></th>
+                                    <th><span>연락처</span></th>
+                                    <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span>메인 담당자</span></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><span>공동 업무자</span></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><input type="text" class="cui_text_field"></td>
+                                    <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>Green Partner</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>Warranty Letter</span></th>
+                                    <td><span>Approved</span></td>
+                                    <th><span>Warranty Letter</span></th>
+                                    <td><span>10점 | A등급 | 2024-07-31</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="cui_table center">
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th colspan="4"><span>분쟁광물(CMRT)</span></th>
+                                    <th colspan="2"><span>책임광물(EMRT)</span></th>
+                                </tr>
+                                <tr>
+                                    <th><span>Tantalum</span></th>
+                                    <th><span>Tungsten</span></th>
+                                    <th><span>Tin</span></th>
+                                    <th><span>Gold</span></th>
+                                    <th><span>Cobalt</span></th>
+                                    <th><span>Mica</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span>미사용</span></td>
+                                    <td><span>사용</span></td>
+                                    <td><span>사용</span></td>
+                                    <td><span>사용</span></td>
+                                    <td><span>미사용</span></td>
+                                    <td><span>사용</span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <fieldset>
+                            <legend><span>DWFC 거래 사업부</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>사업본부</span></th>
+                                    <td>
+                                        <div>
+                                            1) 반도체 사업본부<br>
+                                            2) 첨단소재 사업본부<br>
+                                            3) 에너지 기능재료 사업부<br>
+                                            4) 옵티칼 사업본부<br>
+                                            5) 통신디바이스 사업본부
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="right">
+                            <div class="item_content">
+                                <button type="submit" class="cui_button primary"><span>수정</span></button>
+                            </div>
+                        </div>
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>외부 인증 정보</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><span>인증 구분</span></th>
+                                    <th><span>인증일</span></th>
+                                    <th><span>유효일</span></th>
+                                    <th><span>인증기관</span></th>
+                                    <th><span>인증서</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span>ISO 14001</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>SGS</span></td>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="center">
+                                            <div class="item_content">
+                                                <button type="submit" class="cui_button secondary"><span>다운로드</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span>ISO 14001</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>SGS</span></td>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="center">
+                                            <div class="item_content">
+                                                <button type="submit" class="cui_button secondary"><span>다운로드</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="right">
+                            <div class="item_content">
+                                <button type="submit" class="cui_button primary"><span>수정</span></button>
+                            </div>
+                        </div>
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>회원 ID 관리</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:120px;">
+                                    <col style="width:120px;">
+                                    <col style="width:240px;">
+                                    <col style="width:120px;">
+                                    <col style="width:120px;">
+                                    <col >
+                                    <col style="width:120px;">
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><span>ID</span></th>
+                                    <th><span>이름</span></th>
+                                    <th><span>E-mail</span></th>
+                                    <th><span>가입일</span></th>
+                                    <th><span>승인일</span></th>
+                                    <th><span>접속 목적</span></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span>Test1</span></td>
+                                    <td><span>홍길동</span></td>
+                                    <td><span>test1@test.com</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><p>Audit Management (노동환경)<br>Audit Management (환경안전)</p></td>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="center">
+                                            <div class="item_content">
+                                                <button type="submit" class="cui_button"><span>탈퇴</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span>Test1</span></td>
+                                    <td><span>홍길동</span></td>
+                                    <td><span>test1@test.com</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><p>Audit Management (노동환경)<br>Audit Management (환경안전)</p></td>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="center">
+                                            <div class="item_content">
+                                                <button type="submit" class="cui_button"><span>탈퇴</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
