@@ -7,30 +7,15 @@
             <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation" th:each="auth : ${#authentication.authorities}" th:if="${auth.authority == 'ADMIN'}" >
-            <ul class="nav-item sec" th:each="page, index : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminMenuList}">
+            <ul class="nav-item sec" th:each="page, index : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userMenuList}">
                 <li th:each="subMenu, subIndex : ${page}" th:if="${subMenu.AUTH_ROLE_NM == 'ADMIN'}">
                     <a th:href="${subMenu.PAGE_URL}"><span th:text="${subMenu.PAGE_NM}"></span></a>
-                    <ul class="menu-sub-nav" th:each="page : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList}">
+                    <ul class="menu-sub-nav" th:each="page : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
                         <li th:each="subPage : ${page}" th:if="${subPage != null and subMenu.GNB_IDX == subPage.GNB_IDX }">
                             <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
                         </li>
                     </ul>
                 </li>
-                <li class="more">
-                    <a href="#" class="toggle"><span>더보기</span></a>
-                    <ul></ul>
-                </li>
-            </ul>
-        </nav>
-        <nav class="cui_gnb" role="navigation" th:each="auth : ${#authentication.authorities}" th:if="${auth.authority != 'ADMIN'}" >
-            <ul class="nav-item sec" th:each="page, index : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).userMenuList}">
-                <li th:each="subMenu, subIndex : ${page}" th:if="${subMenu.AUTH_ROLE_NM == 'USER'}">
-                    <a th:href="${subMenu.PAGE_URL}"><span th:text="${subMenu.PAGE_NM}"></span></a>
-                    <ul class="menu-sub-nav" th:each="page : ${T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
-                        <li th:each="subPage : ${page}" th:if="${subPage != null and subMenu.GNB_IDX == subPage.GNB_IDX }">
-                            <a th:href="${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
-                        </li>
-                    </ul>
                 <li class="more">
                     <a href="#" class="toggle"><span>더보기</span></a>
                     <ul></ul>
@@ -51,6 +36,19 @@
 <script>
     const goMenu = (menuPage) => {
         location.href = menuPage;
+    }
+
+    function reloadReply(value){
+        const param = {key:value}
+        callParamAjax(param, '/ajax-function-call', successCb, errorCb);
+
+        function successCb(fragment){
+            $("#").replaceWith(fragment);
+        }
+
+        function errorCb(err){
+            console.log(err);
+        }
     }
 </script>
 </html>
