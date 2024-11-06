@@ -2,14 +2,14 @@
 <html lang="kr"
       xmlns:th="http:www.thymeleaf.org">
     <div class="cui_lnb" th:fragment="AsideFragment">
-        <div class="lnb_root" th:each="auth : ${#authentication.authorities}" th:if="${auth.authority == 'ADMIN'}">
+        <div class="lnb_root" th:each="auth : ${#authentication.authorities}">
             <div class="lnb_head" th:each="menuPage : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userMenuList}"><span></span>
                 <h2 class="lnb_title">
                     <span th:each="mainMenu : ${menuPage}" th:if="${mainMenu != null and currentUrl.contains(mainMenu.PAGE_URL)}" th:text="${mainMenu.GNB_NM}"></span>
                 </h2>
             </div>
             <div class="cui_nav">
-                <nav class="nav_root" th:each="page : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList : T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
+                <nav class="nav_root" th:each="page : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
                     <ul>
                         <li th:each="subPage : ${page}" th:if="${subPage != null and #strings.substring(currentUrl, 0, 7+#strings.indexOf(#strings.substring(currentUrl, 7, currentUrl.length), '/')) == #strings.substring(subPage.PAGE_URL, 0, 7+#strings.indexOf(#strings.substring(subPage.PAGE_URL, 7, subPage.PAGE_URL.length), '/'))}">
                             <a th:href="${subPage.PAGE_URL}" class="nav_item" th:attr="aria-selected=${currentUrl.contains(subPage.PAGE_URL)? 'true' : 'false'}">
