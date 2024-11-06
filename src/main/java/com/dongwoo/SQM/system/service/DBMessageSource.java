@@ -8,6 +8,8 @@ import org.springframework.context.support.AbstractMessageSource;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 @Slf4j
@@ -20,7 +22,8 @@ public class DBMessageSource extends AbstractMessageSource {
 
     @Override
     protected MessageFormat resolveCode(String key, Locale locale) {
-       /* MultiLanguageDTO message = multiLanguageRepository.findByKeyAndLocale(key, locale.getLanguage());
+       /*  하나씩 불러와서 처리
+        MultiLanguageDTO message = multiLanguageRepository.findByKeyAndLocale(key, locale.getLanguage());
 
         if (locale.getLanguage() == null) {
             message = multiLanguageRepository.findByKeyAndLocale(key, DEFAULT_LOCALE_CODE);
@@ -34,4 +37,5 @@ public class DBMessageSource extends AbstractMessageSource {
         return new MessageFormat(message.getMESSAGE_CONTENT(), locale);*/
         return null;
     }
+
 }

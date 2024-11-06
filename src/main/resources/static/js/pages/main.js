@@ -7,6 +7,7 @@ const main = {
 		this.event();
 		this.setMultiLang();
 		this.resize();
+		updateLanguageContent('KR');
 	},
 	style: function() {
 	},
@@ -35,7 +36,9 @@ const main = {
     		type : "post",
     		success : function(data) {
         		localStorage.setItem("MULTI_LANGUAGE_DATA", JSON.stringify(data));
-        		//Schema.require("lang").init();
+        		//console.log("localStorage???????"+localStorage.getItem("MULTI_LANGUAGE_DATA"))
+
+                //Schema.require("lang").init();
         		setTimeout(main.getMessage(), 500);
     		},
     		error : function() {
@@ -57,11 +60,46 @@ const main = {
 	}
 }
 
-//모달 닫기
-$('.modal-close').on('click', function(e){
-    e.preventDefault();
-    const modal = $(this).parents('.cui_dialog');
-    modal.fadeOut();
-});
 
 
+
+// 로컬스토리지에서 MULTI_LANGUAGE_DATA 가져오기
+function getMultiLanguageData() {
+    const data = localStorage.getItem('MULTI_LANGUAGE_DATA');
+    if (data) {
+        return JSON.parse(data);  // JSON 배열 반환
+    }
+    return null;
+}
+
+// ID와 lang을 기반으로 해당 값을 찾는 함수
+function getLocalizedValue(id, lang) {
+    const data = getMultiLanguageData();
+    if (!data) {
+        return "로컬스토리지에 데이터가 없습니다.";
+    }
+
+    // 해당 ID와 lang을 기반으로 데이터 찾기
+    const item = data.find(entry => entry.ID === id);
+    if (item && item[lang]) {
+        return item[lang];  // 해당 lang에 맞는 값 반환
+    }
+
+    return `ID 또는 lang에 해당하는 데이터가 없습니다.`;
+}
+
+// 특정 lang에 맞는 데이터를 span에 적용하는 함수
+function updateLanguageContent(lang) {
+    const spans = document.querySelectorAll('span[data-type="lang"]');
+
+    document.querySelectorAll('span[data-type="lang"]').forEach(span => {
+        //console.log("span : " + span.id); // id가 존재하면 출력
+        const id = span.id;
+        const localizedValue = getLocalizedValue(id, lang);
+        console.log("localizedValue========="+localizedValue);
+        // 해당 span에 다국어 값을 넣음
+        span.innerText = localizedValue;
+    });
+}
+
+// 예시: lang을 'KR'로 설정하여 다국어 처리

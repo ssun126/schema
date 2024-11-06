@@ -34,7 +34,7 @@ public class MultiLanguageController {
     public @ResponseBody List<HashMap> setLocalStorage(HttpSession session, Model model)  throws Exception{
 
         List<HashMap> multiLanguageList =  multiLanguageService.getMultiLanguageList_HashMap();
-        log.info("multiLanguageList = " + multiLanguageList);
+        //log.info("multiLanguageList = " + multiLanguageList);
 
         return multiLanguageList;
     }
