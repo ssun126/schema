@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
                         .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**","/userMgr/**").permitAll()
                         // 관리자 권한만 가능
-                        .requestMatchers("/dwuser/**").hasRole("dwuser")
+                        //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
