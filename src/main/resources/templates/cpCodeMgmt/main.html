@@ -55,7 +55,7 @@
                 <div class="toolbar_aside">
                     <button type="button" class="cui_button secondary" onclick="modal_open('CpCode','add', '')"><span>추가</span></button>
                     <button type="button" class="cui_button secondary" onclick="CpCode_Popup()"><span>삭제</span></button>
-                    <button type="button" class="cui_button secondary" onclick="CpCode_Popup()"><span>엑셀다운로드</span></button>
+                    <button type="button" class="cui_button secondary"  onclick="downloadExcel()"><span>엑셀다운로드</span></button>
                 </div>
             </div>
 
@@ -280,10 +280,15 @@
         $('#modalCompanyName').val(data.com_NAME); // COM_NAME을 모달 내에 표시
         $('#modalCompanyNation').val(data.com_NATION); // COM_NATION을 모달 내에 표시
 
-        //업체코드 수정 불가
+        //업체코드 수정 불가 처리
+        $('#modalCompanyCode').attr("readonly",true);
         //com_Status는 select box 타입으로 처리
     }
 
+    function downloadExcel() {
+        // 버튼 클릭 시 서버에서 엑셀 파일을 다운로드하도록 요청
+        window.location.href = '/api/downloadExcel';  // 서버 엔드포인트로 이동
+    }
 
 
 </script>
