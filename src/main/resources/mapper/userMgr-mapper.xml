@@ -3,6 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="userMgr">
 
+    <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
+        SELECT * FROM  base_code
+        WHERE  GROUP_CODE != BASE_CODE
+        AND BASE_OPTION = 'SYSTEM'
+        AND BASE_STATUS ='Y'
+        AND GROUP_CODE  =#{GROUP_CODE}
+        ORDER BY BASE_SORT ASC
+    </select>
+
     <select id="findAll" resultType="userMgr">
         SELECT BASECONFIGIDX as IDX,GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,u.USERNAME,b.REGDATE
         FROM BASECONFIG b
@@ -99,6 +108,7 @@
         FROM USER_INFO u
         JOIN USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
         WHERE 1=1
+        AND  u.USER_GUBN = 0
         <if test="USER_ID != null and USER_ID != ''">
             AND u.USER_ID LIKE '%' || #{USER_ID} || '%'
         </if>
@@ -230,6 +240,42 @@
         select * from USER_INFO where USER_ID=#{USER_ID}
     </select>
 
+
+    <!-- CONNECT_GOAL 접속목적 가져가기 기초 코드 체크 박스 그리기용.-->
+    <select id="findConnectGoalByUserId" parameterType="String" resultType="userMgr">
+        SELECT * FROM
+        (
+            SELECT B.BASE_CODE,B.BASE_NAME,B.BASE_CODE_IDX,B.BASE_SORT FROM  base_code B
+            WHERE b.GROUP_CODE != b.BASE_CODE
+            AND b.BASE_OPTION = 'SYSTEM'
+            AND b.BASE_STATUS = 'Y'
+            AND b.GROUP_CODE = 'CONNECT'
+        ) A  ,
+        (
+            SELECT b.BASE_CODE , g.USER_IDX  ,u.USER_ID ,g.GOAL_IDX
+            FROM base_code b
+            LEFT JOIN USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
+            LEFT JOIN USER_INFO u ON u.USER_IDX = g.USER_IDX
+            WHERE b.GROUP_CODE != b.BASE_CODE
+            AND b.BASE_OPTION = 'SYSTEM'
+            AND b.BASE_STATUS = 'Y'
+            AND b.GROUP_CODE = 'CONNECT'
+            AND u.USER_ID =#{USER_ID}
+        ) B
+        WHERE  A.BASE_CODE = B.BASE_CODE(+)
+        ORDER BY A.BASE_SORT ASC
+    </select>
+
+
+    <insert id="insertConnectGoal"  parameterType="userMgr" >
+        INSERT INTO USER_INFO_COMPANY_CONNECT_GOAL
+        (USER_IDX, GOAL_IDX, BASE_CODE)
+        VALUES(#{USER_IDX}, (SELECT NVL(MAX(GOAL_IDX), 0) + 1 FROM USER_INFO_COMPANY_CONNECT_GOAL), #{BASE_CODE})
+    </insert>
+
+    <delete id="deleteConnectGoal"  parameterType="userMgr">
+        delete from USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
+    </delete>
 
 
 </mapper>

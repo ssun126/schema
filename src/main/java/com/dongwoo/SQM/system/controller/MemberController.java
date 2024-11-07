@@ -1,8 +1,12 @@
 package com.dongwoo.SQM.system.controller;
 
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
+
 import com.dongwoo.SQM.system.dto.*;
 import com.dongwoo.SQM.system.service.MemberService;
+import com.dongwoo.SQM.siteMgr.service.UserMgrService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +33,7 @@ import java.util.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final UserMgrService userMgrService;
 
     @GetMapping("/member/agree")
     public String agreeForm(Model model) {
@@ -88,7 +93,12 @@ public class MemberController {
 
         UserMgrDTO memberDTO = memberService.findByMemberId(loginId);
 
+        //업체 사용자 접속목적 코드
+        List<UserMgrDTO> memberGoalList = memberService.findConnectGoalByUserId(loginId);
+
         model.addAttribute("member", memberDTO);
+        model.addAttribute("memberGoalList", memberGoalList); // 리스트 추가
+
         return "/member/myPage";
     }
 
@@ -260,6 +270,39 @@ public class MemberController {
 //        , GOALIDX			NUMBER(4)		NOT NULL		--// 접속목적 IDX  ▶  기초코드 ?
 //        , BASECODE			VARCHAR2(50)	NOT NULL		--// 코드
 
+        //checkboxDataJson
+        String checkboxesJson =  memberDTO.getCheckboxDataJson();
+
+
+        //해당 유저 접속 목적 전체 삭제.  delete from USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
+        UserMgrDTO userMgrDTO = new UserMgrDTO();
+        userMgrDTO.setUSER_IDX(USER_IDX);
+        userMgrService.deleteConnectGoal(userMgrDTO);
+
+        // 체크박스 데이터 JSON
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Map<String, Object>> selectedGoals = objectMapper.readValue(checkboxesJson, List.class);
+
+            for (Map<String, Object> goal : selectedGoals) {
+                String base_code = (String) goal.get("id");
+                Boolean checked = (Boolean) goal.get("checked");
+                System.out.println("체크박스들: " + "ID: " + base_code + ", Checked: " + checked);
+
+                if(checked) {
+                    userMgrDTO.setBASE_CODE(base_code);
+                    userMgrService.insertConnectGoal(userMgrDTO);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
+
+
+
+
 
         ////Step 5 Final  COMPANY_CODE 업데이트
         ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
@@ -364,7 +407,7 @@ public class MemberController {
         MemberDTO memberDTO = memberService.basicvendorNumCheck(searchType,searchCode);
         String USER_STATUS = ""; //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려) ★
         String checkResult = "N";
-
+        String User_ID = "";
 
         Map<String, Object> response = new HashMap<>();
 
@@ -382,6 +425,7 @@ public class MemberController {
                 //USERINFO 를 검색하자.   USER_INFO_COMPANY.USER_IDX
                 UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSER_IDX());
 
+                User_ID = userUserinfoDTO.getUSER_ID();
                 //ID /PASS 업체 정보 바인딩 항목
                 response.put("USER_ID", userUserinfoDTO.getUSER_ID());
                 response.put("USER_NAME", userUserinfoDTO.getUSER_NAME());
@@ -425,7 +469,7 @@ public class MemberController {
             //업체 정보 바인딩 항목
             response.put("COM_CODE", memberDTO.getCOM_CODE()); //Vendor
             response.put("COM_NAME", memberDTO.getCOM_NAME()); //귀사정보
-            response.put("VENDOR_WORK_KIND", memberDTO.getVENDOR_WORK_KIND()); //업종형태
+            response.put("VENDOR_WORK_KIND", memberDTO.getVENDOR_WORK_KIND()); //업종형태 VENDOR 업종 형태 (D:제조사, L:물류사)
             response.put("COM_NATION", memberDTO.getCOM_NATION()); //국가
 
             response.put("COMPANY_NAME", memberDTO.getCOMPANY_NAME());   //회사명
@@ -436,7 +480,10 @@ public class MemberController {
             response.put("COM_CEO_PHONE", memberDTO.getCOM_CEO_PHONE());  //CEO 연락처 (영문)
             response.put("COM_CEO_EMAIL", memberDTO.getCOM_CEO_EMAIL());  //CEO e-mail (영문)
         }
-        //response.put("VENDOR_WORK_KIND", memberDTO.getVENDOR_WORK_KIND());  //접속목적 코드화 받아서 동적 생성해야됨
+
+        //업체 사용자 접속목적 코드
+        List<UserMgrDTO> memberGoalList = memberService.findConnectGoalByUserId(User_ID);
+        response.put("memberGoalList", memberGoalList);
 
         return response;
     }

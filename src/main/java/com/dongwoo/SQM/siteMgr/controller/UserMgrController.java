@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import com.dongwoo.SQM.siteMgr.service.UserMgrService;
@@ -9,6 +10,7 @@ import com.dongwoo.SQM.system.dto.MemberDTO;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
 import com.dongwoo.SQM.system.dto.UserInfoDTO;
 import com.dongwoo.SQM.system.service.LoginService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,6 +36,10 @@ public class UserMgrController {
         //기초코드 바인딩.
         //왜 두개냐 ? 상단 메뉴 링크.
         //경로가 왜 두개냐 ?
+        List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("DEPT");
+        model.addAttribute("deptList", deptList);
+        System.out.println("userMgrDTOList = " + deptList);
+
         return "userMgr/list";
     }
 
@@ -40,6 +47,9 @@ public class UserMgrController {
     public String userMgrMain(Model model) {
         //기초코드 바인딩.
         //경로가 왜 두개냐 ? 좌측 사이드 메뉴 링크
+        List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("DEPT");
+        model.addAttribute("deptList", deptList);
+        System.out.println("userMgrDTOList = " + deptList);
         return "userMgr/list";
     }
 
@@ -181,11 +191,14 @@ public class UserMgrController {
     }
 
 
+
     @PostMapping("/userMgr/updateUserMgrMyPage")
     @ResponseBody
-    public String updateUserMgrMypage(@ModelAttribute UserMgrDTO userMgrDTO ,Model model) {
+    public String updateUserMgrMyPage( @ModelAttribute UserMgrDTO userMgrDTO
+             ,@RequestParam(value = "checkboxes", required = false) String checkboxesJson
+            ,Model model) {
 
-        //체크 박스처리 길이 길다.
+        //동우!!! 체크 박스처리 길이 길다.
         //region
         userMgrDTO.setMANAGE_SYSTEM_YN(checkValue(userMgrDTO.getMANAGE_SYSTEM_YN())) ;
 
@@ -218,7 +231,38 @@ public class UserMgrController {
 
         //endregion
 
-        userMgrService.updateUserMgrMyPage(userMgrDTO);
+        if(userMgrDTO.getUSER_GUBN() == 0) {
+
+            userMgrService.updateUserMgrMyPage(userMgrDTO);
+
+        }else {
+
+            //해당 유저 접속 목적 전체 삭제.
+            userMgrService.deleteConnectGoal(userMgrDTO);
+
+            // 체크박스 데이터 JSON
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<Map<String, Object>> selectedGoals = objectMapper.readValue(checkboxesJson, List.class);
+
+
+                for (Map<String, Object> goal : selectedGoals) {
+                    String base_code = (String) goal.get("id");
+                    Boolean checked = (Boolean) goal.get("checked");
+                    //System.out.println("체크박스들: " + "ID: " + base_code + ", Checked: " + checked);
+
+                    if(checked) {
+                        userMgrDTO.setBASE_CODE(base_code);
+                        userMgrService.insertConnectGoal(userMgrDTO);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "error";
+            }
+
+        }
 
         model.addAttribute("message", "사용자 정보가 성공적으로 업데이트되었습니다.");  //
         return "ok";

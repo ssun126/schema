@@ -85,6 +85,7 @@
                                     <th><span>ID</span></th>
                                     <td><p th:text="${member.USER_ID}"></p>
                                         <input id="user_idx" name="USER_IDX" th:value="${member.USER_IDX}" class="cui_text_field" type="hidden" >
+                                        <input id="user_gubn" name="USER_GUBN" th:value="${member.USER_GUBN}" class="cui_text_field" type="hidden" >
                                     </td>
                                     <th><span>사용자명</span></th>
                                     <td><p th:text="${member.USER_NAME}"></p></td>
@@ -96,29 +97,23 @@
                                     <td><p th:text="${member.UP_DATE}"></p></td>
                                 </tr>
 
-
-                                <!--여기에 듀얼로  조건 로그인 유저  , 업체 사용자 ,, -->
-
-
-                                <tr style="display:none">
-                                    <th><span>접속 목적</span></th>
+                                <tr th:style="${member.USER_GUBN == 1 ? '' : 'display:none;'}">
+                                    <th><span>접속 목적 </span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content wrap">
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                            <div id="divGoal" class="item_content wrap" style="display: flex; flex-wrap: wrap;" >
+                                                <label  th:each="memberGoal : ${memberGoalList}" class="cui_checkbox wide">
+                                                    <input type="checkbox" th:id="${memberGoal.BASE_CODE}" th:name="${memberGoal.BASE_CODE}"
+                                                           th:checked="${memberGoal.USER_ID != null}">
+                                                    <i></i>
+                                                    <span th:text="${memberGoal.BASE_NAME}"></span>
+                                                </label>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
 
-
-
-                                <!--여기에 듀얼로-->
-
-                                <tr>
+                                <tr th:style="${member.USER_GUBN == 0 ? '' : 'display:none;'}" >
                                     <th ><span>관리 업무</span></th>
                                     <td colspan="3">
 
@@ -217,7 +212,7 @@
 
 
 
-                                <tr>
+                                <tr th:style="${member.USER_GUBN == 0 ? '' : 'display:none;'}">
                                     <th><span>알림설정</span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
@@ -341,11 +336,63 @@
 
   });
 
-   function save() {
+
+  function save() {
+
+ // 체크된 체크박스의 id와 value를 수집
+    const selectedGoals = [];
+
+    $('#divGoal input[type="checkbox"]').each(function() {
+        const isChecked = $(this).is(':checked');  // 체크 여부 확인
+        selectedGoals.push({
+            id: $(this).attr("id"),  // 체크박스의 ID
+            checked: isChecked       // 체크 여부
+        });
+    });
+
+    // 폼 데이터 직렬화
+    const formData = $('#updateForm').serialize();
+
+    // selectedGoals를 JSON 문자열로 변환
+    const additionalData = {
+        checkboxes: JSON.stringify(selectedGoals) // JSON.stringify()로 직렬화
+    };
+
+    // 두 데이터를 병합
+    const dataToSend = formData + '&' + $.param(additionalData);
+
       $.ajax({
          type: "post",
          url: "/userMgr/updateUserMgrMyPage",
-         data: $('#updateForm').serialize(),
+         data: dataToSend,
+         success: function(response) {
+            showAlert('success', '사용자 정보가 수정되었습니다.');
+         },
+         error: function(err) {
+           console.log("에러발생", err);
+           showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+         }
+     });
+   }
+
+
+   function save_bak() {
+   //체크 박스 아이디를 못받는다.
+     const selectedGoals = [];
+
+    // 체크된 체크박스 값을 배열로 수집
+    $('#divGoal input[type="checkbox"]:checked').each(function() {
+        selectedGoals.push($(this).val());
+    });
+
+    // formData 직렬화 및 추가 데이터 병합
+    const formData = $('#updateForm').serialize();
+    const dataToSend = formData + '&' + $.param({ checkboxes: selectedGoals });
+
+      $.ajax({
+         type: "post",
+         url: "/userMgr/updateUserMgrMyPage",
+         data: dataToSend,
          success: function(response) {
             showAlert('success', '사용자 정보가 수정되었습니다.');
          },

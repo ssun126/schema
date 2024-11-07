@@ -156,7 +156,7 @@
                             </div>
                             <div class="cui_alert alert_basic" data-type="info" role="alert" id="registeredCompany">
                                 <div class="alert_message">
-                                    <p>기등록 업체입니다.</p>
+                                    <p>기등록 업체입니다. "이상태" 추가로직 필요함.보류!!! </p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="warning" role="alert" id="noCompanyCode">
@@ -367,10 +367,11 @@
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="column">
                                             <div class="item_content">
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>제조사</span></label>
-                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>물류사</span></label>
-<!--                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>-->
-<!--                                                <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>-->
+                                                <div id="divGoal" class="item_content wrap" style="display: flex; flex-wrap: wrap;" >
+                                                    <label class="cui_checkbox wide"><input type="checkbox" name="checkbox1"><i></i><span>Audit Management (노동환경)</span></label>
+                                                </div>
+                                                <!-- JSON 데이터를 저장할 숨겨진 필드 -->
+                                                <input type="hidden" name="checkboxDataJson" id="checkboxDataJson">
                                             </div>
                                         </div>
                                     </td>
@@ -573,18 +574,18 @@
               ,"searchType" : searchType
           },
           success: function(res) {
-              console.log("요청성공????", res.status);
+
               if (res.status == "ok") {
-               $('#registeredCompany').show(); //기등록 업체입니다.
+               $('#registeredCompany').show();             //기등록 업체입니다.
                $('#joinBasicStep1').show();
 
-                //공동업무자정보
-                //ID /PASS
-                bindCompanyInfo(res);           //정보 바인딩. ★
+                bindCompanyInfo(res);                       //정보 바인딩. ★
+                bindCompanyUserList(res.companyUserList);
+                bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
                 bindCompanyUserInfo(res);
                 setFieldsReadOnly(false);
 
-              } else if (res.status == "not") {  //IF 코드 없음.
+              } else if (res.status == "not") {            //IF 코드 없음.
 
                 $('#noCompanyCode').show();
                 $('#joinBasicStep1').hide();
@@ -599,24 +600,24 @@
 
                 $('#firstCompany').show();
                 $('#joinBasicStep1').show();
-                bindCompanyInfo(res);             //정보 바인딩. ★
+                bindCompanyInfo(res);                       //정보 바인딩. ★
                 bindCompanyUserList(res.companyUserList);
+                bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
                 unbindCompanyUserInfo();
                 setFieldsReadOnly(false);
 
-              }else {   //가입 진행중.
+              }else {                                      //가입 진행중.
                 $('#errCompanyCode').show();
                 $('#joinBasicStep1').show();  //기존 신청 정보 수정 가능하게.
 
                 bindCompanyInfo(res);  //정보 바인딩. ★
                 bindCompanyUserInfo(res);
+                bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
 
-               if(res.companyUserList != "undefined"){
+                if(res.companyUserList != "undefined"){
                     bindCompanyUserList(res.companyUserList);
-               }
-
-               setFieldsReadOnly(true);
-
+                }
+                setFieldsReadOnly(true);
                 errCompanyCodeMsg.innerHTML = "["+ res.status + "] 중인 정보가 있습니다. 관리자에게 문의하세요" ;
               }
           },
@@ -723,6 +724,31 @@
             //document.querySelector('#memberID').onkeyup(event); //그대로 넘겨야됨.
 
         }
+    }
+
+    //접속목적 바인딩
+    function bindMemberGoalList(memberGoalList) {
+
+        const divGoal = $('#divGoal');
+
+        divGoal.empty();
+
+        memberGoalList.forEach(function(memberGoal) {
+
+            const checkbox = $('<input>', {
+                type: 'checkbox',
+                id: memberGoal.base_CODE,
+                name: memberGoal.base_CODE,
+                checked: memberGoal.user_ID !== null
+            });
+
+            const label = $('<label>', { class: 'cui_checkbox wide' });
+            label.append(checkbox);
+            label.append('<i></i>');
+            label.append($('<span>').text(memberGoal.base_NAME));
+
+            divGoal.append(label);
+        });
     }
 
     //바인딩 초기화
@@ -950,6 +976,20 @@
             alert("ID/PW 추가사유를 입력해 주세요.");
             return;
         }
+
+        // 접속목적
+        const selectedGoals = [];
+        $('#divGoal input[type="checkbox"]').each(function() {
+            const isChecked = $(this).is(':checked');
+
+            selectedGoals.push({
+                id: $(this).attr("id"),
+                checked: isChecked
+            });
+        });
+        // JSON 데이터 저장
+        const jsonData = JSON.stringify(selectedGoals);
+        $('#checkboxDataJson').val(jsonData);
 
         document.getElementById('frmJoin').submit();
     }

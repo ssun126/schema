@@ -78,6 +78,12 @@ public class MemberService {
         return memberRepository.findUserInfoDataById(loginId);
     }
 
+    //My page 업체용 접속목적  체크박스
+    public List<UserMgrDTO> findConnectGoalByUserId(String loginId) {
+        return memberRepository.findConnectGoalByUserId(loginId);
+    }
+
+
 
     //사용자 저장
     public int saveUserInfo(UserInfoDTO userInfoDTO) {

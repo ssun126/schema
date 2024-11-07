@@ -111,10 +111,12 @@
                                 <div class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">사업부</strong>
                                     <div class="item_content">
-                                        <select id="deptcode" name = "DEPT_CODE" class="cui_select_field wide">
+                                        <select id="deptcode" name="DEPT_CODE" class="cui_select_field wide">
                                             <option value=""></option>
-                                            <option value="15">인사팀</option>
-                                            <option value="16">개발팀</option>
+                                            <option th:each="dept : ${deptList}"
+                                                    th:value="${dept.BASE_CODE_IDX}"
+                                                    th:text="${dept.BASE_NAME}">
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -236,9 +238,11 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">사업부</strong>
                             <div class="item_content">
-                                <select id="dept_code" name = "DEPT_CODE" class="cui_select_field wide">
-                                    <option value="15">인사팀</option>
-                                    <option value="16">개발팀</option>
+                                <select id="dept_code" name="DEPT_CODE" class="cui_select_field wide">
+                                    <option th:each="dept : ${deptList}"
+                                            th:value="${dept.BASE_CODE_IDX}"
+                                            th:text="${dept.BASE_NAME}">
+                                    </option>
                                 </select>
                             </div>
                         </label>
