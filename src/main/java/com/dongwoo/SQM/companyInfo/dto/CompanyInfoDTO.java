@@ -1,22 +1,15 @@
 package com.dongwoo.SQM.companyInfo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class CompanyInfoDTO {
-    private int BOARD_IDX;
-    private String INPUT_USER_ID;
-    private String BOARD_PASS;
-    private String BOARD_TITLE;
-    private String BOARD_DESC;
-    private int BOARD_HITS;
-    private String INPUT_DATE;
-    private int ATTACHED_FILE;
-
+    private Integer RN;
+    private String COM_CODE;
+    private String COM_NAME;
+    private String COM_NATION;
+    private String COM_STATUS;
 }

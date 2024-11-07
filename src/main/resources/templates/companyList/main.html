@@ -18,19 +18,19 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체코드</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                <input class="cui_text_field" type="text" placeholder="업체코드를 입력해주세요"/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체명</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                                <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요"/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">사업본부</strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchFactory">
+                                <select class="cui_select_field" name="SEARCHKEY">
                                     <option value="CODEGROUP" selected>선택</option>
                                     <option value="BASECODE">사업본부</option>
                                 </select>
@@ -39,12 +39,12 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">국가</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchNation">
+                                <input class="cui_text_field" type="text" name="SEARCHVAL">
                             </div>
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="button" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+                        <button type="button" class="cui_button primary search_btn" onclick=""><span>검색</span></button>
                     </div>
                 </div>
             </form>
@@ -86,11 +86,12 @@
         </div>
     </div>
 </div>
+
 <div class="cui_dialog" style="width:400px;display:none;" id="CpCode">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span id="modalTitle">신규추가</span></div>
+                <div class="main_label">신규 추가</div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
@@ -98,20 +99,20 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" id="formCpCode">
+                <form class="cui_form_field" data-legend="true" action="/baseCode/action" method="get" name="formCpCode">
                     <fieldset>
                         <!--                        <legend><span>ID 찾기</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체 코드</strong>
                             <div class="item_content">
-                                <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata">
+                                <input name="COMPANY_CODE" class="cui_text_field fixdata">
                                 <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체명</strong>
                             <div class="item_content">
-                                <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata">
+                                <input name="BASE_CODE" class="cui_text_field fixdata">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -125,13 +126,13 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">국가</strong>
                             <div class="item_content">
-                                <input id="modalCompanyNation" name="COM_NATION" class="cui_text_field ">
+                                <input name="BASE_NAME" class="cui_text_field ">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">사용</strong>
                             <div class="item_content">
-                                <select class="cui_select_field wide" id="modalCompanyStatus" name="COM_STATUS">
+                                <select class="cui_select_field wide" id="BASE_STATUS" name="BASE_STATUS">
                                     <option value="Y">Y</option>
                                     <option value="N">N</option>
                                 </select>
@@ -152,140 +153,87 @@
 </div>
 <script>
     $(document).ready(function() {
-        $('#searchBtn').click();
-
-          //업체 정보 추가
-        $('#formCpCode').on('submit', function(e) {
-            e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
-
-            // 폼 데이터를 직렬화하여 가져오기
-            var CpCodeDTO = {
-                COM_CODE: $('#modalCompanyCode').val(),
-                COM_NAME: $('#modalCompanyName').val(),
-                COM_NATION: $('#modalCompanyNation').val(),
-                COM_STATUS: 'Y'
-            };
-            console.log("formData>>>>>>>>>"+JSON.stringify(CpCodeDTO));
-            $.ajax({
-                type: 'POST',
-                url: '/api/setCompanyData',  //'/admin/companyInfo/company/save',    //
-                contentType: 'application/json',
-                data: JSON.stringify(CpCodeDTO),
-                success: function(response) {
-                    console.log('Form successfully submitted!', response);
-                    // 성공적으로 제출 후
-                    modal_close('CpCode'); //모달 닫기
-                    $('#searchBtn').click(); //리스트 새로 로드
-                },
-                error: function(xhr, status, error) {
-                    console.error('Form submission failed:', error);
-                }
-            });
-        });
-
-        //업체 코드 조회
-    });
-
-    // 검색 버튼 클릭 시
-    $('#searchBtn').on('click', function() {
-        var name = $('#searchName').val();  // 업체명
-        var code = $('#searchCode').val();  // 업체 코드
-        var nation = $('#searchNation').val();  // 국가
 
         $.ajax({
-            url: '/api/searchCompanies',  // 서버의 검색 API URL
+            url: '/api/pageMaker',  // 서버에서 pageMaker 객체를 가져오는 API URL
             type: 'GET',
             data: {
-                name: name,      // 업체명
-                code: code,      // 업체 코드
-                nation: nation,  // 국가
-                pageNum: 1,      // 기본값으로 첫 페이지
-                amount: 10       // 한 페이지에 표시할 항목 수
+                pageNum: 1,  // 기본값으로 첫 페이지를 설정, 필요에 따라 변경
+                amount: 10    // 페이지당 항목 수
             },
             success: function(response) {
-                // 테이블에 결과 채우기
-                var tableBody = $('#companyTable tbody');
-                tableBody.empty();  // 기존 내용 비우기
+                // pageMaker 객체를 받아옴
+                var startPage = response.startPage;
+                var endPage = response.endPage;
+                var currentPage = response.criteria.pageNum;
+                var totalPages = response.totalPages;
 
-                // 검색된 결과를 테이블에 추가
-                response.resultList.forEach(function(company) {
-                     var row = '<tr>' +
-                                 (company.com_STATUS === 'N' ?
-                                    '<td><input type="checkbox" id=\'' + company.com_CODE + '\'></td>' :
-                                    '<td></td>') +  // company.com_STATUS가 'N'이 아닌 경우에
-                                    '<td>' + company.com_CODE + '</td>' +
-                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCode\', \'detail\', \'/api/getCompanyData\', \''+ company.com_CODE + '\')">' + company.com_NAME + '</a></td>' +
-                                    '<td>' + company.com_NATION + '</td>' +
-                                    '<td>' + company.com_STATUS + '</td>' +
-                                  '</tr>';
-                    tableBody.append(row);  // 테이블에 새 행 추가
+                // 페이지네이션 컨테이너를 업데이트
+                var paginationHtml = '';
+
+                // "이전" 버튼 처리
+                if (currentPage > 1) {
+                    paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+                }
+
+                // 페이지 번호 처리
+                for (var i = startPage; i <= endPage; i++) {
+                    if (i === currentPage) {
+                        paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
+                    } else {
+                        paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
+                    }
+                }
+
+                // "다음" 버튼 처리
+                if (currentPage < totalPages) {
+                    paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
+                }
+
+                // 페이지네이션 컨테이너에 HTML 추가
+                $('#pagination').html(paginationHtml);
+                loadPage(1);
+
+                // 페이지 번호 클릭 시 페이지네이션 갱신
+                $('.page, .prev, .next').on('click', function(event) {
+                    event.preventDefault();
+                    var pageNum = $(this).data('page');
+                    loadPage(pageNum);
                 });
-
-                // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
-                updatePagination(response.pageMaker);
             },
             error: function() {
-                alert("검색 결과를 가져오는 데 실패했습니다.");
+                alert("페이지네이션 데이터를 가져오는 데 실패했습니다.");
             }
         });
-    });
 
+        // 페이지 로드 함수
+        function loadPage(pageNum) {
+           // 페이지가 로드되면 서버에서 데이터를 가져옴
+            $.ajax({
+                url: '/api/companyList',  // 서버의 API URL
+                type: 'GET',
+                data: { pageNum: pageNum, amount: 10 },
+                success: function(response) {
+                    var tableBody = $('#companyTable tbody');
+                    tableBody.empty(); // 기존 내용 비우기
 
-     // 페이지네이션 처리 함수 (updatePagination)
-    function updatePagination(pageMaker) {
-        var paginationHtml = '';
-        var currentPage = pageMaker.criteria.pageNum;
-        var startPage = pageMaker.startPage;
-        var endPage = pageMaker.endPage;
-        var totalPages = pageMaker.totalPages;
-
-        // 이전 페이지 버튼
-        if (currentPage > 1) {
-            paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+                    response.forEach(function(company) {
+                        var row = '<tr>' +
+                                        '<td>' + company.rn + '</td>' +
+                                        '<td>' + company.com_CODE + '</td>' +
+                                        '<td><a href="/company/' + company.com_CODE + '">' + company.com_NAME + '</a></td>' +
+                                        '<td>' + company.com_NATION + '</td>' +
+                                        '<td>' + company.com_STATUS + '</td>' +
+                                      '</tr>';
+                        tableBody.append(row);
+                    });
+                },
+                error: function() {
+                    alert("회사를 가져오는 데 실패했습니다.");
+                }
+            });  // $.ajax 호출 끝
         }
-
-        // 페이지 번호
-        for (var i = startPage; i <= endPage; i++) {
-            if (i === currentPage) {
-                paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-            } else {
-                paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-            }
-        }
-
-        // 다음 페이지 버튼
-        if (currentPage < totalPages) {
-            paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-        }
-
-        // 페이지네이션 HTML 업데이트
-        $('#pagination').html(paginationHtml);
-
-        // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-        $('.page, .prev, .next').on('click', function(event) {
-            event.preventDefault();
-            var pageNum = $(this).data('page');
-            searchCompanies(pageNum);
-        });
-    }
-
-    //상세 항목 정보 - Ajax로 받아온 데이터 바인딩
-    function bindModalData(status, data) {
-        const searchButton = document.querySelector('[data-cui-icon="search"]');
-        if (searchButton) { //업체 검색 버튼 가리기
-          searchButton.style.display = 'none';
-        }
-        $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-        $('#modalCompanyCode').val(data.com_CODE); // COM_CODE를 모달 내에 표시
-        $('#modalCompanyName').val(data.com_NAME); // COM_NAME을 모달 내에 표시
-        $('#modalCompanyNation').val(data.com_NATION); // COM_NATION을 모달 내에 표시
-
-        //업체코드 수정 불가
-        //com_Status는 select box 타입으로 처리
-    }
-
-
-
+    });  // $(document).ready() 끝
 </script>
 </body>
 </html>

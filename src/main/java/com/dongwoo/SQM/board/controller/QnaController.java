@@ -39,11 +39,11 @@ public class QnaController {
      */
     @GetMapping("/admin/board/qa")
     public String list(Criteria criteria, Model model) {
-        log.info("criteria============================================="+criteria);
+        /*log.info("criteria============================================="+criteria);
         List<BoardDTO> boardDTOList = boardService.getList(criteria);
         model.addAttribute("boardList", boardDTOList);
         model.addAttribute("pageMaker", new PageDTO(boardService.getTotal(), 10, criteria));
-        log.info("boardDTOList = " + boardDTOList);
+        log.info("boardDTOList = " + boardDTOList);*/
         return "board/adminList";
     }
 
@@ -61,7 +61,7 @@ public class QnaController {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
 
-        return "board/adminDetail";
+        return "board/Detail";
     }
 
     @GetMapping("/admin/board/download/{filename}")
