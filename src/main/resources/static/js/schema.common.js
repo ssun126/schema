@@ -49,6 +49,15 @@ function modal_init(id, status){
     $("form[name='form"+id+"']").each(function() {
         this.reset();
         $("input[type=hidden]").val(''); //reset만으로 hidden type은 리셋이 안되기 때문에 써줌
+
+        // readOnly 속성 초기화
+        $(this).find('input, textarea, select').each(function() {
+            // readOnly 속성 제거 (읽기 전용 상태를 해제)
+            $(this).removeAttr('readonly');
+        });
+        $(this).find('[style*="display: none"]').each(function() {
+            $(this).css('display', 'block');  // 보이게 하기
+        });
     });
 }
 
@@ -69,10 +78,14 @@ function modal_open(id, status, sUrl, param){
 
           if (res != null) {
             $("#" + id).fadeIn();
-            modal_init(status);
+            modal_init(id, status);
 
             // res 데이터를 다른 함수로 전달하여 데이터 바인딩 처리
-            bindModalData(status, res);
+            if(status === 'second'){
+                bindModalData2(status, res);
+            }else{
+                bindModalData(status, res);
+            }
           }
       },
       error: function(err) {
@@ -85,7 +98,10 @@ function modal_open(id, status, sUrl, param){
   }
 }
 
+
 //모달 닫기
 function modal_close(id){
     $("#" + id).fadeOut();
+    //초기화
+    modal_init(id, 'add');
 }

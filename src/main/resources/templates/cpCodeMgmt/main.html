@@ -53,9 +53,9 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button secondary" onclick="modal_open('CpCode','add', '')"><span>추가</span></button>
-                    <button type="button" class="cui_button secondary" onclick="CpCode_Popup()"><span>삭제</span></button>
-                    <button type="button" class="cui_button secondary"  onclick="downloadExcel()"><span>엑셀다운로드</span></button>
+                    <button type="button" class="cui_button secondary" onclick="modal_open('CpCodeMgmt','add', '', '')"><span>추가</span></button>
+                    <button type="button" class="cui_button secondary" onclick="delCompany()"><span>삭제</span></button>
+                    <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span>엑셀다운로드</span></button>
                 </div>
             </div>
 
@@ -86,26 +86,25 @@
         </div>
     </div>
 </div>
-<div class="cui_dialog" style="width:400px;display:none;" id="CpCode">
+<div class="cui_dialog" style="width:400px;display:none;" id="CpCodeMgmt">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
                 <div class="main_label"><span id="modalTitle">신규추가</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCodeMgmt')"><span>Close</span></button>
             </div>
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" id="formCpCode">
+                <form class="cui_form_field" data-legend="true" name="formCpCodeMgmt">
                     <fieldset>
-                        <!--                        <legend><span>ID 찾기</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체 코드</strong>
                             <div class="item_content">
                                 <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata">
-                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+                                <button type="button" class="cui_button icon" data-cui-icon="search" id="getCpCode"><span>검색</span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -117,9 +116,9 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">사업본부</strong>
                             <div class="item_content">
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>체크박스 1</span></label>
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label>
+                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label>
+                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>에너지 기능재료 사업부</span></label>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -140,8 +139,8 @@
 
                         <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                             <div class="item_content">
-                                <button type="submit" id="CpCodeAdd" class="cui_button primary"><span>저장</span></button>
-                                <button type="button" id="CpCodePop" class="cui_button secondary" onClick="modal_close('CpCode')"><span>닫기</span></button>
+                                <button type="submit" id="CpCodeMgmtAdd" class="cui_button primary"><span>저장</span></button>
+                                <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" onClick="modal_close('CpCodeMgmt')"><span>닫기</span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -150,12 +149,58 @@
         </div>
     </div>
 </div>
+
+<div class="cui_dialog" style="width:400px;display:none;" id="CpCode">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span>업체코드 선택</span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_field" data-legend="true" id="formCpCode">
+                    <table class="cui_table center" id="cpCodeTable">
+                        <colgroup>
+                            <col style="width:50px;">
+                            <col style="width:130px;">
+                            <col>
+                            <col style="width:80px;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span>업체코드</span></th>
+                            <th><span>업체명</span></th>
+                            <th><span>국가</span></th>
+                            <th><span>선택</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #CpCode {
+        z-index: 1050; /* 두 번째 모달은 첫 번째보다 높은 z-index */
+        top: 60%;
+        left: 70%;
+        transform: translate(-60%, -70%);
+    }
+</style>
 <script>
     $(document).ready(function() {
         $('#searchBtn').click();
 
           //업체 정보 추가
-        $('#formCpCode').on('submit', function(e) {
+        $("form[name='formCpCodeMgmt']").on('submit', function(e) {
             e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
 
             // 폼 데이터를 직렬화하여 가져오기
@@ -174,7 +219,7 @@
                 success: function(response) {
                     console.log('Form successfully submitted!', response);
                     // 성공적으로 제출 후
-                    modal_close('CpCode'); //모달 닫기
+                    modal_close('CpCodeMgmt'); //모달 닫기
                     $('#searchBtn').click(); //리스트 새로 로드
                 },
                 error: function(xhr, status, error) {
@@ -182,8 +227,6 @@
                 }
             });
         });
-
-        //업체 코드 조회
     });
 
     // 검색 버튼 클릭 시
@@ -214,7 +257,7 @@
                                     '<td><input type="checkbox" id=\'' + company.com_CODE + '\'></td>' :
                                     '<td></td>') +  // company.com_STATUS가 'N'이 아닌 경우에
                                     '<td>' + company.com_CODE + '</td>' +
-                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCode\', \'detail\', \'/api/getCompanyData\', \''+ company.com_CODE + '\')">' + company.com_NAME + '</a></td>' +
+                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCodeMgmt\', \'detail\', \'/api/getCompanyData\', \''+ company.com_CODE + '\')">' + company.com_NAME + '</a></td>' +
                                     '<td>' + company.com_NATION + '</td>' +
                                     '<td>' + company.com_STATUS + '</td>' +
                                   '</tr>';
@@ -276,20 +319,55 @@
           searchButton.style.display = 'none';
         }
         $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-        $('#modalCompanyCode').val(data.com_CODE); // COM_CODE를 모달 내에 표시
-        $('#modalCompanyName').val(data.com_NAME); // COM_NAME을 모달 내에 표시
-        $('#modalCompanyNation').val(data.com_NATION); // COM_NATION을 모달 내에 표시
+        $('#modalCompanyCode').val(data.com_CODE);
+        $('#modalCompanyName').val(data.com_NAME);
+        $('#modalCompanyNation').val(data.com_NATION);
 
         //업체코드 수정 불가 처리
         $('#modalCompanyCode').attr("readonly",true);
         //com_Status는 select box 타입으로 처리
+        const statusSelect = document.getElementById("modalCompanyStatus");
+        statusSelect.value = data.com_STATUS; // COM_STATUS을 표시
     }
 
+    //엑셀 다운로드
     function downloadExcel() {
         // 버튼 클릭 시 서버에서 엑셀 파일을 다운로드하도록 요청
         window.location.href = '/api/downloadExcel';  // 서버 엔드포인트로 이동
     }
 
+    // 업체코드 검색
+    $('#getCpCode').on('click', function() {
+        var param = {
+                pageNum: 1,      // 기본값으로 첫 페이지
+                amount: 10       // 한 페이지에 표시할 항목 수
+            };
+        modal_open('CpCode', 'second', '/api/companyList', param) //모달창 오픈
+    });
+
+    //두번째 모달 응답 정보 - Ajax로 받아온 데이터 바인딩
+    function bindModalData2(status, data) {
+        // 테이블에 결과 채우기
+        var tableBody = $('#cpCodeTable tbody');
+        tableBody.empty();  // 기존 내용 비우기
+
+        // 검색된 결과를 테이블에 추가
+        data.forEach(function(company) {
+            var row = '<tr>' +
+                            '<td>' + company.com_CODE + '</td>' +
+                            '<td>' + company.com_NAME + '</a></td>' +
+                            '<td>' + company.com_NATION + '</td>' +
+                            '<td><button type="button" class="cui_button secondary" onClick="setCpCd()">선택</button></td>' +
+                          '</tr>';
+            tableBody.append(row);  // 테이블에 새 행 추가
+        });
+    }
+    //선택된 업체코드, 업체명 셋팅
+    function setCpCd(code, name){
+        modal_close('CpCode');
+        $('#modalCompanyCode').val(code);
+        $('#modalCompanyName').val(name);
+    }
 
 </script>
 </body>
