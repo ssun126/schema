@@ -20,7 +20,7 @@
                     <button type="button" class="cui_button primary" onclick="location.href='/user/board/qa/save'"><span>글 등록</span></button>
                 </div>
             </div>
-            <table class="cui_table center">
+            <table class="cui_table center" id="boardTable">
                 <colgroup>
                     <col style="width:110px;">
                     <col>
@@ -38,7 +38,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="board : ${boardList}">
+               <!-- <th:block th:each="board : ${boardList}">
                     <tr class="tBody" th:object="${board}">
                         <td th:text="*{BOARD_IDX}"></td>
                         <td><a id="goRead" th:href="*{BOARD_IDX}" th:text="*{BOARD_TITLE}"></a></td>
@@ -46,12 +46,13 @@
                         <td th:text="*{INPUT_DATE}"></td>
                         <td th:text="*{BOARD_HITS}"></td>
                     </tr>
-                </th:block>
+                </th:block>-->
                 </tbody>
                 <tfoot>
                 </tfoot>
             </table>
-            <div th:object="${pageMaker}" style="text-align: center" th:each="auth : ${#authentication.authorities}">
+            <div id="pagination" class="pagination" style="text-align: center"></div>
+            <!--<div th:object="${pageMaker}" style="text-align: center" th:each="auth : ${#authentication.authorities}">
                 <div id="pagination" class="pagination">
                     <a th:if="*{prev}" th:href="@{/#auth.authority/board/qa(pageNum=${startPage - 1})}"><code>&lt;&lt;</code></a>
                     <th:block th:each="num : ${#numbers.sequence(pageMaker.getStartPage(), pageMaker.getEndPage())}">
@@ -60,20 +61,99 @@
                     </th:block>
                     <a th:if="*{next}" th:href="@{/#auth.authority/board/qa(pageNum=${endPage + 1})}"><code>&gt;&gt;</code></a>
                 </div>
-                <!--<div class="small-width" style="text-align: center">
-                    <a class="changePage" th:if="*{criteria.pageNum > 1}" th:href="*{criteria.pageNum - 1}"><code>&lt;</code></a>
-                    <code th:text="*{criteria.pageNum}"></code>
-                    <a class="changePage" th:if="*{criteria.pageNum < realEnd}" th:href="@{/board/list(pageNum=${criteria.pageNum + 1})}"><code>&gt;</code></a>
-                </div>-->
                 <form action="/${auth.authority}/board/qa" th:object="${criteria}" name="pageForm">
                     <input type="hidden" name="pageNum" th:field="*{pageNum}">
                     <input type="hidden" name="amount" th:field="*{amount}">
                 </form>
-            </div>
+            </div>-->
             <div class="table-wrapper">
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+
+        $.ajax({
+            url: '/api/boardList/pageMaker',  // 서버에서 pageMaker 객체를 가져오는 API URL
+            type: 'GET',
+            data: {
+                pageNum: 1,  // 기본값으로 첫 페이지를 설정, 필요에 따라 변경
+                amount: 10    // 페이지당 항목 수
+            },
+            success: function(response) {
+                // pageMaker 객체를 받아옴
+                var startPage = response.startPage;
+                var endPage = response.endPage;
+                var currentPage = response.criteria.pageNum;
+                var totalPages = response.totalPages;
+
+                // 페이지네이션 컨테이너를 업데이트
+                var paginationHtml = '';
+
+                // "이전" 버튼 처리
+                if (currentPage > 1) {
+                    paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+                }
+
+                // 페이지 번호 처리
+                for (var i = startPage; i <= endPage; i++) {
+                    if (i === currentPage) {
+                        paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
+                    } else {
+                        paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
+                    }
+                }
+
+                // "다음" 버튼 처리
+                if (currentPage < totalPages) {
+                    paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
+                }
+
+                // 페이지네이션 컨테이너에 HTML 추가
+                $('#pagination').html(paginationHtml);
+                loadPage(1);
+
+                // 페이지 번호 클릭 시 페이지네이션 갱신
+                $('.page, .prev, .next').on('click', function(event) {
+                    event.preventDefault();
+                    var pageNum = $(this).data('page');
+                    loadPage(pageNum);
+                });
+            },
+            error: function() {
+                alert("페이지네이션 데이터를 가져오는 데 실패했습니다.");
+            }
+        });
+
+        // 페이지 로드 함수
+        function loadPage(pageNum) {
+           // 페이지가 로드되면 서버에서 데이터를 가져옴
+            $.ajax({
+                url: '/api/boardList',  // 서버의 API URL
+                type: 'GET',
+                data: { pageNum: pageNum, amount: 10 },
+                success: function(response) {
+                    var tableBody = $('#boardTable tbody');
+                    tableBody.empty(); // 기존 내용 비우기
+
+                    response.forEach(function(board) {
+                        var row = '<tr>' +
+                                        '<td>' + board.BOARD_IDX + '</td>' +
+                                        '<td>' + board.BOARD_TITLE + '</td>' +
+                                        '<td><a href="/board/' + board.com_CODE + '">' + board.BOARD_DESC + '</a></td>' +
+                                        '<td>' + board.INPUT_DATE + '</td>' +
+                                        '<td>' + board.BOARD_HITS + '</td>' +
+                                      '</tr>';
+                        tableBody.append(row);
+                    });
+                },
+                error: function() {
+                    alert("회사를 가져오는 데 실패했습니다.");
+                }
+            });  // $.ajax 호출 끝
+        }
+    });  // $(document).ready() 끝
+</script>
 </body>
 </html>

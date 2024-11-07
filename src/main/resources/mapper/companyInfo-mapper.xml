@@ -4,44 +4,97 @@
 
 <mapper namespace="CompanyInfo">
     <insert id="save" parameterType="companyInfo">
-        insert into COMPANYCODE(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
-        values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
+        insert into COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
+        values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)
     </insert>
-    <select id="login" parameterType="companyInfo" resultType="companyInfo">
-        select * from COMPANYCODE where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
+
+    <select id="findById" parameterType="companyInfo" resultType="companyInfo">
+        select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
-    <select id="findAll" resultType="companyInfo">
-        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from COMPANYCODE
+
+    <select id="findSearch" parameterType="companyInfo" resultType="companyInfo">
+        select COM_CODE, COM_NAME, COM_NATION, COM_STATUS from COMPANY_CODE
+       <!-- INNER JOIN COMPANY_CODE_WORK ccw ON ccd.COM_CODE = ccw.COM_CODE-->
+        WHERE 1=1
+        <if test="COM_CODE != '' ">
+            and COM_CODE = #{COM_CODE}
+        </if>
+        <if test="COM_NAME != '' ">
+            and COM_NAME = #{COM_NAME}
+        </if>
+        <if test="COM_NATION != '' ">
+            and COM_NAME = #{COM_NATION}
+        </if>
     </select>
-    <select id="findById" parameterType="int" resultType="companyInfo">
-        select * from COMPANYCODE where USER_IDX=#{id}
-    </select>
+
     <delete id="delete" parameterType="int">
-        delete from COMPANYCODE where USER_IDX=#{id}
+        delete from COMPANY_CODE where COM_CODE=#{COM_CODE}
     </delete>
+
     <select id="findByCompanyId" parameterType="String" resultType="companyInfo">
-        select * from COMPANYCODE where USER_ID=#{USER_ID}
+        select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
-    <select id="getList" resultType="board">
-        <![CDATA[
-        SELECT RN, BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS
+
+    <select id="findByCriteria" parameterType="map" resultType="companyInfo">
+        SELECT RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
         FROM
         (
-            /*알리아스를 붙인 컬럼에 WHERE절에서 접근할 때에는 FROM 절에 작성된 테이블의 컬럼과 동일한 이름으로만 사용이 가능하다.*/
-            SELECT /*+ INDEX_DESC(BOARD_INFO PK_BOARD) */
-            ROWNUM RN, BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS
-            FROM BOARD_INFO
+            SELECT /*+ INDEX_DESC(COMPANY_CODE PK_COMPANY_CODE) */
+                ROWNUM RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
+            FROM COMPANY_CODE
+            WHERE 1 =1
+            <if test="COM_CODE != null and COM_CODE != ''">
+                AND (COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+            </if>
+            <if test="COM_NAME != null and COM_NAME != ''">
+                AND (COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+            </if>
+            <if test="COM_NATION != null and COM_NATION != ''">
+                AND (COM_NATION LIKE CONCAT(CONCAT('%',  #{COM_NATION}), '%'))
+            </if>
+            <if test="criteria != null and criteria != ''">
+        <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>
+            </if>
+        )
+        WHERE RN > ((#{criteria.pageNum}-1) * #{criteria.amount})
+    </select>
+
+    <select id="countByKeyword" parameterType="map" resultType="int">
+        select count(*) CNT
+        from COMPANY_CODE
+        WHERE 1 =1
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+        <if test="COM_NATION != null and COM_NATION != ''">
+            AND (COM_NATION LIKE CONCAT(CONCAT('%',  #{COM_NATION}), '%'))
+        </if>
+    </select>
+
+    <select id="getList" resultType="companyInfo">
+        <![CDATA[
+        SELECT RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
+        FROM
+        (
+            SELECT /*+ INDEX_DESC(COMPANY_CODE PK_COMPANY_CODE) */
+            ROWNUM RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
+            FROM COMPANY_CODE
             WHERE ROWNUM <= #{pageNum} * #{amount}
         )
            WHERE RN > (#{pageNum}-1) * #{amount}
         ]]>
     </select>
+
     <select id="getTotal" resultType="int">
         select count(*) CNT
-        from BOARD_INFO
+        from COMPANY_CODE
     </select>
-    <update id="update" parameterType="companyInfo">
-        update COMPANYCODE set USER_Mobile=#{USER_Mobile}
-        where USER_IDX=#{USER_idx}
+
+    <update id="updateStatus" parameterType="companyInfo">
+        update COMPANY_CODE set COM_STATUS=#{COM_STATUS}
+        where COM_CODE=#{COM_CODE}
     </update>
 </mapper>

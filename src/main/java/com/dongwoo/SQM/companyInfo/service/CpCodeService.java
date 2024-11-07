@@ -1,6 +1,5 @@
 package com.dongwoo.SQM.companyInfo.service;
 
-import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
@@ -14,34 +13,15 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class CompanyInfoService {
+public class CpCodeService {
     private final CompanyInfoRepository companyInfoRepository;
 
-    public int save(CpCodeDTO cpCodeDTO) {
-        return companyInfoRepository.save(cpCodeDTO);
+    public void save(CpCodeDTO cpCodeDTO) {
+        companyInfoRepository.save(cpCodeDTO);
     }
 
     public List<CompanyInfoDTO> findAll() {
         return companyInfoRepository.findAll();
-    }
-
-    // 여러 조건을 처리하는 검색 메서드
-    public List<CompanyInfoDTO> searchCompanies(String name, String code, String nation, Criteria criteria) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("COM_NAME", name);
-        params.put("COM_CODE", code);
-        params.put("COM_NATION", nation);
-        params.put("criteria", criteria);
-        return companyInfoRepository.findByCriteria(params);
-    }
-
-    // 검색 조건에 맞는 총 개수를 반환
-    public int getTotalByKeyword(String name, String code, String nation) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("COM_NAME", name);
-        params.put("COM_CODE", code);
-        params.put("COM_NATION", nation);
-        return companyInfoRepository.countByKeyword(params);
     }
 
     public List<CompanyInfoDTO> getList(Criteria cri) {
@@ -51,7 +31,7 @@ public class CompanyInfoService {
         return companyInfoRepository.getTotal();
     }
 
-    public CompanyInfoDTO findByCompanyId(String id) {
+    public CompanyInfoDTO findById(String id) {
         return companyInfoRepository.findByCompanyId(id);
     }
 
@@ -62,5 +42,7 @@ public class CompanyInfoService {
     public void delete(int id) {
         companyInfoRepository.delete(id);
     }
+
+
 
 }

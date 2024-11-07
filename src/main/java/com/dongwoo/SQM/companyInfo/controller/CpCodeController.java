@@ -1,18 +1,17 @@
 package com.dongwoo.SQM.companyInfo.controller;
 
-import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,48 +19,36 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class CpCodeMgmtController {
+public class CpCodeController {
     private final CompanyInfoService companyInfoService;
 
-
     @GetMapping("/admin/companyInfo/cpCode")
-    //@PreAuthorize("hasRole('ADMIN')")
     public String cpCodeMgmtMain(Criteria criteria, Model model) {
-        log.info("criteria============================================="+criteria);
-        List<CompanyInfoDTO> companyInfoDTOList = companyInfoService.getList(criteria);
-        model.addAttribute("boardList", companyInfoDTOList);
+        List<CompanyInfoDTO> companyInfoList = companyInfoService.getList(criteria);
+        model.addAttribute("companyList", companyInfoList);
         model.addAttribute("pageMaker", new PageDTO(companyInfoService.getTotal(), 10, criteria));
-        log.info("boardDTOList = " + companyInfoDTOList);
+        log.info("companyList = " + companyInfoList);
         return "cpCodeMgmt/main";
     }
 
-    @PostMapping("/admin/companyInfo/save")
-    public String save(CompanyInfoDTO companyInfoDTO) throws IOException {
-       // System.out.println("companyInfoDTO = " + companyInfoDTO);
+    @PostMapping("/admin/companyInfo/cpCode/save")
+    public String cpCodeSave(CompanyInfoDTO companyInfoDTO) throws IOException {
        // companyInfoService.save(companyInfoDTO);
         return "redirect:/companyInfo/list";
     }
 
-    @GetMapping("/admin/companyInfo/list")
+    @GetMapping("/admin/companyInfo/cpCode/list")
     public String findAll(Model model) {
        // List<CompanyInfoDTO> companyInfoDTOList = companyInfoService.findAll();
        // model.addAttribute("companyInfoList", companyInfoDTOList);
-        //System.out.println("companyInfoDTOList = " + companyInfoDTOList);
         return "/companyInfo/list";
     }
 
-    @GetMapping("/admin/companyInfo/{id}")
-    public String findById(@PathVariable("id") int id, Model model) {
-
+    @PostMapping("/admin/companyInfo/cpCode/{id}")
+    public CompanyInfoDTO findById(@PathVariable("id") String id, Model model) {
         // 상세내용 가져옴
-       // CompanyInfoDTO companyInfoDTO = companyInfoService.findById(id);
-       // model.addAttribute("companyInfo", companyInfoDTO);
-        //System.out.println("companyInfoDTO = " + companyInfoDTO);
-//        if (companyInfoDTO.getATTACHED_FILE().equals(1)) {
-//            List<CompanyInfoFileDTO> companyInfoFileDTOList = companyInfoService.findFile(id);
-//            model.addAttribute("companyInfoFileList", companyInfoFileDTOList);
-//        }
-        return "/companyInfo/detail";
+
+        return companyInfoService.findByCompanyId(id);
     }
 
     @GetMapping("/admin/companyInfo/update/{id}")

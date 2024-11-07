@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //모달 초기화
 function modal_init(id, status){
+    $('#modalTitle').text(status == 'add'?'신규 추가':'업체'); //모달창의 제목 변경
     // form 전체 초기화
     $("form[name='form"+id+"']").each(function() {
         this.reset();
@@ -52,23 +53,26 @@ function modal_init(id, status){
 }
 
 //모달 열기
-function modal_open(id, status, sUrl){
+function modal_open(id, status, sUrl, param){
   if(status !='add'){
    var sUrl = sUrl;
+   console.log("param"+param);
 
     $.ajax({
-      type: "post",
+      type: "get",
       url:   sUrl,
       data: {
-          "status": status
+          "param": param
       },
       success: function(res) {
           console.log("요청성공", res);
 
-          if (res.status == "ok") {
+          if (res != null) {
             $("#" + id).fadeIn();
             modal_init(status);
 
+            // res 데이터를 다른 함수로 전달하여 데이터 바인딩 처리
+            bindModalData(status, res);
           }
       },
       error: function(err) {

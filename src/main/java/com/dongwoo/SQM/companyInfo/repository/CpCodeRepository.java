@@ -1,23 +1,20 @@
 package com.dongwoo.SQM.companyInfo.repository;
 
-import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
-import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class CompanyInfoRepository {
+public class CpCodeRepository {
     private final SqlSessionTemplate sql;
 
-    public int save(CpCodeDTO cpCodeDTO) {
-        return sql.insert("CompanyInfo.save", cpCodeDTO);
+    public int save(CompanyInfoDTO companyInfoDTO) {
+        return sql.insert("CompanyInfo.save", companyInfoDTO);
     }
 
     public List<CompanyInfoDTO> findAll() {
@@ -32,8 +29,8 @@ public class CompanyInfoRepository {
         return sql.selectOne("CompanyInfo.getTotal");
     }
 
-    public CompanyInfoDTO findByCompanyId(String id) {
-        return sql.selectOne("CompanyInfo.findByCompanyId", id);
+    public CompanyInfoDTO findById(int id) {
+        return sql.selectOne("CompanyInfo.findById", id);
     }
 
     public void update(CompanyInfoDTO companyInfoDTO) {
@@ -44,11 +41,5 @@ public class CompanyInfoRepository {
         sql.delete("CompanyInfo.delete", id);
     }
 
-    public List<CompanyInfoDTO> findByCriteria(Map<String, Object> params) {
-        return sql.selectList("CompanyInfo.findByCriteria", params);
-    }
 
-    public int countByKeyword(Map<String, Object> params) {
-        return sql.selectOne("CompanyInfo.countByKeyword", params);
-    }
 }
