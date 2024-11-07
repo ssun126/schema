@@ -66,6 +66,8 @@ public class SvhcListController {
         }
 
         try {
+            //전체삭제
+            svhcListService.deletAll();
             log.info("test startttttttttttt");
             svhcListService.insert_svhcBulk(svhcListDTOList);
             log.info("test 6666666666666666666666");
@@ -73,7 +75,7 @@ public class SvhcListController {
             throw new RuntimeException(e);
         }
 
-        return  "/siteMgr/svhcList";
+        return  "redirect:/siteMgr/svhcList";
 
     }
 }

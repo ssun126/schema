@@ -7,4 +7,8 @@
         SELECT SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM
         FROM SVHC_DATA
     </select>
+
+    <delete id="deletAll">
+        DELETE SVHC_DATA
+    </delete>
 </mapper>

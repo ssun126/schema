@@ -52,7 +52,7 @@
                 </a>
               </li>
               <li>
-                <a href="#" class="nav_item" aria-selected="true">
+                <a href="/siteMgmt/admin/samplefile" class="nav_item" aria-selected="true">
                   <span class="nav_label">SAMPLE 파일</span>
                 </a>
               </li>
@@ -91,13 +91,13 @@
                 <div class="cui_items_wrap" data-direction="left">
                   <div class="item_content">
                     <div class="cui_attachments">
-                      <input type="file" class="cui_file_field">
+                      <input type="file" name="file" id="fileInfo" class="cui_file_field">
 
                     </div>
                     <div class="item_content">
                       <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
 <!--                      <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                      <button type="button" onclick="fn_deletfile_info()" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                     </div>
                     <button type="button" class="cui_button"><span>SAMPLE</span></button>
                     <button type="submit" class="cui_button primary"><span>저장</span></button>
@@ -117,6 +117,8 @@
               <col>
             </colgroup>
             <thead>
+
+
             <tr>
               <th class="center"><label class="cui_checkbox"><input type="checkbox"><i></i></label></th>
               <th class="center"><span>NO.</span></th>
@@ -143,10 +145,7 @@
             </tbody>
           </table>
 
-          <div class="cui_items_wrap" data-direction="right">
-            <div class="item_content">
 
-            </div>
           </div>
         </div>
       </div>
@@ -156,126 +155,10 @@
 </body>
 <script>
 
-<!--  $(document).ready(function() {-->
-<!--      //modal_init("Init");-->
-<!--  });-->
-
-<!--    function setBizSection(){-->
-<!--        const sUrl ="/baseCode/getBizSectionList";-->
-<!--        $.ajax({-->
-<!--            type:"post",-->
-<!--            url : sUrl,-->
-<!--            success: function(res){-->
-<!--                if(res.status == "ok"){-->
-<!--                    bindBizSectionList(res);-->
-<!--                }-->
-<!--            },-->
-<!--            error :  function(err){-->
-<!--                console.log("에러발생",err);-->
-<!--            }-->
-
-<!--        });-->
-<!--    }-->
-
-
-  function BaseConfig_Popup(){
-      let popOption ="width=601,height=436,top=100,left=100";
-      let openUrl = "/BaseConfig/Popup";
-      window.open(openUrl, 'BaseConfig', popOption);
+  function fn_deletfile_info(){
+    //첨부파일 삭제
+    $(".cui_file_field").val('');
   }
-
-  //모달 초기화
-  function modal_init(flag){
-      if(flag=="MODIFY"){
-         $(".fixdata").attr("readonly",true);
-         //버튼 바꾸기
-           $("#BaseCodeAdd").css("display","none");
-          $("#BaseCodeMod").css("display","block");
-          $("#BaseCodeDel").css("display","block");
-
-      }else{
-          //초기화
-          document.getElementsByName("BASE_CODE")[0].value = "";
-          document.getElementsByName("BASE_NAME")[0].value = "";
-          document.getElementsByName("BASE_VALUE")[0].value = "";
-          document.getElementsByName("BASE_SUMMARY")[0].value = "";
-          document.getElementsByName("BASE_SORT")[0].value = "";
-          document.getElementsByName("BASE_OPTION")[0].value = "";
-          document.getElementsByName("BASE_CODE_IDX")[0].value = 0;
-          $("select[name=GUBN] option:eq(0)").prop("selected", true);
-          $("select[name=GROUP_CODE] option:eq(0)").prop("selected", true);
-          $("select[name=BASE_STATUS] option:eq(0)").prop("selected", true);
-          $(".fixdata").attr("readonly",false);
-
-          //버튼 바꾸기
-          $("#ConfigAdd").css("display","block");
-          $("#ConfigMod").css("display","none");
-          $("#ConfigDel").css("display","none");
-      }
-
-  }
-
-
-  //모달 열기
-  function modal(id, status){
-    if(status !='add'){
-     var sUrl = "/baseCode/baseCode_Info" ;
-
-      $.ajax({
-        type: "post",
-        url:   sUrl,
-        data: {
-            "status": status
-        },
-        success: function(res) {
-            console.log("요청성공", res);
-
-            if (res.status == "ok") {
-              //공동업무자정보
-              //ID /PASS
-              bindBasCodeInfo(res);           //정보 바인딩. ★
-              $("#" + id).fadeIn();
-              modal_init("MODIFY");
-
-            }
-        },
-        error: function(err) {
-            console.log("에러발생", err);
-        }
-      });
-    }else{
-      modal_init();
-      $("#" + id).fadeIn();
-    }
-  }
-
-  function bindBasCodeInfo(baseCode){
-      if(baseCode != null){
-          document.getElementsByName("BASE_CODE")[0].value = baseCode.BASE_CODE ;
-          document.getElementsByName("BASE_NAME")[0].value = baseCode.BASE_NAME ;
-          document.getElementsByName("BASE_VALUE")[0].value = baseCode.BASE_VALUE ;
-          document.getElementsByName("BASE_SUMMARY")[0].value = baseCode.BASE_SUMMARY ;
-          document.getElementsByName("BASE_SORT")[0].value = baseCode.BASE_SORT ;
-          document.getElementsByName("BASE_OPTION")[0].value = baseCode.BASE_OPTION ;
-          document.getElementsByName("BASE_CODE_IDX")[0].value = baseCode.BASE_CODE_IDX ;
-
-          $("select[name=GUBN]").val(baseCode.GUBN).prop("selected", true);
-          $("select[name=GROUP_CODE]").val(baseCode.GROUP_CODE).prop("selected", true);
-          $("select[name=BASE_STATUS]").val(baseCode.BASE_STATUS).prop("selected", true);
-
-
-      }
-  }
-
-  //모달 닫기
-  $('.modal-close').on('click', function(e){
-    e.preventDefault();
-    const modal = $(this).parents('.cui_dialog');
-    modal.fadeOut();
-    modal_init();
-  });
-
-
 
 </script>
 </html>
