@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.siteMgr.service;
 
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
@@ -12,6 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserMgrService {
     private final UserMgrRepository userMgrRepository;
+
+    //코드 바인딩
+    public List<BaseCodeDTO> GetBaseCode(String group_code) {
+        return userMgrRepository.GetBaseCode(group_code);
+    }
 
     public void save(UserMgrDTO UserMgrDTO) {
         userMgrRepository.save(UserMgrDTO);
@@ -45,6 +51,17 @@ public class UserMgrService {
     //사용자 추가
     public void insertUserMgr(UserMgrDTO userMgrDTO) {
         userMgrRepository.insertUserMgr(userMgrDTO);
+    }
+
+
+    //업체 MyPage 접속 목적 삭제.
+    public void deleteConnectGoal(UserMgrDTO userMgrDTO) {
+        userMgrRepository.deleteConnectGoal(userMgrDTO);
+    }
+
+    //업체 MyPage 접속 목적 추가.
+    public void insertConnectGoal(UserMgrDTO userMgrDTO) {
+        userMgrRepository.insertConnectGoal(userMgrDTO);
     }
 
 

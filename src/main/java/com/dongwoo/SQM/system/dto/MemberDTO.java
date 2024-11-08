@@ -75,5 +75,12 @@ public class MemberDTO {
     private String COBALT_YN	;
     private String MICA_YN	;
 
+    private int BASE_CODE_IDX;
+    private String BASE_CODE;
+    private String BASE_NAME;
+    private String BASE_SORT;;
+
+    private String checkboxDataJson;;  //회원가입시 접속목적 사용 Json
+
 }
 

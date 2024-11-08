@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.siteMgr.repository;
 
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import com.dongwoo.SQM.system.dto.UserInfoDTO;
@@ -13,6 +14,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserMgrRepository {
     private final SqlSessionTemplate sql;
+
+    //코드 바인딩
+    public List<BaseCodeDTO> GetBaseCode(String GROUP_CODE) {
+        return sql.selectList("userMgr.GetBaseCode",GROUP_CODE );
+    }
 
     public int save(UserMgrDTO userMgrDTO) {
         return sql.insert("UserMgr.save", userMgrDTO);
@@ -64,6 +70,19 @@ public class UserMgrRepository {
         sql.insert("userMgr.insertUserinfoDwMgr", userMgrDTO);
 
     }
+
+
+    //업체 사용자 접속 목적  삭제.
+    public void deleteConnectGoal(UserMgrDTO userMgrDTO) {
+        sql.delete("userMgr.deleteConnectGoal", userMgrDTO);
+    }
+
+
+    //업체 사용자 접속 목적  추가
+    public void insertConnectGoal(UserMgrDTO userMgrDTO) {
+        sql.insert("userMgr.insertConnectGoal", userMgrDTO);
+    }
+
 
 
 
