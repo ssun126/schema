@@ -1,4 +1,4 @@
-
+/*SCHEMA 공통 스크립트*/
 document.addEventListener("DOMContentLoaded", function() {
     //모달 Draggable 처리
     const modalHeader = document.querySelector(".dialog_head");
@@ -81,7 +81,7 @@ function modal_open(id, status, sUrl, param){
             modal_init(id, status);
 
             // res 데이터를 다른 함수로 전달하여 데이터 바인딩 처리
-            if(status === 'second'){
+            if(status === 'second'){ //두번째 모달창을 여는 경우
                 bindModalData2(status, res);
             }else{
                 bindModalData(status, res);
@@ -105,3 +105,7 @@ function modal_close(id){
     //초기화
     modal_init(id, 'add');
 }
+
+
+
+

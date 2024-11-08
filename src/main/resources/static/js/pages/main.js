@@ -1,3 +1,4 @@
+/*SCHEMA 메인 화면 쿼리*/
 $(document).ready(function(){
 	main.init();
 });
@@ -15,7 +16,7 @@ const main = {
 	},
 	resize:function(){
 	},
-	setMultiLang : function() {
+	setMultiLang : function() { //다국어 처리
     	const data = {};
         if (navigator.appName == "Netscape") {
         	data.LANG = navigator.language;
@@ -35,8 +36,7 @@ const main = {
     		url : '/multiLanguage/setLocalStorage',
     		type : "post",
     		success : function(data) {
-        		localStorage.setItem("MULTI_LANGUAGE_DATA", JSON.stringify(data));
-        		//console.log("localStorage???????"+localStorage.getItem("MULTI_LANGUAGE_DATA"))
+        		localStorage.setItem("MULTI_LANGUAGE_DATA", JSON.stringify(data)); //로컬스토리지에 저장
 
                 //Schema.require("lang").init();
         		setTimeout(main.getMessage(), 500);
@@ -59,9 +59,6 @@ const main = {
 		}
 	}
 }
-
-
-
 
 // 로컬스토리지에서 MULTI_LANGUAGE_DATA 가져오기
 function getMultiLanguageData() {
@@ -96,7 +93,6 @@ function updateLanguageContent(lang) {
         //console.log("span : " + span.id); // id가 존재하면 출력
         const id = span.id;
         const localizedValue = getLocalizedValue(id, lang);
-        console.log("localizedValue========="+localizedValue);
         // 해당 span에 다국어 값을 넣음
         span.innerText = localizedValue;
     });
