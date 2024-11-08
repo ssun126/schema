@@ -67,4 +67,12 @@ public class UserMgrDTO {
    private String ALARM_PART_YN;             //-- 알람설정 PART MANAGEMENT □
    private String ALARM_COA_CHANGE_YN;       //-- COA 관리 / 변경점 관리 □
 
+   private int BASE_CODE_IDX;
+   private String BASE_CODE;
+   private String BASE_NAME;
+   private String BASE_SORT;;
+
+   private String checkboxDataJson;;  //회원가입시 접속목적 사용 Json
+
+
 }

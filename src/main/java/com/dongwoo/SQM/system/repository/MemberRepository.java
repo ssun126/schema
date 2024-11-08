@@ -109,6 +109,8 @@ public class MemberRepository {
 
     //MyPage 동우 사용자 조인해서 가져오기.
     public UserMgrDTO findUserInfoDataById(String  USER_ID) { return sql.selectOne("userMgr.findUserMgrById", USER_ID); }
+    //업체용 접속목적  체크박스
+    public List<UserMgrDTO> findConnectGoalByUserId(String  USER_ID) { return sql.selectList("userMgr.findConnectGoalByUserId", USER_ID); }
 
     public MemberDTO findByMemberEmail(String loginEmail) { return sql.selectOne("Member.findByMemberEmail", loginEmail); }
 
