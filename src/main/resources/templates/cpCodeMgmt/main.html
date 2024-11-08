@@ -357,7 +357,7 @@
                             '<td>' + company.com_CODE + '</td>' +
                             '<td>' + company.com_NAME + '</a></td>' +
                             '<td>' + company.com_NATION + '</td>' +
-                            '<td><button type="button" class="cui_button secondary" onClick="setCpCd()">선택</button></td>' +
+                            '<td><button type="button" class="cui_button secondary" onClick="setCpCd(\''+company.com_CODE+ '\', \''+company.com_NAME+ '\')">선택</button></td>' +
                           '</tr>';
             tableBody.append(row);  // 테이블에 새 행 추가
         });
