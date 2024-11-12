@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sampleFile" >
+    <insert id="upload" parameterType="java.util.List">
+<!--        <foreach collection="list" item="file" separator=";">-->
+<!--        INSERT INTO  SAMPLEFILE_DATA(FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)-->
+<!--        VALUES (#{file.FILE_LANG},#{file.FILE_CASE},#{file.FILE_GUBN},#{file.FILE_NUM},#{file.FILE_NAME},#{file.FILE_PATH},sysdate,'xp')-->
+<!--        </foreach>-->
+
+        INSERT INTO  SAMPLEFILE_DATA(FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+        (#{item.FILE_LANG},#{item.FILE_CASE},#{item.FILE_GUBN},#{item.FILE_NUM},#{item.FILE_NAME},#{item.FILE_PATH},sysdate,'xp')
+        </foreach>
+
+
+<!--        <foreach collection="list" item="file" separator=";">-->
+<!--            INSERT INTO  SAMPLEFILE_DATA(FILE_IDX,FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)-->
+<!--            VALUES (SEQ_FILE_IDX.NEXTVAL,#{file.FILE_LANG},#{file.FILE_CASE},#{file.FILE_GUBN},#{file.FILE_NUM},#{file.FILE_NAME},#{file.FILE_PATH},sysdate,'xp');-->
+<!--        </foreach>-->
+    </insert>
+
+    <select id="plantList_bak" parameterType="String" resultType="hashMap">
+        SELECT BASE_CODE ,NVL(sd.FILE_LANG,'NULL') AS FILE_LANG,CASE WHEN instr(LISTAGG(sd.FILE_NUM,'|'),'|') > 0  THEN LISTAGG(sd.FILE_NUM,'|')
+                                            ELSE concat(LISTAGG(sd.FILE_NUM,'|'),'|')   END  AS FILE_NUM
+            , CASE WHEN instr(LISTAGG(sd.FILE_PATH,'|'),'|') > 0  THEN LISTAGG(sd.FILE_PATH,'|')
+                ELSE concat(LISTAGG(sd.FILE_PATH,'|'),'|')   END AS FILE_PATH
+            , CASE WHEN instr(LISTAGG(sd.FILE_NAME ,'|'),'|') > 0  THEN LISTAGG(sd.FILE_NAME,'|')
+                ELSE concat(LISTAGG(sd.FILE_NAME,'|'),'|')   END AS FILE_NAME, BASE_SORT
+        from (SELECT BASE_CODE , BASE_SORT  FROM BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ORDER BY BASE_SORT )  bc
+        LEFT OUTER JOIN  (SELECT FILE_GUBN,FILE_LANG,FILE_NUM,FILE_PATH,FILE_NAME FROM SAMPLEFILE_DATA ORDER by FILE_NUM ASC ) sd ON bc.BASE_CODE = sd.FILE_GUBN AND sd.FILE_LANG =#{sLang}
+        GROUP BY BASE_CODE , sd.FILE_LANG,BASE_SORT
+        ORDER BY bc.BASE_SORT asc
+
+    </select>
+
+    <select id="plantList" parameterType="String"  resultType="hashMap">
+        SELECT BASE_CODE FROM BASE_CODE
+        WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE
+        ORDER BY BASE_SORT asc
+    </select>
+
+    <select id="getFileInfo" parameterType="map" resultType="sampleFile">
+        SELECT FILE_PATH, FILE_NAME
+        FROM  SAMPLEFILE_DATA
+        WHERE FILE_LANG =#{sLang} AND FILE_GUBN =#{baseCode} AND FILE_NUM =#{fileNum} AND FILE_CASE=#{case}
+
+    </select>
+
+    <select id="getPlantFileInfo" parameterType="String" resultType="hashMap">
+        SELECT  sd.FILE_GUBN ,sd.FILE_LANG ,sd.FILE_NUM ,sd.FILE_PATH,sd.FILE_NAME
+        FROM SAMPLEFILE_DATA sd
+        INNER JOIN BASE_CODE bc ON  bc.BASE_CODE = sd.FILE_GUBN
+        WHERE FILE_LANG =#{sLang}
+
+    </select>
+
+    <select id="getOtherFileInfo" parameterType="String" resultType="hashMap">
+        SELECT  sd.FILE_CASE ,sd.FILE_LANG ,sd.FILE_NUM ,sd.FILE_PATH,sd.FILE_NAME
+        FROM SAMPLEFILE_DATA sd
+        WHERE FILE_CASE != 'PLANT' AND  FILE_LANG =#{sLang}
+
+    </select>
+</mapper>

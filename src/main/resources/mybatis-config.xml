@@ -26,6 +26,7 @@
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SvhcListDTO" alias="svhcList"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.DeclarationDTO" alias="Declaration"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SampleFileDTO" alias="sampleFile"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthDTO" alias="isoAuth"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO" alias="companyInfoParam"></typeAlias>

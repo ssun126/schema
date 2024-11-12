@@ -22,6 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @Controller
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class BaseConfigController {
 
