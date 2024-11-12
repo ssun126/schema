@@ -3,6 +3,209 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="CompanyInfo">
+
+    <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
+        SELECT * FROM  base_code
+        WHERE  GROUP_CODE != BASE_CODE
+        AND BASE_OPTION = 'SYSTEM'
+        AND BASE_STATUS ='Y'
+        AND GROUP_CODE  =#{GROUP_CODE}
+        ORDER BY BASE_SORT ASC
+    </select>
+
+    <select id="findCompanyInfo"  parameterType="companyInfo" resultType="companyInfo">
+        SELECT main.*
+        ,DECODE(main.CP_WORK_CD1, 'CD1', 'O', ' ') AS CP_CODE_WORK_CD1
+        ,DECODE(main.CP_WORK_CD2, 'CD2', 'O', ' ') AS CP_CODE_WORK_CD2
+        ,DECODE(main.CP_WORK_CD3, 'CD3', 'O', ' ') AS CP_CODE_WORK_CD3
+        ,DECODE(main.CP_WORK_CD4, 'CD4', 'O', ' ') AS CP_CODE_WORK_CD4
+        ,DECODE(main.CP_WORK_CD5, 'CD5', 'O', ' ') AS CP_CODE_WORK_CD5
+        From
+        (
+            SELECT
+            c.COM_CODE
+            ,c.COM_NAME
+            ,NVL(TO_CHAR(c.COM_OK_DATE, 'YYYY-MM-DD'), ' ') AS COM_OK_DATE
+            ,DECODE(c.TANTALUM_YN ,'Y','사용(인증)','미사용') TANTALUM_YN
+            ,DECODE(c.TUNGSTEN_YN ,'Y','사용(인증)','미사용') TUNGSTEN_YN
+            ,DECODE(c.TIN_YN ,'Y','사용(인증)','미사용') TIN_YN
+            ,DECODE(c.GOLD_YN ,'Y','사용(인증)','미사용') GOLD_YN
+            ,DECODE(c.COBALT_YN ,'Y','사용(인증)','미사용') COBALT_YN
+            ,DECODE(c.MICA_YN ,'Y','사용(인증)','미사용') MICA_YN
+            ,MAX(DECODE(x.BASE_CODE, 'CD1', 'CD1', ' ')) AS CP_WORK_CD1
+            ,MAX(DECODE(x.BASE_CODE, 'CD2', 'CD2', ' ')) AS CP_WORK_CD2
+            ,MAX(DECODE(x.BASE_CODE, 'CD3', 'CD3', ' ')) AS CP_WORK_CD3
+            ,MAX(DECODE(x.BASE_CODE, 'CD4', 'CD4', ' ')) AS CP_WORK_CD4
+            ,MAX(DECODE(x.BASE_CODE, 'CD5', 'CD5', ' ')) AS CP_WORK_CD5
+            ,c.COM_NATION
+            ,c.COM_STATUS
+            ,c.REG_DW_USER_IDX
+            ,c.UP_DW_USER_IDX
+            ,c.REG_DATE
+            ,c.UP_DATE
+            ,c.VENDOR_WORK_KIND
+            ,c.COM_USER_IDX
+            ,c.COMPANY_NAME
+            ,c.FACTORY_NAME
+            ,NVL(c.BUS_NUMBER , '') BUS_NUMBER
+            ,c.COM_ADDRESS
+            ,c.COM_CEO_NAME
+            ,c.COM_CEO_PHONE
+            ,c.COM_CEO_EMAIL
+            ,DECODE(c.COM_MANAGE_STATUS, '0' ,'Pending' , '1' , 'Waiting' , '2' ,'Approved' , '3' , 'Rejected') COM_MANAGE_STATUS
+            ,c.COM_APP_DATE
+            ,c.COM_FILE_NAME
+            ,c.COM_FILE_PATH
+            ,c.COM_AUDIT_POINT
+            ,c.COM_AUDIT_LEVEL
+            FROM
+            COMPANY_CODE c
+            LEFT JOIN
+            COMPANY_CODE_WORK x ON c.COM_CODE = x.COM_CODE AND x.BASE_CODE IN ('CD1', 'CD2', 'CD3', 'CD4', 'CD5')
+            WHERE 1=1
+                AND NVL(c.COM_MANAGE_STATUS,'0') in ('1','2','3') -- (0:Pending, 1:Waiting, 2:Approved, 3:Rejected) Warranty
+            <if test="COM_CODE != null and COM_CODE != ''">
+                AND c.COM_CODE = #{COM_CODE}
+            </if>
+            <if test="COM_NAME != null and COM_NAME != ''">
+                AND c.COM_NAME LIKE '%' || #{COM_NAME} || '%'
+            </if>
+            <if test="MINERAL != null and MINERAL != ''">
+                AND  ${MINERAL} = 'Y'
+            </if>
+            <if test="COM_AUDIT_POINT_FROM >= 0 and COM_AUDIT_POINT_TO > 0">
+                AND c.COM_AUDIT_POINT BETWEEN #{COM_AUDIT_POINT_FROM} AND #{COM_AUDIT_POINT_TO}
+            </if>
+            <if test="COM_MANAGE_STATUS != null and COM_MANAGE_STATUS != ''">
+                AND c.COM_MANAGE_STATUS = #{COM_MANAGE_STATUS}
+            </if>
+                GROUP BY
+            c.COM_CODE ,c.COM_NAME ,c.COM_OK_DATE
+            ,c.TANTALUM_YN ,c.TUNGSTEN_YN ,c.TIN_YN ,c.GOLD_YN ,c.COBALT_YN ,c.MICA_YN
+            ,c.COM_NATION ,c.COM_STATUS ,c.REG_DW_USER_IDX ,c.UP_DW_USER_IDX ,c.REG_DATE ,c.UP_DATE
+            ,c.VENDOR_WORK_KIND ,c.COM_USER_IDX ,c.COMPANY_NAME ,c.FACTORY_NAME ,c.BUS_NUMBER
+            ,c.COM_ADDRESS ,c.COM_CEO_NAME ,c.COM_CEO_PHONE ,c.COM_CEO_EMAIL
+            ,c.COM_MANAGE_STATUS ,c.COM_APP_DATE ,c.COM_FILE_NAME ,c.COM_FILE_PATH
+            ,c.COM_AUDIT_POINT ,c.COM_AUDIT_LEVEL
+                ORDER BY
+            c.COM_CODE
+        ) main
+        where 1=1
+<!--            AND NVL(main.USER_STATUS,'0') in ('1','2','3') &#45;&#45; (0:대기, 1:검토중, 2:승인, 3:반려)-->
+        <if test="DEPT_CODE != null and DEPT_CODE != ''">
+            AND (  CP_WORK_CD1 =#{DEPT_CODE}
+                OR CP_WORK_CD2 =#{DEPT_CODE}
+                OR CP_WORK_CD3 =#{DEPT_CODE}
+                OR CP_WORK_CD4 =#{DEPT_CODE}
+                OR CP_WORK_CD5 =#{DEPT_CODE}
+            )
+        </if>
+
+    </select>
+
+    <!-- 업체승인 리스트-->
+    <select id="findCpApprovalList"  parameterType="companyInfo" resultType="companyInfo">
+        SELECT
+            DECODE(NVL(main.USER_STATUS,0) ,'0' ,'대기', '1', '검토중', '2','승인' ,'3','반려') USER_STATUS
+            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD1) AS CP_CODE_WORK_CD1
+            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD2) AS CP_CODE_WORK_CD2
+            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD3) AS CP_CODE_WORK_CD3
+            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD4) AS CP_CODE_WORK_CD4
+            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD5) AS CP_CODE_WORK_CD5
+            , main.*
+        From
+        (
+        SELECT
+         c.COM_CODE
+        ,c.COM_NAME
+        ,NVL(TO_CHAR(c.COM_OK_DATE, 'YYYY-MM-DD'), ' ') AS COM_OK_DATE
+        ,DECODE(c.TANTALUM_YN ,'Y','사용(인증)','미사용') TANTALUM_YN
+        ,DECODE(c.TUNGSTEN_YN ,'Y','사용(인증)','미사용') TUNGSTEN_YN
+        ,DECODE(c.TIN_YN ,'Y','사용(인증)','미사용') TIN_YN
+        ,DECODE(c.GOLD_YN ,'Y','사용(인증)','미사용') GOLD_YN
+        ,DECODE(c.COBALT_YN ,'Y','사용(인증)','미사용') COBALT_YN
+        ,DECODE(c.MICA_YN ,'Y','사용(인증)','미사용') MICA_YN
+        ,MAX(DECODE(x.BASE_CODE, 'CD1', 'CD1', ' ')) AS CP_WORK_CD1
+        ,MAX(DECODE(x.BASE_CODE, 'CD2', 'CD2', ' ')) AS CP_WORK_CD2
+        ,MAX(DECODE(x.BASE_CODE, 'CD3', 'CD3', ' ')) AS CP_WORK_CD3
+        ,MAX(DECODE(x.BASE_CODE, 'CD4', 'CD4', ' ')) AS CP_WORK_CD4
+        ,MAX(DECODE(x.BASE_CODE, 'CD5', 'CD5', ' ')) AS CP_WORK_CD5
+        ,c.COM_NATION
+        ,c.COM_STATUS
+        ,c.REG_DW_USER_IDX
+        ,c.UP_DW_USER_IDX
+        ,c.REG_DATE
+        ,c.UP_DATE
+        ,c.VENDOR_WORK_KIND
+        ,c.COM_USER_IDX
+        ,c.COMPANY_NAME
+        ,c.FACTORY_NAME
+        ,NVL(c.BUS_NUMBER , ' ') BUS_NUMBER
+        ,c.COM_ADDRESS
+        ,c.COM_CEO_NAME
+        ,c.COM_CEO_PHONE
+        ,c.COM_CEO_EMAIL
+        ,DECODE(c.COM_MANAGE_STATUS, '0' ,'Pending' , '1' , 'Waiting' , '2' ,'Approved' , '3' , 'Rejected') COM_MANAGE_STATUS
+        ,c.COM_APP_DATE
+        ,c.COM_FILE_NAME
+        ,c.COM_FILE_PATH
+        ,c.COM_AUDIT_POINT
+        ,c.COM_AUDIT_LEVEL
+        ,uic.ID_PW_ADD_REASON
+        ,uic.USER_STATUS
+        ,uic.USER_OK_DATE
+        FROM
+        COMPANY_CODE c
+        LEFT JOIN
+        USER_INFO_COMPANY uic ON c.COM_CODE = uic.Com_Code
+        LEFT JOIN
+        COMPANY_CODE_WORK x ON c.COM_CODE = x.COM_CODE AND x.BASE_CODE IN ('CD1', 'CD2', 'CD3', 'CD4', 'CD5')
+        WHERE 1=1
+            AND NVL(c.COM_MANAGE_STATUS,0) in ('1','2','3') -- (0:Pending, 1:Waiting, 2:Approved, 3:Rejected)
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND c.COM_CODE = #{COM_CODE}
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND c.COM_NAME LIKE '%' || #{COM_NAME} || '%'
+        </if>
+        <if test="MINERAL != null and MINERAL != ''">
+            AND  ${MINERAL} = 'Y'  --신청구분 .... 작업중...
+        </if>
+        <if test="COM_MANAGE_STATUS != null and COM_MANAGE_STATUS != ''">
+            AND c.COM_MANAGE_STATUS = #{COM_MANAGE_STATUS}
+        </if>
+        <if test="BUS_NUMBER != null and BUS_NUMBER != ''">
+            AND  c.BUS_NUMBER =${BUS_NUMBER}
+        </if>
+        GROUP BY
+        c.COM_CODE ,c.COM_NAME ,c.COM_OK_DATE
+        ,c.TANTALUM_YN ,c.TUNGSTEN_YN ,c.TIN_YN ,c.GOLD_YN ,c.COBALT_YN ,c.MICA_YN
+        ,c.COM_NATION ,c.COM_STATUS ,c.REG_DW_USER_IDX ,c.UP_DW_USER_IDX ,c.REG_DATE ,c.UP_DATE
+        ,c.VENDOR_WORK_KIND ,c.COM_USER_IDX ,c.COMPANY_NAME ,c.FACTORY_NAME ,c.BUS_NUMBER
+        ,c.COM_ADDRESS ,c.COM_CEO_NAME ,c.COM_CEO_PHONE ,c.COM_CEO_EMAIL
+        ,c.COM_MANAGE_STATUS ,c.COM_APP_DATE ,c.COM_FILE_NAME ,c.COM_FILE_PATH
+        ,c.COM_AUDIT_POINT ,c.COM_AUDIT_LEVEL
+        ,uic.ID_PW_ADD_REASON, uic.USER_STATUS,uic.USER_OK_DATE
+        ORDER BY
+        c.COM_CODE
+        ) main
+        where 1=1
+            AND NVL(main.USER_STATUS,0) in ('1','2','3') -- (0:대기, 1:검토중, 2:승인, 3:반려)
+        <if test="DEPT_CODE != null and DEPT_CODE != ''">
+            AND (  CP_WORK_CD1 =#{DEPT_CODE}
+            OR CP_WORK_CD2 =#{DEPT_CODE}
+            OR CP_WORK_CD3 =#{DEPT_CODE}
+            OR CP_WORK_CD4 =#{DEPT_CODE}
+            OR CP_WORK_CD5 =#{DEPT_CODE}
+            )
+        </if>
+        <if test="USER_STATUS != null and USER_STATUS != ''">
+            AND  NVL(main.USER_STATUS,0) =#{USER_STATUS}
+        </if>
+
+    </select>
+
+
     <insert id="save" parameterType="companyInfo">
         insert into COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
         values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)

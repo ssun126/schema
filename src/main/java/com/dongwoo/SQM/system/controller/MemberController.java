@@ -157,17 +157,24 @@ public class MemberController {
             dateStr = comDateString.substring(0, 10);
         }
         memberDTO.setCOM_OK_DATE(dateStr);  // 워런티 협약상태 승일일 또는 반려일
-
+        //워런티
         String sComManageStatus = switch (comPanyDTO.getCOM_MANAGE_STATUS()) {
             case "1" -> "검토중";
             case "2" -> "승인";
             case "3" -> "반려";
             default -> "대기"; //"0"
         };
-        memberDTO.setCOM_MANAGE_STATUS(sComManageStatus);  // 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+        memberDTO.setCOM_MANAGE_STATUS(sComManageStatus);  // 워런티~~!!! 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+
 
         memberDTO.setCOM_FILE_NAME(comPanyDTO.getCOM_FILE_NAME());  // 워런티 파일 이름
         memberDTO.setCOM_FILE_PATH(comPanyDTO.getCOM_FILE_PATH());  // 워런티 파일 Path
+
+        //ID 가입 신청 정보
+        MemberDTO user_Info_CompanyDTO  = memberService.vendorNumCheck(comPanyDTO.getCOM_CODE());   //코드 정리 필요....분리하자...!@@@@
+        memberDTO.setUSER_STATUS(user_Info_CompanyDTO.getUSER_STATUS()); //ID 가입 상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+        memberDTO.setRETURN_REASON(user_Info_CompanyDTO.getRETURN_REASON()); //ID 반려사유
+
 
         model.addAttribute("comPanyDTO", comPanyDTO);
         
@@ -181,7 +188,7 @@ public class MemberController {
 
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("joinData");
 
-        //세션 정보 삭제후 다시 들어온거..!!
+        //세션 정보 삭제후 다시 들어온거 방지.!!
         if (session.getAttribute("joinData") == null) {
             model.addAttribute("resultMsg", "가입 정보가 없습니다.");
             return "/member/warranty";
@@ -259,20 +266,14 @@ public class MemberController {
         userInfoCompanyDTO.setUSER_IDX(USER_IDX);
         userInfoCompanyDTO.setCOM_CODE(COM_CODE);
         userInfoCompanyDTO.setCOM_USER_IDX(COM_USER_IDX);   //메인 업무자.... 공동 작업자
-        userInfoCompanyDTO.setID_PW_ADD_REASON(memberDTO.getID_PW_ADD_REASON());
-        userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+        userInfoCompanyDTO.setID_PW_ADD_REASON(memberDTO.getID_PW_ADD_REASON());           //ID/PW 추가 사유
+        userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  //반려후 재처리시... 다시 바꿈.?
 
         memberService.saveUserInfoCompanyHis(userInfoCompanyDTO);
 
-        //Step 4 사용자 추가정보 (업체) 저장후  -> (업체/접속목적) 저장. USER_INFO_COMPANY_CONNECT_GOAL  //키가 잘못된것 같은대 ?
-
-//        USER_IDX				NUMBER(4)		NOT NULL		--// 사용자 IDX   ▶
-//        , GOALIDX			NUMBER(4)		NOT NULL		--// 접속목적 IDX  ▶  기초코드 ?
-//        , BASECODE			VARCHAR2(50)	NOT NULL		--// 코드
-
+        //Step 4 사용자 추가정보 (업체) 저장
         //checkboxDataJson
         String checkboxesJson =  memberDTO.getCheckboxDataJson();
-
 
         //해당 유저 접속 목적 전체 삭제.  delete from USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
         UserMgrDTO userMgrDTO = new UserMgrDTO();
@@ -301,9 +302,6 @@ public class MemberController {
         }
 
 
-
-
-
         ////Step 5 Final  COMPANY_CODE 업데이트
         ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
         comPanyCodeDTO.setCOM_CODE(COM_CODE);
@@ -324,7 +322,7 @@ public class MemberController {
         comPanyCodeDTO.setUP_DW_USER_IDX(USER_IDX);   //업데이트 사용자.
         comPanyCodeDTO.setCOM_MANAGE_STATUS("1"); //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
 
-        memberService.updateCompanyCode(comPanyCodeDTO);  //업데이트
+        memberService.updateCompanyCode(comPanyCodeDTO);  //업데이트  COMPANY_CODE
 
 
 //        동우 RC 관리자에게 메일 발송

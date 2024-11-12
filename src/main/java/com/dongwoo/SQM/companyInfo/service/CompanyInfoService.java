@@ -3,8 +3,12 @@ package com.dongwoo.SQM.companyInfo.service;
 import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
+import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.repository.CompanyInfoRepository;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,16 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CompanyInfoService {
     private final CompanyInfoRepository companyInfoRepository;
+
+    //코드 바인딩
+    public List<BaseCodeDTO> GetBaseCode(String group_code) {
+        return companyInfoRepository.GetBaseCode(group_code);
+    }
+
+    //업체 목록 검색 2024.10.30
+    public List<CompanyInfoDTO> findCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ,String SearchType) {
+        return companyInfoRepository.findCompanySearch(companyInfoParamDTO , SearchType);
+    }
 
     public int save(CpCodeDTO cpCodeDTO) {
         return companyInfoRepository.save(cpCodeDTO);

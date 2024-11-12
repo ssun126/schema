@@ -3,18 +3,37 @@ package com.dongwoo.SQM.companyInfo.repository;
 import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
+import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
 public class CompanyInfoRepository {
     private final SqlSessionTemplate sql;
+
+    //코드 바인딩
+    public List<BaseCodeDTO> GetBaseCode(String GROUP_CODE) {
+        return sql.selectList("CompanyInfo.GetBaseCode",GROUP_CODE );
+    }
+
+    //업체 리스트 검색 2024.11.8
+    public List<CompanyInfoDTO> findCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ,String SearchType) {
+        if(Objects.equals(SearchType, "List")) {
+            return sql.selectList("CompanyInfo.findCompanyInfo", companyInfoParamDTO);
+        }else {
+            return sql.selectList("CompanyInfo.findCpApprovalList", companyInfoParamDTO);
+        }
+    }
 
     public int save(CpCodeDTO cpCodeDTO) {
         return sql.insert("CompanyInfo.save", cpCodeDTO);

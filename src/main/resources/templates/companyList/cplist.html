@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<body>
+    <div class="cui_content">
+        <div class="cui_main">
+            <div class="cui_head">
+                <div class="head_content">
+                    <h2 class="cui_title"><span>업체목록</span></h2>
+                </div>
+            </div>
+            <div class="cui_body">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap ">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">업체Code</strong>
+                            <div class="item_content">
+                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" placeholder="업체Code를 입력해주세요">
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">업체명</strong>
+                            <div class="item_content">
+                                <input id="comName" name="comName" class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
+<!--                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>-->
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">사업부</strong>
+                            <div class="item_content">
+                                <select id="deptCode" name="deptCode" class="cui_select_field wide">
+                                    <option value=""></option>
+                                    <option th:each="dept : ${deptList}"
+                                            th:value="${dept.BASE_CODE}"
+                                            th:text="${dept.BASE_NAME}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">책임광물</strong>
+                            <div class="item_content">
+                                <select id="mineral" name="mineral" class="cui_select_field" >
+                                    <option value=""></option>
+                                    <option value="TANTALUM_YN">티타늄</option>
+                                    <option value="TIN_YN">주석</option>
+                                    <option value="TUNGSTEN_YN">텅스텐</option>
+                                    <option value="GOLD_YN">금</option>
+                                    <option value="COBALT_YN">코발트</option>
+                                    <option value="MICA_YN">운모</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">Audit 점수</strong>
+                            <div class="item_content">
+                                <input type="text" class="cui_text_field" id="pointFrom" name="pointFrom">
+                                <div class="field_connect">~</div>
+                                <input type="text" class="cui_text_field" id="pointTo" name="pointTo">
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">Warranty</strong>
+                            <div class="item_content">
+                                <select class="cui_select_field wide" id="comManageStatus" name="comManageStatus">
+                                    <option value=""></option>
+<!--                                    <option value="0">Pending</option>-->
+                                    <option value="1">Waiting</option>
+                                    <option value="2">Approved</option>
+                                    <option value="3">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search_action">
+<!--                        <button type="button" class="cui_button primary"><span>검색</span></button>-->
+                        <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span>검색</span></button>
+                    </div>
+                </div>
+                <div class="cui_toolbar">
+                    <div class="toolbar_content">
+                        <div class="toolbar_default"></div>
+                    </div>
+                    <div class="toolbar_aside">
+                        <button type="button" class="cui_button secondary"><span>엑셀 다운로드</span></button>
+                    </div>
+                </div>
+
+
+
+
+                 <table class="cui_table cui_font_xs">
+                     <colgroup>
+                         <col style="width:100px">
+                         <col style="width:300px">
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                         <col>
+                     </colgroup>
+                     <thead>
+                         <tr>
+                             <th rowspan="2"><span>업체코드</span></th>
+                             <th rowspan="2"><span>업체명(영문)</span></th>
+                             <th rowspan="2"><span>Warranty</span></th>
+                             <th colspan="2"><span>Audit 결과</span></th>
+                             <th colspan="6"><span>분쟁 및 책임광물</span></th>
+                             <th colspan="5"><span>사업부</span></th>
+                         </tr>
+                         <tr>
+                             <th><span>점수</span></th>
+                             <th><span>실시일</span></th>
+                             <th><span>티타늄</span></th>
+                             <th><span>주석</span></th>
+                             <th><span>텅스텐</span></th>
+                             <th><span>금</span></th>
+                             <th><span>코발트</span></th>
+                             <th><span>운모</span></th>
+                             <th><span>반도체</span></th>
+                             <th><span>첨단<br>소재</span></th>
+                             <th><span>옵티칼</span></th>
+                             <th><span>통신<br>디바이스</span></th>
+                             <th><span>에너지<br>기능재료</span></th>
+                         </tr>
+                     </thead>
+                     <tbody id="companyTableBody">
+                         <tr>
+                             <td style="text-align:center">
+                                <a href="#" class="cui_link">
+                                    <span></span>
+                                </a>
+                             </td>
+                             <td style="text-align:center"><span id = "com_name" name = "COM_NAME"></span></td>
+                             <td style="text-align:center"><span id = "com_file_name" name = "COM_FILE_NAME"></span></td>
+                             <td style="text-align:center"><span id = "com_audit_point" name = "COM_AUDIT_POINT" ></span></td>
+                             <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" ></span></td>
+                             <td style="text-align:center"><span id = "tantalum_yn" name = "TANTALUM_YN" ></span></td>
+                             <td style="text-align:center"><span id = "tin_yn" name = "TIN_YN" ></span></td>
+                             <td style="text-align:center"><span id = "tungsten_yn" name = "TUNGSTEN_YN" ></span></td>
+                             <td style="text-align:center"><span id = "gold_yn" name = "GOLD_YN" ></span></td>
+                             <td style="text-align:center"><span id = "cobalt_yn" name = "COBALT_YN" ></span></td>
+                             <td style="text-align:center"><span id = "mica_yn" name = "MICA_YN" ></span></td>
+                             <td style="text-align:center"><span id = "user_status1" name = "USER_STATUS" ></span></td>
+                             <td style="text-align:center"><span id = "user_status2" name = "USER_STATUS" ></span></td>
+                             <td style="text-align:center"><span id = "user_status3" name = "USER_STATUS" ></span></td>
+                             <td style="text-align:center"><span id = "user_status4" name = "USER_STATUS" ></span></td>
+                             <td style="text-align:center"><span id = "user_status5" name = "USER_STATUS" ></span></td>
+                         </tr>
+                     </tbody>
+                 </table>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+<script>
+
+
+    function fetchDataLis() {
+
+       const dto = {
+           "COM_CODE": document.getElementById('comCode').value,
+           "COM_NAME": document.getElementById('comName').value,
+           "DEPT_CODE": document.getElementById('deptCode').value,
+           "MINERAL": document.getElementById('mineral').value,
+           "COM_AUDIT_POINT_FROM": document.getElementById('pointFrom').value,
+           "COM_AUDIT_POINT_TO": document.getElementById('pointTo').value ,
+           "COM_MANAGE_STATUS": document.getElementById('comManageStatus').value
+       };
+
+       fetch('/admin/companyInfo/getCompanyInfo', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(dto)
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response.json();
+       })
+       .then(data => {
+            console.log('응답 데이터:', data);
+            if (data && Array.isArray(data)) {
+                 populateTable(data);
+            } else {
+                 alert("nodata");
+            }
+       })
+       .catch(error => {
+           console.error('데이터 조회 실패:', error);
+       });
+    }
+
+
+    function populateTable(data) {
+
+     const tableBody = $("#companyTableBody");
+     tableBody.empty();
+
+     data.forEach(company => {
+         const row = `
+             <tr>
+                 <td style="text-align:center">
+                    <a href="#"  onclick="goDetail('${company.com_CODE}')" class="cui_link">
+                        <span id = "com_code" name = "COM_CODE" >${company.com_CODE}</span>
+                    </a>
+                 </td>
+                 <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.com_NAME}</span></td>
+                 <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
+                 <td style="text-align:center"><span id = "com_audit_point" name = "COM_AUDIT_POINT" >${company.com_AUDIT_POINT}</span></td>
+                 <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" >${company.com_OK_DATE}</span></td>
+                 <td style="text-align:center"><span id = "tantalum_yn" name = "TANTALUM_YN" >${company.tantalum_YN}</span></td>
+                 <td style="text-align:center"><span id = "tin_yn" name = "TIN_YN" >${company.tin_YN}</span></td>
+                 <td style="text-align:center"><span id = "tungsten_yn" name = "TUNGSTEN_YN" >${company.tungsten_YN}</span></td>
+                 <td style="text-align:center"><span id = "gold_yn" name = "GOLD_YN" >${company.gold_YN}</span></td>
+                 <td style="text-align:center"><span id = "cobalt_yn" name = "COBALT_YN" >${company.cobalt_YN}</span></td>
+                 <td style="text-align:center"><span id = "mica_yn" name = "MICA_YN" >${company.mica_YN}</span></td>
+                 <td style="text-align:center"><span id = "company_code_work1" name = "COMPANY_CODE_WORK1" >${company.cp_CODE_WORK_CD1}</span></td>
+                 <td style="text-align:center"><span id = "company_code_work2" name = "COMPANY_CODE_WORK2" >${company.cp_CODE_WORK_CD2}</span></td>
+                 <td style="text-align:center"><span id = "company_code_work3" name = "COMPANY_CODE_WORK3" >${company.cp_CODE_WORK_CD3}</span></td>
+                 <td style="text-align:center"><span id = "company_code_work4" name = "COMPANY_CODE_WORK4" >${company.cp_CODE_WORK_CD4}</span></td>
+                 <td style="text-align:center"><span id = "company_code_work5" name = "COMPANY_CODE_WORK5" >${company.cp_CODE_WORK_CD5}</span></td>
+             </tr>
+         `;
+         tableBody.append(row);
+     });
+    }
+
+    const goDetail = (com_code) => {
+        location.href = '/admin/companyInfo/cpDetail?com_code='+com_code;
+    }
+
+</script>

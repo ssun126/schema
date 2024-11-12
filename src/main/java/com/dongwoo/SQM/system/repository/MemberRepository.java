@@ -65,8 +65,11 @@ public class MemberRepository {
 
     //User history. 10.23
     public int saveUserinfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
-
+        //USER_INFO_COMPANY  (0:대기, 1:검토중, 2:승인, 3:반려)  --> 승인된거는 제외 하자.
         MemberDTO finduserInfoCompanyDTO = sql.selectOne("Member.findByUserInfoCompany", userInfoCompanyDTO.getCOM_CODE());
+
+        //이거 변경 되야됨... 기가입 처리 문제.
+
         if(finduserInfoCompanyDTO == null) {
             return sql.insert("Member.saveUserinfoCompanyHis", userInfoCompanyDTO);
         }else {
@@ -101,7 +104,7 @@ public class MemberRepository {
     public MemberDTO findByBUS_NUMBER(String BUS_NUMBER) { return sql.selectOne("Member.findByBUSNUMBER", BUS_NUMBER); }
 
 
-    //USERINFOCOMPANY
+    //USER_INFO_COMPANY
     public MemberDTO findByUserInfoCompany(String COM_CODE) { return sql.selectOne("Member.findByUserInfoCompany", COM_CODE); }
 
     //ID 중복체크

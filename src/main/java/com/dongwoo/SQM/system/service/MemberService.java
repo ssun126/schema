@@ -129,7 +129,7 @@ public class MemberService {
     }
 
 
-    //00.최초 가입여부 (COMPANYCODE)검색 IF 받아서 기초정보만 있다.
+    //00.최초 가입여부 (COMPANY_CODE)검색 IF 받아서 기초정보만 있다.
     //없으면  - > 업체코드 내역이 없어 가입이 불가합니다.
     public MemberDTO basicvendorNumCheck(String searchType ,String searchCode ) {
 
@@ -142,7 +142,7 @@ public class MemberService {
         return memberDTO ;
     }
 
-    //01.코드 검색 USERINFOCOMPANY 진행중인 업체코드 COM_CODE 등록 여부
+    //01.코드 검색 USER_INFO_COMPANY 진행중인 업체코드 COM_CODE 등록 여부
     public MemberDTO vendorNumCheck(String vendorCode) {
         MemberDTO memberDTO = memberRepository.findByUserInfoCompany(vendorCode);
         return memberDTO ;

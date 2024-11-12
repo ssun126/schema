@@ -1,26 +1,94 @@
 package com.dongwoo.SQM.companyInfo.controller;
 
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
+import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class CompanyListController {
+
     private final CompanyInfoService companyInfoService;
 
+    //업체 목록  2024.11.08 sylee
     @GetMapping("/admin/companyInfo/cpList")
-    public String icpListMain(Model model) {
-        return "companyList/main";
+    public String cpListMain(Model model) {
+        List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
+        model.addAttribute("deptList", deptList);
+
+        return "companyList/cpList";
     }
+
+    //업체 목록 검색 LIST
+    @PostMapping("/admin/companyInfo/getCompanyInfo")
+    public ResponseEntity<?> getcompanyInfo(@RequestBody CompanyInfoParamDTO companyInfoParamDTO ) {
+        try {
+            System.out.println("Received companyInfoDTO: " + companyInfoParamDTO);
+
+            List<CompanyInfoDTO> companyList = companyInfoService.findCompanySearch(companyInfoParamDTO , "List");
+
+            //System.out.println("select companyUserList: " + companyUserList);
+            return ResponseEntity.ok(companyList);
+
+        } catch (Exception e) {
+            System.out.println("검색 에러!!!: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류 발생\"}");
+        }
+    }
+
+
+    //업체 목록 검색 LIST -> 업체 상세  2024.11.08 sylee
+    @GetMapping("/admin/companyInfo/cpDetail")
+    public String cpListDetail(@RequestParam("com_code") String com_code , Model model) {
+        List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
+        model.addAttribute("deptList", deptList);
+
+        return "companyList/cpDetail";
+    }
+
+
+
+
+    //업체 승인 목록  2024.11.11 sylee
+    @GetMapping("/admin/companyInfo/cpApproval")
+    public String cpApprovalListMain(Model model) {
+        List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
+        model.addAttribute("deptList", deptList);
+
+        return "companyList/cpApprovallist";
+    }
+
+    //업체 승인 목록 검색 LIST  2024.11.12 sylee
+    @PostMapping("/admin/companyInfo/getCompanyApprovalList")
+    public ResponseEntity<?> getCompanyApprovalList(@RequestBody CompanyInfoParamDTO companyInfoParamDTO ) {
+        try {
+            System.out.println("Received companyInfoDTO: " + companyInfoParamDTO);
+            List<CompanyInfoDTO> companyList = companyInfoService.findCompanySearch(companyInfoParamDTO ,"Approval");
+            return ResponseEntity.ok(companyList);
+        } catch (Exception e) {
+            System.out.println("검색 에러!!!: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류 발생\"}");
+        }
+    }
+
+
+/////////////
+
 
     @PostMapping("/admin/companyInfo/cpList/save")
     public String save(CompanyInfoDTO companyInfoDTO) throws IOException {
@@ -68,4 +136,12 @@ public class CompanyListController {
         //companyInfoService.delete(id);
         return "redirect:/companyInfo/list";
     }
+
+
+
+
+
+
+
+
 }

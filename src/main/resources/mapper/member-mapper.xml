@@ -119,6 +119,7 @@
     <!--진행중인 업체코드 COM_CODE 등록 여부 -->
     <!--관리상태 USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findByUserInfoCompany" parameterType="String" resultType="member">
+<!--        select * from USER_INFO_COMPANY where USER_STATUS != '2' and COM_CODE=#{COM_CODE}-->
         select * from USER_INFO_COMPANY where COM_CODE=#{COM_CODE}
     </select>
 

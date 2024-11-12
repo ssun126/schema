@@ -107,5 +107,44 @@ function modal_close(id){
 }
 
 
+//2024.11.08 sylee 이사왔음.
+// updatePagination(response.pageMaker);
+// 페이지네이션 처리 함수 (updatePagination)
+function updatePagination(pageMaker) {
+    var paginationHtml = '';
+    var currentPage = pageMaker.criteria.pageNum;
+    var startPage = pageMaker.startPage;
+    var endPage = pageMaker.endPage;
+    var totalPages = pageMaker.totalPages;
+
+    // 이전 페이지 버튼
+    if (currentPage > 1) {
+        paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+    }
+
+    // 페이지 번호
+    for (var i = startPage; i <= endPage; i++) {
+        if (i === currentPage) {
+            paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
+        } else {
+            paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
+        }
+    }
+
+    // 다음 페이지 버튼
+    if (currentPage < totalPages) {
+        paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
+    }
+
+    // 페이지네이션 HTML 업데이트
+    $('#pagination').html(paginationHtml);
+
+    // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
+    $('.page, .prev, .next').on('click', function(event) {
+        event.preventDefault();
+        var pageNum = $(this).data('page');
+        searchCompanies(pageNum);
+    });
+}
 
 

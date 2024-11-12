@@ -31,25 +31,12 @@ import java.util.stream.Collectors;
 public class UserMgrController {
     private final UserMgrService userMgrService;
 
-    @GetMapping("/siteMgr")
+    @GetMapping("/admin/siteMgr/dwUserList")
     public String userMgr(Model model) {
-        //기초코드 바인딩.
-        //왜 두개냐 ? 상단 메뉴 링크.
-        //경로가 왜 두개냐 ?
         List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("DEPT");
         model.addAttribute("deptList", deptList);
         System.out.println("userMgrDTOList = " + deptList);
 
-        return "userMgr/list";
-    }
-
-    @GetMapping("/userMgr")
-    public String userMgrMain(Model model) {
-        //기초코드 바인딩.
-        //경로가 왜 두개냐 ? 좌측 사이드 메뉴 링크
-        List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("DEPT");
-        model.addAttribute("deptList", deptList);
-        System.out.println("userMgrDTOList = " + deptList);
         return "userMgr/list";
     }
 
