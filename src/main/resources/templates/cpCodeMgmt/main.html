@@ -3,6 +3,14 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
+<style>
+    #CpCode {
+        z-index: 1050; /* 두 번째 모달은 첫 번째보다 높은 z-index */
+        top: 60%;
+        left: 70%;
+        transform: translate(-60%, -70%);
+    }
+</style>
 <body>
 <div class="cui_content">
     <div class="cui_main">
@@ -187,14 +195,6 @@
         </div>
     </div>
 </div>
-<style>
-    #CpCode {
-        z-index: 1050; /* 두 번째 모달은 첫 번째보다 높은 z-index */
-        top: 60%;
-        left: 70%;
-        transform: translate(-60%, -70%);
-    }
-</style>
 <script>
     $(document).ready(function() {
         $('#searchBtn').click();
@@ -227,51 +227,60 @@
                 }
             });
         });
-    });
 
-    // 검색 버튼 클릭 시
-    $('#searchBtn').on('click', function() {
-        var name = $('#searchName').val();  // 업체명
-        var code = $('#searchCode').val();  // 업체 코드
-        var nation = $('#searchNation').val();  // 국가
+        // 검색 버튼 클릭 시
+        $('#searchBtn').on('click', function() {
+            var name = $('#searchName').val();  // 업체명
+            var code = $('#searchCode').val();  // 업체 코드
+            var nation = $('#searchNation').val();  // 국가
 
-        $.ajax({
-            url: '/api/searchCompanies',  // 서버의 검색 API URL
-            type: 'GET',
-            data: {
-                name: name,      // 업체명
-                code: code,      // 업체 코드
-                nation: nation,  // 국가
-                pageNum: 1,      // 기본값으로 첫 페이지
-                amount: 10       // 한 페이지에 표시할 항목 수
-            },
-            success: function(response) {
-                // 테이블에 결과 채우기
-                var tableBody = $('#companyTable tbody');
-                tableBody.empty();  // 기존 내용 비우기
+            $.ajax({
+                url: '/api/searchCompanies',  // 서버의 검색 API URL
+                type: 'GET',
+                data: {
+                    name: name,      // 업체명
+                    code: code,      // 업체 코드
+                    nation: nation,  // 국가
+                    pageNum: 1,      // 기본값으로 첫 페이지
+                    amount: 10       // 한 페이지에 표시할 항목 수
+                },
+                success: function(response) {
+                    // 테이블에 결과 채우기
+                    var tableBody = $('#companyTable tbody');
+                    tableBody.empty();  // 기존 내용 비우기
 
-                // 검색된 결과를 테이블에 추가
-                response.resultList.forEach(function(company) {
-                     var row = '<tr>' +
-                                 (company.com_STATUS === 'N' ?
-                                    '<td><input type="checkbox" id=\'' + company.com_CODE + '\'></td>' :
-                                    '<td></td>') +  // company.com_STATUS가 'N'이 아닌 경우에
-                                    '<td>' + company.com_CODE + '</td>' +
-                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCodeMgmt\', \'detail\', \'/api/getCompanyData\', \''+ company.com_CODE + '\')">' + company.com_NAME + '</a></td>' +
-                                    '<td>' + company.com_NATION + '</td>' +
-                                    '<td>' + company.com_STATUS + '</td>' +
-                                  '</tr>';
-                    tableBody.append(row);  // 테이블에 새 행 추가
-                });
+                    // 검색된 결과를 테이블에 추가
+                    response.resultList.forEach(function(company) {
+                         var row = '<tr>' +
+                                     (company.COM_STATUS === 'N' ?
+                                        '<td><input type="checkbox" id=\'' + company.COM_CODE + '\'></td>' :
+                                        '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
+                                        '<td>' + company.COM_CODE + '</td>' +
+                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCodeMgmt\', \'detail\', \'/api/getCompanyData\', \''+ company.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
+                                        '<td>' + company.COM_NATION + '</td>' +
+                                        '<td>' + company.COM_STATUS + '</td>' +
+                                      '</tr>';
+                        tableBody.append(row);  // 테이블에 새 행 추가
+                    });
 
-                // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
-                updatePagination(response.pageMaker);
-            },
-            error: function() {
-                alert("검색 결과를 가져오는 데 실패했습니다.");
-            }
+                    // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
+                    updatePagination(response.pageMaker);
+                },
+                error: function() {
+                    alert("검색 결과를 가져오는 데 실패했습니다.");
+                }
+            });
+        });
+        // 업체코드 검색
+        $('#getCpCode').on('click', function() {
+            var param = {
+                    pageNum: 1,      // 기본값으로 첫 페이지
+                    amount: 10       // 한 페이지에 표시할 항목 수
+                };
+            modal_open('CpCode', 'second', '/api/companyList', param) //모달창 오픈
         });
     });
+
 
 
      // 페이지네이션 처리 함수 (updatePagination)
@@ -319,15 +328,15 @@
           searchButton.style.display = 'none';
         }
         $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-        $('#modalCompanyCode').val(data.com_CODE);
-        $('#modalCompanyName').val(data.com_NAME);
-        $('#modalCompanyNation').val(data.com_NATION);
+        $('#modalCompanyCode').val(data.COM_CODE);
+        $('#modalCompanyName').val(data.COM_NAME);
+        $('#modalCompanyNation').val(data.COM_NATION);
 
         //업체코드 수정 불가 처리
         $('#modalCompanyCode').attr("readonly",true);
-        //com_Status는 select box 타입으로 처리
+        //COM_Status는 select box 타입으로 처리
         const statusSelect = document.getElementById("modalCompanyStatus");
-        statusSelect.value = data.com_STATUS; // COM_STATUS을 표시
+        statusSelect.value = data.COM_STATUS; // COM_STATUS을 표시
     }
 
     //엑셀 다운로드
@@ -336,14 +345,7 @@
         window.location.href = '/api/downloadExcel';  // 서버 엔드포인트로 이동
     }
 
-    // 업체코드 검색
-    $('#getCpCode').on('click', function() {
-        var param = {
-                pageNum: 1,      // 기본값으로 첫 페이지
-                amount: 10       // 한 페이지에 표시할 항목 수
-            };
-        modal_open('CpCode', 'second', '/api/companyList', param) //모달창 오픈
-    });
+
 
     //두번째 모달 응답 정보 - Ajax로 받아온 데이터 바인딩
     function bindModalData2(status, data) {
@@ -354,10 +356,10 @@
         // 검색된 결과를 테이블에 추가
         data.forEach(function(company) {
             var row = '<tr>' +
-                            '<td>' + company.com_CODE + '</td>' +
-                            '<td>' + company.com_NAME + '</a></td>' +
-                            '<td>' + company.com_NATION + '</td>' +
-                            '<td><button type="button" class="cui_button secondary" onClick="setCpCd(\''+company.com_CODE+ '\', \''+company.com_NAME+ '\')">선택</button></td>' +
+                            '<td>' + company.COM_CODE + '</td>' +
+                            '<td>' + company.COM_NAME + '</a></td>' +
+                            '<td>' + company.COM_NATION + '</td>' +
+                            '<td><button type="button" class="cui_button secondary" onClick="setCpCd(\''+company.COM_CODE+ '\', \''+company.COM_NAME+ '\')">선택</button></td>' +
                           '</tr>';
             tableBody.append(row);  // 테이블에 새 행 추가
         });
