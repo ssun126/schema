@@ -63,41 +63,47 @@ function modal_init(id, status){
 
 //모달 열기
 function modal_open(id, status, sUrl, param){
-  if(status !='add'){
-   var sUrl = sUrl;
-   console.log("param"+param);
+    if(status !='add'){
+        var sUrl = sUrl;
+        console.log("param"+param);
+        // param을 구분자로 나누기 (예: ',' 또는 다른 구분자)
+        var params = param.split("|");  // 구분자는 적절히 바꿔주세요.
 
-    $.ajax({
-      type: "get",
-      url:   sUrl,
-      data: {
-          "param": param
-      },
-      success: function(res) {
-          console.log("요청성공", res);
+        var data = {};  // 전송할 데이터 객체 생성
 
-          if (res != null) {
-            $("#" + id).fadeIn();
-            modal_init(id, status);
+        // param1, param2, ...로 data 구성
+        for (var i = 0; i < params.length; i++) {
+            data["param" + (i + 1)] = params[i];  // param1, param2, ... 형식으로 추가
+        }
 
-            // res 데이터를 다른 함수로 전달하여 데이터 바인딩 처리
-            if(status === 'second'){ //두번째 모달창을 여는 경우
-                bindModalData2(status, res);
-            }else{
-                bindModalData(status, res);
+        $.ajax({
+            type: "get",
+            url:   sUrl,
+            data: data,
+            success: function(res) {
+                console.log("요청성공", res);
+
+                if (res != null) {
+                    $("#" + id).fadeIn();
+                    modal_init(id, status);
+
+                    // res 데이터를 다른 함수로 전달하여 데이터 바인딩 처리
+                    if(status === 'second'){ //두번째 모달창을 여는 경우
+                        bindModalData2(status, res);
+                    }else{
+                        bindModalData(status, res);
+                    }
+                }
+            },
+            error: function(err) {
+              console.log("에러발생", err);
             }
-          }
-      },
-      error: function(err) {
-          console.log("에러발생", err);
-      }
-    });
-  }else{
-    modal_init(id, status);
-    $("#" + id).fadeIn();
-  }
+        });
+    }else{
+        modal_init(id, status);
+        $("#" + id).fadeIn();
+    }
 }
-
 
 //모달 닫기
 function modal_close(id){
@@ -105,6 +111,7 @@ function modal_close(id){
     //초기화
     modal_init(id, 'add');
 }
+
 
 
 
