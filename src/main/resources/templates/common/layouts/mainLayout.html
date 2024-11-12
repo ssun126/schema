@@ -8,11 +8,16 @@
 <body>
     <div class="cui_app">
         <header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
-
-        <th:block layout:fragment="Content"></th:block>
-
-        <!--<footer th:replace="~{common/fragments/footer :: FooterFragment}"></footer>-->
+        <div class="cui_container">
+           <!-- <div th:if="${currentUrl != '/main' and currentUrl != '/' and currentUrl != '/member/myPage'}">
+                <aside th:replace="~{common/fragments/aside :: AsideFragment}"></aside>&lt;!&ndash; 공통 사이드 메뉴 &ndash;&gt;
+            </div>-->
+            <!-- content 영역 -->
+            <div class="cui_content">
+                <div layout:fragment="Content">
+                </div>
+            </div>
+        </div>
     </div>
 </body>
-
 </html>

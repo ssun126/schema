@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+</head>
+<body>
+        <div class="cui_main">
+            <div class="cui_head">
+                <div class="head_content">
+                    <h2 class="cui_title"><span>만료일 관리</span></h2>
+                </div>
+            </div>
+            <div class="cui_body">
+                <form id="searchForm" method="get">
+                    <div class="cui_search">
+                        <div class="search_list cui_grid_wrap ">
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">만료일</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="searchExpDate" placeholder="만료일을 선택해 주세요."/>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">업체코드</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">업체명</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search_action">
+                            <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="goSearch()"><span>검색</span></button>
+                        </div>
+                    </div>
+                </form>
+                <table class="cui_table center" id="companyTable">
+                    <colgroup>
+                        <col style="width:100px;">
+                        <col style="width:130px;">
+                        <col>
+                        <col style="width:80px;">
+                        <col style="width:130px;">
+                        <col style="width:130px;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><span>승인상태</span></th>
+                        <th><span>업체코드</span></th>
+                        <th><span>업체명</span></th>
+                        <th><span>점수</span></th>
+                        <th><span>제출일자</span></th>
+                        <th><span>승인일자</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="table-wrapper">
+                </div>
+            </div>
+        </div>
+</body>
+</html>

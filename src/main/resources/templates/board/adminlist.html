@@ -134,11 +134,11 @@
 
                     response.forEach(function(board) {
                         var row = '<tr>' +
-                                        '<td>' + board.board_IDX + '</td>' +
-                                        '<td><a href="/admin/board/qa/' + board.board_IDX + '">' + board.board_TITLE + '</a></td>' +
-                                        '<td>' + board.input_USER_ID + '</td>' +
-                                        '<td>' + board.input_DATE + '</td>' +
-                                        '<td>' + board.board_HITS + '</td>' +
+                                        '<td>' + board.BOARD_IDX + '</td>' +
+                                        '<td><a href="/admin/board/qa/' + board.BOARD_IDX + '">' + board.BOARD_TITLE + '</a></td>' +
+                                        '<td>' + board.INPUT_USER_ID + '</td>' +
+                                        '<td>' + board.INPUT_DATE + '</td>' +
+                                        '<td>' + board.BOARD_HITS + '</td>' +
                                       '</tr>';
                         tableBody.append(row);
                     });
