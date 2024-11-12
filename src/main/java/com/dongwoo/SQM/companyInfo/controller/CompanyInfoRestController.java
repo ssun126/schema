@@ -46,7 +46,7 @@ public class CompanyInfoRestController {
 
     //업체 정보 가져오기
     @GetMapping("/getCompanyData")
-    public ResponseEntity<?> getCompanyData(@RequestParam("param")String param) {
+    public ResponseEntity<?> getCompanyData(@RequestParam("param1")String param) {
         CompanyInfoDTO companyInfo = companyInfoService.findByCompanyId(param);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)

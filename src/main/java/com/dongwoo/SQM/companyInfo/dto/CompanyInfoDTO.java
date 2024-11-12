@@ -8,11 +8,13 @@ import java.util.List;
 @Data
 public class CompanyInfoDTO {
     private Integer RN;
-
+    @JsonProperty("COM_CODE")
     private String COM_CODE			    ; //  업체코드 (벤더코드) ★
+    @JsonProperty("COM_NAME")
     private String  COM_NAME		    ; //  업체명 --검색필드 1
-
+    @JsonProperty("COM_NATION")
     private String  COM_NATION		    ; // 국가 (KOR...)     ★
+    @JsonProperty("COM_STATUS")
     private String  COM_STATUS			; // 구분 (Y:사용, N:미거래)
     private int  REG_DW_USER_IDX	    ; // 등록자 IDX   IF 받고 최초는 대기 0  일때 IF
     private int  UP_DW_USER_IDX		    ; // 수정자 IDX   IF 받고 최초는 대기 0 일때 IF

@@ -76,7 +76,8 @@
                                     <strong class="item_label">분류</strong>
                                     <div class="item_content">
                                         <select class="cui_select_field wide" id="modalIsoType" name="ISO_TYPE">
-                                            <option value="ISO09001">ISO09001</option>
+                                            <option value="">인증서 선택</option>
+                                            <option value="ISO-9001">ISO-9001</option>
                                             <option value="IATF16949">IATF16949</option>
                                             <option value="ISO14001">ISO14001</option>
                                             <option value="ISO45001">ISO45001</option>
@@ -215,7 +216,7 @@
                             response.forEach(function(isoAuthItem) {
                                 var row = '<tr>' +
                                                 '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
-                                                '<td><a href="/isoAuthItem/' + isoAuthItem.AUTH_CODE + '">' + isoAuthItem.AUTH_CODE + '</a></td>' +
+                                                '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
                                                 '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
                                                 '<td>' + isoAuthItem.EXP_DATE + '</td>' +
                                                 '<td>' + isoAuthItem.REG_DATE + '</td>' +
@@ -276,15 +277,10 @@
             //상세 항목 정보 - Ajax로 받아온 데이터 바인딩
             function bindModalData(status, data) {
                 $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-                $('#modalCompanyCode').val(data.com_CODE);
-                $('#modalCompanyName').val(data.com_NAME);
-                $('#modalCompanyNation').val(data.com_NATION);
-        
-                //업체코드 수정 불가 처리
-                $('#modalCompanyCode').attr("readonly",true);
-                //select box 타입으로 처리
-                const statusSelect = document.getElementById("modalCompanyStatus");
-                statusSelect.value = data.com_STATUS; // COM_STATUS을 표시
+                const authSelect = document.getElementById("modalIsoType");
+                authSelect.value = data.AUTH_CODE;
+                $('#modalCompanyName').val(data.COM_CODE);
+                $('#modalFactoryId').val(data.AUTH_TYPE);
             }
 
         </script>

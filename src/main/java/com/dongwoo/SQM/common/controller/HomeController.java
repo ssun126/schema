@@ -27,11 +27,6 @@ public class HomeController {
     }
 
     //페이지 생성 전 링크 연결
-    @GetMapping("/admin/auditMgmt/isoAuth")
-    public String auditMgmIsoAuth() {
-        return "isoAuth/main";
-    }
-
     @GetMapping("/admin/partMgmt/matApproval")
     public String partMgmtMatApproval() {
         return "matApproval/main";

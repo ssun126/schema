@@ -8,20 +8,28 @@
         values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)
     </insert>
 
-    <select id="findByCompanyId" parameterType="String" resultType="isoAuthItem">
-        select * from ISO_AUTH_COMPANY_ITEM where COM_CODE=#{COM_CODE}
+    <select id="findByIsoAuthItem" parameterType="String" resultType="isoAuthItem">
+        select * from ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and  COM_CODE=#{COM_CODE}
     </select>
 
-    <select id="findByCriteria" parameterType="map" resultType="isoAuthItem">
-        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE
+    <select id="findByCriteria" parameterType="map" resultType="isoAuth">
+        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
         FROM
         (
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-                ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE
-            FROM ISO_AUTH_COMPANY_ITEM
+                ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
+            FROM AUTH_COMPANY_INFO ACI
+            INNER JOIN COMPANY_CODE CC
+            ON CC.COM_CODE = ACI.COM_CODE
             WHERE 1 =1
             <if test="COM_CODE != null and COM_CODE != ''">
-                AND (COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+                AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+            </if>
+            <if test="COM_NAME != null and COM_NAME != ''">
+                AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+            </if>
+            <if test="COM_STATUS != null and COM_STATUS != ''">
+                AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
             </if>
             <if test="criteria != null and criteria != ''">
         <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>
@@ -32,10 +40,18 @@
 
     <select id="countByKeyword" parameterType="map" resultType="int">
         select count(*) CNT
-        from ISO_AUTH_COMPANY_ITEM
+        from AUTH_COMPANY_INFO ACI
+        INNER JOIN COMPANY_CODE CC
+        ON CC.COM_CODE = ACI.COM_CODE
         WHERE 1 =1
         <if test="COM_CODE != null and COM_CODE != ''">
-            AND (COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+            AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+        <if test="COM_STATUS != null and COM_STATUS != ''">
+            AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
         </if>
     </select>
 
