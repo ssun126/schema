@@ -24,7 +24,7 @@
                     <form class="cui_form_field" data-legend="true">
                         <fieldset>
                             <legend><span>인증서 관리(배점 4점)</span></legend>
-                            <table class="cui_table" id="isoAuthItemTable">
+                            <table class="cui_table">
                                 <colgroup>
                                     <col style="width:120px;">
                                     <col >
@@ -53,7 +53,6 @@
                             </table>
                         </fieldset>
                     </form>
-                    <div id="pagination" class="pagination" style="text-align: center"></div>
                 </div>
             </div>
         </div>
@@ -75,7 +74,7 @@
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">분류</strong>
                                     <div class="item_content">
-                                        <select class="cui_select_field wide" id="modalIsoType" name="ISO_TYPE">
+                                        <select class="cui_select_field wide" id="modalISOType" name="ISO_TYPE">
                                             <option value="ISO09001">ISO09001</option>
                                             <option value="IATF16949">IATF16949</option>
                                             <option value="ISO14001">ISO14001</option>
@@ -94,7 +93,7 @@
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">사업본부</strong>
                                     <div class="item_content">
-                                        <select class="cui_select_field wide" id="modalFactoryId" name="FACTORY_ID">
+                                        <select class="cui_select_field wide" id="modalFactoryId" name="ISO_TYPE">
                                             <option value="ISO09001">케미컬(신흥)</option>
                                             <option value="IATF16949">케미컬(평택)</option>
                                         </select>
@@ -103,14 +102,14 @@
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">인증일</strong>
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" value="2024.09.30" id="modalAuthDate" name="AUTH_DATE">
+                                        <input type="text" class="cui_text_field" value="2024.09.30">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>날자 선택</span></button>
                                     </div>
                                 </label>
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">만료일</strong>
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" value="2024.09.30" id="modalExpDate" name="EXP_DATE">
+                                        <input type="text" class="cui_text_field" value="2024.09.30" id="datepicker-input">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="calendar-icon"><span>날자 선택</span></button>
                                     </div>
                                 </label>
@@ -144,108 +143,27 @@
         </div>
         <script>
             $(document).ready(function() {
-
-                 $.ajax({
-                    url: '/api/isoAuthItemList/pageMaker',  // 서버에서 pageMaker 객체를 가져오는 API URL
-                    type: 'GET',
-                    data: {
-                        pageNum: 1,  // 기본값으로 첫 페이지를 설정, 필요에 따라 변경
-                        amount: 10    // 페이지당 항목 수
-                    },
-                    success: function(response) {
-                        // pageMaker 객체를 받아옴
-                        var startPage = response.startPage;
-                        var endPage = response.endPage;
-                        var currentPage = response.criteria.pageNum;
-                        var totalPages = response.totalPages;
-
-                        // 페이지네이션 컨테이너를 업데이트
-                        var paginationHtml = '';
-
-                        // "이전" 버튼 처리
-                        if (currentPage > 1) {
-                            paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
-                        }
-
-                        // 페이지 번호 처리
-                        for (var i = startPage; i <= endPage; i++) {
-                            if (i === currentPage) {
-                                paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-                            } else {
-                                paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-                            }
-                        }
-
-                        // "다음" 버튼 처리
-                        if (currentPage < totalPages) {
-                            paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-                        }
-
-                        // 페이지네이션 컨테이너에 HTML 추가
-                        $('#pagination').html(paginationHtml);
-                        loadPage(1);
-
-                        // 페이지 번호 클릭 시 페이지네이션 갱신
-                        $('.page, .prev, .next').on('click', function(event) {
-                            event.preventDefault();
-                            var pageNum = $(this).data('page');
-                            loadPage(pageNum);
-                            // 기존 active 클래스 제거
-                            $('.page').removeClass('active');
-                            // 새로운 active 페이지에 클래스 추가
-                            $(`.page[data-page=${pageNum}]`).addClass('active');
-                        });
-                    },
-                    error: function() {
-                        alert("페이지네이션 데이터를 가져오는 데 실패했습니다.");
-                    }
-                });
-
-                // 페이지 로드 함수
-                function loadPage(pageNum) {
-                   // 페이지가 로드되면 서버에서 데이터를 가져옴
-                    $.ajax({
-                        url: '/api/isoAuthItemList',  // 서버의 API URL
-                        type: 'GET',
-                        data: { pageNum: pageNum, amount: 10 },
-                        success: function(response) {
-                            var tableBody = $('#isoAuthItemTable tbody');
-                            tableBody.empty(); // 기존 내용 비우기
-
-                            response.forEach(function(isoAuthItem) {
-                                var row = '<tr>' +
-                                                '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
-                                                '<td><a href="/isoAuthItem/' + isoAuthItem.AUTH_CODE + '">' + isoAuthItem.AUTH_CODE + '</a></td>' +
-                                                '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
-                                                '<td>' + isoAuthItem.EXP_DATE + '</td>' +
-                                                '<td>' + isoAuthItem.REG_DATE + '</td>' +
-                                                '<td>보기</td>' +
-                                                '<td>첨부</td>' +
-                                                '<td>' + isoAuthItem.ITEM_STATE + '</td>' +
-                                              '</tr>';
-                                tableBody.append(row);
-                            });
-                        },
-                        error: function() {
-                            alert("회사를 가져오는 데 실패했습니다.");
-                        }
-                    });  // $.ajax 호출 끝
-                }
         
                   //인증서 추가
                 $("form[name='formIsoAuth']").on('submit', function(e) {
                     e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
 
+                    var isoAuthDTO = {
+                        COM_CODE: $('#modalCompanyCode').val(),
+                        COM_NAME: $('#modalCompanyName').val(),
+                        COM_NATION: $('#modalCompanyNation').val(),
+                        COM_STATUS: 'Y'
+                    };
                     $.ajax({
                         type: 'POST',
-                        url: '/api/setIsoAuthData',
+                        url: '/api/setCompanyData',
                         contentType: 'application/json',
-                        data: { pageNum: pageNum, amount: 10 },
+                        data: JSON.stringify(isoAuthDTO),
                         success: function(response) {
                             console.log('Form successfully submitted!', response);
                             // 성공적으로 제출 후
                             modal_close('IsoAuth'); //모달 닫기
-                           //리스트 새로 로드
+                            $('#searchBtn').click(); //리스트 새로 로드
                         },
                         error: function(xhr, status, error) {
                             console.error('Form submission failed:', error);
@@ -254,14 +172,14 @@
                 });
 
                  // datepicker를 input 필드에 적용
-                $('#modalExpDate').datepicker({
+                $('#datepicker-input').datepicker({
                     dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
                     showOn: "focus",
                 });
 
                 // 버튼 클릭 시 input 필드의 datepicker 열기
                 $('#calendar-icon').on('click', function() {
-                    var inputField = $('#modalExpDate');
+                    var inputField = $('#datepicker-input');
 
                     // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
                     if (inputField.datepicker("widget").is(":visible")) {
