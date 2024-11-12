@@ -143,14 +143,14 @@
                                 </tbody>
                             </table>
                         </fieldset>
-
-                        <div th:if="${memberDTO.USER_STATUS == 3}">
+                        <br>
+                        <div th:if="${memberDTO.USER_STATUS == '3'}">
                             <div class="cui_bullet_title"><span>반려 사유</span></div>
                             <div class="cui_border_box">
                                 <p name="RETURN_REASON" id="RETURN_REASON"><span th:text="${memberDTO.RETURN_REASON}"></span> </p>
                             </div>
                         </div>
-
+                        <br>
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
                                 <!--                                <button  type="submit" name ="request" id="request"  class="cui_button primary" onClick="modal('dialog')">-->
