@@ -9,9 +9,9 @@
     <div class="cui_app">
         <header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
         <div class="cui_container">
-            <div th:if="${currentUrl != '/main' and currentUrl != '/' and currentUrl != '/member/myPage'}">
-                <aside th:replace="~{common/fragments/aside :: AsideFragment}"></aside><!-- 공통 사이드 메뉴 -->
-            </div>
+           <!-- <div th:if="${currentUrl != '/main' and currentUrl != '/' and currentUrl != '/member/myPage'}">
+                <aside th:replace="~{common/fragments/aside :: AsideFragment}"></aside>&lt;!&ndash; 공통 사이드 메뉴 &ndash;&gt;
+            </div>-->
             <!-- content 영역 -->
             <div class="cui_content">
                 <div layout:fragment="Content">
@@ -19,117 +19,5 @@
             </div>
         </div>
     </div>
-    <script>
-        const goMenu = (menuPage) => {
-            location.href = menuPage;
-        }
-
-        // container 콘텐츠를 부드럽게 전환하는 함수
-        function loadContainer(url) {
-            $(".cui_content").fadeOut(300, function() {
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    success: function(response) {
-                        // 새로운 콘텐츠 로드 후 페이드 인
-                        $(".cui_content").html(response).fadeIn(300);
-                    },
-                    error: function() {
-                        console.log("콘텐츠 로드 실패!");
-                    }
-                });
-            });
-        }
-
-        // 콘텐츠를 부드럽게 전환하는 함수
-        function loadContent(url) {
-            $(".cui_content").fadeOut(200, function() {
-                $.ajax({
-                    url: url,
-                    type: "GET",
-                    success: function(response) {
-                        // 새로운 콘텐츠 로드 후 페이드 인
-                        $(".cui_content").html(response).fadeIn(200);
-                    },
-                    error: function() {
-                        console.log("콘텐츠 로드 실패");
-                    }
-                });
-            });
-        }
-
-        // 링크 클릭 시 콘텐츠를 로드
-        $(document).on("click", ".load-container", function(e) {
-            e.preventDefault();
-            var url = $(this).data("url");  // data-url 에서 URL 가져오기
-            console.log("url?????"+url);
-
-            history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-            loadContainer(url);
-            //goMenu(url);
-        });
-
-        // 링크 클릭 시 콘텐츠를 로드
-        $(document).on("click", ".load-content", function(e) {
-            e.preventDefault();
-            var url = $(this).data("url");  // data-url 에서 URL 가져오기
-
-            history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-            loadContent(url);
-        });
-
-        // 뒤로가기 버튼 시 URL 에 맞는 콘텐츠 로드
-        window.onpopstate = function() {
-            console.log("location.pathname?????"+location.pathname);
-            loadContainer(location.pathname);
-        };
-
-
-         // 검색 버튼 클릭 시
-        $('#searchBtn').on('click', function() {
-             event.preventDefault();  // 기본 폼 제출 동작 방지
-
-            // Form 데이터 읽기
-            const formData = new FormData(this);
-            formData.append("pageNum", 1); // 기본값으로 첫 페이지
-            formData.append("amount", 10); // 한 페이지에 표시할 항목 수
-
-            $.ajax({
-                url: '/api/searchIsoAuth',  // 서버의 검색 API URL
-                type: 'GET',
-                data: {
-                    code: code,      // 업체 코드
-                    name: name,      // 업체명
-                    state: state,  // 국가
-                    pageNum: 1,      // 기본값으로 첫 페이지
-                    amount: 10       // 한 페이지에 표시할 항목 수
-                },
-                success: function(response) {
-                    // 테이블에 결과 채우기
-                    var tableBody = $('#companyTable tbody');
-                    tableBody.empty();  // 기존 내용 비우기
-
-                    // 검색된 결과를 테이블에 추가
-                    response.resultList.forEach(function(auth) {
-                         var row = '<tr>' +
-                                        '<td>' + auth.APPROVE_STATE + '</td>' +
-                                        '<td>' + auth.COM_CODE + '</td>' +
-                                        '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
-                                        '<td>' + auth.POINT + '</td>' +
-                                        '<td>' + auth.SEND_DATE + '</td>' +
-                                        '<td>' + auth.APPROVE_DATE + '</td>' +
-                                      '</tr>';
-                        tableBody.append(row);  // 테이블에 새 행 추가
-                    });
-
-                    // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
-                    updatePagination(response.pageMaker);
-                },
-                error: function() {
-                    alert("검색 결과를 가져오는 데 실패했습니다.");
-                }
-            });
-        });
-    </script>
 </body>
 </html>

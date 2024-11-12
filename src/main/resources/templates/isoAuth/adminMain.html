@@ -118,29 +118,35 @@
 
     $(document).ready(function() {
         // 링크 클릭 시 콘텐츠를 로드
-        $(document).on("click", ".load-page .search_btn", function(e) {
+        $(document).on("click", ".load-page", function(e) {
             e.preventDefault();
 
             const url = "/admin/auditMgmt/isoDetail?COM_CODE=COO1";
             const code = $(this).data("code");
 
             history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-            loadContent(url)
+            loadContent(url);
+            goMenu(url);
         });
 
         // 검색 버튼 클릭 시
-        $('#searchForm').on('submit', function(event) {
+        $('#searchBtn').on('click', function(event) {
              event.preventDefault();  // 기본 폼 제출 동작 방지
 
-            // Form 데이터 읽기
-            const formData = new FormData(this);
-            formData.append("pageNum", 1); // 기본값으로 첫 페이지
-            formData.append("amount", 10); // 한 페이지에 표시할 항목 수
-            console.log("formData>>>>"+formData);
+            var name = $('#searchName').val();  // 업체명
+            var code = $('#searchCode').val();  // 업체 코드
+            var state = $('#searchState').val();  // state
+
             $.ajax({
                 url: '/api/searchIsoAuth',  // 서버의 검색 API URL
                 type: 'GET',
-                data: formData,
+                data: {
+                    name: name,      // 업체명
+                    code: code,      // 업체 코드
+                    state: state,  // state
+                    pageNum: 1,      // 기본값으로 첫 페이지
+                    amount: 10       // 한 페이지에 표시할 항목 수
+                },
                 success: function(response) {
                     // 테이블에 결과 채우기
                     var tableBody = $('#companyTable tbody');
