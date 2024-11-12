@@ -3,208 +3,170 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO</title>
+</head>
 <body>
-        <div class="cui_content">
-            <div class="cui_main">
-                <div class="cui_head">
-                    <div class="head_content">
-                        <h2 class="cui_title"><span>ISO 인증</span></h2>
-                    </div>
-                </div>
-                <div class="cui_body">
-                    <div class="cui_toolbar">
-                        <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
-                        </div>
-                        <div class="toolbar_aside">
-                            <button type="button" class="cui_button secondary" onclick="modal_open('IsoAuth','add', '', '')"><span>추가</span></button>
-                            <button type="button" class="cui_button secondary" onclick="delCompany()"><span>삭제</span></button>
-                        </div>
-                    </div>
-                    <form class="cui_form_field" data-legend="true">
-                        <fieldset>
-                            <legend><span>인증서 관리(배점 4점)</span></legend>
-                            <table class="cui_table">
-                                <colgroup>
-                                    <col style="width:120px;">
-                                    <col >
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                </colgroup>
-                                <thead>
-                                <tr>
-                                    <th><span>분류</span></th>
-                                    <th><span>인증서</span></th>
-                                    <th><span>인증일</span></th>
-                                    <th><span>만료일</span></th>
-                                    <th><span>등록일</span></th>
-                                    <th><span>등록서류</span></th>
-                                    <th><span>등록</span></th>
-                                    <th><span>승인여부</span></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </fieldset>
-                    </form>
-                </div>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>ISO 인증</span></h2>
             </div>
         </div>
+        <div class="cui_body">
+            <form id="searchForm" method="get">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap ">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">업체코드</strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">업체명</strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">승인상태</strong>
+                            <div class="item_content">
+                                <select class="cui_select_field" id="searchState">
+                                    <option value="" selected>선택</option>
+                                    <option value="SEND">제출</option>
+                                    <option value="APRROVE">승인</option>
+                                    <option value="NOTAPPROVE">반려</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search_action">
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="goSearch()"><span>검색</span></button>
+                    </div>
+                </div>
+            </form>
+            <table class="cui_table center" id="companyTable">
+                <colgroup>
+                    <col style="width:100px;">
+                    <col style="width:130px;">
+                    <col>
+                    <col style="width:80px;">
+                    <col style="width:130px;">
+                    <col style="width:130px;">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><span>승인상태</span></th>
+                    <th><span>업체코드</span></th>
+                    <th><span>업체명</span></th>
+                    <th><span>점수</span></th>
+                    <th><span>제출일자</span></th>
+                    <th><span>승인일자</span></th>
+                </tr>
+                </thead>
+                <tbody>
 
-        <div class="cui_dialog" style="width:400px;display:none;" id="IsoAuth">
-            <div class="dialog_container">
-                <div class="dialog_head">
-                    <div class="dialog_title">
-                        <div class="main_label"><span id="modalTitle">신규추가</span></div>
-                    </div>
-                    <div class="dialog_toolbar">
-                        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('IsoAuth')"><span>Close</span></button>
-                    </div>
-                </div>
-                <div class="dialog_body">
-                    <div class="body_root">
-                        <form class="cui_form_field" data-legend="true" name="formIsoAuth">
-                            <fieldset>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">분류</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" id="modalISOType" name="ISO_TYPE">
-                                            <option value="ISO09001">ISO09001</option>
-                                            <option value="IATF16949">IATF16949</option>
-                                            <option value="ISO14001">ISO14001</option>
-                                            <option value="ISO45001">ISO45001</option>
-                                            <option value="ISO50001">ISO50001</option>
-                                            <option value="HSPM">HSPM</option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">업체명</strong>
-                                    <div class="item_content">
-                                        <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">사업본부</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" id="modalFactoryId" name="ISO_TYPE">
-                                            <option value="ISO09001">케미컬(신흥)</option>
-                                            <option value="IATF16949">케미컬(평택)</option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">인증일</strong>
-                                    <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" value="2024.09.30">
-                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>날자 선택</span></button>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">만료일</strong>
-                                    <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" value="2024.09.30" id="datepicker-input">
-                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="calendar-icon"><span>날자 선택</span></button>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">첨부</strong>
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <input type="file" class="cui_file_field">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
-                                <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-                                    <div class="item_content">
-                                        <button type="submit" id="IsoAuthAdd" class="cui_button primary"><span>저장</span></button>
-                                        <button type="button" id="IsoAuthPop" class="cui_button secondary" onClick="modal_close('IsoAuth')"><span>닫기</span></button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
+                </tbody>
+            </table>
+            <div id="pagination" class="pagination" style="text-align: center"></div>
+            <div class="table-wrapper">
             </div>
         </div>
-        <script>
-            $(document).ready(function() {
-        
-                  //인증서 추가
-                $("form[name='formIsoAuth']").on('submit', function(e) {
-                    e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
-
-                    var isoAuthDTO = {
-                        COM_CODE: $('#modalCompanyCode').val(),
-                        COM_NAME: $('#modalCompanyName').val(),
-                        COM_NATION: $('#modalCompanyNation').val(),
-                        COM_STATUS: 'Y'
-                    };
-                    $.ajax({
-                        type: 'POST',
-                        url: '/api/setCompanyData',
-                        contentType: 'application/json',
-                        data: JSON.stringify(isoAuthDTO),
-                        success: function(response) {
-                            console.log('Form successfully submitted!', response);
-                            // 성공적으로 제출 후
-                            modal_close('IsoAuth'); //모달 닫기
-                            $('#searchBtn').click(); //리스트 새로 로드
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Form submission failed:', error);
-                        }
-                    });
-                });
-
-                 // datepicker를 input 필드에 적용
-                $('#datepicker-input').datepicker({
-                    dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
-                    showOn: "focus",
-                });
-
-                // 버튼 클릭 시 input 필드의 datepicker 열기
-                $('#calendar-icon').on('click', function() {
-                    var inputField = $('#datepicker-input');
-
-                    // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
-                    if (inputField.datepicker("widget").is(":visible")) {
-                        inputField.datepicker("hide"); // datepicker 숨기기
-                    } else {
-                        inputField.datepicker("show"); // datepicker 보이기
-                    }
-                });
-
-            });
-
-            //상세 항목 정보 - Ajax로 받아온 데이터 바인딩
-            function bindModalData(status, data) {
-                $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-                $('#modalCompanyCode').val(data.com_CODE);
-                $('#modalCompanyName').val(data.com_NAME);
-                $('#modalCompanyNation').val(data.com_NATION);
-        
-                //업체코드 수정 불가 처리
-                $('#modalCompanyCode').attr("readonly",true);
-                //select box 타입으로 처리
-                const statusSelect = document.getElementById("modalCompanyStatus");
-                statusSelect.value = data.com_STATUS; // COM_STATUS을 표시
-            }
-
-        </script>
+    </div>
 </body>
+<script>
+    // 페이지네이션 처리 함수 (updatePagination)
+    function updatePagination(pageMaker) {
+        var paginationHtml = '';
+        var currentPage = pageMaker.criteria.pageNum;
+        var startPage = pageMaker.startPage;
+        var endPage = pageMaker.endPage;
+        var totalPages = pageMaker.totalPages;
+
+        // 이전 페이지 버튼
+        if (currentPage > 1) {
+            paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+        }
+
+        // 페이지 번호
+        for (var i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+                paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
+            } else {
+                paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
+            }
+        }
+
+        // 다음 페이지 버튼
+        if (currentPage < totalPages) {
+            paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
+        }
+
+        // 페이지네이션 HTML 업데이트
+        $('#pagination').html(paginationHtml);
+
+        // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
+        $('.page, .prev, .next').on('click', function(event) {
+            event.preventDefault();
+            var pageNum = $(this).data('page');
+            searchCompanies(pageNum);
+        });
+    }
+
+    $(document).ready(function() {
+        // 링크 클릭 시 콘텐츠를 로드
+        $(document).on("click", ".load-page .search_btn", function(e) {
+            e.preventDefault();
+
+            const url = "/admin/auditMgmt/isoDetail?COM_CODE=COO1";
+            const code = $(this).data("code");
+
+            history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
+            loadContent(url)
+        });
+
+        // 검색 버튼 클릭 시
+        $('#searchForm').on('submit', function(event) {
+             event.preventDefault();  // 기본 폼 제출 동작 방지
+
+            // Form 데이터 읽기
+            const formData = new FormData(this);
+            formData.append("pageNum", 1); // 기본값으로 첫 페이지
+            formData.append("amount", 10); // 한 페이지에 표시할 항목 수
+            console.log("formData>>>>"+formData);
+            $.ajax({
+                url: '/api/searchIsoAuth',  // 서버의 검색 API URL
+                type: 'GET',
+                data: formData,
+                success: function(response) {
+                    // 테이블에 결과 채우기
+                    var tableBody = $('#companyTable tbody');
+                    tableBody.empty();  // 기존 내용 비우기
+
+                    // 검색된 결과를 테이블에 추가
+                    response.resultList.forEach(function(auth) {
+                         var row = '<tr>' +
+                                        '<td>' + auth.APPROVE_STATE + '</td>' +
+                                        '<td>' + auth.COM_CODE + '</td>' +
+                                        '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
+                                        '<td>' + auth.POINT + '</td>' +
+                                        '<td>' + auth.SEND_DATE + '</td>' +
+                                        '<td>' + auth.APPROVE_DATE + '</td>' +
+                                      '</tr>';
+                        tableBody.append(row);  // 테이블에 새 행 추가
+                    });
+
+                    // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
+                    updatePagination(response.pageMaker);
+                },
+                error: function() {
+                    alert("검색 결과를 가져오는 데 실패했습니다.");
+                }
+            });
+        });
+    });
+</script>
 </html>
