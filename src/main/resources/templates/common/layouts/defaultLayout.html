@@ -7,12 +7,11 @@
 </head>
 <body>
     <div class="cui_app">
-        <header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
+        <th:block th:replace="~{common/fragments/header :: HeaderFragment}"></th:block>
         <div class="cui_container">
-            <aside th:replace="~{common/fragments/aside :: AsideFragment}"></aside>
+            <th:block th:replace="~{common/fragments/aside :: AsideFragment}"></th:block>
             <div class="cui_content">
-                <div layout:fragment="Content">
-                </div>
+                <th:block layout:fragment="Content"></th:block>
             </div>
         </div>
     </div>

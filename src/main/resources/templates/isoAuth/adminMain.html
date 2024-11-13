@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="goSearch()"><span>검색</span></button>
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
                     </div>
                 </div>
             </form>
@@ -121,12 +121,12 @@
         $(document).on("click", ".load-page", function(e) {
             e.preventDefault();
 
-            const url = "/admin/auditMgmt/isoDetail?COM_CODE=COO1";
             const code = $(this).data("code");
+            const url = "/admin/auditMgmt/isoDetail?COM_CODE="+code;
 
             history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
             loadContent(url);
-            goMenu(url);
+            //goMenu(url);
         });
 
         // 검색 버튼 클릭 시

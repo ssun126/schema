@@ -44,13 +44,13 @@
 
         // container 콘텐츠를 부드럽게 전환하는 함수
         function loadContainer(url) {
-            $(".cui_content").fadeOut(300, function() {
+            $(".cui_container").fadeOut(300, function() {
                 $.ajax({
                     url: url,
                     type: "GET",
                     success: function(response) {
                         // 새로운 콘텐츠 로드 후 페이드 인
-                        $(".cui_content").html(response).fadeIn(300);
+                        $(".cui_container").html(response).fadeIn(300);
                     },
                     error: function() {
                         console.log("콘텐츠 로드 실패!");
@@ -98,10 +98,10 @@
         });
 
         // 뒤로가기 버튼 시 URL 에 맞는 콘텐츠 로드
-        window.onpopstate = function() {
-            console.log("location.pathname?????"+location.pathname);
-            loadContainer(location.pathname);
-        };
+        //window.onpopstate = function() {
+        //    console.log("location.pathname?????"+location.pathname);
+        //    loadContainer(location.pathname);
+        //};
 
     </script>
 </html>
