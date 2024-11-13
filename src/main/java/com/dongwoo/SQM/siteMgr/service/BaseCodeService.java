@@ -27,8 +27,8 @@ public class BaseCodeService {
         return baseCodeRepository.getbaseGroupCDList();
     }
 
-    public BaseCodeDTO getBaseCode_Info(String idx) {
-        return baseCodeRepository.getBaseCode_Info(idx);
+    public BaseCodeDTO getbaseCodeInfo(String idx) {
+        return baseCodeRepository.getbaseCodeInfo(idx);
     }
 
     public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextVal) {

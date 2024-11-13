@@ -16,7 +16,7 @@
         INNER JOIN USERINFO ui ON bc.REG_DW_USER_IDX = ui.USERIDX
 
     </select>
-    <select id="getBaseCode_Info" parameterType="String" resultType="baseCode">
+    <select id="getbaseCodeInfo" parameterType="String" resultType="baseCode">
         select BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,u.USERNAME as REGISTER_NAME ,b.REG_DATE ,BASE_OPTION
          FROM BASE_CODE b
         LEFT OUTER JOIN USERINFO u

@@ -1,66 +1,13 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/mainLayout}"
-      layout:fragment="Content" xmlns="">
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
     <title>기초설정</title>
-    <style>
-        .cui_dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
 </head>
 <body>
-<div class="cui_app">
-    <div class="cui_container" data-module="">
-        <div class="cui_lnb">
-            <div class="lnb_root">
-                <div class="lnb_head">
-                    <h2 class="lnb_title"><span>Site Management</span></h2>
-                </div>
-                <div class="cui_nav">
-                    <nav class="nav_root">
-                        <ul>
-                            <li>
-                                <a href="#" class="nav_item">
-                                    <span class="nav_label">동우 사용자 관리</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/siteMgr/baseConfig" class="nav_item" aria-selected="true">
-                                    <span class="nav_label">기초설정</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/siteMgr/baseCode" class="nav_item">
-                                    <span class="nav_label">기초코드</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/siteMgr/svhc" class="nav_item">
-                                    <span class="nav_label">SVHC 항목 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav_item">
-                                    <span class="nav_label">Declaration Letter 항목</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="nav_item" aria-selected="true">
-                                    <span class="nav_label">SAMPLE 파일</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
         <div class="cui_content">
             <div class="cui_main">
                 <div class="cui_head">
@@ -103,7 +50,7 @@
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                            <button type="button" class="cui_button secondary" onclick="modal('PopupBaseCode','add')"><span>추가</span></button>
+                            <button type="button" class="cui_button secondary" onclick="modal_open('PopupBaseCode','add', '','')"><span>추가</span></button>
                             <!--                            <button type="button" class="cui_button secondary" onclick="BaseConfig_Popup()"><span>추가</span></button>-->
 
                         </div>
@@ -138,7 +85,7 @@
                             <td style="display:none;" th:text="${baseCodeList.BASE_CODE_IDX}"><span></span></td>
                             <td th:text="${baseCodeList.GUBN}"><span></span></td>
                             <!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
-                            <td ><button th:text="${baseCodeList.GROUP_CODE}" type="button" class="cui_button endpoint" th:onclick="modal('PopupBaseCode',[[${baseCodeList.BASE_CODE_IDX}]])"></button></td>
+                            <td ><button th:text="${baseCodeList.GROUP_CODE}" type="button" class="cui_button endpoint" th:onclick="modal_open('PopupBaseCode', 'edit', '/admin/siteMgr/baseCode/baseCodeInfo',[[${baseCodeList.BASE_CODE_IDX}]])"></button></td>
                             <td th:text="${baseCodeList.BASE_CODE}"><span></span></td>
                             <td th:text="${baseCodeList.BASE_SORT}"><span></span></td>
                             <td th:text="${baseCodeList.BASE_NAME}"><span></span></td>
@@ -152,127 +99,106 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="cui_dialog" style="width:400px;display:none;" id="PopupBaseCode">
-    <div class="dialog_container">
-        <div class="dialog_head">
-            <div class="dialog_title">
-                <div class="main_label">기초코드</div>
-            </div>
-            <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
-            </div>
-        </div>
-        <div class="dialog_body">
-            <div class="body_root">
-                <form class="cui_form_field" data-legend="true" action="/baseCode/action" method="get">
-                    <fieldset>
-                        <!--                        <legend><span>ID 찾기</span></legend>-->
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업무구분</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field wide" id="GUBN" th:name="GUBN">
-                                    <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
-                                            th:text="${baseGubunList.BASE_NAME}"></option>
-                                </select>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">코드그룹</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field wide" id="GROUP_CODE" th:name="GROUP_CODE">
-                                    <option value="GroupAdd">코드그룹추가</option>
-                                    <option th:each="baeGroupCDList : ${baeGroupCDList}" th:value="${baeGroupCDList.GROUP_CODE}"
-                                            th:text="${baeGroupCDList.BASE_NAME}"></option>
-                                </select>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">코드</strong>
-                            <div class="item_content">
-                                <input name="BASE_CODE" class="cui_text_field fixdata">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">코드명</strong>
-                            <div class="item_content">
-                                <input name="BASE_NAME" class="cui_text_field ">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">코드값</strong>
-                            <div class="item_content">
-                                <input name="BASE_VALUE" class="cui_text_field ">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">옵션</strong>
-                            <div class="item_content">
-                                <input name="BASE_OPTION" class="cui_text_field ">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">정렬</strong>
-                            <div class="item_content">
-                                <input name="BASE_SORT" class="cui_text_field ">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">상태</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field wide" id="BASE_STATUS" name="BASE_STATUS">
-                                    <option value="Y">Y</option>
-                                    <option value="N">N</option>
-                                </select>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">설명</strong>
-                            <div class="item_content">
-                                <textarea  style="height:80px;" class="cui_text_field" name="BASE_SUMMARY"></textarea>
-                                <input name="REG_DW_USER_IDX" value=1  style="display:none;">
-                                <input name="BASE_CODE_IDX" value=0 style="display:none;">
-                            </div>
-                        </label>
+        <div class="cui_dialog" style="width:400px;display:none;" id="PopupBaseCode">
+            <div class="dialog_container">
+                <div class="dialog_head">
+                    <div class="dialog_title">
+                        <div class="main_label">기초코드</div>
+                    </div>
+                    <div class="dialog_toolbar">
+                        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                    </div>
+                </div>
+                <div class="dialog_body">
+                    <div class="body_root">
+                        <form class="cui_form_field" data-legend="true" action="/admin/siteMgr/baseCode/action" method="get">
+                            <fieldset>
+                                <!--                        <legend><span>ID 찾기</span></legend>-->
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">업무구분</strong>
+                                    <div class="item_content">
+                                        <select class="cui_select_field wide" id="GUBN" th:name="GUBN">
+                                            <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
+                                                    th:text="${baseGubunList.BASE_NAME}"></option>
+                                        </select>
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">코드그룹</strong>
+                                    <div class="item_content">
+                                        <select class="cui_select_field wide" id="GROUP_CODE" th:name="GROUP_CODE">
+                                            <option value="GroupAdd">코드그룹추가</option>
+                                            <option th:each="baeGroupCDList : ${baeGroupCDList}" th:value="${baeGroupCDList.GROUP_CODE}"
+                                                    th:text="${baeGroupCDList.BASE_NAME}"></option>
+                                        </select>
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">코드</strong>
+                                    <div class="item_content">
+                                        <input name="BASE_CODE" class="cui_text_field fixdata">
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">코드명</strong>
+                                    <div class="item_content">
+                                        <input name="BASE_NAME" class="cui_text_field ">
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">코드값</strong>
+                                    <div class="item_content">
+                                        <input name="BASE_VALUE" class="cui_text_field ">
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">옵션</strong>
+                                    <div class="item_content">
+                                        <input name="BASE_OPTION" class="cui_text_field ">
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">정렬</strong>
+                                    <div class="item_content">
+                                        <input name="BASE_SORT" class="cui_text_field ">
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">상태</strong>
+                                    <div class="item_content">
+                                        <select class="cui_select_field wide" id="BASE_STATUS" name="BASE_STATUS">
+                                            <option value="Y">Y</option>
+                                            <option value="N">N</option>
+                                        </select>
+                                    </div>
+                                </label>
+                                <label class="cui_items_wrap" data-direction="left">
+                                    <strong class="item_label">설명</strong>
+                                    <div class="item_content">
+                                        <textarea  style="height:80px;" class="cui_text_field" name="BASE_SUMMARY"></textarea>
+                                        <input name="REG_DW_USER_IDX" value=1  style="display:none;">
+                                        <input name="BASE_CODE_IDX" value=0 style="display:none;">
+                                    </div>
+                                </label>
 
-                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-                            <div class="item_content">
-                                <button type="submit" id="BaseCodeAdd" name="INFO_FLAG" value="Add" class="cui_button primary"><span>추가</span></button>
-                                <button type="submit" id="BaseCodeMod" name="INFO_FLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
-                                <button type="submit" id="BaseCodeDel" name="INFO_FLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
+                                <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                                    <div class="item_content">
+                                        <button type="submit" id="BaseCodeAdd" name="INFO_FLAG" value="Add" class="cui_button primary"><span>추가</span></button>
+                                        <button type="submit" id="BaseCodeMod" name="INFO_FLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
+                                        <button type="submit" id="BaseCodeDel" name="INFO_FLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 </body>
 <script>
-
     $(document).ready(function() {
-        modal_init("Init");
+        // modal_init("Init");
     });
-
-<!--    function setBizSection(){-->
-<!--        const sUrl ="/baseCode/getBizSectionList";-->
-<!--        $.ajax({-->
-<!--            type:"post",-->
-<!--            url : sUrl,-->
-<!--            success: function(res){-->
-<!--                if(res.status == "ok"){-->
-<!--                    bindBizSectionList(res);-->
-<!--                }-->
-<!--            },-->
-<!--            error :  function(err){-->
-<!--                console.log("에러발생",err);-->
-<!--            }-->
-
-<!--        });-->
-<!--    }-->
-
 
     function BaseConfig_Popup(){
         let popOption ="width=601,height=436,top=100,left=100";
@@ -315,7 +241,7 @@
     //모달 열기
     function modal(id, status){
       if(status !='add'){
-       var sUrl = "/baseCode/baseCode_Info" ;
+       var sUrl = "/admin/siteMgr/baseCode/baseCodeInfo" ;
 
         $.ajax({
           type: "post",
@@ -345,7 +271,7 @@
       }
     }
 
-    function bindBasCodeInfo(baseCode){
+    function bindModalData(status, baseCode){
         if(baseCode != null){
             document.getElementsByName("BASE_CODE")[0].value = baseCode.BASE_CODE ;
             document.getElementsByName("BASE_NAME")[0].value = baseCode.BASE_NAME ;

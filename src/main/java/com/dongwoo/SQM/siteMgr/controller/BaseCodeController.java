@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,16 +22,17 @@ import java.util.Objects;
 
 @Slf4j
 @Controller
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class BaseCodeController {
 
     private final BaseCodeService baseCodeService;
-    @GetMapping("/baseCode/save")
+    @GetMapping("/siteMgr/baseCode/save")
     public String save() {
         return "/baseCode/save";
     }
 
-    @PostMapping("/baseCode/save")
+    @PostMapping("/siteMgr/baseCode/save")
     public String save(BaseCodeDTO baseCodeDTO) throws IOException {
         log.info("post baseCodeDTO = {}", baseCodeDTO);
         baseCodeService.save(baseCodeDTO);
@@ -54,33 +57,18 @@ public class BaseCodeController {
         return "/baseCode/list";
     }
 
-    @PostMapping("/baseCode/baseCode_Info")
-    public @ResponseBody Map<String, String> getBaseConfig_Info(@RequestParam("status") String idx) {
-        System.out.println("status = " + idx);
-        BaseCodeDTO baseCodeDTO = baseCodeService.getBaseCode_Info(idx);
-        log.info("================test22222222aa");
+    @GetMapping("/siteMgr/baseCode/baseCodeInfo")
+    public ResponseEntity<?> getBaseConfigInfo(@RequestParam("param1") String idx) {
+        BaseCodeDTO baseCodeDTO = baseCodeService.getbaseCodeInfo(idx);
 
-
-        HashMap<String,String> response = new HashMap<>();
-
-        if(baseCodeDTO != null) {
-            response.put("status", "ok");
-            response.put("BASE_CODE_IDX", String.valueOf(baseCodeDTO.getBASE_CODE_IDX()));
-            response.put("GUBN", String.valueOf(baseCodeDTO.getGUBN()));
-            response.put("GROUP_CODE", String.valueOf(baseCodeDTO.getGROUP_CODE()));
-            response.put("BASE_CODE", String.valueOf(baseCodeDTO.getBASE_CODE()));
-            response.put("BASE_NAME", String.valueOf(baseCodeDTO.getBASE_NAME()));
-            response.put("BASE_VALUE", String.valueOf(baseCodeDTO.getBASE_VALUE()));
-            response.put("BASE_SUMMARY", String.valueOf(baseCodeDTO.getBASE_SUMMARY()));
-            response.put("BASE_SORT", String.valueOf(baseCodeDTO.getBASE_SORT()));
-            response.put("BASE_STATUS", String.valueOf(baseCodeDTO.getBASE_STATUS()));
-            response.put("BASE_OPTION", String.valueOf(baseCodeDTO.getBASE_OPTION()));
-
+        if (baseCodeDTO != null) {
+            return ResponseEntity.ok().body(baseCodeDTO);  // 회사 정보가 있을 경우 응답
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found.");
         }
-        return response;
     }
 
-    @GetMapping("/baseCode/action")
+    @GetMapping("/siteMgr/baseCode/action")
     public String save(@ModelAttribute BaseCodeDTO baseCodeDTO,HttpSession session) {
         log.info("test111111");
         //log.info(GUBN);
@@ -119,7 +107,7 @@ public class BaseCodeController {
         return  "redirect:/siteMgr/baseCode";
     }
 
-    @GetMapping("/basecode/search")
+    @GetMapping("/siteMgr/basecode/search")
     public String findSearch(Model model, HttpServletRequest request){
         String sGubun = request.getParameter("GUBUN");
         String sSearchKey = request.getParameter("SEARCHKEY");
@@ -144,7 +132,7 @@ public class BaseCodeController {
      * @param baseCodeDTO
      * @return
      */
-    @PostMapping("/baseCode/getCode")
+    @PostMapping("/siteMgr/baseCode/getCode")
     public String findByCodeGroup(BaseCodeDTO baseCodeDTO) {
         // 상세내용 가져옴
         List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findByCodeGroup(baseCodeDTO);
@@ -158,7 +146,7 @@ public class BaseCodeController {
      * @param baseCodeDTO
      * @return
      */
-    @GetMapping("/baseCode/get")
+    @GetMapping("/siteMgr/baseCode/get")
     @ResponseBody
     public List<BaseCodeDTO> findByCode(BaseCodeDTO baseCodeDTO){
         List<BaseCodeDTO> baseCodeDTOList= baseCodeService.findByCodeGroup(baseCodeDTO);
