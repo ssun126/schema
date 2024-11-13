@@ -577,10 +577,8 @@
                $('#registeredCompany').show();             //기등록 업체입니다.(추가 ID 작업 gogo)
                $('#joinBasicStep1').show();
 
-                bindCompanyInfo(res);                       //정보 바인딩. ★
-                //bindCompanyUserList(res.companyUserList); //공동사용자 list
+                bindCompanyInfo(res);                      //정보 바인딩. ★
                 bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
-                //bindCompanyUserInfo(res); //공동 ,id/pw
                 unbindCompanyUserInfo();
                 setFieldsReadOnly(false);
 

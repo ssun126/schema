@@ -84,6 +84,12 @@ public class MemberRepository {
     }
 
 
+    //회사 사용자 로그인 ID로 정보확인 2024.11.13
+    public MemberDTO findCpLoginID(String USER_ID) {
+        return sql.selectOne("Member.findCpLoginID", USER_ID);
+    }
+
+
     //User history. 10.23
     public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
         System.out.println("comPanyCodeDTO = " + comPanyCodeDTO);
@@ -98,10 +104,13 @@ public class MemberRepository {
     public UserInfoCompanyUserDTO findByCompanyUserName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return sql.selectOne("Member.findByCompanyUserName", userInfoCompanyUserDTO );
     }
+    //공동 사용자 ID별 가져오기  10.24
+    public List<UserInfoCompanyUserDTO> findByCompanyUserComCode(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return sql.selectList("Member.findByCompanyUserComCode", userInfoCompanyUserDTO ); }
+
     //공동 사용자 전체 가져오기  10.24
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return sql.selectList("Member.findByCompanyUserAll", userInfoCompanyUserDTO ); }
-
 
     //최초가입 여부 (마스터 코드 등록여부) "COM_CODE" 로 검색
     public MemberDTO findByComPanyCode(String COM_CODE) { return sql.selectOne("Member.findByCompanyCode", COM_CODE); }

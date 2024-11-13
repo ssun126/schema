@@ -29,8 +29,8 @@ public class BaseCodeRepository {
         return sql.selectList("BaseCode.getbaseGroupCDList");
     }
 
-    public BaseCodeDTO getBaseCode_Info(String idx){
-        return sql.selectOne("BaseCode.getBaseCode_Info",idx);
+    public BaseCodeDTO getbaseCodeInfo(String idx){
+        return sql.selectOne("BaseCode.getbaseCodeInfo",idx);
     }
 
     public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextval){

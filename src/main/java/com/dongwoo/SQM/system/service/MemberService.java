@@ -68,7 +68,12 @@ public class MemberService {
     public UserInfoCompanyUserDTO findByCompanyUserName(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.findByCompanyUserName(userInfoCompanyUserDTO);
     }
-    // 공동 사용자 전체
+    // 공동 사용자 com_code, user_idx
+    public List<UserInfoCompanyUserDTO> findByCompanyUserComCode(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return memberRepository.findByCompanyUserComCode(userInfoCompanyUserDTO);
+    }
+
+    // 공동 사용자 전체 com_code
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.findByCompanyUserAll(userInfoCompanyUserDTO);
     }
@@ -151,6 +156,12 @@ public class MemberService {
     //가입 승인된 회사 정보만 찾는다.
     public List<MemberDTO> findApproveCompany(String vendorCode) {
         return memberRepository.findApproveCompany(vendorCode);
+    }
+
+    //회사 사용자 로그인 ID로 정보확인
+    public MemberDTO findCpLoginID(String vendorCode) {
+        MemberDTO memberDTO = memberRepository.findCpLoginID(vendorCode);
+        return memberDTO ;
     }
 
 
