@@ -20,25 +20,24 @@ public class DemoInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        // 전체 메뉴-권한 정보 리스트 조회/저장
-       /* List<SecurityUrlMatcherDTO> menuList =  securityUrlMatcherService.getAllMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
-        MenuStaticValue.menuList = Collections.singletonList(menuList);
-
-        List<SubMenuDTO> subMenuList =  securityUrlMatcherService.getAllSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
-        MenuStaticValue.subMenuList = Collections.singletonList(subMenuList);*/
-
         //관리자
         List<SecurityUrlMatcherDTO> adminMenuList =  securityUrlMatcherService.getAllAdminMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.adminMenuList = Collections.singletonList(adminMenuList);
 
-        List<SubMenuDTO> adminSubMenuList =  securityUrlMatcherService.getAllAdminSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        List<SecurityUrlMatcherDTO> adminSubMenuList =  securityUrlMatcherService.getAllAdminSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.adminSubMenuList = Collections.singletonList(adminSubMenuList);
+
+        List<SecurityUrlMatcherDTO> adminThirdMenuList =  securityUrlMatcherService.getAllAdminThirdMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.adminThirdMenuList = Collections.singletonList(adminThirdMenuList);
 
         //사용자
         List<SecurityUrlMatcherDTO> userMenuList =  securityUrlMatcherService.getAllUserMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.userMenuList = Collections.singletonList(userMenuList);
 
-        List<SubMenuDTO> userSubMenuList =  securityUrlMatcherService.getAllUserSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        List<SecurityUrlMatcherDTO> userSubMenuList =  securityUrlMatcherService.getAllUserSubMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
         MenuStaticValue.userSubMenuList = Collections.singletonList(userSubMenuList);
+
+        List<SecurityUrlMatcherDTO> userThirdMenuList =  securityUrlMatcherService.getAllUserThirdMenu(); // ... DB에서 메뉴 정보 조회하는 로직 실행
+        MenuStaticValue.userThirdMenuList = Collections.singletonList(userThirdMenuList);
     }
 }

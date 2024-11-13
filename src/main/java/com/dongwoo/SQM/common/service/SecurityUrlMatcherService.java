@@ -24,10 +24,6 @@ public class SecurityUrlMatcherService {
     private final SubMenuRepository subMenuRepository;
 
 
-    public List<SecurityUrlMatcherDTO> getAllMenu() {
-        return securityUrlMatcherRepository.getAllMenu();
-    }
-
     public List<SecurityUrlMatcherDTO> getAllAdminMenu() {
         return securityUrlMatcherRepository.getAllAdminMenu();
     }
@@ -36,15 +32,19 @@ public class SecurityUrlMatcherService {
         return securityUrlMatcherRepository.getAllUserMenu();
     }
 
-    public List<SubMenuDTO> getAllSubMenu() {
-        return subMenuRepository.getAllSubMenu();
-    }
-
-    public List<SubMenuDTO> getAllAdminSubMenu() {
+    public List<SecurityUrlMatcherDTO> getAllAdminSubMenu() {
         return subMenuRepository.getAllAdminSubMenu();
     }
 
-    public List<SubMenuDTO> getAllUserSubMenu() {
+    public List<SecurityUrlMatcherDTO> getAllUserSubMenu() {
         return subMenuRepository.getAllUserSubMenu();
+    }
+
+    public List<SecurityUrlMatcherDTO> getAllAdminThirdMenu() {
+        return subMenuRepository.getAllAdminThirdMenu();
+    }
+
+    public List<SecurityUrlMatcherDTO> getAllUserThirdMenu() {
+        return subMenuRepository.getAllUserThirdMenu();
     }
 }

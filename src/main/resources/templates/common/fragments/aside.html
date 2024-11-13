@@ -12,10 +12,19 @@
             <div class="cui_nav">
                 <nav class="nav_root" th:each="page : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
                     <ul>
-                        <li th:each="subPage : ${page}" th:if="${subPage != null and #strings.substring(currentUrl, 0, 7+#strings.indexOf(#strings.substring(currentUrl, 7, currentUrl.length), '/')) == #strings.substring(subPage.PAGE_URL, 0, 7+#strings.indexOf(#strings.substring(subPage.PAGE_URL, 7, subPage.PAGE_URL.length), '/'))}">
-                            <a href="#" class="load-content nav_item" th:attr="data-url=${subPage.PAGE_URL}, aria-selected=${currentUrl.contains(subPage.PAGE_URL)? 'true' : 'false'}">
-                                <span class="nav_label"><span th:text="${subPage.PAGE_NM}"></span></span>
+                        <li aria-expanded="true" th:each="subMenu : ${page}" th:if="${subMenu != null and #strings.substring(currentUrl, 0, 7+#strings.indexOf(#strings.substring(currentUrl, 7, currentUrl.length), '/')) == #strings.substring(subMenu.PAGE_URL, 0, 7+#strings.indexOf(#strings.substring(subMenu.PAGE_URL, 7, subMenu.PAGE_URL.length), '/'))}">
+                            <button type="button" class="nav_item" th:if="${#lists.size(T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList) > 0  and subMenu.PAGE_IDX == T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList[0][0].GNB_IDX}" th:attr="aria-selected=${currentUrl.contains(subMenu.PAGE_URL)? 'true' : 'false'}">
+                                <span class="nav_label " th:text="${subMenu.PAGE_NM}"></span>
+                                <i class="nav_toggle cui_button icon endpoint" role="button"><span>열기</span></i>
+                            </button>
+                            <a href="#" class="nav_item load-content" th:if="${#lists.size(T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList) > 0  and subMenu.PAGE_IDX != T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList[0][0].GNB_IDX}" th:attr="data-url=${subMenu.PAGE_URL}, aria-selected=${currentUrl.contains(subMenu.PAGE_URL)? 'true' : 'false'}">
+                                <span class="nav_label" th:text="${subMenu.PAGE_NM}"></span>
                             </a>
+                            <ul th:each="thirdPage : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userThirdMenuList}">
+                                <li th:each="thirdMenu : ${thirdPage}"  th:if="${thirdMenu != null and subMenu.PAGE_IDX == thirdMenu.GNB_IDX }">
+                                    <a href="#" class="nav_item load-content" th:attr="data-url=${thirdMenu.PAGE_URL}, aria-selected=${currentUrl.contains(thirdMenu.PAGE_URL)? 'true' : 'false'}"><span class="nav_label" th:text="${thirdMenu.PAGE_NM}"></span></a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>
