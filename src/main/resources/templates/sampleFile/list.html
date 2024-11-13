@@ -92,7 +92,7 @@
                                         <div class="item_content">
                                             <div class="cui_attachments">
                                                 <input type="file" class="cui_file_field" name="files">
-                                                <input type="hidden" class="cui_file_field" name="FILE_STATUS">
+                                                <input type="hidden" name="FILE_STATUS">
                                                 <input type="hidden" name="FILE_CASE" value="WARANTY"/>
                                                 <input type="hidden" name="FILE_GUBN" value=""/>
                                                 <input type="hidden" name="FILE_NUM" value="1"/>
@@ -102,7 +102,7 @@
                                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                                 th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=WARANTY)}"><span>다운로드</span></button>
 <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -129,7 +129,7 @@
                                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                                 th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=SAFTY)}"><span>다운로드</span></button>
 <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -162,7 +162,7 @@
                                                                 <span>다운로드</span>
                                                             </button>
 <!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -186,7 +186,7 @@
                                                                 <span>다운로드</span>
                                                             </button>
                                                             <!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -215,7 +215,7 @@
                                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                                     th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=CMRT)}"><span>다운로드</span></button>
 <!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -243,7 +243,7 @@
                                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                                     th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=EMRT)}"><span>다운로드</span></button>
 <!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -281,14 +281,52 @@
         console.log("test : ============== "+slang);
         getplantData(slang);
 
+    });
 
+    //파일 변경 시 status 변경
+    $(function(){
+        $('input:file').change(function (){
+            var fileName = $(this).val();
+            if(fileName != ''){
+                if($(this).closest('.cui_attachments').find('.item_label span').text()==''){
+                    //기존 파일이 없다면 insert
+                    //$(this).closest('name="FILE_STATUS"').text('INSERT');
+                    $(this).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val('INSERT');
+                }else{
+                    //기존파일이 있다면 update
+                    //$(this).closest('name="FILE_STATUS"').text('UPDATE');
+                    $(this).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val('UPDATE');
+                }
+            }else{
+                //status 가 delet가 아니라면 초기화
+                if($(this).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val() != 'DELETE'){
+                    //$(this).closest('name="FILE_STATUS"').text('');
+                    $(this).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val('');
+                }
+            }
 
+        });
     });
 
     //status 업데이트
-<!--    function status_update(){-->
-<!--        //-->
-<!--    }-->
+    function status_Del(status){
+        //삭제버튼 클릭 시 DELETE
+        //$(status).closest('name="FILE_STATUS"').val('DELETE');
+        $(status).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val('DELETE');
+
+        //안보이게 처리
+        $(status).closest('.file_wrap').css('display','none');
+<!--        else if(stat == 'UPDATE'){-->
+<!--            $(this).closet('<input type="hidden" name="FILE_STATUS" >').val('UPDATE');-->
+<!--        }else if(stat == 'INSERT'){-->
+<!--            $(this).closet('<input type="hidden" name="FILE_STATUS" >').val('INSERT');-->
+<!--        }else{-->
+<!--            $(this).closet('<input type="hidden" name="FILE_STATUS" >').val('');-->
+<!--        }-->
+        //파일 선택 되었을 때 기존 데이터가 없으면 > insert, 있으면 update
+    }
+
+
 
     //plant data 바인딩
     function getplantData(language){
@@ -369,11 +407,21 @@
     }
 
     function initFileData(){
+        //파일 명 바인등 초기화
         $('.file_wrap').each(function() {
             const span = $(this).find('.item_label > span');
             span.text('');
             $(this).css('display','');
 
+        });
+
+        //현재 상태 초기화 status
+        $('input[name=FILE_STATUS]').each(function() {
+            $(this).val('');
+        });
+
+        $('input:file').each(function() {
+            $(this).val('');
         });
 
     }

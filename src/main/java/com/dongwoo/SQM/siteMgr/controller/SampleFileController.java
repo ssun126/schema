@@ -160,9 +160,10 @@ public class SampleFileController {
                               @RequestParam("FILE_CASE") String[] sCase,
                               @RequestParam("FILE_GUBN") String[] sGubn,
                               @RequestParam("FILE_NUM") String[] sNum,
+                              @RequestParam("FILE_STATUS") String[] sStatus,
                               Model model){
-        List<SampleFileDTO> fileDeleteList = new ArrayList<>();//삭제
-        List<SampleFileDTO> fileUpdateList = new ArrayList<>();//업데이트
+        List<SampleFileDTO> samplefileDeleteList = new ArrayList<>();//삭제
+        List<SampleFileDTO> samplefileUpdateList = new ArrayList<>();//업데이트
         List<SampleFileDTO> sampleFileDTOList = new ArrayList<>();//insert
         //List<String> fileNumList = new ArrayList<>();
         log.info("=======length : "+files.length +"   언어:  "+sLang);
@@ -172,6 +173,7 @@ public class SampleFileController {
             MultipartFile file = files[i];
             String sUrl = "/SAMPLEFILE/"+sLang+"/";
             if(!file.isEmpty()){
+                //업데이트,  insert
                 try{
                     sUrl += sCase[i] +"/"+ sGubn[i];       //\SAMPLFILE\"FILE_LANG"\"FILE_CASE"\"FILE_GUBUN"
                     if(!sGubn[i].isEmpty()) sUrl += "/";
@@ -193,15 +195,17 @@ public class SampleFileController {
                     sampleFileDTO.setFILE_NUM(sNum[i]);
                     sampleFileDTO.setFILE_NAME(fileName);
                     sampleFileDTO.setFILE_PATH("./uploads"+sUrl);
-
+                    log.info("status :" + sStatus[i]);
                     //insert-sampleFileDTOList update- fileUpdateList delete- fileDeleteList
-//                    if(status[i].equals("UPDATE")) {
-//                        fileUpdateList.add(sampleFileDTO);
-//                    }else {
-//                        sampleFileDTOList.add(sampleFileDTO);
-//                    }
+                    if(sStatus[i].equals("UPDATE")) {
+                        log.info("update :" + sampleFileDTO);
+                        samplefileUpdateList.add(sampleFileDTO);
+                    }else if(sStatus[i].equals("INSERT")) {
+                        log.info("INSERT :" + sampleFileDTO);
+                        sampleFileDTOList.add(sampleFileDTO);
+                    }
 
-                    sampleFileDTOList.add(sampleFileDTO);
+                    //sampleFileDTOList.add(sampleFileDTO);
 
                 }catch (IOException e){
                     e.printStackTrace();
@@ -210,20 +214,30 @@ public class SampleFileController {
 
                 }
             }
-//            else{
-//                // 파일만 삭제하는 경우
-//                if(status[i].equals("DELETE")){
-//                    fileDeleteList.add(sampleFileDTO);
-//                }
-//            }
+            else{
+                log.info("status :" + sStatus[i]);
+                // 파일만 삭제하는 경우
+                if(sStatus[i].equals("DELETE")){
+                    //dto 저장
+                    sampleFileDTO.setFILE_LANG(sLang);
+                    sampleFileDTO.setFILE_CASE(sCase[i]);
+                    sampleFileDTO.setFILE_GUBN(sGubn[i]);
+                    sampleFileDTO.setFILE_NUM(sNum[i]);
+                    //sampleFileDTO.setFILE_NAME(fileName);
+                    //sampleFileDTO.setFILE_PATH("./uploads"+sUrl);
+                    samplefileDeleteList.add(sampleFileDTO);
+                }
+            }
         }
         log.info("test121212222222222222");
         //db저장
-        //sampleFileService.delete(fileDeleteList);
-        //sampleFileService.update(fileUpdateList);
+        sampleFileService.delete(samplefileDeleteList);
+        log.info("test3333333333");
+        sampleFileService.update(samplefileUpdateList);
+        log.info("test4444444444444");
         sampleFileService.upload(sampleFileDTOList);
 
-        log.info("test222222222222222222");
+        log.info("test4455555555555555555");
         //templates/sampleFile/list.htm
         return "redirect:/admin/siteMgmt/samplefile?sLang="+sLang;
     }

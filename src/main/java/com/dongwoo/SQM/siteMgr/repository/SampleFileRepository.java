@@ -16,8 +16,15 @@ import java.util.Map;
 public class SampleFileRepository {
     private  final SqlSessionTemplate sql;
 
-    public void upload(List<SampleFileDTO> sampleFileDTOList){
-        sql.insert("sampleFile.upload",sampleFileDTOList);
+    public void upload(SampleFileDTO sampleFileDTO){
+        sql.insert("sampleFile.upload",sampleFileDTO);
+    }
+
+    public void update(SampleFileDTO sampleFileDTO){
+        sql.insert("sampleFile.update",sampleFileDTO);
+    }
+    public void delete(SampleFileDTO sampleFileDTO){
+        sql.insert("sampleFile.delete",sampleFileDTO);
     }
 
     public List<HashMap> plantList(String sLang){
