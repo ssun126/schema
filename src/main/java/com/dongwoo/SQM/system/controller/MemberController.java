@@ -1,7 +1,6 @@
 package com.dongwoo.SQM.system.controller;
 
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
-import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
 
 import com.dongwoo.SQM.system.dto.*;
 import com.dongwoo.SQM.system.service.MemberService;
@@ -171,9 +170,17 @@ public class MemberController {
         memberDTO.setCOM_FILE_PATH(comPanyDTO.getCOM_FILE_PATH());  // 워런티 파일 Path
 
         //ID 가입 신청 정보
-        MemberDTO user_Info_CompanyDTO  = memberService.vendorNumCheck(comPanyDTO.getCOM_CODE());   //코드 정리 필요....분리하자...!@@@@
-        memberDTO.setUSER_STATUS(user_Info_CompanyDTO.getUSER_STATUS()); //ID 가입 상태 (0:대기, 1:검토중, 2:승인, 3:반려)
-        memberDTO.setRETURN_REASON(user_Info_CompanyDTO.getRETURN_REASON()); //ID 반려사유
+        //등록중 건이 있는지 체크.
+        //select * from USER_INFO_COMPANY where USER_STATUS != '2' and  COM_CODE=#{COM_CODE}
+        MemberDTO user_Info_CompanyDTO  = memberService.vendorNumCheck(comPanyDTO.getCOM_CODE());
+
+        if(user_Info_CompanyDTO != null) {
+            memberDTO.setUSER_STATUS(user_Info_CompanyDTO.getUSER_STATUS());     //ID 가입 상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+            memberDTO.setRETURN_REASON(user_Info_CompanyDTO.getRETURN_REASON()); //ID 반려사유
+        }else{
+            memberDTO.setUSER_STATUS("0");
+        }
+
 
 
         model.addAttribute("comPanyDTO", comPanyDTO);
@@ -401,7 +408,7 @@ public class MemberController {
     public @ResponseBody Map<String, Object> vendorCheck(@RequestParam("searchCode") String searchCode ,@RequestParam("searchType") String searchType) {
         log.info("vendorCode = " + searchCode);
 
-        //마스터등록 여부 확인
+        //마스터등록 여부 확인  COMPANY_CODE
         MemberDTO memberDTO = memberService.basicvendorNumCheck(searchType,searchCode);
         String USER_STATUS = ""; //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려) ★
         String checkResult = "N";
@@ -412,13 +419,27 @@ public class MemberController {
 
         if(memberDTO != null) {
 
-            //등록중인건이 있는지 체크. USER_INFO_COMPANY
+            //등록중 건이 있는지 체크.
+            //select * from USER_INFO_COMPANY where USER_STATUS != '2' and  COM_CODE=#{COM_CODE}
             MemberDTO comPanyDTO  = memberService.vendorNumCheck(searchCode);
 
             if(comPanyDTO == null ){
-                checkResult = "no"; //신규.
+
+                //★ 기가입 여부만 체크.
+                //select * from USER_INFO_COMPANY where USER_STATUS = '2' and  COM_CODE=#{COM_CODE}
+                List<MemberDTO> approveComPanyListDTO  = memberService.findApproveCompany(searchCode);
+
+                int approveCount = approveComPanyListDTO.size();
+                System.out.println("승인된 USER_STATUS= 2 갯수: " + approveCount);
+
+                if(approveCount > 0) {
+                    checkResult = "ok";  //기가입 업체.
+                }else {
+                    checkResult = "no"; //신규.
+                }
+
             }else {
-                USER_STATUS = comPanyDTO.getUSER_STATUS();
+                USER_STATUS = comPanyDTO.getUSER_STATUS();  //(0:대기, 1:검토중, 2:승인, 3:반려)
 
                 //USERINFO 를 검색하자.   USER_INFO_COMPANY.USER_IDX
                 UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSER_IDX());
@@ -431,34 +452,24 @@ public class MemberController {
                 response.put("ID_PW_ADD_REASON", comPanyDTO.getID_PW_ADD_REASON());
 
 
-                //공동 작업자 가져오기.   where.   밴더 코드 : COM_CODE
+                //공동 작업자 가져오기.   where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
                 UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
-                parmaDTO.setCOM_CODE(comPanyDTO.getCOM_CODE()); //위에서 만들어진 사용자 IDX
+                parmaDTO.setCOM_CODE(comPanyDTO.getCOM_CODE()); //위에서 만들어진 밴더 코드
+                parmaDTO.setUSER_IDX(comPanyDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX
                 List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserAll(parmaDTO);
                 response.put("companyUserList", companyUserList);
 
-                if(USER_STATUS.equals("2")) {
-                    checkResult = "ok";  //기가입 업체.
-                }else{
-                    //메세지 리턴.
-                    switch(USER_STATUS) {
-                        case "0":
-                            checkResult = "대기";
-                            break;
-                        case "1":
-                            checkResult = "검토중";
-                            break;
-                        case "3":
-                            checkResult = "반려";
-                            break;
-                        default:
-                            throw new RuntimeException("관리자 문의.");
-                    }
-                }
+                //메세지 리턴.
+                checkResult = switch (USER_STATUS) {
+                    case "0" -> "대기";
+                    case "1" -> "검토중";
+                    case "3" -> "반려";
+                    default -> throw new RuntimeException("관리자 문의.");
+                };
             }
 
         }else {
-            checkResult = "not" ;
+            checkResult = "not" ; //업체코드 내역이 없어 가입이 불가합니다.
         }
 
         response.put("status", checkResult);

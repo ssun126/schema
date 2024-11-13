@@ -148,4 +148,10 @@ public class MemberService {
         return memberDTO ;
     }
 
+    //가입 승인된 회사 정보만 찾는다.
+    public List<MemberDTO> findApproveCompany(String vendorCode) {
+        return memberRepository.findApproveCompany(vendorCode);
+    }
+
+
 }

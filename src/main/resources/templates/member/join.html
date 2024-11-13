@@ -131,8 +131,6 @@
                                             <div class="item_content">
                                                 <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer" ><i></i><span>제조사</span></label>
                                                 <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"><i></i><span>물류사</span></label>
-<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>-->
-<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>-->
                                             </div>
                                         </div>
                                     </td>
@@ -576,13 +574,14 @@
           success: function(res) {
 
               if (res.status == "ok") {
-               $('#registeredCompany').show();             //기등록 업체입니다.
+               $('#registeredCompany').show();             //기등록 업체입니다.(추가 ID 작업 gogo)
                $('#joinBasicStep1').show();
 
                 bindCompanyInfo(res);                       //정보 바인딩. ★
-                bindCompanyUserList(res.companyUserList);
+                //bindCompanyUserList(res.companyUserList); //공동사용자 list
                 bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
-                bindCompanyUserInfo(res);
+                //bindCompanyUserInfo(res); //공동 ,id/pw
+                unbindCompanyUserInfo();
                 setFieldsReadOnly(false);
 
               } else if (res.status == "not") {            //IF 코드 없음.

@@ -59,9 +59,9 @@
         select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_NAME=#{USER_NAME}
     </select>
 
-    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자 전체 가져오기 -->
-    <select id="findByCompanyUserAll" parameterType="String" resultType="userinfocom">
-        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
+    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  가져오기 -->
+    <select id="findByCompanyUserAll" parameterType="userinfocom" resultType="userinfocom">
+        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_IDX = #{USER_IDX}
     </select>
 
 
@@ -117,11 +117,18 @@
 
 
     <!--진행중인 업체코드 COM_CODE 등록 여부 -->
+    <!--호출 위치 join 1 1.여기 있으면 기등록 업체 입니다.!!!   -->
     <!--관리상태 USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findByUserInfoCompany" parameterType="String" resultType="member">
-<!--        select * from USER_INFO_COMPANY where USER_STATUS != '2' and COM_CODE=#{COM_CODE}-->
-        select * from USER_INFO_COMPANY where COM_CODE=#{COM_CODE}
+        select * from USER_INFO_COMPANY where USER_STATUS != '2' and COM_CODE=#{COM_CODE}
     </select>
+
+    <!--가입 승인된 회사 정보만 찾는다.  USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
+    <select id="findApproveCompany" parameterType="String" resultType="member">
+        select * from USER_INFO_COMPANY where USER_STATUS = '2' and COM_CODE=#{COM_CODE}
+    </select>
+
+
 
     <!--사용자 ID 중복 체크 -->
     <select id="findByMemberId" parameterType="String" resultType="member">
