@@ -6,9 +6,6 @@ import com.dongwoo.SQM.auditMgmt.dto.IsoSearchResult;
 import com.dongwoo.SQM.auditMgmt.service.IsoAuthService;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
-import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
-import com.dongwoo.SQM.companyInfo.dto.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,13 +18,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class AuditMgmtRestController {
+public class ISOAuthRestController {
     @Autowired
     private IsoAuthService isoAuthService;
 
-    // 검색 API 처리 (여러 검색 조건 처리)
+    // admin -검색어로 ISO 업체리스트
     @GetMapping("/searchIsoAuth")
-    public IsoSearchResult searchCompanies(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("state") String state, Criteria criteria) {
+    public IsoSearchResult searchCompanies(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("state") String state,  Criteria criteria) {
         // 검색 조건에 맞는 결과를 반환
         List<IsoAuthDTO> isoAuthList = isoAuthService.searchCompanies(code,name,state,criteria);
 
@@ -65,22 +62,31 @@ public class AuditMgmtRestController {
         }
     }
 
+    /**
+     * ISO 인증서 정보 리스트
+     * @param criteria
+     * @return
+     */
     @GetMapping("/isoAuthItemList")
     public List<IsoAuthItemDTO> getIsoAuthList(Criteria criteria) {
         // ISO 인증서 리스트를 가져옵니다
         List<IsoAuthItemDTO> companyIsoAuthList = isoAuthService.getList(criteria);
-        log.info("companyInfoList>>>>>>>>>>"+companyIsoAuthList);
-        // 반환되는 데이터가 JSON 형식으로 자동 변환됩니다
         return companyIsoAuthList;
     }
-
     @GetMapping("/isoAuthItemList/pageMaker")
     public PageDTO getIsoAuthPage(Criteria criteria) {
         // pageMaker 객체를 생성하고 반환
         int total = isoAuthService.getTotal();  // 전체 데이터 개수
         PageDTO pageMaker = new PageDTO(total, 10, criteria);  // 10은 한 페이지당 보여줄 항목 수
-        log.info("pageMaker>>>>>>>>>>"+pageMaker);
         return pageMaker;
+    }
+
+    // admin -만료일 - 업체별 ISO 인증서 정보
+    @GetMapping("/searchIsoExpDate")
+    public List<IsoAuthItemDTO> searchExpDateIsoAuth(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("expDate") String expDate,  Criteria criteria) {
+        // 검색 조건에 맞는 결과를 반환
+        List<IsoAuthItemDTO> isoAuthList = isoAuthService.getExpDateList(code,name,expDate,criteria);
+        return isoAuthList;
     }
 
     @RequestMapping("/auditMgmt/isoDetail")

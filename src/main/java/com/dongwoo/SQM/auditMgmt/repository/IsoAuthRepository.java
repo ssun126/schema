@@ -21,9 +21,14 @@ public class IsoAuthRepository {
         return sql.insert("IsoAuthItem.save", isoAuthItemDTO);
     }
 
-    //전체 리스트 조회
+    //전체 인증서 리스트 조회
     public List<IsoAuthItemDTO> getList(Criteria criteria) {
         return sql.selectList("IsoAuthItem.getList", criteria);
+    }
+
+    //검색된 인증서 리스트 조회
+    public List<IsoAuthItemDTO> getExpDateList(Map<String, Object> params) {
+        return sql.selectList("IsoAuthItem.getExpDateList", params);
     }
 
     //전체 리스트 수
@@ -42,8 +47,8 @@ public class IsoAuthRepository {
     }
     
     //검색어와 페이징으로 리스트 조회
-    public List<IsoAuthDTO> findByCriteria(Map<String, Object> params) {
-        return sql.selectList("IsoAuthItem.findByCriteria", params);
+    public List<IsoAuthDTO> searchCompanies(Map<String, Object> params) {
+        return sql.selectList("IsoAuthItem.searchCompanies", params);
     }
 
     //검색어로 조회된 리스트 수

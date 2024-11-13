@@ -8,6 +8,8 @@ public class IsoAuthItemDTO {
     private Integer RN;
     @JsonProperty("COM_CODE")
     private String COM_CODE;
+    @JsonProperty("COM_NAME")
+    private String COM_NAME;
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
     @JsonProperty("AUTH_CODE")
