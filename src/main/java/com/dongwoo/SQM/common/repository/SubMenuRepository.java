@@ -15,15 +15,20 @@ public class SubMenuRepository {
 
     private final SqlSessionTemplate sql;
 
-    public List<SubMenuDTO> getAllSubMenu() {
-        return sql.selectList("Menu.getAllSubMenu");
-    }
 
-    public List<SubMenuDTO> getAllAdminSubMenu() {
+    public List<SecurityUrlMatcherDTO> getAllAdminSubMenu() {
         return sql.selectList("Menu.getAllAdminSubMenu");
     }
 
-    public List<SubMenuDTO> getAllUserSubMenu() {
+    public List<SecurityUrlMatcherDTO> getAllUserSubMenu() {
         return sql.selectList("Menu.getAllUserSubMenu");
+    }
+
+    public List<SecurityUrlMatcherDTO> getAllAdminThirdMenu() {
+        return sql.selectList("Menu.getAllAdminThirdMenu");
+    }
+
+    public List<SecurityUrlMatcherDTO> getAllUserThirdMenu() {
+        return sql.selectList("Menu.getAllUserThirdMenu");
     }
 }
