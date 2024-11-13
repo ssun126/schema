@@ -60,8 +60,13 @@
     </select>
 
     <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  가져오기 -->
-    <select id="findByCompanyUserAll" parameterType="userinfocom" resultType="userinfocom">
+    <select id="findByCompanyUserComCode" parameterType="userinfocom" resultType="userinfocom">
         select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_IDX = #{USER_IDX}
+    </select>
+
+    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  업체 회원정보 에서 가져오기 -->
+    <select id="findByCompanyUserAll" parameterType="userinfocom" resultType="userinfocom">
+        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
     </select>
 
 
@@ -126,6 +131,13 @@
     <!--가입 승인된 회사 정보만 찾는다.  USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findApproveCompany" parameterType="String" resultType="member">
         select * from USER_INFO_COMPANY where USER_STATUS = '2' and COM_CODE=#{COM_CODE}
+    </select>
+
+    <!--회사 사용자 로그인 ID로 정보확인. -->
+    <select id="findCpLoginID" parameterType="String" resultType="member">
+        SELECT * FROM USER_INFO u, USER_INFO_COMPANY uc
+            WHERE u.USER_IDX  = uc.USER_IDX
+                and  u.USER_ID=#{loginId}
     </select>
 
 

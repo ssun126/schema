@@ -8,7 +8,7 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title"><span>Company Information</span></h2>
+                        <h2 class="cui_title"><span>Company Information (업체용)</span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
@@ -28,7 +28,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="12341234" disabled>
+<!--                                                <input class="cui_text_field" type="text" value="12341234" disabled>-->
+                                                <input class="cui_text_field" type="text" name ="COM_CODE"  id = "searchCustomer"  th:value="${member.COM_CODE}" disabled>
                                             </div>
                                         </div>
                                     </td>
@@ -36,7 +37,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="COVISION" disabled>
+<!--                                                <input class="cui_text_field" type="text" value="COVISION" disabled>-->
+                                                <input class="cui_text_field" type="text"  id="COM_NAME"  th:value="${member.COM_NAME}" disabled>
                                             </div>
                                         </div>
                                     </td>
@@ -46,10 +48,23 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>-->
+<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>-->
+<!--                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer" ><i></i><span>제조사</span></label>-->
+<!--                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"><i></i><span>물류사</span></label>-->
+
+                                                <label class="cui_checkbox">
+                                                    <input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer"
+                                                           th:checked="${member.VENDOR_WORK_KIND == 'D'}">
+                                                    <i></i><span>제조사</span>
+                                                </label>
+
+                                                <label class="cui_checkbox">
+                                                    <input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"
+                                                           th:checked="${member.VENDOR_WORK_KIND == 'L'}">
+                                                    <i></i><span>물류사</span>
+                                                </label>
+
                                             </div>
                                         </div>
                                     </td>
@@ -57,7 +72,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="KOREA" disabled>
+<!--                                                <input class="cui_text_field" type="text" value="KOREA" disabled>-->
+                                                <input class="cui_text_field" type="text"  name="COM_NATION" id="COM_NATION" th:value="${member.COM_NATION}" disabled>
                                             </div>
                                         </div>
                                     </td>
@@ -67,7 +83,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+<!--                                                <input class="cui_text_field" type="text">-->
+                                                <input class="cui_text_field" type="text" name = "COMPANY_NAME" id="COMPANY_NAME" th:value="${member.COMPANY_NAME}">
                                             </div>
                                         </div>
                                     </td>
@@ -75,7 +92,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+<!--                                                <input class="cui_text_field" type="text">-->
+                                                <input class="cui_text_field" type="text" name = "FACTORY_NAME" id="FACTORY_NAME" th:value="${member.FACTORY_NAME}">
                                             </div>
                                         </div>
                                     </td>
@@ -85,7 +103,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text">
+<!--                                                <input class="cui_text_field" type="text">-->
+                                                <input class="cui_text_field" type="text"  name = "BUS_NUMBER" id="BUS_NUMBER" th:value="${member.BUS_NUMBER}">
                                             </div>
                                         </div>
                                     </td>
@@ -93,7 +112,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="서울시 강서구 발산">
+<!--                                                <input class="cui_text_field" type="text" value="서울시 강서구 발산">-->
+                                                <input class="cui_text_field" type="text"  name = "COM_ADDRESS" id="COM_ADDRESS" th:value="${member.COM_ADDRESS}">
                                             </div>
                                         </div>
                                     </td>
@@ -103,7 +123,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="HONG GIL DONG">
+<!--                                                <input class="cui_text_field" type="text" value="HONG GIL DONG">-->
+                                                <input class="cui_text_field" type="text"  name = "COM_CEO_NAME" id="COM_CEO_NAME" th:value="${member.COM_CEO_NAME}">
                                             </div>
                                         </div>
                                     </td>
@@ -111,11 +132,23 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" value="010-1234-1234">
+<!--                                                <input class="cui_text_field" type="text" value="010-1234-1234">-->
+                                                <input class="cui_text_field" type="text" name = "COM_CEO_PHONE" id="COM_CEO_PHONE" th:value="${member.COM_CEO_PHONE}">
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th><span>CEO e-mail(영문)</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <input class="cui_text_field" name ="COM_CEO_EMAIL" id ="COM_CEO_EMAIL" th:value="${member.COM_CEO_EMAIL}">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
                                 </tbody>
                             </table>
                         </fieldset>

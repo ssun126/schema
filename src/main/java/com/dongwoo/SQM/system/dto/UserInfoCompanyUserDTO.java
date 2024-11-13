@@ -18,6 +18,7 @@ public class UserInfoCompanyUserDTO {
    private String  USER_DEPT	;
    private String  USER_EMAIL	;
    private String  USER_PHONE   ;
+   private String  MAIN_USER_NAME    ;   //업체별 메인 담당자
 
 }
 
