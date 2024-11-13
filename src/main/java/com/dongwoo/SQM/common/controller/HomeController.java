@@ -27,7 +27,7 @@ public class HomeController {
     }
 
     //페이지 생성 전 링크 연결
-    @GetMapping("/admin/partMgmt/matApproval")
+    @GetMapping("/admin/partMgmt/approvalState")
     public String partMgmtMatApproval() {
         return "matApproval/main";
     }
