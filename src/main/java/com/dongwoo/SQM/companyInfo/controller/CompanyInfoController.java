@@ -3,6 +3,9 @@ package com.dongwoo.SQM.companyInfo.controller;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
+import com.dongwoo.SQM.system.dto.MemberDTO;
+import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
+import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +29,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
+    private final MemberService memberService;
 
+    //업체.sylee
     @GetMapping("/user/companyInfo/company")
-    public String isoAuthMain(Model model) {
+    public String isoAuthMain(Model model, Authentication authentication) {
+
+        String loginId = authentication.getName();
+        System.out.println("loginId????"+loginId);
+
+        //로그인된 ID 회사 코드 알아오기. 여기는 업체 유저 전용
+        MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
+        MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",loginMemberDTO.getCOM_CODE());
+        model.addAttribute("member", memberDTO);
+
+        //공동 작업자 가져오기.   where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
+        UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+        parmaDTO.setCOM_CODE(loginMemberDTO.getCOM_CODE()); // 밴더 코드
+        parmaDTO.setUSER_IDX(loginMemberDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX
+        List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserComCode(parmaDTO);
+        model.addAttribute("companyUserList", companyUserList);
+
+
+        System.out.println("memberDTO: "+memberDTO);
         return "companyInfo/main";
     }
 

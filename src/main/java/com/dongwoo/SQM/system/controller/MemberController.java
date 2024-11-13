@@ -313,7 +313,7 @@ public class MemberController {
         ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
         comPanyCodeDTO.setCOM_CODE(COM_CODE);
         comPanyCodeDTO.setVENDOR_WORK_KIND(memberDTO.getVENDOR_WORK_KIND());  // VENDOR 업종 형태 (D:제조사, L:물류사)
-        comPanyCodeDTO.setCOM_USER_IDX(COM_USER_IDX);   // 메인 업무자
+        comPanyCodeDTO.setCOM_USER_IDX(COM_USER_IDX);   // 메인 업무자(이거 안씀.!!)
 
         comPanyCodeDTO.setCOMPANY_NAME(memberDTO.getCOMPANY_NAME());
         comPanyCodeDTO.setFACTORY_NAME(memberDTO.getFACTORY_NAME());
@@ -456,7 +456,7 @@ public class MemberController {
                 UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
                 parmaDTO.setCOM_CODE(comPanyDTO.getCOM_CODE()); //위에서 만들어진 밴더 코드
                 parmaDTO.setUSER_IDX(comPanyDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX
-                List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserAll(parmaDTO);
+                List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserComCode(parmaDTO);
                 response.put("companyUserList", companyUserList);
 
                 //메세지 리턴.
