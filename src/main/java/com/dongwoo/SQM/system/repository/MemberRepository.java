@@ -78,6 +78,12 @@ public class MemberRepository {
 
     }
 
+    //가입 승인된 회사 정보만 찾는다.
+    public List<MemberDTO> findApproveCompany(String COM_CODE) {
+        return sql.selectList("Member.findApproveCompany", COM_CODE);
+    }
+
+
     //User history. 10.23
     public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
         System.out.println("comPanyCodeDTO = " + comPanyCodeDTO);
