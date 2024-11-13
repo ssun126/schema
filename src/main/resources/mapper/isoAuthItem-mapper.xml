@@ -12,7 +12,7 @@
         select * from ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and  COM_CODE=#{COM_CODE}
     </select>
 
-    <select id="findByCriteria" parameterType="map" resultType="isoAuth">
+    <select id="searchCompanies" parameterType="map" resultType="isoAuth">
         SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
         FROM
         (
@@ -72,6 +72,32 @@
     <select id="getTotal" resultType="int">
         select count(*) CNT
         from ISO_AUTH_COMPANY_ITEM
+    </select>
+
+    <select id="getExpDateList" parameterType="map" resultType="isoAuthItem">
+        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE
+        FROM
+        (
+        SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
+        ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, ACI.REG_DATE, ITEM_STATE
+        FROM ISO_AUTH_COMPANY_ITEM ACI
+        INNER JOIN COMPANY_CODE CC
+        ON CC.COM_CODE = ACI.COM_CODE
+        WHERE 1 =1
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+        <if test="COM_STATUS != null and COM_STATUS != ''">
+            AND (ACI.EXP_DATE LIKE CONCAT(CONCAT('%',  #{EXP_DATE}), '%'))
+        </if>
+        <if test="criteria != null and criteria != ''">
+            <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>
+        </if>
+        )
+        WHERE RN > ((#{criteria.pageNum}-1) * #{criteria.amount})
     </select>
 
     <update id="updateStatus" parameterType="isoAuthItem">

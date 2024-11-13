@@ -29,7 +29,7 @@ public class IsoAuthService {
         params.put("COM_NAME", name);
         params.put("COM_STATUS", state);
         params.put("criteria", criteria);
-        return isoAuthRepository.findByCriteria(params);
+        return isoAuthRepository.searchCompanies(params);
     }
 
     // ISO 인증 업체 리스트-검색 조건에 맞는 총 개수를 반환
@@ -44,6 +44,16 @@ public class IsoAuthService {
     //업체별 ISO 인증서 정보 리스트
     public List<IsoAuthItemDTO> getList(Criteria cri) {
         return isoAuthRepository.getList(cri);
+    }
+
+    //업체별 ISO 인증서 만료일 정보 리스트
+    public List<IsoAuthItemDTO> getExpDateList(String code, String name, String expDate, Criteria criteria) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_CODE", code);
+        params.put("COM_NAME", name);
+        params.put("EXP_DATE", expDate);
+        params.put("criteria", criteria);
+        return isoAuthRepository.getExpDateList(params);
     }
     public int getTotal() {
         return isoAuthRepository.getTotal();
