@@ -34,7 +34,7 @@ public class SampleFileController {
     private final SampleFileService sampleFileService;
     private final String fileBasePath ="./upload";
 
-    @GetMapping("/admin/siteMgmt/samplefile")
+    @GetMapping("/admin/siteMgr/samplefile")
     public String findAll(@RequestParam(value="sLang",defaultValue = "KOR") String sLang,Model model){
         //if(sLang == null) sLang="KOR";
         log.info("test2dfasdfasdfasdfasdf");
@@ -239,7 +239,7 @@ public class SampleFileController {
 
         log.info("test4455555555555555555");
         //templates/sampleFile/list.htm
-        return "redirect:/admin/siteMgmt/samplefile?sLang="+sLang;
+        return "redirect:/admin/siteMgr/samplefile?sLang="+sLang;
     }
 
 

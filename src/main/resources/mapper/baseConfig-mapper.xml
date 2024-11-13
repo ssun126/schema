@@ -7,6 +7,7 @@
         FROM BASECONFIG b
         LEFT OUTER JOIN USERINFO u
         ON b.REGDWUSERIDX = u.USERIDX
+        ORDER BY b.BASECONFIGIDX asc
 
     </select>
 

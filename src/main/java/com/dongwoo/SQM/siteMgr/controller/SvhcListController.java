@@ -31,7 +31,7 @@ public class SvhcListController {
 
     private final SvhcListService svhcListService;
 
-    @GetMapping("/siteMgr/svhcList")
+    @GetMapping("/admin/siteMgr/svhcList")
     public String findAll(Model model){
         List<SvhcListDTO> svhcListDTOList = svhcListService.findAll();
         model.addAttribute("svhcDataList",svhcListDTOList);
@@ -75,7 +75,7 @@ public class SvhcListController {
             throw new RuntimeException(e);
         }
 
-        return  "redirect:/siteMgr/svhcList";
+        return  "redirect:/admin/siteMgr/svhcList";
 
     }
 }

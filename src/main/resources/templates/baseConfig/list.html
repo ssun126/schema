@@ -27,32 +27,32 @@
                     <nav class="nav_root">
                         <ul>
                             <li>
-                                <a href="#" class="nav_item">
+                                <a href="/admin/siteMgr/dwUserList" class="nav_item">
                                     <span class="nav_label">동우 사용자 관리</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav_item" aria-selected="true">
+                                <a href="/admin/siteMgr/baseConfig" class="nav_item" aria-selected="true">
                                     <span class="nav_label">기초설정</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/siteMgr/baseCode" class="nav_item">
+                                <a href="/admin/siteMgr/baseCode" class="nav_item">
                                     <span class="nav_label">기초코드</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="/siteMgr/svhc" class="nav_item">
+                                <a href="/admin/siteMgr/svhcList" class="nav_item">
                                     <span class="nav_label">SVHC 항목 </span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav_item">
+                                <a href="/admin/siteMgr/declarationList" class="nav_item">
                                     <span class="nav_label">Declaration Letter 항목</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav_item" aria-selected="true">
+                                <a href="/admin/siteMgr/samplefile" class="nav_item" aria-selected="true">
                                     <span class="nav_label">SAMPLE 파일</span>
                                 </a>
                             </li>
@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="cui_body">
-                    <form id="searchForm" action="/admin/baseconfig/search" method="get">
+                    <form id="searchForm" action="/baseconfig/search" method="get">
                         <div class="cui_search">
                             <div class="search_list cui_grid_wrap ">
                                 <div class="cui_items_wrap" data-direction="left">
@@ -170,7 +170,7 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/admin/baseconfig/action">
+                <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/baseconfig/action">
                     <fieldset>
 <!--                        <legend><span>ID 찾기</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
@@ -228,7 +228,7 @@
 <script>
     function BaseConfig_Popup(){
         let popOption ="width=601,height=436,top=100,left=100";
-        let openUrl = "/admin/BaseConfig/Popup";
+        let openUrl = "/BaseConfig/Popup";
         window.open(openUrl, 'BaseConfig', popOption);
     }
 
@@ -262,7 +262,7 @@
     //모달 열기
     function modal(id, status){
       if(status !='add'){
-       var sUrl = "/admin/baseConfig/baseConfig_Info" ;
+       var sUrl = "/baseConfig/baseConfig_Info" ;
 
         $.ajax({
           type: "post",

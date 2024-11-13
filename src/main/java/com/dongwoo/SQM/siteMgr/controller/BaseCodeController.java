@@ -41,7 +41,7 @@ public class BaseCodeController {
 
 
     //@GetMapping("/baseCode/list")
-    @GetMapping("/siteMgr/baseCode")
+    @GetMapping("/admin/siteMgr/baseCode")
     public String findAll(Model model) {
         log.info("test-===============findall");
         List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findAll();

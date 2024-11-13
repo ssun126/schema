@@ -14,6 +14,7 @@
         SELECT BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,ui.USERNAME as REGISTER_NAME ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE ,BASE_OPTION
         FROM base_code bc
         INNER JOIN USERINFO ui ON bc.REG_DW_USER_IDX = ui.USERIDX
+        ORDER BY BASE_CODE_IDX ASC
 
     </select>
     <select id="getbaseCodeInfo" parameterType="String" resultType="baseCode">
