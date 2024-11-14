@@ -28,12 +28,12 @@
                                 <colgroup>
                                     <col style="width:120px;">
                                     <col >
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
-                                    <col style="width:120px;">
+                                    <col style="width:100px;">
+                                    <col style="width:100px;">
+                                    <col style="width:100px;">
+                                    <col style="width:100px;">
+                                    <col style="width:160px;">
+                                    <col style="width:100px;">
                                 </colgroup>
                                 <thead>
                                 <tr>
@@ -213,16 +213,22 @@
                             var tableBody = $('#isoAuthItemTable tbody');
                             tableBody.empty(); // 기존 내용 비우기
 
-                            response.forEach(function(isoAuthItem) {
-                                var row = '<tr onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +
-                                                '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
-                                                '<td><a href="javascript:void(0);" >' +  isoAuthItem.AUTH_CODE + '</a></td>' +
-                                                '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
-                                                '<td>' + isoAuthItem.EXP_DATE + '</td>' +
-                                                '<td>' + isoAuthItem.REG_DATE + '</td>' +
+                            response.forEach(function(isoAuth) {
+                                var authDate = new Date(isoAuth.AUTH_DATE); // AUTH_DATE Date 객체로 변환
+                                var formattedAuthDate = authDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
+                                var expDate = new Date(isoAuth.EXP_DATE); // EXP_DATE를 Date 객체로 변환
+                                var formattedExpDate = expDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
+                                var regDate = new Date(isoAuth.REG_DATE); // REG_DATE Date 객체로 변환
+                                var formattedRegDate = regDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
+                                var row = '<tr>' +
+                                                '<td>' + isoAuth.AUTH_TYPE + '</td>' +
+                                                '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
+                                                '<td>' + formattedAuthDate + '</td>' +
+                                                '<td>' + formattedExpDate + '</td>' +
+                                                '<td>' + formattedRegDate + '</td>' +
                                                 '<td>보기</td>' +
                                                 '<td>첨부</td>' +
-                                                '<td>' + isoAuthItem.ITEM_STATE + '</td>' +
+                                                '<td>' + isoAuth.ITEM_STATE + '</td>' +
                                               '</tr>';
                                 tableBody.append(row);
                             });

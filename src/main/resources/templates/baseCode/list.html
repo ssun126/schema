@@ -195,8 +195,38 @@
 </body>
 <script>
     $(document).ready(function() {
-        // modal_init("Init");
+         modal_init("Init");
     });
+
+    //모달 초기화
+    function modal_init(flag){
+        if(flag=="MODIFY"){
+           $(".fixdata").attr("readonly",true);
+           //버튼 바꾸기
+             $("#BaseCodeAdd").css("display","none");
+            $("#BaseCodeMod").css("display","block");
+            $("#BaseCodeDel").css("display","block");
+
+        }else{
+            //초기화
+            document.getElementsByName("BASE_CODE")[0].value = "";
+            document.getElementsByName("BASE_NAME")[0].value = "";
+            document.getElementsByName("BASE_VALUE")[0].value = "";
+            document.getElementsByName("BASE_SUMMARY")[0].value = "";
+            document.getElementsByName("BASE_SORT")[0].value = "";
+            document.getElementsByName("BASE_OPTION")[0].value = "";
+            document.getElementsByName("BASE_CODE_IDX")[0].value = 0;
+            $("select[name=GUBN] option:eq(0)").prop("selected", true);
+            $("select[name=GROUP_CODE] option:eq(0)").prop("selected", true);
+            $("select[name=BASE_STATUS] option:eq(0)").prop("selected", true);
+            $(".fixdata").attr("readonly",false);
+
+            //버튼 바꾸기
+            $("#ConfigAdd").css("display","block");
+            $("#ConfigMod").css("display","none");
+            $("#ConfigDel").css("display","none");
+        }
+    }
 
 
     function bindModalData(status, baseCode){
