@@ -22,7 +22,6 @@ import java.util.Map;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class BaseConfigController {
 
@@ -36,7 +35,7 @@ public class BaseConfigController {
 //        return "/baseConfig/getlist";
 //    }
 
-    @GetMapping("/siteMgr/baseConfig")
+    @GetMapping("/admin/siteMgr/baseConfig")
     public String findAll(Model model){
         List<BaseConfigDTO> baseConfigDTOList = BaseConfigService.findAll();
         model.addAttribute("baseConfigList",baseConfigDTOList);
@@ -115,7 +114,7 @@ public class BaseConfigController {
         }
 
 
-        return  "redirect:/siteMgr/baseConfig";
+        return  "redirect:/admin/siteMgr/baseConfig";
     }
 
 

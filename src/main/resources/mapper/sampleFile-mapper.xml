@@ -3,24 +3,34 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="sampleFile" >
-    <insert id="upload" parameterType="java.util.List">
-<!--        <foreach collection="list" item="file" separator=";">-->
-<!--        INSERT INTO  SAMPLEFILE_DATA(FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)-->
-<!--        VALUES (#{file.FILE_LANG},#{file.FILE_CASE},#{file.FILE_GUBN},#{file.FILE_NUM},#{file.FILE_NAME},#{file.FILE_PATH},sysdate,'xp')-->
-<!--        </foreach>-->
+    <insert id="upload" parameterType="sampleFile">
 
-        INSERT INTO  SAMPLEFILE_DATA(FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)
-        VALUES
-        <foreach collection="list" item="item" separator=",">
-        (#{item.FILE_LANG},#{item.FILE_CASE},#{item.FILE_GUBN},#{item.FILE_NUM},#{item.FILE_NAME},#{item.FILE_PATH},sysdate,'xp')
-        </foreach>
+            INSERT INTO  SAMPLEFILE_DATA(FILE_IDX,FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)
+            VALUES (SEQ_FILE_IDX.NEXTVAL,#{FILE_LANG},#{FILE_CASE},#{FILE_GUBN},#{FILE_NUM},#{FILE_NAME},#{FILE_PATH},sysdate,'xp')
 
-
-<!--        <foreach collection="list" item="file" separator=";">-->
-<!--            INSERT INTO  SAMPLEFILE_DATA(FILE_IDX,FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)-->
-<!--            VALUES (SEQ_FILE_IDX.NEXTVAL,#{file.FILE_LANG},#{file.FILE_CASE},#{file.FILE_GUBN},#{file.FILE_NUM},#{file.FILE_NAME},#{file.FILE_PATH},sysdate,'xp');-->
-<!--        </foreach>-->
     </insert>
+
+    <delete id="delete" parameterType="sampleFile">
+        DELETE SAMPLEFILE_DATA
+        WHERE FILE_LANG=#{FILE_LANG} AND FILE_CASE = #{FILE_CASE} AND FILE_NUM =#{FILE_NUM}
+
+        <if test="FILE_CASE == 'PLANT' ">
+            and FILE_GUBN = #{FILE_GUBN}
+        </if>
+
+    </delete>
+
+    <update id="update" parameterType="sampleFile">
+        UPDATE SAMPLEFILE_DATA
+        SET FILE_PATH = #{FILE_PATH}, FILE_NAME=#{FILE_NAME}, FILE_MODIFY_DATE = sysdate, FILE_MODIFY_USER='xp'
+        WHERE FILE_LANG=#{FILE_LANG} AND FILE_CASE = #{FILE_CASE} AND FILE_NUM =#{FILE_NUM}
+
+        <if test="FILE_CASE == 'PLANT' ">
+            and FILE_GUBN = #{FILE_GUBN}
+        </if>
+
+    </update>
+
 
     <select id="plantList_bak" parameterType="String" resultType="hashMap">
         SELECT BASE_CODE ,NVL(sd.FILE_LANG,'NULL') AS FILE_LANG,CASE WHEN instr(LISTAGG(sd.FILE_NUM,'|'),'|') > 0  THEN LISTAGG(sd.FILE_NUM,'|')

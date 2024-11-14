@@ -27,7 +27,7 @@ import java.util.List;
 public class DeclarationController {
     private final DeclarationService declarationService;
 
-    @GetMapping("/siteMgr/declarationList")
+    @GetMapping("/admin/siteMgr/declarationList")
     public String findAll(Model model){
         List<DeclarationDTO> declarationDTOList = declarationService.findAll();
         model.addAttribute("declarationDataList",declarationDTOList);
@@ -67,7 +67,7 @@ public class DeclarationController {
             throw new RuntimeException(e);
         }
 
-        return "redirect:/siteMgr/declarationList";
+        return "redirect:/admin/siteMgr/declarationList";
 
     }
 }
