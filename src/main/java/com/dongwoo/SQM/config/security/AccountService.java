@@ -49,7 +49,8 @@ public class AccountService  implements UserDetailsService {
                 , encoder.encode(loginDTO.getUSER_PWD())
                 , enabled, accountNonExpired, credentialsNonExpired, accountNonLocked
                 , authorities(loginDTO)
-                , loginDTO.getUSER_EMAIL()
+                , loginDTO.getUSER_GUBN()
+                , loginDTO.getUSER_STATUS()
                 , loginDTO.getUSER_NAME() // 이름
         );
 
