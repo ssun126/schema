@@ -8,7 +8,7 @@
         values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
     </insert>
 
-    <!-- USERINFO 저장!!-->
+    <!-- USER_INFO 저장!!-->
     <insert id="saveUserinfo" parameterType="userinfo">
         insert into USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS ,REG_DW_USER_IDX  ,REG_DATE,UP_DATE)
         values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS} , #{REG_DW_USER_IDX} , sysdate,sysdate )
