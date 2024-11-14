@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Declaration">
     <select id="findAll" resultType="Declaration">
-        SELECT DECLARATION_NUM,DECLARATION_NAME,DECLARATION_CASNUM
+        SELECT DECL_NUM,DECL_SUB_NUM,DECL_NAME,DECL_CASNUM,DECL_WEIGHT,DECL_CLASS,DECL_GROUND
         FROM DECLARATION_DATA
     </select>
     <delete id="deleteAll">

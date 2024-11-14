@@ -83,17 +83,17 @@ public class BaseConfigController {
         }
     }
 
-    @GetMapping("/baseConfig/action")
+    @GetMapping("/baseconfig/action")
     public String save(@ModelAttribute BaseConfigDTO baseConfigDTO,HttpSession session) {
         log.info("test111111");
-        log.info(baseConfigDTO.getUSERID());
+        log.info(baseConfigDTO.getUSER_ID());
         String sUserID = (String) session.getAttribute("loginId");
         if(sUserID==null) sUserID="1";
         log.info(sUserID);
-        baseConfigDTO.setUSERID(sUserID);
+        baseConfigDTO.setUSER_ID(sUserID);
 
         //String sFlag = httpServletRequest.getParameter("baseConfigFlag");
-        String sFlag = baseConfigDTO.getINFOFLAG();
+        String sFlag = baseConfigDTO.getINFO_FLAG();
         log.info(sFlag);
         // add : 추가, Mod : 수정, Del :  삭제
         if(sFlag.equals("Add")) {

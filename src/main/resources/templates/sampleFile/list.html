@@ -1,66 +1,95 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/mainLayout}"
+      layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content" xmlns="">
 <head>
     <meta charset="UTF-8">
     <title>기초설정</title>
-    <style>
-        .cui_dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+<style>
+    .cui_tab {
+    &[data-wrap=wrap] {
+        .tab_list {
+            ul {
+                flex-wrap : wrap;
+            }
         }
-    </style>
+    }
+
+    &[data-fill=fit] {
+        .tab_list {
+            ul {
+                li {
+                    flex : 1 0 0;
+                }
+            }
+        }
+    }
+
+    .tab_list {
+        ul {
+            @include reset-this-list;
+            display     : flex;
+            align-items : stretch;
+
+            li {
+                flex : 0 0 auto;
+
+                .tab_button {
+                    @include reset-button;
+                    line-height : var(--line-height);
+                    position    : relative;
+                    width       : 100%;
+                    height      : 100%;
+                    padding     : 12px;
+                    border      : 1px solid var(--border-primary);
+
+                    &:before {
+                        position   : absolute;
+                        top        : 0;
+                        right      : 0;
+                        left       : 0;
+                        display    : none;
+                        width      : 100%;
+                        height     : 3px;
+                        content    : '';
+                        background : var(--primary);
+                    }
+
+                    &:hover {
+                        background : var(--hover-theme);
+                    }
+                }
+
+                &[aria-selected="true"] {
+                    a, button {
+                        &:before {
+                            display : block;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .tab_contents {
+        .tab_content {
+            display : none;
+
+            &[aria-expanded="true"] {
+                display : block;
+                padding : 8px;
+            }
+        }
+
+    }
+}
+
+</style>
 </head>
 <body>
 <div class="cui_app">
     <div class="cui_container" data-module="">
-        <div class="cui_lnb">
-            <div class="lnb_root">
-                <div class="lnb_head">
-                    <h2 class="lnb_title"><span>Site Management</span></h2>
-                </div>
-                <div class="cui_nav">
-                    <nav class="nav_root">
-                        <ul>
-                            <li>
-                                <a href="/admin/siteMgr/dwUserList" class="nav_item">
-                                    <span class="nav_label">동우 사용자 관리</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/siteMgr/baseConfig" class="nav_item" aria-selected="true">
-                                    <span class="nav_label">기초설정</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/siteMgr/baseCode" class="nav_item">
-                                    <span class="nav_label">기초코드</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/siteMgr/svhcList" class="nav_item">
-                                    <span class="nav_label">SVHC 항목 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/siteMgr/declarationList" class="nav_item">
-                                    <span class="nav_label">Declaration Letter 항목</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin/siteMgr/samplefile" class="nav_item" aria-selected="true">
-                                    <span class="nav_label">SAMPLE 파일</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
         <div class="cui_content">
             <div class="cui_main version_kor">
                 <div class="cui_head">
@@ -68,12 +97,31 @@
                         <h2 class="cui_title"><span>SAMPLE 파일</span></h2>
                     </div>
                 </div>
-                <div>
-                    <input type="hidden" th:value="${Language}" id="selectLang"/>
-                    <button type="button" name="ChangeLang" th:class="${Language} == 'KOR'? 'cui_button primary' : 'cui_button' " onclick="getFileList('KOR');"><span>국문</span></button>
-                    <button type="button" name="ChangeLang" th:class="${Language} == 'ENG'? 'cui_button primary' : 'cui_button' " onclick="getFileList('ENG');"><span>영문</span></button>
-                    <button type="button" name="ChangeLang" th:class="${Language} == 'JPN'? 'cui_button primary' : 'cui_button' " onclick="getFileList('JPN');"><span>일문</span></button>
-                    <button type="button" name="ChangeLang" th:class="${Language} == 'CHN'? 'cui_button primary' : 'cui_button' " onclick="getFileList('CHN');"><span>중문</span></button>
+<!--                <div>-->
+<!--                    <input type="hidden" th:value="${Language}" id="selectLang"/>-->
+<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'KOR'? 'cui_button primary' : 'cui_button' " onclick="getFileList('KOR');"><span>국문</span></button>-->
+<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'ENG'? 'cui_button primary' : 'cui_button' " onclick="getFileList('ENG');"><span>영문</span></button>-->
+<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'JPN'? 'cui_button primary' : 'cui_button' " onclick="getFileList('JPN');"><span>일문</span></button>-->
+<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'CHN'? 'cui_button primary' : 'cui_button' " onclick="getFileList('CHN');"><span>중문</span></button>-->
+
+
+
+<!--                </div>-->
+                <div class="cui_tab">
+                    <div class="tab_list">
+                        <ul>
+                            <li th:attr="aria-selected = ${Language} == 'KOR'? 'true' : '' ">
+                                <button type="button" name="ChangeLang" onclick="getFileList('KOR');" class="tab_button"><span>국문</span></button>
+                            </li>
+                            <li th:attr="aria-selected = ${Language} == 'ENG'? 'true' : '' " >
+                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('ENG');"><span>영문</span></button></li>
+                            <li th:attr="aria-selected = ${Language} == 'JPN'? 'true' : '' " >
+                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('JPN');" ><span>일문</span></button></li>
+                            <li th:attr="aria-selected = ${Language} == 'CHN'? 'true' : '' " >
+                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('CHN');" ><span>중문</span></button></li>
+                        </ul>
+                    </div>
+
                 </div>
 
                 <div class="cui_body version_KOR">
