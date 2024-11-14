@@ -40,7 +40,6 @@ public class BoardController {
      */
     @GetMapping("/user/board/qa")
     public String list(Criteria criteria, Model model) {
-        log.info("criteria============================================="+criteria);
         List<BoardDTO> boardDTOList = boardService.getList(criteria);
         model.addAttribute("boardList", boardDTOList);
         model.addAttribute("pageMaker", new PageDTO(boardService.getTotal(), 10, criteria));
@@ -68,7 +67,6 @@ public class BoardController {
     @GetMapping("/user/board/download/{filename}")
     public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {
         try {
-            log.info("filename???????"+filename);
             // 파일 경로 설정
             File file = new File("D:/devp/" +  filename);
             if (!file.exists()) {

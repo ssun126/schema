@@ -1,3 +1,11 @@
+/* 모달 설정 */
+.cui_dialog {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+}
+
 /* 페이징 영역 */
 .pagination {
   display: flex;
