@@ -51,6 +51,7 @@ public class AccountService  implements UserDetailsService {
                 , authorities(loginDTO)
                 , loginDTO.getUSER_GUBN()
                 , loginDTO.getUSER_STATUS()
+                , loginDTO.getCOM_CODE()
                 , loginDTO.getUSER_NAME() // 이름
         );
 

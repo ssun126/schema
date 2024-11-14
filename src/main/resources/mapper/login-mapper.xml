@@ -24,7 +24,10 @@
         select * from USER_INFO where USER_EMAIL=#{USER_EMAIL}
     </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        SELECT * FROM USER_INFO UI
+        LEFT OUTER JOIN USER_INFO_COMPANY UIC
+        ON UIC.USER_IDX = UI.USER_IDX
+        where USER_ID=#{USER_ID}
     </select>
     <select id="findByLoginName" parameterType="String" resultType="login">
         select * from USER_INFO where USER_NAME=#{USER_NAME}
