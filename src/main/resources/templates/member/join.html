@@ -199,6 +199,7 @@
                                 </tbody>
                             </table>
                         </fieldset>
+
                         <fieldset>
                             <legend><span>ID/PW</span></legend>
                             <table class="cui_table">
@@ -248,7 +249,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="tr_id_pw_add_reason" >
                                     <th><span>ID/PW 추가사유</span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
@@ -286,6 +287,7 @@
                                 </div>
                             </div>
                         </fieldset>
+
                         <fieldset>
                             <legend><span>업체정보</span></legend>
                             <table class="cui_table">
@@ -355,7 +357,7 @@
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" name ="COM_CEO_EMAIL" id ="COM_CEO_EMAIL"></input>
+                                                <input class="cui_text_field" type="text" name ="COM_CEO_EMAIL" id ="COM_CEO_EMAIL">
                                             </div>
                                         </div>
                                     </td>
@@ -409,11 +411,11 @@
             // 공동 업무자 정보 생성
             const newRow = `
                 <tr>
-                    <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름"  onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_POSITION" onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_DEPT" onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일"  onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호"  onblur="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름"  onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_POSITION" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_DEPT" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일"  onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호"  onclick="setUserSelectReset()"></td>
                     <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
                 </tr>
             `;
@@ -473,7 +475,6 @@
     });
 
 
-    // 데이터를 <select>에 추가
     function setUserSelect(users) {
 
         var userSelect = document.getElementById('userSelect');
@@ -481,8 +482,8 @@
         users.forEach(function(user) {
 
             var option = document.createElement('option');
-            //option.value = user.email;  // 이메일을 value 값으로 설정
-            option.value = user.name;  // 이름을 value 값으로 설정  //추후 동명이인 처리시 고민해보자
+            //option.value = user.email;
+            option.value = user.name;        // 이름을 value 값으로 설정  //추후 동명이인 처리시 고민해보자
             option.textContent = user.name;  // 이름을 표시
 
             userSelect.appendChild(option);
@@ -561,10 +562,7 @@
       }
 
       var sUrl = "/member/vendor-check" ;
-      console.log("searchCode=="+ searchCustomer);
-      console.log("searchType=="+ searchType);
       $.ajax({
-          // 요청방식: post, url: "vendor-check", 데이터:  Vendor 번호,사업자 등록번호 체크
           type: "post",
           url:   sUrl,
           data: {
@@ -574,7 +572,7 @@
           success: function(res) {
 
               if (res.status == "ok") {
-               $('#registeredCompany').show();             //기등록 업체입니다.(추가 ID 작업 gogo)
+               $('#registeredCompany').show();             //기등록 업체입니다.(추가 ID 작업)
                $('#joinBasicStep1').show();
 
                 bindCompanyInfo(res);                      //정보 바인딩. ★
@@ -607,7 +605,7 @@
                 $('#errCompanyCode').show();
                 $('#joinBasicStep1').show();  //기존 신청 정보 수정 가능하게.
 
-                bindCompanyInfo(res);  //정보 바인딩. ★
+                bindCompanyInfo(res);                      //정보 바인딩. ★
                 bindCompanyUserInfo(res);
                 bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
 
@@ -632,11 +630,11 @@
         if (companyUserList === undefined || companyUserList.length === 0) {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름" onblur="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_POSITION" placeholder="직위" onblur="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_DEPT" placeholder="부서명" onblur="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" onblur="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" onblur="setUserSelectReset()"></td>
+                <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름" onclick="setUserSelectReset()"></td>
+                <td><input type="text" class="cui_text_field" name="USER_POSITION" placeholder="직위" onclick="setUserSelectReset()"></td>
+                <td><input type="text" class="cui_text_field" name="USER_DEPT" placeholder="부서명" onclick="setUserSelectReset()"></td>
+                <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" onclick="setUserSelectReset()"></td>
+                <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" onclick="setUserSelectReset()"></td>
                 <td></td>
             `;
             tableBody.appendChild(row);
@@ -645,11 +643,11 @@
             companyUserList.forEach((item, index) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><input type="text" class="cui_text_field" name="USER_NAME" value="${item.user_NAME}" placeholder="이름" onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_POSITION" value="${item.user_POSITION}" onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_DEPT" value="${item.user_DEPT}" onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" value="${item.user_EMAIL}" placeholder="이메일" onblur="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_PHONE" value="${item.user_PHONE}" placeholder="전화번호" onblur="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_NAME" value="${item.user_NAME}" placeholder="이름" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_POSITION" value="${item.user_POSITION}" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_DEPT" value="${item.user_DEPT}" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" value="${item.user_EMAIL}" placeholder="이메일" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_PHONE" value="${item.user_PHONE}" placeholder="전화번호" onclick="setUserSelectReset()"></td>
                     <td>${index === 0 ? '' : '<button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button>'}</td>
                 `;
                 tableBody.appendChild(row);
@@ -689,7 +687,7 @@
         }
     }
 
-    //공동사용자기본정보 바인딩
+    //공동사용자 기본정보 바인딩
     function bindCompanyUserInfo(companyInfo) {
 
         if (companyInfo) {
@@ -706,8 +704,15 @@
             select.appendChild(option);
             option.selected = true;
 
-            document.getElementById("UserPass").value =  companyInfo.USER_PWD;
-            document.getElementById("UserPassRe").value =  companyInfo.USER_PWD;
+            companyInfo.companyUserList.forEach((item) => {
+				if(item.user_NAME != companyInfo.USER_NAME ){
+				 var optionAdd = document.createElement("option");
+					optionAdd.value = item.user_NAME;
+					optionAdd.text  = item.user_NAME;
+					select.appendChild(optionAdd);
+				}
+            });
+
             document.getElementById("ID_PW_ADD_REASON").value =  companyInfo.ID_PW_ADD_REASON;
 
             //유효성
@@ -884,8 +889,10 @@
         var input = document.getElementById('memberID');
         input.readOnly = bool;
 
-    }
+        var userselect = document.getElementById('userSelect');
+        userselect.readOnly = bool;
 
+    }
 
     // Member / Pass 가입 ///////////////////
 
@@ -989,6 +996,7 @@
                 checked: isChecked
             });
         });
+
         // JSON 데이터 저장
         const jsonData = JSON.stringify(selectedGoals);
         $('#checkboxDataJson').val(jsonData);

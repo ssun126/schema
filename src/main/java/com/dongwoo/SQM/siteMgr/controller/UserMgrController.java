@@ -1,5 +1,7 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
+import com.dongwoo.SQM.config.security.AccountService;
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -262,16 +266,20 @@ public class UserMgrController {
     public ResponseEntity<?> updateUserPWS(@ModelAttribute UserMgrDTO userMgrDTO , Authentication authentication) {
 
         try {
-            String loginId = authentication.getName(); // 사용자 이름 = ID  2024.11.04 일단 이걸로.
-            LoginDTO loginDTO = new LoginDTO();
-            loginDTO.setUSER_ID(loginId);
-            loginDTO.setUSER_PWD(userMgrDTO.getUSER_PWD());
+            String loginId = authentication.getName();
+            LoginDTO loginResult = loginService.findByIdUsePass(loginId);
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            String dbPasswordHash = loginResult.getUSER_PWD();
+            String inputPassword = userMgrDTO.getUSER_PWD();
+            boolean isPasswordMatch = encoder.matches(inputPassword, dbPasswordHash);
+            //System.out.println("비밀번호 일치 여부: " + isPasswordMatch); // true or false
 
-            LoginDTO loginResult = loginService.login(loginDTO);
+            if (isPasswordMatch) {
 
-            if (loginResult != null) {
+                PasswordEncoder encoderNew = new BCryptPasswordEncoder();
+                String encodedPasswordNew = encoderNew.encode(userMgrDTO.getUSER_PWD_NEW());
 
-                userMgrDTO.setUSER_PWD(userMgrDTO.getUSER_PWD_NEW());
+                userMgrDTO.setUSER_PWD(encodedPasswordNew);
                 userMgrDTO.setUSER_ID(loginId);
                 userMgrService.updateUserPWS(userMgrDTO);
                 return ResponseEntity.ok("비밀번호가 변경 되었습니다.");
