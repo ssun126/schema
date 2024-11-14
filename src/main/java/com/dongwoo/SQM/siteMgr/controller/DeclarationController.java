@@ -47,13 +47,23 @@ public class DeclarationController {
             DataFormatter formatter = new DataFormatter();
             XSSFRow row = worksheet.getRow(i);
 
-            String DECLARATION_NUM = formatter.formatCellValue(row.getCell(0));
-            String DECLARATION_NAME = formatter.formatCellValue(row.getCell(1));
-            String DECLARATION_CASNUM = formatter.formatCellValue(row.getCell(2));
+            String DECL_NUM = formatter.formatCellValue(row.getCell(0));
+            String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(1));
+            String DECL_NAME = formatter.formatCellValue(row.getCell(2));
+            String DECL_CASNUM = formatter.formatCellValue(row.getCell(3));
+            String DECL_WEIGHT = formatter.formatCellValue(row.getCell(4));
+            String DECL_CLASS = formatter.formatCellValue(row.getCell(5));
+            String DECL_GROUND = formatter.formatCellValue(row.getCell(6));
 
-            declarationDTO.setDECLARATION_NUM(DECLARATION_NUM);
-            declarationDTO.setDECLARATION_NAME(DECLARATION_NAME);
-            declarationDTO.setDECLARATION_CASNUM(DECLARATION_CASNUM);
+
+            log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+            declarationDTO.setDECL_NUM(DECL_NUM);
+            declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+            declarationDTO.setDECL_NAME(DECL_NAME);
+            declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+            declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+            declarationDTO.setDECL_CLASS(DECL_CLASS);
+            declarationDTO.setDECL_GROUND(DECL_GROUND);
 
             declarationDTOList.add(declarationDTO);
 

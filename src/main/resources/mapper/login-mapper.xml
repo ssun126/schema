@@ -17,6 +17,9 @@
     <select id="findById" parameterType="String" resultType="member">
         select * from USER_INFO where USER_ID=#{USER_ID}
     </select>
+    <select id="findByIdUsePass" parameterType="String" resultType="login">
+        select * from USER_INFO where USER_ID=#{USER_ID}
+    </select>
     <delete id="delete" parameterType="String">
         delete from USER_INFO where USER_ID=#{USER_ID}
     </delete>

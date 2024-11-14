@@ -86,11 +86,10 @@ public class MemberController {
     //마이페이지 2024.11.24 sylee
     @GetMapping("/member/myPage")
     public String myPage(HttpSession session, Model model,Authentication authentication) {
-        // 세션에 저장된 나의 ID 가져오기
-       // String loginId = (String) session.getAttribute("loginId");//System.out.println("loginId????"+loginId);
 
-        String loginId = authentication.getName(); // 사용자 이름 = ID  2024.11.04 일단 이걸로.
-        System.out.println("loginId????"+loginId);
+
+        String loginId = authentication.getName();
+        //System.out.println("loginId????"+loginId);
 
         UserMgrDTO memberDTO = memberService.findByMemberId(loginId);
 
@@ -451,13 +450,8 @@ public class MemberController {
                 UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSER_IDX());
 
                 User_ID = userUserinfoDTO.getUSER_ID();
-                //ID /PASS 업체 정보 바인딩 항목
-                response.put("USER_ID", userUserinfoDTO.getUSER_ID());
-                response.put("USER_NAME", userUserinfoDTO.getUSER_NAME()); //메인 담당자 select .  USER_INFO_COMPANY 의 COM_USER_IDX 의 명을 가져와야된다.
-                //response.put("USER_PWD", userUserinfoDTO.getUSER_PWD()); //복호화 처리 안됨.
-                response.put("USER_PWD", ""); //수정시 재설정하자.
-                response.put("ID_PW_ADD_REASON", comPanyDTO.getID_PW_ADD_REASON());
-
+                int com_user_idx = comPanyDTO.getCOM_USER_IDX();  //메인작업자.
+                String com_user_Name = ""; //메인작업자 명
 
                 //공동 작업자 가져오기.  USER_INFO_COMPANY  where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
                 UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
@@ -465,6 +459,20 @@ public class MemberController {
                 parmaDTO.setUSER_IDX(comPanyDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX
                 List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserComCode(parmaDTO);
                 response.put("companyUserList", companyUserList);
+
+                //추출
+                for (UserInfoCompanyUserDTO user : companyUserList) {
+                    if (user.getCOM_USER_IDX() == com_user_idx) {
+                        com_user_Name = user.getUSER_NAME();
+                    }
+                }
+
+                //ID /PASS 업체 정보 바인딩 항목
+                response.put("USER_ID", userUserinfoDTO.getUSER_ID());
+                response.put("USER_NAME", com_user_Name);    //메인 담당자 select 컨트럴 바인딩.
+                response.put("USER_PWD", ""); //수정시 재설정하자.
+                response.put("ID_PW_ADD_REASON", comPanyDTO.getID_PW_ADD_REASON());
+                
 
                 //메세지 리턴.
                 checkResult = switch (USER_STATUS) {

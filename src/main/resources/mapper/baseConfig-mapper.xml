@@ -3,51 +3,51 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BaseConfig">
     <select id="findAll" resultType="baseConfig">
-        SELECT BASECONFIGIDX as IDX,GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,u.USERNAME,TO_CHAR(b.REGDATE, 'YYYY-MM-DD') as REGDATE
-        FROM BASECONFIG b
-        LEFT OUTER JOIN USERINFO u
-        ON b.REGDWUSERIDX = u.USERIDX
-        ORDER BY b.BASECONFIGIDX asc
+        SELECT BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,u.USER_NAME,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+        FROM BASE_CONFIG b
+        LEFT OUTER JOIN USER_INFO u
+        ON b.REG_DW_USER_IDX = u.USER_IDX
+        ORDER BY b.BASE_CONFIG_IDX asc
 
     </select>
 
     <select id="findSearch" parameterType="hashMap" resultType="baseConfig">
-        select BASECONFIGIDX as IDX,GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,u.USERNAME,TO_CHAR(b.REGDATE, 'YYYY-MM-DD') as REGDATE
-        FROM BASECONFIG b
-        LEFT OUTER JOIN USERINFO u
-        ON b.REGDWUSERIDX = u.USERIDX
+        select BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,u.USER_NAME,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+        FROM BASE_CONFIG b
+        LEFT OUTER JOIN USER_INFO u
+        ON b.REG_DW_USER_IDX = u.USER_IDX
         WHERE 1=1
         <if test="gubun != '' ">
             and GUBN = #{gubun}
         </if>
         <if test="key.equals('key') and textval != ''">
-            and CONFIGCODE like '%' ||  #{textval} || '%'
+            and CONFIG_CODE like '%' ||  #{textval} || '%'
         </if>
         <if test="key.equals('val') and textval != ''">
-            and CONFIGVALUE like '%' ||  #{textval} || '%'
+            and CONFIG_VALUE like '%' ||  #{textval} || '%'
         </if>
 
     </select>
 
     <select id="getBaseConfig_Info" parameterType="String" resultType="baseConfig">
-        select BASECONFIGIDX as IDX,GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,b.REGDATE,u.USERID
-        FROM BASECONFIG b
-        LEFT OUTER JOIN USERINFO u
-        ON b.REGDWUSERIDX = u.USERIDX where BASECONFIGIDX = #{idx}
+        select BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,b.REG_DATE,u.USER_ID
+        FROM BASE_CONFIG b
+        LEFT OUTER JOIN USER_INFO u
+        ON b.REG_DW_USER_IDX = u.USER_IDX where BASE_CONFIG_IDX = #{idx}
     </select>
 
     <insert id="save" parameterType="baseConfig">
-        INSERT into BASECONFIG(BASECONFIGIDX, GUBN,CONFIGCODE,CONFIGVALUE,CONFIGSUMMARY,CONFIGSTATUS,REGDWUSERIDX,UPDWUSERIDX,REGDATE,"UPDATE")
-        VALUES (SEQUENCE_BASECONFIG.NEXTVAL,#{GUBN},#{CONFIGCODE},#{CONFIGVALUE},#{CONFIGSUMMARY},#{CONFIGSTATUS},#{USERID},#{USERID},sysdate,sysdate)
+        INSERT into BASE_CONFIG(BASE_CONFIG_IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,REG_DW_USER_IDX,UP_DW_USER_IDX,REG_DATE,UP_DATE)
+        VALUES (SEQ_BASE_CONFIG.NEXTVAL,#{GUBN},#{CONFIG_CODE},#{CONFIG_VALUE},#{CONFIG_SUMMARY},#{CONFIG_STATUS},#{USER_ID},#{USER_ID},sysdate,sysdate)
     </insert>
     <update id="update" parameterType="baseConfig">
-        update BASECONFIG
-        set GUBN=#{GUBN},CONFIGCODE=#{CONFIGCODE},CONFIGVALUE=#{CONFIGVALUE}
-        ,CONFIGSUMMARY=#{CONFIGSUMMARY},CONFIGSTATUS=#{CONFIGSTATUS},UPDWUSERIDX=#{USERID},"UPDATE"=sysdate
-        where BASECONFIGIDX=#{IDX}
+        update BASE_CONFIG
+        set GUBN=#{GUBN},CONFIG_CODE=#{CONFIG_CODE},CONFIG_VALUE=#{CONFIG_VALUE}
+        ,CONFIG_SUMMARY=#{CONFIG_SUMMARY},CONFIG_STATUS=#{CONFIG_STATUS},UP_DW_USER_IDX=#{USER_ID},UP_DATE=sysdate
+        where BASE_CONFIG_IDX=#{IDX}
     </update>
     <delete id="delete" parameterType="int">
-        delete from BASECONFIG where BASECONFIGIDX=#{IDX}
+        delete from BASE_CONFIG where BASE_CONFIG_IDX=#{IDX}
     </delete>
 
 </mapper>

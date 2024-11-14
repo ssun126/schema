@@ -8,8 +8,15 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DeclarationDTO {
-    private String DECLARATION_NUM;
-    private String DECLARATION_NAME;
-    private String DECLARATION_CASNUM;
+
+    private int DECL_IDX;
+    private String DECL_NUM;
+    private String DECL_SUB_NUM;
+    private String DECL_NAME;
+    private String DECL_CASNUM;
+    private String DECL_WEIGHT;
+    private String DECL_CLASS;
+    private String DECL_GROUND;
+
 
 }

@@ -77,16 +77,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="baseConfigList : ${baseConfigList}">
+                        <tr th:each="baseConfigList : ${baseConfigList}"
+                            th:onclick="modal_open('PopupBaseConfig','MODIFY', '/admin/siteMgr/baseConfig/baseConfigInfo', [[${baseConfigList.IDX}]])">
                             <td style="display:none;" th:text="${baseConfigList.IDX}"><span></span></td>
                             <td th:text="${baseConfigList.GUBN}"><span></span></td>
                             <!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
-                            <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" th:onclick="modal_open('PopupBaseConfig','edit', '/admin/siteMgr/baseConfig/baseConfigInfo', [[${baseConfigList.IDX}]])"></button></td>
-                            <td th:text="${baseConfigList.CONFIGVALUE}"><span></span></td>
-                            <td th:text="${baseConfigList.CONFIGSUMMARY}"><span></span></td>
-                            <td th:text="${baseConfigList.USERNAME}"><span></span></td>
-                            <td th:text="${baseConfigList.CONFIGSTATUS}"><span></span></td>
-                            <td th:text="${baseConfigList.REGDATE}"><span></span></td>
+                            <td th:text="${baseConfigList.CONFIG_CODE}"  ></td>
+                            <td th:text="${baseConfigList.CONFIG_VALUE}"><span></span></td>
+                            <td th:text="${baseConfigList.CONFIG_SUMMARY}"><span></span></td>
+                            <td th:text="${baseConfigList.USER_NAME}"><span></span></td>
+                            <td th:text="${baseConfigList.CONFIG_STATUS}"><span></span></td>
+                            <td th:text="${baseConfigList.REG_DATE}"><span></span></td>
 
                         </tr>
                         <!--                        <tr>-->
@@ -115,7 +116,7 @@
                 </div>
                 <div class="dialog_body">
                     <div class="body_root">
-                        <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/admin/baseconfig/action">
+                        <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/admin/siteMgr/baseconfig/action">
                             <fieldset>
         <!--                        <legend><span>ID 찾기</span></legend>-->
                                 <label class="cui_items_wrap" data-direction="left">
@@ -130,19 +131,19 @@
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">설정키</strong>
                                     <div class="item_content">
-                                        <input name="CONFIGCODE" class="cui_text_field fixdata">
+                                        <input name="CONFIG_CODE" class="cui_text_field fixdata">
                                     </div>
                                 </label>
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">설정값</strong>
                                     <div class="item_content">
-                                        <input name="CONFIGVALUE" class="cui_text_field ">
+                                        <input name="CONFIG_VALUE" class="cui_text_field ">
                                     </div>
                                 </label>
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">상태</strong>
                                     <div class="item_content">
-                                        <select class="cui_select_field wide " name="CONFIGSTATUS">
+                                        <select class="cui_select_field wide " name="CONFIG_STATUS">
                                             <option value="Y">Y</option>
                                             <option value="N">N</option>
                                         </select>
@@ -151,16 +152,16 @@
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">설명</strong>
                                     <div class="item_content">
-                                        <textarea  style="height:80px;" class="cui_text_field" name="CONFIGSUMMARY"></textarea>
+                                        <textarea  style="height:80px;" class="cui_text_field" name="CONFIG_SUMMARY"></textarea>
                                         <input name="USERID" style="display:none;">
                                         <input name="IDX" value=0 style="display:none;">
                                     </div>
                                 </label>
                                 <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                                     <div class="item_content">
-                                        <button type="submit" id="ConfigAdd" name="INFOFLAG" value="Add" class="cui_button primary"><span>추가</span></button>
-                                        <button type="submit" id="ConfigMod" name="INFOFLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
-                                        <button type="submit" id="ConfigDel" name="INFOFLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
+                                        <button type="submit" id="ConfigAdd" name="INFO_FLAG" value="Add" class="cui_button primary"><span>추가</span></button>
+                                        <button type="submit" id="ConfigMod" name="INFO_FLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
+                                        <button type="submit" id="ConfigDel" name="INFO_FLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -178,7 +179,7 @@
     }
 
     //모달 초기화
-    function modal_init(flag){
+    function modal_init(id,flag){
         if(flag=="MODIFY"){
            $(".fixdata").attr("readonly",true);
            //버튼 바꾸기
@@ -188,11 +189,11 @@
 
         }else{
             //초기화
-            document.getElementsByName("CONFIGCODE")[0].value = "";
-            document.getElementsByName("CONFIGVALUE")[0].value = "";
-            document.getElementsByName("CONFIGSUMMARY")[0].value = "";
+            document.getElementsByName("CONFIG_CODE")[0].value = "";
+            document.getElementsByName("CONFIG_VALUE")[0].value = "";
+            document.getElementsByName("CONFIG_SUMMARY")[0].value = "";
             $("select[name=GUBN] option:eq(0)").prop("selected", true);
-            $("select[name=CONFIGSTATUS] option:eq(0)").prop("selected", true);
+            $("select[name=CONFIG_STATUS] option:eq(0)").prop("selected", true);
             $(".fixdata").attr("readonly",false);
 
             //버튼 바꾸기
@@ -239,13 +240,13 @@
 
     function bindModalData(state, baseConfig){
         if(baseConfig != null){
-            document.getElementsByName("CONFIGCODE")[0].value = baseConfig.CONFIGCODE ;
-            document.getElementsByName("CONFIGVALUE")[0].value = baseConfig.CONFIGVALUE ;
-            document.getElementsByName("CONFIGSUMMARY")[0].value = baseConfig.CONFIGSUMMARY ;
+            document.getElementsByName("CONFIG_CODE")[0].value = baseConfig.CONFIG_CODE ;
+            document.getElementsByName("CONFIG_VALUE")[0].value = baseConfig.CONFIG_VALUE ;
+            document.getElementsByName("CONFIG_SUMMARY")[0].value = baseConfig.CONFIG_SUMMARY ;
             document.getElementsByName("IDX")[0].value = baseConfig.IDX ;
 
             $("select[name=GUBN]").val(baseConfig.GUBN).prop("selected", true);
-            $("select[name=STATUS]").val(baseConfig.CONFIGSTATUS).prop("selected", true);
+            $("select[name=STATUS]").val(baseConfig.CONFIG_STATUS).prop("selected", true);
 
         }
     }

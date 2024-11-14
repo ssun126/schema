@@ -40,6 +40,12 @@ public class LoginService {
         return loginRepository.findById(USER_ID);
     }
 
+    public LoginDTO findByIdUsePass(String USER_ID) {
+        return loginRepository.findByIdUsePass(USER_ID);
+    }
+
+
+
     public void delete(String USER_ID) {
         loginRepository.delete(USER_ID);
     }

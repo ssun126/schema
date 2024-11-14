@@ -10,6 +10,7 @@ import lombok.ToString;
 public class BaseCodeDTO {
     @JsonProperty("BASE_CODE_IDX")
     private int BASE_CODE_IDX;
+    @JsonProperty("GUBN")
     private String GUBN;  //구분
     @JsonProperty("GROUP_CODE")
     private String GROUP_CODE;   //그룹

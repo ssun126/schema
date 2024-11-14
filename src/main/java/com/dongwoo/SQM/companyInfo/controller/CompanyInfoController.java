@@ -43,12 +43,22 @@ public class CompanyInfoController {
         MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",loginMemberDTO.getCOM_CODE());
         model.addAttribute("member", memberDTO);
 
-        //공동 작업자 가져오기.   where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
+        int com_user_idx = loginMemberDTO.getCOM_USER_IDX();
+
+        //공동 작업자  where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
         UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
         parmaDTO.setCOM_CODE(loginMemberDTO.getCOM_CODE()); // 밴더 코드
-        parmaDTO.setUSER_IDX(loginMemberDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX
-        List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserComCode(parmaDTO);
-        model.addAttribute("companyUserList", companyUserList);
+        parmaDTO.setUSER_IDX(loginMemberDTO.getUSER_IDX());
+        List<UserInfoCompanyUserDTO> companyUserList = memberService.findByCompanyUserComCode(parmaDTO);  //select * from USER_INFO_COMPANY_USER where COM_CODE='C001' and USER_IDX =1
+        //model.addAttribute("companyUserList", companyUserList);
+//
+//        //추출
+//        for (UserInfoCompanyUserDTO user : companyUserList) {
+//            if (user.getCOM_USER_IDX() == com_user_idx) {
+//                com_user_Name = user.getUSER_NAME();
+//            }
+//        }
+
 
 
         System.out.println("memberDTO: "+memberDTO);

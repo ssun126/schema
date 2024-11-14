@@ -30,6 +30,10 @@ public class LoginRepository {
         return sql.selectOne("Login.findById", USER_ID);
     }
 
+    public LoginDTO findByIdUsePass(String USER_ID) {
+        return sql.selectOne("Login.findByIdUsePass", USER_ID);
+    }
+
     public void delete(String USER_ID) {
         sql.delete("Login.delete", USER_ID);
     }
