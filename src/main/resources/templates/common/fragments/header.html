@@ -82,7 +82,7 @@
             var url = $(this).data("url");  // data-url 에서 URL 가져오기
             console.log("url?????"+url);
 
-            history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
+            //history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
             //loadContainer(url);
             goMenu(url);
         });
@@ -92,7 +92,7 @@
             e.preventDefault();
             var url = $(this).data("url");  // data-url 에서 URL 가져오기
 
-            history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
+            //history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
             //loadContent(url);
             goMenu(url);
         });
