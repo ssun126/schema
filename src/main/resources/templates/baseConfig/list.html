@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/mainLayout}"
+      layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
     <title>기초설정</title>
-    <style>
-        .cui_dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    </style>
 </head>
 <body>
 <div class="cui_app">
@@ -69,7 +61,7 @@
                     </div>
                 </div>
                 <div class="cui_body">
-                    <form id="searchForm" action="/baseconfig/search" method="get">
+                    <form id="searchForm" action="/admin/siteMgr/baseConfig/search" method="get">
                         <div class="cui_search">
                             <div class="search_list cui_grid_wrap ">
                                 <div class="cui_items_wrap" data-direction="left">
@@ -103,7 +95,7 @@
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                         <button type="button" class="cui_button secondary" onclick="modal('PopupBaseConfig','add')"><span>추가</span></button>
+                         <button type="button" class="cui_button secondary" onclick="modal_open('PopupBaseConfig','add', '', '')"><span>추가</span></button>
 <!--                            <button type="button" class="cui_button secondary" onclick="BaseConfig_Popup()"><span>추가</span></button>-->
 
                         </div>
@@ -134,7 +126,7 @@
                             <td style="display:none;" th:text="${baseConfigList.IDX}"><span></span></td>
                             <td th:text="${baseConfigList.GUBN}"><span></span></td>
                             <!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
-                            <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" th:onclick="modal('PopupBaseConfig',[[${baseConfigList.IDX}]])"></button></td>
+                            <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" th:onclick="modal_open('PopupBaseConfig','edit', '/admin/siteMgr/baseConfig/baseConfigInfo', [[${baseConfigList.IDX}]])"></button></td>
                             <td th:text="${baseConfigList.CONFIGVALUE}"><span></span></td>
                             <td th:text="${baseConfigList.CONFIGSUMMARY}"><span></span></td>
                             <td th:text="${baseConfigList.USERNAME}"><span></span></td>
@@ -170,7 +162,7 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/baseconfig/action">
+                <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/admin/baseconfig/action">
                     <fieldset>
 <!--                        <legend><span>ID 찾기</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
@@ -228,7 +220,7 @@
 <script>
     function BaseConfig_Popup(){
         let popOption ="width=601,height=436,top=100,left=100";
-        let openUrl = "/BaseConfig/Popup";
+        let openUrl = "/admin/BaseConfig/Popup";
         window.open(openUrl, 'BaseConfig', popOption);
     }
 
@@ -262,7 +254,7 @@
     //모달 열기
     function modal(id, status){
       if(status !='add'){
-       var sUrl = "/baseConfig/baseConfig_Info" ;
+       var sUrl = "/admin/baseConfig/baseConfig_Info" ;
 
         $.ajax({
           type: "post",
@@ -292,7 +284,7 @@
       }
     }
 
-    function bindBasConfigInfo(baseConfig){
+    function bindModalData(state, baseConfig){
         if(baseConfig != null){
             document.getElementsByName("CONFIGCODE")[0].value = baseConfig.CONFIGCODE ;
             document.getElementsByName("CONFIGVALUE")[0].value = baseConfig.CONFIGVALUE ;

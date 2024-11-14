@@ -214,9 +214,9 @@
                             tableBody.empty(); // 기존 내용 비우기
 
                             response.forEach(function(isoAuthItem) {
-                                var row = '<tr>' +
+                                var row = '<tr onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +
                                                 '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
-                                                '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
+                                                '<td><a href="javascript:void(0);" >' +  isoAuthItem.AUTH_CODE + '</a></td>' +
                                                 '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
                                                 '<td>' + isoAuthItem.EXP_DATE + '</td>' +
                                                 '<td>' + isoAuthItem.REG_DATE + '</td>' +
