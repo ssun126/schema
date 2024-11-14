@@ -19,7 +19,6 @@ public class LoginDTO implements UserDetails {
     private String PASSWORD;
     private String USER_Mobile;
 
-
    //USER_INFO
    private int USER_IDX;
    private String USER_ID;
@@ -37,6 +36,8 @@ public class LoginDTO implements UserDetails {
    private String DEL_DATE;
    private String ROLE;
    private Collection<? extends GrantedAuthority> authorities;
+
+   private String COM_CODE;
 
 
     @Override

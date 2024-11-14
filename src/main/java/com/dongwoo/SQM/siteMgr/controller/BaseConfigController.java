@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,7 @@ import java.util.Map;
 
 @Slf4j
 @Controller
+@RequestMapping("/admin/siteMgr")
 @RequiredArgsConstructor
 public class BaseConfigController {
 
@@ -35,7 +38,7 @@ public class BaseConfigController {
 //        return "/baseConfig/getlist";
 //    }
 
-    @GetMapping("/admin/siteMgr/baseConfig")
+    @GetMapping("/baseConfig")
     public String findAll(Model model){
         List<BaseConfigDTO> baseConfigDTOList = BaseConfigService.findAll();
         model.addAttribute("baseConfigList",baseConfigDTOList);
@@ -46,7 +49,7 @@ public class BaseConfigController {
         return "/baseConfig/list";
     }
 
-    @GetMapping("/baseconfig/search")
+    @GetMapping("/baseConfig/search")
     public String findSearch(Model model, HttpServletRequest request){
         String sGubun = request.getParameter("gubun");
         String sSearchKey = request.getParameter("searchkey");
@@ -61,7 +64,7 @@ public class BaseConfigController {
         return "/baseConfig/list";
     }
 
-    @RequestMapping(value = "/BaseConfig/Popup",method = RequestMethod.GET)
+    @RequestMapping(value = "/baseConfig/Popup",method = RequestMethod.GET)
     public ModelAndView baseConfig_Popup(Locale locale, Model model){
         String returnUrl = "/baseConfig/BaseConfigPopUp";
         ModelAndView mav = new ModelAndView(returnUrl);
@@ -69,27 +72,18 @@ public class BaseConfigController {
     }
 
 
-    @PostMapping("/baseConfig/baseConfig_Info")
-    public @ResponseBody Map<String, String> getBaseConfig_Info(@RequestParam("status") String idx) {
+    @GetMapping("/baseConfig/baseConfigInfo")
+    public ResponseEntity<?> getBaseConfigInfo(@RequestParam("param1") String idx) {
         System.out.println("status = " + idx);
         BaseConfigDTO baseConfigDTO = BaseConfigService.getBaseConfig_Info(idx);
-        log.info("================test22222222aa");
-
-        HashMap<String,String> response = new HashMap<>();
-
-        if(baseConfigDTO != null) {
-            response.put("status", "ok");
-            response.put("IDX", String.valueOf(baseConfigDTO.getIDX()));
-            response.put("GUBN", String.valueOf(baseConfigDTO.getGUBN()));
-            response.put("CONFIGCODE", String.valueOf(baseConfigDTO.getCONFIGCODE()));
-            response.put("CONFIGVALUE", String.valueOf(baseConfigDTO.getCONFIGVALUE()));
-            response.put("CONFIGSUMMARY", String.valueOf(baseConfigDTO.getCONFIGSUMMARY()));
-            response.put("CONFIGSTATUS", String.valueOf(baseConfigDTO.getCONFIGSTATUS()));
+        if (baseConfigDTO != null) {
+            return ResponseEntity.ok().body(baseConfigDTO);  // 회사 정보가 있을 경우 응답
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found.");
         }
-        return response;
     }
 
-    @GetMapping("/baseconfig/action")
+    @GetMapping("/baseConfig/action")
     public String save(@ModelAttribute BaseConfigDTO baseConfigDTO,HttpSession session) {
         log.info("test111111");
         log.info(baseConfigDTO.getUSERID());
@@ -112,7 +106,6 @@ public class BaseConfigController {
             int sidx = baseConfigDTO.getIDX();
             BaseConfigService.delete(sidx);
         }
-
 
         return  "redirect:/admin/siteMgr/baseConfig";
     }

@@ -10,7 +10,6 @@
         <setting name="logImpl" value="org.apache.ibatis.logging.stdout.StdOutImpl"/>
     </settings>
     <typeAliases>
-        <typeAlias type="com.dongwoo.SQM.common.dto.ExcelDTO" alias="excel"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.board.dto.BoardDTO" alias="board"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.MemberDTO" alias="member"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.system.dto.LoginDTO" alias="login"></typeAlias>
@@ -27,10 +26,10 @@
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SvhcListDTO" alias="svhcList"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.DeclarationDTO" alias="Declaration"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SampleFileDTO" alias="sampleFile"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthDTO" alias="isoAuth"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO" alias="companyInfoParam"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO" alias="isoAuthItem"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO" alias="companyInfoParam"></typeAlias>
 
 
 

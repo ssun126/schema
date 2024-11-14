@@ -22,12 +22,12 @@ import java.util.Objects;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/siteMgr")
 @RequiredArgsConstructor
 public class BaseCodeController {
 
     private final BaseCodeService baseCodeService;
-    @GetMapping("/siteMgr/baseCode/save")
+    @GetMapping("/baseCode/save")
     public String save() {
         return "/baseCode/save";
     }
@@ -41,7 +41,7 @@ public class BaseCodeController {
 
 
     //@GetMapping("/baseCode/list")
-    @GetMapping("/admin/siteMgr/baseCode")
+    @GetMapping("/baseCode")
     public String findAll(Model model) {
         log.info("test-===============findall");
         List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findAll();
@@ -57,7 +57,7 @@ public class BaseCodeController {
         return "/baseCode/list";
     }
 
-    @GetMapping("/siteMgr/baseCode/baseCodeInfo")
+    @GetMapping("/baseCode/baseCodeInfo")
     public ResponseEntity<?> getBaseConfigInfo(@RequestParam("param1") String idx) {
         BaseCodeDTO baseCodeDTO = baseCodeService.getbaseCodeInfo(idx);
 
@@ -68,7 +68,7 @@ public class BaseCodeController {
         }
     }
 
-    @GetMapping("/siteMgr/baseCode/action")
+    @GetMapping("/baseCode/action")
     public String save(@ModelAttribute BaseCodeDTO baseCodeDTO,HttpSession session) {
         log.info("test111111");
         //log.info(GUBN);
@@ -104,10 +104,10 @@ public class BaseCodeController {
         }
 
 
-        return  "redirect:/siteMgr/baseCode";
+        return  "redirect:/admin/siteMgr/baseCode";
     }
 
-    @GetMapping("/siteMgr/basecode/search")
+    @GetMapping("/baseCode/search")
     public String findSearch(Model model, HttpServletRequest request){
         String sGubun = request.getParameter("GUBUN");
         String sSearchKey = request.getParameter("SEARCHKEY");
@@ -132,7 +132,7 @@ public class BaseCodeController {
      * @param baseCodeDTO
      * @return
      */
-    @PostMapping("/siteMgr/baseCode/getCode")
+    @PostMapping("/baseCode/getCode")
     public String findByCodeGroup(BaseCodeDTO baseCodeDTO) {
         // 상세내용 가져옴
         List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findByCodeGroup(baseCodeDTO);
@@ -146,7 +146,7 @@ public class BaseCodeController {
      * @param baseCodeDTO
      * @return
      */
-    @GetMapping("/siteMgr/baseCode/get")
+    @GetMapping("/baseCode/get")
     @ResponseBody
     public List<BaseCodeDTO> findByCode(BaseCodeDTO baseCodeDTO){
         List<BaseCodeDTO> baseCodeDTOList= baseCodeService.findByCodeGroup(baseCodeDTO);

@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
-                        .requestMatchers("/", "/login", "/join","/member/**","/siteMgr/**","/userMgr/**").permitAll()
+                        .requestMatchers("/", "/login", "/member/**").permitAll()
                         // 관리자 권한만 가능
                         //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

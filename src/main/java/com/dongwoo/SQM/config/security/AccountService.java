@@ -46,10 +46,12 @@ public class AccountService  implements UserDetailsService {
         // 조회한 정보를 userCustom에 담는다.
         // 만약 파라미터를 추가해야한다면 UserCustom 을 먼저 수정한다.
         UserCustom userCustom = new UserCustom(loginDTO.getUsername()
-                , encoder.encode(loginDTO.getUSER_PWD())
+                , loginDTO.getUSER_PWD()
                 , enabled, accountNonExpired, credentialsNonExpired, accountNonLocked
                 , authorities(loginDTO)
-                , loginDTO.getUSER_EMAIL()
+                , loginDTO.getUSER_GUBN()
+                , loginDTO.getUSER_STATUS()
+                , loginDTO.getCOM_CODE()
                 , loginDTO.getUSER_NAME() // 이름
         );
 

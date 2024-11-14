@@ -36,9 +36,5 @@ public class CustomErrorController implements ErrorController {
         model.addAttribute("errorMessage", "예외 발생 시 메시지");
         return "/error/example"; // Thymeleaf 템플릿 이름
     }
-/*
-        @Override
-        public String getErrorPath() {
-            return null;
-        }*/
+
 }
