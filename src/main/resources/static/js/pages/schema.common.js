@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function() {
     modalHeader.addEventListener("mousedown", function (event) {
       isDragging = true;
       mouseOffset = { x: event.clientX, y: event.clientY };
-      console.log("modalDialog.style.left========"+modalDialog.style.left);
       // 모달의 현재 위치가 없을 경우 기본값을 0으로 설정
       dialogOffset = {
         left: modalDialog.style.left === '' ? 800 : Number(modalDialog.style.left.replace('px', '')),
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //모달 초기화
 function modal_init(id, status){
-    $('#modalTitle').text(status == 'add'?'신규 추가':'업체'); //모달창의 제목 변경
+    $('#modalTitle').text(status == 'add'?'신규 추가':''); //모달창의 제목 변경
     // form 전체 초기화
     $("form[name='form"+id+"']").each(function() {
         this.reset();
@@ -63,22 +62,21 @@ function modal_init(id, status){
 
 //모달 열기
 function modal_open(id, status, sUrl, param){
+    overlay.style.display = "block"; // 오버레이 배경 표시
     if(status !='add'){
         var sUrl = sUrl;
         var data = {};  // 전송할 데이터 객체 생성
 
-        console.log("param:"+param );
         // param1, param2, ...로 data 구성
         if(param != null && typeof param === 'string' && param.includes("|")){
             var params = param.split("|");
-            console.log("param:"+param + "//////"+params.length);
+            //console.log("param:"+param + "//////"+params.length);
             for (var i = 0; i < params.length; i++) {
                 data["param" + (i + 1)] = params[i];  // param1, param2, ... 형식으로 추가
             }
         }else{
             data = {param1 : param};
         }
-        console.log("data=====>"+data);
         $.ajax({
             type: "get",
             url:   sUrl,
@@ -110,6 +108,7 @@ function modal_open(id, status, sUrl, param){
 
 //모달 닫기
 function modal_close(id){
+    overlay.style.display = "none"; // 오버레이 숨기기
     $("#" + id).fadeOut();
     //초기화
     modal_init(id, 'add');
