@@ -16,6 +16,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -211,10 +213,14 @@ public class MemberController {
         String USERID = memberDTO.getUSER_ID();
         String MainUSER_NAME = memberDTO.getUSERSELECT();  //메인작업자.
 
-        //Step 1 .USERINFO 만들기.  ID 생성
+        //Step 1 .USER_INFO 만들기. (로그인 ID 생성)
         UserInfoDTO userinfoDTO = new UserInfoDTO();
         userinfoDTO.setUSER_ID(memberDTO.getUSER_ID());
-        userinfoDTO.setUSER_PWD(memberDTO.getUSER_PWD());
+
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedPassword = encoder.encode(memberDTO.getUSER_PWD());
+        userinfoDTO.setUSER_PWD(encodedPassword);
+
         userinfoDTO.setUSER_NAME(MainUSER_NAME);
         userinfoDTO.setUSER_GUBN("1");  //사용자 구분 (0:동우화인켐, 1:업체)
         userinfoDTO.setUSER_STATUS("N"); // 사용자 상태 (Y:사용, N:미사용)
@@ -227,7 +233,7 @@ public class MemberController {
         int USER_IDX = userNewUserinfoDTO.getUSER_IDX();
 
 
-        //Step 2 .USERINFOCOMPANYUSER 만들기. //추가 사용자 생성
+        //Step 2 .USER_INFO_COMPANY_USER 만들기. //추가 사용자 생성
         //공동 작업자 영역.=============================
         String USER_NAME = memberDTO.getUSER_NAME();
         String USER_POSITION = memberDTO.getUSER_POSITION();
@@ -272,7 +278,7 @@ public class MemberController {
         UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
         userInfoCompanyDTO.setUSER_IDX(USER_IDX);
         userInfoCompanyDTO.setCOM_CODE(COM_CODE);
-        userInfoCompanyDTO.setCOM_USER_IDX(COM_USER_IDX);   //메인 업무자.... 공동 작업자
+        userInfoCompanyDTO.setCOM_USER_IDX(COM_USER_IDX);   //★ 메인 업무자.... 공동 작업자
         userInfoCompanyDTO.setID_PW_ADD_REASON(memberDTO.getID_PW_ADD_REASON());           //ID/PW 추가 사유
         userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  //반려후 재처리시... 다시 바꿈.?
 
@@ -441,18 +447,19 @@ public class MemberController {
             }else {
                 USER_STATUS = comPanyDTO.getUSER_STATUS();  //(0:대기, 1:검토중, 2:승인, 3:반려)
 
-                //USERINFO 를 검색하자.   USER_INFO_COMPANY.USER_IDX
+                //USER_INFO 를 검색하자.   USER_INFO_COMPANY.USER_IDX
                 UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSER_IDX());
 
                 User_ID = userUserinfoDTO.getUSER_ID();
                 //ID /PASS 업체 정보 바인딩 항목
                 response.put("USER_ID", userUserinfoDTO.getUSER_ID());
-                response.put("USER_NAME", userUserinfoDTO.getUSER_NAME());
-                response.put("USER_PWD", userUserinfoDTO.getUSER_PWD());
+                response.put("USER_NAME", userUserinfoDTO.getUSER_NAME()); //메인 담당자 select .  USER_INFO_COMPANY 의 COM_USER_IDX 의 명을 가져와야된다.
+                //response.put("USER_PWD", userUserinfoDTO.getUSER_PWD()); //복호화 처리 안됨.
+                response.put("USER_PWD", ""); //수정시 재설정하자.
                 response.put("ID_PW_ADD_REASON", comPanyDTO.getID_PW_ADD_REASON());
 
 
-                //공동 작업자 가져오기.   where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
+                //공동 작업자 가져오기.  USER_INFO_COMPANY  where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
                 UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
                 parmaDTO.setCOM_CODE(comPanyDTO.getCOM_CODE()); //위에서 만들어진 밴더 코드
                 parmaDTO.setUSER_IDX(comPanyDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX

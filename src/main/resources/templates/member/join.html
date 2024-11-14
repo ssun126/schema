@@ -701,7 +701,7 @@
             //document.getElementById("userSelect").value =  companyInfo.USER_NAME;
             var select = document.getElementById("userSelect");
             var option = document.createElement("option");
-            option.value =companyInfo.USER_NAME;
+            option.value =companyInfo.USER_NAME;  //메인 업무자 셋팅.
             option.text = companyInfo.USER_NAME;
             select.appendChild(option);
             option.selected = true;
@@ -967,12 +967,17 @@
             return;
         }
 
+        //기등록 업체 일때... 아이디 추가 일때만 체크
         const reason = document.getElementById('ID_PW_ADD_REASON').value;
-        if (reason == "") {
-            $('#ID_PW_ADD_REASON').focus();
-            alert("ID/PW 추가사유를 입력해 주세요.");
-            return;
+        if ($('#registeredCompany').is(':visible')) {
+
+            if (reason == "") {
+                $('#ID_PW_ADD_REASON').focus();
+                alert("ID/PW 추가사유를 입력해 주세요.");
+                return;
+            }
         }
+
 
         // 접속목적
         const selectedGoals = [];
