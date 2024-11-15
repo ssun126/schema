@@ -3,6 +3,11 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>성적서</title>
+</head>
 <body>
     <div class="cui_content">
         <div class="cui_main">
@@ -12,98 +17,99 @@
                 </div>
             </div>
             <div class="cui_body">
-                <div class="cui_search">
-                    <div class="search_list cui_grid_wrap ">
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">등록일</strong>
-                            <div class="item_content">
-                                <div class="cui_items_wrap">
-                                    <div class="item_content" data-role="calendar-picker" >
-                                        <input type="text" class="cui_text_field" value="2024.12.13">
+                <form id="searchForm" method="get">
+                    <div class="cui_search">
+                        <div class="search_list cui_grid_wrap ">
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">등록일</strong>
+                                <div class="item_content">
+                                    <div class="cui_items_wrap">
+                                        <div class="item_content" data-role="calendar-picker" >
+                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                        </div>
+                                    </div>
+                                    <div class="field_connect">~</div>
+                                    <div class="cui_items_wrap">
+                                        <div class="item_content" data-role="calendar-picker" >
+                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="field_connect">~</div>
-                                <div class="cui_items_wrap">
-                                    <div class="item_content" data-role="calendar-picker" >
-                                        <input type="text" class="cui_text_field" value="2024.12.13">
-                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
-                                    </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">등록자</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" placeholder="등록자를 입력해주세요">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">등록자</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" placeholder="등록자를 입력해주세요">
-                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">업체명</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체명</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
-                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
-                            </div>
-                        </div>
 
-
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">입고일</strong>
-                            <div class="item_content">
-                                <div class="cui_items_wrap">
-                                    <div class="item_content" data-role="calendar-picker" >
-                                        <input type="text" class="cui_text_field" value="2024.12.13">
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">입고일</strong>
+                                <div class="item_content">
+                                    <div class="cui_items_wrap">
+                                        <div class="item_content" data-role="calendar-picker" >
+                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                        </div>
+                                    </div>
+                                    <div class="field_connect">~</div>
+                                    <div class="cui_items_wrap">
+                                        <div class="item_content" data-role="calendar-picker" >
+                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="field_connect">~</div>
-                                <div class="cui_items_wrap">
-                                    <div class="item_content" data-role="calendar-picker" >
-                                        <input type="text" class="cui_text_field" value="2024.12.13">
-                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
-                                    </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">자재</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">성적서 상태</strong>
+                                <div class="item_content">
+                                    <select class="cui_select_field">
+                                        <option value="">제목</option>
+                                        <option value="">제목</option>
+                                        <option value="">제목</option>
+                                        <option value="">제목</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap required_field">
+                                <strong class="item_label">LOT NO</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" placeholder="">
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">플랜트</strong>
+                                <div class="item_content">
+                                    <select class="cui_select_field">
+                                        <option value="">제목</option>
+                                        <option value="">제목</option>
+                                        <option value="">제목</option>
+                                        <option value="">제목</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">자재</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
-                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
-                            </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">성적서 상태</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field">
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="cui_items_wrap required_field">
-                            <strong class="item_label">LOT NO</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" placeholder="">
-                            </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">플랜트</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field">
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                </select>
-                            </div>
+                        <div class="search_action">
+                            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
                         </div>
                     </div>
-                    <div class="search_action">
-                        <button type="button" class="cui_button primary"><span>조회</span></button>
-                    </div>
-                </div>
+                </form>
 
                 <div class="cui_jqGrid_section">
                     <div class="cui_jqGrid_head">
@@ -127,3 +133,10 @@
     </div>
 </body>
 </html>
+<script>
+    $(document).ready(function () {
+        $('#searchBtn').on('click', function(event){
+            event.preventDefault();  // 기본 폼 제출 동작 방지
+        });
+    });
+</script>

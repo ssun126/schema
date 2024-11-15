@@ -3,6 +3,11 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>변경관리</title>
+</head>
 <body>
 <div class="cui_content">
   <div class="cui_main">
@@ -12,71 +17,73 @@
       </div>
     </div>
     <div class="cui_body">
-      <div class="cui_search">
-        <div class="search_list cui_grid_wrap ">
-          <div class="cui_items_wrap" data-direction="left">
-            <strong class="item_label">플랜트</strong>
-            <div class="item_content">
-              <select class="cui_select_field">
-                <option value="">제목</option>
-                <option value="">제목</option>
-                <option value="">제목</option>
-                <option value="">제목</option>
-              </select>
-            </div>
-          </div>
-          <div class="cui_items_wrap" data-direction="left">
-            <strong class="item_label">상태</strong>
-            <div class="item_content">
-              <select class="cui_select_field">
-                <option value="">제목</option>
-                <option value="">제목</option>
-                <option value="">제목</option>
-                <option value="">제목</option>
-              </select>
-            </div>
-          </div>
-          <div class="cui_items_wrap" data-direction="left">
-            <strong class="item_label">업체명</strong>
-            <div class="item_content">
-              <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
-              <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
-            </div>
-          </div>
-          <div class="cui_items_wrap required_field">
-            <strong class="item_label">제목</strong>
-            <div class="item_content">
-              <input class="cui_text_field" type="text" placeholder="">
-            </div>
-          </div>
-          <div class="cui_items_wrap required_field">
-            <strong class="item_label">PCN_NO</strong>
-            <div class="item_content">
-              <input class="cui_text_field" type="text" placeholder="">
-            </div>
-          </div>
-          <div class="cui_items_wrap" data-direction="left">
-            <strong class="item_label">의뢰일</strong>
-            <div class="item_content">
-              <div class="cui_items_wrap">
-                <div class="item_content" data-role="calendar-picker" >
-                  <input type="text" class="cui_text_field" value="2024.12.13">
-                </div>
-              </div>
-              <div class="field_connect">~</div>
-              <div class="cui_items_wrap">
-                <div class="item_content" data-role="calendar-picker" >
-                  <input type="text" class="cui_text_field" value="2024.12.13">
-                  <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
-                </div>
+      <form id="searchForm" method="get">
+        <div class="cui_search">
+          <div class="search_list cui_grid_wrap ">
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">플랜트</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                </select>
               </div>
             </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">상태</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체명</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
+                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>
+              </div>
+            </div>
+            <div class="cui_items_wrap required_field">
+              <strong class="item_label">제목</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="">
+              </div>
+            </div>
+            <div class="cui_items_wrap required_field">
+              <strong class="item_label">PCN_NO</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="">
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">의뢰일</strong>
+              <div class="item_content">
+                <div class="cui_items_wrap">
+                  <div class="item_content" data-role="calendar-picker" >
+                    <input type="text" class="cui_text_field" value="2024.12.13">
+                  </div>
+                </div>
+                <div class="field_connect">~</div>
+                <div class="cui_items_wrap">
+                  <div class="item_content" data-role="calendar-picker" >
+                    <input type="text" class="cui_text_field" value="2024.12.13">
+                    <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="search_action">
+            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
           </div>
         </div>
-        <div class="search_action">
-          <button type="button" class="cui_button primary"><span>조회</span></button>
-        </div>
-      </div>
+      </form>
 
       <div class="cui_jqGrid_section">
         <div class="cui_jqGrid_head">
@@ -98,5 +105,259 @@
     </div>
   </div>
 </div>
+<div class="cui_dialog" style="width:1200px;display:none;" id="PopupChangeMgmt">
+  <div class="dialog_container">
+    <div class="dialog_head">
+      <div class="dialog_title">
+        <div class="main_label">PCN</div>
+      </div>
+      <div class="dialog_toolbar">
+        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+      </div>
+    </div>
+    <div class="dialog_body">
+      <div class="body_root">
+        <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/admin/qualityCtrl/changeMgmt/action">
+          <fieldset>
+            <legend><span>PCN 내용</span></legend>
+            <table class="cui_table">
+              <colgroup>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+              </colgroup>
+              <tbody>
+              <tr>
+                <th><span>PCN_NO</span></th>
+                <td>
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>담당자</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>업체명</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th><span>플랜트</span></th>
+                <td>
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>제목(원재료포함)</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>동시진행여부</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th><span>완료요청일</span></th>
+                <td>
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>변경유형</span></th>
+                <td>
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>목적</span></th>
+                <td colspan="3">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th><span>변경전</span></th>
+                <td colspan="3">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>변경후</span></th>
+                <td colspan="3">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th><span>첨부파일</span></th>
+                <td colspan="7">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+            <legend><span>접수내역</span></legend>
+            <table class="cui_table">
+              <colgroup>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+              </colgroup>
+              <tbody>
+              <tr>
+                <th><span>접수일</span></th>
+                <td>
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="2024-11-15" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>진행완료 예정일</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="2024-11-15" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>접수의견</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+            <legend><span>승인내역</span></legend>
+            <table class="cui_table">
+              <colgroup>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+                <col style="width:154px;">
+                <col>
+              </colgroup>
+              <tbody>
+              <tr>
+                <th><span>승인일</span></th>
+                <td>
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="2024-11-15" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>승인여부</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="2024-11-15" disabled>
+                    </div>
+                  </div>
+                </td>
+                <th><span>특이사항</span></th>
+                <td colspan="2">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <th><span>승인서</span></th>
+                <td colspan="7">
+                  <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_content">
+                      <input class="cui_text_field" type="text" value="" disabled>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </fieldset>
+        </form>
+        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+          <div class="item_content">
+            <button type="button" id="BtnClose" name="INFO_FLAG" value="Close" class="cui_button primary modal-close"><span>닫기</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
+<script>
+  $(document).ready(function () {
+    $('#searchBtn').on('click', function(event){
+      event.preventDefault();  // 기본 폼 제출 동작 방지
+    });
+  });
+
+  $('.modal-close').on('click', function(e){
+      e.preventDefault();
+      const modal = $(this).parents('.cui_dialog');
+      modal.fadeOut();
+      modal_init();
+    });
+</script>
