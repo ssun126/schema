@@ -17,7 +17,7 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button primary" onclick="location.href='/user/board/qa/save'"><span>글 등록</span></button>
+                    <button type="button" class="cui_button primary" onclick="location.href='/user/board/qna/save'"><span>글 등록</span></button>
                 </div>
             </div>
             <table class="cui_table center" id="boardTable">
@@ -54,14 +54,14 @@
             <div id="pagination" class="pagination" style="text-align: center"></div>
             <!--<div th:object="${pageMaker}" style="text-align: center" th:each="auth : ${#authentication.authorities}">
                 <div id="pagination" class="pagination">
-                    <a th:if="*{prev}" th:href="@{/#auth.authority/board/qa(pageNum=${startPage - 1})}"><code>&lt;&lt;</code></a>
+                    <a th:if="*{prev}" th:href="@{/#auth.authority/board/qna(pageNum=${startPage - 1})}"><code>&lt;&lt;</code></a>
                     <th:block th:each="num : ${#numbers.sequence(pageMaker.getStartPage(), pageMaker.getEndPage())}">
                         <a th:unless="${pageMaker.criteria.getPageNum() != num}" href="#" class="active"><code th:text="${num}"></code></a>
-                        <a th:unless="${pageMaker.criteria.getPageNum() == num}" th:href="@{/#auth.authority/board/qa(pageNum=${num})}"><code th:text="${num}"></code></a>
+                        <a th:unless="${pageMaker.criteria.getPageNum() == num}" th:href="@{/#auth.authority/board/qna(pageNum=${num})}"><code th:text="${num}"></code></a>
                     </th:block>
-                    <a th:if="*{next}" th:href="@{/#auth.authority/board/qa(pageNum=${endPage + 1})}"><code>&gt;&gt;</code></a>
+                    <a th:if="*{next}" th:href="@{/#auth.authority/board/qna(pageNum=${endPage + 1})}"><code>&gt;&gt;</code></a>
                 </div>
-                <form action="/${auth.authority}/board/qa" th:object="${criteria}" name="pageForm">
+                <form action="/${auth.authority}/board/qna" th:object="${criteria}" name="pageForm">
                     <input type="hidden" name="pageNum" th:field="*{pageNum}">
                     <input type="hidden" name="amount" th:field="*{amount}">
                 </form>

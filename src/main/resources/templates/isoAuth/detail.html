@@ -67,14 +67,29 @@
                 <form class="cui_form_field" data-legend="true" name="formIsoAuth">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">분류</strong>
+                            <strong class="item_label" >분류</strong>
                             <div class="item_content">
-                                <select class="cui_select_field wide" id="modalIsoType" name="ISO_TYPE">
+                                <select class="cui_select_field wide" id="modalAuthType" name="AUTH_TYPE">
+                                    <option value="">분류 선택</option>
+                                    <option value="QUALITY">품질관리</option>
+                                    <option value="ENVIRONMENT">환경</option>
+                                    <option value="SAFETY">안전보건</option>
+                                    <option value="ENERGY">에너지</option>
+                                    <option value="HSPM">HSPM</option>
+                                    <option value="ETC">기타</option>
+                                </select>
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-type="lang">인증서</strong>
+                            <div class="item_content">
+                                <select class="cui_select_field wide" id="modalAuthCode" name="AUTH_CODE">
+                                    <option value="">인증서 선택</option>
                                     <option value="ISO-9001">ISO-9001</option>
-                                    <option value="IATF16949">IATF16949</option>
-                                    <option value="ISO14001">ISO14001</option>
-                                    <option value="ISO45001">ISO45001</option>
-                                    <option value="ISO50001">ISO50001</option>
+                                    <option value="IATF-16949">IATF-16949</option>
+                                    <option value="ISO-14001">ISO-14001</option>
+                                    <option value="ISO-45001">ISO-45001</option>
+                                    <option value="ISO-50001">ISO-50001</option>
                                     <option value="HSPM">HSPM</option>
                                 </select>
                             </div>
@@ -85,37 +100,37 @@
                                 <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata">
                             </div>
                         </label>
-                        <label class="cui_items_wrap" data-direction="left">
+                        <label class="cui_items_wrap" data-direction="left" style="display:none;">
                             <strong class="item_label">사업본부</strong>
                             <div class="item_content">
                                 <select class="cui_select_field wide" id="modalFactoryId" name="FACTORY_ID">
-                                    <option value="ISO09001">케미컬(신흥)</option>
-                                    <option value="IATF16949">케미컬(평택)</option>
+                                    <option value="20001">케미컬(신흥)</option>
+                                    <option value="30001">케미컬(평택)</option>
                                 </select>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">인증일</strong>
                             <div class="item_content" data-role="calendar-picker">
-                                <input type="text" class="cui_text_field" value="2024.09.30" id="modalAuthDate" name="AUTH_DATE">
-                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>날자 선택</span></button>
+                                <input type="text" class="cui_text_field datepicker" value="2024.09.30" id="modalAuthDate" name="AUTH_DATE">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="authDate"><span>날자 선택</span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">만료일</strong>
                             <div class="item_content" data-role="calendar-picker">
-                                <input type="text" class="cui_text_field" value="2024.09.30" id="modalExpDate" name="EXP_DATE">
-                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="calendar-icon"><span>날자 선택</span></button>
+                                <input type="text" class="cui_text_field datepicker" value="2024.09.30" id="modalExpDate" name="EXP_DATE">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="expDate"><span>날자 선택</span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">첨부</strong>
                             <div class="item_content">
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field">
-                                    <div class="cui_items_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                                        <div class="item_content">
+                                    <input type="file" class="cui_file_field" name="file" id="modalFile">
+                                    <div class="cui_items_wrap" data-direction="left" style="display:none;" id="attachInfo">
+                                        <div class="item_label" data-cui-icon="paperclip" id="modalFileName"><span>파일명.html</span></div>
+                                        <div class="item_content" style="display:none;">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
@@ -280,9 +295,16 @@
     //상세 항목 정보 - Ajax로 받아온 데이터 바인딩
     function bindModalData(status, data) {
         $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-        $('#modalIsoType').val(data.AUTH_TYPE);
-        $('#modalCompanyName').val(data.COM_CODE);
-        $('#modalFactoryId').val(data.AUTH_CODE);
+                const authTypeSelect = document.getElementById("modalAuthType");
+                const authSelect = document.getElementById("modalAuthCode");
+                authTypeSelect.value = data.AUTH_TYPE;
+                authSelect.value = data.AUTH_CODE;
+                $('#modalCompanyName').val(data.COM_CODE);
+                $('#modalAuthDate').val(data.AUTH_DATE);
+                $('#modalExpDate').val(data.EXP_DATE);
+                $('#attachInfo').css('display', 'block');
+                $('#modalFileName span').text(data.FILE_NAME);
+                //$('#modalFactoryId').val(data.AUTH_TYPE);
     }
 
 </script>
