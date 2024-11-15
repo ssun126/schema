@@ -111,10 +111,16 @@ public class MemberService {
         return memberRepository.saveUserinfoCompanyHis(userInfoCompanyDTO);
     }
 
-    //COMPANYCODE 정보 업데이트
+    //COMPANYCODE 정보 업데이트 (가입)
     public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
         return memberRepository.updateCompanyCode(comPanyCodeDTO);
     }
+
+    //COMPANYCODE 정보 업데이트(가입후)
+    public int updateCpCodeCPUser(ComPanyCodeDTO comPanyCodeDTO) {
+        return memberRepository.updateCpCodeCPUser(comPanyCodeDTO);
+    }
+
 
 
     //사용자 ID 중복체크
