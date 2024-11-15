@@ -205,6 +205,43 @@
 
     </select>
 
+    <select id="findCompanyCodeWork" parameterType="companyInfo" resultType="companyInfo">
+        SELECT ccw.COM_CODE,ccw.BASE_CODE,BC.BASE_NAME
+            FROM COMPANY_CODE_WORK ccw ,BASE_CODE bc
+        WHERE ccw.BASE_CODE  = bc.BASE_CODE
+            AND COM_CODE=#{COM_CODE}
+    </select>
+
+    <select id="findCompanyCodeWorkEx" parameterType="companyInfo" resultType="companyInfo">
+        SELECT
+        u.USER_IDX,
+        u.USER_ID,
+        u.USER_NAME,
+        u.REG_DATE,
+        uc.USER_OK_DATE,
+        uc.user_status,
+        uc.COM_USER_IDX,
+        (SELECT LISTAGG(b.BASE_Name, '\n') WITHIN GROUP (ORDER BY b.BASE_Name)
+        FROM base_code b
+        LEFT JOIN USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
+        WHERE b.GROUP_CODE != b.BASE_CODE
+        AND b.BASE_OPTION = 'SYSTEM'
+        AND b.BASE_STATUS = 'Y'
+        AND b.GROUP_CODE = 'CONNECT'
+        AND g.USER_IDX = u.USER_IDX) AS BASE_NAMES,
+        (SELECT x.user_email
+        FROM USER_INFO_COMPANY_USER x
+        WHERE x.User_idx = u.USER_IDX
+        AND x.COM_USER_IDX = uc.COM_USER_IDX) AS user_email
+        FROM
+        USER_INFO u
+        JOIN
+        USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
+        WHERE
+        uc.COM_CODE =#{COM_CODE}
+        ORDER BY uc.USER_OK_DATE asc
+
+    </select>
 
     <insert id="save" parameterType="companyInfo">
         insert into COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)

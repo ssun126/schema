@@ -35,6 +35,17 @@ public class CompanyInfoRepository {
         }
     }
 
+    //업체 거래 사업부
+    public List<CompanyInfoDTO> findCompanyCodeWork(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return sql.selectList("CompanyInfo.findCompanyCodeWork", companyInfoParamDTO);
+    }
+
+    ////업체 회원 ID 검색 확장
+    public List<CompanyInfoDTO> findCompanyCodeWorkEx(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return sql.selectList("CompanyInfo.findCompanyCodeWorkEx", companyInfoParamDTO);
+    }
+
+
     public int save(CpCodeDTO cpCodeDTO) {
         return sql.insert("CompanyInfo.save", cpCodeDTO);
     }

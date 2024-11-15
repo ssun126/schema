@@ -69,6 +69,21 @@
         select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
     </select>
 
+    <!--가입 정보 가져오기 ID 에 달려있는..-->
+    <select id="findByMemberInfoAll" parameterType="userinfocom" resultType="userinfocom">
+        SELECT
+         decode(uc.COM_USER_IDX , icu.COM_USER_IDX ,'Y',' ') AS MAIN_USER_YN
+        ,uc.user_status
+        ,u.USER_IDX
+        ,u.USER_ID
+        ,uc.COM_USER_IDX,icu.*
+        FROM USER_INFO u, USER_INFO_COMPANY uc ,USER_INFO_COMPANY_USER icu
+        WHERE u.USER_IDX  = uc.USER_IDX
+        AND uc.USER_IDX = icu.USER_IDX
+        AND u.USER_ID= #{USER_ID}
+        ORDER BY MAIN_USER_YN DESC
+    </select>
+
 
     <!-- USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
     <insert id="saveUserinfoCompanyHis" parameterType="userinfoHis">

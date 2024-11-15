@@ -34,7 +34,7 @@ public class SvhcListService {
         try{
             String sql  = "INSERT INTO SVHC_DATA(SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM) VALUES (?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","C##NSQM","12345");
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","C##SCHEMA","12345");
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
             log.info("test2222222222222");

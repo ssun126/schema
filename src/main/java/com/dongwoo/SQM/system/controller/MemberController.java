@@ -450,6 +450,7 @@ public class MemberController {
                 UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSER_IDX());
 
                 User_ID = userUserinfoDTO.getUSER_ID();
+
                 int com_user_idx = comPanyDTO.getCOM_USER_IDX();  //메인작업자.
                 String com_user_Name = ""; //메인작업자 명
 

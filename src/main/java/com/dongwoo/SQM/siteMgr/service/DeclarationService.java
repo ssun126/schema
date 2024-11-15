@@ -34,7 +34,7 @@ public class DeclarationService
         try{
             String sql = "INSERT INTO DECLARATION_DATA(DECL_IDX,DECL_NUM,DECL_SUB_NUM,DECL_NAME,DECL_CASNUM,DECL_WEIGHT,DECL_CLASS,DECL_GROUND) VALUES (SEQ_DECL_DATA.NEXTVAL,?,?,?,?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","C##NSQM","12345");
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","C##SCHEMA","12345");
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
 
