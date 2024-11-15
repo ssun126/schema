@@ -8,12 +8,23 @@ import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -51,14 +62,47 @@ public class ISOAuthRestController {
 
     //IsoAuth 정보 신규 저장
     @PostMapping("/setIsoAuthData")
-    public ResponseEntity<?> setIsoAuthData(@RequestBody IsoAuthItemDTO isoAuthItemDTO) {
-        int resultCnt = isoAuthService.save(isoAuthItemDTO);
+    public ResponseEntity<?> setIsoAuthData(@RequestBody IsoAuthDTO isoAuthDTO) {
+        int resultCnt = isoAuthService.save(isoAuthDTO);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
         if(resultCnt > 0){
             return ResponseEntity.ok("Form submitted successfully!");
         }else{
             return ResponseEntity.ok("Form submitted fail!");
+        }
+    }
+    @Value("${Upload.path}")
+    private String uploadPath;
+
+    //IsoAuth 정보 신규 저장
+    @PostMapping("/setIsoAuthItemData")
+    public String setIsoAuthItemData(IsoAuthItemDTO isoAuthItemDTO, @RequestParam("file") MultipartFile file) throws IOException {
+        log.info("isoAuthItemDTO = " + isoAuthItemDTO);
+        if (file.isEmpty()) {
+            log.info("No file uploaded");
+        } else {
+            // 파일 업로드 처리 시작
+            UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
+
+            //String directory = "D:/devp/";
+            String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
+
+            File saveFile = new File(uploadPath, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
+
+            file.transferTo(saveFile);
+
+            isoAuthItemDTO.setFILE_NAME(fileName);
+            isoAuthItemDTO.setFILE_PATH(uploadPath + fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
+            // 파일 업로드 처리 끝
+        }
+        int resultCnt = isoAuthService.saveItem(isoAuthItemDTO);
+
+        // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
+        if(resultCnt > 0){
+            return "File uploaded successfully!";
+        }else{
+            return "Form submitted fail!";
         }
     }
 
@@ -93,5 +137,59 @@ public class ISOAuthRestController {
     public String loadPage1(Model model) {
         // 필요한 데이터를 모델에 추가
         return "isoAuth/detail";
+    }
+
+    @GetMapping("/getIsoAuthFileDown")
+    public ResponseEntity<FileSystemResource> downloadFile(@RequestParam("filename") String filename) {
+        try {
+            // 파일 경로 설정
+            File file = new File(uploadPath +   URLEncoder.encode(filename, StandardCharsets.UTF_8));
+            if (!file.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+
+            // 파일 리소스 생성
+            FileSystemResource resource = new FileSystemResource(file);
+
+            // 응답 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    //IsoAuth 정보 제출
+    @PostMapping("/sendIsoAuthData")
+    public ResponseEntity<?> sendIsoAuthData(@RequestBody IsoAuthDTO isoAuthDTO) {
+
+        /*연동 필요*/
+
+        /*전송 데이터 저장*/
+        log.info("isoAuthDTO = " + isoAuthDTO);
+        isoAuthDTO.setAPPROVE_STATE("SEND");
+        isoAuthDTO.setCOM_NAME("C001");
+        isoAuthDTO.setAUTH_TYPE("ISO");
+
+        int resultCnt = isoAuthService.save(isoAuthDTO);
+
+        //상태 업데이트
+        IsoAuthItemDTO isoAuthItemDTO = new IsoAuthItemDTO();
+        isoAuthItemDTO.setCOM_CODE(isoAuthDTO.getCOM_CODE());
+        isoAuthItemDTO.setITEM_STATE("SEND");
+        isoAuthService.updateStatus(isoAuthItemDTO);
+
+        /* 메일 발송 */
+
+        // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
+        if(resultCnt > 0){
+            return ResponseEntity.ok("Form submitted successfully!");
+        }else{
+            return ResponseEntity.ok("Form submitted fail!");
+        }
     }
 }

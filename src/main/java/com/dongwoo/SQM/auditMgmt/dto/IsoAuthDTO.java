@@ -13,6 +13,8 @@ public class IsoAuthDTO {
     private String COM_CODE;
     @JsonProperty("COM_NAME")
     private String COM_NAME;
+    @JsonProperty("AUTH_TYPE")
+    private String AUTH_TYPE;
     @JsonProperty("APPROVE_STATE")
     private String APPROVE_STATE;
     @JsonProperty("APPROVE_DATE")

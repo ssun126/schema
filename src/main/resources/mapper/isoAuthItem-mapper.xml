@@ -3,9 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="IsoAuthItem">
-    <insert id="save" parameterType="isoAuthItem">
-        insert into ISO_AUTH_COMPANY_ITEM(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
-        values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)
+    <insert id="saveItem" parameterType="isoAuthItem">
+        INSERT INTO ISO_AUTH_COMPANY_ITEM(COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH)
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, 1, 1, sysdate, sysdate, 'SAVE', #{FILE_NAME}, #{FILE_PATH})
+    </insert>
+
+    <insert id="save" parameterType="isoAuth">
+        INSERT INTO AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, POINT, AUTH_TYPE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{POINT}, #{AUTH_TYPE}, 1, 1, sysdate, sysdate)
     </insert>
 
     <select id="findByIsoAuthItem" parameterType="String" resultType="isoAuthItem">
@@ -57,11 +62,11 @@
 
     <select id="getList" resultType="isoAuthItem">
         <![CDATA[
-        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE
+        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
         FROM
         (
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-            ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE
+            ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
             FROM ISO_AUTH_COMPANY_ITEM
             WHERE ROWNUM <= #{pageNum} * #{amount}
         )
@@ -75,11 +80,11 @@
     </select>
 
     <select id="getExpDateList" parameterType="map" resultType="isoAuthItem">
-        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE
+        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
         FROM
         (
         SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-        ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, ACI.REG_DATE, ITEM_STATE
+        ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, ACI.REG_DATE, ACI.UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
         FROM ISO_AUTH_COMPANY_ITEM ACI
         INNER JOIN COMPANY_CODE CC
         ON CC.COM_CODE = ACI.COM_CODE
@@ -101,7 +106,7 @@
     </select>
 
     <update id="updateStatus" parameterType="isoAuthItem">
-        update ISO_AUTH_COMPANY_ITEM set COM_STATUS=#{COM_STATUS}
+        update ISO_AUTH_COMPANY_ITEM set ITEM_STATE=#{ITEM_STATE}
         where COM_CODE=#{COM_CODE}
     </update>
 </mapper>

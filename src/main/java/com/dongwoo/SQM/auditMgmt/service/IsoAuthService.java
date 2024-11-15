@@ -18,8 +18,12 @@ import java.util.Map;
 public class IsoAuthService {
     private final IsoAuthRepository isoAuthRepository;
 
-    public int save(IsoAuthItemDTO isoAuthItemDTO) {
-        return isoAuthRepository.save(isoAuthItemDTO);
+    public int save(IsoAuthDTO isoAuthDTO) {
+        return isoAuthRepository.save(isoAuthDTO);
+    }
+
+    public int saveItem(IsoAuthItemDTO isoAuthItemDTO) {
+        return isoAuthRepository.saveItem(isoAuthItemDTO);
     }
 
     // ISO 인증 업체 리스트- 조건을 처리하는 검색 메서드
@@ -72,5 +76,10 @@ public class IsoAuthService {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_CODE", com_id);
         return isoAuthRepository.findByCompanyId(params);
+    }
+
+    //상태업데이트
+    public void updateStatus(IsoAuthItemDTO isoAuthItemDTO) {
+        isoAuthRepository.updateStatus(isoAuthItemDTO);
     }
 }

@@ -82,7 +82,7 @@ function getLocalizedValue(id, lang) {
         return item[lang];  // 해당 lang에 맞는 값 반환
     }
 
-    return `ID 또는 lang에 해당하는 데이터가 없습니다.`;
+    return `No ID or lang`;
 }
 
 // 특정 lang에 맞는 데이터를 span에 적용하는 함수

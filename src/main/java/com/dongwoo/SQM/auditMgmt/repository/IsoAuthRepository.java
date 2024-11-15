@@ -17,8 +17,12 @@ import java.util.Map;
 public class IsoAuthRepository {
     private final SqlSessionTemplate sql;
 
-    public int save(IsoAuthItemDTO isoAuthItemDTO) {
-        return sql.insert("IsoAuthItem.save", isoAuthItemDTO);
+    public int save(IsoAuthDTO isoAuthDTO) {
+        return sql.insert("IsoAuthItem.save", isoAuthDTO);
+    }
+
+    public int saveItem(IsoAuthItemDTO isoAuthItemDTO) {
+        return sql.insert("IsoAuthItem.saveItem", isoAuthItemDTO);
     }
 
     //전체 인증서 리스트 조회
@@ -54,5 +58,10 @@ public class IsoAuthRepository {
     //검색어로 조회된 리스트 수
     public int countByKeyword(Map<String, Object> params) {
         return sql.selectOne("IsoAuthItem.countByKeyword", params);
+    }
+
+    //상태업데이트
+    public void updateStatus(IsoAuthItemDTO isoAuthItemDTO) {
+        sql.update("IsoAuthItem.updateStatus", isoAuthItemDTO);
     }
 }
