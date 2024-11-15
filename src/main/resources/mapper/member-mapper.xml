@@ -124,6 +124,22 @@
         where COM_CODE=#{COM_CODE}
     </update>
 
+    <!-- Company Information 에서 사용자가 업체 기본 정보 수정할때-->
+    <update id="updateCpCodeCPUser" parameterType="companycode">
+        update COMPANY_CODE set
+        VENDOR_WORK_KIND=#{VENDOR_WORK_KIND}
+        ,COMPANY_NAME=#{COMPANY_NAME}
+        ,FACTORY_NAME=#{FACTORY_NAME}
+        ,BUS_NUMBER=#{BUS_NUMBER}
+        ,COM_ADDRESS=#{COM_ADDRESS}
+        ,COM_CEO_NAME=#{COM_CEO_NAME}
+        ,COM_CEO_PHONE=#{COM_CEO_PHONE}
+        ,COM_CEO_EMAIL=#{COM_CEO_EMAIL}
+        ,UP_DATE =sysdate
+        ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+        where COM_CODE=#{COM_CODE}
+    </update>
+
 
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->
     <select id="findByCompanyCode" parameterType="String" resultType="member">

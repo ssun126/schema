@@ -90,10 +90,14 @@ public class MemberRepository {
     }
 
 
-    //User history. 10.23
+    //회사정보 업데이트 (가입)
     public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
-        System.out.println("comPanyCodeDTO = " + comPanyCodeDTO);
         return sql.insert("Member.updateCompanyCode", comPanyCodeDTO);
+    }
+
+    //회사정보 업데이트 (가입후)
+    public int updateCpCodeCPUser(ComPanyCodeDTO comPanyCodeDTO) {
+        return sql.insert("Member.updateCpCodeCPUser", comPanyCodeDTO);
     }
 
 

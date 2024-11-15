@@ -5,6 +5,8 @@ import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.system.dto.ComPanyCodeDTO;
 import com.dongwoo.SQM.system.dto.MemberDTO;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
 import com.dongwoo.SQM.system.service.MemberService;
@@ -18,13 +20,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -73,6 +74,36 @@ public class CompanyInfoController {
 
         return "companyInfo/main";
     }
+
+
+    @PostMapping("/user/companyInfo/updateCompanyInfo")
+    @ResponseBody
+    public String updateUserMgrMyPage(@ModelAttribute MemberDTO memberDTO, Authentication authentication ,Model model) {
+
+        String loginId = authentication.getName();
+        MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
+
+        ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
+        comPanyCodeDTO.setCOM_CODE(memberDTO.getCOM_CODE());
+        comPanyCodeDTO.setVENDOR_WORK_KIND(memberDTO.getVENDOR_WORK_KIND());  // VENDOR 업종 형태 (D:제조사, L:물류사)
+
+        comPanyCodeDTO.setCOMPANY_NAME(memberDTO.getCOMPANY_NAME());
+        comPanyCodeDTO.setFACTORY_NAME(memberDTO.getFACTORY_NAME());
+        comPanyCodeDTO.setBUS_NUMBER(memberDTO.getBUS_NUMBER());
+        comPanyCodeDTO.setCOM_ADDRESS(memberDTO.getCOM_ADDRESS());
+        comPanyCodeDTO.setCOM_CEO_NAME(memberDTO.getCOM_CEO_NAME());
+        comPanyCodeDTO.setCOM_CEO_PHONE(memberDTO.getCOM_CEO_PHONE());
+        comPanyCodeDTO.setCOM_CEO_EMAIL(memberDTO.getCOM_CEO_EMAIL());
+        comPanyCodeDTO.setUP_DW_USER_IDX(loginMemberDTO.getUSER_IDX());   //업데이트 사용자.
+
+        System.out.println("comPanyCodeDTO: "+comPanyCodeDTO);
+        memberService.updateCpCodeCPUser(comPanyCodeDTO);  //업데이트  COMPANY_CODE
+
+        model.addAttribute("message", "Company 정보가 업데이트되었습니다.");  //
+        return "ok";
+    }
+
+
 
     @GetMapping("/admin/companyInfo/company")
     @PreAuthorize("hasRole('ADMIN')")

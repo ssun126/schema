@@ -333,13 +333,12 @@
     e.preventDefault();
     const modal = $(this).parents('.cui_dialog');
     modal.fadeOut();
-
   });
 
 
   function save() {
 
- // 체크된 체크박스의 id와 value를 수집
+    // 체크된 체크박스의 id와 value를 수집
     const selectedGoals = [];
 
     $('#divGoal input[type="checkbox"]').each(function() {
@@ -360,34 +359,6 @@
 
     // 두 데이터를 병합
     const dataToSend = formData + '&' + $.param(additionalData);
-
-      $.ajax({
-         type: "post",
-         url: "/userMgr/updateUserMgrMyPage",
-         data: dataToSend,
-         success: function(response) {
-            showAlert('success', '사용자 정보가 수정되었습니다.');
-         },
-         error: function(err) {
-           console.log("에러발생", err);
-           showAlert('warning', '업데이트 중 오류가 발생했습니다.');
-         }
-     });
-   }
-
-
-   function save_bak() {
-   //체크 박스 아이디를 못받는다.
-     const selectedGoals = [];
-
-    // 체크된 체크박스 값을 배열로 수집
-    $('#divGoal input[type="checkbox"]:checked').each(function() {
-        selectedGoals.push($(this).val());
-    });
-
-    // formData 직렬화 및 추가 데이터 병합
-    const formData = $('#updateForm').serialize();
-    const dataToSend = formData + '&' + $.param({ checkboxes: selectedGoals });
 
       $.ajax({
          type: "post",
