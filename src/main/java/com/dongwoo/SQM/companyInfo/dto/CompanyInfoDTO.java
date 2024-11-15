@@ -65,4 +65,22 @@ public class CompanyInfoDTO {
   private String  USER_STATUS;  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)   //  처리상태  ★.
   private String  USER_OK_DATE;
 
+    @JsonProperty("BASE_CODE")
+    private String BASE_CODE;        //코드
+    @JsonProperty("BASE_NAME")
+    private String BASE_NAME;    //코드명
+
+    @JsonProperty("USER_IDX")
+    private int USER_IDX ;
+    @JsonProperty("USER_ID")
+    private String  USER_ID ;
+    @JsonProperty("USER_NAME")
+    private String  USER_NAME ;
+    @JsonProperty("BASE_NAMES")
+    private String  BASE_NAMES ;
+
+    @JsonProperty("USER_EMAIL")
+    private String  USER_EMAIL ;
+
+
 }

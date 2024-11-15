@@ -73,6 +73,12 @@ public class MemberService {
         return memberRepository.findByCompanyUserComCode(userInfoCompanyUserDTO);
     }
 
+    // 공동 사용자 com_code, user_idx
+    public List<UserInfoCompanyUserDTO> findByMemberInfoAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return memberRepository.findByMemberInfoAll(userInfoCompanyUserDTO);
+    }
+
+
     // 공동 사용자 전체 com_code
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.findByCompanyUserAll(userInfoCompanyUserDTO);

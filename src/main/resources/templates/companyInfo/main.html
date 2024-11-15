@@ -24,11 +24,10 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>Vendor 번호 및 사업자등록번호 검색</span></th>
+                                    <th><span>Vendor 번호</span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text" value="12341234" disabled>-->
                                                 <input class="cui_text_field" type="text" name ="COM_CODE"  id = "searchCustomer"  th:value="${member.COM_CODE}" disabled>
                                             </div>
                                         </div>
@@ -37,7 +36,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text" value="COVISION" disabled>-->
                                                 <input class="cui_text_field" type="text"  id="COM_NAME"  th:value="${member.COM_NAME}" disabled>
                                             </div>
                                         </div>
@@ -48,11 +46,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>-->
-<!--                                                <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>-->
-<!--                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer" ><i></i><span>제조사</span></label>-->
-<!--                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"><i></i><span>물류사</span></label>-->
-
                                                 <label class="cui_checkbox">
                                                     <input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer"
                                                            th:checked="${member.VENDOR_WORK_KIND == 'D'}">
@@ -112,7 +105,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text" value="서울시 강서구 발산">-->
                                                 <input class="cui_text_field" type="text"  name = "COM_ADDRESS" id="COM_ADDRESS" th:value="${member.COM_ADDRESS}">
                                             </div>
                                         </div>
@@ -123,7 +115,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text" value="HONG GIL DONG">-->
                                                 <input class="cui_text_field" type="text"  name = "COM_CEO_NAME" id="COM_CEO_NAME" th:value="${member.COM_CEO_NAME}">
                                             </div>
                                         </div>
@@ -132,7 +123,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text" value="010-1234-1234">-->
                                                 <input class="cui_text_field" type="text" name = "COM_CEO_PHONE" id="COM_CEO_PHONE" th:value="${member.COM_CEO_PHONE}">
                                             </div>
                                         </div>
@@ -170,27 +160,22 @@
                                     <th><span>부서명</span></th>
                                     <th><span>email</span></th>
                                     <th><span>연락처</span></th>
-                                    <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
+                                    <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <td><span>메인 담당자</span></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><span>공동 업무자</span></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><input type="text" class="cui_text_field"></td>
-                                    <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
+                                <tbody id="tableBody">
+                                <tr th:each=" user : ${companyUserList}">
+                                    <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span></td>
+                                    <td><input type="text" class="cui_text_field" th:value="${user.USER_NAME}"></td>
+                                    <td><input type="text" class="cui_text_field" th:value="${user.USER_POSITION}"></td>
+                                    <td><input type="text" class="cui_text_field" th:value="${user.USER_DEPT}"></td>
+                                    <td><input type="text" class="cui_text_field" th:value="${user.USER_EMAIL}"></td>
+                                    <td><input type="text" class="cui_text_field" th:value="${user.USER_PHONE}"></td>
+                                    <td>
+                                        <button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton" th:if="${user.MAIN_USER_YN != 'Y'}">
+                                            <span>삭제</span>
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -209,9 +194,21 @@
                                 <tbody>
                                 <tr>
                                     <th><span>Warranty Letter</span></th>
-                                    <td><span>Approved</span></td>
-                                    <th><span>Warranty Letter</span></th>
-                                    <td><span>10점 | A등급 | 2024-07-31</span></td>
+                                    <td>
+                                        <span th:switch="${member.COM_MANAGE_STATUS}">
+                                            <span th:case="'0'">Pending</span>
+                                            <span th:case="'1'">Waiting</span>
+                                            <span th:case="'2'">Approved</span>
+                                            <span th:case="'3'">Rejected</span>
+                                        </span>
+                                    </td>
+                                    <th><span>Audit 관리</span></th>
+<!--                                    10점 | A등급 | 2024-07-31-->
+                                    <td>
+                                        <span th:text="${member.COM_AUDIT_POINT != null ? member.COM_AUDIT_POINT + '점  |  ' : ' 점수 없음 |'}"></span>
+                                        <span th:text="${member.COM_AUDIT_LEVEL != null ? member.COM_AUDIT_LEVEL + '등급  |  ' : ' 등급 없음 | '}"></span>
+                                        <span th:text="${member.COM_OK_DATE != null ? member.COM_OK_DATE.substring(0, 10) : ''}"></span>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -240,12 +237,12 @@
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td><span>미사용</span></td>
-                                    <td><span>사용</span></td>
-                                    <td><span>사용</span></td>
-                                    <td><span>사용</span></td>
-                                    <td><span>미사용</span></td>
-                                    <td><span>사용</span></td>
+                                    <td><span th:text="${member.TANTALUM_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.TIN_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.GOLD_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.COBALT_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.COBALT_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.MICA_YN == 'Y' ? '사용' : '미사용'}"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -261,12 +258,8 @@
                                 <tr>
                                     <th><span>사업본부</span></th>
                                     <td>
-                                        <div>
-                                            1) 반도체 사업본부<br>
-                                            2) 첨단소재 사업본부<br>
-                                            3) 에너지 기능재료 사업부<br>
-                                            4) 옵티칼 사업본부<br>
-                                            5) 통신디바이스 사업본부
+                                        <div th:each="companyCodeWork, iterStat : ${companyCodeWorkList}">
+                                            <span th:text="${iterStat.index + 1} + ') ' + ${companyCodeWork.BASE_NAME}"></span><br>
                                         </div>
                                     </td>
                                 </tr>
@@ -360,36 +353,22 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td><span>Test1</span></td>
-                                    <td><span>홍길동</span></td>
-                                    <td><span>test1@test.com</span></td>
-                                    <td><span>2024-01-01</span></td>
-                                    <td><span>2024-01-01</span></td>
-                                    <td><p>Audit Management (노동환경)<br>Audit Management (환경안전)</p></td>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="center">
-                                            <div class="item_content">
-                                                <button type="submit" class="cui_button"><span>탈퇴</span></button>
+                                    <tr th:each=" user : ${companyUserIDList}">
+                                        <td><span th:text="${user.USER_ID}" ></span></td>
+                                        <td><span th:text="${user.USER_NAME}"></span></td>
+                                        <td><span th:text="${user.USER_EMAIL}"></span></td>
+                                        <td><span th:text="${user.REG_DATE != null ? user.REG_DATE.substring(0, 10) : ''}"></span></td>
+                                        <td><span th:text="${user.USER_OK_DATE != null ? user.USER_OK_DATE.substring(0, 10) : ''}"></span></td>
+                                        <td><span th:utext="${#strings.replace(user.BASE_NAMES, '\n', '<br />')}"></span></td>
+                                        <td>
+                                            <div class="cui_items_wrap" data-direction="center">
+                                                <div class="item_content">
+                                                    <input type="hidden" name="USER_IDX" id="hiddenUSER_IDX" th:value="${user.USER_IDX}">
+                                                    <button type="submit" class="cui_button"><span>탈퇴</span></button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><span>Test1</span></td>
-                                    <td><span>홍길동</span></td>
-                                    <td><span>test1@test.com</span></td>
-                                    <td><span>2024-01-01</span></td>
-                                    <td><span>2024-01-01</span></td>
-                                    <td><p>Audit Management (노동환경)<br>Audit Management (환경안전)</p></td>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="center">
-                                            <div class="item_content">
-                                                <button type="submit" class="cui_button"><span>탈퇴</span></button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </fieldset>
@@ -399,3 +378,37 @@
         </div>
 </body>
 </html>
+
+<script>
+
+
+    $(document).ready(function() {
+
+         $('#addRowButton').on('click', function() {
+            // 공동 업무자 정보 생성
+            const newRow = `
+                <tr>
+                    <td><span>공동 업무자</span></td>
+                    <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름"  ></td>
+                    <td><input type="text" class="cui_text_field" name="USER_POSITION" ></td>
+                    <td><input type="text" class="cui_text_field" name="USER_DEPT"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" ></td>
+                    <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" ></td>
+                    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
+                </tr>
+            `;
+
+            $('#tableBody').append(newRow);
+        });
+
+
+        // 공동 업무자 정보 삭제
+        $(document).on('click', '#delRowButton', function() {
+            $(this).closest('tr').remove();
+        });
+
+
+    });
+
+
+</script>

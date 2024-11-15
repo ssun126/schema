@@ -31,6 +31,16 @@ public class CompanyInfoService {
         return companyInfoRepository.findCompanySearch(companyInfoParamDTO , SearchType);
     }
 
+    //업체 거래사업부
+    public List<CompanyInfoDTO> findCompanyCodeWork(CompanyInfoParamDTO companyInfoParamDTO) {
+        return companyInfoRepository.findCompanyCodeWork(companyInfoParamDTO);
+    }
+
+    //업체 회원 ID 검색 확장
+    public List<CompanyInfoDTO> findCompanyCodeWorkEx(CompanyInfoParamDTO companyInfoParamDTO) {
+        return companyInfoRepository.findCompanyCodeWorkEx(companyInfoParamDTO);
+    }
+
     public int save(CpCodeDTO cpCodeDTO) {
         return companyInfoRepository.save(cpCodeDTO);
     }

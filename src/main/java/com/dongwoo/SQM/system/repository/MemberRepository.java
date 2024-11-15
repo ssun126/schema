@@ -108,6 +108,10 @@ public class MemberRepository {
     public List<UserInfoCompanyUserDTO> findByCompanyUserComCode(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return sql.selectList("Member.findByCompanyUserComCode", userInfoCompanyUserDTO ); }
 
+    //공동 사용자 ID 조인후 전체 가져오기
+    public List<UserInfoCompanyUserDTO> findByMemberInfoAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return sql.selectList("Member.findByMemberInfoAll", userInfoCompanyUserDTO ); }
+
     //공동 사용자 전체 가져오기  10.24
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return sql.selectList("Member.findByCompanyUserAll", userInfoCompanyUserDTO ); }
