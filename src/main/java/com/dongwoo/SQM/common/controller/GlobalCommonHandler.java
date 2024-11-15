@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +30,15 @@ public class GlobalCommonHandler {
         errorMessage = "예기치 않은 오류가 발생했습니다: " + exc.getMessage();
         return errorMessage;
     }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public String handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException ex) {
+        String errorMessage;
+        errorMessage = "타입에 맞지 않습니다. 확인하세요.";
+        return errorMessage;
+    }
+
+
     //현재URL정보 가져오기
     @ModelAttribute("currentUrl")
     public String currentUrl(HttpServletRequest request) {

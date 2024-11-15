@@ -20,6 +20,12 @@ public class IsoAuthItemDTO {
     private String EXP_DATE;
     @JsonProperty("REG_DATE")
     private String REG_DATE;
+    @JsonProperty("UP_DATE")
+    private String UP_DATE;
     @JsonProperty("ITEM_STATE")
     private String ITEM_STATE;
+    @JsonProperty("FILE_NAME")
+    private String FILE_NAME; // 파일 이름
+    @JsonProperty("FILE_PATH")
+    private String FILE_PATH; // 파일이 저장된 경로
 }

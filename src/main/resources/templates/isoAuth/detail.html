@@ -28,7 +28,6 @@
                             <col style="width:120px;">
                             <col style="width:120px;">
                             <col style="width:120px;">
-                            <col style="width:120px;">
                         </colgroup>
                         <thead>
                         <tr>
@@ -38,7 +37,6 @@
                             <th><span>만료일</span></th>
                             <th><span>등록일</span></th>
                             <th><span>등록서류</span></th>
-                            <th><span>등록</span></th>
                             <th><span>상태</span></th>
                             <th><span>상태일자</span></th>
                         </tr>
@@ -217,16 +215,17 @@
                         var formattedRegDate = regDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
                         var regDate = new Date(isoAuth.REG_DATE); // REG_DATE Date 객체로 변환
                         var formattedRegDate = regDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
+                        var upDate = new Date(isoAuth.UP_DATE); // UP_DATE Date 객체로 변환
+                        var formattedUpDate = upDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
                         var row = '<tr>' +
                                         '<td>' + isoAuth.AUTH_TYPE + '</td>' +
                                         '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
                                         '<td>' + formattedAuthDate + '</td>' +
                                         '<td>' + formattedExpDate + '</td>' +
                                         '<td>' + formattedRegDate + '</td>' +
-                                        '<td>보기</td>' +
-                                        '<td>첨부</td>' +
+                                        '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuth.FILE_NAME) + '">다운로드</a></td>' +
                                         '<td><button type="button" class="cui_button first"><span>승인</span></button><button type="button" class="cui_button secondary"><span>반려</span></button></td>' +
-                                        '<td>' + isoAuth.ITEM_STATE + '</td>' +
+                                        '<td>' + formattedUpDate + '</td>' +
                                       '</tr>';
                         tableBody.append(row);
                     });
