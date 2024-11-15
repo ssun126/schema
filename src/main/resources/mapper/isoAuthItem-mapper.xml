@@ -5,12 +5,12 @@
 <mapper namespace="IsoAuthItem">
     <insert id="saveItem" parameterType="isoAuthItem">
         INSERT INTO ISO_AUTH_COMPANY_ITEM(COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH)
-        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, 1, 1, sysdate, sysdate, 'SAVE', #{FILE_NAME}, #{FILE_PATH})
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, 'SAVE', #{FILE_NAME}, #{FILE_PATH})
     </insert>
 
     <insert id="save" parameterType="isoAuth">
         INSERT INTO AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, POINT, AUTH_TYPE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
-        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{POINT}, #{AUTH_TYPE}, 1, 1, sysdate, sysdate)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{POINT}, #{AUTH_TYPE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate)
     </insert>
 
     <select id="findByIsoAuthItem" parameterType="String" resultType="isoAuthItem">
@@ -62,11 +62,11 @@
 
     <select id="getList" resultType="isoAuthItem">
         <![CDATA[
-        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
+        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
         FROM
         (
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-            ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
+            ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
             FROM ISO_AUTH_COMPANY_ITEM
             WHERE ROWNUM <= #{pageNum} * #{amount}
         )

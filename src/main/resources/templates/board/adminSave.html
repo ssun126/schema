@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>Q&A 등록</span></h2>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form id="fileUploadForm" action="/admin/board/REGISTER_NAME/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
+                제목: <input type="text" name="BOARD_TITLE"><br>
+                작성자: <input type="text" name="INPUT_USER_ID"><br>
+                비밀번호: <input type="text" name="BOARD_PASS"><br>
+                내용: <textarea name="BOARD_DESC" cols="30" rows="10"></textarea>
+                일반파일: <input type="file" name="file">
+                <button type="submit">저장</button>
+            </form>
+            <div class="cui_dialog" style="width:420px;display:none;">
+                <div class="dialog_container">
+                    <div class="dialog_body">
+                        <div class="body_root">
+                            <div class="cui_alert alert_modal" data-type="success" role="alert">저장 되었습니다.</div>
+                            <div class="cui_items_wrap" data-direction="center">
+                                <div class="item_content">
+                                    <button type="button" class="cui_button primary modal-close"><span>확인</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        const uploadFile = () => {
+             var formData = new FormData($('#fileUploadForm')[0]);
+
+            $.ajax({
+                url: '/admin/board/REGISTER_NAME/save',  // 업로드 경로
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    alert("파일 업로드 성공!");
+                },
+                error: function(xhr) {
+                    alert(xhr.responseText);  // 서버에서 반환한 메시지 표시
+                }
+            });
+        }
+    </script>
+</body>
+</html>
