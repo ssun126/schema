@@ -6,6 +6,7 @@ import com.dongwoo.SQM.auditMgmt.dto.IsoSearchResult;
 import com.dongwoo.SQM.auditMgmt.service.IsoAuthService;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
+import com.dongwoo.SQM.config.security.UserCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -165,22 +167,25 @@ public class ISOAuthRestController {
 
     //IsoAuth 정보 제출
     @PostMapping("/sendIsoAuthData")
-    public ResponseEntity<?> sendIsoAuthData(@RequestBody IsoAuthDTO isoAuthDTO) {
+    public ResponseEntity<?> sendIsoAuthData(@RequestBody IsoAuthDTO isoAuthDTO, @AuthenticationPrincipal UserCustom user) {
 
         /*연동 필요*/
 
         /*전송 데이터 저장*/
         log.info("isoAuthDTO = " + isoAuthDTO);
-        isoAuthDTO.setAPPROVE_STATE("SEND");
-        isoAuthDTO.setCOM_NAME("C001");
+        isoAuthDTO.setAPPROVE_STATE("SEND"); //제출
         isoAuthDTO.setAUTH_TYPE("ISO");
+        isoAuthDTO.setREG_DW_USER_IDX(user.getUsername());
+        isoAuthDTO.setUP_DW_USER_IDX(user.getUsername());
 
         int resultCnt = isoAuthService.save(isoAuthDTO);
 
         //상태 업데이트
         IsoAuthItemDTO isoAuthItemDTO = new IsoAuthItemDTO();
         isoAuthItemDTO.setCOM_CODE(isoAuthDTO.getCOM_CODE());
-        isoAuthItemDTO.setITEM_STATE("SEND");
+        isoAuthItemDTO.setITEM_STATE("SEND"); //제출
+        isoAuthItemDTO.setREG_DW_USER_IDX(user.getUsername());
+        isoAuthItemDTO.setUP_DW_USER_IDX(user.getUsername());
         isoAuthService.updateStatus(isoAuthItemDTO);
 
         /* 메일 발송 */

@@ -2,7 +2,6 @@ package com.dongwoo.SQM.board.controller;
 
 import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
-import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +21,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class QnaController {
+public class NoticeController {
     private final BoardService boardService;
 
     /**
@@ -37,7 +35,7 @@ public class QnaController {
      * @param model
      * @return
      */
-    @GetMapping("/admin/board/qna")
+    @GetMapping("/admin/board/notice")
     public String list(Criteria criteria, Model model) {
         /*log.info("criteria============================================="+criteria);
         List<BoardDTO> boardDTOList = boardService.getList(criteria);
@@ -53,7 +51,7 @@ public class QnaController {
      * @param model
      * @return
      */
-    @GetMapping("/admin/board/qna/{id}")
+    @GetMapping("/admin/board/notice/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
         // 조회수 처리.
         boardService.updateHits(id);
@@ -64,7 +62,7 @@ public class QnaController {
         return "board/Detail";
     }
 
-    @GetMapping("/admin/board/download/{filename}")
+    @GetMapping("/admin/board/notice/download/{filename}")
     public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {
         try {
             log.info("filename???????"+filename);
@@ -93,7 +91,7 @@ public class QnaController {
      * Q&A 등록 화면
      * @return
      */
-    @GetMapping("/admin/board/qna/save")
+    @GetMapping("/admin/board/notice/save")
     public String save() {
         return "/board/adminSave";
     }
@@ -105,7 +103,7 @@ public class QnaController {
      * @return
      * @throws IOException
      */
-    @PostMapping("/admin/board/qna/save")
+    @PostMapping("/admin/board/notice/save")
     public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
         log.info("boardDTO = " + boardDTO);
         // 파일 업로드 처리 시작
@@ -123,17 +121,17 @@ public class QnaController {
         // 파일 업로드 처리 끝
 
         boardService.save(boardDTO);
-        return "redirect:/admin/board/qna/list";
+        return "redirect:/admin/board/notice/list";
     }
 
-    @GetMapping("/admin/board/qna/update/{id}")
+    @GetMapping("/admin/board/notice/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
         return "/board/adminUpdate";
     }
 
-    @PostMapping("/admin/board/qna/update/{id}")
+    @PostMapping("/admin/board/notice/update/{id}")
     public String update(BoardDTO boardDTO, Model model) {
         boardService.update(boardDTO);
         BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
@@ -141,7 +139,7 @@ public class QnaController {
         return "/board/adminDetail";
     }
 
-    @GetMapping("/admin/board/qna/delete/{id}")
+    @GetMapping("/admin/board/notice/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         boardService.delete(id);
         return "redirect:/board/list";

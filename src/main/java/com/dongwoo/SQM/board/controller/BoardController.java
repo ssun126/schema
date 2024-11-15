@@ -38,7 +38,7 @@ public class BoardController {
      * @param model
      * @return
      */
-    @GetMapping("/user/board/qa")
+    @GetMapping("/user/board/qna")
     public String list(Criteria criteria, Model model) {
         List<BoardDTO> boardDTOList = boardService.getList(criteria);
         model.addAttribute("boardList", boardDTOList);
@@ -53,7 +53,7 @@ public class BoardController {
      * @param model
      * @return
      */
-    @GetMapping("/user/board/qa/{id}")
+    @GetMapping("/user/board/qna/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
         // 조회수 처리.
         boardService.updateHits(id);
@@ -88,13 +88,14 @@ public class BoardController {
         }
     }
 
+
     /**
      * Q&A 등록 화면
      * @return
      */
-    @GetMapping("/user/board/qa/save")
+    @GetMapping("/user/board/qna/save")
     public String save() {
-        return "/Board/save";
+        return "/board/save";
     }
 
     /**
@@ -104,7 +105,7 @@ public class BoardController {
      * @return
      * @throws IOException
      */
-    @PostMapping("/user/board/qa/save")
+    @PostMapping("/user/board/qna/save")
     public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
         log.info("boardDTO = " + boardDTO);
         // 파일 업로드 처리 시작
@@ -122,17 +123,17 @@ public class BoardController {
         // 파일 업로드 처리 끝
 
         boardService.save(boardDTO);
-        return "redirect:/user/board/qa/list";
+        return "redirect:/user/board/qna/list";
     }
 
-    @GetMapping("/user/board/qa/update/{id}")
+    @GetMapping("/user/board/qna/update/{id}")
     public String update(@PathVariable("id") int id, Model model) {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
         return "/board/update";
     }
 
-    @PostMapping("/user/board/qa/update/{id}")
+    @PostMapping("/user/board/qna/update/{id}")
     public String update(BoardDTO boardDTO, Model model) {
         boardService.update(boardDTO);
         BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
@@ -140,7 +141,7 @@ public class BoardController {
         return "/board/detail";
     }
 
-    @GetMapping("/user/board/qa/delete/{id}")
+    @GetMapping("/user/board/qna/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         boardService.delete(id);
         return "redirect:/board/list";

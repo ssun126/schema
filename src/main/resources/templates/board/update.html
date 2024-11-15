@@ -4,7 +4,7 @@
       layout:decorate="~{common/layouts/mainLayout}"
       layout:fragment="Content">
 <body>
-<form th:action="@{|/user/board/qa/update/${board.BOARD_IDX}|}" method="post" name="updateForm">
+<form th:action="@{|/user/board/qna/update/${board.BOARD_IDX}|}" method="post" name="updateForm">
     <input type="hidden" name="BOARD_IDX" th:value="${board.BOARD_IDX}">
     writer: <input type="text" name="INPUT_USER_ID" th:value="${board.INPUT_USER_ID}" readonly><br>
     title: <input type="text" name="BOARD_TITLE" th:value="${board.BOARD_TITLE}"><br>
