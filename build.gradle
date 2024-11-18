@@ -7,13 +7,19 @@ plugins {
 
 group = 'com.dongwoo'
 version = '0.0.1-SNAPSHOT'
-
+apply plugin: 'war'
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
+
+bootWar {
+	archiveBaseName = "schema"
+	archiveFileName = "schema.war"
+	archiveVersion = "0.0.0"
+}
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -55,4 +61,18 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+tasks.named('processResources') {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE // Or use INCLUDE/FAIL as needed
+}
+
+
+ext.profile=(!project.hasProperty('profile') || !profile)? 'dev':profile
+
+sourceSets {
+	main {
+		resources {
+			srcDirs "src/main/resources", "src/main/resources-env/${profile}"
+		}
+	}
 }

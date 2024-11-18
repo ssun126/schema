@@ -1,0 +1,11 @@
+# server port
+server:
+  port: 80
+
+# database
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@192.168.13.28:1521/xe
+    username: nsqm
+    password: dongwoo1234
