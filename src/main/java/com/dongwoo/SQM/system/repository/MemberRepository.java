@@ -7,7 +7,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,7 +35,7 @@ public class MemberRepository {
     }
 
     //User ID 생성. 10.23
-    public int save(UserInfoDTO userInfoDTO) {
+    public int saveUserinfo(UserInfoDTO userInfoDTO) {
         System.out.println("userInfoDTO = " + userInfoDTO);
 
         UserInfoDTO findUserDto = sql.selectOne("Member.findByUserId", userInfoDTO);
@@ -42,6 +45,11 @@ public class MemberRepository {
         }else {
             return sql.update("Member.updateUserinfo", userInfoDTO);
         }
+    }
+
+    //User_Name만 변경
+    public int updateUserName(UserInfoDTO userInfoDTO) {
+        return sql.update("Member.updateUserName", userInfoDTO);
     }
 
     //User ID 생성 된 USER_IDX. 가져오기  10.23
@@ -57,18 +65,36 @@ public class MemberRepository {
         if(findCompanyUserDto == null) {
             return sql.insert("Member.saveUserinfoCompanyUser", userInfoCompanyUserDTO);
         }else {
-            userInfoCompanyUserDTO.setCOM_USER_IDX(findCompanyUserDto.getCOM_USER_IDX()); //기존 유저 COM_USER_IDX 설정
+            userInfoCompanyUserDTO.setCOM_USER_IDX(findCompanyUserDto.getCOM_USER_IDX());
             return sql.update("Member.updateUserinfoCompanyUser", userInfoCompanyUserDTO);
-            //가입-> 수정시 공동 사용자가 지워지는 경우 생각해보자!!
         }
+    }
+
+    //User 공동 사용자 정보 생성. 10.23
+    public int updateCompanyUser(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+
+        // 여기서 키값은  회사번호 COM_CODE , 사용자명 USER_NAME 으로 검색해서.
+        UserInfoCompanyUserDTO findCompanyUserDto = sql.selectOne("Member.findByCompanyUserIdx", userInfoCompanyUserDTO );
+        if(findCompanyUserDto == null) {
+            return sql.insert("Member.saveUserinfoCompanyUser", userInfoCompanyUserDTO);
+        }else {
+            userInfoCompanyUserDTO.setCOM_USER_IDX(findCompanyUserDto.getCOM_USER_IDX());
+            return sql.update("Member.updateUserinfoCompanyUser", userInfoCompanyUserDTO);
+        }
+    }
+
+    //User 공동 사용자 정보 삭제. 업체 유저 회사 정보 관리 update
+    public int deleteCompanyUser(String comCode , List<Integer> companyUseridxList) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_CODE", comCode);
+        params.put("list", companyUseridxList);
+        return sql.delete("Member.deleteUserinfoCompanyUser", params);
     }
 
     //User history. 10.23
     public int saveUserinfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
         //USER_INFO_COMPANY  (0:대기, 1:검토중, 2:승인, 3:반려)  --> 승인된거는 제외 하자.
         MemberDTO finduserInfoCompanyDTO = sql.selectOne("Member.findByUserInfoCompany", userInfoCompanyDTO.getCOM_CODE());
-
-        //이거 변경 되야됨... 기가입 처리 문제.
 
         if(finduserInfoCompanyDTO == null) {
             return sql.insert("Member.saveUserinfoCompanyHis", userInfoCompanyDTO);

@@ -643,11 +643,11 @@
             companyUserList.forEach((item, index) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><input type="text" class="cui_text_field" name="USER_NAME" value="${item.user_NAME}" placeholder="이름" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_POSITION" value="${item.user_POSITION}" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_DEPT" value="${item.user_DEPT}" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" value="${item.user_EMAIL}" placeholder="이메일" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_PHONE" value="${item.user_PHONE}" placeholder="전화번호" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_NAME" value="${item.USER_NAME}" placeholder="이름" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_POSITION" value="${item.USER_POSITION}" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_DEPT" value="${item.USER_DEPT}" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" value="${item.USER_EMAIL}" placeholder="이메일" onclick="setUserSelectReset()"></td>
+                    <td><input type="text" class="cui_text_field" name="USER_PHONE" value="${item.USER_PHONE}" placeholder="전화번호" onclick="setUserSelectReset()"></td>
                     <td>${index === 0 ? '' : '<button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button>'}</td>
                 `;
                 tableBody.appendChild(row);
@@ -705,10 +705,10 @@
             option.selected = true;
 
             companyInfo.companyUserList.forEach((item) => {
-				if(item != null && item.user_NAME != companyInfo.USER_NAME ){
+				if(item != null && item.USER_NAME != companyInfo.USER_NAME ){
 				 var optionAdd = document.createElement("option");
-					optionAdd.value = item.user_NAME;
-					optionAdd.text  = item.user_NAME;
+					optionAdd.value = item.USER_NAME;
+					optionAdd.text  = item.USER_NAME;
 					select.appendChild(optionAdd);
 				}
             });

@@ -31,7 +31,6 @@
                                             <div class="item_content">
                                                 <input class="cui_text_field" type="text" name ="comcode"  id = "searchCustomer"  th:value="${member.COM_CODE}" disabled>
                                                 <input type="hidden" name="COM_CODE" id="COM_CODE" th:value="${member.COM_CODE}">
-
                                             </div>
                                         </div>
                                     </td>
@@ -169,7 +168,9 @@
                                 </thead>
                                 <tbody id="tableBody">
                                 <tr class="collaborator-row" th:each=" user : ${companyUserList}">
-                                    <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span></td>
+                                    <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
+                                        <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
+                                    </td>
 
                                     <td>
                                         <input type="text" name="USER_NAME" class="cui_text_field" th:value="${user.USER_NAME}">
@@ -276,7 +277,8 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="submit" class="cui_button primary"><span>수정</span></button>
+<!--                                <button type="submit" class="cui_button primary"><span>수정</span></button>-->
+                                <button type="button" class="cui_button primary" onClick="updateCpUser()"><span>수정</span></button>
                             </div>
                         </div>
                     </form>
@@ -371,8 +373,10 @@
                                         <td>
                                             <div class="cui_items_wrap" data-direction="center">
                                                 <div class="item_content">
-                                                    <input type="hidden" name="USER_IDX" id="hiddenUSER_IDX" th:value="${user.USER_IDX}">
-                                                    <button type="submit" class="cui_button"><span>탈퇴</span></button>
+                                                    <input type="hidden" name="USER_IDX" id="USER_IDX" th:value="${user.USER_IDX}">
+                                                    <button type="button" class="cui_button secondary" onClick="deleteCpUser()">
+                                                        <span th:text="${user.USER_STATUS == '2' ? '탈퇴' : '삭제'}"></span>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </td>
@@ -415,8 +419,8 @@
            const newRow = `
                <tr class="collaborator-row">
                    <td><span>공동 업무자</span></td>
-                   <td><input type="text" name="USER_NAME" class="cui_text_field" name="USER_NAME" placeholder="이름"  ></td>
-                   <td><input type="text" name="USER_POSITION" class="cui_text_field" name="USER_POSITION" ></td>
+                   <td><input type="text" name="USER_NAME" class="cui_text_field" name="USER_NAME" placeholder="이름"></td>
+                   <td><input type="text" name="USER_POSITION" class="cui_text_field" name="USER_POSITION"></td>
                    <td><input type="text" name="USER_DEPT" class="cui_text_field" name="USER_DEPT"></td>
                    <td><input type="text" name="USER_EMAIL" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" ></td>
                    <td><input type="text" name="USER_PHONE" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" ></td>
@@ -453,33 +457,81 @@
     });
   }
 
-//작업중
  function updateCpUser() {
 
-<!--     const rowsData = [];-->
-<!--      $('tr.collaborator-row').each(function () {-->
-<!--            const rowData = {-->
-<!--                USER_NAME: $(this).find('input[name="USER_NAME"]').val(),-->
-<!--                USER_POSITION: $(this).find('input[name="USER_POSITION"]').val(),-->
-<!--                USER_DEPT: $(this).find('input[name="USER_DEPT"]').val(),-->
-<!--                USER_EMAIL: $(this).find('input[name="USER_EMAIL"]').val(),-->
-<!--                USER_PHONE: $(this).find('input[name="USER_PHONE"]').val()-->
-<!--            };-->
-<!--            rowsData.push(rowData); // 각 행 데이터를 배열에 추가-->
-<!--        });-->
+     const comCode = document.getElementById("COM_CODE").value;
+     const userIdx = document.getElementById("USER_IDX").value;
 
-<!--     $.ajax({-->
-<!--        type: "post",-->
-<!--        url: "/user/companyInfo/updateCompanyInfo",-->
-<!--        data: JSON.stringify(rowsData),-->
-<!--        success: function(response) {-->
-<!--           showAlert('success', '공동 사용자 정보가 업데이트되었습니다.');-->
-<!--        },-->
-<!--        error: function(err) {-->
-<!--          console.log("에러발생", err);-->
-<!--          showAlert('warning', '업데이트 중 오류가 발생했습니다.');-->
-<!--        }-->
-<!--    });-->
+     const rowsData = [];
+      $('tr.collaborator-row').each(function () {
+            const rowData = {
+                COM_CODE: comCode,
+                USER_IDX: userIdx,
+                MAIN_USER_YN: $(this).find('input[name="MAIN_USER_YN"]').val(),
+                COM_USER_IDX: $(this).find('input[name="COM_USER_IDX"]').val(),
+                USER_NAME: $(this).find('input[name="USER_NAME"]').val(),
+                USER_POSITION: $(this).find('input[name="USER_POSITION"]').val(),
+                USER_DEPT: $(this).find('input[name="USER_DEPT"]').val(),
+                USER_EMAIL: $(this).find('input[name="USER_EMAIL"]').val(),
+                USER_PHONE: $(this).find('input[name="USER_PHONE"]').val()
+            };
+            rowsData.push(rowData);
+      });
+
+     $.ajax({
+        type: "post",
+        url: "/user/companyInfo/updateCompanyUserInfo",
+        data: JSON.stringify(rowsData),
+        contentType: "application/json",
+        success: function(response) {
+            if(response.status === "success") {
+                showAlert('success', response.message);
+            }
+        },
+        error: function(err) {
+          console.log("에러발생", err);
+          showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+        }
+    });
+  }
+
+
+
+ function deleteCpUser() {
+
+     const comCode = document.getElementById("COM_CODE").value;
+     const userIdx = document.getElementById("USER_IDX").value;
+
+     const rowsData = [];
+      $('tr.collaborator-row').each(function () {
+            const rowData = {
+                COM_CODE: comCode,
+                USER_IDX: userIdx,
+                COM_USER_IDX: $(this).find('input[name="COM_USER_IDX"]').val(),
+                USER_NAME: $(this).find('input[name="USER_NAME"]').val(),
+                USER_POSITION: $(this).find('input[name="USER_POSITION"]').val(),
+                USER_DEPT: $(this).find('input[name="USER_DEPT"]').val(),
+                USER_EMAIL: $(this).find('input[name="USER_EMAIL"]').val(),
+                USER_PHONE: $(this).find('input[name="USER_PHONE"]').val()
+            };
+            rowsData.push(rowData);
+      });
+
+     $.ajax({
+        type: "post",
+        url: "/user/companyInfo/updateCompanyUserInfo",
+        data: JSON.stringify(rowsData),
+        contentType: "application/json",
+        success: function(response) {
+            if(response.status === "success") {
+                showAlert('success', response.message);
+            }
+        },
+        error: function(err) {
+          console.log("에러발생", err);
+          showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+        }
+    });
   }
 
 
