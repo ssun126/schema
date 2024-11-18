@@ -26,6 +26,7 @@
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
                                             <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
@@ -58,6 +59,7 @@
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
                                             <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
@@ -138,5 +140,31 @@
         $('#searchBtn').on('click', function(event){
             event.preventDefault();  // 기본 폼 제출 동작 방지
         });
+
+        // NAME 변경필요
+        $("#jqGrid").jqGrid({
+          datatype: "jsonp",
+          colModel: [
+              { label: 'COA ID', name: 'COA_ID', key: true, width: 75 },
+              { label: '업체명', name: 'CustomerID', width: 150 },
+              { label: '자재명', name: 'OrderDate', width: 100},
+              { label: '자재코드', name: 'Freight', width: 75 },
+              { label: '공장명', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: 'LOT NO.', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: '출력일', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: '제조일', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: 'COA 상태', name: 'COA_STATUS', width: 75 },
+              { label: '유효', name: 'Freight', width: 75 },
+              { label: '작성자', name: 'CREATOR', width: 75 },
+              { label: '등록일시', name: 'CREATE_DATE', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: '작업자', name: 'Freight', width: 75 },
+              { label: '수신일자', name: 'Freight', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}}
+          ],
+          viewrecords: true,
+          autowidth: true,
+          height: 250,
+          rowNum: 20,
+          pager: "#jqGridPager"
+      });
     });
 </script>

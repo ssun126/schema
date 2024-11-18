@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전보건/환경관리</title>
+</head>
+<body>
+<div class="cui_content">
+  <div class="cui_main">
+    <div class="cui_head">
+      <div class="head_content">
+        <h2 class="cui_title"><span>변경관리</span></h2>
+      </div>
+    </div>
+    <div class="cui_body">
+      <form class="cui_form_field" data-legend="true">
+        <fieldset>
+          <legend><span>안전보건환경 Audit 계획</span></legend>
+          <table class="cui_table">
+            <colgroup>
+              <col style="width:154px;">
+              <col>
+              <col style="width:154px;">
+              <col>
+            </colgroup>
+            <tbody>
+            <tr>
+              <th><span>업체명</span></th>
+              <td>
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <input class="cui_text_field" type="text" value="12341234" disabled>
+                  </div>
+                </div>
+              </td>
+              <th><span>담당자</span></th>
+              <td>
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <input class="cui_text_field" type="text" value="COVISION" disabled>
+                  </div>
+                </div>
+              </td>
+              <th><span>구분</span></th>
+              <td>
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <input class="cui_text_field" type="text" value="COVISION" disabled>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th><span>Audit 계획일</span></th>
+              <td>
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>제조사</span></label>
+                    <label class="cui_checkbox"><input type="radio" name="checkbox1"><i></i><span>물류사</span></label>
+                    <label class="cui_checkbox"><input type="radio" name="checkbox1" disabled><i></i><span>체크박스 비활성화</span></label>
+                    <label class="cui_checkbox"><input type="radio" name="checkbox1" checked disabled><i></i><span>체크박스 비활성화</span></label>
+                  </div>
+                </div>
+              </td>
+              <th><span>Audit 방법</span></th>
+              <td>
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <input class="cui_text_field" type="text" value="KOREA" disabled>
+                  </div>
+                </div>
+              </td>
+              <th><span>Audit 구분</span></th>
+              <td>
+                <div class="cui_items_wrap" data-direction="left">
+                  <div class="item_content">
+                    <input class="cui_text_field" type="text" value="KOREA" disabled>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </fieldset>
+        <div class="cui_items_wrap" data-direction="right">
+          <div class="item_content">
+            <button type="submit" class="cui_button primary"><span>수정</span></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<script>
+
+</script>

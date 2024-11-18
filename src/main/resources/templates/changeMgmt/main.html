@@ -67,6 +67,7 @@
                 <div class="cui_items_wrap">
                   <div class="item_content" data-role="calendar-picker" >
                     <input type="text" class="cui_text_field" value="2024.12.13">
+                    <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                   </div>
                 </div>
                 <div class="field_connect">~</div>
@@ -89,10 +90,9 @@
         <div class="cui_jqGrid_head">
           <div class="jqGrid_label"> PCN  List</div>
           <div class="jqGrid_aside">
-            <button type="button" class="cui_button endpoint" data-cui-icon="folder_open"><span>복사</span></button>
-            <button type="button" class="cui_button endpoint" data-cui-icon="download"><span>스펙다운로드</span></button>
-            <button type="button" class="cui_button endpoint" data-cui-icon="upload"><span>업로드</span></button>
-            <button type="button" class="cui_button endpoint" data-cui-icon="pen"><span>등록</span></button>
+            <button type="button" class="cui_button endpoint" data-cui-icon="folder_open"><span>협력업체 변경점 등급표</span></button>
+            <button type="button" class="cui_button endpoint" data-cui-icon="download"><span>PCN 신고서</span></button>
+            <button type="button" class="cui_button endpoint" data-cui-icon="upload"><span>PCN 등록</span></button>
             <button type="button" class="cui_button endpoint" data-cui-icon="trash"><span>선택삭제</span></button>
           </div>
         </div>
@@ -352,6 +352,25 @@
     $('#searchBtn').on('click', function(event){
       event.preventDefault();  // 기본 폼 제출 동작 방지
     });
+
+    $("#jqGrid").jqGrid({
+          datatype: "jsonp",
+          colModel: [
+              { label: 'PCN_NO', name: 'OrderID', key: true, width: 75 },
+              { label: '제목(원재료 포함)', name: 'CustomerID', width: 150 },
+              { label: '업체명', name: 'OrderDate', width: 100},
+              { label: '상태', name: 'Freight', width: 75 },
+              { label: '의뢰일', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: '접수일', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: '진행완료 예정일', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}},
+              { label: '승인일', name: 'OrderDate', width: 75,formatter : 'date', formatoptions: { srcformat : 'Y-m-d H:i:s', newformat :'ShortDate'}}
+          ],
+          viewrecords: true,
+          autowidth: true,
+          height: 250,
+          rowNum: 20,
+          pager: "#jqGridPager"
+      });
   });
 
   $('.modal-close').on('click', function(e){
