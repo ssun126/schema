@@ -255,6 +255,7 @@
     $('.modal-close').on('click', function(e){
       e.preventDefault();
       const modal = $(this).parents('.cui_dialog');
+      overlay.style.display = "none"; // 오버레이 숨기기
       modal.fadeOut();
       modal_init();
     });

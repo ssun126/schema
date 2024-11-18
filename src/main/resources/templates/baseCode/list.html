@@ -84,7 +84,7 @@
                             th:onclick="modal_open('PopupBaseCode','MODIFY','/admin/siteMgr/baseCode/baseCodeInfo',[[${baseCodeList.BASE_CODE_IDX}]])">
                             <!--<td style="display:none;" th:text="${baseCodeList.BASE_CODE_IDX}"><span></span></td>-->
                             <td th:text="${baseCodeList.GUBN}"><span></span></td>
-                            <td ><button th:text="${baseCodeList.GROUP_CODE}" type="button" class="cui_button endpoint" th:onclick="modal_open('PopupBaseCode', 'edit', '/admin/siteMgr/baseCode/baseCodeInfo',[[${baseCodeList.BASE_CODE_IDX}]])"></button></td>
+                            <td ><button th:text="${baseCodeList.GROUP_CODE}" type="button" class="cui_button endpoint" th:onclick="modal_open('PopupBaseCode', 'MODIFY', '/admin/siteMgr/baseCode/baseCodeInfo',[[${baseCodeList.BASE_CODE_IDX}]])"></button></td>
                             <!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
                             <!--<td th:text="${baseCodeList.GROUP_CODE}" ></td>-->
                             <td th:text="${baseCodeList.BASE_CODE}"><span></span></td>
@@ -206,7 +206,7 @@
         if(flag=="MODIFY"){
            $(".fixdata").attr("readonly",true);
            //버튼 바꾸기
-             $("#BaseCodeAdd").css("display","none");
+            $("#BaseCodeAdd").css("display","none");
             $("#BaseCodeMod").css("display","block");
             $("#BaseCodeDel").css("display","block");
 
@@ -225,9 +225,9 @@
             $(".fixdata").attr("readonly",false);
 
             //버튼 바꾸기
-            $("#ConfigAdd").css("display","block");
-            $("#ConfigMod").css("display","none");
-            $("#ConfigDel").css("display","none");
+            $("#BaseCodeAdd").css("display","block");
+            $("#BaseCodeMod").css("display","none");
+            $("#BaseCodeDel").css("display","none");
         }
     }
 
@@ -248,6 +248,15 @@
 
 
         }
+
+         if(status=="MODIFY"){
+           $(".fixdata").attr("readonly",true);
+           //버튼 바꾸기
+            $("#BaseCodeAdd").css("display","none");
+            $("#BaseCodeMod").css("display","block");
+            $("#BaseCodeDel").css("display","block");
+
+        }
     }
 
     //모달 닫기
@@ -256,7 +265,7 @@
         overlay.style.display = "none"; // 오버레이 숨기기
         const modal = $(this).parents('.cui_dialog');
         modal.fadeOut();
-        modal_init();
+        modal_init("Init");
     });
 
 
