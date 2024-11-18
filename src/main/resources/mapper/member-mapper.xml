@@ -25,6 +25,14 @@
         WHERE USER_ID = #{USER_ID}
     </update>
 
+    <!-- 업체 회사정보에서 메인담당자 이름변경시 업데이트 -->
+    <update id="updateUserName" parameterType="userinfo">
+        UPDATE USER_INFO
+        SET
+        USER_NAME = #{USER_NAME}
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
+
 
     <!-- USERINFO 가입된정보 가져가기 -->
     <select id="findByUserId" parameterType="String" resultType="userinfo">
@@ -49,10 +57,22 @@
             USER_DEPT = #{USER_DEPT},
             USER_EMAIL = #{USER_EMAIL},
             USER_PHONE = #{USER_PHONE}
-        WHERE USER_IDX = #{COM_USER_IDX}
+        WHERE COM_USER_IDX = #{COM_USER_IDX}
     </update>
 
+    <delete id="deleteUserinfoCompanyUser" parameterType="map">
+        DELETE FROM USER_INFO_COMPANY_USER
+        WHERE COM_CODE = #{COM_CODE}
+        AND COM_USER_IDX NOT IN
+        <foreach collection="list" item="COM_USER_IDX" open="(" separator="," close=")">
+            #{COM_USER_IDX}
+        </foreach>
+    </delete>
 
+    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
+    <select id="findByCompanyUserIdx" parameterType="int" resultType="userinfocom">
+        select * from USER_INFO_COMPANY_USER where COM_USER_IDX=#{COM_USER_IDX}
+    </select>
 
     <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
     <select id="findByCompanyUserName" parameterType="String" resultType="userinfocom">
@@ -76,7 +96,9 @@
         ,uc.user_status
         ,u.USER_IDX
         ,u.USER_ID
-        ,uc.COM_USER_IDX,icu.*
+        ,icu.COM_USER_IDX
+        ,uc.COM_USER_IDX as MAIN_COM_USER_IDX   --메인작업자.
+        ,icu.*
         FROM USER_INFO u, USER_INFO_COMPANY uc ,USER_INFO_COMPANY_USER icu
         WHERE u.USER_IDX  = uc.USER_IDX
         AND uc.USER_IDX = icu.USER_IDX

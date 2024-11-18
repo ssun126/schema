@@ -9,6 +9,7 @@ import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.dto.ComPanyCodeDTO;
 import com.dongwoo.SQM.system.dto.MemberDTO;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
+import com.dongwoo.SQM.system.dto.UserInfoDTO;
 import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,8 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -45,7 +45,7 @@ public class CompanyInfoController {
         MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
         MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",loginMemberDTO.getCOM_CODE());
         model.addAttribute("member", memberDTO);
-        System.out.println("memberDTO: "+memberDTO);
+        //System.out.println("memberDTO: "+memberDTO);
         //int com_user_idx = loginMemberDTO.getCOM_USER_IDX();
 
         //공동 작업자
@@ -55,7 +55,7 @@ public class CompanyInfoController {
 
 
         model.addAttribute("companyUserList", companyUserList);
-        System.out.println("companyUserList: "+companyUserList);
+        //System.out.println("companyUserList: "+companyUserList);
 
         //부서
         List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
@@ -70,7 +70,7 @@ public class CompanyInfoController {
         //회원 ID 관리
         List<CompanyInfoDTO> companyUserIDList = companyInfoService.findCompanyCodeWorkEx(companyInfoParamDTO);
         model.addAttribute("companyUserIDList", companyUserIDList);
-        System.out.println("companyUserIDList: "+companyUserIDList);
+        //System.out.println("companyUserIDList: "+companyUserIDList);
 
         return "companyInfo/main";
     }
@@ -78,7 +78,7 @@ public class CompanyInfoController {
 
     @PostMapping("/user/companyInfo/updateCompanyInfo")
     @ResponseBody
-    public String updateUserMgrMyPage(@ModelAttribute MemberDTO memberDTO, Authentication authentication ,Model model) {
+    public String updateCompanyInfo(@ModelAttribute MemberDTO memberDTO, Authentication authentication ,Model model) {
 
         String loginId = authentication.getName();
         MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
@@ -96,7 +96,7 @@ public class CompanyInfoController {
         comPanyCodeDTO.setCOM_CEO_EMAIL(memberDTO.getCOM_CEO_EMAIL());
         comPanyCodeDTO.setUP_DW_USER_IDX(loginMemberDTO.getUSER_IDX());   //업데이트 사용자.
 
-        System.out.println("comPanyCodeDTO: "+comPanyCodeDTO);
+        //System.out.println("comPanyCodeDTO: "+comPanyCodeDTO);
         memberService.updateCpCodeCPUser(comPanyCodeDTO);  //업데이트  COMPANY_CODE
 
         model.addAttribute("message", "Company 정보가 업데이트되었습니다.");  //
@@ -104,6 +104,65 @@ public class CompanyInfoController {
     }
 
 
+    @PostMapping("/user/companyInfo/updateCompanyUserInfo")
+    @ResponseBody
+    public Map<String, String> updateCompanyInfoUser(@RequestBody List<UserInfoCompanyUserDTO> CompanyUserList) {
+        Map<String, String> response = new HashMap<>();
+        try {
+
+            //공동 사용자 삭제 (휴지통 버튼 누른 유저들.)
+            List<Integer> companyUserIdxList = new ArrayList<>();
+            String comCode = null;
+            for (UserInfoCompanyUserDTO companyUser : CompanyUserList) {
+                if (companyUser.getCOM_USER_IDX() != 0) {
+                    companyUserIdxList.add(companyUser.getCOM_USER_IDX());
+                }
+
+                if (comCode == null) {
+                    comCode = companyUser.getCOM_CODE();
+                }
+            }
+
+            if (comCode != null && !companyUserIdxList.isEmpty()) {
+                memberService.deleteCompanyUser(comCode, companyUserIdxList);
+            }
+
+            //공동 작업자 저장.
+            for (UserInfoCompanyUserDTO companyUser : CompanyUserList) {
+
+               System.out.println("companyUser: "+companyUser);
+
+                // MAIN_COM_USER_IDX 메인작업자 변경시 USER_INFO 이름 업데이트
+                if(Objects.equals(companyUser.getMAIN_USER_YN(), "Y")) {
+                    UserInfoDTO userInfoDTO =  new UserInfoDTO();
+                    userInfoDTO.setUSER_NAME(companyUser.getUSER_NAME());
+                    userInfoDTO.setUSER_IDX(companyUser.getUSER_IDX());
+                    memberService.updateUserName(userInfoDTO);
+                }
+
+               UserInfoCompanyUserDTO userInfoCompanyUserDTO = new UserInfoCompanyUserDTO();
+                userInfoCompanyUserDTO.setCOM_USER_IDX(companyUser.getCOM_USER_IDX());
+                userInfoCompanyUserDTO.setUSER_IDX(companyUser.getUSER_IDX());
+                userInfoCompanyUserDTO.setCOM_CODE(companyUser.getCOM_CODE());
+                userInfoCompanyUserDTO.setUSER_NAME(companyUser.getUSER_NAME());
+                userInfoCompanyUserDTO.setUSER_POSITION(companyUser.getUSER_POSITION());
+                userInfoCompanyUserDTO.setUSER_DEPT(companyUser.getUSER_DEPT());
+                userInfoCompanyUserDTO.setUSER_EMAIL(companyUser.getUSER_EMAIL());
+                userInfoCompanyUserDTO.setUSER_PHONE(companyUser.getUSER_PHONE());
+               // 없으면 insert 있으면 update 여기서 키값은 COM_USER_IDX
+               memberService.updateUserInfoCompany(userInfoCompanyUserDTO);
+
+
+           }
+
+            response.put("status", "success");
+            response.put("message", "공동 업무자가 성공적으로 저장되었습니다.");
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "저장 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
 
     @GetMapping("/admin/companyInfo/company")
     @PreAuthorize("hasRole('ADMIN')")
