@@ -52,6 +52,11 @@ public class MemberRepository {
         return sql.update("Member.updateUserName", userInfoDTO);
     }
 
+    //User 상태 변경
+    public int updateUserStatus(UserInfoDTO userInfoDTO) {
+        return sql.update("Member.updateUserStatus", userInfoDTO);
+    }
+
     //User ID 생성 된 USER_IDX. 가져오기  10.23
     public UserInfoDTO findByUserId(String userId) { return sql.selectOne("Member.findByUserId", userId); }
 
@@ -101,8 +106,14 @@ public class MemberRepository {
         }else {
             return sql.update("Member.updateUserinfoCompanyHis", userInfoCompanyDTO);
         }
-
     }
+
+    //User history. 10.23
+    public int deleteUserinfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
+        //USER_INFO_COMPANY  (0:대기 삭제 처리 , 1:검토중, 2:승인, 3:반려)
+        return sql.update("Member.deleteUserinfoCompanyHis", userInfoCompanyDTO);
+    }
+
 
     //가입 승인된 회사 정보만 찾는다.
     public List<MemberDTO> findApproveCompany(String COM_CODE) {

@@ -6,10 +6,7 @@ import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
-import com.dongwoo.SQM.system.dto.ComPanyCodeDTO;
-import com.dongwoo.SQM.system.dto.MemberDTO;
-import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
-import com.dongwoo.SQM.system.dto.UserInfoDTO;
+import com.dongwoo.SQM.system.dto.*;
 import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -151,8 +150,6 @@ public class CompanyInfoController {
                 userInfoCompanyUserDTO.setUSER_PHONE(companyUser.getUSER_PHONE());
                // 없으면 insert 있으면 update 여기서 키값은 COM_USER_IDX
                memberService.updateUserInfoCompany(userInfoCompanyUserDTO);
-
-
            }
 
             response.put("status", "success");
@@ -160,6 +157,37 @@ public class CompanyInfoController {
         } catch (Exception e) {
             response.put("status", "error");
             response.put("message", "저장 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
+
+    @PostMapping("/user/companyInfo/deleteCompanyUserInfo")
+    @ResponseBody
+    public Map<String, String> deleteCompanyUserInfo(@RequestParam("USER_IDX") int USER_IDX , Authentication authentication) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            String loginId = authentication.getName();
+            MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
+            //USER_INFO ID 상태 변경
+            UserInfoDTO userInfoDTO =  new UserInfoDTO();
+            userInfoDTO.setUSER_IDX(USER_IDX);
+            userInfoDTO.setUSER_STATUS("N"); //사용자 상태 (Y:사용, N:미사용)
+            userInfoDTO.setDEL_DW_USER_IDX(loginMemberDTO.getUSER_IDX());
+            memberService.updateUserStatus(userInfoDTO);
+
+            //USER_INFO_COMPANY ID 상태 변경
+            UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
+            userInfoCompanyDTO.setUSER_IDX(USER_IDX);
+            userInfoCompanyDTO.setID_PW_ADD_REASON("업체 사용자 삭제");
+            userInfoCompanyDTO.setUSER_STATUS("0");  //관리상태 (0:대기,삭제 , 1:검토중, 2:승인, 3:반려)
+            memberService.deleteUserInfoCompanyHis(userInfoCompanyDTO);
+
+            response.put("status", "success");
+            response.put("message", "삭제 처리 되었습니다.");
+
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "처리 중 오류가 발생했습니다.");
         }
         return response;
     }

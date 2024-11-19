@@ -33,6 +33,16 @@
         WHERE USER_IDX = #{USER_IDX}
     </update>
 
+    <!-- 업체 ID 상태  업데이트 -->
+    <update id="updateUserStatus" parameterType="userinfo">
+        UPDATE USER_INFO
+        SET
+         USER_STATUS = #{USER_STATUS} ,
+         DEL_DW_USER_IDX = #{DEL_DW_USER_IDX} ,
+         DEL_DATE = sysdate
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
+
 
     <!-- USERINFO 가입된정보 가져가기 -->
     <select id="findByUserId" parameterType="String" resultType="userinfo">
@@ -103,7 +113,7 @@
         WHERE u.USER_IDX  = uc.USER_IDX
         AND uc.USER_IDX = icu.USER_IDX
         AND u.USER_ID= #{USER_ID}
-        ORDER BY MAIN_USER_YN DESC
+        ORDER BY MAIN_USER_YN DESC ,icu.COM_USER_IDX ASC
     </select>
 
 
@@ -121,6 +131,16 @@
             ID_PW_ADD_REASON = #{ID_PW_ADD_REASON},
             USER_STATUS = #{USER_STATUS},
             USER_OK_DATE = #{USER_OK_DATE},
+            RETURN_REASON = #{RETURN_REASON}
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
+
+    <!-- 사용자 삭제처리-->
+    <update id="deleteUserinfoCompanyHis" parameterType="userinfoHis">
+        UPDATE USER_INFO_COMPANY
+            SET
+            USER_STATUS = #{USER_STATUS},
+            USER_OK_DATE = sysdate() ,
             RETURN_REASON = #{RETURN_REASON}
         WHERE USER_IDX = #{USER_IDX}
     </update>
@@ -178,7 +198,7 @@
     <!--호출 위치 join 1 1.여기 있으면 기등록 업체 입니다.!!!   -->
     <!--관리상태 USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findByUserInfoCompany" parameterType="String" resultType="member">
-        select * from USER_INFO_COMPANY where USER_STATUS != '2' and COM_CODE=#{COM_CODE}
+        select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and COM_CODE=#{COM_CODE}
     </select>
 
     <!--가입 승인된 회사 정보만 찾는다.  USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->

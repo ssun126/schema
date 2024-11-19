@@ -172,7 +172,7 @@ public class MemberController {
 
         //ID 가입 신청 정보
         //등록중 건이 있는지 체크.
-        //select * from USER_INFO_COMPANY where USER_STATUS != '2' and  COM_CODE=#{COM_CODE}
+        //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
         MemberDTO user_Info_CompanyDTO  = memberService.vendorNumCheck(comPanyDTO.getCOM_CODE());
 
         if(user_Info_CompanyDTO != null) {
@@ -223,7 +223,7 @@ public class MemberController {
         userinfoDTO.setUSER_NAME(MainUSER_NAME);
         userinfoDTO.setUSER_GUBN("1");  //사용자 구분 (0:동우화인켐, 1:업체)
         userinfoDTO.setUSER_STATUS("N"); // 사용자 상태 (Y:사용, N:미사용)
-        userinfoDTO.setREG_DW_USER_IDX("1");  //등록자 //로그인 사용자.
+        //userinfoDTO.setREG_DW_USER_IDX("1");  //등록자 //로그인 사용자.
 
         memberService.saveUserInfo(userinfoDTO);  // 없으면 insert 있으면 update
 
@@ -425,7 +425,7 @@ public class MemberController {
         if(memberDTO != null) {
 
             //등록중 건이 있는지 체크.
-            //select * from USER_INFO_COMPANY where USER_STATUS != '2' and  COM_CODE=#{COM_CODE}
+            //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
             MemberDTO comPanyDTO  = memberService.vendorNumCheck(searchCode);
 
             if(comPanyDTO == null ){

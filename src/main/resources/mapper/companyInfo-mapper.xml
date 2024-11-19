@@ -238,7 +238,7 @@
         JOIN
         USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
         WHERE
-        uc.COM_CODE =#{COM_CODE}
+            u.DEL_DATE IS null and uc.COM_CODE =#{COM_CODE}
         ORDER BY uc.USER_OK_DATE asc
 
     </select>

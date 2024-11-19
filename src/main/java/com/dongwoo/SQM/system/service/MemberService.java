@@ -106,6 +106,11 @@ public class MemberService {
         return memberRepository.updateUserName(userInfoDTO);
     }
 
+    //사용자 상태 변경 (사용처: 승인,탈퇴(삭제) USER_STATUS )
+    public int updateUserStatus(UserInfoDTO userInfoDTO) {
+        return memberRepository.updateUserStatus(userInfoDTO);
+    }
+
     //공동 사용자 저장 USER_INFO_COMPANY_USER
     public int saveUserInfoCompany(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.saveCompanyUser(userInfoCompanyUserDTO);
@@ -124,6 +129,11 @@ public class MemberService {
     //사용자 추가정보 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  정보 저장. company
     public int saveUserInfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
         return memberRepository.saveUserinfoCompanyHis(userInfoCompanyDTO);
+    }
+
+    //사용자 삭제 처리.
+    public int deleteUserInfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
+        return memberRepository.deleteUserinfoCompanyHis(userInfoCompanyDTO);
     }
 
     //COMPANYCODE 정보 업데이트 (가입)

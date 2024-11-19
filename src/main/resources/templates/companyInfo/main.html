@@ -170,6 +170,8 @@
                                 <tr class="collaborator-row" th:each=" user : ${companyUserList}">
                                     <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
                                         <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
+                                        <input type="hidden"  name="MAIN_USER_IDX"  class="cui_text_field" th:value="${user.USER_IDX}">
+
                                     </td>
 
                                     <td>
@@ -334,7 +336,7 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="submit" class="cui_button primary"><span>수정</span></button>
+                                <button type="button" class="cui_button primary" onclick="location.href='/user/auditMgmt/isoAuth'"><span>수정</span></button>
                             </div>
                         </div>
                     </form>
@@ -363,7 +365,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each=" user : ${companyUserIDList}">
+                                    <tr th:each=" user : ${companyUserIDList}" th:id="'idListRow-' + ${user.USER_IDX}">
                                         <td><span th:text="${user.USER_ID}" ></span></td>
                                         <td><span th:text="${user.USER_NAME}"></span></td>
                                         <td><span th:text="${user.USER_EMAIL}"></span></td>
@@ -374,7 +376,7 @@
                                             <div class="cui_items_wrap" data-direction="center">
                                                 <div class="item_content">
                                                     <input type="hidden" name="USER_IDX" id="USER_IDX" th:value="${user.USER_IDX}">
-                                                    <button type="button" class="cui_button secondary" onClick="deleteCpUser()">
+                                                    <button type="button" name="deleteCpUser" class="cui_button secondary"   th:onclick="'deleteCpUserConfirm(' + '\'' + ${user.USER_IDX} + '\'' + ')'">
                                                         <span th:text="${user.USER_STATUS == '2' ? '탈퇴' : '삭제'}"></span>
                                                     </button>
                                                 </div>
@@ -407,6 +409,28 @@
     </div>
 </div>
 <!--==alert==-->
+
+<!--==Confirm==-->
+<div class="cui_dialog" style="width:420px;display:none" id="dialogConfirm">
+    <div class="dialog_container">
+        <div class="dialog_body">
+            <div class="body_root">
+                <div class="cui_alert alert_modal alert_basic" data-type="warning" role="alert" id="ConfirmTypeimg"> <p id="confirmMessageContent" ></p> </div>
+                <div class="cui_items_wrap" data-direction="center">
+                    <div class="item_content">
+                        <button type="button" class="cui_button primary" onClick="confirmAction(true)">
+                            <span>확인</span>
+                        </button>
+                        <button type="button" class="cui_button" onClick="confirmAction(false)">
+                            <span>취소</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==Confirm==-->
 
 </html>
 
@@ -460,7 +484,7 @@
  function updateCpUser() {
 
      const comCode = document.getElementById("COM_CODE").value;
-     const userIdx = document.getElementById("USER_IDX").value;
+     const userIdx = document.getElementsByName("MAIN_USER_IDX").value;
 
      const rowsData = [];
       $('tr.collaborator-row').each(function () {
@@ -495,59 +519,79 @@
     });
   }
 
+     function deleteCpUser(userIdx) {
 
-
- function deleteCpUser() {
-
-     const comCode = document.getElementById("COM_CODE").value;
-     const userIdx = document.getElementById("USER_IDX").value;
-
-     const rowsData = [];
-      $('tr.collaborator-row').each(function () {
-            const rowData = {
-                COM_CODE: comCode,
-                USER_IDX: userIdx,
-                COM_USER_IDX: $(this).find('input[name="COM_USER_IDX"]').val(),
-                USER_NAME: $(this).find('input[name="USER_NAME"]').val(),
-                USER_POSITION: $(this).find('input[name="USER_POSITION"]').val(),
-                USER_DEPT: $(this).find('input[name="USER_DEPT"]').val(),
-                USER_EMAIL: $(this).find('input[name="USER_EMAIL"]').val(),
-                USER_PHONE: $(this).find('input[name="USER_PHONE"]').val()
-            };
-            rowsData.push(rowData);
-      });
-
-     $.ajax({
-        type: "post",
-        url: "/user/companyInfo/updateCompanyUserInfo",
-        data: JSON.stringify(rowsData),
-        contentType: "application/json",
-        success: function(response) {
-            if(response.status === "success") {
-                showAlert('success', response.message);
+         $.ajax({
+            type: "post",
+            url: "/user/companyInfo/deleteCompanyUserInfo",
+            data: {
+                  "USER_IDX": userIdx
+              },
+            success: function(response) {
+                if(response.status === "success") {
+                    showAlert('success', response.message);
+                    const row = document.getElementById('idListRow-' + userIdx );
+                    if (row) {
+                        row.remove();
+                    }
+                }
+            },
+            error: function(err) {
+              console.log("에러발생", err);
+              showAlert('warning',err);
             }
-        },
-        error: function(err) {
-          console.log("에러발생", err);
-          showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+        });
+
+      }
+
+    function deleteCpUserConfirm(userIdx) {
+        //유효성  1개 아이디 남기자.
+
+        var buttons = document.querySelectorAll('button[name="deleteCpUser"]');
+
+        if (buttons.length === 1) {
+            showAlert('warning','한 명 이상의 기본 사용자가 있어야 됩니다.');
+            return;
         }
-    });
-  }
 
+        showConfirm('warning', '정말로 삭제하시겠습니까?', function(isConfirmed) {
+            if (isConfirmed) {
+              deleteCpUser(userIdx);
+            } else {
+                //alert('아니오');
+            }
+        });
+    }
 
+    function modalConfirmClose(id){
+      $("#" + id).fadeOut();
+    }
 
-   function showAlert(type, message) {
+    function confirmAction(isConfirmed) {
+        if (window.confirmCallback) {
+            window.confirmCallback(isConfirmed);
+        }
+        modalConfirmClose('dialogConfirm');
+    }
+
+  function showConfirm(type, message ,callback ) {
+       var alertDiv = document.querySelector('#alertTypeimg');
+       alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
+       document.getElementById('confirmMessageContent').innerText = message;  // 메시지 설정
+       modal('dialogConfirm');
+       window.confirmCallback = callback;
+   }
+
+   function showAlert(type, message ) {
        var alertDiv = document.querySelector('#alertTypeimg');
        alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
        document.getElementById('messageContent').innerText = message;  // 메시지 설정
        modal('dialog');
    }
 
-
  function modal(id){
    $("#" + id).fadeIn();
  }
-
 
  $('.modal-close').on('click', function(e){
    e.preventDefault();
