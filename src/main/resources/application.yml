@@ -6,11 +6,11 @@ server:
       charset: UTF-8
       enabled: true
       force: true
-    session:
-      timeout:90m  //1800초
-  error:
-    include-exception: true # 오류 응답에 exception의 내용을 포함할지 여부
-    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
+#    session:
+#      timeout:90m  //1800초
+#  error:
+#    include-exception: true # 오류 응답에 exception의 내용을 포함할지 여부
+#    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
 
 # thymeleaf
 
@@ -19,8 +19,11 @@ server:
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@192.168.13.28:1521/EMP
+#    username: nsqm
+#    password: dongwoo1234
     url: jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe
-    username: C##SCHEMA
+    username: c##schema
     password: 12345
   messages:
     basename: messages
