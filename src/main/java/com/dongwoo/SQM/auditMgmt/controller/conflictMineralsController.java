@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class conflictMineralsController {
     @GetMapping("/admin/auditMgmt/conflictMinerals")
-    public String isoAuthMain(Model model) {
+    public String Main(Model model) {
         return "conflictMinerals/main";
+    }
+
+    @GetMapping("/admin/auditMgmt/conflictMinerals/detail")
+    public String Detail(Model model) {
+        return "conflictMinerals/detail";
     }
 }

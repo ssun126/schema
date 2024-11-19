@@ -14,4 +14,9 @@ public class safetyHealthController {
     public String GetList(Model model) {
         return "safetyHealth/main";
     }
+
+    @GetMapping("/admin/auditMgmt/safetyHealth/detail")
+    public String labourHRDetail(Model model) {
+        return "safetyHealth/detail";
+    }
 }

@@ -25,14 +25,14 @@
                                 <div class="item_content">
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <input type="text" id="Sch_CreateStartDate" class="cui_text_field" value="2024.12.13">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <input type="text" id="Sch_CreateEndDate" class="cui_text_field" value="2024.12.13">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                                         </div>
                                     </div>
@@ -58,14 +58,14 @@
                                 <div class="item_content">
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <input type="text" id="Sch_StartDate" class="cui_text_field" value="2024.12.13">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field" value="2024.12.13">
+                                            <input type="text" id="Sch_EndDate" class="cui_text_field" value="2024.12.13">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
                                         </div>
                                     </div>
@@ -166,5 +166,26 @@
           rowNum: 20,
           pager: "#jqGridPager"
       });
+
+        //DatePicker 적용 [등록일, 입고일]
+        $('#Sch_CreateStartDate').datepicker({
+          dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+          showOn: "focus",
+        });
+
+        $('#Sch_CreateEndDate').datepicker({
+          dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+          showOn: "focus",
+        });
+
+        $('#Sch_StartDate').datepicker({
+          dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+          showOn: "focus",
+        });
+
+        $('#Sch_EndDate').datepicker({
+          dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+          showOn: "focus",
+        });
     });
 </script>

@@ -284,7 +284,19 @@
               </tr>
               <tr>
                 <th><span>첨부파일</span></th>
-                <td></td>
+                <td colspan="7">
+                  <div class="cui_attachments">
+                    <input type="file" class="cui_file_field">
+                    <div class="cui_items_wrap" data-direction="left">
+                      <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
+                      <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -315,7 +327,9 @@
               </tr>
               <tr>
                 <th><span>COMMENT</span></th>
-                <td></td>
+                <td colspan="7">
+                  <textarea rows="5" style="width:100%" class="cui_text_field"></textarea>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -323,8 +337,8 @@
         </form>
         <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
           <div class="item_content">
-            <button type="button" id="BT1" name="INFO_FLAG" value="Reg" class="cui_button primary"><span>조치결과 저장</span></button>
-            <button type="button" id="BT2" name="INFO_FLAG" value="Save" class="cui_button primary"><span>조치결과 등록</span></button>
+            <button type="button" id="BT1" name="INFO_FLAG" value="Reg" class="cui_button secondary"><span>조치결과 저장</span></button>
+            <button type="button" id="BT2" name="INFO_FLAG" value="Save" class="cui_button secondary"><span>조치결과 등록</span></button>
             <button type="button" id="BtnClose" name="INFO_FLAG" value="Close" class="cui_button primary modal-close"><span>닫기</span></button>
           </div>
         </div>

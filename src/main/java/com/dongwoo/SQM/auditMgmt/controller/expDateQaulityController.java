@@ -9,14 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class qualityControlController {
-    @GetMapping("/admin/auditMgmt/qualityControl")
-    public String GetList(Model model) {
-        return "qualityControl/main";
-    }
-
-    @GetMapping("/admin/auditMgmt/qualityControl/detail")
-    public String GetDetail(Model model) {
-        return "qualityControl/detail";
+public class expDateQaulityController {
+    @GetMapping("/admin/auditMgmt/expDateQaulity")
+    public String isoAuthMain(Model model) {
+        return "expDateQaulity/main";
     }
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+</head>
+<body>
+  <div class="cui_main">
+  <div class="cui_head">
+    <div class="head_content">
+      <h2 class="cui_title"><span>갱신</span></h2>
+    </div>
+  </div>
+  <div class="cui_body">
+    <form id="searchForm1" method="get">
+      <div class="cui_search">
+        <div class="search_list cui_grid_wrap ">
+          <div class="cui_items_wrap" data-direction="left">
+            <strong class="item_label">만료일</strong>
+            <div class="item_content">
+              <div class="cui_items_wrap">
+                <div class="item_content" data-role="calendar-picker" >
+                  <input type="text" id="SearchExpDate" class="cui_text_field cui_calendar_val" value="2024.12.13">
+                  <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cui_items_wrap" data-direction="left">
+            <strong class="item_label">업체코드</strong>
+            <div class="item_content">
+              <input class="cui_text_field" type="text" id="SearchCode"/>
+            </div>
+          </div>
+          <div class="cui_items_wrap" data-direction="left">
+            <strong class="item_label">업체명</strong>
+            <div class="item_content">
+              <input class="cui_text_field" type="text" id="SearchName"/>
+            </div>
+          </div>
+        </div>
+        <div class="search_action">
+          <button type="submit" class="cui_button primary search_btn" id="searchBtn1"><span>검색</span></button>
+        </div>
+      </div>
+    </form>
+
+    <div class="cui_toolbar">
+      <div class="toolbar_content">
+        <div class="toolbar_default"></div>
+      </div>
+      <div class="toolbar_aside">
+        <button type="button" class="cui_button secondary"><span>갱신요청 발송</span></button>
+      </div>
+    </div>
+
+    <table class="cui_table" id="expDateSafetyTable">
+      <colgroup>
+        <col style="width:70px;">
+        <col style="width:80px;">
+        <col style="width:100px;">
+        <col >
+        <col style="width:80px;">
+        <col style="width:100px;">
+        <col style="width:100px;">
+        <col style="width:100px;">
+      </colgroup>
+      <thead>
+      <tr>
+        <th class="center"><label class="cui_checkbox"><input type="checkbox"><i></i></label></th>
+        <th><span>승인상태</span></th>
+        <th><span>업체코드</span></th>
+        <th><span>업체명</span></th>
+        <th><span>점수</span></th>
+        <th><span>제출일자</span></th>
+        <th><span>승인일자</span></th>
+        <th><span>만료일자</span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="center"><label class="cui_checkbox"><input type="checkbox"><i></i></label></td>
+        <td class="center">제출</td>
+        <td>AAAA1</td>
+        <td>코비젼-</td>
+        <td class="center">10</td>
+        <td class="center">2024-11-10</td>
+        <td class="center">2024-11-11</td>
+        <td class="center">2024-11-16</td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="table-wrapper">
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<script>
+  $(document).ready(function () {
+    $('#SearchExpDate').datepicker({
+      dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+      showOn: "focus",
+    });
+
+    $(".cui_calendar_ico").on('click', function() {
+        var inputField = $(this).prev('input');
+        // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
+        if (inputField.datepicker("widget").is(":visible")) {
+            inputField.datepicker("hide"); // datepicker 숨기기
+        } else {
+            inputField.datepicker("show"); // datepicker 보이기
+        }
+      });
+  });
+</script>

@@ -66,15 +66,15 @@
               <div class="item_content">
                 <div class="cui_items_wrap">
                   <div class="item_content" data-role="calendar-picker" >
-                    <input type="text" class="cui_text_field" value="2024.12.13">
-                    <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
+                    <input type="text" id="Sch_StartDate" class="cui_text_field cui_calendar_val" value="2024.12.13" onclick="SetDatePicker(this);">
+                    <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
                   </div>
                 </div>
                 <div class="field_connect">~</div>
                 <div class="cui_items_wrap">
                   <div class="item_content" data-role="calendar-picker" >
-                    <input type="text" class="cui_text_field" value="2024.12.13">
-                    <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>
+                    <input type="text" id="Sch_EndDate" class="cui_text_field cui_calendar_val" value="2024.12.13" onclick="SetDatePicker(this);">
+                    <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
                   </div>
                 </div>
               </div>
@@ -215,7 +215,7 @@
                 <td colspan="3">
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                      <textarea class="cui_text_field" rows="2" disabled></textarea>
                     </div>
                   </div>
                 </td>
@@ -223,7 +223,7 @@
                 <td colspan="3">
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="12341234" disabled>
+                      <textarea class="cui_text_field" rows="2" disabled></textarea>
                     </div>
                   </div>
                 </td>
@@ -233,7 +233,7 @@
                 <td colspan="7">
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="12341234" disabled>
+
                     </div>
                   </div>
                 </td>
@@ -264,7 +264,7 @@
                   </div>
                 </td>
                 <th><span>진행완료 예정일</span></th>
-                <td colspan="2">
+                <td>
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
                       <input class="cui_text_field" type="text" value="2024-11-15" disabled>
@@ -272,10 +272,10 @@
                   </div>
                 </td>
                 <th><span>접수의견</span></th>
-                <td colspan="2">
+                <td colspan="3">
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="" disabled>
+                      <textarea class="cui_text_field" rows="2" disabled></textarea>
                     </div>
                   </div>
                 </td>
@@ -301,12 +301,12 @@
                 <td>
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="2024-11-15" disabled>
+                      <input id="AppDate" class="cui_text_field" type="text" value="2024-11-15" disabled>
                     </div>
                   </div>
                 </td>
                 <th><span>승인여부</span></th>
-                <td colspan="2">
+                <td>
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
                       <input class="cui_text_field" type="text" value="2024-11-15" disabled>
@@ -314,10 +314,10 @@
                   </div>
                 </td>
                 <th><span>특이사항</span></th>
-                <td colspan="2">
+                <td colspan="3">
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="" disabled>
+                      <textarea class="cui_text_field" rows="2" disabled></textarea>
                     </div>
                   </div>
                 </td>
@@ -327,7 +327,7 @@
                 <td colspan="7">
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_content">
-                      <input class="cui_text_field" type="text" value="" disabled>
+
                     </div>
                   </div>
                 </td>
@@ -354,7 +354,7 @@
     });
 
     $("#jqGrid").jqGrid({
-          datatype: "jsonp",
+          datatype: "json",
           colModel: [
               { label: 'PCN_NO', name: 'OrderID', key: true, width: 75 },
               { label: '제목(원재료 포함)', name: 'CustomerID', width: 150 },
@@ -369,7 +369,25 @@
           autowidth: true,
           height: 250,
           rowNum: 20,
-          pager: "#jqGridPager"
+          pager: "#jqGridPager",
+          emptyrecords: "데이터가 없습니다."       	// 레코드가 없을때 보여줄 문구
+      });
+
+      $(".cui_calendar_ico").on('click', function() {
+        var inputField = $(this).prev('input');
+        // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
+        if (inputField.datepicker("widget").is(":visible")) {
+            inputField.datepicker("hide"); // datepicker 숨기기
+        } else {
+            inputField.datepicker("show"); // datepicker 보이기
+        }
+      });
+
+      $(".cui_calendar_val").on('click', function() {
+        $(this).datepicker({
+          dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+          showOn: "focus",
+        });
       });
   });
 
