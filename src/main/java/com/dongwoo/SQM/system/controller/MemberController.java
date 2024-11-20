@@ -315,6 +315,13 @@ public class MemberController {
 
 
         ////Step 5 Final  COMPANY_CODE 업데이트
+
+        //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
+        //기존 상태확인
+        MemberDTO comPanyDTO  = memberService.getCOMPANYCODE(memberDTO.getCOM_CODE());
+        //워런티 승인일
+        String comManageStatus = comPanyDTO.getCOM_MANAGE_STATUS();
+
         ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
         comPanyCodeDTO.setCOM_CODE(COM_CODE);
         comPanyCodeDTO.setVENDOR_WORK_KIND(memberDTO.getVENDOR_WORK_KIND());  // VENDOR 업종 형태 (D:제조사, L:물류사)
@@ -329,13 +336,20 @@ public class MemberController {
         comPanyCodeDTO.setCOM_CEO_PHONE(memberDTO.getCOM_CEO_PHONE());
         comPanyCodeDTO.setCOM_CEO_EMAIL(memberDTO.getCOM_CEO_EMAIL());
 
+        //워런티 s
         comPanyCodeDTO.setCOM_FILE_NAME(memberDTO.getCOM_FILE_NAME());   //워런티 파일 이름
         comPanyCodeDTO.setCOM_FILE_PATH(memberDTO.getCOM_FILE_PATH());   //워런티 파일 Path
         comPanyCodeDTO.setUP_DW_USER_IDX(USER_IDX);   //업데이트 사용자.
         comPanyCodeDTO.setCOM_MANAGE_STATUS("1"); //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+        //워런티 e
 
-        memberService.updateCompanyCode(comPanyCodeDTO);  //업데이트  COMPANY_CODE
-
+        String resultMsg = "";
+        if(comManageStatus.equals("2")) {
+            //ID 추가 상태는 워런티! 건들면 안됨!
+            memberService.updateCpCodeCPUser(comPanyCodeDTO);
+        }else {
+            memberService.updateCompanyCode(comPanyCodeDTO);
+        }
 
 //        동우 RC 관리자에게 메일 발송
 //        <내용 예시>
@@ -347,7 +361,19 @@ public class MemberController {
         session.removeAttribute("joinData");
         System.out.println("joinData 속성.세션 삭제");
 
-        model.addAttribute("resultMsg", "승인 요청 되었습니다.");
+        System.out.println("comManageStatus: " + comManageStatus);
+
+        if(comManageStatus.equals("2")) { //워런티 승인 상태면
+            resultMsg ="ID추가 요청 되었습니다.";
+        }else if(comManageStatus.equals("0")){
+            resultMsg = "승인 요청 되었습니다.";
+        }else{
+            resultMsg = "수정 요청 되었습니다.";
+        }
+
+
+        model.addAttribute("resultMsg", resultMsg);
+
         return "/member/warranty";
 
     }

@@ -133,9 +133,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center" >
                                             <div class="item_content">
-                                                <button type="button" class="cui_button"  onclick ="findfile()"><span>첨부</span></button>
+                                                <button type="button" class="cui_button" onclick="findfile()" th:if="${memberDTO.COM_OK_DATE == ''}"><span>첨부</span></button>
                                                 <button type="button" class="cui_button"  onclick ="downloadFile()"><span>보기</span></button>
-<!--                                                <span id="file-name-display" class="file-name-display"> </span>-->
                                             </div>
                                         </div>
                                     </td>
@@ -153,10 +152,13 @@
                         <br>
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
-                                <!--                                <button  type="submit" name ="request" id="request"  class="cui_button primary" onClick="modal('dialog')">-->
-                                <button  type="submit" name ="request" id="request"  class="cui_button primary">
-                                    <span th:if="${memberDTO.COM_APP_DATE != ''}" th:text="'수정요청'"></span>
-                                    <span th:if="${memberDTO.COM_APP_DATE == ''}" th:text="'승인요청'"></span>
+                                <button type="submit" name="request" id="request" class="cui_button primary">
+                                    <!-- 검토중 또는 반려일 때 버튼 텍스트 -->
+                                    <span th:if="${memberDTO.COM_MANAGE_STATUS == '검토중' || memberDTO.COM_MANAGE_STATUS == '반려'}" th:text="'수정요청'"></span>
+
+                                    <!-- COM_OK_DATE 값에 따라 버튼 텍스트 -->
+                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE != ''}" th:text="'ID추가 요청'"></span>
+                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE == ''}" th:text="'승인요청'"></span>
                                 </button>
                             </div>
                         </div>
@@ -263,12 +265,14 @@
        const hiddenInput = document.getElementById('COM_FILE_NAME');
        var fileName = hiddenInput.value;
 
-       if(fileName == ""){
+       const comManageStatus  =  document.getElementById("hiddenCOM_MANAGE_STATUS").value ;
+
+        if (comManageStatus !== "승인" && (!fileName || fileName.trim() === "")) {
            showAlert('warning', '첨부된 파일이 없습니다.');
            return;
-       }else{
-           document.getElementById('approvalForm').submit();
-       }
+        }
+
+       document.getElementById('approvalForm').submit();
   }
 
   //모달 열기
@@ -332,23 +336,19 @@
            throw new Error('Network response was not ok.');
        })
        .then(data => {
-           console.log("파일 업로드 성공:", data);
-           // 추가적인 성공 메시지나 UI 업데이트
-           //alert('파일 업로드 성공')
+           //console.log("파일 업로드 성공:", data);
            showAlert('success', '파일 업로드 성공');
            $("#dialog2").fadeOut() ;
-           //화면닫기.
        })
        .catch(error => {
-           //alert('파일 업로드 실패! 관리자에게 문의하세요')
-           showAlert('warning', '파일 업로드 실패! 관리자에게 문의하세요');
            console.error("파일 업로드 실패:", error);
+           showAlert('warning', '파일 업로드 실패! 관리자에게 문의하세요');
            $("#dialog2").fadeOut() ;
        });
   }
 
 
-  //warranty 파일 다운로드
+   //warranty 파일 다운로드
    function downloadFile() {
 
        const hiddenInput = document.getElementById('COM_FILE_NAME');

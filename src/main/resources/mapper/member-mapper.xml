@@ -72,7 +72,7 @@
 
     <delete id="deleteUserinfoCompanyUser" parameterType="map">
         DELETE FROM USER_INFO_COMPANY_USER
-        WHERE COM_CODE = #{COM_CODE}
+        WHERE COM_CODE = #{COM_CODE} AND USER_IDX =#{USER_IDX}
         AND COM_USER_IDX NOT IN
         <foreach collection="list" item="COM_USER_IDX" open="(" separator="," close=")">
             #{COM_USER_IDX}
@@ -166,7 +166,7 @@
         where COM_CODE=#{COM_CODE}
     </update>
 
-    <!-- Company Information 에서 사용자가 업체 기본 정보 수정할때-->
+    <!-- Company Information 에서 사용자가 업체 기본 정보 수정할때 ,기가입 유저 추가할때.-->
     <update id="updateCpCodeCPUser" parameterType="companycode">
         update COMPANY_CODE set
         VENDOR_WORK_KIND=#{VENDOR_WORK_KIND}

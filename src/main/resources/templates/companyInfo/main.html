@@ -484,13 +484,12 @@
  function updateCpUser() {
 
      const comCode = document.getElementById("COM_CODE").value;
-     const userIdx = document.getElementsByName("MAIN_USER_IDX").value;
 
      const rowsData = [];
       $('tr.collaborator-row').each(function () {
             const rowData = {
                 COM_CODE: comCode,
-                USER_IDX: userIdx,
+                USER_IDX: $(this).find('input[name="MAIN_USER_IDX"]').val(),
                 MAIN_USER_YN: $(this).find('input[name="MAIN_USER_YN"]').val(),
                 COM_USER_IDX: $(this).find('input[name="COM_USER_IDX"]').val(),
                 USER_NAME: $(this).find('input[name="USER_NAME"]').val(),
