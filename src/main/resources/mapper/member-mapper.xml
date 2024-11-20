@@ -140,7 +140,7 @@
         UPDATE USER_INFO_COMPANY
             SET
             USER_STATUS = #{USER_STATUS},
-            USER_OK_DATE = sysdate() ,
+            USER_OK_DATE = sysdate ,
             RETURN_REASON = #{RETURN_REASON}
         WHERE USER_IDX = #{USER_IDX}
     </update>

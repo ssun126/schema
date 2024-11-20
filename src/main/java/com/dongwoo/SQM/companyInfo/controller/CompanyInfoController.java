@@ -51,8 +51,6 @@ public class CompanyInfoController {
         UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
         parmaDTO.setUSER_ID(loginId);
         List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);
-
-
         model.addAttribute("companyUserList", companyUserList);
         //System.out.println("companyUserList: "+companyUserList);
 
@@ -178,7 +176,7 @@ public class CompanyInfoController {
             //USER_INFO_COMPANY ID 상태 변경
             UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
             userInfoCompanyDTO.setUSER_IDX(USER_IDX);
-            userInfoCompanyDTO.setID_PW_ADD_REASON("업체 사용자 삭제");
+            userInfoCompanyDTO.setRETURN_REASON("업체 사용자 삭제");
             userInfoCompanyDTO.setUSER_STATUS("0");  //관리상태 (0:대기,삭제 , 1:검토중, 2:승인, 3:반려)
             memberService.deleteUserInfoCompanyHis(userInfoCompanyDTO);
 
