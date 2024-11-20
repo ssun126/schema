@@ -16,8 +16,6 @@ import java.net.URLEncoder;
 @Component
 public class CustomFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private static final String DEFAULT_FAIL_URL = "/login";
-
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
