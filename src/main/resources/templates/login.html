@@ -56,8 +56,10 @@
                                 </div>
                             </form>
                             <!-- 로그인 실패 메시지 표시 -->
-                            <div th:if="${loginError}" style="color: red;">
-                                <p th:text="${loginError}"></p>
+                            <div th:if="${error}" class="cui_alert alert_basic" data-type="warning" role="alert">
+                                <div class="alert_message">
+                                    <p th:text="${exception}"></p>
+                                </div>
                             </div>
 
                             <div class="login_form_settings">

@@ -12,12 +12,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final AuthenticationFailureHandler customFailureHandler;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -37,7 +40,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
-                        .requestMatchers("/", "/login", "/member/**").permitAll()
+                        .requestMatchers("/", "/login", "/auth/login", "/member/**").permitAll()
                         // 관리자 권한만 가능
                         //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -45,7 +48,8 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/main", true)
+                        .failureForwardUrl("/loginError")
+                        .failureHandler(customFailureHandler)
                         .successHandler(new LoginSuccessHandler("/main"))
                         .permitAll()
                 )
@@ -60,6 +64,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 }
 

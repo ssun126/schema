@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,13 +35,14 @@ public class AccountService  implements UserDetailsService {
     boolean accountNonLocked = true;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("username======="+username);
         LoginDTO loginDTO = userRepository.findByLoginId(username);
-
+        log.info("loginDTO======="+loginDTO);
         // 조회가 되지않는 고객은 에러발생.
         if(loginDTO == null){
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.:"+username);
         }
 
         // 조회한 정보를 userCustom에 담는다.
@@ -56,16 +58,6 @@ public class AccountService  implements UserDetailsService {
         );
 
         return userCustom;
-
-        /*if(account != null){
-            log.info("account.getUSER_NAME()==="+account.getUSER_NAME());
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            //패스워드 암호화 저장이 되지 않아 여기서 암호화하여 넘겨줌(임시)
-
-            return new User(account.getUSER_ID(), encoder.encode(account.getUSER_PWD()), authorities);
-        }
-         return null;*/
-
     }
 
     private static Collection<? extends GrantedAuthority> authorities(LoginDTO loginDTO){
