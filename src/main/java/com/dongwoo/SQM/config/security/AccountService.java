@@ -42,7 +42,7 @@ public class AccountService  implements UserDetailsService {
         log.info("loginDTO======="+loginDTO);
         // 조회가 되지않는 고객은 에러발생.
         if(loginDTO == null){
-            throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다.:"+username);
+            throw new UsernameNotFoundException("패스워드가 틀리거나 해당 사용자를 찾을 수 없습니다.:"+username);
         }
 
         // 조회한 정보를 userCustom에 담는다.
