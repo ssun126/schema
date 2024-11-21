@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CodeCache">
+    <select id="selectListCodeGroup" resultType="HashMap">
+        /* CodeCacheDAO.selectListCodeGroup */
+        SELECT BASE_CODE, BASE_NAME FROM BASE_CODE bc
+        WHERE GROUP_CODE != BASE_CODE AND BASE_OPTION = 'SYSTEM' AND BASE_STATUS ='Y'
+        ORDER BY BASE_SORT
+    </select>
+
+</mapper>
