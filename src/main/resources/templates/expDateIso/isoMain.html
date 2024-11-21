@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+</head>
+<body>
+        <div class="cui_main">
+            <div class="cui_head">
+                <div class="head_content">
+                    <h2 class="cui_title"><span>만료일 관리</span></h2>
+                </div>
+            </div>
+            <div class="cui_body">
+                <form id="searchForm" method="get">
+                    <div class="cui_search">
+                        <div class="search_list cui_grid_wrap ">
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">만료일</strong>
+                                <div class="item_content">
+                                    <div class="cui_items_wrap">
+                                        <div class="item_content" data-role="calendar-picker" >
+                                            <input type="text" id="searchExpDate" class="cui_text_field cui_calendar_val" value="2024.12">
+                                            <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">업체코드</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label">업체명</strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search_action">
+                            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="cui_toolbar">
+                    <div class="toolbar_content">
+                        <div class="toolbar_default"></div>
+                    </div>
+                    <div class="toolbar_aside">
+                        <button type="button" class="cui_button secondary"><span>갱신요청 발송</span></button>
+                    </div>
+                </div>
+
+                <table class="cui_table" id="isoExpDateTable">
+                    <colgroup>
+                        <col style="width:70px;">
+                        <col style="width:80px;">
+                        <col>
+                        <col style="width:80px;">
+                        <col style="width:120px;" >
+                        <col style="width:100px;">
+                        <col style="width:100px;">
+                        <col style="width:100px;">
+                        <col style="width:100px;">
+                        <col style="width:100px;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><span><input type="checkbox"/></span></th>
+                        <th><span>업체코드</span></th>
+                        <th><span>업체명</span></th>
+                        <th><span>분류</span></th>
+                        <th><span>인증서</span></th>
+                        <th><span>인증일</span></th>
+                        <th><span>만료일</span></th>
+                        <th><span>등록일</span></th>
+                        <th><span>등록서류</span></th>
+                        <th><span>승인여부</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="10">검색 버튼을 눌러 조회하세요.</td></tr>
+                    </tbody>
+                </table>
+                <div class="table-wrapper">
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $(document).ready(function () {
+                    $('#searchExpDate').datepicker({
+                        dateFormat: 'yy.mm',  // 월 단위로 포맷 설정 (yyyy.mm 형식)
+                        showOn: "focus",          // 인풋에 포커스가 가면 달력 보이기
+                        changeMonth: true,        // 월 선택기 활성화
+                        changeYear: true,         // 연도 선택기 활성화
+                        showButtonPanel: true,    // "오늘" 버튼과 같은 버튼 패널 표시
+                        defaultViewDate: new Date(), // 기본 표시 날짜
+                        minDate: new Date(2000, 0), // 최소 선택 가능 연도 (예: 2000년부터)
+                        maxDate: new Date(2099, 11), // 최대 선택 가능 연도 (예: 2099년까지)
+                        onClose: function(dateText, inst) {
+                            // 날짜가 선택되었을 때
+                            var selectedMonth = $("#searchExpDate").val();
+                            console.log('Selected Month:', selectedMonth);
+                        }
+                    });
+
+                    $(".cui_calendar_ico").on('click', function() {
+                        var inputField = $(this).prev('input');
+                        // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
+                        if (inputField.datepicker("widget").is(":visible")) {
+                            inputField.datepicker("hide"); // datepicker 숨기기
+                        } else {
+                            inputField.datepicker("show"); // datepicker 보이기
+                        }
+                      });
+                  });
+                // 검색 버튼 클릭 시
+                $('#searchBtn').on('click', function(event) {
+                     event.preventDefault();  // 기본 폼 제출 동작 방지
+
+                    var name = $('#searchName').val();  // 업체명
+                    var code = $('#searchCode').val();  // 업체 코드
+                    var expDate = $('#searchExpDate').val();
+
+                    $.ajax({
+                        url: '/api/searchIsoExpDate',  // 서버의 검색 API URL
+                        type: 'GET',
+                        data: {
+                            name: name,      // 업체명
+                            code: code,      // 업체 코드
+                            expDate: expDate,  // expDate
+                            pageNum: 1,      // 기본값으로 첫 페이지
+                            amount: 10       // 한 페이지에 표시할 항목 수
+                        },
+                        success: function(response) {
+                            // 테이블에 결과 채우기
+                            var tableBody = $('#isoExpDateTable tbody');
+                            tableBody.empty();  // 기존 내용 비우기
+
+                            if(response != null){
+                                // 검색된 결과를 테이블에 추가
+                                response.forEach(function(isoAuthItem) {
+                                    var row = '<tr>' +
+                                                    '<td><input type="checkbox" name="checkbox1"/></td>' +
+                                                    '<td>' + isoAuthItem.COM_CODE + '</td>' +
+                                                    '<td>' + isoAuthItem.COM_NAME + '</td>' +
+                                                    '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
+                                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
+                                                    '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
+                                                    '<td>' + isoAuthItem.EXP_DATE + '</td>' +
+                                                    '<td>' + isoAuthItem.REG_DATE + '</td>' +
+                                                    '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuthItem.FILE_NAME) + '">다운로드</a></td>' +
+                                                    '<td>' + isoAuthItem.ITEM_STATE + '</td>' +
+                                                  '</tr>';
+                                    tableBody.append(row);
+                                });
+                            }else{
+                                var row = '<tr><td colspan="10">데이터가 없습니다.</td>></tr>';
+                                tableBody.append(row);  // 테이블에 새 행 추가
+                            }
+                        },
+                        error: function() {
+                            alert("검색 결과를 가져오는 데 실패했습니다.");
+                        }
+                    });
+                });
+            });
+        </script>
+</body>
+</html>

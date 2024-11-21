@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ExpDateMgmtController {
     @GetMapping("/admin/auditMgmt/expDateIso")
     public String isoAuthMain(Model model) {
-        return "expDateMgmt/isoMain";
+        return "expDateIso/isoMain";
     }
 }

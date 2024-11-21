@@ -39,6 +39,7 @@
                                     <option value="SEND">제출</option>
                                     <option value="APRROVE">승인</option>
                                     <option value="NOTAPPROVE">반려</option>
+                                    <option value="SAVE">저장</option>
                                 </select>
                             </div>
                         </div>
@@ -68,7 +69,7 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                    <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
                 </tbody>
             </table>
             <div id="pagination" class="pagination" style="text-align: center"></div>
@@ -158,25 +159,28 @@
                         'OK': '승인',
                         'REJECT': '반려'
                     };
-
-                    // 검색된 결과를 테이블에 추가
-                    response.resultList.forEach(function(auth) {
-                        var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
-                        var sendDate = new Date(auth.SEND_DATE); // SEND_DATE Date 객체로 변환
-                        var formattedSendDate = sendDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                        var itemPoint = auth.APPROVE_STATE ? auth.APPROVE_STATE: '-';  // null일 경우 '0'로 대체
-                        var itemPoint = auth.POINT ? auth.POINT: '-';  // null일 경우 '0'로 대체
-                        var itemApvDate = auth.APPROVE_DATE ? auth.APPROVE_DATE: '';  // null일 경우 '0'로 대체
-                        var row = '<tr>' +
-                                        '<td>' + appTypeText + '</td>' +
-                                        '<td>' + auth.COM_CODE + '</td>' +
-                                        '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
-                                        '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
-                                        '<td>' + formattedSendDate + '</td>' +
-                                        '<td>' + itemApvDate + '</td>' +
-                                      '</tr>';
+                    console.log("ssssss"+response);
+                    if(response != null){
+                        // 검색된 결과를 테이블에 추가
+                        response.resultList.forEach(function(auth) {
+                            var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
+                            var itemPoint = auth.APPROVE_STATE ? auth.APPROVE_STATE: '-';  // null일 경우 '-'로 대체
+                            var itemPoint = auth.POINT ? auth.POINT: '-';  // null일 경우 '0'로 대체
+                            var itemApvDate = auth.APPROVE_DATE ? auth.APPROVE_DATE: '';  // null일 경우 ''로 대체
+                            var row = '<tr>' +
+                                            '<td>' + appTypeText + '</td>' +
+                                            '<td>' + auth.COM_CODE + '</td>' +
+                                            '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
+                                            '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
+                                            '<td>' + auth.SEND_DATE + '</td>' +
+                                            '<td>' + itemApvDate + '</td>' +
+                                          '</tr>';
+                            tableBody.append(row);  // 테이블에 새 행 추가
+                        });
+                    }else{
+                        var row = '<tr><td colspan=6>데이터가 없습니다.</td>></tr>';
                         tableBody.append(row);  // 테이블에 새 행 추가
-                    });
+                    }
 
                     // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
                     updatePagination(response.pageMaker);
