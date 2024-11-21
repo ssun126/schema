@@ -51,6 +51,7 @@ public class AccountService  implements UserDetailsService {
                 , loginDTO.getUSER_PWD()
                 , enabled, accountNonExpired, credentialsNonExpired, accountNonLocked
                 , authorities(loginDTO)
+                , loginDTO.getUSER_idx()
                 , loginDTO.getUSER_GUBN()
                 , loginDTO.getUSER_STATUS()
                 , loginDTO.getCOM_CODE()
