@@ -18,7 +18,7 @@
     </select>
 
     <select id="searchCompanies" parameterType="map" resultType="isoAuth">
-        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
+        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE, TO_CHAR(SEND_DATE, 'YYYY.MM.DD') AS SEND_DATE, POINT
         FROM
         (
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
@@ -62,7 +62,8 @@
 
     <select id="getList" resultType="isoAuthItem">
         <![CDATA[
-        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
+        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE, TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE,
+            TO_CHAR(REG_DATE, 'YYYY.MM.DD') AS REG_DATE, TO_CHAR(UP_DATE, 'YYYY.MM.DD') AS UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
         FROM
         (
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
@@ -84,7 +85,9 @@
         FROM
         (
         SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-        ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, ACI.REG_DATE, ACI.UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
+            ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE,
+            TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE, TO_CHAR(ACI.REG_DATE, 'YYYY.MM.DD') AS REG_DATE, TO_CHAR(ACI.UP_DATE, 'YYYY.MM.DD') AS UP_DATE,
+            ITEM_STATE, FILE_NAME, FILE_PATH
         FROM ISO_AUTH_COMPANY_ITEM ACI
         INNER JOIN COMPANY_CODE CC
         ON CC.COM_CODE = ACI.COM_CODE
@@ -95,8 +98,8 @@
         <if test="COM_NAME != null and COM_NAME != ''">
             AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
         </if>
-        <if test="COM_STATUS != null and COM_STATUS != ''">
-            AND (ACI.EXP_DATE LIKE CONCAT(CONCAT('%',  #{EXP_DATE}), '%'))
+        <if test="EXP_DATE != null and EXP_DATE != ''">
+            AND TO_CHAR(ACI.EXP_DATE, 'YYYY.MM') = #{EXP_DATE}
         </if>
         <if test="criteria != null and criteria != ''">
             <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>

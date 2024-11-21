@@ -155,6 +155,59 @@ function updatePagination(pageMaker) {
     });
 }
 
+function fileExtensionCheck(){
+     e.preventDefault(); // 기본 제출 이벤트 방지
+
+    // 파일 입력 요소 가져오기
+    var fileInput = $('#fileInput')[0];
+    var file = fileInput.files[0];
+
+    if (file) {
+        // 허용된 파일 확장자 (예: .jpg, .png, .pdf)
+        var allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf'];
+
+        // 파일 이름에서 확장자 추출
+        var fileName = file.name;
+        var fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+
+        // 허용된 확장자에 포함되지 않으면 경고
+        if (!allowedExtensions.includes('.' + fileExtension)) {
+            alert('지원되지 않는 파일 형식입니다. JPG, JPEG, PNG, PDF 파일만 업로드 가능합니다.');
+            return false; // 파일 형식이 맞지 않으면 업로드를 취소
+        }
+
+        // 파일 형식이 맞으면 폼 제출 (추후 Ajax 처리 등 추가 가능)
+        alert('파일 업로드 성공!');
+        // 여기서 실제 파일 업로드 로직을 추가할 수 있습니다.
+    } else {
+        alert('파일을 선택해 주세요.');
+    }
+}
 
 
+function modalConfirmClose(id){
+    $("#" + id).fadeOut();
+}
+
+function confirmAction(isConfirmed) {
+    if (window.confirmCallback) {
+        window.confirmCallback(isConfirmed);
+    }
+    modalConfirmClose('dialogConfirm');
+}
+
+function showConfirm(type, message ,callback ) {
+   var alertDiv = document.querySelector('#alertTypeimg');
+   alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
+   document.getElementById('confirmMessageContent').innerText = message;  // 메시지 설정
+   modal('dialogConfirm');
+   window.confirmCallback = callback;
+}
+
+function showAlert(type, message ) {
+   var alertDiv = document.querySelector('#alertTypeimg');
+   alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
+   document.getElementById('messageContent').innerText = message;  // 메시지 설정
+   modal('dialog');
+}
 

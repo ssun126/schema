@@ -14,6 +14,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -79,7 +80,7 @@ public class ISOAuthRestController {
 
     //IsoAuth 정보 신규 저장
     @PostMapping("/setIsoAuthItemData")
-    public String setIsoAuthItemData(IsoAuthItemDTO isoAuthItemDTO, @RequestParam("file") MultipartFile file) throws IOException {
+    public String setIsoAuthItemData(IsoAuthItemDTO isoAuthItemDTO, @RequestParam("file") MultipartFile file, @AuthenticationPrincipal UserCustom user) throws IOException {
         log.info("isoAuthItemDTO = " + isoAuthItemDTO);
         if (file.isEmpty()) {
             log.info("No file uploaded");
@@ -98,6 +99,10 @@ public class ISOAuthRestController {
             isoAuthItemDTO.setFILE_PATH(uploadPath + fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
             // 파일 업로드 처리 끝
         }
+
+        int loginIdx = user.getUSER_IDX();
+        isoAuthItemDTO.setREG_DW_USER_IDX(loginIdx);
+        isoAuthItemDTO.setUP_DW_USER_IDX(loginIdx);
         int resultCnt = isoAuthService.saveItem(isoAuthItemDTO);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
@@ -175,8 +180,8 @@ public class ISOAuthRestController {
         log.info("isoAuthDTO = " + isoAuthDTO);
         isoAuthDTO.setAPPROVE_STATE("SEND"); //제출
         isoAuthDTO.setAUTH_TYPE("ISO");
-        isoAuthDTO.setREG_DW_USER_IDX(user.getUsername());
-        isoAuthDTO.setUP_DW_USER_IDX(user.getUsername());
+        isoAuthDTO.setREG_DW_USER_IDX(user.getUSER_IDX());
+        isoAuthDTO.setUP_DW_USER_IDX(user.getUSER_IDX());
 
         int resultCnt = isoAuthService.save(isoAuthDTO);
 
@@ -184,8 +189,8 @@ public class ISOAuthRestController {
         IsoAuthItemDTO isoAuthItemDTO = new IsoAuthItemDTO();
         isoAuthItemDTO.setCOM_CODE(isoAuthDTO.getCOM_CODE());
         isoAuthItemDTO.setITEM_STATE("SEND"); //제출
-        isoAuthItemDTO.setREG_DW_USER_IDX(user.getUsername());
-        isoAuthItemDTO.setUP_DW_USER_IDX(user.getUsername());
+        isoAuthItemDTO.setREG_DW_USER_IDX(user.getUSER_IDX());
+        isoAuthItemDTO.setUP_DW_USER_IDX(user.getUSER_IDX());
         isoAuthService.updateStatus(isoAuthItemDTO);
 
         /* 메일 발송 */

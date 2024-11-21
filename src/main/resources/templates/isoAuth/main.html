@@ -178,18 +178,12 @@
                             tableBody.empty(); // 기존 내용 비우기
 
                             response.forEach(function(isoAuth) {
-                                var authDate = new Date(isoAuth.AUTH_DATE); // AUTH_DATE Date 객체로 변환
-                                var formattedAuthDate = authDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                                var expDate = new Date(isoAuth.EXP_DATE); // EXP_DATE를 Date 객체로 변환
-                                var formattedExpDate = expDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                                var regDate = new Date(isoAuth.REG_DATE); // REG_DATE Date 객체로 변환
-                                var formattedRegDate = regDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
                                 var row = '<tr>' +
                                                 '<td>' + isoAuth.AUTH_TYPE + '</td>' +
                                                 '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
-                                                '<td>' + formattedAuthDate + '</td>' +
-                                                '<td>' + formattedExpDate + '</td>' +
-                                                '<td>' + formattedRegDate + '</td>' +
+                                                '<td>' + isoAuth.AUTH_DATE + '</td>' +
+                                                '<td>' + isoAuth.EXP_DATE + '</td>' +
+                                                '<td>' + isoAuth.REG_DATE + '</td>' +
                                                 '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuth.FILE_NAME) + '">다운로드</a></td>' +
                                                 '<td>' + isoAuth.ITEM_STATE + '</td>' +
                                               '</tr>';
