@@ -4,16 +4,16 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NCR 관리</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안전보건/환경관리</title>
 </head>
 <body>
 <div class="cui_content">
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>노동인권</span></h2>
+              <h2 class="cui_title"><span>노동인권</span></h2>
             </div>
         </div>
         <div class="cui_body">
@@ -69,7 +69,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
+                  <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
                 </tbody>
             </table>
             <div id="pagination" class="pagination" style="text-align: center"></div>
@@ -81,13 +81,13 @@
 </body>
 </html>
 <script>
-    $(document).ready(function() {
+  $(document).ready(function() {
             // 링크 클릭 시 콘텐츠를 로드
             $(document).on("click", ".load-page", function(e) {
                 e.preventDefault();
 
                 const code = $(this).data("code");
-                const url = "/admin/auditMgmt/labourHRDetail?COM_CODE="+code;
+                const url = "/admin/auditMgmt/safetyHealthDetail?COM_CODE="+code;
 
                 history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
                 loadContent(url);
@@ -98,7 +98,7 @@
             $('#searchBtn').on('click', function(event) {
                  event.preventDefault();  // 기본 폼 제출 동작 방지
 
-                var type = 'LABOUR';      // audit 타입
+                var type = 'SAFETY';      // audit 타입
                 var name = $('#searchName').val();  // 업체명
                 var code = $('#searchCode').val();  // 업체 코드
                 var state = $('#searchState').val();  // state

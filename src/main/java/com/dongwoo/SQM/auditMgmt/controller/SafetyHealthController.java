@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SafetyHealthController {
     @GetMapping("/admin/auditMgmt/safetyHealth")
     public String GetList(Model model) {
-        return "safetyHealth/main";
+        return "safetyHealth/adminMain";
     }
 
-    @GetMapping("/admin/auditMgmt/safetyHealth/detail")
+    @GetMapping("/admin/auditMgmt/safetyHealthDetail")
     public String labourHRDetail(Model model) {
         return "safetyHealth/detail";
     }

@@ -165,35 +165,6 @@ function updatePagination(pageMaker) {
     });
 }
 
-function fileExtensionCheck(){
-     e.preventDefault(); // 기본 제출 이벤트 방지
-
-    // 파일 입력 요소 가져오기
-    var fileInput = $('#fileInput')[0];
-    var file = fileInput.files[0];
-
-    if (file) {
-        // 허용된 파일 확장자 (예: .jpg, .png, .pdf)
-        var allowedExtensions = ['.jpg', '.jpeg', '.png', '.pdf'];
-
-        // 파일 이름에서 확장자 추출
-        var fileName = file.name;
-        var fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
-
-        // 허용된 확장자에 포함되지 않으면 경고
-        if (!allowedExtensions.includes('.' + fileExtension)) {
-            alert('지원되지 않는 파일 형식입니다. JPG, JPEG, PNG, PDF 파일만 업로드 가능합니다.');
-            return false; // 파일 형식이 맞지 않으면 업로드를 취소
-        }
-
-        // 파일 형식이 맞으면 폼 제출 (추후 Ajax 처리 등 추가 가능)
-        alert('파일 업로드 성공!');
-        // 여기서 실제 파일 업로드 로직을 추가할 수 있습니다.
-    } else {
-        alert('파일을 선택해 주세요.');
-    }
-}
-
 
 function modalConfirmClose(id){
     $("#" + id).fadeOut();
@@ -219,5 +190,40 @@ function showAlert(type, message ) {
    alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
    document.getElementById('messageContent').innerText = message;  // 메시지 설정
    modal('dialog');
+}
+
+// 파일 확장자 체크 함수
+function fileExtensionCheck(fileInputId, allowType, successCallback, errorCallback) {
+    // 파일 입력 요소 가져오기
+    var fileInput = $('#' + fileInputId)[0]; // fileInputId로 파일 입력 요소 선택
+    var file = fileInput.files[0];
+
+
+
+    if (file) {
+        // 파일 이름에서 확장자 추출
+        var fileName = file.name;
+        var fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+
+        // 허용된 확장자에 포함되지 않으면 에러 콜백 호출
+        if (!allowedExtensions.includes('.' + fileExtension)) {
+            if (typeof errorCallback === 'function') {
+                errorCallback('지원되지 않는 파일 형식입니다. 허용된 파일 형식: ' + allowedExtensions.join(', '));
+            }
+            return false; // 파일 형식이 맞지 않으면 업로드를 취소
+        }
+
+        // 파일 형식이 맞으면 성공 콜백 호출
+        if (typeof successCallback === 'function') {
+            successCallback('파일 업로드 성공!');
+        }
+
+        return true; // 파일 형식이 맞을 경우 true 반환
+    } else {
+        if (typeof errorCallback === 'function') {
+            errorCallback('파일을 선택해 주세요.');
+        }
+        return false; // 파일이 선택되지 않으면 false 반환
+    }
 }
 

@@ -10,132 +10,152 @@
 </head>
 <body>
 <div class="cui_content">
-  <div class="cui_main">
-    <div class="cui_head">
-      <div class="head_content">
-        <h2 class="cui_title"><span>안전보건/환경관리</span></h2>
-      </div>
-    </div>
-    <div class="cui_body">
-      <form id="searchForm" method="get">
-        <div class="cui_search">
-          <div class="search_list cui_grid_wrap ">
-            <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">업체코드</strong>
-              <div class="item_content">
-                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
-              </div>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+              <h2 class="cui_title"><span>노동인권</span></h2>
             </div>
-            <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">업체명</strong>
-              <div class="item_content">
-                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
-              </div>
-            </div>
-            <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">승인상태</strong>
-              <div class="item_content">
-                <select class="cui_select_field">
-                  <option value="">제목</option>
-                  <option value="">제목</option>
-                  <option value="">제목</option>
-                  <option value="">제목</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="search_action">
-            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
-          </div>
         </div>
-      </form>
-      <table class="cui_table center" id="companyTable">
-        <colgroup>
-          <col style="width:100px;">
-          <col style="width:130px;">
-          <col>
-          <col style="width:80px;">
-          <col style="width:130px;">
-          <col style="width:130px;">
-          <col style="width:80px;">
-        </colgroup>
-        <thead>
-        <tr>
-          <th><span>승인상태</span></th>
-          <th><span>업체코드</span></th>
-          <th><span>업체명</span></th>
-          <th><span>점수</span></th>
-          <th><span>제출일자</span></th>
-          <th><span>승인일자</span></th>
-          <th><span>메일발송</span></th>
-        </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><span>제출</span></td>
-            <td><span>AAAA1</span></td>
-            <td><span>코비젼 1</span></td>
-            <td><span>8</span></td>
-            <td><span>2024-07-31</span></td>
-            <td><span>2024-07-31</span></td>
-            <td><button type="button" class="cui_button secondary"><span>발송</span></button></td>
-          </tr>
-        </tbody>
-      </table>
-      <div id="pagination" class="pagination" style="text-align: center"></div>
-      <div class="table-wrapper">
-      </div>
+        <div class="cui_body">
+            <form id="searchForm" method="get">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap ">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">업체코드</strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">업체명</strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">승인상태</strong>
+                            <div class="item_content">
+                                <select class="cui_select_field" id="searchState">
+                                    <option value="" selected>선택하세요</option>
+                                    <option value="SEND">제출</option>
+                                    <option value="APRROVE">승인</option>
+                                    <option value="NOTAPPROVE">반려</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search_action">
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+                    </div>
+                </div>
+            </form>
+            <table class="cui_table center" id="companyTable">
+                <colgroup>
+                    <col style="width:130px;">
+                    <col style="width:130px;">
+                    <col>
+                    <col style="width:130px;">
+                    <col style="width:130px;">
+                    <col style="width:130px;">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th><span>승인상태</span></th>
+                    <th><span>업체코드</span></th>
+                    <th><span>업체명</span></th>
+                    <th><span>점수</span></th>
+                    <th><span>제출일자</span></th>
+                    <th><span>승인일자</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
+                </tbody>
+            </table>
+            <div id="pagination" class="pagination" style="text-align: center"></div>
+            <div class="table-wrapper">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 </body>
 </html>
 <script>
-  // 페이지네이션 처리 함수 (updatePagination)
-function updatePagination(pageMaker) {
-    var paginationHtml = '';
-    var currentPage = pageMaker.criteria.pageNum;
-    var startPage = pageMaker.startPage;
-    var endPage = pageMaker.endPage;
-    var totalPages = pageMaker.totalPages;
-
-    // 이전 페이지 버튼
-    if (currentPage > 1) {
-        paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
-    }
-
-    // 페이지 번호
-    for (var i = startPage; i <= endPage; i++) {
-        if (i === currentPage) {
-            paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-        } else {
-            paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-        }
-    }
-
-    // 다음 페이지 버튼
-    if (currentPage < totalPages) {
-        paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-    }
-
-    // 페이지네이션 HTML 업데이트
-    $('#pagination').html(paginationHtml);
-
-    // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-    $('.page, .prev, .next').on('click', function(event) {
-        event.preventDefault();
-        var pageNum = $(this).data('page');
-        searchCompanies(pageNum);
-    });
-}
-
   $(document).ready(function() {
-    $('#searchBtn').on('click', function(event){
-      event.preventDefault();  // 기본 폼 제출 동작 방지
+            // 링크 클릭 시 콘텐츠를 로드
+            $(document).on("click", ".load-page", function(e) {
+                e.preventDefault();
 
-      var name = $('#searchName').val();  // 업체명
-      var code = $('#searchCode').val();  // 업체 코드
-      var state = $('#searchState').val();  // state
-    });
-  });
+                const code = $(this).data("code");
+                const url = "/admin/auditMgmt/labourHRDetail?COM_CODE="+code;
+
+                history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
+                loadContent(url);
+                //goMenu(url);
+            });
+
+            // 검색 버튼 클릭 시
+            $('#searchBtn').on('click', function(event) {
+                 event.preventDefault();  // 기본 폼 제출 동작 방지
+
+                var type = 'SAFETY';      // audit 타입
+                var name = $('#searchName').val();  // 업체명
+                var code = $('#searchCode').val();  // 업체 코드
+                var state = $('#searchState').val();  // state
+
+                $.ajax({
+                    url: '/api/searchAuditMgmt',  // 서버의 검색 API URL
+                    type: 'GET',
+                    data: {
+                        type: type,      // audit 타입
+                        name: name,      // 업체명
+                        code: code,      // 업체 코드
+                        state: state,  // state
+                        pageNum: 1,      // 기본값으로 첫 페이지
+                        amount: 10       // 한 페이지에 표시할 항목 수
+                    },
+                    success: function(response) {
+                        // 테이블에 결과 채우기
+                        var tableBody = $('#companyTable tbody');
+                        tableBody.empty();  // 기존 내용 비우기
+
+                        // APPROVE_STATE 매핑 객체 선언
+                        var appTypeMap = {
+                            'SAVE': '작성중',
+                            'SEND': '제출',
+                            'OK': '승인',
+                            'REJECT': '반려'
+                        };
+
+                        if(response != null){
+                            // 검색된 결과를 테이블에 추가
+                            response.resultList.forEach(function(auth) {
+                                var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
+                                var itemPoint = auth.APPROVE_STATE ? auth.APPROVE_STATE: '-';  // null일 경우 '-'로 대체
+                                var itemPoint = auth.POINT ? auth.POINT: '-';  // null일 경우 '0'로 대체
+                                var itemApvDate = auth.APPROVE_DATE ? auth.APPROVE_DATE: '';  // null일 경우 ''로 대체
+                                var row = '<tr>' +
+                                                '<td>' + appTypeText + '</td>' +
+                                                '<td>' + auth.COM_CODE + '</td>' +
+                                                '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
+                                                '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
+                                                '<td>' + auth.SEND_DATE + '</td>' +
+                                                '<td>' + itemApvDate + '</td>' +
+                                              '</tr>';
+                                tableBody.append(row);  // 테이블에 새 행 추가
+                            });
+                        }else{
+                            var row = '<tr><td colspan=6>데이터가 없습니다.</td>></tr>';
+                            tableBody.append(row);  // 테이블에 새 행 추가
+                        }
+
+                        // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
+                        updatePagination(response.pageMaker);
+                    },
+                    error: function() {
+                        alert("검색 결과를 가져오는 데 실패했습니다.");
+                    }
+                });
+            });
+        });
 </script>

@@ -35,7 +35,7 @@
                             <strong class="item_label">승인상태</strong>
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchState">
-                                    <option value="" selected>선택</option>
+                                    <option value="" selected>선택하세요</option>
                                     <option value="SEND">제출</option>
                                     <option value="APRROVE">승인</option>
                                     <option value="NOTAPPROVE">반려</option>
@@ -122,8 +122,11 @@
                         'OK': '승인',
                         'REJECT': '반려'
                     };
-                    console.log("ssssss"+response);
-                    if(response != null){
+
+                    if (!response.resultList || response.resultList.length === 0) {
+                        var row = '<tr><td colspan="6">데이터가 없습니다.</td>></tr>';
+                        tableBody.append(row);  // 테이블에 새 행 추가
+                    }else{
                         // 검색된 결과를 테이블에 추가
                         response.resultList.forEach(function(auth) {
                             var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
@@ -140,9 +143,6 @@
                                           '</tr>';
                             tableBody.append(row);  // 테이블에 새 행 추가
                         });
-                    }else{
-                        var row = '<tr><td colspan=6>데이터가 없습니다.</td>></tr>';
-                        tableBody.append(row);  // 테이블에 새 행 추가
                     }
 
                     // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
