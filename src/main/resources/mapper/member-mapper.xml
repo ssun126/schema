@@ -120,8 +120,8 @@
     <!-- USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
     <insert id="saveUserinfoCompanyHis" parameterType="userinfoHis">
         insert into USER_INFO_COMPANY(USER_IDX
-        , COM_CODE , COM_USER_IDX , ID_PW_ADD_REASON ,USER_STATUS ,USER_OK_DATE , RETURN_REASON )
-        values ( #{USER_IDX} , #{COM_CODE} ,#{COM_USER_IDX} ,  #{ID_PW_ADD_REASON} , #{USER_STATUS} , #{USER_OK_DATE}, #{RETURN_REASON} )
+        , COM_CODE , COM_USER_IDX , ID_PW_ADD_REASON ,USER_STATUS ,USER_OK_DATE , RETURN_REASON ,ID_ADD_TYPE)
+        values ( #{USER_IDX} , #{COM_CODE} ,#{COM_USER_IDX} ,  #{ID_PW_ADD_REASON} , #{USER_STATUS} , #{USER_OK_DATE}, #{RETURN_REASON} , #{ID_ADD_TYPE} )
     </insert>
 
     <update id="updateUserinfoCompanyHis" parameterType="userinfoHis">

@@ -255,6 +255,7 @@
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <input name="ID_PW_ADD_REASON" id="ID_PW_ADD_REASON" class="cui_text_field wide" type="text">
+                                                <input type="hidden" name="ID_ADD_TYPE" id="ID_ADD_TYPE">
                                             </div>
                                         </div>
                                     </td>
@@ -526,6 +527,7 @@
     //밴더 사업자 검색후 표기 초기화
     function hideCompanyStatusInfo () {
       $('#firstCompany').hide();
+      $('#tr_id_pw_add_reason').hide();
       $('#registeredCompany').hide();
       $('#noCompanyCode').hide();
       $('#errCompanyCode').hide();
@@ -572,16 +574,19 @@
           success: function(res) {
 
               if (res.status == "ok") {
-               $('#registeredCompany').show();             //기등록 업체입니다.(추가 ID 작업)
+               //기등록 업체입니다.(추가 ID 작업)
+               $('#registeredCompany').show();
+               $('#tr_id_pw_add_reason').show();
                $('#joinBasicStep1').show();
 
                 bindCompanyInfo(res);                      //정보 바인딩. ★
                 bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
                 unbindCompanyUserInfo();
+                document.getElementById("ID_ADD_TYPE").value = "1" ;
                 setFieldsReadOnly(false);
 
-              } else if (res.status == "not") {            //IF 코드 없음.
-
+              } else if (res.status == "not") {
+                //IF 코드 없음.
                 $('#noCompanyCode').show();
                 $('#joinBasicStep1').hide();
 
@@ -591,8 +596,8 @@
                 document.getElementById("COM_NATION").value = "";
                 unbindCompanyUserInfo();
 
-              } else if (res.status == "no") {  //신규.
-
+              } else if (res.status == "no") {
+                //신규.
                 $('#firstCompany').show();
                 $('#joinBasicStep1').show();
                 bindCompanyInfo(res);                       //정보 바인딩. ★
@@ -601,10 +606,10 @@
                 unbindCompanyUserInfo();
                 setFieldsReadOnly(false);
 
-              }else {                                      //가입 진행중.
+              }else {
+                //가입 진행중.
                 $('#errCompanyCode').show();
-                $('#joinBasicStep1').show();  //기존 신청 정보 수정 가능하게.
-
+                $('#joinBasicStep1').show();        //기존 신청 정보 수정 가능하게.
                 bindCompanyInfo(res);                      //정보 바인딩. ★
                 bindCompanyUserInfo(res);
                 bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
@@ -714,6 +719,13 @@
             });
 
             document.getElementById("ID_PW_ADD_REASON").value =  companyInfo.ID_PW_ADD_REASON;
+            document.getElementById("ID_ADD_TYPE").value =  companyInfo.ID_ADD_TYPE;
+
+            const idAddType = companyInfo.ID_ADD_TYPE;
+
+            if(idAddType == "1") { // 0 :신규 사용자., 1:추가 사용자
+                $('#tr_id_pw_add_reason').show();
+            }
 
             //유효성
             $('#IdVAL').show();
@@ -754,20 +766,20 @@
     }
 
     //바인딩 초기화
-        function unbindCompanyUserInfo() {
+    function unbindCompanyUserInfo() {
 
-            //ID
-            document.getElementById("memberID").value = "";
-            setUserSelectReset();
+        //ID
+        document.getElementById("memberID").value = "";
+        setUserSelectReset();
 
-            document.getElementById("UserPass").value =  "";
-            document.getElementById("UserPassRe").value =  "";
-            document.getElementById("ID_PW_ADD_REASON").value = "";
+        document.getElementById("UserPass").value =  "";
+        document.getElementById("UserPassRe").value =  "";
+        document.getElementById("ID_PW_ADD_REASON").value = "";
 
-            //유효성
-            $('#selectOwner').show(); //담당자선택 메세지
-            passConfirm();
-            document.querySelector('#memberID').onkeyup(event);
+        //유효성
+        $('#selectOwner').show(); //담당자선택 메세지
+        passConfirm();
+        document.querySelector('#memberID').onkeyup(event);
 
     }
 

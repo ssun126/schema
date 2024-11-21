@@ -279,7 +279,8 @@ public class MemberController {
         userInfoCompanyDTO.setCOM_CODE(COM_CODE);
         userInfoCompanyDTO.setCOM_USER_IDX(COM_USER_IDX);   //★ 메인 업무자.... 공동 작업자
         userInfoCompanyDTO.setID_PW_ADD_REASON(memberDTO.getID_PW_ADD_REASON());           //ID/PW 추가 사유
-        userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  //반려후 재처리시... 다시 바꿈.?
+        userInfoCompanyDTO.setID_ADD_TYPE(memberDTO.getID_ADD_TYPE());           //ID 추가 정보 (0:신규, 1:추가)
+        userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
 
         memberService.saveUserInfoCompanyHis(userInfoCompanyDTO);
 
@@ -499,6 +500,7 @@ public class MemberController {
                 response.put("USER_NAME", com_user_Name);    //메인 담당자 select 컨트럴 바인딩.
                 response.put("USER_PWD", ""); //수정시 재설정하자.
                 response.put("ID_PW_ADD_REASON", comPanyDTO.getID_PW_ADD_REASON());
+                response.put("ID_ADD_TYPE", comPanyDTO.getID_ADD_TYPE());
                 
 
                 //메세지 리턴.

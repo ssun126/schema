@@ -33,19 +33,17 @@ public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
     private final MemberService memberService;
 
-    //업체.sylee
     @GetMapping("/user/companyInfo/company")
     public String isoAuthMain(Model model, Authentication authentication) {
 
         String loginId = authentication.getName();
-        System.out.println("loginId????"+loginId);
+        //System.out.println("loginId????"+loginId);
 
         //로그인된 ID 회사 코드 알아오기. 여기는 업체 유저 전용
         MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
         MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",loginMemberDTO.getCOM_CODE());
         model.addAttribute("member", memberDTO);
         //System.out.println("memberDTO: "+memberDTO);
-        //int com_user_idx = loginMemberDTO.getCOM_USER_IDX();
 
         //공동 작업자
         UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
