@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>auditResult</title>
+</head>
+<body>
+<div class="cui_content">
+  <div class="cui_main">
+    <div class="cui_head">
+      <div class="head_content">
+        <h2 class="cui_title"><span>Audit 결과</span></h2>
+      </div>
+    </div>
+    <div class="cui_body">
+      <form id="searchForm" method="get">
+        <div class="cui_search">
+          <div class="search_list cui_grid_wrap ">
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체코드</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체명</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left"></div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">분쟁광물</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">분쟁광물1</option>
+                  <option value="">분쟁광물2</option>
+                  <option value="">분쟁광물3</option>
+                  <option value="">분쟁광물4</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">책임광물</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">책임광물1</option>
+                  <option value="">책임광물2</option>
+                  <option value="">책임광물3</option>
+                  <option value="">책임광물4</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">Audit 구분</strong>
+              <div class="item_content">
+                <select class="cui_select_field" id="searchAuditType">
+                  <option value="">구분1</option>
+                  <option value="">구분2</option>
+                  <option value="">구분3</option>
+                  <option value="">구분4</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="search_action">
+            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+          </div>
+        </div>
+      </form>
+
+      <table class="cui_table center" id="auditResultTable">
+        <colgroup>
+          <col style="width:100px;">
+          <col>
+          <col style="width:100px;">
+          <col style="width:80px;">
+          <col style="width:80px;">
+          <col style="width:150px;">
+          <col style="width:80px;">
+          <col style="width:150px;">
+          <col style="width:80px;">
+        </colgroup>
+        <thead>
+        <tr>
+          <th><span>업체코드</span></th>
+          <th><span>업체명</span></th>
+          <th><span>Audit 일자</span></th>
+          <th><span>점수</span></th>
+          <th><span>Audit 구분</span></th>
+          <th><span>분쟁광물</span></th>
+          <th><span>분쟁-결과</span></th>
+          <th><span>책임광물</span></th>
+          <th><span>책임-결과</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <div id="pagination" class="pagination" style="text-align: center"></div>
+      <div class="table-wrapper">
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
+<script>
+  // 페이지네이션 처리 함수 (updatePagination)
+    function updatePagination(pageMaker) {
+        var paginationHtml = '';
+        var currentPage = pageMaker.criteria.pageNum;
+        var startPage = pageMaker.startPage;
+        var endPage = pageMaker.endPage;
+        var totalPages = pageMaker.totalPages;
+
+        // 이전 페이지 버튼
+        if (currentPage > 1) {
+            paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+        }
+
+        // 페이지 번호
+        for (var i = startPage; i <= endPage; i++) {
+            if (i === currentPage) {
+                paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
+            } else {
+                paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
+            }
+        }
+
+        // 다음 페이지 버튼
+        if (currentPage < totalPages) {
+            paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
+        }
+
+        // 페이지네이션 HTML 업데이트
+        $('#pagination').html(paginationHtml);
+
+        // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
+        $('.page, .prev, .next').on('click', function(event) {
+            event.preventDefault();
+            var pageNum = $(this).data('page');
+            searchCompanies(pageNum);
+        });
+    }
+
+  $(document).ready(function () {
+    $('#searchBtn').on('click', function (event) {
+      event.preventDefault();  // 기본 폼 제출 동작 방지
+    });
+  });
+</script>
