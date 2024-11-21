@@ -1,10 +1,8 @@
 package com.dongwoo.SQM.auditMgmt.repository;
 
-import com.dongwoo.SQM.auditMgmt.dto.IsoAuthDTO;
+import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
-import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,7 +15,7 @@ import java.util.Map;
 public class IsoAuthRepository {
     private final SqlSessionTemplate sql;
 
-    public int save(IsoAuthDTO isoAuthDTO) {
+    public int save(AuditMgmtDTO isoAuthDTO) {
         return sql.insert("IsoAuthItem.save", isoAuthDTO);
     }
 
@@ -51,7 +49,7 @@ public class IsoAuthRepository {
     }
     
     //검색어와 페이징으로 리스트 조회
-    public List<IsoAuthDTO> searchCompanies(Map<String, Object> params) {
+    public List<AuditMgmtDTO> searchCompanies(Map<String, Object> params) {
         return sql.selectList("IsoAuthItem.searchCompanies", params);
     }
 

@@ -1,11 +1,9 @@
 package com.dongwoo.SQM.auditMgmt.service;
 
-import com.dongwoo.SQM.auditMgmt.dto.IsoAuthDTO;
+import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
 import com.dongwoo.SQM.board.dto.Criteria;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
-import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +16,7 @@ import java.util.Map;
 public class IsoAuthService {
     private final IsoAuthRepository isoAuthRepository;
 
-    public int save(IsoAuthDTO isoAuthDTO) {
+    public int save(AuditMgmtDTO isoAuthDTO) {
         return isoAuthRepository.save(isoAuthDTO);
     }
 
@@ -27,8 +25,9 @@ public class IsoAuthService {
     }
 
     // ISO 인증 업체 리스트- 조건을 처리하는 검색 메서드
-    public List<IsoAuthDTO> searchCompanies(String code, String name, String state, Criteria criteria) {
+    public List<AuditMgmtDTO> searchCompanies(String type, String code, String name, String state, Criteria criteria) {
         Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         params.put("COM_NAME", name);
         params.put("COM_STATUS", state);
@@ -37,8 +36,9 @@ public class IsoAuthService {
     }
 
     // ISO 인증 업체 리스트-검색 조건에 맞는 총 개수를 반환
-    public int getTotalByKeyword(String code, String name, String state) {
+    public int getTotalByKeyword(String type, String code, String name, String state) {
         Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         params.put("COM_NAME", name);
         params.put("COM_STATUS", state);

@@ -1,8 +1,8 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
-import com.dongwoo.SQM.auditMgmt.dto.IsoAuthDTO;
+import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
-import com.dongwoo.SQM.auditMgmt.dto.IsoSearchResult;
+import com.dongwoo.SQM.auditMgmt.dto.AuditSearchResult;
 import com.dongwoo.SQM.auditMgmt.service.IsoAuthService;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
@@ -14,7 +14,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,30 +23,28 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class ISOAuthRestController {
+public class AuditMgmtRestController {
     @Autowired
     private IsoAuthService isoAuthService;
 
     // admin -검색어로 ISO 업체리스트
-    @GetMapping("/searchIsoAuth")
-    public IsoSearchResult searchCompanies(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("state") String state,  Criteria criteria) {
+    @GetMapping("/searchAuditMgmt")
+    public AuditSearchResult searchCompanies(@RequestParam("type") String type, @RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("state") String state, Criteria criteria) {
         // 검색 조건에 맞는 결과를 반환
-        List<IsoAuthDTO> isoAuthList = isoAuthService.searchCompanies(code,name,state,criteria);
+        List<AuditMgmtDTO> isoAuthList = isoAuthService.searchCompanies(type, code,name,state,criteria);
 
         // 페이지 네이게이션과 함께 반환
-        int total = isoAuthService.getTotalByKeyword(code,name,state);  // 검색 조건에 맞는 총 개수
+        int total = isoAuthService.getTotalByKeyword(type,code,name,state);  // 검색 조건에 맞는 총 개수
         PageDTO pageMaker = new PageDTO(total, 10, criteria);          // 페이지 DTO 생성
 
         // 검색 결과와 페이지 네비게이터를 포함한 결과 객체 반환
-        return new IsoSearchResult(isoAuthList, pageMaker);
+        return new AuditSearchResult(isoAuthList, pageMaker);
     }
 
     //IsoAuth 정보 가져오기
@@ -65,7 +62,7 @@ public class ISOAuthRestController {
 
     //IsoAuth 정보 신규 저장
     @PostMapping("/setIsoAuthData")
-    public ResponseEntity<?> setIsoAuthData(@RequestBody IsoAuthDTO isoAuthDTO) {
+    public ResponseEntity<?> setIsoAuthData(@RequestBody AuditMgmtDTO isoAuthDTO) {
         int resultCnt = isoAuthService.save(isoAuthDTO);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
@@ -172,7 +169,7 @@ public class ISOAuthRestController {
 
     //IsoAuth 정보 제출
     @PostMapping("/sendIsoAuthData")
-    public ResponseEntity<?> sendIsoAuthData(@RequestBody IsoAuthDTO isoAuthDTO, @AuthenticationPrincipal UserCustom user) {
+    public ResponseEntity<?> sendIsoAuthData(@RequestBody AuditMgmtDTO isoAuthDTO, @AuthenticationPrincipal UserCustom user) {
 
         /*연동 필요*/
 

@@ -195,7 +195,7 @@
                             });
                         },
                         error: function() {
-                            alert("회사를 가져오는 데 실패했습니다.");
+                            alert("정보를 가져오는 데 실패했습니다.");
                         }
                     });  // $.ajax 호출 끝
                 }
@@ -220,7 +220,6 @@
                         }
                     });
                 });
-
         
                   //인증서 추가
                 $('#formIsoAuth').on('submit', function(e) {
@@ -245,7 +244,6 @@
                     });
                 });
 
-
                  // datepicker를 input 필드에 적용
                 $('.datepicker').datepicker({
                     dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
@@ -264,7 +262,6 @@
                        $('#modalAuthDate').datepicker('show'); // 두 번째 datepicker 열기
                     }
                 });
-
             });
 
             //상세 항목 정보 - Ajax로 받아온 데이터 바인딩

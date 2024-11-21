@@ -12,11 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LabourHRController {
     @GetMapping("/admin/auditMgmt/labourHR")
     public String labourHRMain(Model model) {
-        return "labourHR/main";
+        return "labourHR/adminMain";
     }
 
     @GetMapping("/admin/auditMgmt/labourHRDetail")
     public String labourHRDetail(Model model) {
         return "labourHR/detail";
+    }
+
+    @GetMapping("/user/auditMgmt/labourHR")
+    public String labourHRUserMain(Model model) {
+        return "labourHR/main";
     }
 }

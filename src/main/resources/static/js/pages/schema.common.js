@@ -44,20 +44,30 @@ document.addEventListener("DOMContentLoaded", function() {
 //모달 초기화
 function modal_init(id, status){
     $('#modalTitle').text(status == 'add'?'신규 추가':''); //모달창의 제목 변경
-    // form 전체 초기화
-    $("form[name='form"+id+"']").each(function() {
-        this.reset();
-        $("input[type=hidden]").val(''); //reset만으로 hidden type은 리셋이 안되기 때문에 써줌
 
-        // readOnly 속성 초기화
-        $(this).find('input, textarea, select').each(function() {
-            // readOnly 속성 제거 (읽기 전용 상태를 해제)
-            $(this).removeAttr('readonly');
+    // form 전체 초기화
+    //if(status =='add'){
+        $("form[name='form"+id+"']").each(function() {
+            this.reset();
+            $("input[type=hidden]").val(''); //reset만으로 hidden type은 리셋이 안되기 때문에 써줌
+
+            // 파일 입력 초기화
+            $(this).find('input[type="file"]').each(function() {
+                $(this).val('');  // 파일 입력 초기화
+            });
+
+            $('#modalFileName span').text('');
+
+            // readOnly 속성 초기화
+            $(this).find('input, textarea, select').each(function() {
+                // readOnly 속성 제거 (읽기 전용 상태를 해제)
+                $(this).removeAttr('readonly');
+            });
+            $(this).find('[style*="display: none"]').each(function() {
+                $(this).css('display', 'block');  // 보이게 하기
+            });
         });
-        $(this).find('[style*="display: none"]').each(function() {
-            $(this).css('display', 'block');  // 보이게 하기
-        });
-    });
+    //}
 }
 
 //모달 열기
