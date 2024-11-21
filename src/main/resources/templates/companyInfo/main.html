@@ -392,46 +392,6 @@
         </div>
 </body>
 
-
-<!--==alert==-->
-<div class="cui_dialog" style="width:420px;display:none" id="dialog">
-    <div class="dialog_container">
-        <div class="dialog_body">
-            <div class="body_root">
-                <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
-                <div class="cui_items_wrap" data-direction="center">
-                    <div class="item_content">
-                        <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--==alert==-->
-
-<!--==Confirm==-->
-<div class="cui_dialog" style="width:420px;display:none" id="dialogConfirm">
-    <div class="dialog_container">
-        <div class="dialog_body">
-            <div class="body_root">
-                <div class="cui_alert alert_modal alert_basic" data-type="warning" role="alert" id="ConfirmTypeimg"> <p id="confirmMessageContent" ></p> </div>
-                <div class="cui_items_wrap" data-direction="center">
-                    <div class="item_content">
-                        <button type="button" class="cui_button primary" onClick="confirmAction(true)">
-                            <span>확인</span>
-                        </button>
-                        <button type="button" class="cui_button" onClick="confirmAction(false)">
-                            <span>취소</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--==Confirm==-->
-
 </html>
 
 <script>
@@ -563,31 +523,7 @@
         });
     }
 
-    function modalConfirmClose(id){
-      $("#" + id).fadeOut();
-    }
 
-    function confirmAction(isConfirmed) {
-        if (window.confirmCallback) {
-            window.confirmCallback(isConfirmed);
-        }
-        modalConfirmClose('dialogConfirm');
-    }
-
-  function showConfirm(type, message ,callback ) {
-       var alertDiv = document.querySelector('#alertTypeimg');
-       alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
-       document.getElementById('confirmMessageContent').innerText = message;  // 메시지 설정
-       modal('dialogConfirm');
-       window.confirmCallback = callback;
-   }
-
-   function showAlert(type, message ) {
-       var alertDiv = document.querySelector('#alertTypeimg');
-       alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
-       document.getElementById('messageContent').innerText = message;  // 메시지 설정
-       modal('dialog');
-   }
 
  function modal(id){
    $("#" + id).fadeIn();

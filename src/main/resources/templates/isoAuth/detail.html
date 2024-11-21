@@ -26,7 +26,7 @@
                             <col style="width:120px;">
                             <col style="width:120px;">
                             <col style="width:120px;">
-                            <col style="width:120px;">
+                            <col style="width:160px;">
                             <col style="width:120px;">
                         </colgroup>
                         <thead>
@@ -222,25 +222,15 @@
                     tableBody.empty(); // 기존 내용 비우기
 
                     response.forEach(function(isoAuth) {
-                        var authDate = new Date(isoAuth.AUTH_DATE); // AUTH_DATE Date 객체로 변환
-                        var formattedAuthDate = authDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                        var expDate = new Date(isoAuth.EXP_DATE); // EXP_DATE를 Date 객체로 변환
-                        var formattedExpDate = expDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                        var regDate = new Date(isoAuth.REG_DATE); // REG_DATE Date 객체로 변환
-                        var formattedRegDate = regDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                        var regDate = new Date(isoAuth.REG_DATE); // REG_DATE Date 객체로 변환
-                        var formattedRegDate = regDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
-                        var upDate = new Date(isoAuth.UP_DATE); // UP_DATE Date 객체로 변환
-                        var formattedUpDate = upDate.toLocaleDateString('ko-KR');  // 날짜를 "YYYY-MM-DD" 형식으로 >> 'ko-KR'을 사용하여 한국 형식으로 표시
                         var row = '<tr>' +
                                         '<td>' + isoAuth.AUTH_TYPE + '</td>' +
                                         '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
-                                        '<td>' + formattedAuthDate + '</td>' +
-                                        '<td>' + formattedExpDate + '</td>' +
-                                        '<td>' + formattedRegDate + '</td>' +
+                                        '<td>' + isoAuth.AUTH_DATE + '</td>' +
+                                        '<td>' + isoAuth.EXP_DATE + '</td>' +
+                                        '<td>' + isoAuth.REG_DATE + '</td>' +
                                         '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuth.FILE_NAME) + '">다운로드</a></td>' +
                                         '<td><button type="button" class="cui_button first"><span>승인</span></button><button type="button" class="cui_button secondary"><span>반려</span></button></td>' +
-                                        '<td>' + formattedUpDate + '</td>' +
+                                        '<td>' + isoAuth.UP_DATE + '</td>' +
                                       '</tr>';
                         tableBody.append(row);
                     });
@@ -272,21 +262,22 @@
             });
         });
 
-         // datepicker를 input 필드에 적용
-        $('#modalExpDate').datepicker({
+        // datepicker를 input 필드에 적용
+        $('.datepicker').datepicker({
             dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
             showOn: "focus",
         });
 
         // 버튼 클릭 시 input 필드의 datepicker 열기
-        $('#calendar-icon').on('click', function() {
-            var inputField = $('#modalExpDate');
+        $('[data-cui-icon="calendar"]').on('click', function() {
+            var targetId = $(this).attr('id'); // 클릭된 요소의 id 가져오기
+            console.log(targetId + " was clicked");
 
             // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
-            if (inputField.datepicker("widget").is(":visible")) {
-                inputField.datepicker("hide"); // datepicker 숨기기
-            } else {
-                inputField.datepicker("show"); // datepicker 보이기
+            if (targetId === "expDate") {
+               $('#modalExpDate').datepicker('show'); // 첫 번째 datepicker 열기
+            } else if (targetId === "authDate") {
+               $('#modalAuthDate').datepicker('show'); // 두 번째 datepicker 열기
             }
         });
 

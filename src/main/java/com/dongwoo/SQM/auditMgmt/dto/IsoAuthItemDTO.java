@@ -22,10 +22,14 @@ public class IsoAuthItemDTO {
     private String REG_DATE;
     @JsonProperty("UP_DATE")
     private String UP_DATE;
+    @JsonProperty("DEL_DATE")
+    private String DEL_DATE;
     @JsonProperty("REG_DW_USER_IDX")
-    private String REG_DW_USER_IDX;
+    private int REG_DW_USER_IDX;
     @JsonProperty("UP_DW_USER_IDX")
-    private String UP_DW_USER_IDX;
+    private int UP_DW_USER_IDX;
+    @JsonProperty("DEL_DW_USER_IDX")
+    private int DEL_DW_USER_IDX;
     @JsonProperty("ITEM_STATE")
     private String ITEM_STATE;
     @JsonProperty("FILE_NAME")

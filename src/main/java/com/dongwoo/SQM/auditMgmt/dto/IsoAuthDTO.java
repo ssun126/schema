@@ -20,12 +20,16 @@ public class IsoAuthDTO {
     @JsonProperty("APPROVE_DATE")
     private String APPROVE_DATE;
     @JsonProperty("REG_DW_USER_IDX")
-    private String REG_DW_USER_IDX;
+    private int REG_DW_USER_IDX;
     @JsonProperty("UP_DW_USER_IDX")
-    private String UP_DW_USER_IDX;
+    private int UP_DW_USER_IDX;
+    @JsonProperty("DEL_DW_USER_IDX")
+    private int DEL_DW_USER_IDX;
     @JsonProperty("SEND_DATE")
     private String SEND_DATE;
     @JsonProperty("UP_DATE")
     private String UP_DATE;
+    @JsonProperty("DEL_DATE")
+    private String DEL_DATE;
     private int POINT;
 }
