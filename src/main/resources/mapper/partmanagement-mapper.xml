@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="partManagement">
+    <select id="getPlantList" resultType="HashMap">
+        SELECT BASE_CODE,BASE_VALUE FROM BASE_CODE
+        WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE
+        ORDER BY BASE_SORT asc
+    </select>
+
+    <select id="getApprovalStatus" resultType="HashMap">
+        SELECT BASE_CODE,BASE_VALUE FROM BASE_CODE
+        WHERE GROUP_CODE ='APPVSTATUS' AND GROUP_CODE != BASE_CODE
+        ORDER BY BASE_SORT asc
+    </select>
+
+    <select id="searchPartMgmt" parameterType="partManagement" resultType="partManagement">
+
+        SELECT PM_IDX
+        ,PM_PART_CODE
+        ,pc.PART_NAME as PM_PART_NAME
+        ,bc.base_value as PM_PLANT
+        ,pc.PART_COUNTRY as PM_COUNTRY
+        ,ui.USER_NAME as PM_REG_USER
+        ,NVL(PM_ACTIVE_YN, ' ') as PM_ACTIVE_YN
+        ,NVL(PM_APPROVAL_STATUS, ' ') as PM_APPROVAL_STATUS
+        ,NVL(TO_CHAR(PM_APPROVAL_DATE, 'YYYY-MM-DD'),' ') as PM_APPROVAL_DATE
+        FROM PART_MANAGEMENT_DATA pmd
+        LEFT OUTER JOIN  PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE
+        LEFT OUTER JOIN (SELECT Base_code, base_value FROM base_code WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
+        LEFT OUTER JOIN USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_ID
+        WHERE 1 =1
+        <if test="PM_PART_CODE != null and PM_PART_CODE != ''">
+            AND (PM_PART_CODE LIKE CONCAT(CONCAT('%',  #{PM_PART_CODE}), '%'))
+        </if>
+        <if test="PM_PART_NAME != null and PM_PART_NAME != ''">
+            AND (PM_PART_NAME LIKE CONCAT(CONCAT('%',  #{PM_PART_NAME}), '%'))
+        </if>
+        <if test="PM_REG_USER != null and PM_REG_USER != ''">
+            AND (PM_REG_USER LIKE CONCAT(CONCAT('%',  #{PM_REG_USER}), '%'))
+        </if>
+        <if test="PM_ACTIVE_YN != null and PM_ACTIVE_YN != ''">
+            AND (PM_ACTIVE_YN = #{PM_ACTIVE_YN})
+        </if>
+        <if test="PM_PLANT != null and PM_PLANT != ''">
+            AND (PM_PLANT LIKE CONCAT(CONCAT('%',  #{PM_PLANT}), '%'))
+        </if>
+        <if test="PM_APPROVAL_STATUS != null and PM_APPROVAL_STATUS != ''">
+            AND (PM_APPROVAL_STATUS LIKE CONCAT(CONCAT('%',  #{PM_APPROVAL_STATUS}), '%'))
+        </if>
+        <if test="PM_SDATE != null and PM_SDATE != ''">
+            <![CDATA[ AND (PM_REG_DATE > #{PM_SDATE})]]>
+        </if>
+        <if test="PM_EDATE != null and PM_EDATE != ''">
+            <![CDATA[ AND (PM_REG_DATE  <= #{PM_EDATE})]]>
+        </if>
+
+    </select>
+
+    <select id="partCodeList" resultType="HashMap">
+        SELECT PART_CODE,PART_COUNTRY,PART_NAME,bc.BASE_VALUE
+        FROM PART_CODE pc
+        LEFT OUTER JOIN  (SELECT Base_code, base_value FROM base_code WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
+
+    </select>
+
+    <insert id="save" parameterType="partManagement">
+        INSERT INTO PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER)
+        VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,'xp')
+    </insert>
+
+
+
+</mapper>

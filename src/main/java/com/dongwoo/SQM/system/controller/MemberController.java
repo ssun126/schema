@@ -279,7 +279,8 @@ public class MemberController {
         userInfoCompanyDTO.setCOM_CODE(COM_CODE);
         userInfoCompanyDTO.setCOM_USER_IDX(COM_USER_IDX);   //★ 메인 업무자.... 공동 작업자
         userInfoCompanyDTO.setID_PW_ADD_REASON(memberDTO.getID_PW_ADD_REASON());           //ID/PW 추가 사유
-        userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  //반려후 재처리시... 다시 바꿈.?
+        userInfoCompanyDTO.setID_ADD_TYPE(memberDTO.getID_ADD_TYPE());           //ID 추가 정보 (0:신규, 1:추가)
+        userInfoCompanyDTO.setUSER_STATUS("1");  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
 
         memberService.saveUserInfoCompanyHis(userInfoCompanyDTO);
 
@@ -315,6 +316,13 @@ public class MemberController {
 
 
         ////Step 5 Final  COMPANY_CODE 업데이트
+
+        //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
+        //기존 상태확인
+        MemberDTO comPanyDTO  = memberService.getCOMPANYCODE(memberDTO.getCOM_CODE());
+        //워런티 승인일
+        String comManageStatus = comPanyDTO.getCOM_MANAGE_STATUS();
+
         ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
         comPanyCodeDTO.setCOM_CODE(COM_CODE);
         comPanyCodeDTO.setVENDOR_WORK_KIND(memberDTO.getVENDOR_WORK_KIND());  // VENDOR 업종 형태 (D:제조사, L:물류사)
@@ -329,13 +337,20 @@ public class MemberController {
         comPanyCodeDTO.setCOM_CEO_PHONE(memberDTO.getCOM_CEO_PHONE());
         comPanyCodeDTO.setCOM_CEO_EMAIL(memberDTO.getCOM_CEO_EMAIL());
 
+        //워런티 s
         comPanyCodeDTO.setCOM_FILE_NAME(memberDTO.getCOM_FILE_NAME());   //워런티 파일 이름
         comPanyCodeDTO.setCOM_FILE_PATH(memberDTO.getCOM_FILE_PATH());   //워런티 파일 Path
         comPanyCodeDTO.setUP_DW_USER_IDX(USER_IDX);   //업데이트 사용자.
         comPanyCodeDTO.setCOM_MANAGE_STATUS("1"); //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+        //워런티 e
 
-        memberService.updateCompanyCode(comPanyCodeDTO);  //업데이트  COMPANY_CODE
-
+        String resultMsg = "";
+        if(comManageStatus.equals("2")) {
+            //ID 추가 상태는 워런티! 건들면 안됨!
+            memberService.updateCpCodeCPUser(comPanyCodeDTO);
+        }else {
+            memberService.updateCompanyCode(comPanyCodeDTO);
+        }
 
 //        동우 RC 관리자에게 메일 발송
 //        <내용 예시>
@@ -347,7 +362,19 @@ public class MemberController {
         session.removeAttribute("joinData");
         System.out.println("joinData 속성.세션 삭제");
 
-        model.addAttribute("resultMsg", "승인 요청 되었습니다.");
+        System.out.println("comManageStatus: " + comManageStatus);
+
+        if(comManageStatus.equals("2")) { //워런티 승인 상태면
+            resultMsg ="ID추가 요청 되었습니다.";
+        }else if(comManageStatus.equals("0")){
+            resultMsg = "승인 요청 되었습니다.";
+        }else{
+            resultMsg = "수정 요청 되었습니다.";
+        }
+
+
+        model.addAttribute("resultMsg", resultMsg);
+
         return "/member/warranty";
 
     }
@@ -473,6 +500,7 @@ public class MemberController {
                 response.put("USER_NAME", com_user_Name);    //메인 담당자 select 컨트럴 바인딩.
                 response.put("USER_PWD", ""); //수정시 재설정하자.
                 response.put("ID_PW_ADD_REASON", comPanyDTO.getID_PW_ADD_REASON());
+                response.put("ID_ADD_TYPE", comPanyDTO.getID_ADD_TYPE());
                 
 
                 //메세지 리턴.

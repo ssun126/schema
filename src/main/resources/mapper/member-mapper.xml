@@ -72,7 +72,7 @@
 
     <delete id="deleteUserinfoCompanyUser" parameterType="map">
         DELETE FROM USER_INFO_COMPANY_USER
-        WHERE COM_CODE = #{COM_CODE}
+        WHERE COM_CODE = #{COM_CODE} AND USER_IDX =#{USER_IDX}
         AND COM_USER_IDX NOT IN
         <foreach collection="list" item="COM_USER_IDX" open="(" separator="," close=")">
             #{COM_USER_IDX}
@@ -120,8 +120,8 @@
     <!-- USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
     <insert id="saveUserinfoCompanyHis" parameterType="userinfoHis">
         insert into USER_INFO_COMPANY(USER_IDX
-        , COM_CODE , COM_USER_IDX , ID_PW_ADD_REASON ,USER_STATUS ,USER_OK_DATE , RETURN_REASON )
-        values ( #{USER_IDX} , #{COM_CODE} ,#{COM_USER_IDX} ,  #{ID_PW_ADD_REASON} , #{USER_STATUS} , #{USER_OK_DATE}, #{RETURN_REASON} )
+        , COM_CODE , COM_USER_IDX , ID_PW_ADD_REASON ,USER_STATUS ,USER_OK_DATE , RETURN_REASON ,ID_ADD_TYPE)
+        values ( #{USER_IDX} , #{COM_CODE} ,#{COM_USER_IDX} ,  #{ID_PW_ADD_REASON} , #{USER_STATUS} , #{USER_OK_DATE}, #{RETURN_REASON} , #{ID_ADD_TYPE} )
     </insert>
 
     <update id="updateUserinfoCompanyHis" parameterType="userinfoHis">
@@ -166,7 +166,7 @@
         where COM_CODE=#{COM_CODE}
     </update>
 
-    <!-- Company Information 에서 사용자가 업체 기본 정보 수정할때-->
+    <!-- Company Information 에서 사용자가 업체 기본 정보 수정할때 ,기가입 유저 추가할때.-->
     <update id="updateCpCodeCPUser" parameterType="companycode">
         update COMPANY_CODE set
         VENDOR_WORK_KIND=#{VENDOR_WORK_KIND}

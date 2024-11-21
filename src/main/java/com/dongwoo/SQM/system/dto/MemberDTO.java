@@ -43,7 +43,8 @@ public class MemberDTO {
 
     private String ID_PW_ADD_REASON;
     private String USER_OK_DATE;
-    private String RETURN_REASON;
+    private String RETURN_REASON; //
+    private String ID_ADD_TYPE;
 
     private String COM_NAME	;
     private String COM_NATION;

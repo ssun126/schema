@@ -78,7 +78,7 @@ public class MemberRepository {
     //User 공동 사용자 정보 생성. 10.23
     public int updateCompanyUser(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
 
-        // 여기서 키값은  회사번호 COM_CODE , 사용자명 USER_NAME 으로 검색해서.
+        // 여기서 키값은 COM_USER_IDX 검색해서.
         UserInfoCompanyUserDTO findCompanyUserDto = sql.selectOne("Member.findByCompanyUserIdx", userInfoCompanyUserDTO );
         if(findCompanyUserDto == null) {
             return sql.insert("Member.saveUserinfoCompanyUser", userInfoCompanyUserDTO);
@@ -89,9 +89,10 @@ public class MemberRepository {
     }
 
     //User 공동 사용자 정보 삭제. 업체 유저 회사 정보 관리 update
-    public int deleteCompanyUser(String comCode , List<Integer> companyUseridxList) {
+    public int deleteCompanyUser(String comCode,int useridx , List<Integer> companyUseridxList) {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_CODE", comCode);
+        params.put("USER_IDX", useridx);
         params.put("list", companyUseridxList);
         return sql.delete("Member.deleteUserinfoCompanyUser", params);
     }
@@ -129,12 +130,12 @@ public class MemberRepository {
 
     //회사정보 업데이트 (가입)
     public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
-        return sql.insert("Member.updateCompanyCode", comPanyCodeDTO);
+        return sql.update("Member.updateCompanyCode", comPanyCodeDTO);
     }
 
     //회사정보 업데이트 (가입후)
     public int updateCpCodeCPUser(ComPanyCodeDTO comPanyCodeDTO) {
-        return sql.insert("Member.updateCpCodeCPUser", comPanyCodeDTO);
+        return sql.update("Member.updateCpCodeCPUser", comPanyCodeDTO);
     }
 
 

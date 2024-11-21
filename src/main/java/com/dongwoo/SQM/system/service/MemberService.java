@@ -122,8 +122,8 @@ public class MemberService {
     }
 
     //공동 사용자 삭제 USER_INFO_COMPANY_USER
-    public int deleteCompanyUser(String comCode , List<Integer> companyUseridxList) {
-        return memberRepository.deleteCompanyUser(comCode ,companyUseridxList);
+    public int deleteCompanyUser(String comCode ,int useridx , List<Integer> companyUseridxList) {
+        return memberRepository.deleteCompanyUser(comCode ,useridx,companyUseridxList);
     }
 
     //사용자 추가정보 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)  정보 저장. company

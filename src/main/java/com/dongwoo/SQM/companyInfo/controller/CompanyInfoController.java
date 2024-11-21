@@ -33,19 +33,17 @@ public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
     private final MemberService memberService;
 
-    //업체.sylee
     @GetMapping("/user/companyInfo/company")
     public String isoAuthMain(Model model, Authentication authentication) {
 
         String loginId = authentication.getName();
-        System.out.println("loginId????"+loginId);
+        //System.out.println("loginId????"+loginId);
 
         //로그인된 ID 회사 코드 알아오기. 여기는 업체 유저 전용
         MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
         MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",loginMemberDTO.getCOM_CODE());
         model.addAttribute("member", memberDTO);
         //System.out.println("memberDTO: "+memberDTO);
-        //int com_user_idx = loginMemberDTO.getCOM_USER_IDX();
 
         //공동 작업자
         UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
@@ -110,6 +108,8 @@ public class CompanyInfoController {
             //공동 사용자 삭제 (휴지통 버튼 누른 유저들.)
             List<Integer> companyUserIdxList = new ArrayList<>();
             String comCode = null;
+            int useridx = 0;
+
             for (UserInfoCompanyUserDTO companyUser : CompanyUserList) {
                 if (companyUser.getCOM_USER_IDX() != 0) {
                     companyUserIdxList.add(companyUser.getCOM_USER_IDX());
@@ -118,10 +118,14 @@ public class CompanyInfoController {
                 if (comCode == null) {
                     comCode = companyUser.getCOM_CODE();
                 }
+
+                if (useridx == 0) {
+                    useridx = companyUser.getUSER_IDX();
+                }
             }
 
             if (comCode != null && !companyUserIdxList.isEmpty()) {
-                memberService.deleteCompanyUser(comCode, companyUserIdxList);
+                memberService.deleteCompanyUser(comCode, useridx,companyUserIdxList);
             }
 
             //공동 작업자 저장.
@@ -139,7 +143,7 @@ public class CompanyInfoController {
 
                UserInfoCompanyUserDTO userInfoCompanyUserDTO = new UserInfoCompanyUserDTO();
                 userInfoCompanyUserDTO.setCOM_USER_IDX(companyUser.getCOM_USER_IDX());
-                userInfoCompanyUserDTO.setUSER_IDX(companyUser.getUSER_IDX());
+                userInfoCompanyUserDTO.setUSER_IDX(useridx);
                 userInfoCompanyUserDTO.setCOM_CODE(companyUser.getCOM_CODE());
                 userInfoCompanyUserDTO.setUSER_NAME(companyUser.getUSER_NAME());
                 userInfoCompanyUserDTO.setUSER_POSITION(companyUser.getUSER_POSITION());
@@ -179,6 +183,11 @@ public class CompanyInfoController {
             userInfoCompanyDTO.setRETURN_REASON("업체 사용자 삭제");
             userInfoCompanyDTO.setUSER_STATUS("0");  //관리상태 (0:대기,삭제 , 1:검토중, 2:승인, 3:반려)
             memberService.deleteUserInfoCompanyHis(userInfoCompanyDTO);
+
+            /* 삭제 처리후 가비지 DATA 처리방법 확인 할것.
+            select * from USER_INFO_COMPANY_USER
+            SELECT * FROM USER_INFO_COMPANY_CONNECT_GOAL
+            */
 
             response.put("status", "success");
             response.put("message", "삭제 처리 되었습니다.");

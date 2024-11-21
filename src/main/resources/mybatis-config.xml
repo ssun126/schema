@@ -30,6 +30,7 @@
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO" alias="isoAuthItem"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO" alias="companyInfoParam"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO" alias="partManagement"></typeAlias>
 
 
 
