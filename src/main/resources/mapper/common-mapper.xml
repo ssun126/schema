@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Common">
+    <select id="getSampleList" resultType="java.util.LinkedHashMap">
+        SELECT
+        'DATA1' AS DATA1
+        , 'DATA2' AS DATA2
+        FROM
+        DUAL
+    </select>
+
+    <select id="getStoredQueryExecute" resultType="java.util.HashMap">
+        /* Common.getStoredQueryExecute */
+        ${query}
+    </select>
+
+    <select id="getStoredQueryExecuteObject" resultType="java.util.HashMap">
+        /* Common.getStoredQueryExecuteObject */
+        ${query}
+    </select>
+
+    <select id="getStoredQuery" resultType="common">
+        /* Common.getStoredQuery */
+        SELECT *
+        FROM CIM_STOREDQUERY
+        WHERE STOREDQUERYID = #{STOREDQUERYID}
+        AND STOREDQUERYVERSION = #{STOREDQUERYVERSION}
+        AND STOREDQUERYCLASSID = #{STOREDQUERYCLASSID}
+        AND SITEID = #{SITEID}
+        AND ISUSABLE = 'Usable'
+    </select>
+
+    <select id="getStoredQueryObject" resultType="common">
+        /* Common.getStoredQueryObject */
+        SELECT *
+        FROM CIM_STOREDQUERY
+        WHERE STOREDQUERYID = #{STOREDQUERYID}
+        AND STOREDQUERYVERSION = #{STOREDQUERYVERSION}
+        AND STOREDQUERYCLASSID = #{STOREDQUERYCLASSID}
+        AND SITEID = #{SITEID}
+        AND ISUSABLE = 'Usable'
+    </select>
+
+    <select id="getCommonCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        /* Common.getCommonCodeList */
+        SELECT CODEID     AS CODE_ID
+        , CODENAME   AS CODE_NAME
+        , CODEVALUE  AS CODE_VALUE
+        , UISEQUENCE AS UI_SEQUENCE
+        FROM CIM_CODE
+        WHERE 1 = 1
+        <if test="codeclassid != null and codeclassid != ''">
+            <if test="codeclassid != 'undefined'">
+                AND CODECLASSID = #{codeclassid}
+            </if>
+        </if>
+        <if test="siteid != null and siteid != ''">
+            <if test="siteid != 'undefined'">
+                AND SITEID = #{siteid}
+            </if>
+        </if>
+        AND ISUSABLE = 'Usable'
+        ORDER BY UI_SEQUENCE
+    </select>
+
+    <insert id="insertHistoryTable">
+        /* Common.insertHistoryTable */
+        INSERT
+        INTO ${historyTableName}
+        SELECT SEQ_SYS_USER_HIST_01.nextval
+        , A.*
+        FROM ${tableName} A
+        WHERE ${columnName0} = #{columnValue0}
+        <if test="columnName1 != null and columnName1 != ''">
+            AND ${columnName1} = #{columnValue1}
+        </if>
+        <if test="columnName2 != null and columnName2 != ''">
+            AND ${columnName2} = #{columnValue2}
+        </if>
+        <if test="columnName3 != null and columnName3 != ''">
+            AND ${columnName3} = #{columnValue3}
+        </if>
+        <if test="columnName4 != null and columnName4 != ''">
+            AND ${columnName4} = #{columnValue4}
+        </if>
+        <if test="columnName5 != null and columnName5 != ''">
+            AND ${columnName5} = #{columnValue5}
+        </if>
+    </insert>
+    <update id="updateActivity">
+        /* Common.updateActivity */
+        UPDATE ${tableName}
+        SET ACTIVITY = #{deleteActivity}
+        , PREV_ACTIVITY = ACTIVITY
+        , MODIFIER = #{modifier}
+        , MODIFY_TIME = sysdate
+        , LAST_EVENT_TIME =sysdate
+        WHERE ${columnName0} = #{columnValue0}
+        <if test="columnName1 != null and columnName1 != ''">
+            AND ${columnName1} = #{columnValue1}
+        </if>
+        <if test="columnName2 != null and columnName2 != ''">
+            AND ${columnName2} = #{columnValue2}
+        </if>
+        <if test="columnName3 != null and columnName3 != ''">
+            AND ${columnName3} = #{columnValue3}
+        </if>
+        <if test="columnName4 != null and columnName4 != ''">
+            AND ${columnName4} = #{columnValue4}
+        </if>
+        <if test="columnName5 != null and columnName5 != ''">
+            AND ${columnName5} = #{columnValue5}
+        </if>
+    </update>
+
+    <select id="searchCodeData" resultType="java.util.LinkedHashMap">
+        /* Common.searchCodeData */
+        SELECT ID,
+        MASTER_ID,
+        NAME,
+        CODE_VALUE,
+        MULTI_LANG_ID,
+        NVL((SELECT B.LANGUAGE_CODE_DATA fROM SYS_MULTI_LANGUAGE B
+        WHERE B.LANGUAGE_CODE_ID = MULTI_LANG_ID
+        AND B.LANGUAGE = #{LANGUAGE_TYPE}), DISPLAY_VALUE) AS DISPLAY_VALUE,
+        DESCRIPTION,
+        SEQ,
+        IS_USE,
+        CREATOR,
+        CREATE_DATE
+        FROM CODE_DETAIL
+        WHERE MASTER_ID = #{MASTER_ID}
+        <if test="ID != null and ID != ''">
+            AND ID = #{ID}
+        </if>
+        AND IS_USE = 'Y'
+    </select>
+
+    <insert id="insertUserAction">
+        /* Common.insertUserAction */
+        INSERT
+        INTO LOG_USER_ACTION (
+        SEQ
+        , USER_ID
+        , API
+        , IP
+        , IS_SUCCESS
+        <if test="REMARK != null and REMARK != ''">
+            , REMARK
+        </if>
+        , CREATE_DATETIME
+        )
+        VALUES (
+        SEQ_LOG_USER_ACTION_01.NEXTVAL
+        , #{USER_ID}
+        , #{API}
+        , #{IP}
+        , #{IS_SUCCESS}
+        <if test="REMARK != null and REMARK != ''">
+            , #{REMARK}
+        </if>
+        , SYSDATE
+        )
+
+        <selectKey keyProperty="SEQ" resultType="int" order="AFTER">
+            SELECT SEQ_LOG_USER_ACTION_01.CURRVAL FROM DUAL
+        </selectKey>
+
+    </insert>
+
+    <update id="updateUserAction">
+        /* Common.updateUserAction */
+        UPDATE
+        LOG_USER_ACTION
+        SET IS_SUCCESS = #{IS_SUCCESS}
+        <if test="REMARK != null and REMARK != ''">
+            , REMARK = #{REMARK}
+        </if>
+        WHERE SEQ = ${SEQ}
+    </update>
+
+    <select id="parseDate" resultType="String">
+        /* Common.parseDate */
+        SELECT
+        TO_CHAR(TO_DATE(#{param}), 'YYYY-MM-DD') AS DATE_STRING
+        FROM DUAL
+    </select>
+
+    <select id="getMailTitle" resultType="String">
+        /* Common.getMailTitle */
+        SELECT
+        (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = 'T_MailTitlePrefix' AND LANGUAGE = 'KR') || ' '
+        || (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = #{TITLE_CODE} AND LANGUAGE = 'KR')
+        || '(' || (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = #{TITLE_CODE} AND LANGUAGE = 'EN') || ')'
+        FROM DUAL
+    </select>
+
+    <select id="getMailContents" resultType="String">
+        /* Common.getMailContents */
+        SELECT
+        (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = #{MSG_CODE} AND LANGUAGE = 'KR') || <![CDATA[ '<br/><br/>' ]]>
+        || (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = #{MSG_CODE} AND LANGUAGE = 'EN') || <![CDATA[ '<br/><br/>' ]]>
+        || (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = 'T_MailFooter' AND LANGUAGE = 'KR')
+        || (SELECT LANGUAGE_CODE_DATA FROM SYS_MULTI_LANGUAGE WHERE LANGUAGE_CODE_ID = 'T_MailFooter' AND LANGUAGE = 'EN')
+        FROM DUAL
+    </select>
+    <select id="authorityMenuMoveCheck" resultType="String">
+        SELECT
+        USER_AUTH.PLANT_ID
+        FROM (SELECT * FROM USER_PLANT WHERE USER_ID =#{USER_ID}) USER_AUTH
+        JOIN (SELECT * FROM SYS_MENU_PLANT WHERE MENU_ID=#{menu_id} AND IS_USABLE ='Y') MENU_AUTH
+        ON USER_AUTH.PLANT_ID = MENU_AUTH.PLANT_ID
+    </select>
+    <select id="authorityUserInfo" resultType="java.util.LinkedHashMap">
+        SELECT
+        USER_TYPE
+        FROM SYS_USER
+        WHERE USER_ID =#{USER_ID}
+    </select>
+</mapper>

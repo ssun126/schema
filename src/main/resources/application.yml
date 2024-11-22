@@ -55,5 +55,12 @@ mybatis:
 Logging:
   config: classpath:logback-spring.xml
 
+# Upload File Path Setting
 Upload:
-  path: "D:/devp/"
+  path:
+    attach: "D:/SCHEMA/STORAGE/ATTACH"
+    excel: "D:/SCHEMA/STORAGE/EXCEL"
+    iso: "D:/SCHEMA/STORAGE/ISO"
+    audit: "D:/SCHEMA/STORAGE/AUDIT"
+
+

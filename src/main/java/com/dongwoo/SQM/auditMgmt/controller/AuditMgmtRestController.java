@@ -72,7 +72,7 @@ public class AuditMgmtRestController {
             return ResponseEntity.ok("Form submitted fail!");
         }
     }
-    @Value("${Upload.path}")
+    @Value("${Upload.path.attach}")
     private String uploadPath;
 
     //IsoAuth 정보 신규 저장

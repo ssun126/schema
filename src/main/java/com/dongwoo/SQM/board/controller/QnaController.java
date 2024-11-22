@@ -33,7 +33,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class QnaController {
     private final BoardService boardService;
-    @Value("${Upload.path}")
+    @Value("${Upload.path.attach}")
     private String uploadPath;
     /**
      * Q&A 리스트
