@@ -38,6 +38,7 @@ public class LoginDTO implements UserDetails {
    private Collection<? extends GrantedAuthority> authorities;
 
    private String COM_CODE;
+   private String COM_NAME;
 
 
     @Override
