@@ -45,6 +45,9 @@ public class CompanyInfoParamDTO {
 
     @JsonProperty("BUS_NUMBER")
     private String  BUS_NUMBER;  //사업자등록번호
+    @JsonProperty("ID_ADD_TYPE")
+    private String  ID_ADD_TYPE; //ID 추가 정보 (0:신규, 1:추가)
 
-
+    @JsonProperty("USER_IDX")
+    private int USER_IDX;
 }

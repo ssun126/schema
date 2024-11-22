@@ -61,9 +61,12 @@ public class CompanyInfoDTO {
     private String  CP_CODE_WORK_CD4 ; //업체 사업부 코드4
     private String  CP_CODE_WORK_CD5 ; //업체 사업부 코드5
 
-  private String  ID_PW_ADD_REASON;
-  private String  USER_STATUS;  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)   //  처리상태  ★.
-  private String  USER_OK_DATE;
+    private String  ID_PW_ADD_REASON;
+    @JsonProperty("ID_ADD_TYPE")
+    private String  ID_ADD_TYPE; //ID 추가 정보 (0:신규, 1:추가)
+
+    private String  USER_STATUS;  //관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)   //  처리상태  ★.
+    private String  USER_OK_DATE;
 
     @JsonProperty("BASE_CODE")
     private String BASE_CODE;        //코드

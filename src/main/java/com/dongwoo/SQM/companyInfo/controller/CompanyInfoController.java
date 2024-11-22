@@ -34,7 +34,7 @@ public class CompanyInfoController {
     private final MemberService memberService;
 
     @GetMapping("/user/companyInfo/company")
-    public String isoAuthMain(Model model, Authentication authentication) {
+    public String cpInfoMain(Model model, Authentication authentication) {
 
         String loginId = authentication.getName();
         //System.out.println("loginId????"+loginId);
@@ -67,7 +67,7 @@ public class CompanyInfoController {
         model.addAttribute("companyUserIDList", companyUserIDList);
         //System.out.println("companyUserIDList: "+companyUserIDList);
 
-        return "companyInfo/main";
+        return "companyInfo/cpInfoMain";
     }
 
 

@@ -11,12 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class ConflictMineralsController {
     @GetMapping("/admin/auditMgmt/conflictMinerals")
-    public String Main(Model model) {
-        return "conflictMinerals/main";
+    public String AdminMain(Model model) {
+        return "conflictMinerals/adminMain";
     }
 
     @GetMapping("/admin/auditMgmt/conflictMinerals/detail")
     public String Detail(Model model) {
         return "conflictMinerals/detail";
+    }
+
+    @GetMapping("user/auditMgmt/conflictMinerals")
+    public String Main(Model model) {
+        return "conflictMinerals/main";
     }
 }

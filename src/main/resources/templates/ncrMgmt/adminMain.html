@@ -17,124 +17,103 @@
       </div>
     </div>
     <div class="cui_body">
-      <form class="cui_form_field" data-legend="true">
-        <fieldset>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>업체명</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>코비젼</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>담당자</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>동우</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>PR</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span>Audit 계획일</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>2024-10-01</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>Audit 방법</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>대면</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>Audit 구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>정기</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>NCR List</span></legend>
-          <table class="cui_table center" id="Table">
-            <colgroup>
-              <col style="width:100px;">
-              <col style="width:130px;">
-              <col>
-              <col style="width:130px;">
-              <col style="width:130px;">
-              <col style="width:130px;">
-              <col style="width:130px;">
-              <col style="width:130px;">
-            </colgroup>
-            <thead>
-            <tr>
-              <th><span>분류</span></th>
-              <th><span>지적구분</span></th>
-              <th><span>지적내용</span></th>
-              <th><span>진행상태</span></th>
-              <th><span>NCR발행일</span></th>
-              <th><span>조치계획일</span></th>
-              <th><span>시정조치일</span></th>
-              <th><span>완료일</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><span>품질</span></td>
-              <td><span>부적합</span></td>
-              <td><span>AAAAA</span></td>
-              <td><span>NCR발행완료</span></td>
-              <td><span>2024-09-30</span></td>
-              <td><span></span></td>
-              <td><span></span></td>
-              <td><span></span></td>
-            </tr>
-            <tr>
-              <td><span>환안</span></td>
-              <td><span>권고</span></td>
-              <td><span>BBBBB</span></td>
-              <td><span>조치계획작성완료</span></td>
-              <td><span>2024-09-10</span></td>
-              <td><span>2024-09-21</span></td>
-              <td><span></span></td>
-              <td><span></span></td>
-            </tr>
-            </tbody>
-          </table>
-          <div id="pagination" class="pagination" style="text-align: center"></div>
-          <div class="table-wrapper">
+      <form id="searchForm" method="get">
+        <div class="cui_search">
+          <div class="search_list cui_grid_wrap ">
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체코드</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체명</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">지적구분</strong>
+              <div class="item_content">
+                <select class="cui_select_field" id="searchGubun">
+                  <option value="" selected>선택</option>
+                  <option value="SEND">제출</option>
+                  <option value="APRROVE">승인</option>
+                  <option value="NOTAPPROVE">반려</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">진행상태</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">분류</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">조회기간</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                  <option value="">제목</option>
+                </select>
+              </div>
+            </div>
           </div>
-        </fieldset>
+          <div class="search_action">
+            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+          </div>
+        </div>
       </form>
+      <table class="cui_table center" id="companyTable">
+        <colgroup>
+          <col style="width:100px;">
+          <col style="width:130px;">
+          <col>
+          <col style="width:80px;">
+          <col style="width:130px;">
+          <col style="width:130px;">
+          <col style="width:80px;">
+          <col style="width:130px;">
+          <col style="width:130px;">
+        </colgroup>
+        <thead>
+        <tr>
+          <th><span>분류</span></th>
+          <th><span>지적구분</span></th>
+          <th><span>업체명</span></th>
+          <th><span>지적내용</span></th>
+          <th><span>진행상태</span></th>
+          <th><span>NCR발행일</span></th>
+          <th><span>조치계획일</span></th>
+          <th><span>시정조치일</span></th>
+          <th><span>완료일</span></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
+      <div id="pagination" class="pagination" style="text-align: center"></div>
+      <div class="table-wrapper">
+      </div>
     </div>
   </div>
 </div>

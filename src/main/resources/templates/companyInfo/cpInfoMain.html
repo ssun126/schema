@@ -13,7 +13,7 @@
                 </div>
                 <div class="cui_body">
 <!--                    <form class="cui_form_field" data-legend="true">-->
-                    <form id="updateForm" method="POST" action="/companyInfo/mainUpdate"  class="cui_form_field">
+                    <form id="updateForm"  class="cui_form_field">
                         <fieldset>
                             <legend><span>업체 기본정보</span></legend>
                             <table class="cui_table">
@@ -67,7 +67,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text" value="KOREA" disabled>-->
                                                 <input class="cui_text_field" type="text"  name="COM_NATION" id="COM_NATION" th:value="${member.COM_NATION}" disabled>
                                             </div>
                                         </div>
@@ -78,7 +77,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text">-->
                                                 <input class="cui_text_field" type="text" name = "COMPANY_NAME" id="COMPANY_NAME" th:value="${member.COMPANY_NAME}">
                                             </div>
                                         </div>
@@ -87,7 +85,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text">-->
                                                 <input class="cui_text_field" type="text" name = "FACTORY_NAME" id="FACTORY_NAME" th:value="${member.FACTORY_NAME}">
                                             </div>
                                         </div>
@@ -98,7 +95,6 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-<!--                                                <input class="cui_text_field" type="text">-->
                                                 <input class="cui_text_field" type="text"  name = "BUS_NUMBER" id="BUS_NUMBER" th:value="${member.BUS_NUMBER}">
                                             </div>
                                         </div>
@@ -214,7 +210,6 @@
                                         </span>
                                     </td>
                                     <th><span>Audit 관리</span></th>
-<!--                                    10점 | A등급 | 2024-07-31-->
                                     <td>
                                         <span th:text="${member.COM_AUDIT_POINT != null ? member.COM_AUDIT_POINT + '점  |  ' : ' 점수 없음 |'}"></span>
                                         <span th:text="${member.COM_AUDIT_LEVEL != null ? member.COM_AUDIT_LEVEL + '등급  |  ' : ' 등급 없음 | '}"></span>
@@ -279,7 +274,6 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-<!--                                <button type="submit" class="cui_button primary"><span>수정</span></button>-->
                                 <button type="button" class="cui_button primary" onClick="updateCpUser()"><span>수정</span></button>
                             </div>
                         </div>
@@ -505,7 +499,6 @@
 
     function deleteCpUserConfirm(userIdx) {
         //유효성  1개 아이디 남기자.
-
         var buttons = document.querySelectorAll('button[name="deleteCpUser"]');
 
         if (buttons.length === 1) {
@@ -521,7 +514,6 @@
             }
         });
     }
-
 
 
  function modal(id){

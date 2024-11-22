@@ -154,6 +154,8 @@
         ,uic.ID_PW_ADD_REASON
         ,uic.USER_STATUS
         ,uic.USER_OK_DATE
+        ,uic.ID_ADD_TYPE
+        ,uic.USER_IDX
         FROM
         COMPANY_CODE c
         LEFT JOIN
@@ -168,14 +170,14 @@
         <if test="COM_NAME != null and COM_NAME != ''">
             AND c.COM_NAME LIKE '%' || #{COM_NAME} || '%'
         </if>
-        <if test="MINERAL != null and MINERAL != ''">
-            AND  ${MINERAL} = 'Y'  --신청구분 .... 작업중...
+        <if test="ID_ADD_TYPE != null and ID_ADD_TYPE != ''">
+            AND uic.ID_ADD_TYPE = #{ID_ADD_TYPE}
         </if>
         <if test="COM_MANAGE_STATUS != null and COM_MANAGE_STATUS != ''">
             AND c.COM_MANAGE_STATUS = #{COM_MANAGE_STATUS}
         </if>
         <if test="BUS_NUMBER != null and BUS_NUMBER != ''">
-            AND  c.BUS_NUMBER =${BUS_NUMBER}
+            AND c.BUS_NUMBER =${BUS_NUMBER}
         </if>
         GROUP BY
         c.COM_CODE ,c.COM_NAME ,c.COM_OK_DATE
@@ -185,7 +187,7 @@
         ,c.COM_ADDRESS ,c.COM_CEO_NAME ,c.COM_CEO_PHONE ,c.COM_CEO_EMAIL
         ,c.COM_MANAGE_STATUS ,c.COM_APP_DATE ,c.COM_FILE_NAME ,c.COM_FILE_PATH
         ,c.COM_AUDIT_POINT ,c.COM_AUDIT_LEVEL
-        ,uic.ID_PW_ADD_REASON, uic.USER_STATUS,uic.USER_OK_DATE
+        ,uic.ID_PW_ADD_REASON, uic.USER_STATUS,uic.USER_OK_DATE,uic.ID_ADD_TYPE,uic.USER_IDX
         ORDER BY
         c.COM_CODE
         ) main

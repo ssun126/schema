@@ -27,12 +27,19 @@ public class CompanyInfoRepository {
     }
 
     //업체 리스트 검색 2024.11.8
-    public List<CompanyInfoDTO> findCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ,String SearchType) {
-        if(Objects.equals(SearchType, "List")) {
-            return sql.selectList("CompanyInfo.findCompanyInfo", companyInfoParamDTO);
-        }else {
-            return sql.selectList("CompanyInfo.findCpApprovalList", companyInfoParamDTO);
-        }
+    public List<CompanyInfoDTO> findCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ) {
+        //if(Objects.equals(SearchType, "List")) {
+        return sql.selectList("CompanyInfo.findCompanyInfo", companyInfoParamDTO);
+    }
+
+    //업체 리스트 검색 2024.11.8
+    public List<CompanyInfoDTO> approvalCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return sql.selectList("CompanyInfo.findCpApprovalList", companyInfoParamDTO);
+    }
+
+    //업체 리스트 검색 USeridx
+    public List<CompanyInfoDTO> approvalCompanySearchUseridx(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return sql.selectList("CompanyInfo.findCpApprovalList", companyInfoParamDTO);
     }
 
     //업체 거래 사업부
