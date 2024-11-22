@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{common/layouts/mainLayout}"
+      layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <body>
-<form th:action="@{|/user/board/qna/update/${board.BOARD_IDX}|}" method="post" name="updateForm">
-    <input type="hidden" name="BOARD_IDX" th:value="${board.BOARD_IDX}">
-    writer: <input type="text" name="INPUT_USER_ID" th:value="${board.INPUT_USER_ID}" readonly><br>
-    title: <input type="text" name="BOARD_TITLE" th:value="${board.BOARD_TITLE}"><br>
-    pass: <input type="text" name="BOARD_PASS" id="board-pass"><br>
-    contents: <textarea name="BOARD_DESC" cols="30" rows="10" th:text="${board.BOARD_DESC}"></textarea><br>
-    <input type="file" name="file">
-    <input type="button" value="수정" onclick="board_update()">
-</form>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>Q&A 등록</span></h2>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form th:action="@{|/user/board/qna/update/${board.BOARD_IDX}|}" method="post" name="updateForm">
+                <input type="hidden" name="BOARD_IDX" th:value="${board.BOARD_IDX}">
+                writer: <input type="text" name="INPUT_USER_ID" th:value="${board.INPUT_USER_ID}" readonly><br>
+                title: <input type="text" name="BOARD_TITLE" th:value="${board.BOARD_TITLE}"><br>
+                pass: <input type="text" name="BOARD_PASS" id="board-pass"><br>
+                contents: <textarea name="BOARD_DESC" cols="30" rows="10" th:text="${board.BOARD_DESC}"></textarea><br>
+                <input type="file" name="file">
+                <input type="button" value="수정" onclick="board_update()">
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 <script th:inline="javascript">
     const board_update = () => {
@@ -21,10 +32,9 @@
         if (boardPass == passDB) {
             updateForm.submit();
         } else {
-            alert("비밀번호가 틀립니다!!");
+            showAlert('warning','비밀번호가 틀립니다');
         }
     }
-
 
 </script>
 </html>

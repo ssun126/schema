@@ -4,12 +4,15 @@ import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.board.service.BoardService;
+import com.dongwoo.SQM.config.security.UserCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class QnaController {
     private final BoardService boardService;
-
+    @Value("${Upload.path}")
+    private String uploadPath;
     /**
      * Q&A 리스트
      * @param criteria
@@ -69,7 +73,7 @@ public class QnaController {
         try {
             log.info("filename???????"+filename);
             // 파일 경로 설정
-            File file = new File("D:/devp/" +  filename);
+            File file = new File(uploadPath +  filename);
             if (!file.exists()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -106,12 +110,12 @@ public class QnaController {
      * @throws IOException
      */
     @PostMapping("/admin/board/qna/save")
-    public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
+    public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file,@AuthenticationPrincipal UserCustom user) throws IOException {
         log.info("boardDTO = " + boardDTO);
         // 파일 업로드 처리 시작
         UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
 
-        String directory = "D:/devp/";
+        String directory = uploadPath;
         String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
 
         File saveFile = new File(directory, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
@@ -121,9 +125,8 @@ public class QnaController {
         boardDTO.setFILE_NAME(fileName);
         boardDTO.setFILE_PATH(directory+fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
         // 파일 업로드 처리 끝
-
         boardService.save(boardDTO);
-        return "redirect:/admin/board/qna/list";
+        return "redirect:/admin/board/qna";
     }
 
     @GetMapping("/admin/board/qna/update/{id}")
