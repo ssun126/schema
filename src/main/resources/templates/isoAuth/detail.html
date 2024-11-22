@@ -42,7 +42,6 @@
                         </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                 </fieldset>
@@ -221,19 +220,29 @@
                     var tableBody = $('#isoAuthItemTable tbody');
                     tableBody.empty(); // 기존 내용 비우기
 
-                    // AUTH_TYPE 매핑 객체 선언
-                    var authTypeMap = {
-                        'QUALITY': '품질관리',
-                        'ENVIRONMENT': '환경',
-                        'SAFETY': '안전보건',
-                        'ENERGY': '에너지',
-                        'HSPM': 'HSPM'
+                    // AUTH_CODE 매핑 객체 선언
+                    var authCodeMap = {
+                        '품질관리': 'ISO9001',
+                        '품질관리': 'IATF16949',
+                        '환경': 'ISO14001',
+                        '안전보건': 'ISO45001',
+                        '안전보건': 'KOSHA MS',
+                        'HSPM': 'QC080000',
+                        'ENERGY': 'ISO50001',
+                        '기타': '녹색기업'
                     };
+                    var reversedMap = {};
+                    for (var key in authCodeMap) {
+                        if (authCodeMap.hasOwnProperty(key)) {
+                            var value = authCodeMap[key];
+                            reversedMap[value] = key;  // value를 key로 매핑
+                        }
+                    }
 
                     response.forEach(function(isoAuth) {
-                        var authTypeText = authTypeMap[isoAuth.AUTH_TYPE] || isoAuth.AUTH_TYPE;  // 기본값은 'AUTH_TYPE'값 그대로
+                        var isoTypeText = reversedMap[isoAuth.AUTH_CODE] || 기타;
                         var row = '<tr>' +
-                                        '<td>' + authTypeText + '</td>' +
+                                        '<td>' + isoTypeText + '</td>' +
                                         '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
                                         '<td>' + isoAuth.AUTH_DATE + '</td>' +
                                         '<td>' + isoAuth.EXP_DATE + '</td>' +

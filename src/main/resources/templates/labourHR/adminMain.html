@@ -127,12 +127,12 @@
                             'REJECT': '반려'
                         };
 
-                        if (!response.resultList || response.resultList.length === 0) {
+
+                            // 검색된 결과를 테이블에 추가
+                            response.resultList.forEach(functiif (!response.resultList || response.resultList.length === 0) {
                             var row = '<tr><td colspan="6">데이터가 없습니다.</td>></tr>';
                             tableBody.append(row);  // 테이블에 새 행 추가
-                        }else{
-                            // 검색된 결과를 테이블에 추가
-                            response.resultList.forEach(function(auth) {
+                        }else{on(auth) {
                                 var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
                                 var itemPoint = auth.APPROVE_STATE ? auth.APPROVE_STATE: '-';  // null일 경우 '-'로 대체
                                 var itemPoint = auth.POINT ? auth.POINT: '-';  // null일 경우 '0'로 대체

@@ -192,6 +192,11 @@ function showAlert(type, message ) {
    modal('dialog');
 }
 
+     //모달 열기
+  function modal(id){
+    $("#" + id).fadeIn();
+  }
+
 // 파일 확장자 체크 함수
 function fileExtensionCheck(fileInputId, allowType, successCallback, errorCallback) {
     // 파일 입력 요소 가져오기

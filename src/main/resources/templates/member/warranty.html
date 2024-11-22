@@ -219,24 +219,6 @@
             </div>
         </div>
 
-        <!--==alert==-->
-        <div class="cui_dialog" style="width:420px;display:none" id="dialogW">
-            <div class="dialog_container">
-                <div class="dialog_body">
-                    <div class="body_root">
-                        <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContentW" ></p> </div>
-                        <div class="cui_items_wrap" data-direction="center">
-                            <div class="item_content">
-                                <button type="button" class="cui_button primary modal-closeW" onClick="modal('cui_dialog')"><span>확인</span></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--==alert==-->
-
-
     </div>
 </div>
 </body>
@@ -275,10 +257,6 @@
        document.getElementById('approvalForm').submit();
   }
 
-  //모달 열기
-  function modal(id){
-    $("#" + id).fadeIn();
-  }
 
   //모달 닫기
   $('.modal-close').on('click', function(e){
@@ -410,14 +388,6 @@
            hiddenInput.value = ''; // 파일이 선택되지 않은 경우 숨겨진 입력 필드 초기화
        }
    }
-
-
-    function showAlert(type, message) {
-        var alertDiv = document.querySelector('#alertTypeimg');
-        alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
-        document.getElementById('messageContentW').innerText = message;  // 메시지 설정
-        modal('dialogW');
-    }
 
 
   // 이메일 입력값을 가져오고,
