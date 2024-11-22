@@ -13,149 +13,328 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-              <h2 class="cui_title"><span>노동인권</span></h2>
+              <h2 class="cui_title"><span></span></h2>
             </div>
         </div>
         <div class="cui_body">
-            <form id="searchForm" method="get">
-                <div class="cui_search">
-                    <div class="search_list cui_grid_wrap ">
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체코드</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
-                            </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체명</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
-                            </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">승인상태</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field" id="searchState">
-                                    <option value="" selected>선택하세요</option>
-                                    <option value="SEND">제출</option>
-                                    <option value="APRROVE">승인</option>
-                                    <option value="NOTAPPROVE">반려</option>
-                                </select>
-                            </div>
+            <form class="cui_form_field" data-legend="true">
+                <fieldset>
+                    <legend><span>안전보건환경 Audit 계획</span></legend>
+                    <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
+                    <div class="cui_items_wrap" data-direction="right">
+                        <div class="item_content">
+                            <button type="submit" class="cui_button secondary"><span>양식다운로드1</span></button>
+                            <button type="submit" class="cui_button secondary"><span>양식다운로드2</span></button>
                         </div>
                     </div>
-                    <div class="search_action">
-                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+                    <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>업체명</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>코비젼</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>담당자</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>동우</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>PR</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>Audit 계획일</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>2024-10-01</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Audit 방법</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>대면</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Audit 구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>정기</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : 대면 -->
+                <fieldset>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 내용</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>POVIS의 audit 요청사항 그대로 기재</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>File 첨부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <input type="file" class="cui_file_field">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : 대면 -->
+                <!-- Audit 방법 : Self -->
+                <fieldset>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>제출 구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file" checked><i></i><span>파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="text"><i></i><span>직접입력</span></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="fs_file">
+                    <div class="cui_items_wrap" data-direction="right">
+                        <div class="item_content">
+                            <button type="submit" class="cui_button secondary"><span>양식다운로드</span></button>
+                        </div>
+                    </div>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>파일 첨부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <input type="file" class="cui_file_field">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="fs_text">
+                    <table class="cui_table center">
+                        <thead>
+                            <tr>
+                                <th><span>항목</span></th>
+                                <th><span>내용</span></th>
+                                <th><span>답변</span></th>
+                                <th><span>평가점수</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" class="cui_text_field"></td>
+                                <td><input type="text" class="cui_text_field"></td>
+                                <td><input type="text" class="cui_text_field"></td>
+                                <td><input type="text" class="cui_text_field"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td colspan="3"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : Self -->
+                <div class="cui_items_wrap" data-direction="right">
+                    <div class="item_content">
+                        <button type="submit" class="cui_button primary"><span>제출</span></button>
                     </div>
                 </div>
+                <!-- Audit 방법 : 대면 -->
+                <fieldset>
+                    <legend><span>안전보건환경 Audit 결과</span></legend>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 실시일</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>2024-10-01</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>담당자</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>동우</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Audit 등급</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>A</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>NCR 발행여부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>Y</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 결과</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>POVIS의 audit 요청사항 그대로 기재</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>첨부자료</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <input type="file" class="cui_file_field">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : 대면 -->
             </form>
-            <table class="cui_table center" id="companyTable">
-                <colgroup>
-                    <col style="width:130px;">
-                    <col style="width:130px;">
-                    <col>
-                    <col style="width:130px;">
-                    <col style="width:130px;">
-                    <col style="width:130px;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th><span>승인상태</span></th>
-                    <th><span>업체코드</span></th>
-                    <th><span>업체명</span></th>
-                    <th><span>점수</span></th>
-                    <th><span>제출일자</span></th>
-                    <th><span>승인일자</span></th>
-                </tr>
-                </thead>
-                <tbody>
-                  <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
-                </tbody>
-            </table>
-            <div id="pagination" class="pagination" style="text-align: center"></div>
-            <div class="table-wrapper">
-            </div>
         </div>
     </div>
 </div>
 </body>
 </html>
 <script>
-  $(document).ready(function() {
-            // 링크 클릭 시 콘텐츠를 로드
-            $(document).on("click", ".load-page", function(e) {
-                e.preventDefault();
+    $(document).ready(function () {
+        //Audit 방법 : Self 일때 제출구분 초기값
+        $("#fs_text").hide();
 
-                const code = $(this).data("code");
-                const url = "/admin/auditMgmt/labourHRDetail?COM_CODE="+code;
+        $("input:radio[name=checkbox1]").change(function () {
+            var chkvalue = $("input:radio[name=checkbox1]:checked").val();
 
-                history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-                loadContent(url);
-                //goMenu(url);
-            });
-
-            // 검색 버튼 클릭 시
-            $('#searchBtn').on('click', function(event) {
-                 event.preventDefault();  // 기본 폼 제출 동작 방지
-
-                var type = 'SAFETY';      // audit 타입
-                var name = $('#searchName').val();  // 업체명
-                var code = $('#searchCode').val();  // 업체 코드
-                var state = $('#searchState').val();  // state
-
-                $.ajax({
-                    url: '/api/searchAuditMgmt',  // 서버의 검색 API URL
-                    type: 'GET',
-                    data: {
-                        type: type,      // audit 타입
-                        name: name,      // 업체명
-                        code: code,      // 업체 코드
-                        state: state,  // state
-                        pageNum: 1,      // 기본값으로 첫 페이지
-                        amount: 10       // 한 페이지에 표시할 항목 수
-                    },
-                    success: function(response) {
-                        // 테이블에 결과 채우기
-                        var tableBody = $('#companyTable tbody');
-                        tableBody.empty();  // 기존 내용 비우기
-
-                        // APPROVE_STATE 매핑 객체 선언
-                        var appTypeMap = {
-                            'SAVE': '작성중',
-                            'SEND': '제출',
-                            'OK': '승인',
-                            'REJECT': '반려'
-                        };
-
-                        if(response != null){
-                            // 검색된 결과를 테이블에 추가
-                            response.resultList.forEach(function(auth) {
-                                var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
-                                var itemPoint = auth.APPROVE_STATE ? auth.APPROVE_STATE: '-';  // null일 경우 '-'로 대체
-                                var itemPoint = auth.POINT ? auth.POINT: '-';  // null일 경우 '0'로 대체
-                                var itemApvDate = auth.APPROVE_DATE ? auth.APPROVE_DATE: '';  // null일 경우 ''로 대체
-                                var row = '<tr>' +
-                                                '<td>' + appTypeText + '</td>' +
-                                                '<td>' + auth.COM_CODE + '</td>' +
-                                                '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
-                                                '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
-                                                '<td>' + auth.SEND_DATE + '</td>' +
-                                                '<td>' + itemApvDate + '</td>' +
-                                              '</tr>';
-                                tableBody.append(row);  // 테이블에 새 행 추가
-                            });
-                        }else{
-                            var row = '<tr><td colspan=6>데이터가 없습니다.</td>></tr>';
-                            tableBody.append(row);  // 테이블에 새 행 추가
-                        }
-
-                        // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
-                        updatePagination(response.pageMaker);
-                    },
-                    error: function() {
-                        alert("검색 결과를 가져오는 데 실패했습니다.");
-                    }
-                });
-            });
+            if(chkvalue == "file"){
+                $("#fs_file").show();
+                $("#fs_text").hide();
+            }
+            else if(chkvalue == "text"){
+                $("#fs_file").hide();
+                $("#fs_text").show();
+            }
         });
+    });
 </script>
