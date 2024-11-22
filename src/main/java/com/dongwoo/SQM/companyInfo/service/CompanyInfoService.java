@@ -27,8 +27,12 @@ public class CompanyInfoService {
     }
 
     //업체 목록 검색 2024.10.30
-    public List<CompanyInfoDTO> findCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ,String SearchType) {
-        return companyInfoRepository.findCompanySearch(companyInfoParamDTO , SearchType);
+    public List<CompanyInfoDTO> findCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return companyInfoRepository.findCompanySearch(companyInfoParamDTO);
+    }
+
+    public List<CompanyInfoDTO> approvalCompanySearch(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return companyInfoRepository.approvalCompanySearch(companyInfoParamDTO);
     }
 
     //업체 거래사업부

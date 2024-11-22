@@ -213,6 +213,13 @@
                 and  u.USER_ID=#{loginId}
     </select>
 
+    <!--회사 사용자 로그인 IDX로 정보확인. -->
+    <select id="findCpLoginIDX" parameterType="member" resultType="member">
+        SELECT * FROM USER_INFO u, USER_INFO_COMPANY uc
+        WHERE u.USER_IDX  = uc.USER_IDX
+        and  u.USER_IDX=#{USER_IDX}
+    </select>
+
 
 
     <!--사용자 ID 중복 체크 -->

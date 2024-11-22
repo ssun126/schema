@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<body>
+        <div class="cui_content">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title"><span>Company Information (업체 승인!)</span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+<!--                    <form class="cui_form_field" data-legend="true">-->
+                    <form id="updateForm" method="POST" action="/companyInfo/mainUpdate"  class="cui_form_field">
+                        <fieldset>
+                            <legend><span>업체 기본정보</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>Vendor 번호</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_CODE}" ></span>
+                                                <input type="hidden" name="COM_CODE" id="COM_CODE" th:value="${member.COM_CODE}" >
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>귀사 정보</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_NAME}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>Vendor 업종 형태</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <label class="cui_checkbox">
+                                                    <input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer"
+                                                           th:checked="${member.VENDOR_WORK_KIND == 'D'}" disabled>
+                                                    <i></i><span>제조사</span>
+                                                </label>
+
+                                                <label class="cui_checkbox">
+                                                    <input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"
+                                                           th:checked="${member.VENDOR_WORK_KIND == 'L'}" disabled>
+                                                    <i></i><span>물류사</span>
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>국가</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_NATION}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>회사명</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COMPANY_NAME}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>제조 공장명</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.FACTORY_NAME}"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>사업자 등록번호</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span  th:text="${member.BUS_NUMBER}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>회사주소 (영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_ADDRESS}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>CEO 성명(영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span  th:text="${member.COM_CEO_NAME}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>CEO 연락처(영문)</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_CEO_PHONE}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><span>CEO e-mail(영문)</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_CEO_EMAIL}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                        </fieldset>
+
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>DWFC 거래 사업부</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>사업본부</span></th>
+                                    <td>
+                                        <div th:each="companyCodeWork, iterStat : ${companyCodeWorkList}">
+                                            <span th:text="${iterStat.index + 1} + ') ' + ${companyCodeWork.BASE_NAME}"></span><br>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend><span>공동 업무자 정보</span></legend>
+                            <table class="cui_table center">
+                                <thead>
+                                <tr>
+                                    <th><span>담당자 구분</span></th>
+                                    <th><span>성명(영문)</span></th>
+                                    <th><span>직위</span></th>
+                                    <th><span>부서명</span></th>
+                                    <th><span>email</span></th>
+                                    <th><span>연락처</span></th>
+                                    <th>
+<!--                                        <button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button>-->
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                <tr class="collaborator-row" th:each=" user : ${companyUserList}">
+                                    <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
+                                        <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
+                                        <input type="hidden"  name="MAIN_USER_IDX"  class="cui_text_field" th:value="${user.USER_IDX}">
+
+                                    </td>
+
+                                    <td>
+                                        <span th:text="${user.USER_NAME}"></span>
+                                        <input type="hidden"  name="COM_USER_IDX"  class="cui_text_field" th:value="${user.COM_USER_IDX}">
+                                    </td>
+                                    <td><span  th:text="${user.USER_POSITION}"></span></td>
+                                    <td><span th:text="${user.USER_DEPT}"></span></td>
+                                    <td><span  th:text="${user.USER_EMAIL}"></span></td>
+                                    <td><span  th:text="${user.USER_PHONE}"></span></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>Warranty 협약 상태</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>Warranty Letter</span></th>
+                                    <td>
+                                        <span th:switch="${member.COM_MANAGE_STATUS}">
+                                            <span th:case="'0'">Pending</span>
+                                            <span th:case="'1'">Waiting</span>
+                                            <span th:case="'2'">Approved</span>
+                                            <span th:case="'3'">Rejected</span>
+                                        </span>
+                                    </td>
+                                    <th><span>Audit 관리</span></th>
+<!--                                    10점 | A등급 | 2024-07-31-->
+                                    <td>
+                                        <span th:text="${member.COM_AUDIT_POINT != null ? member.COM_AUDIT_POINT + '점  |  ' : ' 점수 없음 |'}"></span>
+                                        <span th:text="${member.COM_AUDIT_LEVEL != null ? member.COM_AUDIT_LEVEL + '등급  |  ' : ' 등급 없음 | '}"></span>
+                                        <span th:text="${member.COM_OK_DATE != null ? member.COM_OK_DATE.substring(0, 10) : ''}"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+
+                        <div class="cui_items_wrap" data-direction="right">
+                            <div class="item_content">
+<!--                                <button type="submit" class="cui_button primary"><span>수정</span></button>-->
+<!--                                <button type="button" class="cui_button primary" onClick="updateCpUser()"><span>수정</span></button>-->
+                            </div>
+                        </div>
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>신청 정보</span></legend>
+<!--                            <table class="cui_table">-->
+<!--                                <colgroup>-->
+<!--                                    <col style="width:120px;">-->
+<!--                                    <col style="width:120px;">-->
+<!--                                    <col style="width:240px;">-->
+<!--                                    <col style="width:120px;">-->
+<!--                                    <col style="width:120px;">-->
+<!--                                    <col >-->
+<!--                                    <col style="width:120px;">-->
+<!--                                </colgroup>-->
+<!--                                <thead>-->
+<!--                                <tr>-->
+<!--                                    <th><span>ID</span></th>-->
+<!--                                    <th><span>이름</span></th>-->
+<!--                                    <th><span>E-mail</span></th>-->
+<!--                                    <th><span>가입일</span></th>-->
+<!--                                    <th><span>승인일</span></th>-->
+<!--                                    <th><span>접속 목적</span></th>-->
+<!--                                    <th></th>-->
+<!--                                </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                    <tr th:each=" user : ${companyUserIDList}" th:id="'idListRow-' + ${user.USER_IDX}">-->
+<!--                                        <td><span th:text="${user.USER_ID}" ></span></td>-->
+<!--                                        <td><span th:text="${user.USER_NAME}"></span></td>-->
+<!--                                        <td><span th:text="${user.USER_EMAIL}"></span></td>-->
+<!--                                        <td><span th:text="${user.REG_DATE != null ? user.REG_DATE.substring(0, 10) : ''}"></span></td>-->
+<!--                                        <td><span th:text="${user.USER_OK_DATE != null ? user.USER_OK_DATE.substring(0, 10) : ''}"></span></td>-->
+<!--                                        <td><span th:utext="${#strings.replace(user.BASE_NAMES, '\n', '<br />')}"></span></td>-->
+<!--                                        <td>-->
+<!--                                            <div class="cui_items_wrap" data-direction="center">-->
+<!--                                                <div class="item_content">-->
+<!--                                                    <input type="hidden" name="USER_IDX" id="USER_IDX" th:value="${user.USER_IDX}">-->
+<!--                                                    <button type="button" name="deleteCpUser" class="cui_button secondary"   th:onclick="'deleteCpUserConfirm(' + '\'' + ${user.USER_IDX} + '\'' + ')'">-->
+<!--                                                        <span th:text="${user.USER_STATUS == '2' ? '탈퇴' : '삭제'}"></span>-->
+<!--                                                    </button>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </tbody>-->
+
+
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:200px;">
+                                    <col>
+                                    <col style="width:200px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tbody>
+                                <tr>
+                                    <th><span>신청구분</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_CODE}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>신청일</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><span>ID</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_CODE}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>이름</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><span>처리상태</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_CODE}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th><span>처리일</span></th>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${member.COM_NAME}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+                        </fieldset>
+                        <div class="cui_items_wrap" data-direction="right">
+                            <div class="item_content">
+                                <button type="button" class="cui_button primary" onClick="Approval(1)"><span>승인</span></button>
+                                <button type="button" class="cui_button primary" onClick="Approval(2)"><span>반려</span></button>
+                                <button type="button" class="cui_button primary" onClick="Approval(3)"><span>목록</span></button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+</body>
+
+</html>
+
+<script>
+
+   $(document).ready(function() {
+
+   });
+
+
+    function deleteCpUserConfirm(userIdx) {
+        //유효성  1개 아이디 남기자.
+
+        var buttons = document.querySelectorAll('button[name="deleteCpUser"]');
+
+        if (buttons.length === 1) {
+            showAlert('warning','한 명 이상의 기본 사용자가 있어야 됩니다.');
+            return;
+        }
+
+        showConfirm('warning', '정말로 삭제하시겠습니까?', function(isConfirmed) {
+            if (isConfirmed) {
+              deleteCpUser(userIdx);
+            } else {
+                //alert('아니오');
+            }
+        });
+    }
+
+
+ function Approval(userIdx) {
+
+        var buttons = document.querySelectorAll('button[name="deleteCpUser"]');
+
+        if (buttons.length === 1) {
+            showAlert('warning','한 명 이상의 기본 사용자가 있어야 됩니다.');
+            return;
+        }
+
+        showConfirm('warning', '정말로 삭제하시겠습니까?', function(isConfirmed) {
+            if (isConfirmed) {
+              deleteCpUser(userIdx);
+            } else {
+                //alert('아니오');
+            }
+        });
+    }
+
+
+
+
+<!-- function modal(id){-->
+<!--   $("#" + id).fadeIn();-->
+<!-- }-->
+
+<!-- $('.modal-close').on('click', function(e){-->
+<!--   e.preventDefault();-->
+<!--   const modal = $(this).parents('.cui_dialog');-->
+<!--   modal.fadeOut();-->
+<!-- });-->
+
+
+    window.addEventListener("popstate", function(event) {
+         const code = document.getElementById('comCode').value ;
+         let url = "/admin/companyInfo/cpApproval";
+         history.pushState({ comCode: code }, null, url);
+    });
+
+
+</script>

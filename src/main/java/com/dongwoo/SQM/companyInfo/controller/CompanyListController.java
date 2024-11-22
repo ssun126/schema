@@ -6,10 +6,14 @@ import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
+import com.dongwoo.SQM.system.dto.MemberDTO;
+import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
+import com.dongwoo.SQM.system.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,7 @@ import java.util.List;
 public class CompanyListController {
 
     private final CompanyInfoService companyInfoService;
+    private final MemberService memberService;
 
     //업체 목록  2024.11.08 sylee
     @GetMapping("/admin/companyInfo/cpList")
@@ -38,7 +43,7 @@ public class CompanyListController {
         try {
             System.out.println("Received companyInfoDTO: " + companyInfoParamDTO);
 
-            List<CompanyInfoDTO> companyList = companyInfoService.findCompanySearch(companyInfoParamDTO , "List");
+            List<CompanyInfoDTO> companyList = companyInfoService.findCompanySearch(companyInfoParamDTO);
 
             //System.out.println("select companyUserList: " + companyUserList);
             return ResponseEntity.ok(companyList);
@@ -52,8 +57,8 @@ public class CompanyListController {
 
 
     //업체 목록 검색 LIST -> 업체 상세  2024.11.08 sylee
-    @GetMapping("/admin/companyInfo/cpDetail")
-    public String cpListDetail(@RequestParam("com_code") String com_code , Model model) {
+    @GetMapping("/admin/companyInfo/cpDetail1111")
+    public String bak_cpListDetail(@RequestParam("com_code") String com_code , Model model) {
         List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
         model.addAttribute("deptList", deptList);
 
@@ -77,7 +82,7 @@ public class CompanyListController {
     public ResponseEntity<?> getCompanyApprovalList(@RequestBody CompanyInfoParamDTO companyInfoParamDTO ) {
         try {
             System.out.println("Received companyInfoDTO: " + companyInfoParamDTO);
-            List<CompanyInfoDTO> companyList = companyInfoService.findCompanySearch(companyInfoParamDTO ,"Approval");
+            List<CompanyInfoDTO> companyList = companyInfoService.approvalCompanySearch(companyInfoParamDTO);
             return ResponseEntity.ok(companyList);
         } catch (Exception e) {
             System.out.println("검색 에러!!!: " + e);
@@ -85,6 +90,48 @@ public class CompanyListController {
                     .body("{\"error\": \"서버 오류 발생\"}");
         }
     }
+
+    //업체 승인 목록 상세 검색-> 업체 상세  2024.11.08 sylee
+    @GetMapping("/admin/companyInfo/cpApprovalDetail")
+    public String cpListDetail(@RequestParam("com_code") String com_code ,Model model, Authentication authentication) {
+
+        //String loginId = authentication.getName();
+        //System.out.println("loginId????"+loginId);
+
+        //로그인된 ID 회사 코드 알아오기. 여기는 업체 유저 전용
+        //MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
+        MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",com_code);
+        model.addAttribute("member", memberDTO);
+        //System.out.println("memberDTO: "+memberDTO);
+
+        //공동 작업자
+        UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+        parmaDTO.setUSER_ID("c002sylee1");
+        List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);
+        model.addAttribute("companyUserList", companyUserList);
+        //System.out.println("companyUserList: "+companyUserList);
+
+        //부서
+        List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
+        model.addAttribute("deptList", deptList);
+
+        //업체코드 사업본부
+        CompanyInfoParamDTO companyInfoParamDTO = new CompanyInfoParamDTO();
+        companyInfoParamDTO.setCOM_CODE(com_code);
+        List<CompanyInfoDTO> companyCodeWorkList = companyInfoService.findCompanyCodeWork(companyInfoParamDTO);
+        model.addAttribute("companyCodeWorkList", companyCodeWorkList);
+
+        //회원 ID 관리
+        List<CompanyInfoDTO> companyUserIDList = companyInfoService.findCompanyCodeWorkEx(companyInfoParamDTO);
+        model.addAttribute("companyUserIDList", companyUserIDList);
+        //System.out.println("companyUserIDList: "+companyUserIDList);
+
+
+        //List<CompanyInfoDTO> companyList = companyInfoService.findCompanySearch(companyInfoParamDTO);
+
+        return "companyList/cpApprovalDetail";
+    }
+
 
 
 /////////////
