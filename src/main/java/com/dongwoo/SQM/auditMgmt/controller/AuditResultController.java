@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class AuditResultController {
     @GetMapping("/admin/auditMgmt/auditResult")
-    public String isoAuthMain(Model model) {
+    public String AuditResultMain(Model model) {
+        return "auditResult/adminMain";
+    }
+
+    @GetMapping("/user/auditMgmt/auditResult")
+    public String AuditResultUserMain(Model model) {
         return "auditResult/main";
     }
 }

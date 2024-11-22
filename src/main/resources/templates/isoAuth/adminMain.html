@@ -35,7 +35,7 @@
                             <strong class="item_label">승인상태</strong>
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchState">
-                                    <option value="" selected>선택</option>
+                                    <option value="" selected>선택하세요</option>
                                     <option value="SEND">제출</option>
                                     <option value="APRROVE">승인</option>
                                     <option value="NOTAPPROVE">반려</option>
@@ -79,44 +79,6 @@
     </div>
 </body>
 <script>
-    // 페이지네이션 처리 함수 (updatePagination)
-    function updatePagination(pageMaker) {
-        var paginationHtml = '';
-        var currentPage = pageMaker.criteria.pageNum;
-        var startPage = pageMaker.startPage;
-        var endPage = pageMaker.endPage;
-        var totalPages = pageMaker.totalPages;
-
-        // 이전 페이지 버튼
-        if (currentPage > 1) {
-            paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
-        }
-
-        // 페이지 번호
-        for (var i = startPage; i <= endPage; i++) {
-            if (i === currentPage) {
-                paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-            } else {
-                paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-            }
-        }
-
-        // 다음 페이지 버튼
-        if (currentPage < totalPages) {
-            paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-        }
-
-        // 페이지네이션 HTML 업데이트
-        $('#pagination').html(paginationHtml);
-
-        // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-        $('.page, .prev, .next').on('click', function(event) {
-            event.preventDefault();
-            var pageNum = $(this).data('page');
-            searchCompanies(pageNum);
-        });
-    }
-
     $(document).ready(function() {
         // 링크 클릭 시 콘텐츠를 로드
         $(document).on("click", ".load-page", function(e) {
@@ -132,16 +94,17 @@
 
         // 검색 버튼 클릭 시
         $('#searchBtn').on('click', function(event) {
-             event.preventDefault();  // 기본 폼 제출 동작 방지
-
+            event.preventDefault();  // 기본 폼 제출 동작 방지
+            var type = 'ISO';      // audit 타입
             var name = $('#searchName').val();  // 업체명
             var code = $('#searchCode').val();  // 업체 코드
             var state = $('#searchState').val();  // state
 
             $.ajax({
-                url: '/api/searchIsoAuth',  // 서버의 검색 API URL
+                url: '/api/searchAuditMgmt',  // 서버의 검색 API URL
                 type: 'GET',
                 data: {
+                    type: type,      // audit 타입
                     name: name,      // 업체명
                     code: code,      // 업체 코드
                     state: state,  // state
@@ -159,8 +122,11 @@
                         'OK': '승인',
                         'REJECT': '반려'
                     };
-                    console.log("ssssss"+response);
-                    if(response != null){
+
+                    if (!response.resultList || response.resultList.length === 0) {
+                        var row = '<tr><td colspan="6">데이터가 없습니다.</td>></tr>';
+                        tableBody.append(row);  // 테이블에 새 행 추가
+                    }else{
                         // 검색된 결과를 테이블에 추가
                         response.resultList.forEach(function(auth) {
                             var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
@@ -177,9 +143,6 @@
                                           '</tr>';
                             tableBody.append(row);  // 테이블에 새 행 추가
                         });
-                    }else{
-                        var row = '<tr><td colspan=6>데이터가 없습니다.</td>></tr>';
-                        tableBody.append(row);  // 테이블에 새 행 추가
                     }
 
                     // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)

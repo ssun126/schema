@@ -112,7 +112,7 @@
                 </div>
                 <div class="dialog_body">
                     <div class="body_root">
-                        <form class="cui_form_field" data-legend="true" action="/admin/siteMgr/baseCode/action" method="get">
+                        <form class="cui_form_field" data-legend="true" id="baseCodeForm" onsubmit="handleSubmit(event)" action="/admin/siteMgr/baseCode/action" method="get">
                             <fieldset>
                                 <!--                        <legend><span>ID 찾기</span></legend>-->
                                 <label class="cui_items_wrap" data-direction="left">
@@ -161,7 +161,7 @@
                                 <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label">정렬</strong>
                                     <div class="item_content">
-                                        <input name="BASE_SORT" class="cui_text_field ">
+                                        <input type="number" name="BASE_SORT" class="cui_text_field ">
                                     </div>
                                 </label>
                                 <label class="cui_items_wrap" data-direction="left">
@@ -184,9 +184,10 @@
 
                                 <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                                     <div class="item_content">
-                                        <button type="submit" id="BaseCodeAdd" name="INFO_FLAG" value="Add" class="cui_button primary"><span>추가</span></button>
-                                        <button type="submit" id="BaseCodeMod" name="INFO_FLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
-                                        <button type="submit" id="BaseCodeDel" name="INFO_FLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
+                                        <input type="hidden"  name="INFO_FLAG" >
+                                        <button type="submit" id="BaseCodeAdd"  value="Add" class="cui_button primary"><span>추가</span></button>
+                                        <button type="submit" id="BaseCodeMod"  value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
+                                        <button type="submit" id="BaseCodeDel"  value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -269,6 +270,47 @@
     });
 
 
+  $('.modal-close-msg').on('click', function(e){
+    e.preventDefault();
+    const modal = $(this).parents('.cui_dialog');
+    modal.fadeOut();
+
+  });
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    $("input[name=INFO_FLAG]").val(event.submitter.value);
+
+    if(event.submitter.value != "Del"){
+      var code = $("input[name=BASE_CODE]").val();
+      var name = $("input[name=BASE_NAME]").val();
+      var value = $("input[name=BASE_VALUE]").val();
+      var group= $("select[name=GROUP_CODE]").val();
+      var sort =  $("input[name=BASE_SORT]").val();
+
+       if(code == ""){
+           showAlert('warning', '코드가 입력되지 않았습니다');
+           return;
+       }else if(name == ""){
+           showAlert('warning', '코드명이 입력되지 않았습니다');
+           return;
+       }else if(value == ""){
+            showAlert('warning', '코드값이 입력되지 않았습니다');
+           return;
+       }else if(group=="GroupAdd" && code != value){
+            showAlert('warning', '코드그룹 추가 시 코드와 코드값이 동일해야 합니다.');
+           return;
+       }else if(sort ==""){
+            showAlert('warning', '정렬값이 입력되지 않았습니다');
+           return;
+       }else{
+           document.getElementById('baseCodeForm').submit();
+       }
+    }else{
+           document.getElementById('baseCodeForm').submit();
+    }
+  }
 
 </script>
 </html>

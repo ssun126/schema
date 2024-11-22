@@ -1,10 +1,15 @@
 package com.dongwoo.SQM.common.controller;
 
+import com.dongwoo.SQM.config.security.UserCustom;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,6 +44,7 @@ public class GlobalCommonHandler {
     }
 
 
+
     //현재URL정보 가져오기
     @ModelAttribute("currentUrl")
     public String currentUrl(HttpServletRequest request) {
@@ -47,7 +53,7 @@ public class GlobalCommonHandler {
     }
     //현재 사용자 정보 가져오기
     @ModelAttribute("currentUser")
-    public String getCurrentUser() {
+    public String getCurrentUser(@AuthenticationPrincipal UserCustom user) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             return authentication.getName();

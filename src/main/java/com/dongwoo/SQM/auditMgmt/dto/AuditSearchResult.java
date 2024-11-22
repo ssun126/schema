@@ -10,14 +10,14 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class IsoSearchResult {
-    private List<IsoAuthDTO> resultList;  // 검색된 항목들
+public class AuditSearchResult {
+    private List<AuditMgmtDTO> resultList;  // 검색된 항목들
     private PageDTO pageMaker;           // 페이지 네비게이션 정보
     // 기본 생성자
-    public IsoSearchResult() {}
+    public AuditSearchResult() {}
 
     // 검색된 항목들과 페이지네이션 정보를 받는 생성자
-    public IsoSearchResult(List<IsoAuthDTO> items, PageDTO pageMaker) {
+    public AuditSearchResult(List<AuditMgmtDTO> items, PageDTO pageMaker) {
         this.resultList = items;
         this.pageMaker = pageMaker;
     }

@@ -58,7 +58,7 @@
                     </div>
                 </div>
 
-                <table class="cui_table" id="isoExpDateTable">
+                <table class="cui_table center" id="isoExpDateTable">
                     <colgroup>
                         <col style="width:70px;">
                         <col style="width:80px;">
@@ -145,7 +145,10 @@
                             var tableBody = $('#isoExpDateTable tbody');
                             tableBody.empty();  // 기존 내용 비우기
 
-                            if(response != null){
+                            if (!response || response.length === 0) {
+                                var row = '<tr><td colspan="10">데이터가 없습니다.</td>></tr>';
+                                tableBody.append(row);  // 테이블에 새 행 추가
+                            }else{
                                 // 검색된 결과를 테이블에 추가
                                 response.forEach(function(isoAuthItem) {
                                     var row = '<tr>' +
@@ -162,9 +165,6 @@
                                                   '</tr>';
                                     tableBody.append(row);
                                 });
-                            }else{
-                                var row = '<tr><td colspan="10">데이터가 없습니다.</td>></tr>';
-                                tableBody.append(row);  // 테이블에 새 행 추가
                             }
                         },
                         error: function() {

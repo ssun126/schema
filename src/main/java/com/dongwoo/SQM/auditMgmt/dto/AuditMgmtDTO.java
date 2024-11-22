@@ -1,14 +1,10 @@
 package com.dongwoo.SQM.auditMgmt.dto;
 
-import com.dongwoo.SQM.board.dto.PageDTO;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class IsoAuthDTO {
+public class AuditMgmtDTO {
     @JsonProperty("COM_CODE")
     private String COM_CODE;
     @JsonProperty("COM_NAME")

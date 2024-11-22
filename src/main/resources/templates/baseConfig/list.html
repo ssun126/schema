@@ -116,7 +116,7 @@
                 </div>
                 <div class="dialog_body">
                     <div class="body_root">
-                        <form class="cui_form_field" data-legend="true" onsubmit="handleSubmit(event)" action="/admin/siteMgr/baseconfig/action">
+                        <form class="cui_form_field" data-legend="true" id="baseConfigForm" onsubmit="handleSubmit(event)" action="/admin/siteMgr/baseconfig/action">
                             <fieldset>
         <!--                        <legend><span>ID 찾기</span></legend>-->
                                 <label class="cui_items_wrap" data-direction="left">
@@ -159,9 +159,10 @@
                                 </label>
                                 <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                                     <div class="item_content">
-                                        <button type="submit" id="ConfigAdd" name="INFO_FLAG" value="Add" class="cui_button primary"><span>추가</span></button>
-                                        <button type="submit" id="ConfigMod" name="INFO_FLAG" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
-                                        <button type="submit" id="ConfigDel" name="INFO_FLAG" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
+                                        <input type="hidden"  name="INFO_FLAG" >
+                                        <button type="submit" id="ConfigAdd" value="Add" class="cui_button primary"><span>추가</span></button>
+                                        <button type="submit" id="ConfigMod" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
+                                        <button type="submit" id="ConfigDel" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -170,6 +171,7 @@
                 </div>
             </div>
         </div>
+
 </body>
 <script>
     function BaseConfig_Popup(){
@@ -206,37 +208,42 @@
 
 
     //모달 열기
-    function modal(id, status){
-      if(status !='add'){
-       var sUrl = "/admin/baseConfig/baseConfig_Info" ;
+<!--    function modal(id, status){-->
+<!--      if(status !='add'){-->
+<!--       var sUrl = "/admin/baseConfig/baseConfig_Info" ;-->
 
-        $.ajax({
-          type: "post",
-          url:   sUrl,
-          data: {
-              "status": status
-          },
-          success: function(res) {
-              console.log("요청성공", res);
+<!--        $.ajax({-->
+<!--          type: "post",-->
+<!--          url:   sUrl,-->
+<!--          data: {-->
+<!--              "status": status-->
+<!--          },-->
+<!--          success: function(res) {-->
+<!--              console.log("요청성공", res);-->
 
-              if (res.status == "ok") {
-                //공동업무자정보
-                //ID /PASS
-                bindBasConfigInfo(res);           //정보 바인딩. ★
-                $("#" + id).fadeIn();
-                modal_init("MODIFY");
+<!--              if (res.status == "ok") {-->
+<!--                //공동업무자정보-->
+<!--                //ID /PASS-->
+<!--                bindBasConfigInfo(res);           //정보 바인딩. ★-->
+<!--                $("#" + id).fadeIn();-->
+<!--                modal_init("MODIFY");-->
 
-              }
-          },
-          error: function(err) {
-              console.log("에러발생", err);
-          }
-        });
-      }else{
-        modal_init();
-        $("#" + id).fadeIn();
-      }
-    }
+<!--              }-->
+<!--          },-->
+<!--          error: function(err) {-->
+<!--              console.log("에러발생", err);-->
+<!--          }-->
+<!--        });-->
+<!--      }else{-->
+<!--        modal_init();-->
+<!--        $("#" + id).fadeIn();-->
+<!--      }-->
+<!--    }-->
+
+    //모달 열기
+  function modal(id){
+    $("#" + id).fadeIn();
+  }
 
     function bindModalData(state, baseConfig){
         if(baseConfig != null){
@@ -259,6 +266,39 @@
       modal.fadeOut();
       modal_init();
     });
+
+    $('.modal-close-msg').on('click', function(e){
+      e.preventDefault();
+      const modal = $(this).parents('.cui_dialog');
+      modal.fadeOut();
+
+    });
+
+    function handleSubmit(event) {
+      event.preventDefault();
+
+      $("input[name=INFO_FLAG]").val(event.submitter.value);
+
+      if(event.submitter.value != "Del"){
+        var code = $("input[name=CONFIG_CODE]").val();
+        var value = $("input[name=CONFIG_VALUE]").val();
+
+         if(code == ""){
+             showAlert('warning', '설정키가 입력되지 않았습니다');
+             return;
+         }else if(value == ""){
+             showAlert('warning', '설정값이 입력되지 않았습니다');
+             return;
+         }else{
+             document.getElementById('baseConfigForm').submit();
+         }
+      }else{
+             document.getElementById('baseConfigForm').submit();
+      }
+
+  }
+
+
 
 
 

@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="cui_body">
-            <form id="fileUploadForm" action="/user/board/qna/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
+            <form id="fileUploadForm" action="/admin/board/qna/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
                 제목: <input type="text" name="BOARD_TITLE"><br>
                 작성자: <input type="text" name="INPUT_USER_ID"><br>
                 비밀번호: <input type="text" name="BOARD_PASS"><br>
@@ -42,13 +42,13 @@
              var formData = new FormData($('#fileUploadForm')[0]);
 
             $.ajax({
-                url: '/user/board/qna/save',  // 업로드 경로
+                url: '/admin/board/qna/save',  // 업로드 경로
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    alert("파일 업로드 성공!");
+                     showAlert("success", "파일 업로드 성공!");
                 },
                 error: function(xhr) {
                     alert(xhr.responseText);  // 서버에서 반환한 메시지 표시

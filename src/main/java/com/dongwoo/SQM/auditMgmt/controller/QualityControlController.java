@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class QualityControlController {
     @GetMapping("/admin/auditMgmt/qualityControl")
     public String GetList(Model model) {
-        return "qualityControl/main";
+        return "qualityControl/adminMain";
     }
 
-    @GetMapping("/admin/auditMgmt/qualityControl/detail")
+    @GetMapping("/admin/auditMgmt/qualityControlDetail")
     public String GetDetail(Model model) {
         return "qualityControl/detail";
     }

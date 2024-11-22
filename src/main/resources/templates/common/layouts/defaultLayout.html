@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head th:replace="~{common/fragments/config :: ConfigFragment}">
     <title>SCHEMA</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://*; child-src 'none';">
 </head>
 <body>
     <div class="cui_app">
@@ -25,7 +26,7 @@
                     <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
-                            <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
+                            <button type="button" class="cui_button primary modal-close" onClick="modal_close('dialog')"><span>확인</span></button>
                         </div>
                     </div>
                 </div>

@@ -8,29 +8,29 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title"><span>ISO 인증</span></h2>
+                        <h2 class="cui_title"><span><span th:text="${#authentication.principal.COM_NAME}"></span></span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
                     <div class="cui_toolbar">
                         <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
+                            <div class="toolbar_default"><legend><span>인증서 관리(배점 4점)</span></legend></div>
                         </div>
                         <div class="toolbar_aside">
                             <input type="hidden" id="COM_CODE" th:value="${#authentication.principal.COM_CODE}">
-                            <button type="button" class="cui_button secondary" onclick="modal_open('IsoAuth','add', '', '')"><span>추가</span></button>
+                            <button type="button" class="cui_button secondary" id="addRowBtn"><span>추가</span></button>
                             <!--<button type="button" class="cui_button secondary" onclick="delCompany()"><span>삭제</span></button>-->
                         </div>
                     </div>
                     <form class="cui_form_field" data-legend="true">
                         <fieldset>
-                            <legend><span>인증서 관리(배점 4점)</span></legend>
                             <table class="cui_table center" id="isoAuthItemTable">
                                 <colgroup>
                                     <col style="width:120px;">
                                     <col >
-                                    <col style="width:100px;">
-                                    <col style="width:100px;">
+                                    <col style="width:120px;">
+                                    <col style="width:120px;">
+                                    <col style="width:120px;">
                                     <col style="width:100px;">
                                     <col style="width:100px;">
                                     <col style="width:100px;">
@@ -43,23 +43,23 @@
                                     <th><span>만료일</span></th>
                                     <th><span>등록일</span></th>
                                     <th><span>등록서류</span></th>
+                                    <th><span>등록</span></th>
                                     <th><span>승인여부</span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 </tbody>
                             </table>
                         </fieldset>
+                        <div class="cui_toolbar">
+                            <div class="toolbar_content">
+                                <div class="toolbar_default"></div>
+                            </div>
+                            <div class="toolbar_aside">
+                                <button type="button" class="cui_button primary" id="submitIsoAuth"><span>제출</span></button>
+                            </div>
+                        </div>
                     </form>
-                    <div class="cui_toolbar">
-                        <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
-                        </div>
-                        <div class="toolbar_aside">
-                            <button type="button" class="cui_button primary" id="submitIsoAuth"><span>제출</span></button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -79,29 +79,15 @@
                         <form class="cui_form_field" data-legend="true" name="formIsoAuth" id="formIsoAuth" enctype="multipart/form-data">
                             <fieldset>
                                 <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label" >분류</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" id="modalAuthType" name="AUTH_TYPE">
-                                            <option value="">분류 선택</option>
-                                            <option value="QUALITY">품질관리</option>
-                                            <option value="ENVIRONMENT">환경</option>
-                                            <option value="SAFETY">안전보건</option>
-                                            <option value="ENERGY">에너지</option>
-                                            <option value="HSPM">HSPM</option>
-                                            <option value="ETC">기타</option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
                                     <strong class="item_label" data-type="lang">인증서</strong>
                                     <div class="item_content">
                                         <select class="cui_select_field wide" id="modalAuthCode" name="AUTH_CODE">
                                             <option value="">인증서 선택</option>
-                                            <option value="ISO-9001">ISO-9001</option>
-                                            <option value="IATF-16949">IATF-16949</option>
-                                            <option value="ISO-14001">ISO-14001</option>
-                                            <option value="ISO-45001">ISO-45001</option>
-                                            <option value="ISO-50001">ISO-50001</option>
+                                            <option value="ISO9001">ISO9001</option>
+                                            <option value="IATF16949">IATF16949</option>
+                                            <option value="ISO14001">ISO14001</option>
+                                            <option value="ISO45001">ISO45001</option>
+                                            <option value="ISO50001">ISO50001</option>
                                             <option value="HSPM">HSPM</option>
                                         </select>
                                     </div>
@@ -177,25 +163,68 @@
                             var tableBody = $('#isoAuthItemTable tbody');
                             tableBody.empty(); // 기존 내용 비우기
 
-                            response.forEach(function(isoAuth) {
-                                var row = '<tr>' +
-                                                '<td>' + isoAuth.AUTH_TYPE + '</td>' +
-                                                '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
-                                                '<td>' + isoAuth.AUTH_DATE + '</td>' +
-                                                '<td>' + isoAuth.EXP_DATE + '</td>' +
-                                                '<td>' + isoAuth.REG_DATE + '</td>' +
-                                                '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuth.FILE_NAME) + '">다운로드</a></td>' +
-                                                '<td>' + isoAuth.ITEM_STATE + '</td>' +
-                                              '</tr>';
-                                tableBody.append(row);
-                                //상태가 제출이나 승인일때는 제출 버튼 안보이도록
-                                if(isoAuth.ITEM_STATE == 'SEND'){
-                                    $('#submitIsoAuth').css('display', 'none');
+                            var authCodeMap = {
+                                '품질관리': 'ISO9001',
+                                '품질관리': 'IATF16949',
+                                '환경': 'ISO14001',
+                                '안전보건': 'ISO45001',
+                                '안전보건': 'KOSHA MS',
+                                'HSPM': 'QC080000',
+                                'ENERGY': 'ISO50001',
+                                '기타': '녹색기업'
+                            };
+                            var reversedMap = {};
+                            for (var key in authCodeMap) {
+                                if (authCodeMap.hasOwnProperty(key)) {
+                                    var value = authCodeMap[key];
+                                    reversedMap[value] = key;  // value를 key로 매핑
                                 }
-                            });
+                            }
+                            if (!response || response.length === 0) {
+                                for (var key in authCodeMap) {
+                                    if (authCodeMap.hasOwnProperty(key)) {
+                                        var value = authCodeMap[key];  // value 추출
+                                        var row = '<tr>' +
+                                                    '<td>' + key + '</td>' +  // 첫 번째 td - key
+                                                    '<td>' + value + '</td>' +  // 두 번째 td - value
+                                                    '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +
+                                                    '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +
+                                                    '<td><input type="text" class="cui_text_field datepicker" name="REG_DATE"></td>' +
+                                                    '<td></td>' +
+                                                    '<td><button type="button" class="cui_button primary">첨부</button></td>' +
+                                                    '<td></td>' +
+                                                '</tr>';
+                                        tableBody.append(row);
+                                    }
+                                }
+                                // 새로 추가된 input 요소에 대해 datepicker 초기화
+                                $(".datepicker").datepicker({
+                                    dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
+                                    minDate: 0               // 오늘 이후 날짜만 선택 가능
+                                });
+                            }else{
+                                response.forEach(function(isoAuth) {
+                                    var isoTypeText = reversedMap[isoAuth.AUTH_CODE] || 기타;
+                                    var row = '<tr>' +
+                                                    '<td>' + isoTypeText + '</td>' +
+                                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
+                                                    '<td><input type="text" class="cui_text_field" value="'+ isoAuth.AUTH_DATE + '"></input></td>' +
+                                                    '<td><input type="text" class="cui_text_field" value="'+ isoAuth.EXP_DATE + '"></input></td>' +
+                                                    '<td><input type="text" class="cui_text_field" value="'+ isoAuth.REG_DATE + '"></input></td>' +
+                                                    '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuth.FILE_NAME) + '">다운로드</a></td>' +
+                                                    '<td></td>' +
+                                                    '<td>' + isoAuth.ITEM_STATE + '</td>' +
+                                                  '</tr>';
+                                    tableBody.append(row);
+                                    //상태가 제출이나 승인일때는 제출 버튼 안보이도록
+                                    if(isoAuth.ITEM_STATE == 'SEND'){
+                                        $('#submitIsoAuth').css('display', 'none');
+                                    }
+                                });
+                            }
                         },
                         error: function() {
-                            alert("회사를 가져오는 데 실패했습니다.");
+                            alert("정보를 가져오는 데 실패했습니다.");
                         }
                     });  // $.ajax 호출 끝
                 }
@@ -220,7 +249,6 @@
                         }
                     });
                 });
-
         
                   //인증서 추가
                 $('#formIsoAuth').on('submit', function(e) {
@@ -245,11 +273,13 @@
                     });
                 });
 
-
                  // datepicker를 input 필드에 적용
                 $('.datepicker').datepicker({
                     dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
                     showOn: "focus",
+                    onSelect: function(dateText) {
+                        console.log("선택된 날짜: " + dateText);
+                    }
                 });
 
                 // 버튼 클릭 시 input 필드의 datepicker 열기
@@ -264,7 +294,30 @@
                        $('#modalAuthDate').datepicker('show'); // 두 번째 datepicker 열기
                     }
                 });
+            });
 
+            // '추가' 버튼 클릭 시 테이블에 행 추가
+            $('#addRowBtn').on('click', function() {
+                // 새로운 tr 행 생성
+                var row = '<tr>' +
+                            '<td>기타</td>' +  // 첫 번째 td - key 입력 필드
+                            '<td><input type="text" class="cui_text_field" name="AUTH_CODE"></td>' +  // 두 번째 td - value 입력 필드
+                            '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +  // 날짜 필드
+                            '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +  // 날짜 필드
+                            '<td><input type="text" class="cui_text_field datepicker" name="REG_DATE"></td>' +  // 날짜 필드
+                            '<td></td>' +  // 첨부 버튼
+                            '<td><button type="button" class="cui_button primary">첨부</button></td>' +  // 첨부 버튼
+                            '<td></td>' +  // 첨부 버튼
+                          '</tr>';
+
+                // 테이블의 tbody에 새로운 행 추가
+                $('#isoAuthItemTable tbody').append(row);
+
+                // 새로 추가된 input 필드들에 대해 datepicker 초기화
+                $(".datepicker").datepicker({
+                    dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
+                    minDate: 0               // 오늘 이후 날짜만 선택 가능
+                });
             });
 
             //상세 항목 정보 - Ajax로 받아온 데이터 바인딩

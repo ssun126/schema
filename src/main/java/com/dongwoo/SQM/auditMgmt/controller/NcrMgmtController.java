@@ -11,7 +11,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class NcrMgmtController {
     @GetMapping("/admin/auditMgmt/ncrMgmt")
+    public String GetncrMgmtAdminList(Model model) {
+        return "ncrMgmt/adminMain";
+    }
+
+    @GetMapping("/user/auditMgmt/ncrMgmt")
     public String GetncrMgmtList(Model model) {
         return "ncrMgmt/main";
+    }
+
+    @GetMapping("/user/auditMgmt/ncrMgmtdetail")
+    public String GetncrMgmtAdminDetail(Model model) {
+        return "ncrMgmt/detail";
     }
 }

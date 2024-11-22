@@ -18,7 +18,7 @@
             <form class="cui_form_field" data-legend="true">
                 <fieldset>
                     <legend><span>인증서 관리(배점 4점)</span></legend>
-                    <table class="cui_table" id="isoAuthItemTable">
+                    <table class="cui_table center" id="isoAuthItemTable">
                         <colgroup>
                             <col style="width:120px;">
                             <col >
@@ -42,7 +42,6 @@
                         </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                 </fieldset>
@@ -221,9 +220,29 @@
                     var tableBody = $('#isoAuthItemTable tbody');
                     tableBody.empty(); // 기존 내용 비우기
 
+                    // AUTH_CODE 매핑 객체 선언
+                    var authCodeMap = {
+                        '품질관리': 'ISO9001',
+                        '품질관리': 'IATF16949',
+                        '환경': 'ISO14001',
+                        '안전보건': 'ISO45001',
+                        '안전보건': 'KOSHA MS',
+                        'HSPM': 'QC080000',
+                        'ENERGY': 'ISO50001',
+                        '기타': '녹색기업'
+                    };
+                    var reversedMap = {};
+                    for (var key in authCodeMap) {
+                        if (authCodeMap.hasOwnProperty(key)) {
+                            var value = authCodeMap[key];
+                            reversedMap[value] = key;  // value를 key로 매핑
+                        }
+                    }
+
                     response.forEach(function(isoAuth) {
+                        var isoTypeText = reversedMap[isoAuth.AUTH_CODE] || 기타;
                         var row = '<tr>' +
-                                        '<td>' + isoAuth.AUTH_TYPE + '</td>' +
+                                        '<td>' + isoTypeText + '</td>' +
                                         '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuth.AUTH_CODE + '|'+ isoAuth.COM_CODE + '\')">' +  isoAuth.AUTH_CODE + '</a></td>' +
                                         '<td>' + isoAuth.AUTH_DATE + '</td>' +
                                         '<td>' + isoAuth.EXP_DATE + '</td>' +
@@ -236,7 +255,7 @@
                     });
                 },
                 error: function() {
-                    alert("회사를 가져오는 데 실패했습니다.");
+                    alert("정보를 가져오는 데 실패했습니다.");
                 }
             });  // $.ajax 호출 끝
         }

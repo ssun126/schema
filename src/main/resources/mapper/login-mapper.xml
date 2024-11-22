@@ -27,10 +27,19 @@
         select * from USER_INFO where USER_EMAIL=#{USER_EMAIL}
     </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
-        SELECT * FROM USER_INFO UI
-        LEFT OUTER JOIN USER_INFO_COMPANY UIC
-        ON UIC.USER_IDX = UI.USER_IDX
-        where UI.USER_STATUS  = 'Y' AND  UI.DEL_DATE IS NULL AND USER_ID=#{USER_ID}
+        SELECT
+            UI.*,
+            UIC.COM_CODE,
+            CC.COM_NAME
+        FROM
+            USER_INFO UI
+        LEFT OUTER JOIN
+            USER_INFO_COMPANY UIC ON UIC.USER_IDX = UI.USER_IDX
+        LEFT JOIN
+            COMPANY_CODE CC ON CC.COM_CODE = UIC.COM_CODE
+        WHERE UI.USER_STATUS = 'Y'
+        AND UI.DEL_DATE IS NULL
+        AND UI.USER_ID =#{USER_ID}
     </select>
     <select id="findByLoginName" parameterType="String" resultType="login">
         select * from USER_INFO where USER_NAME=#{USER_NAME}

@@ -36,6 +36,9 @@
             <if test="COM_STATUS != null and COM_STATUS != ''">
                 AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
             </if>
+            <if test="AUTH_TYPE != null and AUTH_TYPE != ''">
+                AND (ACI.AUTH_TYPE LIKE CONCAT(CONCAT('%',  #{AUTH_TYPE}), '%'))
+            </if>
             <if test="criteria != null and criteria != ''">
         <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>
             </if>
@@ -57,6 +60,9 @@
         </if>
         <if test="COM_STATUS != null and COM_STATUS != ''">
             AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
+        </if>
+        <if test="AUTH_TYPE != null and AUTH_TYPE != ''">
+            AND (ACI.AUTH_TYPE LIKE CONCAT(CONCAT('%',  #{AUTH_TYPE}), '%'))
         </if>
     </select>
 
