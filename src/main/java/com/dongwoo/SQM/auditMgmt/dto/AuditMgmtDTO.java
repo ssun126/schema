@@ -27,5 +27,7 @@ public class AuditMgmtDTO {
     private String UP_DATE;
     @JsonProperty("DEL_DATE")
     private String DEL_DATE;
+    @JsonProperty("STATE_REASON")
+    private String STATE_REASON;
     private int POINT;
 }
