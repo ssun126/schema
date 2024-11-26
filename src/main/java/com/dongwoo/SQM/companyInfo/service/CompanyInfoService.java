@@ -44,6 +44,10 @@ public class CompanyInfoService {
     public List<CompanyInfoDTO> findCompanyCodeWorkEx(CompanyInfoParamDTO companyInfoParamDTO) {
         return companyInfoRepository.findCompanyCodeWorkEx(companyInfoParamDTO);
     }
+    //신청정보 조회
+    public CompanyInfoDTO findCompanyApprovalID(CompanyInfoParamDTO companyInfoParamDTO) {
+        return companyInfoRepository.findCompanyApprovalID(companyInfoParamDTO);
+    }
 
     public int save(CpCodeDTO cpCodeDTO) {
         return companyInfoRepository.save(cpCodeDTO);

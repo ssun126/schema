@@ -204,16 +204,27 @@
                     <form class="cui_form_field" data-legend="true">
                         <fieldset>
                             <legend><span>Warranty 협약 상태</span></legend>
-                            <table class="cui_table">
+                            <table class="cui_table center">
                                 <colgroup>
-                                    <col style="width:154px;">
                                     <col>
-                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:250px;">
                                     <col>
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>Warranty Letter</span></th>
+                                    <th><span>승인일</span></th>
+                                    <th><span>제출일</span></th>
+                                    <th><span>관리상태</span></th>
+                                    <th><span>양식 첨부</span></th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span th:text="${member.COM_APP_DATE}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${member.COM_OK_DATE}"></span>
+                                    </td>
                                     <td>
                                         <span th:switch="${member.COM_MANAGE_STATUS}">
                                             <span th:case="'0'">Pending</span>
@@ -222,14 +233,12 @@
                                             <span th:case="'3'">Rejected</span>
                                         </span>
                                     </td>
-                                    <th><span>Audit 관리</span></th>
-<!--                                    10점 | A등급 | 2024-07-31-->
                                     <td>
-                                        <span th:text="${member.COM_AUDIT_POINT != null ? member.COM_AUDIT_POINT + '점  |  ' : ' 점수 없음 |'}"></span>
-                                        <span th:text="${member.COM_AUDIT_LEVEL != null ? member.COM_AUDIT_LEVEL + '등급  |  ' : ' 등급 없음 | '}"></span>
-                                        <span th:text="${member.COM_OK_DATE != null ? member.COM_OK_DATE.substring(0, 10) : ''}"></span>
+                                        <button type="button" class="cui_button"  onclick ="downloadFile()"><span>보기</span></button>
+                                        <input type="hidden" name ="COM_FILE_NAME" id="COM_FILE_NAME"  th:value="${member.COM_FILE_NAME}" >
                                     </td>
                                 </tr>
+
                                 </tbody>
                             </table>
                         </fieldset>
@@ -301,7 +310,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <span th:text="${member.COM_CODE}" ></span>
+                                                <span th:text="${companyApprovalID.ID_ADD_TYPE == 0 ? '신규' : 'ID추가'}"></span>
                                             </div>
                                         </div>
                                     </td>
@@ -309,6 +318,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
+                                                <span th:text="${companyApprovalID.REG_DATE}" ></span>
                                             </div>
                                         </div>
                                     </td>
@@ -319,7 +329,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <span th:text="${member.COM_CODE}" ></span>
+                                                <span th:text="${companyApprovalID.USER_ID}" ></span>
                                             </div>
                                         </div>
                                     </td>
@@ -327,6 +337,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
+                                                <span th:text="${companyApprovalID.USER_NAME}" ></span>
                                             </div>
                                         </div>
                                     </td>
@@ -337,7 +348,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <span th:text="${member.COM_CODE}" ></span>
+                                                <span th:text="${companyApprovalID.USER_STATUS}" ></span>
                                             </div>
                                         </div>
                                     </td>
@@ -345,7 +356,17 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <span th:text="${member.COM_NAME}" ></span>
+                                                <span th:text="${companyApprovalID.USER_OK_DATE}" ></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${companyApprovalID.USER_STATUS == '반려'}">
+                                    <th><span>반려사유</span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <span th:text="${companyApprovalID.RETURN_REASON}" ></span>
                                             </div>
                                         </div>
                                     </td>
@@ -357,9 +378,9 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" onClick="Approval(1)"><span>승인</span></button>
-                                <button type="button" class="cui_button primary" onClick="Approval(2)"><span>반려</span></button>
-                                <button type="button" class="cui_button primary" onClick="Approval(3)"><span>목록</span></button>
+                                <button type="button" class="cui_button primary" th:onClick="'approval(' + ${companyApprovalID.USER_IDX} + ')'"><span>승인</span></button>
+                                <button type="button" class="cui_button primary" onclick="modal('dialogUserUpdate')"><span>반려</span></button>
+                                <button type="button" class="cui_button secondary" onClick="goList()"><span>목록</span></button>
                             </div>
                         </div>
 
@@ -369,72 +390,150 @@
         </div>
 </body>
 
+
+<div class="cui_dialog" style="width:720px;display:none;" id="dialogUserUpdate">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span id="popTitle">반려</span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+            </div>
+        </div>
+
+        <div class="dialog_body">
+            <div class="body_root">
+                <form id="updateForm1" method="POST" action="/userMgr/updateUserMgr" class="cui_form_field" data-legend="true">
+                    <fieldset>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">반려사유</strong>
+                            <div class="item_content">
+                                <textarea  style="height:80px;" class="cui_text_field" id="RETURN_REASON" name="RETURN_REASON"></textarea>
+                            </div>
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center">
+                            <div class="item_content">
+                                <button type="button" class="cui_button primary" th:onClick="'reject(' + ${companyApprovalID.USER_IDX} + ')'"><span>반려 처리</span></button>
+                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span>닫기</span></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 </html>
 
-<script>
+<script id ='detailscript'>
 
-   $(document).ready(function() {
-
-   });
-
-
-    function deleteCpUserConfirm(userIdx) {
-        //유효성  1개 아이디 남기자.
-
-        var buttons = document.querySelectorAll('button[name="deleteCpUser"]');
-
-        if (buttons.length === 1) {
-            showAlert('warning','한 명 이상의 기본 사용자가 있어야 됩니다.');
-            return;
-        }
-
-        showConfirm('warning', '정말로 삭제하시겠습니까?', function(isConfirmed) {
+    function approval(userIdx) {
+        showConfirm('warning', '승인하시겠습니까?', function(isConfirmed) {
             if (isConfirmed) {
-              deleteCpUser(userIdx);
+              updateCpUser(userIdx,"Y");
             } else {
                 //alert('아니오');
             }
         });
     }
 
-
- function Approval(userIdx) {
-
-        var buttons = document.querySelectorAll('button[name="deleteCpUser"]');
-
-        if (buttons.length === 1) {
-            showAlert('warning','한 명 이상의 기본 사용자가 있어야 됩니다.');
-            return;
-        }
-
-        showConfirm('warning', '정말로 삭제하시겠습니까?', function(isConfirmed) {
-            if (isConfirmed) {
-              deleteCpUser(userIdx);
-            } else {
-                //alert('아니오');
-            }
-        });
+    function reject(userIdx) {
+        updateCpUser(userIdx,"N") ;
     }
 
 
+   function updateCpUser(userIdx , ApprovalType) {
+
+         let comCode = document.getElementById('COM_CODE').value ;
+         let returnReason = document.getElementById('RETURN_REASON').value ;
+
+         $.ajax({
+            type: "post",
+            url: "/user/companyInfo/approvalCompanyUser",
+            data: {
+                  "USER_IDX": userIdx ,
+                  "ApprovalType" : ApprovalType ,
+                  "RETURN_REASON" : returnReason ,
+                  "COME_CODE" : comCode ,
+              },
+            success: function(response) {
+                if(response.status === "success") {
+                    showAlert('success', response.message);
+                }
+            },
+            error: function(err) {
+              console.log("에러발생", err);
+              showAlert('warning',err);
+            }
+        });
+   }
 
 
-<!-- function modal(id){-->
-<!--   $("#" + id).fadeIn();-->
-<!-- }-->
+   //모달 열기
+    function modal(id){
+      $("#" + id).fadeIn()
+    }
 
-<!-- $('.modal-close').on('click', function(e){-->
-<!--   e.preventDefault();-->
-<!--   const modal = $(this).parents('.cui_dialog');-->
-<!--   modal.fadeOut();-->
-<!-- });-->
+    //닫기
+    function modal_close(id){
+        $("#" + id).fadeOut();
+        goList();
+    }
 
+    //반려 닫기
+    function modalReject_close_(id){
+        $("#" + id).fadeOut();
+    }
 
-    window.addEventListener("popstate", function(event) {
-         const code = document.getElementById('comCode').value ;
-         let url = "/admin/companyInfo/cpApproval";
-         history.pushState({ comCode: code }, null, url);
-    });
+    function goList() {
+        let url = "/admin/companyInfo/cpApproval";
+        renderContent(url,true);
+    }
+
+   //warranty 파일 다운로드
+   function downloadFile() {
+
+       const hiddenInput = document.getElementById('COM_FILE_NAME');
+       var fileName = hiddenInput.value;
+
+       if(fileName == ""){
+           //alert('첨부된 파일이 없습니다.') ;
+           showAlert('warning', '첨부된 파일이 없습니다.');
+           return;
+       }
+
+       fetch(`/member/download?fileName=${encodeURIComponent(fileName)}`, {
+           method: 'GET',
+           headers: {
+               'Accept': 'application/octet-stream'
+           }
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response.blob(); // 파일을 Blob으로 변환
+       })
+       .then(blob => {
+           // Blob URL 생성
+           const url = window.URL.createObjectURL(blob);
+           const a = document.createElement('a');
+           a.href = url;
+           a.download = fileName; // 다운로드할 파일 이름
+           document.body.appendChild(a); // 앵커 요소 추가
+           a.click(); // 다운로드 시작
+           a.remove(); // 앵커 요소 제거
+           window.URL.revokeObjectURL(url); // Blob URL 해제
+       })
+       .catch(error => {
+           console.error('파일 다운로드 실패:', error);
+       });
+   }
 
 
 </script>

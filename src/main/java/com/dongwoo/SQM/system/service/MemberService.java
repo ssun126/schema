@@ -111,6 +111,11 @@ public class MemberService {
         return memberRepository.updateUserStatus(userInfoDTO);
     }
 
+    //승인,반려
+    public int approvalUserStatus(UserInfoDTO userInfoDTO) {
+        return memberRepository.approvalUserStatus(userInfoDTO);
+    }
+
     //공동 사용자 저장 USER_INFO_COMPANY_USER
     public int saveUserInfoCompany(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.saveCompanyUser(userInfoCompanyUserDTO);
@@ -136,6 +141,11 @@ public class MemberService {
         return memberRepository.deleteUserinfoCompanyHis(userInfoCompanyDTO);
     }
 
+    public int approvalUserInfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
+        return memberRepository.approvalUserInfoCompanyHis(userInfoCompanyDTO);
+    }
+
+
     //COMPANYCODE 정보 업데이트 (가입)
     public int updateCompanyCode(ComPanyCodeDTO comPanyCodeDTO) {
         return memberRepository.updateCompanyCode(comPanyCodeDTO);
@@ -144,6 +154,11 @@ public class MemberService {
     //COMPANYCODE 정보 업데이트(가입후)
     public int updateCpCodeCPUser(ComPanyCodeDTO comPanyCodeDTO) {
         return memberRepository.updateCpCodeCPUser(comPanyCodeDTO);
+    }
+
+    //COMPANYCODE 정보 (승인,반려)
+    public int approvalCpCode(ComPanyCodeDTO comPanyCodeDTO) {
+        return memberRepository.approvalCpCode(comPanyCodeDTO);
     }
 
 

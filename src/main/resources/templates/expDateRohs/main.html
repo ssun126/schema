@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+</head>
+<body>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>만료일 설정</span></h2>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form id="searchForm" method="get">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap ">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">만료일</strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="txtExpDate" placeholder="만료일 숫자입력."/>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" style="width: 130px;">Halogen 만료일</strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="txtExpDate1" placeholder="Halogen 만료일 숫자입력."/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search_action">
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>저장</span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

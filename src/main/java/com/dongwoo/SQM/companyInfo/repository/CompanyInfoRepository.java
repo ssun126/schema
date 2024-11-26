@@ -52,6 +52,11 @@ public class CompanyInfoRepository {
         return sql.selectList("CompanyInfo.findCompanyCodeWorkEx", companyInfoParamDTO);
     }
 
+    //신청정보 조회
+    public CompanyInfoDTO findCompanyApprovalID(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return sql.selectOne("CompanyInfo.findCompanyApprovalID", companyInfoParamDTO);
+    }
+
 
     public int save(CpCodeDTO cpCodeDTO) {
         return sql.insert("CompanyInfo.save", cpCodeDTO);
