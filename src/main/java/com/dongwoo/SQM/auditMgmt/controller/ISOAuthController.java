@@ -22,8 +22,8 @@ public class ISOAuthController {
 
     public String isoAuthMain(Model model, @AuthenticationPrincipal UserCustom user) {
         // 회사의 ISO 상태 정보를 가져옵니다.
-        AuditMgmtDTO companyIsoAuth = isoAuthService.getCompanyAuth("ISO", user.getCOM_CODE());
-        model.addAttribute("companyIsoAuth", companyIsoAuth);
+        AuditMgmtDTO companyAuth = isoAuthService.getCompanyAuth("ISO", user.getCOM_CODE());
+        model.addAttribute("companyIsoAuth", companyAuth);
         return "isoAuth/main";
     }
 
@@ -34,7 +34,6 @@ public class ISOAuthController {
 
     @GetMapping("/admin/auditMgmt/isoDetail")
     public String isoAuthAdminDetail(Model model, @RequestParam("COM_CODE") String com_code) {
-        log.info("com_code============================="+com_code);
         // 회사의 ISO 상태 정보를 가져옵니다.
         AuditMgmtDTO companyIsoAuth = isoAuthService.getCompanyAuth("ISO", com_code);
         model.addAttribute("companyIsoAuth", companyIsoAuth);

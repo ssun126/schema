@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +40,7 @@ public class IsoAuthService {
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
-    public void saveIsoAuthData(String tableData, MultipartFile[] fileNames, UserCustom user) throws IOException {
+    public void saveIsoAuthData(String tableData, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         List<IsoAuthItemDTO> isoAuthItems = objectMapper.readValue(tableData, new TypeReference<List<IsoAuthItemDTO>>() {});
@@ -62,6 +64,7 @@ public class IsoAuthService {
                 isoAuthItems.get(i).setFILE_PATH(filePath);  // 파일 경로 추가
             }
         }
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
         int loginIdx = user.getUSER_IDX();
         //인증서 데이터 저장
@@ -163,8 +166,31 @@ public class IsoAuthService {
     }
 
     //상태업데이트
-    public void updateStatus(IsoAuthItemDTO isoAuthItemDTO) {
-        isoAuthRepository.updateStatus(isoAuthItemDTO);
+    public int saveAuthResult(String reason, String com_code, String state) {
+        AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
+        auditMgmtDTO.setCOM_CODE(com_code);
+        auditMgmtDTO.setAUTH_TYPE("ISO");
+        auditMgmtDTO.setSTATE_REASON(reason);
+        auditMgmtDTO.setAPPROVE_STATE(state);
+
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int loginIdx = user.getUSER_IDX();
+        auditMgmtDTO.setUP_DW_USER_IDX(loginIdx);
+
+        updateStatus(com_code, state); //인증서에도 상태 정보 업데이트
+        return isoAuthRepository.saveAuthResult(auditMgmtDTO);
+    }
+
+    //상태업데이트
+    public int updateStatus(String com_code, String state) {
+        IsoAuthItemDTO isoAuthItemDTO = new IsoAuthItemDTO();
+        isoAuthItemDTO.setCOM_CODE(com_code);
+        isoAuthItemDTO.setITEM_STATE(state);
+
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int loginIdx = user.getUSER_IDX();
+        isoAuthItemDTO.setUP_DW_USER_IDX(loginIdx);
+        return isoAuthRepository.updateStatus(isoAuthItemDTO);
     }
 
 }

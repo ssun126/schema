@@ -66,10 +66,12 @@ public class AuditMgmtRestController {
         }
     }
 
-    //IsoAuth 정보 신규 저장
+    //IsoAuth 정보 업데이트
     @PostMapping("/setIsoAuthData")
-    public ResponseEntity<?> setIsoAuthData(@RequestBody AuditMgmtDTO isoAuthDTO) {
-        int resultCnt = isoAuthService.saveAuth(isoAuthDTO);
+    public ResponseEntity<?> setIsoAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("state")String state) {
+        //승인시 점수 정보 추가
+
+        int resultCnt = isoAuthService.saveAuthResult(reason, com_code, state);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
         if(resultCnt > 0){
@@ -88,16 +90,9 @@ public class AuditMgmtRestController {
      */
     @GetMapping("/isoAuthItemList")
     public List<IsoAuthItemDTO> getIsoAuthList(Criteria criteria, @RequestParam("COM_CODE") String com_code) {
-        // ISO 인증서 리스트를 가져옵니다
+        // 선택 회사의 ISO 인증서 리스트를 가져옵니다
         List<IsoAuthItemDTO> companyIsoAuthList = isoAuthService.getList(criteria, com_code);
         return companyIsoAuthList;
-    }
-    @GetMapping("/isoAuthItemList/pageMaker")
-    public PageDTO getIsoAuthPage(Criteria criteria) {
-        // pageMaker 객체를 생성하고 반환
-        int total = isoAuthService.getTotal();  // 전체 데이터 개수
-        PageDTO pageMaker = new PageDTO(total, 10, criteria);  // 10은 한 페이지당 보여줄 항목 수
-        return pageMaker;
     }
 
     // admin -만료일 - 업체별 ISO 인증서 정보
@@ -108,12 +103,7 @@ public class AuditMgmtRestController {
         return isoAuthList;
     }
 
-    @RequestMapping("/auditMgmt/isoDetail")
-    public String loadPage1(Model model) {
-        // 필요한 데이터를 모델에 추가
-        return "isoAuth/detail";
-    }
-
+    //인증서 파일 다운로드
     @GetMapping("/getIsoAuthFileDown")
     public ResponseEntity<FileSystemResource> downloadFile(@RequestParam("fileName") String filename) {
         try {
@@ -152,9 +142,9 @@ public class AuditMgmtRestController {
 
     //IsoAuth 정보 제출
     @PostMapping("/sendIsoAuthData")
-    public String sendIsoAuthData(@RequestParam("data") String data, @RequestParam(value = "file_name") MultipartFile[] fileNames, @AuthenticationPrincipal UserCustom user) throws IOException {
+    public String sendIsoAuthData(@RequestParam("data") String data, @RequestParam(value = "file_name") MultipartFile[] fileNames) throws IOException {
         try {
-            isoAuthService.saveIsoAuthData(data, fileNames, user);  // 데이터와 파일을 서비스에 전달
+            isoAuthService.saveIsoAuthData(data, fileNames);  // 데이터와 파일을 서비스에 전달
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {
             return "데이터 저장에 실패했습니다: " + e.getMessage();
