@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="cui_content">
+  <div class="cui_main">
+    <div class="cui_head">
+      <div class="head_content">
+        <h2 class="cui_title"><span>자재승인 현황</span></h2>
+      </div>
+    </div>
+    <div class="cui_body">
+      <form id="searchForm" method="get">
+        <div class="cui_search">
+          <div class="search_list cui_grid_wrap ">
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체코드</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">업체명</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요"/>
+              </div>
+            </div>
+            <div></div><div></div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">자재코드</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="자재코드를 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">자재명</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="자재명을 입력해주세요"/>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">신청인 ID</strong>
+              <div class="item_content">
+                <input class="cui_text_field" type="text" placeholder="신청인 ID를 입력해주세요"/>
+              </div>
+            </div>
+            <div></div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">사용여부</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">사용</option>
+                  <option value="">미사용</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">취급Plant</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">사용</option>
+                  <option value="">미사용</option>
+                </select>
+              </div>
+            </div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">승인현황</strong>
+              <div class="item_content">
+                <select class="cui_select_field">
+                  <option value="">사용</option>
+                  <option value="">미사용</option>
+                </select>
+              </div>
+            </div>
+            <div></div>
+            <div class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">승인일자</strong>
+              <div class="item_content">
+                <div class="cui_items_wrap">
+                  <div class="item_content" data-role="calendar-picker" >
+                    <input type="text" id="Sch_StartDate" class="cui_text_field cui_calendar_val" value="2024.12.13" onclick="SetDatePicker(this);">
+                    <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
+                  </div>
+                </div>
+                <div class="field_connect">~</div>
+                <div class="cui_items_wrap">
+                  <div class="item_content" data-role="calendar-picker" >
+                    <input type="text" id="Sch_EndDate" class="cui_text_field cui_calendar_val" value="2024.12.13" onclick="SetDatePicker(this);">
+                    <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="search_action">
+            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+          </div>
+        </div>
+      </form>
+      <div class="cui_toolbar">
+        <div class="toolbar_content">
+          <div class="toolbar_default"></div>
+        </div>
+        <div class="toolbar_aside">
+          <button type="button" class="cui_button secondary"><span>엑셀 다운로드</span></button>
+        </div>
+      </div>
+
+      <table class="cui_table" id="Table">
+        <colgroup>
+          <col style="width:100px;">
+          <col style="width:100px;">
+          <col style="width:100px;">
+          <col>
+          <col style="width:100px;">
+          <col style="width:100px;">
+          <col style="width:100px;">
+          <col style="width:100px;">
+          <col style="width:130px;">
+          <col style="width:130px;">
+        </colgroup>
+        <thead>
+        <tr>
+          <th><span>업체코드</span></th>
+          <th><span>업체명</span></th>
+          <th><span>자재코드</span></th>
+          <th><span>자재명칭</span></th>
+          <th><span>취급 Plant</span></th>
+          <th><span>국가</span></th>
+          <th><span>신청 ID</span></th>
+          <th><span>사용여부</span></th>
+          <th><span>승인현황</span></th>
+          <th><span>승인일자</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+
+        </tr>
+        </tbody>
+      </table>
+      <div id="pagination" class="pagination" style="text-align: center"></div>
+      <div class="table-wrapper">
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
