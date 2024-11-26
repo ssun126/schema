@@ -19,4 +19,9 @@ public class QualityControlController {
     public String GetDetail(Model model) {
         return "qualityControl/detail";
     }
+
+    @GetMapping("/user/auditMgmt/qualityControl")
+    public String GetUserList(Model model) {
+        return "qualityControl/main";
+    }
 }

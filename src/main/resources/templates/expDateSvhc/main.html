@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+</head>
+<body>
+  <div class="cui_main">
+  <div class="cui_head">
+    <div class="head_content">
+      <h2 class="cui_title"><span>갱신요청</span></h2>
+    </div>
+  </div>
+  <div class="cui_body">
+    <form class="cui_form_field" data-legend="true">
+      <fieldset>
+        <table class="cui_table">
+          <colgroup>
+            <col style="width:154px;">
+            <col>
+          </colgroup>
+          <tbody>
+          <tr>
+            <th><span>요청사항</span></th>
+            <td>
+              <div class="cui_items_wrap" data-direction="left">
+                <div class="item_content">
+                  <textarea class="cui_text_field" rows="10"></textarea>
+                </div>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="cui_toolbar">
+          <div class="toolbar_content">
+            <div class="toolbar_default"></div>
+          </div>
+          <div class="toolbar_aside">
+            <button type="button" class="cui_button primary"><span>저장</span></button>
+            <button type="button" class="cui_button primary"><span>갱신요청 발송</span></button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <div class="cui_head">
+    <div class="head_content">
+      <h2 class="cui_title"><span>발송이력</span></h2>
+    </div>
+  </div>
+  <div class="cui_body">
+    <table class="cui_table" id="expDateLabourTable">
+      <colgroup>
+        <col style="width:200px;">
+        <col style="width:200px;">
+        <col >
+      </colgroup>
+      <thead>
+      <tr>
+        <th><span>발송일자</span></th>
+        <th><span>발송자</span></th>
+        <th><span>요청사항</span></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>2024-01-01 00:00:00</td>
+        <td>홍길동</td>
+        <td>요청사항 내용입니다</td>
+      </tr>
+      </tbody>
+    </table>
+    <div id="pagination" class="pagination" style="text-align: center"></div>
+    <div class="table-wrapper">
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -5,16 +5,31 @@
 <mapper namespace="IsoAuthItem">
     <insert id="saveItem" parameterType="isoAuthItem">
         INSERT INTO ISO_AUTH_COMPANY_ITEM(COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH)
-        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, 'SAVE', #{FILE_NAME}, #{FILE_PATH})
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, 'SEND', #{FILE_NAME}, #{FILE_PATH})
     </insert>
 
-    <insert id="save" parameterType="isoAuth">
-        INSERT INTO AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, POINT, AUTH_TYPE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
-        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{POINT}, #{AUTH_TYPE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate)
+    <insert id="saveAuth" parameterType="isoAuth">
+        INSERT INTO AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, AUTH_TYPE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{AUTH_TYPE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate)
     </insert>
 
-    <select id="findByIsoAuthItem" parameterType="String" resultType="isoAuthItem">
-        select * from ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and  COM_CODE=#{COM_CODE}
+    <insert id="saveAuthResult" parameterType="isoAuth">
+        UPDATE AUTH_COMPANY_INFO
+            SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= #{APPROVE_DATE}, POINT = #{POINT}, STATE_REASON = #{STATE_REASON}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+        WHERE COM_CODE = #{COM_CODE}
+        AND AUTH_TYPE = #{AUTH_TYPE}
+    </insert>
+
+    <select id="findByIsoAuthItem" parameterType="map" resultType="isoAuthItem">
+        select * from ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
+    </select>
+
+    <select id="getCompanyAuth" parameterType="map" resultType="isoAuth">
+        SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
+        FROM AUTH_COMPANY_INFO ACI
+        INNER JOIN COMPANY_CODE CC
+        ON CC.COM_CODE = ACI.COM_CODE
+        WHERE AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
     </select>
 
     <select id="searchCompanies" parameterType="map" resultType="isoAuth">
@@ -66,7 +81,7 @@
         </if>
     </select>
 
-    <select id="getList" resultType="isoAuthItem">
+    <select id="getList" parameterType="map" resultType="isoAuthItem">
         <![CDATA[
         SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE, TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE,
             TO_CHAR(REG_DATE, 'YYYY.MM.DD') AS REG_DATE, TO_CHAR(UP_DATE, 'YYYY.MM.DD') AS UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
@@ -75,9 +90,8 @@
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
             ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
             FROM ISO_AUTH_COMPANY_ITEM
-            WHERE ROWNUM <= #{pageNum} * #{amount}
+            WHERE COM_CODE = #{COM_CODE}
         )
-           WHERE RN > (#{pageNum}-1) * #{amount}
         ]]>
     </select>
 

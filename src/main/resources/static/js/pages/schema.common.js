@@ -73,6 +73,7 @@ function modal_init(id, status){
 //모달 열기
 function modal_open(id, status, sUrl, param){
     overlay.style.display = "block"; // 오버레이 배경 표시
+    $("#modalState").val(status); // status 저장
     if(status !='add'){
         var sUrl = sUrl;
         var data = {};  // 전송할 데이터 객체 생성
@@ -194,41 +195,27 @@ function showAlert(type, message ) {
 
      //모달 열기
   function modal(id){
+    overlay.style.display = "block"; // 오버레이 배경 표시
     $("#" + id).fadeIn();
   }
 
-// 파일 확장자 체크 함수
-function fileExtensionCheck(fileInputId, allowType, successCallback, errorCallback) {
-    // 파일 입력 요소 가져오기
-    var fileInput = $('#' + fileInputId)[0]; // fileInputId로 파일 입력 요소 선택
-    var file = fileInput.files[0];
-
-
-
-    if (file) {
-        // 파일 이름에서 확장자 추출
-        var fileName = file.name;
-        var fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
-
-        // 허용된 확장자에 포함되지 않으면 에러 콜백 호출
-        if (!allowedExtensions.includes('.' + fileExtension)) {
-            if (typeof errorCallback === 'function') {
-                errorCallback('지원되지 않는 파일 형식입니다. 허용된 파일 형식: ' + allowedExtensions.join(', '));
-            }
-            return false; // 파일 형식이 맞지 않으면 업로드를 취소
-        }
-
-        // 파일 형식이 맞으면 성공 콜백 호출
-        if (typeof successCallback === 'function') {
-            successCallback('파일 업로드 성공!');
-        }
-
-        return true; // 파일 형식이 맞을 경우 true 반환
+/* 첨부파일 검증 */
+function validation(obj){
+    const fileTypes = ['application/pdf', 'image/gif', 'image/jpeg', 'image/png', 'image/bmp', 'image/tif', 'application/haansofthwp', 'application/x-hwp'];
+    if (obj.name.length > 100) {
+        alert("파일명이 100자 이상인 파일은 제외되었습니다.");
+        return false;
+    } else if (obj.size > (100 * 1024 * 1024)) {
+        alert("최대 파일 용량인 100MB를 초과한 파일은 제외되었습니다.");
+        return false;
+    } else if (obj.name.lastIndexOf('.') == -1) {
+        alert("확장자가 없는 파일은 제외되었습니다.");
+        return false;
+    } else if (!fileTypes.includes(obj.type)) {
+        alert("첨부가 불가능한 파일은 제외되었습니다.");
+        return false;
     } else {
-        if (typeof errorCallback === 'function') {
-            errorCallback('파일을 선택해 주세요.');
-        }
-        return false; // 파일이 선택되지 않으면 false 반환
+        return true;
     }
 
 
