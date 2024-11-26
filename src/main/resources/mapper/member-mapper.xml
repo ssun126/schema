@@ -43,6 +43,16 @@
         WHERE USER_IDX = #{USER_IDX}
     </update>
 
+    <!-- 업체 승인 반려 업데이트 -->
+    <update id="approvalUserStatus" parameterType="userinfo">
+        UPDATE USER_INFO
+        SET
+        USER_STATUS = #{USER_STATUS} ,
+        UP_DW_USER_IDX = #{DEL_DW_USER_IDX} ,
+        UP_DATE = sysdate
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
+
 
     <!-- USERINFO 가입된정보 가져가기 -->
     <select id="findByUserId" parameterType="String" resultType="userinfo">
@@ -112,7 +122,12 @@
         FROM USER_INFO u, USER_INFO_COMPANY uc ,USER_INFO_COMPANY_USER icu
         WHERE u.USER_IDX  = uc.USER_IDX
         AND uc.USER_IDX = icu.USER_IDX
-        AND u.USER_ID= #{USER_ID}
+        <if test="USER_ID != null and USER_ID != ''">
+            AND u.USER_ID= #{USER_ID}
+        </if>
+        <if test="USER_IDX != null and USER_IDX != ''">
+            AND u.USER_IDX= #{USER_IDX}
+        </if>
         ORDER BY MAIN_USER_YN DESC ,icu.COM_USER_IDX ASC
     </select>
 
@@ -142,6 +157,21 @@
             USER_STATUS = #{USER_STATUS},
             USER_OK_DATE = sysdate ,
             RETURN_REASON = #{RETURN_REASON}
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
+
+    <!-- 승인 & 반려 처리-->
+    <update id="approvalUserInfoCompanyHis" parameterType="userinfoHis">
+        UPDATE USER_INFO_COMPANY
+        SET
+        USER_STATUS = #{USER_STATUS},
+        USER_OK_DATE = sysdate
+        <if test="USER_STATUS == '2'">
+            , USER_OK_DATE = #{USER_OK_DATE}
+        </if>
+        <if test="RETURN_REASON != null and RETURN_REASON != ''">
+            , RETURN_REASON = #{RETURN_REASON}
+        </if>
         WHERE USER_IDX = #{USER_IDX}
     </update>
 
@@ -181,6 +211,16 @@
         ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
         where COM_CODE=#{COM_CODE}
     </update>
+
+    <update id="approvalCpCode" parameterType="companycode">
+        update COMPANY_CODE set
+         COM_MANAGE_STATUS =#{COM_MANAGE_STATUS}
+        ,COM_OK_DATE =sysdate
+        ,UP_DATE =sysdate
+        ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+        where COM_CODE=#{COM_CODE}
+    </update>
+
 
 
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->

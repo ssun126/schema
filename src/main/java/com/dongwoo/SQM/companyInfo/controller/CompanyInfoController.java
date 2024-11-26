@@ -198,6 +198,76 @@ public class CompanyInfoController {
         }
         return response;
     }
+    
+    //승인,반려처리
+    @PostMapping("/user/companyInfo/approvalCompanyUser")
+    @ResponseBody
+    public Map<String, String> approvalCompanyUser(
+             @RequestParam("USER_IDX") int USER_IDX
+            ,@RequestParam("ApprovalType") String ApprovalType
+            ,@RequestParam("RETURN_REASON") String ReturnReason
+            ,@RequestParam("COME_CODE") String comeCode
+            , Authentication authentication) {
+        Map<String, String> response = new HashMap<>();
+        try {
+
+            String loginId = authentication.getName();
+            UserMgrDTO loginMemberDTO = memberService.findByMemberId(loginId);  //로그인 사용자
+
+            //USER_INFO ID 상태 변경
+            UserInfoDTO userInfoDTO =  new UserInfoDTO();
+            userInfoDTO.setUSER_IDX(USER_IDX);
+            if(ApprovalType.equals("Y")) {
+                userInfoDTO.setUSER_STATUS("Y"); //사용자 상태 (Y:사용, N:미사용)
+            }else{
+                userInfoDTO.setUSER_STATUS("N");
+            }
+            userInfoDTO.setDEL_DW_USER_IDX(loginMemberDTO.getUSER_IDX());
+            memberService.approvalUserStatus(userInfoDTO);  //승인,반려.
+
+            //USER_INFO_COMPANY ID 상태 변경
+            UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
+            userInfoCompanyDTO.setUSER_IDX(USER_IDX);
+            if(ApprovalType.equals("N")) {
+                userInfoCompanyDTO.setRETURN_REASON(ReturnReason);
+            }else{
+                userInfoCompanyDTO.setRETURN_REASON("승인완료");
+            }
+
+            if(ApprovalType.equals("Y")) {
+                userInfoCompanyDTO.setUSER_STATUS("2");  //관리상태 (0:대기,삭제 , 1:검토중, 2:승인, 3:반려)
+            }else {
+                userInfoCompanyDTO.setUSER_STATUS("3");
+            }
+            memberService.approvalUserInfoCompanyHis(userInfoCompanyDTO);
+
+            ComPanyCodeDTO comPanyCodeDTO = new ComPanyCodeDTO();
+            comPanyCodeDTO.setCOM_CODE(comeCode);
+            if(ApprovalType.equals("Y")) {
+                comPanyCodeDTO.setCOM_MANAGE_STATUS("2");  // Warranty 관리상태 (0:대기,삭제 , 1:검토중, 2:승인, 3:반려)
+            }else {
+                comPanyCodeDTO.setCOM_MANAGE_STATUS("3");
+            }
+            comPanyCodeDTO.setUP_DW_USER_IDX(loginMemberDTO.getUSER_IDX());
+            memberService.approvalCpCode(comPanyCodeDTO);  //업데이트  COMPANY_CODE
+
+            response.put("status", "success");
+            if(ApprovalType.equals("Y")) {
+                response.put("message", "승인 처리 되었습니다.");
+            }else{
+                response.put("message", "반려 처리 되었습니다.");
+                //이메일 발송!!!
+                //연락처 e-mail로 발송
+                //반려 처리 후 30일 이내
+                //재제출이 없을시 자동 삭제
+            }
+
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "처리 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
 
     @GetMapping("/admin/companyInfo/company")
     @PreAuthorize("hasRole('ADMIN')")

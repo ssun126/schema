@@ -137,6 +137,7 @@
                              <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" ></span></td>
                              <td style="text-align:center"><span id = "com_manage_status" name = "com_manage_status" ></span></td>
                              <td style="text-align:center"><span id = "code_work" name = "CODE_WORK" ></span></td>
+
                          </tr>
                      </tbody>
                  </table>
@@ -150,125 +151,156 @@
 
 <script>
 
+    $(document).ready(function() {
 
-    function fetchDataLis() {
+       fetchDataLis();
 
-       const dto = {
-           "COM_CODE": document.getElementById('comCode').value,                     //업체코드
-           "COM_NAME": document.getElementById('comName').value,                     //업체명
-           "DEPT_CODE": document.getElementById('deptCode').value,                 //사업부
-           "COM_MANAGE_STATUS": document.getElementById('comManageStatus').value ,   //warranty
-           "BUS_NUMBER": document.getElementById('busNumber').value   ,             //사업자번호
-           "USER_STATUS": document.getElementById('userStatus').value  ,              //처리상태
-           "ID_ADD_TYPE": document.getElementById('idAddType').value                //신청구분
-       };
+       history.replaceState({ comCode: null }, null, location.href);
 
-       fetch('/admin/companyInfo/getCompanyApprovalList', {
-           method: 'POST',
-           headers: {
-               'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(dto)
-       })
-       .then(response => {
-           if (!response.ok) {
-               throw new Error('Network response was not ok');
-           }
-           return response.json();
-       })
-       .then(data => {
-            console.log('응답 데이터:', data);
-            if (data && Array.isArray(data)) {
-                 populateTable(data);
-            } else {
-                 alert("nodata");
-            }
-       })
-       .catch(error => {
-           console.error('데이터 조회 실패:', error);
+       $(document).on("click", ".load-page", function(e) {
+           e.preventDefault();
+           const code = $(this).data("code");
+           const useridx = $(this).data("useridx");
+           const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx;
+           let urlOri = "/admin/companyInfo/cpApproval";
+
+           history.pushState({ comCode: code }, null, urlOri);
+
+           sessionStorage.setItem('comCode', code);
+
+           const queryParams = {
+               COM_CODE: document.getElementById('comCode').value,
+               COM_NAME: document.getElementById('comName').value,
+               DEPT_CODE: document.getElementById('deptCode').value,
+               COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,
+               BUS_NUMBER: document.getElementById('busNumber').value,
+               USER_STATUS: document.getElementById('userStatus').value,
+               ID_ADD_TYPE: document.getElementById('idAddType').value
+           };
+
+           Object.keys(queryParams).forEach(key => {
+               sessionStorage.setItem(key, queryParams[key]);
+           });
+
+           renderContent(url,false);
        });
-    }
 
-    function populateTable(data) {
+        window.addEventListener("popstate", function(event) {
+           let url = "/admin/companyInfo/cpApproval";
+           renderContent(url,true);
+       });
 
-     const tableBody = $("#companyTableBody");
-     tableBody.empty();
-
-     data.forEach(company => {
-         const row = `
-             <tr class='load-page' data-code='${company.COM_CODE}'>
-                 <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.ID_ADD_TYPE == 0 ? '신규' : 'ID추가'}</span></td>
-                 <td style="text-align:center"><span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span></td>
-                 <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
-                 <td style="text-align:center"><span id = "bus_number" name = "BUS_NUMBER">${company.bus_NUMBER}</span></td>
-                 <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
-                 <td style="text-align:center"><span id = "user_status" name = "user_status" >${company.user_STATUS}</span></td>
-                 <td style="text-align:center">
-                    <span class="company_code_work" >
-                     ${company.cp_CODE_WORK_CD1 !=null  ? company.cp_CODE_WORK_CD1 +",": ""}
-                     ${company.cp_CODE_WORK_CD2 !=null  ? company.cp_CODE_WORK_CD2 +",": ""}
-                     ${company.cp_CODE_WORK_CD3 !=null  ? company.cp_CODE_WORK_CD3 +",": ""}
-                     ${company.cp_CODE_WORK_CD4 !=null  ? company.cp_CODE_WORK_CD4 +",": ""}
-                     ${company.cp_CODE_WORK_CD5 !=null  ? company.cp_CODE_WORK_CD5 +",": ""}
-                    </span>
-                 </td>
-
-             </tr>
-         `;
-         tableBody.append(row);
-     });
-
-         $(".company_code_work").each(function() {
-            $(this).text($(this).text().replace(/,\s*$/, ''));
-         });
-    }
+   });
 
 
-     $(document).ready(function() {
+   function fetchDataLis() {
 
-        // 링크 클릭 시 콘텐츠를 로드
-        $(document).on("click", ".load-page", function(e) {
-            e.preventDefault();
-            const code = $(this).data("code");
-            const url = "/admin/companyInfo/cpApprovalDetail?com_code="+code;
-            history.pushState({ comCode: code }, null, url);
-            loadContentTemp(url);
-        });
+      const dto = {
+          "COM_CODE": document.getElementById('comCode').value,
+          "COM_NAME": document.getElementById('comName').value,
+          "DEPT_CODE": document.getElementById('deptCode').value,
+          "COM_MANAGE_STATUS": document.getElementById('comManageStatus').value,
+          "BUS_NUMBER": document.getElementById('busNumber').value,
+          "USER_STATUS": document.getElementById('userStatus').value,
+          "ID_ADD_TYPE": document.getElementById('idAddType').value
+      };
 
-         window.addEventListener("popstate", function(event) {
-            if (event.state && event.state.comCode) {
+      fetch('/admin/companyInfo/getCompanyApprovalList', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dto)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+           //console.log('응답 데이터:', data);
+           if (data && Array.isArray(data)) {
+                populateTable(data);
+           } else {
+                alert("nodata");
+           }
+      })
+      .catch(error => {
+          console.error('데이터 조회 실패:', error);
+      });
+   }
 
-               alert(1)  //event.state.comCode 가 왔다갔다 해서 조건을 모르겠음...ㅜㅜ 재조회 처리 해야 되는대..
-                 //alert(event.state.comCode);
-                let url = "/admin/companyInfo/cpApproval";
-                loadContentTemp(url);
+   function populateTable(data) {
 
-            } else {
-                alert(2)  //조건을 모르겠음...ㅜㅜ
-                let url = "/admin/companyInfo/cpApproval";
-                loadContentTemp(url);
-            }
-        });
+    const tableBody = $("#companyTableBody");
+    tableBody.empty();
 
+    data.forEach(company => {
+        const row = `
+            <tr class='load-page' data-code='${company.COM_CODE}' data-useridx='${company.USER_IDX}'>
+                <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.ID_ADD_TYPE == 0 ? '신규' : 'ID추가'}</span></td>
+                <td style="text-align:center"><span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span></td>
+                <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
+                <td style="text-align:center"><span id = "bus_number" name = "BUS_NUMBER">${company.bus_NUMBER}</span></td>
+                <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
+                <td style="text-align:center"><span id = "user_status" name = "user_status" >${company.user_STATUS}</span></td>
+                <td style="text-align:center">
+                   <span class="company_code_work" >
+                    ${company.cp_CODE_WORK_CD1 !=null  ? company.cp_CODE_WORK_CD1 +",": ""}
+                    ${company.cp_CODE_WORK_CD2 !=null  ? company.cp_CODE_WORK_CD2 +",": ""}
+                    ${company.cp_CODE_WORK_CD3 !=null  ? company.cp_CODE_WORK_CD3 +",": ""}
+                    ${company.cp_CODE_WORK_CD4 !=null  ? company.cp_CODE_WORK_CD4 +",": ""}
+                    ${company.cp_CODE_WORK_CD5 !=null  ? company.cp_CODE_WORK_CD5 +",": ""}
+                   </span>
+                </td>
+
+            </tr>
+        `;
+        tableBody.append(row);
     });
 
-    //cui_app 조절해야됨. sylee 2024.11.22.
-    function loadContentTemp(url) {
-        $(".cui_content").fadeOut(200, function() {
-            $.ajax({
-                url: url,
-                type: "GET",
-                success: function(response) {
-                    //$(".cui_content").html(response).fadeIn(200);
-                    $(".cui_app").html(response).fadeIn(200); //스크립트 문제!! 임시로 layout 다 불러오고 최상위로.  sylee 2024.11.22.
-                },
-                error: function() {
-                    console.log("콘텐츠 로드 실패");
-                }
-            });
+        $(".company_code_work").each(function() {
+           $(this).text($(this).text().replace(/,\s*$/, ''));
         });
-    }
+   }
 
+function renderContent(url,searchList) {
+   $(".cui_content").fadeOut(200, function() {
+       $.ajax({
+           url: url,
+           type: "GET",
+           success: function(response) {
+               const sanitizedResponse = response
+                   .replace(/<script(?![^>]*id\s*=\s*['"][^'"]*detailscript[^'"]*['"])[^>]*>[\s\S]*?<\/script>/gi, "")
+                   .replace(/<link[^>]*>/gi, "");
+
+               $(".cui_app").html(sanitizedResponse).fadeIn(200);
+
+                if(searchList){
+                   preSearchSetting();
+                }
+           },
+           error: function() {
+               console.log("콘텐츠 로드 실패");
+           }
+       });
+   });
+}
+
+function preSearchSetting() {
+  const storedCode = sessionStorage.getItem('comCode');
+   if (storedCode) {
+       document.getElementById('comCode').value = sessionStorage.getItem('COM_CODE');
+       document.getElementById('comName').value = sessionStorage.getItem('COM_NAME');
+       $('#deptCode').val(sessionStorage.getItem('DEPT_CODE'));
+       $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
+       $('#idAddType').val(sessionStorage.getItem('ID_ADD_TYPE'));
+       $('#userStatus').val(sessionStorage.getItem('USER_STATUS'));
+       document.getElementById('busNumber').value  = sessionStorage.getItem('BUS_NUMBER');
+   }
+   fetchDataLis();
+}
 
 
 </script>

@@ -230,5 +230,10 @@ function fileExtensionCheck(fileInputId, allowType, successCallback, errorCallba
         }
         return false; // 파일이 선택되지 않으면 false 반환
     }
+
+
+    //
+
+
 }
 

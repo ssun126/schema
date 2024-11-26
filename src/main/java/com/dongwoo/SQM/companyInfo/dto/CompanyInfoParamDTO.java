@@ -50,4 +50,6 @@ public class CompanyInfoParamDTO {
 
     @JsonProperty("USER_IDX")
     private int USER_IDX;
+    @JsonProperty("USER_ID")
+    private String USER_ID;
 }

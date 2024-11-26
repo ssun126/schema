@@ -245,6 +245,25 @@
 
     </select>
 
+    <select id="findCompanyApprovalID" parameterType="companyInfo" resultType="companyInfo">
+        SELECT
+        u.USER_IDX,
+        u.USER_ID,
+        u.USER_NAME,
+        u.REG_DATE,
+        uc.USER_OK_DATE,
+        DECODE(NVL(uc.USER_STATUS,0) ,'0' ,'대기', '1', '검토중', '2','승인' ,'3','반려') USER_STATUS ,
+        uc.COM_USER_IDX ,
+        uc.ID_ADD_TYPE ,
+        uc.RETURN_REASON
+        FROM
+        USER_INFO u
+        JOIN
+        USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
+        WHERE
+        u.user_idx =#{USER_IDX}
+    </select>
+
     <insert id="save" parameterType="companyInfo">
         insert into COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
         values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)
