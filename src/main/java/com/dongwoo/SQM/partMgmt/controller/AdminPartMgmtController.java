@@ -19,4 +19,30 @@ public class AdminPartMgmtController {
     public String PartMgmtDetail(Model model) {
         return "approvalState/detail";
     }
+
+    @GetMapping("/admin/partMgmt/expDateMsds")
+    public String expDateMsdsList(Model model) {
+        return "expDateMsds/main";
+    }
+
+    @GetMapping("/admin/partMgmt/expDateRohs")
+    public String expDateRohsList(Model model) {
+        return "expDateRohs/main";
+    }
+
+    @GetMapping("/admin/partMgmt/expDateEtc")
+    public String expDateEtcList(Model model) {
+        return "expDateEtc/main";
+    }
+
+    @GetMapping("/admin/partMgmt/expDateSvhc")
+    public String expDateSvhcList(Model model) {
+        return "expDateSvhc/main";
+    }
+
+    @GetMapping("/admin/partMgmt/expDateDecl")
+    public String expDateDeclList(Model model) {
+        return "expDateDecl/main";
+    }
+
 }
