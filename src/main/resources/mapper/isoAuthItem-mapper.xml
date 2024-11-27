@@ -8,12 +8,12 @@
         VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, 'SEND', #{FILE_NAME}, #{FILE_PATH})
     </insert>
 
-    <insert id="saveAuth" parameterType="auditMgmtDTO">
+    <insert id="saveAuth" parameterType="isoAuth">
         INSERT INTO AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, AUTH_TYPE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
         VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{AUTH_TYPE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate)
     </insert>
 
-    <insert id="saveAuthResult" parameterType="auditMgmtDTO">
+    <insert id="saveAuthResult" parameterType="isoAuth">
         UPDATE AUTH_COMPANY_INFO
             SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}, STATE_REASON = #{STATE_REASON}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
         WHERE COM_CODE = #{COM_CODE}
@@ -24,7 +24,7 @@
         select * from ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
     </select>
 
-    <select id="getCompanyAuth" parameterType="map" resultType="auditMgmtDTO">
+    <select id="getCompanyAuth" parameterType="map" resultType="isoAuth">
         SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
         FROM AUTH_COMPANY_INFO ACI
         INNER JOIN COMPANY_CODE CC
@@ -32,7 +32,7 @@
         WHERE AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
     </select>
 
-    <select id="searchCompanies" parameterType="map" resultType="auditMgmtDTO">
+    <select id="searchCompanies" parameterType="map" resultType="isoAuth">
         SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE, TO_CHAR(SEND_DATE, 'YYYY.MM.DD') AS SEND_DATE, POINT
         FROM
         (
