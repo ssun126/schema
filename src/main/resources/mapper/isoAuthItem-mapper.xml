@@ -15,7 +15,7 @@
 
     <insert id="saveAuthResult" parameterType="isoAuth">
         UPDATE AUTH_COMPANY_INFO
-            SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= #{APPROVE_DATE}, POINT = #{POINT}, STATE_REASON = #{STATE_REASON}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+            SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}, STATE_REASON = #{STATE_REASON}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
         WHERE COM_CODE = #{COM_CODE}
         AND AUTH_TYPE = #{AUTH_TYPE}
     </insert>
@@ -129,7 +129,7 @@
     </select>
 
     <update id="updateStatus" parameterType="isoAuthItem">
-        update ISO_AUTH_COMPANY_ITEM set ITEM_STATE=#{ITEM_STATE}
+        update ISO_AUTH_COMPANY_ITEM set ITEM_STATE=#{ITEM_STATE}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
         where COM_CODE=#{COM_CODE}
     </update>
 </mapper>

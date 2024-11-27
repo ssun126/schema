@@ -74,11 +74,13 @@
                 loadPage();
                 // 페이지 로드 함수
                 function loadPage() {
+                    const code = `[[${companyIsoAuth.COM_CODE}]]`;
+                    console.log(code);
                    // 페이지가 로드되면 서버에서 데이터를 가져옴
                     $.ajax({
                         url: '/api/isoAuthItemList',  // 서버의 API URL
                         type: 'GET',
-                        data: { pageNum: 1, amount: 30 },
+                        data: { pageNum: 1, amount: 30, COM_CODE: code },
                         success: function(response) {
                             var tableBody = $('#isoAuthItemTable tbody');
                             tableBody.empty(); // 기존 내용 비우기
@@ -195,7 +197,7 @@
                             console.log(response);
                             showAlert('success','데이터가 성공적으로 저장되었습니다.');
                             //리스트 새로 로드 - 상태가 바뀌므로
-                           loadPage(1);
+                            loadPage(1);
                         },
                         error: function(xhr, status, error) {
                             showAlert('warning','데이터 저장에 실패했습니다.');

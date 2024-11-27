@@ -17,8 +17,8 @@ import java.util.Map;
 public class IsoAuthRepository {
     private final SqlSessionTemplate sql;
 
-    public int saveAuth(AuditMgmtDTO isoAuthDTO) {
-        return sql.insert("IsoAuthItem.saveAuth", isoAuthDTO);
+    public int saveAuth(AuditMgmtDTO auditMgmtDTO) {
+        return sql.insert("IsoAuthItem.saveAuth", auditMgmtDTO);
     }
     //인증서 정보 저장
     public int saveItems(IsoAuthItemDTO isoAuthItemDTO) {
@@ -74,8 +74,13 @@ public class IsoAuthRepository {
         return sql.selectOne("IsoAuthItem.countByKeyword", params);
     }
 
-    //상태업데이트
-    public void updateStatus(IsoAuthItemDTO isoAuthItemDTO) {
-        sql.update("IsoAuthItem.updateStatus", isoAuthItemDTO);
+    //Auth 승인/반려 처리
+    public int saveAuthResult(AuditMgmtDTO auditMgmtDTO) {
+        return sql.update("IsoAuthItem.saveAuthResult", auditMgmtDTO);
+    }
+
+    //상태 업데이트
+    public int updateStatus(IsoAuthItemDTO isoAuthItemDTO) {
+        return sql.update("IsoAuthItem.updateStatus", isoAuthItemDTO);
     }
 }
