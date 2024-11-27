@@ -1,6 +1,6 @@
 package com.dongwoo.SQM.partMgmt.repository;
 
-import com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO;
+import com.dongwoo.SQM.partMgmt.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -32,4 +32,26 @@ public class PartMgmtRepository {
     public int save(PartMgmtDTO partMgmtDTO){
         return sql.insert("partManagement.save",partMgmtDTO);
     }
+
+
+    //detailpage
+    public int updateMsdsData(partDetailMsdsDTO msdsDTO){ return sql.update("partManagement.msdsUpdate",msdsDTO);}
+
+    public int updateRohsData(partDetailRohsDTO rohsDTO){ return sql.update("partManagement.rohsUpdate",rohsDTO);}
+
+    public int updateHalogenData (partDetailHalGDTO halgDTO){ return sql.update("partManagement.halgUpdate",halgDTO);}
+
+    public int updateEtcData (partDetailEtcDTO etcDTO){ return sql.update("partManagement.etcUpdate",etcDTO);}
+
+    public int saveMsdsData(partDetailMsdsDTO msdsDTO){ return sql.insert("partManagement.msdsSave",msdsDTO);}
+
+    public int saveRohsData(partDetailRohsDTO rohsDTO){ return sql.insert("partManagement.rohsSave",rohsDTO);}
+
+    public int saveHalogenData(partDetailHalGDTO halgDTO){ return sql.insert("partManagement.halgSave",halgDTO);}
+
+    public int saveEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.etcSave",etcDTO);}
+
+
+
+
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -12,20 +14,38 @@
         .head_content{
             border-bottom : var(--border-primary) 1px solid;
             align-items : center;
-            justify-content : center;
+            justify-content : space-between;
+        }
+
+        .head-title{
+            justify-content : space-between;
+            padding :  0px 25px 15px 25px;
+        }
+
+        .cui_step{
+            margin : 20px 0px 30px 0px;
+        }
+
+        .cui_file_field{
+            display:flex;
         }
     </style>
 </head>
 <body>
 <div class="cui_content">
     <div class="cui_main">
-        <div class="cui_head">
+        <div class="cui_head head_title">
             <div class="head_content">
-                <h3 class="cui_title"><span>자재코드 : AAAA</span></h3>
-                <h3 class="cui_title"><span>자재명 : 자재명</span></h3>
-                <h3 class="cui_title"><span>승인현황 : 검토중</span></h3>
-                <h3 class="cui_title"><span>사용여부 : Active</span></h3>
+                <h3><span>자재코드 : AAAA</span></h3>
+                <h3><span>자재명 : 자재명</span></h3>
+                <h3><span>승인현황 : 검토중</span></h3>
+                <h3><span>사용여부 : Active</span></h3>
+<!--                <h3><span>자재코드 : </span><span th:text="{$partMgmtDTO.PM_PART_CODE}"></span></h3>-->
+<!--                <h3><span>자재명 : </span><span th:text="{$partMgmtDTO.PM_PART_NAME}">자재명</span></h3>-->
+<!--                <h3><span>승인현황 : </span><span th:text="{$partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>-->
+<!--                <h3><span>사용여부 : </span><span th:text="{$partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>-->
             </div>
+
         </div>
         <div class="cui_body">
             <div class="cui_step">
@@ -36,11 +56,18 @@
                     <li><span>SCCS / 성분명세서 / 기타</span></li>
                 </ol>
             </div>
-            <div class="cui_form_field" data-legend="true">
+            <form class="cui_form_field" data-legend="true" id="frmDetail" action="/user/partMgmt/goSvhc" method="post"  enctype="multipart/form-data">
+                <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <fieldset id="msdsFieldset">
                     <legend><span>MSDS</span></legend>
 
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:150px;">
+                            <col >
+                            <col >
+                            <col >
+                        </colgroup>
                         <thead>
                         <tr>
                             <th><span>작성일</span></th>
@@ -51,12 +78,27 @@
                         </thead>
                         <tbody id="tableBody">
                         <tr>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_POSITION" ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_DEPT"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_EMAIL" ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_PHONE" ></td>
-                            <td></td>
+                            <td>
+                                <div class="item_content" data-role="calendar-picker">
+                                    <input type="hidden" name="MSDS_IDX" >
+                                    <input type="text" class="cui_text_field datepicker" name="MSDS_REG_DATE"  >
+                                </div>
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="MSDS_LANG" ></td>
+                            <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM"  ></td>
+                            <td>
+                                <input type="file" class="cui_file_field" name="MSDS_FILE">
+                                <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
+                                    <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                                ><span>다운로드</span></button>
+                                        <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
+                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                    </div>
+                                </div>
+
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -66,6 +108,20 @@
                     <legend><span>RoHS 분석서/보증서</span></legend>
 
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:130px">
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col style="width:250px">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th><span>확인일자</span></th>
@@ -85,17 +141,33 @@
                         </thead>
                         <tbody id="tableBody2">
                         <tr>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_POSITION" ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_DEPT"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_EMAIL"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_PHONE" ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME1"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME2"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAM3E"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME4"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME5"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME6"  ></td>
+                            <td>
+                                <input type="hidden" name="ROHS_IDX" >
+                                <input type="text" class="cui_text_field datepicker" name="ROHS_CONFIRM_DATE"  >
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_CD" ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_HG"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PB"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_CR6" ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PBBS"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PBDES"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DEHP"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_BBP"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DBP"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DIBP"  ></td>
+                            <td>
+                                <input type="file" class="cui_file_field" name="ROHS_FILE">
+                                <input type="hidden" name="FILE_STATUS">
+                                <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
+                                    <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                        ><span>다운로드</span></button>
+                                        <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
+                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -118,41 +190,79 @@
                         </thead>
                         <tbody id="tableBody3">
                         <tr>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_POSITION" ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_DEPT"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_EMAIL" ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_PHONE"></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME1"  ></td>
-                            <td><input type="text" class="cui_text_field" name="USER_NAME2"  ></td>
+                            <td>
+                                <input type="hidden" name="HALOGEN_IDX" >
+                                <input type="text" class="cui_text_field datepicker" name="HALOGEN_CONFIRM_DATE"  >
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_CL" ></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_BR"  ></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_CLBR" ></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_F"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_I"  ></td>
+                            <td>
+                                <input type="file" class="cui_file_field" name="HALOGEN_FILE">
+                                <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
+                                    <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                        ><span>다운로드</span></button>
+                                        <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
+                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                    </div>
+                                </div>
+                            </td>
                         </tbody>
                     </table>
-                    <fieldset id="etcFieldset">
-                        <legend><span>기타 분석서/보증서 (Antimony, Cobalt 등)</span></legend>
-
-                        <table class="cui_table center">
-                            <thead>
-                            <tr>
-                                <th><span>확인일자</span></th>
-                                <th><span>분석항목</span></th>
-                                <th><span>분석결과</span></th>
-                                <th><span>첨부</span></th>
-                                <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
-                            </tr>
-                            </thead>
-                            <tbody id="tableBody4">
-                            <tr>
-                                <td><input type="text" class="cui_text_field" name="USER_NAME"  ></td>
-                                <td><input type="text" class="cui_text_field" name="USER_POSITION" ></td>
-                                <td><input type="text" class="cui_text_field" name="USER_DEPT"  ></td>
-                                <td><input type="text" class="cui_text_field" name="USER_EMAIL"></td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </fieldset>
                 </fieldset>
-            </div>
+                <fieldset id="etcFieldset">
+                    <legend><span>기타 분석서/보증서 (Antimony, Cobalt 등)</span></legend>
+
+                    <table class="cui_table center">
+                        <thead>
+                        <tr>
+                            <th><span>확인일자</span></th>
+                            <th><span>분석항목</span></th>
+                            <th><span>분석결과</span></th>
+                            <th><span>첨부</span></th>
+                            <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody4">
+                        <tr>
+                            <td>
+                                <input type="hidden" name="ETC_IDX" >
+                                <input type="text" class="cui_text_field" name="ETC_CONFIRM_DATE"  >
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY" ></td>
+                            <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT"  ></td>
+                            <td>
+                                <input type="file" class="cui_file_field" name="ETC_FILE">
+                                <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
+                                    <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                        ><span>다운로드</span></button>
+                                        <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
+                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                    </div>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <div class="cui_items_wrap" data-direction="right" >
+
+                    <div class="item_content">
+                        <input type="hidden"  name="INFO_FLAG" >
+                        <a href="#" onclick="return chk_form('save')" class="cui_button primary"><span>저장</span></a>
+                        <a href="#" onclick="return chk_form('next')" class="cui_button primary"><span>다음</span></a>
+                    </div>
+                </div>
+
+            </form>
 
             <div><br /></div>
 
@@ -162,21 +272,52 @@
 </body>
 <script>
     $(document).ready(function(){
+
         $('#addRowButton').on('click', function() {
             //생성
-            const newRow = `
-                <tr>
-                    <td><input type="text" class="cui_text_field" name="USER_NAME"  ></td>
-                                <td><input type="text" class="cui_text_field" name="USER_POSITION" ></td>
-                                <td><input type="text" class="cui_text_field" name="USER_DEPT"  ></td>
-                                <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일"  ></td>
-                    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
-                </tr>
-            `;
+
+            const newRow = '<tr>'
+                         + '    <td><input type="hidden" name="ETC_IDX" ><input type="text" class="cui_text_field datepicker" name="ETC_CONFIRM_DATE"  ></td>'
+                         + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY" ></td>'
+                         + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT"  ></td>'
+                         + '                <td>'
+                         + '                    <input type="file" class="cui_file_field" name="ETC_FILE">'
+                         + '                    <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">'
+                         + '                        <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>'
+                         + '                        <div class="item_content">'
+                         + '                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span>다운로드</span></button>'
+                         + '                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>'
+                         + '                        </div>'
+                         + '                    </div>'
+                         + '                </td>'
+                         + '    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>'
+                         + '</tr>'
+
 
             $('#tableBody4').append(newRow);
 
         });
+
+        // datepicker를 input 필드에 적용
+        $('.datepicker').datepicker({
+            dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+            showOn: "focus",
+        });
+
+        // 버튼 클릭 시 input 필드의 datepicker 열기
+        $('[data-cui-icon="calendar"]').on('click', function() {
+            var targetId = $(this).attr('id'); // 클릭된 요소의 id 가져오기
+            console.log(targetId + " was clicked");
+
+            // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
+            if (targetId === "startDate") {
+               $('#searchStartDate').datepicker('show'); // 첫 번째 datepicker 열기
+            } else if (targetId === "endDate") {
+               $('#searchEndDate').datepicker('show'); // 두 번째 datepicker 열기
+            }
+        });
+
+
 
         // 삭제
         $(document).on('click', '#delRowButton', function() {
@@ -184,6 +325,33 @@
         });
 
 
+
     });
+
+    //submit 전 체크
+    function chk_form(flag) {
+
+       //action="/user/partMgmt/goSvhc"
+       $("input[name=INFO_FLAG]").val(flag);
+       //window.location.href=url;
+       document.getElementById('frmDetail').submit();
+    }
+
+    //status 업데이트
+    function status_Del(status){
+        //삭제버튼 클릭 시 DELETE
+        //$(status).closest('name="FILE_STATUS"').val('DELETE');
+        $(status).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val('DELETE');
+
+        //안보이게 처리
+        $(status).closest('.file_wrap').css('display','none');
+
+
+    }
+
+
+
+
+
 </script>
 </html>

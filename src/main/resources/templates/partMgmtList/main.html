@@ -396,7 +396,8 @@
             const url = "/user/partMgmt/goDetail?PM_IDX="+idx;
 
             history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-            loadContent(url);
+            //loadContent(url);
+            window.location.href=url;
             //goMenu(url);
         });
 
