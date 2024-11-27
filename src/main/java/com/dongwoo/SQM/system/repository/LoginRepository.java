@@ -14,7 +14,7 @@ public class LoginRepository {
     private final SqlSessionTemplate sql;
 
     public int save(LoginDTO loginDTO) {
-        System.out.println("memberDTO = " + loginDTO);
+       // System.out.println("memberDTO = " + loginDTO);
         return sql.insert("Login.save", loginDTO);
     }
 

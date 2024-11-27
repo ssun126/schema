@@ -109,11 +109,12 @@
         select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
     </select>
 
-    <!--가입 정보 가져오기 ID 에 달려있는..-->
+    <!--공동사용자 정보 사용처 1.업체 업체 정보  , 2.관리자-업체목록(업체 상세)-->
     <select id="findByMemberInfoAll" parameterType="userinfocom" resultType="userinfocom">
         SELECT
          decode(uc.COM_USER_IDX , icu.COM_USER_IDX ,'Y',' ') AS MAIN_USER_YN
         ,uc.user_status
+        ,uc.RETURN_REASON
         ,u.USER_IDX
         ,u.USER_ID
         ,icu.COM_USER_IDX
@@ -122,14 +123,21 @@
         FROM USER_INFO u, USER_INFO_COMPANY uc ,USER_INFO_COMPANY_USER icu
         WHERE u.USER_IDX  = uc.USER_IDX
         AND uc.USER_IDX = icu.USER_IDX
+<!--        AND u.USER_STATUS  = 'Y' -->
+        AND  u.DEL_DATE IS NULL
         <if test="USER_ID != null and USER_ID != ''">
             AND u.USER_ID= #{USER_ID}
         </if>
         <if test="USER_IDX != null and USER_IDX != ''">
             AND u.USER_IDX= #{USER_IDX}
         </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND uc.COM_CODE= #{COM_CODE}
+        </if>
         ORDER BY MAIN_USER_YN DESC ,icu.COM_USER_IDX ASC
     </select>
+
+
 
 
     <!-- USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->

@@ -207,6 +207,7 @@ public class CompanyInfoController {
             ,@RequestParam("ApprovalType") String ApprovalType
             ,@RequestParam("RETURN_REASON") String ReturnReason
             ,@RequestParam("COME_CODE") String comeCode
+            ,@RequestParam("ID_ADD_TYPE") String idAddType
             , Authentication authentication) {
         Map<String, String> response = new HashMap<>();
         try {
@@ -246,7 +247,15 @@ public class CompanyInfoController {
             if(ApprovalType.equals("Y")) {
                 comPanyCodeDTO.setCOM_MANAGE_STATUS("2");  // Warranty 관리상태 (0:대기,삭제 , 1:검토중, 2:승인, 3:반려)
             }else {
-                comPanyCodeDTO.setCOM_MANAGE_STATUS("3");
+
+                if(idAddType.equals("0")) {//신규
+                    comPanyCodeDTO.setCOM_MANAGE_STATUS("3");
+                }else{
+                    comPanyCodeDTO.setCOM_MANAGE_STATUS("2");
+                    //추가 아이디 신청 반려시 워런티는 변경 하지 않는다.!
+                    //기본 승인이 안되면 추가 신청도 안된다.
+                }
+
             }
             comPanyCodeDTO.setUP_DW_USER_IDX(loginMemberDTO.getUSER_IDX());
             memberService.approvalCpCode(comPanyCodeDTO);  //업데이트  COMPANY_CODE

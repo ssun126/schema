@@ -39,7 +39,7 @@ public class UserMgrController {
     public String userMgr(Model model) {
         List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("DEPT");
         model.addAttribute("deptList", deptList);
-        System.out.println("userMgrDTOList = " + deptList);
+        //System.out.println("userMgrDTOList = " + deptList);
 
         return "userMgr/list";
     }
@@ -66,7 +66,7 @@ public class UserMgrController {
         // 상세내용 가져옴
         UserMgrDTO userMgrDTO = userMgrService.findById(id);
         model.addAttribute("userMgr", userMgrDTO);
-        System.out.println("userMgrDTO = " + userMgrDTO);
+       // System.out.println("userMgrDTO = " + userMgrDTO);
 //        if (userMgrDTO.getATTACHED_FILE().equals(1)) {
 //            List<UserMgrFileDTO> userMgrFileDTOList = userMgrService.findFile(id);
 //            model.addAttribute("userMgrFileList", userMgrFileDTOList);
@@ -100,7 +100,7 @@ public class UserMgrController {
     @PostMapping("/userMgr/getUserInfo")
     public ResponseEntity<?> getUserInfo(@RequestBody UserMgrParamDTO userMgrParamDTO ) {
         try {
-            System.out.println("Received UserDto: " + userMgrParamDTO);
+           // System.out.println("Received UserDto: " + userMgrParamDTO);
 
             List<UserMgrDTO> companyUserList = userMgrService.findUserMgrSearch(userMgrParamDTO);
 

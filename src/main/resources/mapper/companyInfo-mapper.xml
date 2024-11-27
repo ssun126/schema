@@ -223,6 +223,7 @@
         uc.USER_OK_DATE,
         uc.user_status,
         uc.COM_USER_IDX,
+        uc.RETURN_REASON,
         (SELECT LISTAGG(b.BASE_Name, '\n') WITHIN GROUP (ORDER BY b.BASE_Name)
         FROM base_code b
         LEFT JOIN USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE

@@ -56,14 +56,44 @@ public class CompanyListController {
     }
 
 
-    //업체 목록 검색 LIST -> 업체 상세  2024.11.08 sylee
-    @GetMapping("/admin/companyInfo/cpDetail1111")
-    public String bak_cpListDetail(@RequestParam("com_code") String com_code , Model model) {
-        List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
-        model.addAttribute("deptList", deptList);
+    //업체 목록 검색 LIST -> 업체 상세
+    @GetMapping("/admin/companyInfo/cpDetail")
+    public String cpDetail(@RequestParam("com_code") String com_code ,Model model, Authentication authentication) {
 
-        return "companyList/cpDetail";
-    }
+    MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",com_code);
+    model.addAttribute("member", memberDTO);
+
+    int useridx = 1 ;  //이거 해결해야됨.
+
+    //공동 작업자  com_code 작업자 전체 가져와야됨.
+    UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+    parmaDTO.setCOM_CODE(com_code);
+    List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);
+    model.addAttribute("companyUserList", companyUserList);
+    //System.out.println("companyUserList: "+companyUserList);
+
+    //부서
+    List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
+    model.addAttribute("deptList", deptList);
+
+    //업체코드 사업본부
+    CompanyInfoParamDTO companyInfoParamDTO = new CompanyInfoParamDTO();
+    companyInfoParamDTO.setCOM_CODE(com_code);
+    List<CompanyInfoDTO> companyCodeWorkList = companyInfoService.findCompanyCodeWork(companyInfoParamDTO);
+    model.addAttribute("companyCodeWorkList", companyCodeWorkList);
+
+    //회원 ID 관리
+    List<CompanyInfoDTO> companyUserIDList = companyInfoService.findCompanyCodeWorkEx(companyInfoParamDTO);
+    model.addAttribute("companyUserIDList", companyUserIDList);
+    //System.out.println("companyUserIDList: "+companyUserIDList);
+
+    //신청정보 조회
+    CompanyInfoDTO companyApprovalID = companyInfoService.findCompanyApprovalID(companyInfoParamDTO);
+    model.addAttribute("companyApprovalID", companyApprovalID);
+
+
+    return "companyList/cpDetail";
+}
 
 
 
@@ -95,11 +125,7 @@ public class CompanyListController {
     @GetMapping("/admin/companyInfo/cpApprovalDetail")
     public String cpListDetail(@RequestParam("com_code") String com_code ,@RequestParam("user_idx") int useridx ,Model model, Authentication authentication) {
 
-        //String loginId = authentication.getName();
-        //System.out.println("loginId????"+loginId);
-
         //로그인된 ID 회사 코드 알아오기. 여기는 업체 유저 전용
-        //MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
         MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",com_code);
         model.addAttribute("member", memberDTO);
         //System.out.println("memberDTO: "+memberDTO);

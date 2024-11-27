@@ -170,82 +170,124 @@
 
 <script>
 
+    $(document).ready(function() {
 
-    function fetchDataLis() {
+      fetchDataLis();
 
-       const dto = {
-           "COM_CODE": document.getElementById('comCode').value,
-           "COM_NAME": document.getElementById('comName').value,
-           "DEPT_CODE": document.getElementById('deptCode').value,
-           "MINERAL": document.getElementById('mineral').value,
-           "COM_AUDIT_POINT_FROM": document.getElementById('pointFrom').value,
-           "COM_AUDIT_POINT_TO": document.getElementById('pointTo').value ,
-           "COM_MANAGE_STATUS": document.getElementById('comManageStatus').value
-       };
+<!--      history.replaceState({ comCode: null }, null, location.href);-->
 
-       fetch('/admin/companyInfo/getCompanyInfo', {
-           method: 'POST',
-           headers: {
-               'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(dto)
-       })
-       .then(response => {
-           if (!response.ok) {
-               throw new Error('Network response was not ok');
+<!--      $(document).on("click", ".load-page", function(e) {-->
+<!--          e.preventDefault();-->
+<!--          const code = $(this).data("code");-->
+<!--          const useridx = $(this).data("useridx");-->
+<!--          const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx;-->
+<!--          let urlOri = "/admin/companyInfo/cpApproval";-->
+
+<!--          history.pushState({ comCode: code }, null, urlOri);-->
+
+<!--          sessionStorage.setItem('comCode', code);-->
+
+<!--          const queryParams = {-->
+<!--              COM_CODE: document.getElementById('comCode').value,-->
+<!--              COM_NAME: document.getElementById('comName').value,-->
+<!--              DEPT_CODE: document.getElementById('deptCode').value,-->
+<!--              COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,-->
+<!--              BUS_NUMBER: document.getElementById('busNumber').value,-->
+<!--              USER_STATUS: document.getElementById('userStatus').value,-->
+<!--              ID_ADD_TYPE: document.getElementById('idAddType').value-->
+<!--          };-->
+
+<!--          Object.keys(queryParams).forEach(key => {-->
+<!--              sessionStorage.setItem(key, queryParams[key]);-->
+<!--          });-->
+
+<!--          renderContent(url,false);-->
+<!--      });-->
+
+<!--       window.addEventListener("popstate", function(event) {-->
+<!--          let url = "/admin/companyInfo/cpApproval";-->
+<!--          renderContent(url,true);-->
+<!--      });-->
+
+  });
+
+
+
+   function fetchDataLis() {
+
+      const dto = {
+          "COM_CODE": document.getElementById('comCode').value,
+          "COM_NAME": document.getElementById('comName').value,
+          "DEPT_CODE": document.getElementById('deptCode').value,
+          "MINERAL": document.getElementById('mineral').value,
+          "COM_AUDIT_POINT_FROM": document.getElementById('pointFrom').value,
+          "COM_AUDIT_POINT_TO": document.getElementById('pointTo').value ,
+          "COM_MANAGE_STATUS": document.getElementById('comManageStatus').value
+      };
+
+      fetch('/admin/companyInfo/getCompanyInfo', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dto)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.json();
+      })
+      .then(data => {
+           console.log('응답 데이터:', data);
+           if (data && Array.isArray(data)) {
+                populateTable(data);
+           } else {
+                alert("nodata");
            }
-           return response.json();
-       })
-       .then(data => {
-            console.log('응답 데이터:', data);
-            if (data && Array.isArray(data)) {
-                 populateTable(data);
-            } else {
-                 alert("nodata");
-            }
-       })
-       .catch(error => {
-           console.error('데이터 조회 실패:', error);
-       });
-    }
+      })
+      .catch(error => {
+          console.error('데이터 조회 실패:', error);
+      });
+   }
 
 
-    function populateTable(data) {
+   function populateTable(data) {
 
-     const tableBody = $("#companyTableBody");
-     tableBody.empty();
+    const tableBody = $("#companyTableBody");
+    tableBody.empty();
 
-     data.forEach(company => {
-         const row = `
-             <tr>
-                 <td style="text-align:center">
-                    <a href="#"  onclick="goDetail('${company.COM_CODE}')" class="cui_link">
-                        <span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span>
-                    </a>
-                 </td>
-                 <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
-                 <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
-                 <td style="text-align:center"><span id = "com_audit_point" name = "COM_AUDIT_POINT" >${company.com_AUDIT_POINT}</span></td>
-                 <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" >${company.com_OK_DATE}</span></td>
-                 <td style="text-align:center"><span id = "tantalum_yn" name = "TANTALUM_YN" >${company.tantalum_YN}</span></td>
-                 <td style="text-align:center"><span id = "tin_yn" name = "TIN_YN" >${company.tin_YN}</span></td>
-                 <td style="text-align:center"><span id = "tungsten_yn" name = "TUNGSTEN_YN" >${company.tungsten_YN}</span></td>
-                 <td style="text-align:center"><span id = "gold_yn" name = "GOLD_YN" >${company.gold_YN}</span></td>
-                 <td style="text-align:center"><span id = "cobalt_yn" name = "COBALT_YN" >${company.cobalt_YN}</span></td>
-                 <td style="text-align:center"><span id = "mica_yn" name = "MICA_YN" >${company.mica_YN}</span></td>
-                 <td style="text-align:center"><span id = "company_code_work1" name = "COMPANY_CODE_WORK1" >${company.cp_CODE_WORK_CD1}</span></td>
-                 <td style="text-align:center"><span id = "company_code_work2" name = "COMPANY_CODE_WORK2" >${company.cp_CODE_WORK_CD2}</span></td>
-                 <td style="text-align:center"><span id = "company_code_work3" name = "COMPANY_CODE_WORK3" >${company.cp_CODE_WORK_CD3}</span></td>
-                 <td style="text-align:center"><span id = "company_code_work4" name = "COMPANY_CODE_WORK4" >${company.cp_CODE_WORK_CD4}</span></td>
-                 <td style="text-align:center"><span id = "company_code_work5" name = "COMPANY_CODE_WORK5" >${company.cp_CODE_WORK_CD5}</span></td>
-             </tr>
-         `;
-         tableBody.append(row);
-     });
-    }
+    data.forEach(company => {
+        const row = `
+            <tr>
+                <td style="text-align:center">
+                   <a href="#"  onclick="goDetail('${company.COM_CODE}')" class="cui_link">
+                       <span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span>
+                   </a>
+                </td>
+                <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
+                <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
+                <td style="text-align:center"><span id = "com_audit_point" name = "COM_AUDIT_POINT" >${company.com_AUDIT_POINT}</span></td>
+                <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" >${company.com_OK_DATE}</span></td>
+                <td style="text-align:center"><span id = "tantalum_yn" name = "TANTALUM_YN" >${company.tantalum_YN}</span></td>
+                <td style="text-align:center"><span id = "tin_yn" name = "TIN_YN" >${company.tin_YN}</span></td>
+                <td style="text-align:center"><span id = "tungsten_yn" name = "TUNGSTEN_YN" >${company.tungsten_YN}</span></td>
+                <td style="text-align:center"><span id = "gold_yn" name = "GOLD_YN" >${company.gold_YN}</span></td>
+                <td style="text-align:center"><span id = "cobalt_yn" name = "COBALT_YN" >${company.cobalt_YN}</span></td>
+                <td style="text-align:center"><span id = "mica_yn" name = "MICA_YN" >${company.mica_YN}</span></td>
+                <td style="text-align:center"><span id = "company_code_work1" name = "COMPANY_CODE_WORK1" >${company.cp_CODE_WORK_CD1}</span></td>
+                <td style="text-align:center"><span id = "company_code_work2" name = "COMPANY_CODE_WORK2" >${company.cp_CODE_WORK_CD2}</span></td>
+                <td style="text-align:center"><span id = "company_code_work3" name = "COMPANY_CODE_WORK3" >${company.cp_CODE_WORK_CD3}</span></td>
+                <td style="text-align:center"><span id = "company_code_work4" name = "COMPANY_CODE_WORK4" >${company.cp_CODE_WORK_CD4}</span></td>
+                <td style="text-align:center"><span id = "company_code_work5" name = "COMPANY_CODE_WORK5" >${company.cp_CODE_WORK_CD5}</span></td>
+            </tr>
+        `;
+        tableBody.append(row);
+    });
+   }
 
-    const goDetail = (com_code) => {
-        location.href = '/admin/companyInfo/cpDetail?com_code='+com_code;
-    }
+   const goDetail = (com_code) => {
+       location.href = '/admin/companyInfo/cpDetail?com_code='+com_code;
+   }
 
 </script>

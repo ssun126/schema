@@ -337,13 +337,13 @@
                     <form class="cui_form_field" data-legend="true">
                         <fieldset>
                             <legend><span>회원 ID 관리</span></legend>
-                            <table class="cui_table">
+                            <table class="cui_table center">
                                 <colgroup>
                                     <col style="width:120px;">
                                     <col style="width:120px;">
                                     <col style="width:240px;">
                                     <col style="width:120px;">
-                                    <col style="width:120px;">
+                                    <col style="width:180px;">
                                     <col >
                                     <col style="width:120px;">
                                 </colgroup>
@@ -364,8 +364,15 @@
                                         <td><span th:text="${user.USER_NAME}"></span></td>
                                         <td><span th:text="${user.USER_EMAIL}"></span></td>
                                         <td><span th:text="${user.REG_DATE != null ? user.REG_DATE.substring(0, 10) : ''}"></span></td>
-                                        <td><span th:text="${user.USER_OK_DATE != null ? user.USER_OK_DATE.substring(0, 10) : ''}"></span></td>
-                                        <td><span th:utext="${#strings.replace(user.BASE_NAMES, '\n', '<br />')}"></span></td>
+                                        <td>
+                                            <a href="#"
+                                               th:attr="data-return-reason=${user.RETURN_REASON}"
+                                               onclick="showReturnReason(this)">
+                                                <span th:text="${user.USER_STATUS == '3' ? '(반려)' : ''}"></span>
+                                            </a>
+                                            <span th:text="${user.USER_OK_DATE != null ? user.USER_OK_DATE.substring(0, 10) : ''}"></span>
+                                        </td>
+                                        <td style="text-align: left;"><span th:utext="${#strings.replace(user.BASE_NAMES, '\n', '<br />')}"></span></td>
                                         <td>
                                             <div class="cui_items_wrap" data-direction="center">
                                                 <div class="item_content">
@@ -385,6 +392,44 @@
             </div>
         </div>
 </body>
+
+<div class="cui_dialog" style="width:720px;display:none;" id="dialogReturnReason">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span id="popTitle">반려</span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+            </div>
+        </div>
+
+        <div class="dialog_body">
+            <div class="body_root">
+                <form id="updateForm1" method="POST" class="cui_form_field" data-legend="true">
+                    <fieldset>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label">반려사유</strong>
+                            <div class="item_content">
+                                <textarea  style="height:80px;" class="cui_text_field" id="RETURN_REASON" name="RETURN_REASON"></textarea>
+                            </div>
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center">
+                            <div class="item_content">
+                                <button type="button" class="cui_button secondary modal-close"><span>닫기</span></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 </html>
 
@@ -510,7 +555,7 @@
             if (isConfirmed) {
               deleteCpUser(userIdx);
             } else {
-                //alert('아니오');
+                overlay.style.display = "none";
             }
         });
     }
@@ -527,6 +572,13 @@
         const modal = $(this).parents('.cui_dialog');
         modal.fadeOut();
     });
+
+    function showReturnReason(element){
+       const reason = element.getAttribute('data-return-reason');
+       document.getElementById('RETURN_REASON').value =reason ;
+       modal('dialogReturnReason');
+
+    }
 
 
 </script>

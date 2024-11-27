@@ -18,7 +18,7 @@ public class MemberRepository {
     private final SqlSessionTemplate sql;
 
     public int save(MemberDTO memberDTO) {
-        System.out.println("memberDTO = " + memberDTO);
+       // System.out.println("memberDTO = " + memberDTO);
         return sql.insert("Member.save", memberDTO);
     }
 
@@ -36,7 +36,7 @@ public class MemberRepository {
 
     //User ID 생성. 10.23
     public int saveUserinfo(UserInfoDTO userInfoDTO) {
-        System.out.println("userInfoDTO = " + userInfoDTO);
+        //System.out.println("userInfoDTO = " + userInfoDTO);
 
         UserInfoDTO findUserDto = sql.selectOne("Member.findByUserId", userInfoDTO);
 

@@ -12,7 +12,8 @@
                     </div>
                 </div>
                 <div class="cui_body">
-                    <form id="updateForm" method="POST" action="/companyInfo/mainUpdate"  class="cui_form_field">
+<!--                    <form class="cui_form_field" data-legend="true">-->
+                    <form id="updateForm"  class="cui_form_field">
                         <fieldset>
                             <legend><span>업체 기본정보</span></legend>
                             <table class="cui_table">
@@ -139,9 +140,85 @@
                                 </tbody>
                             </table>
                         </fieldset>
-
                     </form>
+
                     <form class="cui_form_field" data-legend="true">
+                        <fieldset>
+                            <legend><span>Green Partner</span></legend>
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>Warranty Letter</span></th>
+                                    <td>
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div style="flex: 1; text-align: center;">
+                                            <span th:switch="${member.COM_MANAGE_STATUS}">
+                                                <span th:case="'0'">Pending</span>
+                                                <span th:case="'1'">Waiting</span>
+                                                <span th:case="'2'">Approved</span>
+                                                <span th:case="'3'">Rejected</span>
+                                            </span>
+                                            </div>
+                                            <div style="flex: 1; text-align: left;">
+
+                                                <button type="button" class="cui_button primary" th:if="${member.COM_MANAGE_STATUS == '1'}" onClick="goWarrantyApprovalDetail()">
+                                                    <span>승인</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <th><span>Audit 관리</span></th>
+                                    <td>
+                                        <span th:text="${member.COM_AUDIT_POINT != null ? member.COM_AUDIT_POINT + '점  |  ' : ' 점수 없음 |'}"></span>
+                                        <span th:text="${member.COM_AUDIT_LEVEL != null ? member.COM_AUDIT_LEVEL + '등급  |  ' : ' 등급 없음 | '}"></span>
+                                        <span th:text="${member.COM_OK_DATE != null ? member.COM_OK_DATE.substring(0, 10) : ''}"></span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="cui_table center">
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th colspan="4"><span>분쟁광물(CMRT)</span></th>
+                                    <th colspan="2"><span>책임광물(EMRT)</span></th>
+                                </tr>
+                                <tr>
+                                    <th><span>Tantalum</span></th>
+                                    <th><span>Tungsten</span></th>
+                                    <th><span>Tin</span></th>
+                                    <th><span>Gold</span></th>
+                                    <th><span>Cobalt</span></th>
+                                    <th><span>Mica</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><span th:text="${member.TANTALUM_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.TIN_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.GOLD_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.COBALT_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.COBALT_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                    <td><span th:text="${member.MICA_YN == 'Y' ? '사용' : '미사용'}"></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+
                         <fieldset>
                             <legend><span>DWFC 거래 사업부</span></legend>
                             <table class="cui_table">
@@ -161,7 +238,8 @@
                                 </tbody>
                             </table>
                         </fieldset>
-
+                    </form>
+                    <form class="cui_form_field" data-legend="true">
                         <fieldset>
                             <legend><span>공동 업무자 정보</span></legend>
                             <table class="cui_table center">
@@ -182,310 +260,177 @@
                                     <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
                                         <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
                                         <input type="hidden"  name="MAIN_USER_IDX"  class="cui_text_field" th:value="${user.USER_IDX}">
-
                                     </td>
 
                                     <td>
                                         <span th:text="${user.USER_NAME}"></span>
                                         <input type="hidden"  name="COM_USER_IDX"  class="cui_text_field" th:value="${user.COM_USER_IDX}">
                                     </td>
-                                    <td><span  th:text="${user.USER_POSITION}"></span></td>
+                                    <td><span th:text="${user.USER_POSITION}"></span></td>
                                     <td><span th:text="${user.USER_DEPT}"></span></td>
-                                    <td><span  th:text="${user.USER_EMAIL}"></span></td>
-                                    <td><span  th:text="${user.USER_PHONE}"></span></td>
-                                    <td></td>
+                                    <td><span th:text="${user.USER_EMAIL}"></span></td>
+                                    <td><span th:text="${user.USER_PHONE}"></span></td>
+                                    <td>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </fieldset>
                     </form>
+
                     <form class="cui_form_field" data-legend="true">
                         <fieldset>
-                            <legend><span>Warranty 협약 상태</span></legend>
+                            <legend><span>외부 인증 정보</span></legend>
                             <table class="cui_table center">
                                 <colgroup>
                                     <col>
                                     <col>
-                                    <col style="width:250px;">
+                                    <col>
+                                    <col>
                                     <col>
                                 </colgroup>
+                                <thead>
+                                <tr>
+                                    <th><span>인증 구분</span></th>
+                                    <th><span>인증일</span></th>
+                                    <th><span>유효일</span></th>
+                                    <th><span>인증기관</span></th>
+                                    <th><span>인증서</span></th>
+                                </tr>
+                                </thead>
                                 <tbody>
                                 <tr>
-                                    <th><span>승인일</span></th>
-                                    <th><span>제출일</span></th>
-                                    <th><span>관리상태</span></th>
-                                    <th><span>양식 첨부</span></th>
+                                    <td><span>ISO 14001</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>SGS</span></td>
+                                    <td>
+                                        <div class="cui_items_wrap" data-direction="center">
+                                            <div class="item_content">
+                                                <button type="submit" class="cui_button secondary"><span>다운로드</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 <tr>
+                                    <td><span>ISO 14001</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>2024-01-01</span></td>
+                                    <td><span>SGS</span></td>
                                     <td>
-                                        <span th:text="${member.COM_OK_DATE}"></span>
-                                    </td>
-                                    <td>
-                                        <span th:text="${member.COM_APP_DATE}"></span>
-
-                                    </td>
-                                    <td>
-                                        <span th:switch="${member.COM_MANAGE_STATUS}">
-                                            <span th:case="'0'">Pending</span>
-                                            <span th:case="'1'">Waiting</span>
-                                            <span th:case="'2'">Approved</span>
-                                            <span th:case="'3'">Rejected</span>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="cui_button"  onclick ="downloadFile()"><span>보기</span></button>
-                                        <input type="hidden" name ="COM_FILE_NAME" id="COM_FILE_NAME"  th:value="${member.COM_FILE_NAME}" >
+                                        <div class="cui_items_wrap" data-direction="center">
+                                            <div class="item_content">
+                                                <button type="submit" class="cui_button secondary"><span>다운로드</span></button>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
-
                                 </tbody>
                             </table>
                         </fieldset>
                     </form>
                     <form class="cui_form_field" data-legend="true">
                         <fieldset>
-                            <legend><span>신청 정보</span></legend>
-                            <table class="cui_table">
+                            <legend><span>회원 ID 관리</span></legend>
+                            <table class="cui_table center">
                                 <colgroup>
+                                    <col style="width:180px;">
+                                    <col style="width:180px;">
+                                    <col style="width:180px;">
+                                    <col style="width:180px;">
                                     <col style="width:200px;">
-                                    <col>
-                                    <col style="width:200px;">
-                                    <col>
+                                    <col >
+                                    <col style="width:120px;">
                                 </colgroup>
-                                <tbody>
-                                <tbody>
-                                <tr>
-                                    <th><span>신청구분</span></th>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.ID_ADD_TYPE == 0 ? '신규' : 'ID추가'}"></span>
-                                                <input type="hidden" name="ID_ADD_TYPE" id="ID_ADD_TYPE" th:value="${companyApprovalID.ID_ADD_TYPE}">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <th><span>신청일</span></th>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.REG_DATE}" ></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
+                                <thead>
                                 <tr>
                                     <th><span>ID</span></th>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.USER_ID}" ></span>
-                                            </div>
-                                        </div>
-                                    </td>
                                     <th><span>이름</span></th>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.USER_NAME}" ></span>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <th><span>email</span></th>
+                                    <th><span>가입일</span></th>
+                                    <th><span>승인일</span></th>
+                                    <th><span>접속 목적</span></th>
+                                    <th></th>
                                 </tr>
-
-                                <tr>
-                                    <th><span>처리상태</span></th>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.USER_STATUS}" ></span>
+                                </thead>
+                                <tbody>
+                                    <tr th:each=" user : ${companyUserIDList}" th:id="'idListRow-' + ${user.USER_IDX}">
+                                        <td><span th:text="${user.USER_ID}" ></span></td>
+                                        <td><span th:text="${user.USER_NAME}"></span></td>
+                                        <td><span th:text="${user.USER_EMAIL}"></span></td>
+                                        <td><span th:text="${user.REG_DATE != null ? user.REG_DATE.substring(0, 10) : ''}"></span></td>
+                                        <td>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="flex: 1; text-align: center;">
+                                                    <span th:text="${user.USER_STATUS == '3' ? '(반려)' : ''}"></span>
+                                                    <span th:text="${user.USER_OK_DATE != null ? user.USER_OK_DATE.substring(0, 10) : ''}"></span>
+                                                    <input type="hidden" name="USER_IDX" id="USER_IDX" th:value="${user.USER_IDX}">
+                                                    <button type="button" name="deleteCpUser" class="cui_button primary approval-button-visible"
+                                                            th:if="${user.USER_STATUS == '1'}"
+                                                            th:onclick="'goApprovalDetail(' + '\'' + ${user.USER_IDX} + '\'' + ')'">
+                                                        <span>승인</span>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <th><span>처리일</span></th>
-                                    <td>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.USER_OK_DATE}" ></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr th:if="${companyApprovalID.USER_STATUS == '반려'}">
-                                    <th><span>반려사유</span></th>
-                                    <td colspan="3">
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <span th:text="${companyApprovalID.RETURN_REASON}" ></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
+                                        </td>
+                                        <td style="text-align: left;"><span th:utext="${#strings.replace(user.BASE_NAMES, '\n', '<br />')}"></span></td>
+                                    </tr>
                                 </tbody>
-
                             </table>
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="'approval(' + ${companyApprovalID.USER_IDX} + ')'"><span>승인</span></button>
-                                <button type="button" class="cui_button primary" onclick="modal('dialogUserUpdate')"><span>반려</span></button>
                                 <button type="button" class="cui_button secondary" onClick="goList()"><span>목록</span></button>
                             </div>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
 </body>
 
-
-<div class="cui_dialog" style="width:720px;display:none;" id="dialogUserUpdate">
-    <div class="dialog_container">
-        <div class="dialog_head">
-            <div class="dialog_title">
-                <div class="main_label"><span id="popTitle">반려</span></div>
-            </div>
-            <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
-            </div>
-        </div>
-
-        <div class="dialog_body">
-            <div class="body_root">
-                <form id="updateForm1" method="POST" action="/userMgr/updateUserMgr" class="cui_form_field" data-legend="true">
-                    <fieldset>
-
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">반려사유</strong>
-                            <div class="item_content">
-                                <textarea  style="height:80px;" class="cui_text_field" id="RETURN_REASON" name="RETURN_REASON"></textarea>
-                            </div>
-                        </label>
-
-                        <div class="cui_items_wrap" data-direction="center">
-                            <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="'reject(' + ${companyApprovalID.USER_IDX} + ')'"><span>반려 처리</span></button>
-                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span>닫기</span></button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
-
 </html>
 
 <script id ='detailscript'>
 
-    function approval(userIdx) {
-        showConfirm('warning', '승인하시겠습니까?', function(isConfirmed) {
-            if (isConfirmed) {
-              updateCpUser(userIdx,"Y");
-            } else {
-                //alert('아니오');
-            }
-        });
+   $(document).ready(function() {
+   });
+
+   function goWarrantyApprovalDetail() {
+
+    const approvalButton = document.querySelector(".approval-button-visible");
+
+    if (approvalButton) {
+        const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;
+        const code = document.getElementById('COM_CODE').value;
+        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx;
+        location.href = url;
+    } else {
+        console.error("승인 버튼을 찾을 수 없습니다.");
     }
-
-    function reject(userIdx) {
-        updateCpUser(userIdx,"N") ;
-    }
+}
 
 
-   function updateCpUser(userIdx , ApprovalType) {
 
-         let comCode = document.getElementById('COM_CODE').value ;
-         let returnReason = document.getElementById('RETURN_REASON').value ;
-         let idAddType = document.getElementById('ID_ADD_TYPE').value ;
+  //워런티 승인
+<!--  function goWarrantyApprovalDetail() {-->
+<!--        const approvalButton  = document.querySelectorAll(".approval-button-visible");-->
 
-         $.ajax({
-            type: "post",
-            url: "/user/companyInfo/approvalCompanyUser",
-            data: {
-                  "USER_IDX": userIdx ,
-                  "ApprovalType" : ApprovalType ,
-                  "RETURN_REASON" : returnReason ,
-                  "COME_CODE" : comCode ,
-                  "ID_ADD_TYPE" : idAddType ,
-              },
-            success: function(response) {
-                if(response.status === "success") {
-                    showAlert('success', response.message);
-                }
-            },
-            error: function(err) {
-              console.log("에러발생", err);
-              showAlert('warning',err);
-            }
-        });
+<!--        if (approvalButton) {-->
+<!--            const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;-->
+<!--            const code = document.getElementById('COM_CODE').value;-->
+<!--            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx;-->
+<!--            //renderContent(url,true);-->
+<!--            location.href = url;-->
+<!--        }-->
+<!--   }-->
+
+   //승인페이지 이동
+   function goApprovalDetail(useridx) {
+        const code =document.getElementById('COM_CODE').value ;
+        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx;
+        //renderContent(url,true);
+        location.href = url;
    }
-
-
-   //모달 열기
-    function modal(id){
-      $("#" + id).fadeIn()
-    }
-
-    //닫기
-    function modal_close(id){
-        $("#" + id).fadeOut();
-        goList();
-    }
-
-    //반려 닫기
-    function modalReject_close_(id){
-        $("#" + id).fadeOut();
-    }
-
-    function goList() {
-        let url = "/admin/companyInfo/cpApproval";
-        renderContent(url,true);
-    }
-
-   //warranty 파일 다운로드
-   function downloadFile() {
-
-       const hiddenInput = document.getElementById('COM_FILE_NAME');
-       var fileName = hiddenInput.value;
-
-       if(fileName == ""){
-           //alert('첨부된 파일이 없습니다.') ;
-           showAlert('warning', '첨부된 파일이 없습니다.');
-           return;
-       }
-
-       fetch(`/member/download?fileName=${encodeURIComponent(fileName)}`, {
-           method: 'GET',
-           headers: {
-               'Accept': 'application/octet-stream'
-           }
-       })
-       .then(response => {
-           if (!response.ok) {
-               throw new Error('Network response was not ok');
-           }
-           return response.blob(); // 파일을 Blob으로 변환
-       })
-       .then(blob => {
-           // Blob URL 생성
-           const url = window.URL.createObjectURL(blob);
-           const a = document.createElement('a');
-           a.href = url;
-           a.download = fileName; // 다운로드할 파일 이름
-           document.body.appendChild(a); // 앵커 요소 추가
-           a.click(); // 다운로드 시작
-           a.remove(); // 앵커 요소 제거
-           window.URL.revokeObjectURL(url); // Blob URL 해제
-       })
-       .catch(error => {
-           console.error('파일 다운로드 실패:', error);
-       });
-   }
-
 
 </script>
