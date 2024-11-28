@@ -3,6 +3,13 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
+
+<style>
+    .load-page {
+        cursor: pointer;
+    }
+</style>
+
 <body>
     <div class="cui_content">
         <div class="cui_main">
@@ -88,9 +95,6 @@
                     </div>
                 </div>
 
-
-
-
                  <table class="cui_table cui_font_xs">
                      <colgroup>
                          <col style="width:100px">
@@ -174,40 +178,40 @@
 
       fetchDataLis();
 
-<!--      history.replaceState({ comCode: null }, null, location.href);-->
+      history.replaceState({ comCode: null }, null, location.href);
 
-<!--      $(document).on("click", ".load-page", function(e) {-->
-<!--          e.preventDefault();-->
-<!--          const code = $(this).data("code");-->
-<!--          const useridx = $(this).data("useridx");-->
-<!--          const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx;-->
-<!--          let urlOri = "/admin/companyInfo/cpApproval";-->
+      $(document).on("click", ".load-page", function(e) {
+          e.preventDefault();
+          const code = $(this).data("code");
+          const useridx = $(this).data("useridx");
+          const url = "/admin/companyInfo/cpDetail?com_code=" + code  ;
+          let urlOri = "/admin/companyInfo/cpList";
 
-<!--          history.pushState({ comCode: code }, null, urlOri);-->
+          history.pushState({ comCode: code }, null, urlOri);
 
-<!--          sessionStorage.setItem('comCode', code);-->
+          sessionStorage.setItem('comCode', code);
 
-<!--          const queryParams = {-->
-<!--              COM_CODE: document.getElementById('comCode').value,-->
-<!--              COM_NAME: document.getElementById('comName').value,-->
-<!--              DEPT_CODE: document.getElementById('deptCode').value,-->
-<!--              COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,-->
-<!--              BUS_NUMBER: document.getElementById('busNumber').value,-->
-<!--              USER_STATUS: document.getElementById('userStatus').value,-->
-<!--              ID_ADD_TYPE: document.getElementById('idAddType').value-->
-<!--          };-->
+          const queryParams = {
+              COM_CODE: document.getElementById('comCode').value,
+              COM_NAME: document.getElementById('comName').value,
+              DEPT_CODE: document.getElementById('deptCode').value,
+              MINERAL: document.getElementById('mineral').value,
+              COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
+              COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
+              COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
+          };
 
-<!--          Object.keys(queryParams).forEach(key => {-->
-<!--              sessionStorage.setItem(key, queryParams[key]);-->
-<!--          });-->
+          Object.keys(queryParams).forEach(key => {
+              sessionStorage.setItem(key, queryParams[key]);
+          });
 
-<!--          renderContent(url,false);-->
-<!--      });-->
+          renderContent(url,false);
+      });
 
-<!--       window.addEventListener("popstate", function(event) {-->
-<!--          let url = "/admin/companyInfo/cpApproval";-->
-<!--          renderContent(url,true);-->
-<!--      });-->
+       window.addEventListener("popstate", function(event) {
+          let url = "/admin/companyInfo/cpList";
+          renderContent(url,true);
+      });
 
   });
 
@@ -259,11 +263,9 @@
 
     data.forEach(company => {
         const row = `
-            <tr>
+            <tr class='load-page' data-code='${company.COM_CODE}'>
                 <td style="text-align:center">
-                   <a href="#"  onclick="goDetail('${company.COM_CODE}')" class="cui_link">
-                       <span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span>
-                   </a>
+                   <span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span>
                 </td>
                 <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
                 <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
@@ -286,8 +288,47 @@
     });
    }
 
-   const goDetail = (com_code) => {
-       location.href = '/admin/companyInfo/cpDetail?com_code='+com_code;
+   function renderContent(url,searchList) {
+       $(".cui_content").fadeOut(200, function() {
+           $.ajax({
+               url: url,
+               type: "GET",
+               success: function(response) {
+                   const sanitizedResponse = response
+                       .replace(/<script(?![^>]*id\s*=\s*['"][^'"]*detailscript[^'"]*['"])[^>]*>[\s\S]*?<\/script>/gi, "")
+                       .replace(/<link[^>]*>/gi, "");
+
+                   $(".cui_app").html(sanitizedResponse).fadeIn(200);
+
+                    if(searchList){
+                       preSearchSetting();
+                    }
+               },
+               error: function() {
+                   console.log("콘텐츠 로드 실패");
+               }
+           });
+       });
+    }
+
+   function preSearchSetting() {
+      const storedCode = sessionStorage.getItem('comCode');
+       if (storedCode) {
+
+                document.getElementById('comCode').value = sessionStorage.getItem('COM_CODE');
+                document.getElementById('comName').value = sessionStorage.getItem('COM_NAME');
+                $('#deptCode').val(sessionStorage.getItem('DEPT_CODE'));
+                $('#mineral').val(sessionStorage.getItem('MINERAL'));
+                document.getElementById('pointFrom').value = sessionStorage.getItem('COM_AUDIT_POINT_FROM');
+                document.getElementById('pointTo').value = sessionStorage.getItem('COM_AUDIT_POINT_TO');
+                $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
+       }
+       fetchDataLis();
    }
+
+
+<!--   const goDetail = (com_code) => {-->
+<!--       location.href = '/admin/companyInfo/cpDetail?com_code='+com_code;-->
+<!--   }-->
 
 </script>

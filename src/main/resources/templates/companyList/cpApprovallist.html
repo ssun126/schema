@@ -161,7 +161,7 @@
            e.preventDefault();
            const code = $(this).data("code");
            const useridx = $(this).data("useridx");
-           const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx;
+           const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx+ '&prePage=';
            let urlOri = "/admin/companyInfo/cpApproval";
 
            history.pushState({ comCode: code }, null, urlOri);

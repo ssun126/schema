@@ -122,7 +122,7 @@
             AND dw.EMAIL LIKE '%' || #{EMAIL} || '%'
         </if>
         <if test="USER_LEVEL != null and USER_LEVEL != ''">
-            AND dw.USER_LEVEL LIKE '%' || #{USER_LEVEL} || '%'
+            AND dw.USER_LEVEL =#{USER_LEVEL}
         </if>
         <if test="USER_STATUS != null and USER_STATUS != ''">
             AND u.USER_STATUS LIKE '%' || #{USER_STATUS} || '%'

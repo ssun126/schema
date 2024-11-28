@@ -134,7 +134,7 @@
         <if test="COM_CODE != null and COM_CODE != ''">
             AND uc.COM_CODE= #{COM_CODE}
         </if>
-        ORDER BY MAIN_USER_YN DESC ,icu.COM_USER_IDX ASC
+        ORDER BY uc.USER_IDX asc,MAIN_USER_YN DESC  ,icu.COM_USER_IDX ASC
     </select>
 
 
