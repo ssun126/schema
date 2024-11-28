@@ -259,7 +259,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <span th:text="${companyApprovalID.ID_ADD_TYPE == 0 ? '신규' : 'ID추가'}"></span>
+                                                <span th:text="${companyApprovalID.ID_ADD_TYPE == '0' ? '신규' : 'ID추가'}"></span>
                                                 <input type="hidden" name="ID_ADD_TYPE" id="ID_ADD_TYPE" th:value="${companyApprovalID.ID_ADD_TYPE}">
                                             </div>
                                         </div>
@@ -330,7 +330,10 @@
                             <div class="item_content">
                                 <button type="button" class="cui_button primary" th:onClick="'approval(' + ${companyApprovalID.USER_IDX} + ')'"><span>승인</span></button>
                                 <button type="button" class="cui_button primary" onclick="modal('dialogUserUpdate')"><span>반려</span></button>
-                                <button type="button" class="cui_button secondary" onClick="goList()"><span>목록</span></button>
+                                <button type="button" class="cui_button secondary" onClick="goList()">
+                                    <span th:text="${prepage != '' ? '뒤로' : '목록'}"></span>
+                                </button>
+                                <input type="hidden" name="prePage" id="prePage" th:value="${prepage}">
                             </div>
                         </div>
 
@@ -443,8 +446,16 @@
     }
 
     function goList() {
-        let url = "/admin/companyInfo/cpApproval";
-        renderContent(url,true);
+
+        let prePage = document.getElementById('prePage').value ;
+        let comCode = document.getElementById('COM_CODE').value ;
+        if(!prePage){
+            let url = "/admin/companyInfo/cpApproval";
+            renderContent(url,true);
+        }else{
+            let url = "/admin/companyInfo/cpDetail?com_code="+comCode;
+            location.href = url;
+        }
     }
 
    //warranty 파일 다운로드

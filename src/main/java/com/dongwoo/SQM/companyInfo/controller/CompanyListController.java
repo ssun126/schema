@@ -123,7 +123,10 @@ public class CompanyListController {
 
     //업체 승인 목록 상세 검색-> 업체 상세  2024.11.08 sylee
     @GetMapping("/admin/companyInfo/cpApprovalDetail")
-    public String cpListDetail(@RequestParam("com_code") String com_code ,@RequestParam("user_idx") int useridx ,Model model, Authentication authentication) {
+    public String cpListDetail(@RequestParam("com_code") String com_code
+                             ,@RequestParam("user_idx") int useridx
+                            ,@RequestParam("prePage") String prePage
+            ,Model model, Authentication authentication) {
 
         //로그인된 ID 회사 코드 알아오기. 여기는 업체 유저 전용
         MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",com_code);
@@ -156,6 +159,7 @@ public class CompanyListController {
         //신청정보 조회
         CompanyInfoDTO companyApprovalID = companyInfoService.findCompanyApprovalID(companyInfoParamDTO);
         model.addAttribute("companyApprovalID", companyApprovalID);
+        model.addAttribute("prepage", prePage);
 
         return "companyList/cpApprovalDetail";
     }
