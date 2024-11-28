@@ -257,7 +257,10 @@
                                 </thead>
                                 <tbody id="tableBody">
                                 <tr class="collaborator-row" th:each=" user : ${companyUserList}">
-                                    <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
+<!--                                    <td style="text-align: left;">-->
+                                    <td>
+                                        <span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
+                                        <span th:text="${user.USER_STATUS == '1' ? '(검토중)' : ''}"></span>
                                         <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
                                         <input type="hidden"  name="MAIN_USER_IDX"  class="cui_text_field" th:value="${user.USER_IDX}">
                                     </td>
@@ -397,40 +400,33 @@
    });
 
    function goWarrantyApprovalDetail() {
+        const approvalButton = document.querySelector(".approval-button-visible");
 
-    const approvalButton = document.querySelector(".approval-button-visible");
-
-    if (approvalButton) {
-        const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;
-        const code = document.getElementById('COM_CODE').value;
-        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx;
-        location.href = url;
-    } else {
-        console.error("승인 버튼을 찾을 수 없습니다.");
+        if (approvalButton) {
+            const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;
+            const code = document.getElementById('COM_CODE').value;
+            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx + '&prePage=cpList';
+            location.href = url;
+        } else {
+            console.error("승인 버튼을 찾을 수 없습니다.");
+        }
     }
-}
 
-
-
-  //워런티 승인
-<!--  function goWarrantyApprovalDetail() {-->
-<!--        const approvalButton  = document.querySelectorAll(".approval-button-visible");-->
-
-<!--        if (approvalButton) {-->
-<!--            const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;-->
-<!--            const code = document.getElementById('COM_CODE').value;-->
-<!--            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx;-->
-<!--            //renderContent(url,true);-->
-<!--            location.href = url;-->
-<!--        }-->
-<!--   }-->
 
    //승인페이지 이동
    function goApprovalDetail(useridx) {
         const code =document.getElementById('COM_CODE').value ;
-        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx;
+        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx + '&prePage=cpList';
         //renderContent(url,true);
         location.href = url;
    }
 
+  function goList() {
+        const code =document.getElementById('COM_CODE').value ;
+        const url = "/admin/companyInfo/cpList";
+        //renderContent(url,true);
+        location.href = url;
+   }
+
+    //목록으로
 </script>
