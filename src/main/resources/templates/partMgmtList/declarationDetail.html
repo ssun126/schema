@@ -51,15 +51,15 @@
             <div class="cui_step">
                 <ol>
                     <li ><span>MSDS / RoHSⅡ / Halogen</span></li>
-                    <li class="active"><span>SVHC</span></li>
-                    <li><span>Declaration Letter</span></li>
+                    <li><span>SVHC</span></li>
+                    <li class="active"><span>Declaration Letter</span></li>
                     <li><span>SCCS / 성분명세서 / 기타</span></li>
                 </ol>
             </div>
-            <form class="cui_form_field" data-legend="true" id="frmSvhc" action="/user/partMgmt/goDeclaration" method="post"  enctype="multipart/form-data">
+            <form class="cui_form_field" data-legend="true" id="frmDeclar" action="/user/partMgmt/goSccs" method="post"  enctype="multipart/form-data">
                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <fieldset id="msdsFieldset">
-                    <legend><span>SVHC</span></legend>
+                    <legend><span>Declaration Letter</span></legend>
 
                     <table class="cui_table">
                         <colgroup>
@@ -104,7 +104,7 @@
                     </table>
                 </fieldset>
 
-                <fieldset id="svhcFileFieldset">
+                <fieldset id="declarFileFieldset">
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -117,7 +117,7 @@
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
                                         <div class="cui_attachments">
-                                            <input type="file" class="cui_file_field" name="SVHC_FILE">
+                                            <input type="file" class="cui_file_field" name="DECLAR_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME"></span></div>
@@ -136,7 +136,7 @@
                     </table>
                 </fieldset>
 
-                <fieldset id="svhcDataFieldset" style="display:none;">
+                <fieldset id="declarDataFieldset" style="display:none;">
                     <input type="hidden" name="APPLICABLE_NO" >
                     <table class="cui_table center">
                         <thead>
@@ -144,8 +144,9 @@
                             <th><span>No.</span></th>
                             <th><span>물질명</span></th>
                             <th><span>CAS No.</span></th>
-                            <th><span>EU No.</span></th>
                             <th><span>해당</span></th>
+                            <th><span>함량</span></th>
+                            <th><span>관리 Class</span></th>
                         </tr>
                         </thead>
                         <tbody id="tableBody4">
@@ -197,17 +198,17 @@
         $("input[name='DATA_GUBUN']").change(function(){
 		// 직접입력
 		if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
-		    $('#svhcFileFieldset').hide();
-			$('#svhcDataFieldset').show();
+		    $('#declarFileFieldset').hide();
+			$('#declarDataFieldset').show();
 			//초기화
-			$("input[name=SVHC_FILE]").val('');
-			bindSvhcData();
+			$("input[name=DECLAR_FILE]").val('');
+			bindDeclarData();
 
 		}
 		// 첨부파일
 		else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
-		    $('#svhcFileFieldset').show();
-			$('#svhcDataFieldset').hide();
+		    $('#declarFileFieldset').show();
+			$('#declarDataFieldset').hide();
 			//초기화
 			var tableBody = $('#tableBody4');
             tableBody.empty(); // 기존 내용 비우기
@@ -218,12 +219,12 @@
 
     });
 
-    function getSvhcData(){
+    function getDeclarData(){
         $.ajax({
-            url : '/user/partMgmt/getSvhcData',
+            url : '/user/partMgmt/getDeclarData',
             type : 'GET',
             success : function(response){
-                bindSvhcData(response);
+                bindDeclarData(response);
             },
             error : function(xhr,status,error){
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
@@ -231,24 +232,26 @@
         });
     }
 
-    function bindSvhcData(response){
+    function bindDeclarData(response){
         var tableBody = $('#tableBody4');
         tableBody.empty();
 
         if(!response || response.length ===0 ){
-            var row = '<tr><td colspan="5"> 데이터가 없습니다 </td><tr>';
+            var row = '<tr><td colspan="6"> 데이터가 없습니다 </td><tr>';
             tableBody.append(row);
         }else{
-            response.forEach(function(svhc) {
+            response.forEach(function(declar) {
                 var row = '<tr>'+
-                                '<td>' + svhc.SVHC_NUM +'</td>'+
-                                '<td>' + svhc.SVHC_NAME +'</td>'+
-                                '<td>' + svhc.SVHC_CASNUM +'</td>'+
-                                '<td>' + svhc.SVHC_EUNUM +'</td>'+
-                                '<td><select id=svhc_'+ svhc.SVHC_NUM +' onchange="bindapplicableNum('+ svhc.SVHC_NUM +')">' +
+                                '<td>' + declar.DECL_NUM +'</td>'+
+                                '<td>' + declar.DECL_NAME +'</td>'+
+                                '<td>' + declar.DECL_CASNUM +'</td>'+
+                                '<td><select id=declar_'+ declar.DECL_NUM +' onchange="bindapplicableNum('+ declar.DECL_NUM +')">' +
                                             '<option value="Y">Y</option>'+
                                             '<option value="N" selected >N</option>'+
-                                '</select></td>'
+                                '</select></td>' +
+                                '<td>' + declar.DECL_WEIGHT +'</td>'+
+                                '<td>' + declar.DECL_CLASS +'</td>'+
+
                           '</tr>';
                 tableBody.append(row);
             });
@@ -258,7 +261,7 @@
     function bindapplicableNum(num){
         var selectValues = [];
 
-        $('select[id^="svhc_"]').each(function(){
+        $('select[id^="declar_"]').each(function(){
             var value = $(this).val();
             if(value ==='Y'){
                 selectValues.push(value);
@@ -285,7 +288,7 @@
        //action="/user/partMgmt/goSvhc"
        $("input[name=INFO_FLAG]").val(flag);
        //window.location.href=url;
-       document.getElementById('frmSvhc').submit();
+       document.getElementById('frmDeclar').submit();
     }
 
     //status 업데이트

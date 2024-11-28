@@ -5,6 +5,8 @@ import com.dongwoo.SQM.partMgmt.dto.partDetailHalGDTO;
 import com.dongwoo.SQM.partMgmt.dto.partDetailMsdsDTO;
 import com.dongwoo.SQM.partMgmt.dto.partDetailRohsDTO;
 import com.dongwoo.SQM.partMgmt.repository.PartMgmtRepository;
+import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
+import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +90,18 @@ public class PartDetailService {
         }else{
             partMgmtRepository.updateEtcData(etcDTO);
         }
+
+    }
+
+    //svhc
+    public List<SvhcListDTO> getSvhcData(){
+        return  partMgmtRepository.getSvhcData();
+
+    }
+
+    //declar
+    public List<DeclarationDTO> getDeclarData(){
+        return partMgmtRepository.getDeclarData();
 
     }
 

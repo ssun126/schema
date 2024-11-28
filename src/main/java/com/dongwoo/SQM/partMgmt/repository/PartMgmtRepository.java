@@ -1,6 +1,8 @@
 package com.dongwoo.SQM.partMgmt.repository;
 
 import com.dongwoo.SQM.partMgmt.dto.*;
+import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
+import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -51,6 +53,9 @@ public class PartMgmtRepository {
 
     public int saveEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.etcSave",etcDTO);}
 
+    public List<SvhcListDTO> getSvhcData(){return sql.selectList("partManagement.getSvhcList");}
+
+    public List<DeclarationDTO> getDeclarData(){return sql.selectList("partManagement.getDeclarList");}
 
 
 

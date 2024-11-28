@@ -119,6 +119,18 @@
         VALUES (SEQ_ETC_IDX.NEXTVAL,#{PM_IDX},#{ETC_CONFIRM_DATE},#{ETC_ANALYSE_ENTRY},#{ETC_ANALYSE_RESULT},#{ETC_FILE_NAME},#{ETC_FILE_PATH})
     </insert>
 
+    <select id="getSvhcList">
+        SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
+        FROM SVHC_DATA
+
+    </select>
+
+    <select id="getDeclarList">
+        SELECT NVL(DECL_NUM,DECL_SUB_NUM) AS DECL_NUM ,DECL_NAME, DECL_CASNUM,DECL_WEIGHT,DECL_CLASS
+        FROM DECLARATION_DATA
+
+    </select>
+
 
 
 </mapper>

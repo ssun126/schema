@@ -34,9 +34,11 @@ public class PartDetailMSDSController {
                              , @RequestParam("MSDS_FILE") MultipartFile mdsdFile
                              , @RequestParam("ROHS_FILE") MultipartFile rohsFile
                              , @RequestParam("HALOGEN_FILE") MultipartFile halgFile
-                             , @RequestParam("ETC_FILE") MultipartFile[] etcFile){
+                             , @RequestParam("ETC_FILE") MultipartFile[] etcFile
+                             , Model model){
         log.info("test===========================" + etcDTO);
         //log.info("test12222==================="+ etcFile);
+        String pm_idx = msdsDTO.getPM_IDX();
         //msds
         //파일 저장 및 삭제
         if(msdsDTO.getFILE_STATUS().equals("Del")) {
@@ -153,6 +155,7 @@ public class PartDetailMSDSController {
         if(msdsDTO.getINFO_FLAG().equals("save")){
             return "redirect:/user/partMgmt/matReg";
         }else{
+            model.addAttribute("PM_IDX",pm_idx);
             return "partMgmtList/svhcDetail";
         }
 
