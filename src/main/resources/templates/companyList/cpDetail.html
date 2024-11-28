@@ -405,7 +405,7 @@
         if (approvalButton) {
             const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;
             const code = document.getElementById('COM_CODE').value;
-            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx;
+            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx + '&prePage=cpList';
             location.href = url;
         } else {
             console.error("승인 버튼을 찾을 수 없습니다.");
