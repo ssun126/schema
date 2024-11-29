@@ -124,6 +124,7 @@
                                     <td><p name="COM_MANAGE_STATUS" id="COM_MANAGE_STATUS"> <span th:text="${memberDTO.COM_MANAGE_STATUS}"></span> </p></td>
 
                                     <!-- 값 제출용 숨겨진 input -->
+                                    <input type="hidden" id="comCode" th:value="${memberDTO.COM_CODE}" />
                                     <input type="hidden" name="COM_APP_DATE" id="hiddenCOM_APP_DATE">
                                     <input type="hidden" name="COM_OK_DATE" id="hiddenCOM_OK_DATE">
                                     <input type="hidden" name="COM_MANAGE_STATUS" id="hiddenCOM_MANAGE_STATUS">
@@ -322,8 +323,9 @@
            return;
        }
 
-
       var formData = new FormData(document.getElementById("uploadForm"));
+       const vendorCode = document.getElementById('vendorCode').value;
+       formData.append("comCode", comCode);
 
        fetch("/member/warrantyfileupload", {
            method: "POST",
@@ -331,7 +333,7 @@
        })
        .then(response => {
            if (response.ok) {
-               return response.text();  // 또는 response.json() depending on your server response type
+               return response.text();
            }
            throw new Error('Network response was not ok.');
        })
@@ -360,7 +362,7 @@
            return;
        }
 
-       fetch(`/member/download?fileName=${encodeURIComponent(fileName)}`, {
+       fetch(`/member/warrantyDownLoad?fileName=${encodeURIComponent(fileName)}`, {
            method: 'GET',
            headers: {
                'Accept': 'application/octet-stream'

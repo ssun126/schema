@@ -381,18 +381,29 @@ public class MemberController {
 
 
     @PostMapping("/member/warrantyfileupload")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("findfile") MultipartFile file) {
+    public ResponseEntity<String> handleFileUpload(
+             @RequestParam("findfile") MultipartFile file
+            ,@RequestParam("comCode") String comCode
+    ) {
         // 파일을 저장할 경로 (C 드라이브의 upload 폴더)
-        String uploadDir = "C:\\upload\\";  // 반드시 이 경로가 존재해야 함 ,밴터 코드 별로 관리가 되려면. 코드 도 받아야 될듯.
+        String uploadDir = "C:\\upload\\warranty\\" + comCode + "\\";  // 벤더 코드별 디렉터리 생성
 
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일이 비어 있습니다.");
         }
 
         try {
+
+            // 디렉터리가 없으면 생성
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
             // 파일 저장
             File destinationFile = new File(uploadDir + file.getOriginalFilename());
             file.transferTo(destinationFile);
+
             return ResponseEntity.ok("파일 업로드 성공: " + file.getOriginalFilename());
         } catch (IOException e) {
             e.printStackTrace();
@@ -401,8 +412,15 @@ public class MemberController {
     }
 
     // 파일 다운로드 처리
-    @GetMapping("/member/download")
-    public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName) {
+    @GetMapping("/member/warrantyDownLoad")
+    public ResponseEntity<Resource> downloadFile(
+            @RequestParam("fileName") String fileName
+            ,@RequestParam("comCode") String comCode
+    ) {
+
+        //폴더명 처리!!!
+        //warranty // comCode
+
         String filePath = "C:\\upload\\" + fileName;
         File file = new File(filePath);
 
