@@ -6,6 +6,12 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+  ssl:
+    enable: true
+    key-store: classpath:mykeystore.jks
+    key-store-password: my123456t
+    key-store-type: jks
+    key-alias: mykey
 #    session:
 #      timeout:90m  //1800초
 #  error:
