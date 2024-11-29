@@ -5,13 +5,13 @@
 <mapper namespace="sampleFile" >
     <insert id="upload" parameterType="sampleFile">
 
-            INSERT INTO  SAMPLEFILE_DATA(FILE_IDX,FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)
+            INSERT INTO  SC_SAMPLEFILE_DATA(FILE_IDX,FILE_LANG,FILE_CASE,FILE_GUBN,FILE_NUM,FILE_NAME,FILE_PATH,FILE_REG_DATE,FILE_REG_USER)
             VALUES (SEQ_FILE_IDX.NEXTVAL,#{FILE_LANG},#{FILE_CASE},#{FILE_GUBN},#{FILE_NUM},#{FILE_NAME},#{FILE_PATH},sysdate,'xp')
 
     </insert>
 
     <delete id="delete" parameterType="sampleFile">
-        DELETE SAMPLEFILE_DATA
+        DELETE SC_SAMPLEFILE_DATA
         WHERE FILE_LANG=#{FILE_LANG} AND FILE_CASE = #{FILE_CASE} AND FILE_NUM =#{FILE_NUM}
 
         <if test="FILE_CASE == 'PLANT' ">
@@ -21,7 +21,7 @@
     </delete>
 
     <update id="update" parameterType="sampleFile">
-        UPDATE SAMPLEFILE_DATA
+        UPDATE SC_SAMPLEFILE_DATA
         SET FILE_PATH = #{FILE_PATH}, FILE_NAME=#{FILE_NAME}, FILE_MODIFY_DATE = sysdate, FILE_MODIFY_USER='xp'
         WHERE FILE_LANG=#{FILE_LANG} AND FILE_CASE = #{FILE_CASE} AND FILE_NUM =#{FILE_NUM}
 
@@ -39,37 +39,37 @@
                 ELSE concat(LISTAGG(sd.FILE_PATH,'|'),'|')   END AS FILE_PATH
             , CASE WHEN instr(LISTAGG(sd.FILE_NAME ,'|'),'|') > 0  THEN LISTAGG(sd.FILE_NAME,'|')
                 ELSE concat(LISTAGG(sd.FILE_NAME,'|'),'|')   END AS FILE_NAME, BASE_SORT
-        from (SELECT BASE_CODE , BASE_SORT  FROM BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ORDER BY BASE_SORT )  bc
-        LEFT OUTER JOIN  (SELECT FILE_GUBN,FILE_LANG,FILE_NUM,FILE_PATH,FILE_NAME FROM SAMPLEFILE_DATA ORDER by FILE_NUM ASC ) sd ON bc.BASE_CODE = sd.FILE_GUBN AND sd.FILE_LANG =#{sLang}
+        from (SELECT BASE_CODE , BASE_SORT  FROM SC_BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ORDER BY BASE_SORT )  bc
+        LEFT OUTER JOIN  (SELECT FILE_GUBN,FILE_LANG,FILE_NUM,FILE_PATH,FILE_NAME FROM SC_SAMPLEFILE_DATA ORDER by FILE_NUM ASC ) sd ON bc.BASE_CODE = sd.FILE_GUBN AND sd.FILE_LANG =#{sLang}
         GROUP BY BASE_CODE , sd.FILE_LANG,BASE_SORT
         ORDER BY bc.BASE_SORT asc
 
     </select>
 
     <select id="plantList" parameterType="String"  resultType="hashMap">
-        SELECT BASE_CODE FROM BASE_CODE
+        SELECT BASE_CODE FROM SC_BASE_CODE
         WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE
         ORDER BY BASE_SORT asc
     </select>
 
     <select id="getFileInfo" parameterType="map" resultType="sampleFile">
         SELECT FILE_PATH, FILE_NAME
-        FROM  SAMPLEFILE_DATA
+        FROM  SC_SAMPLEFILE_DATA
         WHERE FILE_LANG =#{sLang} AND FILE_GUBN =#{baseCode} AND FILE_NUM =#{fileNum} AND FILE_CASE=#{case}
 
     </select>
 
     <select id="getPlantFileInfo" parameterType="String" resultType="hashMap">
         SELECT  sd.FILE_GUBN ,sd.FILE_LANG ,sd.FILE_NUM ,sd.FILE_PATH,sd.FILE_NAME
-        FROM SAMPLEFILE_DATA sd
-        INNER JOIN BASE_CODE bc ON  bc.BASE_CODE = sd.FILE_GUBN
+        FROM SC_SAMPLEFILE_DATA sd
+        INNER JOIN SC_BASE_CODE bc ON  bc.BASE_CODE = sd.FILE_GUBN
         WHERE FILE_LANG =#{sLang}
 
     </select>
 
     <select id="getOtherFileInfo" parameterType="String" resultType="hashMap">
         SELECT  sd.FILE_CASE ,sd.FILE_LANG ,sd.FILE_NUM ,sd.FILE_PATH,sd.FILE_NAME
-        FROM SAMPLEFILE_DATA sd
+        FROM SC_SAMPLEFILE_DATA sd
         WHERE FILE_CASE != 'PLANT' AND  FILE_LANG =#{sLang}
 
     </select>
