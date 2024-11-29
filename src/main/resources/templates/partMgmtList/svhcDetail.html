@@ -201,7 +201,7 @@
 			$('#svhcDataFieldset').show();
 			//초기화
 			$("input[name=SVHC_FILE]").val('');
-			bindSvhcData();
+			getSvhcData();
 
 		}
 		// 첨부파일
@@ -220,9 +220,9 @@
 
     function getSvhcData(){
         $.ajax({
-            url : '/user/partMgmt/getSvhcData',
+            url : '/user/partMgmt/getSvhcListData',
             type : 'GET',
-            success : function(response){
+            success: function(response) {
                 bindSvhcData(response);
             },
             error : function(xhr,status,error){

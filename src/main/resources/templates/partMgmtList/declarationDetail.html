@@ -202,7 +202,7 @@
 			$('#declarDataFieldset').show();
 			//초기화
 			$("input[name=DECLAR_FILE]").val('');
-			bindDeclarData();
+			getDeclarData();
 
 		}
 		// 첨부파일
@@ -223,7 +223,7 @@
         $.ajax({
             url : '/user/partMgmt/getDeclarData',
             type : 'GET',
-            success : function(response){
+            success: function(response) {
                 bindDeclarData(response);
             },
             error : function(xhr,status,error){

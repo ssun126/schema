@@ -5,10 +5,10 @@
 <mapper namespace="SvhcList">
     <select id="findAll" resultType="svhcList">
         SELECT SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM
-        FROM SVHC_DATA
+        FROM SC_SVHC_DATA
     </select>
 
     <delete id="deletAll">
-        DELETE SVHC_DATA
+        DELETE SC_SVHC_DATA
     </delete>
 </mapper>
