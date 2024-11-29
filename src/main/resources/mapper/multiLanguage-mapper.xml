@@ -4,11 +4,11 @@
 
 <mapper namespace="MultiLanguage">
     <select id="findByKeyAndLocale" parameterType="multiLanguage" resultType="multiLanguage">
-        SELECT * FROM LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
+        SELECT * FROM SC_LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
     </select>
 
     <select id="findAll" resultType="multiLanguage">
-        SELECT * FROM LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
+        SELECT * FROM SC_LANGUAGES WHERE MESSAGE_KEY=#{MESSAGE_KEY} AND LOCALE = #{LOCALE}
     </select>
 
     <select id="getMultiLanguageList_HashMap" resultType="hashMap">
@@ -21,7 +21,7 @@
         FROM (SELECT MESSAGE_KEY AS ID
                 , LOCALE
                 , MESSAGE_CONTENT
-            FROM LANGUAGES)
+            FROM SC_LANGUAGES)
             PIVOT (MAX(MESSAGE_CONTENT)
             FOR LOCALE
             IN ('kr' as KR
