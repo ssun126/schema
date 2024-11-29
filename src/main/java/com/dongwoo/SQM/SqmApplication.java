@@ -40,7 +40,7 @@ public class SqmApplication {
 
 		return tomcat;
 	}
-
+*/
 
 	/*
     We need to redirect from HTTP to HTTPS. Without SSL, this application used
