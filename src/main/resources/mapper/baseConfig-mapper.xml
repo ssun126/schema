@@ -5,7 +5,7 @@
     <select id="findAll" resultType="baseConfig">
         SELECT BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,u.USER_NAME,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
         FROM BASE_CONFIG b
-        LEFT OUTER JOIN USER_INFO u
+        LEFT OUTER JOIN SC_USER_INFO u
         ON b.REG_DW_USER_IDX = u.USER_IDX
         ORDER BY b.BASE_CONFIG_IDX asc
 
@@ -14,7 +14,7 @@
     <select id="findSearch" parameterType="hashMap" resultType="baseConfig">
         select BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,u.USER_NAME,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
         FROM BASE_CONFIG b
-        LEFT OUTER JOIN USER_INFO u
+        LEFT OUTER JOIN SC_USER_INFO u
         ON b.REG_DW_USER_IDX = u.USER_IDX
         WHERE 1=1
         <if test="gubun != '' ">
@@ -32,7 +32,7 @@
     <select id="getBaseConfig_Info" parameterType="String" resultType="baseConfig">
         select BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,b.REG_DATE,u.USER_ID
         FROM BASE_CONFIG b
-        LEFT OUTER JOIN USER_INFO u
+        LEFT OUTER JOIN SC_USER_INFO u
         ON b.REG_DW_USER_IDX = u.USER_IDX where BASE_CONFIG_IDX = #{idx}
     </select>
 

@@ -184,8 +184,8 @@
           e.preventDefault();
           const code = $(this).data("code");
           const useridx = $(this).data("useridx");
-          const url = "/admin/companyInfo/cpDetail?com_code=" + code  ;
-          let urlOri = "/admin/companyInfo/cpList";
+          const url = "/admin/companyInfo/cpMainListDetail?com_code=" + code  ;
+          let urlOri = "/admin/companyInfo/cpMainList";
 
           history.pushState({ comCode: code }, null, urlOri);
 
@@ -209,7 +209,7 @@
       });
 
        window.addEventListener("popstate", function(event) {
-          let url = "/admin/companyInfo/cpList";
+          let url = "/admin/companyInfo/cpMainList";
           renderContent(url,true);
       });
 
@@ -328,7 +328,7 @@
 
 
 <!--   const goDetail = (com_code) => {-->
-<!--       location.href = '/admin/companyInfo/cpDetail?com_code='+com_code;-->
+<!--       location.href = '/admin/companyInfo/cpMainListDetail?com_code='+com_code;-->
 <!--   }-->
 
 </script>

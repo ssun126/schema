@@ -5,7 +5,7 @@
 <mapper namespace="CompanyInfo">
 
     <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
-        SELECT * FROM  base_code
+        SELECT * FROM SC_base_code
         WHERE  GROUP_CODE != BASE_CODE
         AND BASE_OPTION = 'SYSTEM'
         AND BASE_STATUS ='Y'
@@ -59,9 +59,9 @@
             ,c.COM_AUDIT_POINT
             ,c.COM_AUDIT_LEVEL
             FROM
-            COMPANY_CODE c
+            SC_COMPANY_CODE c
             LEFT JOIN
-            COMPANY_CODE_WORK x ON c.COM_CODE = x.COM_CODE AND x.BASE_CODE IN ('CD1', 'CD2', 'CD3', 'CD4', 'CD5')
+            SC_COMPANY_CODE_WORK x ON c.COM_CODE = x.COM_CODE AND x.BASE_CODE IN ('CD1', 'CD2', 'CD3', 'CD4', 'CD5')
             WHERE 1=1
                 AND NVL(c.COM_MANAGE_STATUS,'0') in ('1','2','3') -- (0:Pending, 1:Waiting, 2:Approved, 3:Rejected) Warranty
             <if test="COM_CODE != null and COM_CODE != ''">
@@ -107,11 +107,11 @@
     <select id="findCpApprovalList"  parameterType="companyInfo" resultType="companyInfo">
         SELECT
             DECODE(NVL(main.USER_STATUS,0) ,'0' ,'대기', '1', '검토중', '2','승인' ,'3','반려') USER_STATUS
-            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD1) AS CP_CODE_WORK_CD1
-            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD2) AS CP_CODE_WORK_CD2
-            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD3) AS CP_CODE_WORK_CD3
-            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD4) AS CP_CODE_WORK_CD4
-            ,(SELECT b.BASE_NAME FROM BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD5) AS CP_CODE_WORK_CD5
+            ,(SELECT b.BASE_NAME FROM SC_BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD1) AS CP_CODE_WORK_CD1
+            ,(SELECT b.BASE_NAME FROM SC_BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD2) AS CP_CODE_WORK_CD2
+            ,(SELECT b.BASE_NAME FROM SC_BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD3) AS CP_CODE_WORK_CD3
+            ,(SELECT b.BASE_NAME FROM SC_BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD4) AS CP_CODE_WORK_CD4
+            ,(SELECT b.BASE_NAME FROM SC_BASE_CODE b WHERE BASE_CODE = main.CP_WORK_CD5) AS CP_CODE_WORK_CD5
             , main.*
         From
         (
@@ -157,11 +157,11 @@
         ,uic.ID_ADD_TYPE
         ,uic.USER_IDX
         FROM
-        COMPANY_CODE c
+        SC_COMPANY_CODE c
         LEFT JOIN
-        USER_INFO_COMPANY uic ON c.COM_CODE = uic.Com_Code
+        SC_USER_INFO_COMPANY uic ON c.COM_CODE = uic.Com_Code
         LEFT JOIN
-        COMPANY_CODE_WORK x ON c.COM_CODE = x.COM_CODE AND x.BASE_CODE IN ('CD1', 'CD2', 'CD3', 'CD4', 'CD5')
+        SC_COMPANY_CODE_WORK x ON c.COM_CODE = x.COM_CODE AND x.BASE_CODE IN ('CD1', 'CD2', 'CD3', 'CD4', 'CD5')
         WHERE 1=1
             AND NVL(c.COM_MANAGE_STATUS,0) in ('1','2','3') -- (0:Pending, 1:Waiting, 2:Approved, 3:Rejected)
         <if test="COM_CODE != null and COM_CODE != ''">
@@ -209,7 +209,7 @@
 
     <select id="findCompanyCodeWork" parameterType="companyInfo" resultType="companyInfo">
         SELECT ccw.COM_CODE,ccw.BASE_CODE,BC.BASE_NAME
-            FROM COMPANY_CODE_WORK ccw ,BASE_CODE bc
+            FROM SC_COMPANY_CODE_WORK ccw ,SC_BASE_CODE bc
         WHERE ccw.BASE_CODE  = bc.BASE_CODE
             AND COM_CODE=#{COM_CODE}
     </select>
@@ -225,21 +225,21 @@
         uc.COM_USER_IDX,
         uc.RETURN_REASON,
         (SELECT LISTAGG(b.BASE_Name, '\n') WITHIN GROUP (ORDER BY b.BASE_Name)
-        FROM base_code b
-        LEFT JOIN USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
+        FROM SC_base_code b
+        LEFT JOIN SC_USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
         WHERE b.GROUP_CODE != b.BASE_CODE
         AND b.BASE_OPTION = 'SYSTEM'
         AND b.BASE_STATUS = 'Y'
         AND b.GROUP_CODE = 'CONNECT'
         AND g.USER_IDX = u.USER_IDX) AS BASE_NAMES,
         (SELECT x.user_email
-        FROM USER_INFO_COMPANY_USER x
+        FROM SC_USER_INFO_COMPANY_USER x
         WHERE x.User_idx = u.USER_IDX
         AND x.COM_USER_IDX = uc.COM_USER_IDX) AS user_email
         FROM
-        USER_INFO u
+        SC_USER_INFO u
         JOIN
-        USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
+        SC_USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
         WHERE
             u.DEL_DATE IS null and uc.COM_CODE =#{COM_CODE}
         ORDER BY uc.USER_OK_DATE asc
@@ -258,24 +258,24 @@
         uc.ID_ADD_TYPE ,
         uc.RETURN_REASON
         FROM
-        USER_INFO u
+        SC_USER_INFO u
         JOIN
-        USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
+        SC_USER_INFO_COMPANY uc ON u.USER_IDX = uc.USER_IDX
         WHERE
         u.user_idx =#{USER_IDX}
     </select>
 
     <insert id="save" parameterType="companyInfo">
-        insert into COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
+        insert into SC_COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
         values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)
     </insert>
 
     <select id="findById" parameterType="companyInfo" resultType="companyInfo">
-        select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
+        select * from SC_COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
 
     <select id="findSearch" parameterType="companyInfo" resultType="companyInfo">
-        select COM_CODE, COM_NAME, COM_NATION, COM_STATUS from COMPANY_CODE
+        select COM_CODE, COM_NAME, COM_NATION, COM_STATUS from SC_COMPANY_CODE
        <!-- INNER JOIN COMPANY_CODE_WORK ccw ON ccd.COM_CODE = ccw.COM_CODE-->
         WHERE 1=1
         <if test="COM_CODE != '' ">
@@ -290,20 +290,20 @@
     </select>
 
     <delete id="delete" parameterType="int">
-        delete from COMPANY_CODE where COM_CODE=#{COM_CODE}
+        delete from SC_COMPANY_CODE where COM_CODE=#{COM_CODE}
     </delete>
 
     <select id="findByCompanyId" parameterType="String" resultType="companyInfo">
-        select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
+        select * from SC_COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
 
     <select id="findByCriteria" parameterType="map" resultType="companyInfo">
         SELECT RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
         FROM
         (
-            SELECT /*+ INDEX_DESC(COMPANY_CODE PK_COMPANY_CODE) */
+            SELECT /*+ INDEX_DESC(SC_COMPANY_CODE PK_COMPANY_CODE) */
                 ROWNUM RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
-            FROM COMPANY_CODE
+            FROM SC_COMPANY_CODE
             WHERE 1 =1
             <if test="COM_CODE != null and COM_CODE != ''">
                 AND (COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
@@ -323,7 +323,7 @@
 
     <select id="countByKeyword" parameterType="map" resultType="int">
         select count(*) CNT
-        from COMPANY_CODE
+        from SC_COMPANY_CODE
         WHERE 1 =1
         <if test="COM_CODE != null and COM_CODE != ''">
             AND (COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
@@ -341,9 +341,9 @@
         SELECT RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
         FROM
         (
-            SELECT /*+ INDEX_DESC(COMPANY_CODE PK_COMPANY_CODE) */
+            SELECT /*+ INDEX_DESC(SC_COMPANY_CODE PK_COMPANY_CODE) */
             ROWNUM RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
-            FROM COMPANY_CODE
+            FROM SC_COMPANY_CODE
             WHERE ROWNUM <= #{pageNum} * #{amount}
         )
            WHERE RN > (#{pageNum}-1) * #{amount}
@@ -352,11 +352,11 @@
 
     <select id="getTotal" resultType="int">
         select count(*) CNT
-        from COMPANY_CODE
+        from SC_COMPANY_CODE
     </select>
 
     <update id="updateStatus" parameterType="companyInfo">
-        update COMPANY_CODE set COM_STATUS=#{COM_STATUS}
+        update SC_COMPANY_CODE set COM_STATUS=#{COM_STATUS}
         where COM_CODE=#{COM_CODE}
     </update>
 </mapper>

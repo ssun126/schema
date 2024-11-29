@@ -29,12 +29,12 @@ public class CompanyListController {
     private final MemberService memberService;
 
     //업체 목록  2024.11.08 sylee
-    @GetMapping("/admin/companyInfo/cpList")
+    @GetMapping("/admin/companyInfo/cpMainList")
     public String cpListMain(Model model) {
         List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
         model.addAttribute("deptList", deptList);
 
-        return "companyList/cpList";
+        return "companyList/cpMainList";
     }
 
     //업체 목록 검색 LIST
@@ -57,8 +57,8 @@ public class CompanyListController {
 
 
     //업체 목록 검색 LIST -> 업체 상세
-    @GetMapping("/admin/companyInfo/cpDetail")
-    public String cpDetail(@RequestParam("com_code") String com_code ,Model model, Authentication authentication) {
+    @GetMapping("/admin/companyInfo/cpMainListDetail")
+    public String cpMainListDetail(@RequestParam("com_code") String com_code ,Model model, Authentication authentication) {
 
     MemberDTO memberDTO = memberService.basicvendorNumCheck("VendorNum",com_code);
     model.addAttribute("member", memberDTO);
@@ -92,7 +92,7 @@ public class CompanyListController {
     model.addAttribute("companyApprovalID", companyApprovalID);
 
 
-    return "companyList/cpDetail";
+    return "companyList/cpMainListDetail";
 }
 
 
@@ -123,7 +123,7 @@ public class CompanyListController {
 
     //업체 승인 목록 상세 검색-> 업체 상세  2024.11.08 sylee
     @GetMapping("/admin/companyInfo/cpApprovalDetail")
-    public String cpListDetail(@RequestParam("com_code") String com_code
+    public String cpApprovalDetail(@RequestParam("com_code") String com_code
                              ,@RequestParam("user_idx") int useridx
                             ,@RequestParam("prePage") String prePage
             ,Model model, Authentication authentication) {

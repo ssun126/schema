@@ -116,17 +116,17 @@ public class MemberService {
         return memberRepository.approvalUserStatus(userInfoDTO);
     }
 
-    //공동 사용자 저장 USER_INFO_COMPANY_USER
+    //공동 사용자 저장 SC_USER_INFO_COMPANY_USER
     public int saveUserInfoCompany(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.saveCompanyUser(userInfoCompanyUserDTO);
     }
 
-    //공동 사용자 update USER_INFO_COMPANY_USER
+    //공동 사용자 update SC_USER_INFO_COMPANY_USER
     public int updateUserInfoCompany(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return memberRepository.updateCompanyUser(userInfoCompanyUserDTO);
     }
 
-    //공동 사용자 삭제 USER_INFO_COMPANY_USER
+    //공동 사용자 삭제 SC_USER_INFO_COMPANY_USER
     public int deleteCompanyUser(String comCode ,int useridx , List<Integer> companyUseridxList) {
         return memberRepository.deleteCompanyUser(comCode ,useridx,companyUseridxList);
     }
@@ -199,7 +199,7 @@ public class MemberService {
         return memberDTO ;
     }
 
-    //01.코드 검색 USER_INFO_COMPANY 진행중인 업체코드 COM_CODE 등록 여부
+    //01.코드 검색 SC_USER_INFO_COMPANY 진행중인 업체코드 COM_CODE 등록 여부
     public MemberDTO vendorNumCheck(String vendorCode) {
         MemberDTO memberDTO = memberRepository.findByUserInfoCompany(vendorCode);
         return memberDTO ;

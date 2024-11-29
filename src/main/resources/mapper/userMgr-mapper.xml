@@ -4,7 +4,7 @@
 <mapper namespace="userMgr">
 
     <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
-        SELECT * FROM  base_code
+        SELECT * FROM  SC_base_code
         WHERE  GROUP_CODE != BASE_CODE
         AND BASE_OPTION = 'SYSTEM'
         AND BASE_STATUS ='Y'
@@ -34,7 +34,7 @@
         TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
         u.UP_DATE,
         u.DEL_DATE,
-        (select x.base_name from base_code x where dw.DEPT_CODE = x.base_code_idx )  DEPT_CODE ,
+        (select x.base_name from SC_base_code x where dw.DEPT_CODE = x.base_code_idx )  DEPT_CODE ,
         dw.EMAIL,
         DECODE(dw.USER_LEVEL,'100','관리자','사용자') USER_LEVEL ,
         dw.MANAGE_SYSTEM_YN,
@@ -60,8 +60,8 @@
         dw.ALARM_AUDIT_YN,
         dw.ALARM_PART_YN,
         dw.ALARM_COA_CHANGE_YN
-        FROM USER_INFO u
-        JOIN USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
+        FROM SC_USER_INFO u
+        JOIN SC_USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
         AND u.USER_ID =#{USER_ID}
     </select>
 
@@ -79,7 +79,7 @@
         TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
         u.UP_DATE,
         u.DEL_DATE,
-        (select x.base_name from base_code x where dw.DEPT_CODE = x.base_code_idx )  DEPT_CODE ,
+        (select x.base_name from SC_base_code x where dw.DEPT_CODE = x.base_code_idx )  DEPT_CODE ,
         dw.EMAIL,
         DECODE(dw.USER_LEVEL,'100','관리자','사용자') USER_LEVEL ,
         dw.MANAGE_SYSTEM_YN,
@@ -105,8 +105,8 @@
         dw.ALARM_AUDIT_YN,
         dw.ALARM_PART_YN,
         dw.ALARM_COA_CHANGE_YN
-        FROM USER_INFO u
-        JOIN USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
+        FROM SC_USER_INFO u
+        JOIN SC_USER_INFO_DW dw ON u.USER_IDX = dw.USER_IDX
         WHERE 1=1
         AND  u.USER_GUBN = 0
         <if test="USER_ID != null and USER_ID != ''">
@@ -130,7 +130,7 @@
     </select>
 
     <update id="updateUserMgr"  parameterType="userMgr" >
-         UPDATE USER_INFO_DW
+         UPDATE SC_USER_INFO_DW
         SET
          DEPT_CODE           =#{DEPT_CODE}
         ,EMAIL               =#{EMAIL}
@@ -162,7 +162,7 @@
     </update>
 
     <update id="updateUserMgrMyPage"  parameterType="userMgr" >
-        UPDATE USER_INFO_DW
+        UPDATE SC_USER_INFO_DW
         SET
 <!--        DEPT_CODE           =#{DEPT_CODE}-->
 <!--        ,EMAIL               =#{EMAIL}-->
@@ -194,7 +194,7 @@
     </update>
 
     <update id="updateUserPWS"  parameterType="userMgr" >
-        UPDATE USER_INFO
+        UPDATE SC_USER_INFO
         SET
          USER_PWD =#{USER_PWD}
         ,UP_DATE =sysdate
@@ -203,7 +203,7 @@
     </update>
 
     <update id="updateUserInfoMgr"  parameterType="userMgr" >
-    UPDATE USER_INFO
+    UPDATE SC_USER_INFO
     SET
         USER_STATUS=#{USER_STATUS}
         ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
@@ -212,7 +212,7 @@
     </update>
 
     <insert id="insertUserinfoDwMgr"  parameterType="userMgr" >
-        INSERT INTO USER_INFO_DW (
+        INSERT INTO SC_USER_INFO_DW (
         USER_IDX, DEPT_CODE, EMAIL, USER_LEVEL,
         MANAGE_SYSTEM_YN, MANAGE_ISO_YN_01, MANAGE_ISO_YN_02, MANAGE_ISO_YN_03, MANAGE_ISO_YN_04, MANAGE_ISO_YN_05, MANAGE_ISO_YN_06,
         MANAGE_ISO_YN_07, MANAGE_ISO_YN_08, MANAGE_ISO_YN_09,
@@ -229,15 +229,15 @@
     </insert>
 
     <insert id="insertUserInfoMgr"  parameterType="userMgr" >
-        insert into USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS
+        insert into SC_USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS
         ,REG_DW_USER_IDX  ,REG_DATE,UP_DATE)
-        values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS}
+        values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM SC_USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS}
         , #{REG_DW_USER_IDX} , sysdate,sysdate )
     </insert>
 
     <!-- USERINFO 가입된정보 가져가기 -->
     <select id="findByUserId" parameterType="String" resultType="userMgr">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        select * from SC_USER_INFO where USER_ID=#{USER_ID}
     </select>
 
 
@@ -245,7 +245,7 @@
     <select id="findConnectGoalByUserId" parameterType="String" resultType="userMgr">
         SELECT * FROM
         (
-            SELECT B.BASE_CODE,B.BASE_NAME,B.BASE_CODE_IDX,B.BASE_SORT FROM  base_code B
+            SELECT B.BASE_CODE,B.BASE_NAME,B.BASE_CODE_IDX,B.BASE_SORT FROM  SC_base_code B
             WHERE b.GROUP_CODE != b.BASE_CODE
             AND b.BASE_OPTION = 'SYSTEM'
             AND b.BASE_STATUS = 'Y'
@@ -253,9 +253,9 @@
         ) A  ,
         (
             SELECT b.BASE_CODE , g.USER_IDX  ,u.USER_ID ,g.GOAL_IDX
-            FROM base_code b
-            LEFT JOIN USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
-            LEFT JOIN USER_INFO u ON u.USER_IDX = g.USER_IDX
+            FROM SC_base_code b
+            LEFT JOIN SC_USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
+            LEFT JOIN SC_USER_INFO u ON u.USER_IDX = g.USER_IDX
             WHERE b.GROUP_CODE != b.BASE_CODE
             AND b.BASE_OPTION = 'SYSTEM'
             AND b.BASE_STATUS = 'Y'
@@ -268,13 +268,13 @@
 
 
     <insert id="insertConnectGoal"  parameterType="userMgr" >
-        INSERT INTO USER_INFO_COMPANY_CONNECT_GOAL
+        INSERT INTO SC_USER_INFO_COMPANY_CONNECT_GOAL
         (USER_IDX, GOAL_IDX, BASE_CODE)
-        VALUES(#{USER_IDX}, (SELECT NVL(MAX(GOAL_IDX), 0) + 1 FROM USER_INFO_COMPANY_CONNECT_GOAL), #{BASE_CODE})
+        VALUES(#{USER_IDX}, (SELECT NVL(MAX(GOAL_IDX), 0) + 1 FROM SC_USER_INFO_COMPANY_CONNECT_GOAL), #{BASE_CODE})
     </insert>
 
     <delete id="deleteConnectGoal"  parameterType="userMgr">
-        delete from USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
+        delete from SC_USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
     </delete>
 
 

@@ -133,7 +133,7 @@ public class CompanyInfoController {
 
                System.out.println("companyUser: "+companyUser);
 
-                // MAIN_COM_USER_IDX 메인작업자 변경시 USER_INFO 이름 업데이트
+                // MAIN_COM_USER_IDX 메인작업자 변경시 SC_USER_INFO 이름 업데이트
                 if(Objects.equals(companyUser.getMAIN_USER_YN(), "Y")) {
                     UserInfoDTO userInfoDTO =  new UserInfoDTO();
                     userInfoDTO.setUSER_NAME(companyUser.getUSER_NAME());
@@ -170,14 +170,14 @@ public class CompanyInfoController {
         try {
             String loginId = authentication.getName();
             MemberDTO loginMemberDTO  = memberService.findCpLoginID(loginId);
-            //USER_INFO ID 상태 변경
+            //SC_USER_INFO ID 상태 변경
             UserInfoDTO userInfoDTO =  new UserInfoDTO();
             userInfoDTO.setUSER_IDX(USER_IDX);
             userInfoDTO.setUSER_STATUS("N"); //사용자 상태 (Y:사용, N:미사용)
             userInfoDTO.setDEL_DW_USER_IDX(loginMemberDTO.getUSER_IDX());
             memberService.updateUserStatus(userInfoDTO);
 
-            //USER_INFO_COMPANY ID 상태 변경
+            //SC_USER_INFO_COMPANY ID 상태 변경
             UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
             userInfoCompanyDTO.setUSER_IDX(USER_IDX);
             userInfoCompanyDTO.setRETURN_REASON("업체 사용자 삭제");
@@ -185,8 +185,8 @@ public class CompanyInfoController {
             memberService.deleteUserInfoCompanyHis(userInfoCompanyDTO);
 
             /* 삭제 처리후 가비지 DATA 처리방법 확인 할것.
-            select * from USER_INFO_COMPANY_USER
-            SELECT * FROM USER_INFO_COMPANY_CONNECT_GOAL
+            select * from SC_USER_INFO_COMPANY_USER
+            SELECT * FROM SC_USER_INFO_COMPANY_CONNECT_GOAL
             */
 
             response.put("status", "success");
@@ -215,7 +215,7 @@ public class CompanyInfoController {
             String loginId = authentication.getName();
             UserMgrDTO loginMemberDTO = memberService.findByMemberId(loginId);  //로그인 사용자
 
-            //USER_INFO ID 상태 변경
+            //SC_USER_INFO ID 상태 변경
             UserInfoDTO userInfoDTO =  new UserInfoDTO();
             userInfoDTO.setUSER_IDX(USER_IDX);
             if(ApprovalType.equals("Y")) {
@@ -226,7 +226,7 @@ public class CompanyInfoController {
             userInfoDTO.setDEL_DW_USER_IDX(loginMemberDTO.getUSER_IDX());
             memberService.approvalUserStatus(userInfoDTO);  //승인,반려.
 
-            //USER_INFO_COMPANY ID 상태 변경
+            //SC_USER_INFO_COMPANY ID 상태 변경
             UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
             userInfoCompanyDTO.setUSER_IDX(USER_IDX);
             if(ApprovalType.equals("N")) {

@@ -27,7 +27,7 @@
     <select id="getCompanyAuth" parameterType="map" resultType="isoAuth">
         SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
         FROM AUTH_COMPANY_INFO ACI
-        INNER JOIN COMPANY_CODE CC
+        INNER JOIN SC_COMPANY_CODE CC
         ON CC.COM_CODE = ACI.COM_CODE
         WHERE AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
     </select>
@@ -39,7 +39,7 @@
             SELECT /*+ INDEX_DESC(ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
                 ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
             FROM AUTH_COMPANY_INFO ACI
-            INNER JOIN COMPANY_CODE CC
+            INNER JOIN SC_COMPANY_CODE CC
             ON CC.COM_CODE = ACI.COM_CODE
             WHERE 1 =1
             <if test="COM_CODE != null and COM_CODE != ''">
@@ -64,7 +64,7 @@
     <select id="countByKeyword" parameterType="map" resultType="int">
         select count(*) CNT
         from AUTH_COMPANY_INFO ACI
-        INNER JOIN COMPANY_CODE CC
+        INNER JOIN SC_COMPANY_CODE CC
         ON CC.COM_CODE = ACI.COM_CODE
         WHERE 1 =1
         <if test="COM_CODE != null and COM_CODE != ''">
@@ -109,7 +109,7 @@
             TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE, TO_CHAR(ACI.REG_DATE, 'YYYY.MM.DD') AS REG_DATE, TO_CHAR(ACI.UP_DATE, 'YYYY.MM.DD') AS UP_DATE,
             ITEM_STATE, FILE_NAME, FILE_PATH
         FROM ISO_AUTH_COMPANY_ITEM ACI
-        INNER JOIN COMPANY_CODE CC
+        INNER JOIN SC_COMPANY_CODE CC
         ON CC.COM_CODE = ACI.COM_CODE
         WHERE 1 =1
         <if test="COM_CODE != null and COM_CODE != ''">

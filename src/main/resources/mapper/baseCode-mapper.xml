@@ -13,14 +13,14 @@
     <select id="findAll" resultType="baseCode">
         SELECT BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,ui.USER_NAME as REGISTER_NAME ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE ,BASE_OPTION
         FROM base_code bc
-        INNER JOIN USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+        INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
         ORDER BY BASE_CODE_IDX ASC
 
     </select>
     <select id="getbaseCodeInfo" parameterType="String" resultType="baseCode">
         select BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,u.USER_NAME as REGISTER_NAME ,b.REG_DATE ,BASE_OPTION
          FROM BASE_CODE b
-        LEFT OUTER JOIN USER_INFO u
+        LEFT OUTER JOIN SC_USER_INFO u
         ON b.BASE_CODE_IDX = u.USER_IDX where BASE_CODE_IDX = #{idx}
     </select>
 
@@ -53,7 +53,7 @@
     <select id="findSearch" parameterType="hashMap" resultType="baseCode">
         SELECT BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,ui.USER_NAME as REGISTER_NAME ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE ,BASE_OPTION
         FROM base_code bc
-        INNER JOIN USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+        INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
         WHERE 1=1
         <if test="sGubun != '' ">
             and GUBN = #{sGubun}

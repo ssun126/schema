@@ -28,7 +28,7 @@
         FROM PART_MANAGEMENT_DATA pmd
         LEFT OUTER JOIN  PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE
         LEFT OUTER JOIN (SELECT Base_code, base_value FROM base_code WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
-        LEFT OUTER JOIN USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_ID
+        LEFT OUTER JOIN SC_USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_ID
         WHERE 1 =1
         <if test="PM_PART_CODE != null and PM_PART_CODE != ''">
             AND (PM_PART_CODE LIKE CONCAT(CONCAT('%',  #{PM_PART_CODE}), '%'))

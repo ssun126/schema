@@ -29,7 +29,7 @@ public class UserMgrParamDTO {
     private String USER_LEVEL;                //-- (100:관리자, 1:사용자)  ▼
 
     @JsonProperty("USER_STATUS")
-    private String USER_STATUS;                //사용자 상태 (Y:사용, N:미사용)   ▼ USER_INFO
+    private String USER_STATUS;                //사용자 상태 (Y:사용, N:미사용)   ▼ SC_USER_INFO
 
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG        ;    //insert update type

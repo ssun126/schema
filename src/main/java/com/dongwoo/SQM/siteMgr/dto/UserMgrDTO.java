@@ -19,7 +19,7 @@ public class UserMgrDTO {
 
     private String INFO_FLAG        ;    //insert update type
 
-    //USER_INFO
+    //SC_USER_INFO
     private int USER_IDX        ;    //-- 사용자 IDX
     private String USER_ID      ;    //-- 아이디 ▼
     private String USER_PWD     ;    //-- 비밀번호 (SHA 암호화)
@@ -34,7 +34,7 @@ public class UserMgrDTO {
     private String UP_DATE      ;    //-- 수정일
     private String DEL_DATE     ;    //-- 삭제일
 
-   //USER_INFO_DW
+   //SC_USER_INFO_DW
    //private int USER_IDX;                     //-- 사용자 IDX
    private String DEPT_CODE;                 //-- 기초코드 INDEX (사업본부는 기초코드로 관리) ▼
    private String EMAIL;                     //-- 이메일 ▼

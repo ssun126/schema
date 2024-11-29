@@ -172,12 +172,12 @@ public class MemberController {
 
         //ID 가입 신청 정보
         //등록중 건이 있는지 체크.
-        //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
-        MemberDTO user_Info_CompanyDTO  = memberService.vendorNumCheck(comPanyDTO.getCOM_CODE());
+        //select * from SC_USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
+        MemberDTO SC_USER_INFO_CompanyDTO  = memberService.vendorNumCheck(comPanyDTO.getCOM_CODE());
 
-        if(user_Info_CompanyDTO != null) {
-            memberDTO.setUSER_STATUS(user_Info_CompanyDTO.getUSER_STATUS());     //ID 가입 상태 (0:대기, 1:검토중, 2:승인, 3:반려)
-            memberDTO.setRETURN_REASON(user_Info_CompanyDTO.getRETURN_REASON()); //ID 반려사유
+        if(SC_USER_INFO_CompanyDTO != null) {
+            memberDTO.setUSER_STATUS(SC_USER_INFO_CompanyDTO.getUSER_STATUS());     //ID 가입 상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+            memberDTO.setRETURN_REASON(SC_USER_INFO_CompanyDTO.getRETURN_REASON()); //ID 반려사유
         }else{
             memberDTO.setUSER_STATUS("0");
         }
@@ -212,7 +212,7 @@ public class MemberController {
         String USERID = memberDTO.getUSER_ID();
         String MainUSER_NAME = memberDTO.getUSERSELECT();  //메인작업자.
 
-        //Step 1 .USER_INFO 만들기. (로그인 ID 생성)
+        //Step 1 .SC_USER_INFO 만들기. (로그인 ID 생성)
         UserInfoDTO userinfoDTO = new UserInfoDTO();
         userinfoDTO.setUSER_ID(memberDTO.getUSER_ID());
 
@@ -232,7 +232,7 @@ public class MemberController {
         int USER_IDX = userNewUserinfoDTO.getUSER_IDX();
 
 
-        //Step 2 .USER_INFO_COMPANY_USER 만들기. //추가 사용자 생성
+        //Step 2 .SC_USER_INFO_COMPANY_USER 만들기. //추가 사용자 생성
         //공동 작업자 영역.=============================
         String USER_NAME = memberDTO.getUSER_NAME();
         String USER_POSITION = memberDTO.getUSER_POSITION();
@@ -272,7 +272,7 @@ public class MemberController {
         UserInfoCompanyUserDTO userInfoCompanyUserDTO = memberService.findByCompanyUserName(parmaDTO);
         int COM_USER_IDX = userInfoCompanyUserDTO.getCOM_USER_IDX();
 
-        //Step 3 .USER_INFO_COMPANY 만들기. //신청상태 HIS 생성
+        //Step 3 .SC_USER_INFO_COMPANY 만들기. //신청상태 HIS 생성
 
         UserInfoCompanyDTO userInfoCompanyDTO  = new UserInfoCompanyDTO();
         userInfoCompanyDTO.setUSER_IDX(USER_IDX);
@@ -288,7 +288,7 @@ public class MemberController {
         //checkboxDataJson
         String checkboxesJson =  memberDTO.getCheckboxDataJson();
 
-        //해당 유저 접속 목적 전체 삭제.  delete from USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
+        //해당 유저 접속 목적 전체 삭제.  delete from SC_USER_INFO_COMPANY_CONNECT_GOAL WHERE USER_IDX =#{USER_IDX}
         UserMgrDTO userMgrDTO = new UserMgrDTO();
         userMgrDTO.setUSER_IDX(USER_IDX);
         userMgrService.deleteConnectGoal(userMgrDTO);
@@ -317,7 +317,7 @@ public class MemberController {
 
         ////Step 5 Final  COMPANY_CODE 업데이트
 
-        //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
+        //select * from SC_USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
         //기존 상태확인
         MemberDTO comPanyDTO  = memberService.getCOMPANYCODE(memberDTO.getCOM_CODE());
         //워런티 승인일
@@ -452,13 +452,13 @@ public class MemberController {
         if(memberDTO != null) {
 
             //등록중 건이 있는지 체크.
-            //select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
+            //select * from SC_USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and  COM_CODE=#{COM_CODE}
             MemberDTO comPanyDTO  = memberService.vendorNumCheck(searchCode);
 
             if(comPanyDTO == null ){
 
                 //★ 기가입 여부만 체크.
-                //select * from USER_INFO_COMPANY where USER_STATUS = '2' and  COM_CODE=#{COM_CODE}
+                //select * from SC_USER_INFO_COMPANY where USER_STATUS = '2' and  COM_CODE=#{COM_CODE}
                 List<MemberDTO> approveComPanyListDTO  = memberService.findApproveCompany(searchCode);
 
                 int approveCount = approveComPanyListDTO.size();
@@ -473,7 +473,7 @@ public class MemberController {
             }else {
                 USER_STATUS = comPanyDTO.getUSER_STATUS();  //(0:대기, 1:검토중, 2:승인, 3:반려)
 
-                //USER_INFO 를 검색하자.   USER_INFO_COMPANY.USER_IDX
+                //SC_USER_INFO 를 검색하자.   SC_USER_INFO_COMPANY.USER_IDX
                 UserInfoDTO userUserinfoDTO = memberService.findByUserIdx(comPanyDTO.getUSER_IDX());
 
                 User_ID = userUserinfoDTO.getUSER_ID();
@@ -481,7 +481,7 @@ public class MemberController {
                 int com_user_idx = comPanyDTO.getCOM_USER_IDX();  //메인작업자.
                 String com_user_Name = ""; //메인작업자 명
 
-                //공동 작업자 가져오기.  USER_INFO_COMPANY  where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
+                //공동 작업자 가져오기.  SC_USER_INFO_COMPANY  where.   밴더 코드 : COM_CODE ,사용자 : USER_IDX
                 UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
                 parmaDTO.setCOM_CODE(comPanyDTO.getCOM_CODE()); //위에서 만들어진 밴더 코드
                 parmaDTO.setUSER_IDX(comPanyDTO.getUSER_IDX()); //위에서 만들어진 사용자 IDX

@@ -10,7 +10,7 @@ import lombok.ToString;
 @ToString
 public class UserInfoCompanyUserDTO {
 
-   //USER_INFO_COMPANY_USER
+   //SC_USER_INFO_COMPANY_USER
    @JsonProperty("COM_USER_IDX")
    private int  COM_USER_IDX;    //공동 사용자 idx (메인사용자.)
    @JsonProperty("USER_IDX")

@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class UserInfoCompanyDTO {
 
-   //USER_INFO_COMPANY
+   //SC_USER_INFO_COMPANY
    private int  USER_IDX		;	//	--// 사용자 IDX       ▶
    private String COM_CODE		;	//	--// 업체코드 (벤더코드) ★
    private int COM_USER_IDX	;	//	--// 메인 업무자

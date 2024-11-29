@@ -4,19 +4,19 @@
 
 <mapper namespace="Member">
     <insert id="save" parameterType="member">
-        insert into USER_INFO(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
+        insert into SC_USER_INFO(USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile)
         values (#{USER_EMAIL}, #{PASSWORD}, #{USER_NAME}, #{USER_Mobile})
     </insert>
 
-    <!-- USER_INFO 저장!!-->
+    <!-- SC_USER_INFO 저장!!-->
     <insert id="saveUserinfo" parameterType="userinfo">
-        insert into USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS ,REG_DW_USER_IDX  ,REG_DATE,UP_DATE)
-        values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS} , #{REG_DW_USER_IDX} , sysdate,sysdate )
+        insert into SC_USER_INFO(USER_IDX , USER_ID , USER_PWD , USER_NAME ,USER_GUBN ,USER_STATUS ,REG_DW_USER_IDX  ,REG_DATE,UP_DATE)
+        values ( (SELECT NVL(MAX(USER_IDX), 0) + 1 FROM SC_USER_INFO) , #{USER_ID} ,  #{USER_PWD} ,  #{USER_NAME} , #{USER_GUBN} , #{USER_STATUS} , #{REG_DW_USER_IDX} , sysdate,sysdate )
     </insert>
 
     <!-- USER_ID 중복 체크 후 업데이트 -->
     <update id="updateUserinfo" parameterType="userinfo">
-        UPDATE USER_INFO
+        UPDATE SC_USER_INFO
             SET USER_PWD = #{USER_PWD},
             USER_NAME = #{USER_NAME},
             USER_GUBN = #{USER_GUBN},
@@ -27,7 +27,7 @@
 
     <!-- 업체 회사정보에서 메인담당자 이름변경시 업데이트 -->
     <update id="updateUserName" parameterType="userinfo">
-        UPDATE USER_INFO
+        UPDATE SC_USER_INFO
         SET
         USER_NAME = #{USER_NAME}
         WHERE USER_IDX = #{USER_IDX}
@@ -35,7 +35,7 @@
 
     <!-- 업체 ID 상태  업데이트 -->
     <update id="updateUserStatus" parameterType="userinfo">
-        UPDATE USER_INFO
+        UPDATE SC_USER_INFO
         SET
          USER_STATUS = #{USER_STATUS} ,
          DEL_DW_USER_IDX = #{DEL_DW_USER_IDX} ,
@@ -45,7 +45,7 @@
 
     <!-- 업체 승인 반려 업데이트 -->
     <update id="approvalUserStatus" parameterType="userinfo">
-        UPDATE USER_INFO
+        UPDATE SC_USER_INFO
         SET
         USER_STATUS = #{USER_STATUS} ,
         UP_DW_USER_IDX = #{DEL_DW_USER_IDX} ,
@@ -56,21 +56,21 @@
 
     <!-- USERINFO 가입된정보 가져가기 -->
     <select id="findByUserId" parameterType="String" resultType="userinfo">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        select * from SC_USER_INFO where USER_ID=#{USER_ID}
     </select>
-    <!-- USER_INFO 가입된정보 가져가기 -->
+    <!-- SC_USER_INFO 가입된정보 가져가기 -->
     <select id="findByUserIdx" parameterType="Int" resultType="userinfo">
-        select * from USER_INFO where USER_IDX=#{USER_IDX}
+        select * from SC_USER_INFO where USER_IDX=#{USER_IDX}
     </select>
 
-    <!-- USER_INFO_COMPANY_USER  공동 작업자 저장!!-->
+    <!-- SC_USER_INFO_COMPANY_USER  공동 작업자 저장!!-->
     <insert id="saveUserinfoCompanyUser" parameterType="userinfocom">
-        insert into USER_INFO_COMPANY_USER(COM_USER_IDX , USER_IDX , COM_CODE , USER_NAME ,USER_POSITION ,USER_DEPT , USER_EMAIL,USER_PHONE )
-        values ( (SELECT NVL(MAX(COM_USER_IDX), 0) + 1 FROM USER_INFO_COMPANY_USER) , #{USER_IDX} ,#{COM_CODE} ,  #{USER_NAME} , #{USER_POSITION} , #{USER_DEPT}, #{USER_EMAIL} , #{USER_PHONE}  )
+        insert into SC_USER_INFO_COMPANY_USER(COM_USER_IDX , USER_IDX , COM_CODE , USER_NAME ,USER_POSITION ,USER_DEPT , USER_EMAIL,USER_PHONE )
+        values ( (SELECT NVL(MAX(COM_USER_IDX), 0) + 1 FROM SC_USER_INFO_COMPANY_USER) , #{USER_IDX} ,#{COM_CODE} ,  #{USER_NAME} , #{USER_POSITION} , #{USER_DEPT}, #{USER_EMAIL} , #{USER_PHONE}  )
     </insert>
 
     <update id="updateUserinfoCompanyUser" parameterType="userinfocom">
-        UPDATE USER_INFO_COMPANY_USER
+        UPDATE SC_USER_INFO_COMPANY_USER
         SET COM_CODE = #{COM_CODE},
             USER_NAME = #{USER_NAME},
             USER_POSITION = #{USER_POSITION},
@@ -81,7 +81,7 @@
     </update>
 
     <delete id="deleteUserinfoCompanyUser" parameterType="map">
-        DELETE FROM USER_INFO_COMPANY_USER
+        DELETE FROM SC_USER_INFO_COMPANY_USER
         WHERE COM_CODE = #{COM_CODE} AND USER_IDX =#{USER_IDX}
         AND COM_USER_IDX NOT IN
         <foreach collection="list" item="COM_USER_IDX" open="(" separator="," close=")">
@@ -89,24 +89,24 @@
         </foreach>
     </delete>
 
-    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
+    <!-- SC_USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
     <select id="findByCompanyUserIdx" parameterType="int" resultType="userinfocom">
-        select * from USER_INFO_COMPANY_USER where COM_USER_IDX=#{COM_USER_IDX}
+        select * from SC_USER_INFO_COMPANY_USER where COM_USER_IDX=#{COM_USER_IDX}
     </select>
 
-    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
+    <!-- SC_USER_INFO_COMPANY_USER 가입된정보 공동 작업자  COM_USER_IDX -->
     <select id="findByCompanyUserName" parameterType="String" resultType="userinfocom">
-        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_NAME=#{USER_NAME}
+        select * from SC_USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_NAME=#{USER_NAME}
     </select>
 
-    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  가져오기 -->
+    <!-- SC_USER_INFO_COMPANY_USER 가입된정보 공동 작업자  가져오기 -->
     <select id="findByCompanyUserComCode" parameterType="userinfocom" resultType="userinfocom">
-        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_IDX = #{USER_IDX}
+        select * from SC_USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and USER_IDX = #{USER_IDX}
     </select>
 
-    <!-- USER_INFO_COMPANY_USER 가입된정보 공동 작업자  업체 회원정보 에서 가져오기 -->
+    <!-- SC_USER_INFO_COMPANY_USER 가입된정보 공동 작업자  업체 회원정보 에서 가져오기 -->
     <select id="findByCompanyUserAll" parameterType="userinfocom" resultType="userinfocom">
-        select * from USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
+        select * from SC_USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
     </select>
 
     <!--공동사용자 정보 사용처 1.업체 업체 정보  , 2.관리자-업체목록(업체 상세)-->
@@ -120,7 +120,7 @@
         ,icu.COM_USER_IDX
         ,uc.COM_USER_IDX as MAIN_COM_USER_IDX   --메인작업자.
         ,icu.*
-        FROM USER_INFO u, USER_INFO_COMPANY uc ,USER_INFO_COMPANY_USER icu
+        FROM SC_USER_INFO u, SC_USER_INFO_COMPANY uc ,SC_USER_INFO_COMPANY_USER icu
         WHERE u.USER_IDX  = uc.USER_IDX
         AND uc.USER_IDX = icu.USER_IDX
 <!--        AND u.USER_STATUS  = 'Y' -->
@@ -140,15 +140,15 @@
 
 
 
-    <!-- USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
+    <!-- SC_USER_INFO_COMPANY_USER   사용자 추가정보 신청상태.. 승일인 사유 저장-->
     <insert id="saveUserinfoCompanyHis" parameterType="userinfoHis">
-        insert into USER_INFO_COMPANY(USER_IDX
+        insert into SC_USER_INFO_COMPANY(USER_IDX
         , COM_CODE , COM_USER_IDX , ID_PW_ADD_REASON ,USER_STATUS ,USER_OK_DATE , RETURN_REASON ,ID_ADD_TYPE)
         values ( #{USER_IDX} , #{COM_CODE} ,#{COM_USER_IDX} ,  #{ID_PW_ADD_REASON} , #{USER_STATUS} , #{USER_OK_DATE}, #{RETURN_REASON} , #{ID_ADD_TYPE} )
     </insert>
 
     <update id="updateUserinfoCompanyHis" parameterType="userinfoHis">
-        UPDATE USER_INFO_COMPANY
+        UPDATE SC_USER_INFO_COMPANY
         SET COM_CODE = #{COM_CODE},
             COM_USER_IDX = #{COM_USER_IDX},
             ID_PW_ADD_REASON = #{ID_PW_ADD_REASON},
@@ -160,7 +160,7 @@
 
     <!-- 사용자 삭제처리-->
     <update id="deleteUserinfoCompanyHis" parameterType="userinfoHis">
-        UPDATE USER_INFO_COMPANY
+        UPDATE SC_USER_INFO_COMPANY
             SET
             USER_STATUS = #{USER_STATUS},
             USER_OK_DATE = sysdate ,
@@ -170,7 +170,7 @@
 
     <!-- 승인 & 반려 처리-->
     <update id="approvalUserInfoCompanyHis" parameterType="userinfoHis">
-        UPDATE USER_INFO_COMPANY
+        UPDATE SC_USER_INFO_COMPANY
         SET
         USER_STATUS = #{USER_STATUS},
         USER_OK_DATE = sysdate
@@ -183,9 +183,9 @@
         WHERE USER_IDX = #{USER_IDX}
     </update>
 
-    <!-- updateCompany_Code COMPANY_CODE 회사코드 업데이트-->
+    <!-- updateCompany_Code SC_COMPANY_CODE 회사코드 업데이트-->
     <update id="updateCompanyCode" parameterType="companycode">
-        update COMPANY_CODE set
+        update SC_COMPANY_CODE set
              VENDOR_WORK_KIND=#{VENDOR_WORK_KIND}
             ,COM_USER_IDX=#{COM_USER_IDX}
             ,COMPANY_NAME=#{COMPANY_NAME}
@@ -206,7 +206,7 @@
 
     <!-- Company Information 에서 사용자가 업체 기본 정보 수정할때 ,기가입 유저 추가할때.-->
     <update id="updateCpCodeCPUser" parameterType="companycode">
-        update COMPANY_CODE set
+        update SC_COMPANY_CODE set
         VENDOR_WORK_KIND=#{VENDOR_WORK_KIND}
         ,COMPANY_NAME=#{COMPANY_NAME}
         ,FACTORY_NAME=#{FACTORY_NAME}
@@ -221,7 +221,7 @@
     </update>
 
     <update id="approvalCpCode" parameterType="companycode">
-        update COMPANY_CODE set
+        update SC_COMPANY_CODE set
          COM_MANAGE_STATUS =#{COM_MANAGE_STATUS}
         ,COM_OK_DATE =sysdate
         ,UP_DATE =sysdate
@@ -233,12 +233,12 @@
 
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->
     <select id="findByCompanyCode" parameterType="String" resultType="member">
-            select * from COMPANY_CODE where COM_CODE=#{COM_CODE}
+            select * from SC_COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
 
     <!-- 최초가입 여부 (마스터 코드 등록여부)-->
     <select id="findByBUSNUMBER" parameterType="String" resultType="member">
-        select * from COMPANY_CODE where BUS_NUMBER=#{BUS_NUMBER}
+        select * from SC_COMPANY_CODE where BUS_NUMBER=#{BUS_NUMBER}
     </select>
 
 
@@ -246,24 +246,24 @@
     <!--호출 위치 join 1 1.여기 있으면 기등록 업체 입니다.!!!   -->
     <!--관리상태 USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findByUserInfoCompany" parameterType="String" resultType="member">
-        select * from USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and COM_CODE=#{COM_CODE}
+        select * from SC_USER_INFO_COMPANY where USER_STATUS NOT IN('0','2') and COM_CODE=#{COM_CODE}
     </select>
 
     <!--가입 승인된 회사 정보만 찾는다.  USER_STATUS (0:대기, 1:검토중, 2:승인, 3:반려)-->
     <select id="findApproveCompany" parameterType="String" resultType="member">
-        select * from USER_INFO_COMPANY where USER_STATUS = '2' and COM_CODE=#{COM_CODE}
+        select * from SC_USER_INFO_COMPANY where USER_STATUS = '2' and COM_CODE=#{COM_CODE}
     </select>
 
     <!--회사 사용자 로그인 ID로 정보확인. -->
     <select id="findCpLoginID" parameterType="String" resultType="member">
-        SELECT * FROM USER_INFO u, USER_INFO_COMPANY uc
+        SELECT * FROM SC_USER_INFO u, SC_USER_INFO_COMPANY uc
             WHERE u.USER_IDX  = uc.USER_IDX
                 and  u.USER_ID=#{loginId}
     </select>
 
     <!--회사 사용자 로그인 IDX로 정보확인. -->
     <select id="findCpLoginIDX" parameterType="member" resultType="member">
-        SELECT * FROM USER_INFO u, USER_INFO_COMPANY uc
+        SELECT * FROM SC_USER_INFO u, SC_USER_INFO_COMPANY uc
         WHERE u.USER_IDX  = uc.USER_IDX
         and  u.USER_IDX=#{USER_IDX}
     </select>
@@ -272,26 +272,26 @@
 
     <!--사용자 ID 중복 체크 -->
     <select id="findByMemberId" parameterType="String" resultType="member">
-        select * from USER_INFO where USER_ID=#{loginId}
+        select * from SC_USER_INFO where USER_ID=#{loginId}
     </select>
 
     <select id="login" parameterType="member" resultType="member">
-        select * from USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
+        select * from SC_USER_INFO where USER_ID=#{USER_ID} and PASSWORD=#{PASSWORD}
     </select>
     <select id="findAll" resultType="member">
-        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from USER_INFO
+        select USER_EMAIL, PASSWORD, USER_NAME, USER_Mobile from SC_USER_INFO
     </select>
 
     <delete id="delete" parameterType="int">
-        delete from USER_INFO where USER_IDX=#{id}
+        delete from SC_USER_INFO where USER_IDX=#{id}
     </delete>
 
     <select id="findByMemberEmail" parameterType="String" resultType="member">
-        select * from USER_INFO where USER_EMAIL=#{loginEmail}
+        select * from SC_USER_INFO where USER_EMAIL=#{loginEmail}
     </select>
 
     <update id="update" parameterType="member">
-        update USER_INFO set USER_Mobile=#{USER_Mobile}
+        update SC_USER_INFO set USER_Mobile=#{USER_Mobile}
         where USER_IDX=#{USER_idx}
     </update>
 </mapper>

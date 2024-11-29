@@ -405,7 +405,7 @@
         if (approvalButton) {
             const userIdx = approvalButton.closest("tr").querySelector("input[name='USER_IDX']").value;
             const code = document.getElementById('COM_CODE').value;
-            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx + '&prePage=cpList';
+            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + userIdx + '&prePage=cpMainList';
             location.href = url;
         } else {
             console.error("승인 버튼을 찾을 수 없습니다.");
@@ -416,14 +416,14 @@
    //승인페이지 이동
    function goApprovalDetail(useridx) {
         const code =document.getElementById('COM_CODE').value ;
-        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx + '&prePage=cpList';
+        const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx + '&prePage=cpMainList';
         //renderContent(url,true);
         location.href = url;
    }
 
   function goList() {
         const code =document.getElementById('COM_CODE').value ;
-        const url = "/admin/companyInfo/cpList";
+        const url = "/admin/companyInfo/cpMainList";
         //renderContent(url,true);
         location.href = url;
    }

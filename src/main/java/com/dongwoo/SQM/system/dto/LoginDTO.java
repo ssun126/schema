@@ -19,7 +19,7 @@ public class LoginDTO implements UserDetails {
     private String PASSWORD;
     private String USER_Mobile;
 
-   //USER_INFO
+   //SC_USER_INFO
    private int USER_IDX;
    private String USER_ID;
    private String USER_PWD;  //비밀번호 (SHA 암호화)

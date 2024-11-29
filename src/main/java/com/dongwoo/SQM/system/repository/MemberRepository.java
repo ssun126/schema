@@ -104,7 +104,7 @@ public class MemberRepository {
 
     //User history. 10.23
     public int saveUserinfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
-        //USER_INFO_COMPANY  (0:대기, 1:검토중, 2:승인, 3:반려)  --> 승인된거는 제외 하자.
+        //SC_USER_INFO_COMPANY  (0:대기, 1:검토중, 2:승인, 3:반려)  --> 승인된거는 제외 하자.
         MemberDTO finduserInfoCompanyDTO = sql.selectOne("Member.findByUserInfoCompany", userInfoCompanyDTO.getCOM_CODE());
 
         if(finduserInfoCompanyDTO == null) {
@@ -116,13 +116,13 @@ public class MemberRepository {
 
     //User history. 10.23
     public int deleteUserinfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
-        //USER_INFO_COMPANY  (0:대기 삭제 처리 , 1:검토중, 2:승인, 3:반려)
+        //SC_USER_INFO_COMPANY  (0:대기 삭제 처리 , 1:검토중, 2:승인, 3:반려)
         return sql.update("Member.deleteUserinfoCompanyHis", userInfoCompanyDTO);
     }
 
     //승인 반려
     public int approvalUserInfoCompanyHis(UserInfoCompanyDTO userInfoCompanyDTO) {
-        //USER_INFO_COMPANY  (0:대기 삭제 처리 , 1:검토중, 2:승인, 3:반려)
+        //SC_USER_INFO_COMPANY  (0:대기 삭제 처리 , 1:검토중, 2:승인, 3:반려)
         return sql.update("Member.approvalUserInfoCompanyHis", userInfoCompanyDTO);
     }
 
@@ -181,7 +181,7 @@ public class MemberRepository {
     public MemberDTO findByBUS_NUMBER(String BUS_NUMBER) { return sql.selectOne("Member.findByBUSNUMBER", BUS_NUMBER); }
 
 
-    //USER_INFO_COMPANY
+    //SC_USER_INFO_COMPANY
     public MemberDTO findByUserInfoCompany(String COM_CODE) { return sql.selectOne("Member.findByUserInfoCompany", COM_CODE); }
 
     //ID 중복체크

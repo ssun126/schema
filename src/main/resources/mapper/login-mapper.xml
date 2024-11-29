@@ -4,27 +4,27 @@
 
 <mapper namespace="Login">
     <insert id="save" parameterType="login">
-        insert into USER_INFO(USER_EMAIL, USER_PWD, USER_NAME)
+        insert into SC_USER_INFO(USER_EMAIL, USER_PWD, USER_NAME)
         values (#{USER_EMAIL}, #{USER_PWD}, #{USER_NAME})
     </insert>
 
     <select id="login" parameterType="login" resultType="login">
-        select * from USER_INFO where USER_STATUS  = 'Y' AND  DEL_DATE IS NULL AND USER_ID=#{USER_ID} and USER_PWD=#{USER_PWD}
+        select * from SC_USER_INFO where USER_STATUS  = 'Y' AND  DEL_DATE IS NULL AND USER_ID=#{USER_ID} and USER_PWD=#{USER_PWD}
     </select>
     <select id="findAll" resultType="login">
-        select USER_EMAIL, USER_PWD, USER_NAME, USER_Mobile from USER_INFO
+        select USER_EMAIL, USER_PWD, USER_NAME, USER_Mobile from SC_USER_INFO
     </select>
     <select id="findById" parameterType="String" resultType="member">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        select * from SC_USER_INFO where USER_ID=#{USER_ID}
     </select>
     <select id="findByIdUsePass" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_ID=#{USER_ID}
+        select * from SC_USER_INFO where USER_ID=#{USER_ID}
     </select>
     <delete id="delete" parameterType="String">
-        delete from USER_INFO where USER_ID=#{USER_ID}
+        delete from SC_USER_INFO where USER_ID=#{USER_ID}
     </delete>
     <select id="findByLoginEmail" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_EMAIL=#{USER_EMAIL}
+        select * from SC_USER_INFO where USER_EMAIL=#{USER_EMAIL}
     </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
         SELECT
@@ -32,20 +32,20 @@
             UIC.COM_CODE,
             CC.COM_NAME
         FROM
-            USER_INFO UI
+            SC_USER_INFO UI
         LEFT OUTER JOIN
-            USER_INFO_COMPANY UIC ON UIC.USER_IDX = UI.USER_IDX
+            SC_USER_INFO_COMPANY UIC ON UIC.USER_IDX = UI.USER_IDX
         LEFT JOIN
-            COMPANY_CODE CC ON CC.COM_CODE = UIC.COM_CODE
+            SC_COMPANY_CODE CC ON CC.COM_CODE = UIC.COM_CODE
         WHERE UI.USER_STATUS = 'Y'
         AND UI.DEL_DATE IS NULL
         AND UI.USER_ID =#{USER_ID}
     </select>
     <select id="findByLoginName" parameterType="String" resultType="login">
-        select * from USER_INFO where USER_NAME=#{USER_NAME}
+        select * from SC_USER_INFO where USER_NAME=#{USER_NAME}
     </select>
     <update id="update" parameterType="login">
-        update USER_INFO set USER_Mobile=#{USER_Mobile}
+        update SC_USER_INFO set USER_Mobile=#{USER_Mobile}
         where USER_IDX=#{USER_idx}
     </update>
 
