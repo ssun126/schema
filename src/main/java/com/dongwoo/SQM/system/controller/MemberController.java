@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,9 @@ import java.util.*;
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
+
+    @Value("${Upload.path.warranty}")
+    private String uploadPath;
 
     private final MemberService memberService;
     private final UserMgrService userMgrService;
@@ -202,8 +206,7 @@ public class MemberController {
             return "/member/warranty";
         }
 
-        String uploadDir = "C:\\upload\\warranty\\" + memberDTO.getCOM_CODE() + "\\";  // 벤더 코드별 디렉터리 생성
-
+        String uploadDir = uploadPath+"\\" + memberDTO.getCOM_CODE() + "\\";  // 벤더 코드별 디렉터리 생성
         memberDTO.setCOM_FILE_NAME(memberFileDTO.getCOM_FILE_NAME());
         memberDTO.setCOM_FILE_PATH(uploadDir);
         //실제 파일 저장 처리//
@@ -387,7 +390,7 @@ public class MemberController {
             ,@RequestParam("comCode") String comCode
     ) {
         // 파일을 저장할 경로 (C 드라이브의 upload 폴더)
-        String uploadDir = "C:\\upload\\warranty\\" + comCode + "\\";  // 벤더 코드별 디렉터리 생성
+         String uploadDir = uploadPath+"\\" + comCode + "\\";  // 벤더 코드별 디렉터리 생성
 
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일이 비어 있습니다.");
@@ -419,8 +422,8 @@ public class MemberController {
             ,@RequestParam("comCode") String comCode
     ) {
 
-        //폴더명 처리!!!
-        String filePath = "C:\\upload\\warranty\\" + comCode + "\\"+ fileName;
+        String filePath = uploadPath+"\\" + comCode + "\\"+ fileName;
+
         File file = new File(filePath);
 
         if (!file.exists()) {
