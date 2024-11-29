@@ -463,6 +463,7 @@
 
        const hiddenInput = document.getElementById('COM_FILE_NAME');
        var fileName = hiddenInput.value;
+       let comCode = document.getElementById('COM_CODE').value ;
 
        if(fileName == ""){
            //alert('첨부된 파일이 없습니다.') ;
@@ -470,7 +471,7 @@
            return;
        }
 
-       fetch(`/member/warrantyDownLoad?fileName=${encodeURIComponent(fileName)}`, {
+       fetch(`/member/warrantyDownLoad?fileName=${encodeURIComponent(fileName)}`+'&comCode='+comCode, {
            method: 'GET',
            headers: {
                'Accept': 'application/octet-stream'
@@ -480,18 +481,18 @@
            if (!response.ok) {
                throw new Error('Network response was not ok');
            }
-           return response.blob(); // 파일을 Blob으로 변환
+           return response.blob();
        })
        .then(blob => {
            // Blob URL 생성
            const url = window.URL.createObjectURL(blob);
            const a = document.createElement('a');
            a.href = url;
-           a.download = fileName; // 다운로드할 파일 이름
-           document.body.appendChild(a); // 앵커 요소 추가
-           a.click(); // 다운로드 시작
-           a.remove(); // 앵커 요소 제거
-           window.URL.revokeObjectURL(url); // Blob URL 해제
+           a.download = fileName;
+           document.body.appendChild(a);
+           a.click();
+           a.remove();
+           window.URL.revokeObjectURL(url);
        })
        .catch(error => {
            console.error('파일 다운로드 실패:', error);

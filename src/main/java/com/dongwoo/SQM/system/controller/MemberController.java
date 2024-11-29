@@ -202,7 +202,8 @@ public class MemberController {
             return "/member/warranty";
         }
 
-        String uploadDir = "C:\\upload\\";  // 반드시 이 경로가 존재해야 함
+        String uploadDir = "C:\\upload\\warranty\\" + memberDTO.getCOM_CODE() + "\\";  // 벤더 코드별 디렉터리 생성
+
         memberDTO.setCOM_FILE_NAME(memberFileDTO.getCOM_FILE_NAME());
         memberDTO.setCOM_FILE_PATH(uploadDir);
         //실제 파일 저장 처리//
@@ -419,9 +420,7 @@ public class MemberController {
     ) {
 
         //폴더명 처리!!!
-        //warranty // comCode
-
-        String filePath = "C:\\upload\\" + fileName;
+        String filePath = "C:\\upload\\warranty\\" + comCode + "\\"+ fileName;
         File file = new File(filePath);
 
         if (!file.exists()) {
