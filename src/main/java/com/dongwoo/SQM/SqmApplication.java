@@ -36,7 +36,7 @@ public class SqmApplication {
 		};
 
 		// Add HTTP to HTTPS redirect
-		//tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
+		tomcat.addAdditionalTomcatConnectors(httpToHttpsRedirectConnector());
 
 		return tomcat;
 	}
