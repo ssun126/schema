@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="partCode">
+
+    <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
+        SELECT * FROM SC_base_code
+        WHERE  GROUP_CODE != BASE_CODE
+        AND BASE_OPTION = 'SYSTEM'
+        AND BASE_STATUS ='Y'
+        AND GROUP_CODE  =#{GROUP_CODE}
+        ORDER BY BASE_SORT ASC
+    </select>
+
+    <select id="getPlantList" resultType="HashMap">
+        SELECT BASE_CODE,BASE_VALUE FROM SC_BASE_CODE
+        WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE
+        ORDER BY BASE_SORT asc
+    </select>
+
+
+    <select id="partCodeList" parameterType="partCode"  resultType="partCode">
+        SELECT
+        pc.PART_CODE,
+        pc.PART_NAME,
+        pc.COM_CODE,
+        cc.COM_NAME,
+        pc.PLANT_CODE,
+        cc.COM_NATION ,
+        pc.PART_STATUS
+        FROM SC_PART_CODE pc
+        JOIN SC_COMPANY_CODE cc ON pc.COM_CODE = cc.COM_CODE
+        WHERE 1=1
+        <if test="PART_CODE != null and PART_CODE != ''">
+            AND pc.PART_CODE LIKE '%' || #{PART_CODE} || '%'
+        </if>
+        <if test="PART_NAME != null and PART_NAME != ''">
+            AND pc.PART_NAME LIKE '%' || #{PART_NAME} || '%'
+        </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND pc.COM_CODE LIKE '%' || #{COM_CODE} || '%'
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND pc.COM_NAME LIKE '%' || #{COM_NAME} || '%'
+        </if>
+        <if test="PLANT_CODE != null and PLANT_CODE != ''">
+            AND pc.PLANT_CODE LIKE '%' || #{PLANT_CODE} || '%'
+        </if>
+        <if test="COM_NATION != null and COM_NATION != ''">
+            AND cc.COM_NATION LIKE '%' || #{COM_NATION} || '%'
+        </if>
+    </select>
+
+</mapper>

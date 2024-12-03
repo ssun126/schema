@@ -33,6 +33,7 @@ public class CompanyInfoController {
     private final CompanyInfoService companyInfoService;
     private final MemberService memberService;
 
+    //사용자 회사정보
     @GetMapping("/user/companyInfo/company")
     public String cpInfoMain(Model model, Authentication authentication) {
 
@@ -70,7 +71,7 @@ public class CompanyInfoController {
         return "companyInfo/cpInfoMain";
     }
 
-
+    //사용자 회사정보 수정
     @PostMapping("/user/companyInfo/updateCompanyInfo")
     @ResponseBody
     public String updateCompanyInfo(@ModelAttribute MemberDTO memberDTO, Authentication authentication ,Model model) {
