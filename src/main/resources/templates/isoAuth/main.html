@@ -16,17 +16,18 @@
                         <div class="toolbar_content">
                             <div class="toolbar_default"></div>
                         </div>
-                        <div class="toolbar_aside">
-                            <input type="hidden" id="COM_CODE" th:value="${#authentication.principal.COM_CODE}">
-                            <button type="button" class="cui_button secondary" id="addRowBtn"><span>추가</span></button>
-                            <button type="button" class="cui_button secondary" id="delRowBtn" onclick="delCompany()"><span>삭제</span></button>
-                        </div>
+
                     </div>
-                    <form class="cui_form_field" data-legend="true">
-                        <fieldset>
-                            <legend><span>인증서 관리(배점 4점)</span></legend>
-                        </fieldset>
-                        <fieldset>
+                    <div class="cui_section">
+                        <div class="cui_bullet_title" style="justify-content: space-between;align-items: center;">
+                            <div class="bullet_title_label"><span>인증서 관리(배점 4점)</span></div>
+                            <div class="button_section" style="display: flex;gap: 10px;">
+                                <button type="button" class="cui_button secondary" id="addRowBtn"><span>추가</span></button>
+                                <button type="button" class="cui_button secondary" id="delRowBtn" onclick="delCompany()"><span>삭제</span></button>
+                            </div>
+                        </div>
+
+                        <form class="cui_form_field" data-legend="true">
                             <table class="cui_table center" id="isoAuthItemTable">
                                 <colgroup>
                                     <col style="width:120px;">
@@ -51,19 +52,19 @@
                                 <tbody>
                                 </tbody>
                             </table>
-                        </fieldset>
-                        <div class="cui_items_wrap" data-direction="right">
-                            <div class="item_content">
-                                <button type="button" class="cui_button primary" id="submitIsoAuth"><span>제출</span></button>
+                            <div class="cui_items_wrap" data-direction="right">
+                                <div class="item_content">
+                                    <button type="button" class="cui_button primary" id="submitIsoAuth"><span>제출</span></button>
+                                </div>
                             </div>
-                        </div>
-                        <fieldset id="rejectArea" style="display:none;">
-                            <legend><span>반려사유</span></legend>
-                            <div>
-                                <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason" th:text="${companyIsoAuth.STATE_REASON}"></textarea>
-                            </div>
-                        </fieldset>
-                    </form>
+                            <fieldset id="rejectArea" style="display:none;">
+                                <legend><span>반려사유</span></legend>
+                                <div>
+                                    <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason" th:text="${companyIsoAuth.STATE_REASON}"></textarea>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
