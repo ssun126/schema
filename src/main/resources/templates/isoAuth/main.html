@@ -30,11 +30,11 @@
                             <table class="cui_table center" id="isoAuthItemTable">
                                 <colgroup>
                                     <col style="width:120px;">
-                                    <col >
+                                    <col style="width:200px;">
                                     <col style="width:120px;">
                                     <col style="width:120px;">
                                     <col style="width:120px;">
-                                    <col style="width:280px;">
+                                    <col>
                                     <col style="width:80px;">
                                 </colgroup>
                                 <thead>
@@ -74,7 +74,7 @@
                 loadPage();
                 // 페이지 로드 함수
                 function loadPage() {
-                    const code = `[[${companyIsoAuth.COM_CODE}]]`;
+                    const code = `[[${#authentication.principal.COM_NAME}]]`; //세션의 회사코드
                     console.log(code);
                    // 페이지가 로드되면 서버에서 데이터를 가져옴
                     $.ajax({
@@ -106,7 +106,10 @@
                                                     '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +
                                                     '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +
                                                     '<td><input type="text" class="cui_text_field datepicker" name="REG_DATE"></td>' +
-                                                    '<td><div class="cui_attachments"><input type="file" class="cui_file_field" name="file" multiple onchange="toggleDeleteButton(this)"><button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button></div></td>' +
+                                                    '<td><div class="cui_items_wrap" data-direction="left"><div class="cui_attachments">' +
+                                                    '<input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)">' +
+                                                    '<button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>' +
+                                                    '</div></div></td>' +
                                                     '<td>신규</td>' +
                                                 '</tr>';
                                         tableBody.append(row);
@@ -165,7 +168,6 @@
                         if (fileInput && fileInput.files.length > 0) {
                             row['FILE_NAME'] = fileInput.files[0].name;
                         }
-                        console.log("row>>>>>>>>>"+row);
                         tableData.push(row);
                     });
 
@@ -221,7 +223,10 @@
                             '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +  // 날짜 필드
                             '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +  // 날짜 필드
                             '<td><input type="text" class="cui_text_field datepicker" name="REG_DATE"></td>' +  // 날짜 필드
-                            '<td><div class="cui_attachments"><input type="file" class="cui_file_field" name="file" multiple onchange="toggleDeleteButton(this)"><button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button></div></td>' +
+                            '<td><div class="cui_items_wrap" data-direction="left"><div class="cui_attachments" style="flex-direction: row;">' +
+                            '<input type="file" class="cui_file_field" name="file" multiple onchange="toggleDeleteButton(this)" style="width: 200px;">' +
+                            '<button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>' +
+                            '</div></div></td>' +
                             '<td>신규</td>' +  // 상태
                           '</tr>';
 
