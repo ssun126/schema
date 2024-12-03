@@ -4,91 +4,91 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>auditResult</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>auditResult</title>
 </head>
 <body>
 <div class="cui_content">
-  <div class="cui_main">
-    <div class="cui_head">
-      <div class="head_content">
-        <h2 class="cui_title"><span>업체명</span></h2>
-      </div>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>업체명</span></h2>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form class="cui_form_section" data-legend="true">
+                <fieldset>
+                    <legend><span>Audit 결과</span></legend>
+                    <table class="cui_table center" id="auditResultTable">
+                        <colgroup>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span>항목</span></th>
+                            <th><span>제출 일자</span></th>
+                            <th><span>구분</span></th>
+                            <th><span>제출 방식</span></th>
+                            <th><span>갱신 예정일</span></th>
+                            <th><span>점수</span></th>
+                            <th><span>결과(등급)</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="center"><span>인증서</span></td>
+                            <td class="center"><span>2024-11-11</span></td>
+                            <td class="center"><span>제출</span></td>
+                            <td class="center"><span>서면</span></td>
+                            <td class="center"><span>2024-00-00</span></td>
+                            <td class="center"><span>/ 4</span></td>
+                            <td class="center" rowspan="5"><span></span></td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span>노동환경</span></td>
+                            <td class="center"><span>2024-11-11</span></td>
+                            <td class="center"><span>미제출</span></td>
+                            <td class="center"><span>Self</span></td>
+                            <td class="center"><span>2024-00-00</span></td>
+                            <td class="center" style="border-right-width:1px;"><span>/ 20</span></td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span>안전보건</span></td>
+                            <td class="center"><span>2024-11-11</span></td>
+                            <td class="center"><span>NCR</span></td>
+                            <td class="center"><span>Self</span></td>
+                            <td class="center"><span>2024-00-00</span></td>
+                            <td class="center" style="border-right-width:1px;"><span>/ 20</span></td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span>품질체계</span></td>
+                            <td class="center"><span>2024-11-11</span></td>
+                            <td class="center"><span>NCR</span></td>
+                            <td class="center"><span>Self</span></td>
+                            <td class="center"><span>2024-00-00</span></td>
+                            <td class="center" style="border-right-width:1px;"><span>/ 50</span></td>
+                        </tr>
+                        <tr>
+                            <td class="center"><span>분쟁/책임광물</span></td>
+                            <td class="center"><span>2024-11-11</span></td>
+                            <td class="center"><span>NCR</span></td>
+                            <td class="center"><span>Self</span></td>
+                            <td class="center"><span>2024-00-00</span></td>
+                            <td class="center" style="border-right-width:1px;"><span>/ 6</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+        </div>
     </div>
-    <div class="cui_body">
-      <form class="cui_form_field" data-legend="true">
-        <fieldset>
-          <legend><span>Audit 결과</span></legend>
-          <table class="cui_table center" id="auditResultTable">
-            <colgroup>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-              <col>
-            </colgroup>
-            <thead>
-            <tr>
-              <th><span>항목</span></th>
-              <th><span>제출 일자</span></th>
-              <th><span>구분</span></th>
-              <th><span>제출 방식</span></th>
-              <th><span>갱신 예정일</span></th>
-              <th><span>점수</span></th>
-              <th><span>결과(등급)</span></th>
-            </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="center"><span>인증서</span></td>
-                <td class="center"><span>2024-11-11</span></td>
-                <td class="center"><span>제출</span></td>
-                <td class="center"><span>서면</span></td>
-                <td class="center"><span>2024-00-00</span></td>
-                <td class="center"><span>/ 4</span></td>
-                <td class="center" rowspan="5"><span></span></td>
-              </tr>
-              <tr>
-                <td class="center"><span>노동환경</span></td>
-                <td class="center"><span>2024-11-11</span></td>
-                <td class="center"><span>미제출</span></td>
-                <td class="center"><span>Self</span></td>
-                <td class="center"><span>2024-00-00</span></td>
-                <td class="center" style="border-right-width:1px;"><span>/ 20</span></td>
-              </tr>
-              <tr>
-                <td class="center"><span>안전보건</span></td>
-                <td class="center"><span>2024-11-11</span></td>
-                <td class="center"><span>NCR</span></td>
-                <td class="center"><span>Self</span></td>
-                <td class="center"><span>2024-00-00</span></td>
-                <td class="center" style="border-right-width:1px;"><span>/ 20</span></td>
-              </tr>
-              <tr>
-                <td class="center"><span>품질체계</span></td>
-                <td class="center"><span>2024-11-11</span></td>
-                <td class="center"><span>NCR</span></td>
-                <td class="center"><span>Self</span></td>
-                <td class="center"><span>2024-00-00</span></td>
-                <td class="center" style="border-right-width:1px;"><span>/ 50</span></td>
-              </tr>
-              <tr>
-                <td class="center"><span>분쟁/책임광물</span></td>
-                <td class="center"><span>2024-11-11</span></td>
-                <td class="center"><span>NCR</span></td>
-                <td class="center"><span>Self</span></td>
-                <td class="center"><span>2024-00-00</span></td>
-                <td class="center" style="border-right-width:1px;"><span>/ 6</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </fieldset>
-      </form>
-    </div>
-  </div>
 </div>
 </body>
 </html>
