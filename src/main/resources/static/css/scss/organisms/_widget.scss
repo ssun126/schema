@@ -16,25 +16,26 @@
         border-bottom : 1px solid var(--border-primary);
 
         .title {
-            display: flex;
-            align-items: center;
-            flex: 1 1 100%;
-            min-width: 0;
-            gap: 8px;
+            display     : flex;
+            align-items : center;
+            flex        : 1 1 100%;
+            min-width   : 0;
+            gap         : 8px;
+
             span {
-                font-size: 15px;
-                font-weight: 700;
-                flex: 0 0 auto;
-                max-width: 100%;
+                font-size      : 15px;
+                font-weight    : 700;
+                flex           : 0 0 auto;
+                max-width      : 100%;
                 text-transform : uppercase;
                 @include text-truncate;
             }
         }
 
         .actions {
-            flex      : 0 0 auto;
-            transform : translateX(8px);
-            margin-left:auto;
+            flex        : 0 0 auto;
+            margin-left : auto;
+            transform   : translateX(8px);
 
             .cui_button {
             }

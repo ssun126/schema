@@ -1,0 +1,116 @@
+%disabled {
+    user-select    : none;
+    pointer-events : none;
+    opacity        : 0.6;
+    background     : var(--control-disabled-bg);
+    touch-action   : none;
+}
+
+%section {
+    display        : flex;
+    flex-direction : column;
+    gap            : 8px;
+
+    & > * {
+        flex : 0 0 auto;
+    }
+}
+
+.cui_section {
+    @extend %section;
+
+    &:not([hidden]):has(.cui_bullet_title) + .cui_section:not([hidden]):has(.cui_bullet_title) {
+        margin-top : 12px;
+    }
+
+    &[aria-disabled=true] {
+        @extend %disabled;
+    }
+}
+
+.cui_border_section {
+    @extend %section;
+    padding       : var(--vertical-space);
+    border        : 1px solid var(--border-primary);
+    border-radius : calc(var(--vertical-space) / 2);
+
+    &[aria-disabled=true] {
+        @extend %disabled;
+    }
+}
+
+.cui_background_section {
+    @extend %section;
+    padding       : var(--vertical-space);
+    border        : 1px solid var(--border-theme);
+    border-radius : calc(var(--vertical-space) / 2);
+    background    : var(--endpoint);
+
+    &[aria-disabled=true] {
+        @extend %disabled;
+    }
+}
+
+.cui_scroll_section {
+    @include scrollbar();
+    overflow      : hidden auto;
+    width         : 100%;
+    height        : 300px;
+    padding       : var(--widget-padding);
+    border        : 1px solid var(--border-primary);
+    border-radius : calc(var(--vertical-space) / 2);
+
+    &[aria-disabled=true] {
+        @extend %disabled;
+    }
+}
+
+.cui_form_section {
+    display : block;
+    width   : 100%;
+
+    &[aria-disabled=true] {
+        @extend %disabled;
+        position : relative;
+
+        &:before {
+            position   : absolute;
+            z-index    : 20;
+            top        : 0;
+            right      : 0;
+            bottom     : 0;
+            left       : 0;
+            display    : block;
+            width      : 100%;
+            height     : 100%;
+            content    : '';
+            background : transparent;
+        }
+    }
+
+    &:not([data-legend]) {
+        legend {
+            @include clip;
+        }
+    }
+
+    legend {
+        @include bullet-title;
+    }
+
+    fieldset {
+        @include reset-default;
+        display : block;
+        width   : 100%;
+        border  : none;
+
+        & > * + * {
+            margin-top : 8px;
+        }
+
+        & + .cui_items_wrap,
+        & + fieldset {
+            margin-top : 24px;
+        }
+    }
+}

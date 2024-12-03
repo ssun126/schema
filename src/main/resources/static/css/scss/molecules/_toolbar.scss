@@ -39,6 +39,7 @@
         align-items : center;
         flex        : 1 1 100%;
         min-width   : 0;
+        gap         : $gap;
 
         .toolbar_default {
             display     : flex;
@@ -55,11 +56,30 @@
 
         .toolbar_more {
             position    : relative;
+            display     : none;
             flex-shrink : 0;
-            margin      : 0 auto 0 8px;
+            margin      : 0;
+
+            &.on {
+                display : block;
+            }
         }
 
         .cui_context_menu {
+            position      : absolute;
+            top           : 100%;
+            right         : 0;
+            display       : none;
+            border-radius : 8px;
+            background    : var(--contextmenu-bg-primary);
+            box-shadow    : var(--contextmenu-shadow);
+
+            &[aria-expanded] {
+                z-index : 99;
+                display : block;
+                padding : 8px 0;
+            }
+
             .cui_button {
                 justify-content : flex-start;
                 width           : 100%;

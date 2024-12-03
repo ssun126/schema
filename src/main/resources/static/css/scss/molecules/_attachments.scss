@@ -1,16 +1,92 @@
 .cui_attachments {
-    display        : flex;
-    flex-direction : column;
+    display : flex;
+
+    & + .cui_attachments {
+        margin-top : 4px;
+    }
 
     .cui_items_wrap {
+        flex : 0 1 auto;
+
         .item_label {
-            flex  : 0 0 auto;
-            width : unset;
-            font-weight:$text-font-weight;
+            font-weight : $text-font-weight;
+            align-items : flex-start;
+            flex        : 0 1 auto;
+            width       : auto;
+
+            &:before {
+                transform : translateY(1px);
+            }
         }
 
         .item_content {
-            gap : 0;
+            flex  : 0 0 auto;
+            width : auto;
+            gap   : 0;
+        }
+    }
+
+    &.multi {
+        flex-direction : column;
+    }
+
+    &.list {
+        flex-direction : column;
+
+        @at-root .cui_table & {
+            padding : 0;
+        }
+        &:has(.cui_attachments_head) {
+            border        : 1px solid var(--border-primary);
+            border-radius : 8px;
+
+            .cui_items_wrap {
+                padding : 0 12px;
+
+                &:hover {
+                    background : var(--hover-fill);
+                }
+            }
+        }
+
+        .cui_attachments_head {
+            display       : flex;
+            align-items   : center;
+            min-height    : calc(var(--control-size) + 8px);
+            padding       : 4px 12px;
+            border-bottom : 1px solid var(--border-primary);
+            border-radius : 8px 8px 0 0;
+
+            .attachments_title {
+                font-weight : $text-font-weight-bold;
+                display     : flex;
+                align-items : center;
+                flex        : 1 1 100%;
+                min-width   : 0;
+
+                .attachments_label {
+                    @include text-truncate;
+                    display   : block;
+                    flex      : 0 0 auto;
+                    max-width : 100%;
+                }
+            }
+        }
+
+        .cui_items_wrap {
+            display : flex;
+            flex    : 0 0 auto;
+
+
+            .item_label {
+                order : 2;
+            }
+
+            .item_content {
+                flex  : 0 0 auto;
+                order : 1;
+                width : auto;
+            }
         }
     }
 }

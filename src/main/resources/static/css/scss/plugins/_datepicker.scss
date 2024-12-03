@@ -1,0 +1,164 @@
+.ui-datepicker {
+    --icon-size : 36px;
+
+    &.ui-widget {
+        &.ui-widget-content {
+            width        : auto;
+            padding      : 12px;
+            border-color : var(--contextmenu-border-primary);
+            background   : var(--contextmenu-bg-primary);
+            color        : var(--text-primary);
+        }
+    }
+
+    .ui-widget-header {
+        display     : flex;
+        align-items : center;
+        height      : auto;
+        border      : none;
+        background  : transparent;
+        color       : inherit;
+
+        a {
+            color : inherit;
+        }
+
+        .ui-datepicker-prev,
+        .ui-datepicker-next {
+            position      : unset;
+            flex          : 0 0 auto;
+            width         : var(--icon-size);
+            height        : var(--icon-size);
+            border-radius : 50%;
+
+            &.ui-state-hover {
+                border     : none;
+                background : var(--control-bg-hover);
+            }
+
+            .ui-icon {
+                position   : relative;
+                width      : 100%;
+                height     : 100%;
+                background : none;
+                cursor     : pointer;
+
+                &:before {
+                    @include icon-font;
+                    display         : flex;
+                    align-items     : center;
+                    justify-content : center;
+                    width           : 100%;
+                    height          : 100%;
+                    font-size       : 24px;
+                }
+            }
+        }
+
+        .ui-datepicker-prev {
+            order : 1;
+
+            span {
+                &:before {
+                    content : $ci_angle_left;
+                }
+            }
+        }
+
+        .ui-datepicker-next {
+            order : 3;
+
+            span {
+                &:before {
+                    content : $ci_angle_right;
+                }
+            }
+        }
+
+        .ui-datepicker-title {
+            display         : flex;
+            gap             : 8px;
+            flex            : 1 1 auto;
+            flex-direction  : row-reverse;
+            align-items     : center;
+            justify-content : center;
+            height          : 100%;
+            margin          : 0;
+            text-align      : center;
+            order           : 2;
+
+            select {
+                position            : relative;
+                display             : inline-flex;
+                flex-shrink         : 0;
+                width               : auto;
+                max-width           : 100%;
+                height              : var(--control-size);
+                margin              : 0;
+                padding             : 0 calc($icon-size + 1px) 0 var(--control-x-padding);
+                border              : 1px solid var(--control-border);
+                border-radius       : var(--control-radius);
+                outline             : none;
+                background-color    : var(--control-bg);
+                background-image    : url("#{$images-src}components/select/icon_select.svg");
+                background-repeat   : no-repeat;
+                background-position : calc(100% - 1px) center;
+                color               : inherit;
+                text-indent         : 0;
+                vertical-align      : top;
+                cursor              : pointer;
+                user-select         : none;
+                -webkit-appearance  : none;
+            }
+        }
+    }
+
+    .ui-datepicker-calendar {
+        :where(th, td) {
+            &:nth-child(1) {
+                color : red;
+            }
+
+            &:nth-child(7) {
+                color : blue;
+            }
+        }
+
+        td {
+            padding : 2px;
+
+            a {
+                width         : var(--icon-size);
+                height        : var(--icon-size);
+                padding       : 0;
+                border        : none;
+                border-radius : 4px;
+                line-height   : var(--icon-size);
+                color         : inherit;
+                text-align    : center;
+            }
+
+            .ui-state {
+                &-default {
+                    border     : none;
+                    background : none;
+                }
+
+                &-hover {
+                    border     : none;
+                    background : var(--control-bg-hover);
+                }
+
+                &-active {
+                    border     : none;
+                    background : var(--primary);
+                    color      : #fff;
+                }
+            }
+        }
+
+    }
+
+}
+
+

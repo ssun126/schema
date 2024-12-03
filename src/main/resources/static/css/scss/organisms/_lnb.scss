@@ -30,6 +30,7 @@
     }
 
     .cui_nav {
+        @include scrollbar();
         overflow : hidden auto;
         flex     : 0 1 auto;
         height   : 100%;

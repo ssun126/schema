@@ -56,6 +56,7 @@
             &[aria-selected=true] {
                 font-weight : $text-font-weight-bold;
                 color       : var(--primary);
+
                 &:before {
                     opacity : 1;
                 }
@@ -70,8 +71,8 @@
                 word-break  : break-all;
 
                 @include area-active('li', '[aria-expanded=true]') {
-                    color:var(--primary);
-                    font-weight:$text-font-weight-bold;
+                    font-weight : $text-font-weight-bold;
+                    color       : var(--primary);
                 }
             }
 

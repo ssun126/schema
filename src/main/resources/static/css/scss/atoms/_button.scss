@@ -11,6 +11,7 @@
     flex-shrink        : 0;
     justify-content    : center;
     box-sizing         : border-box;
+    width              : fit-content;
     min-width          : 66px;
     max-width          : 100%;
     height             : var(--control-size);
@@ -27,7 +28,6 @@
     box-shadow         : none;
     touch-action       : manipulation;
     -webkit-appearance : none;
-    width: fit-content;
 
     &:after {
         position       : absolute;
@@ -54,7 +54,8 @@
     }
 
     span {
-        font-style : normal;
+        font-style  : normal;
+        white-space : nowrap;
         @include area-active('.cui_button', '.icon') {
             @include clip;
         }
@@ -130,7 +131,8 @@
         }
 
         &:disabled {
-            opacity : 0.5;
+            opacity    : 0.5;
+            background : var(--control-disabled-bg);
         }
     }
 

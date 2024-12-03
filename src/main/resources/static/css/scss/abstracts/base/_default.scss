@@ -57,14 +57,16 @@ img {
 }
 
 
-[data-cui-icon]{
+[data-cui-icon] {
     &::before {
         @include icon-font;
     }
 }
+
 .cui_font_sm {
-    font-size:$text-font-size-sm
+    font-size : $text-font-size-sm
 }
+
 .cui_font_xs {
-    font-size:$text-font-size-xs
+    font-size : $text-font-size-xs
 }

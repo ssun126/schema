@@ -15,6 +15,9 @@
     --widget-padding        : 20px;
     --widget-radius         : 12px;
 
+}
+
+@mixin light {
     //color
     --primary               : #{$theme-primary-color};
     --primary-rgb           : #{to-rgb($theme-primary-color)};
@@ -22,9 +25,7 @@
     --primary-hover-rgb     : #{to-rgb($theme-primary-hover)};
     --primary-text          : #{$theme-primary-text};
     --primary-text-rgb      : #{to-rgb($theme-primary-text)};
-}
 
-@mixin light {
     --secondary                  : #{$theme-secondary-color};
     --endpoint                   : #{$theme-endpoint-color};
     --border-theme               : rgb(var(--primary-rgb), 0.3);
@@ -100,6 +101,15 @@
 }
 
 @mixin dark {
+    //color
+    --primary               : #0085ff;
+    --primary-rgb           : #{to-rgb(#0085ff)};
+    --primary-hover         : #{#0085ff};
+    --primary-hover-rgb     : #{to-rgb(#0085ff)};
+    --primary-text          : #{#222222};
+    --primary-text-rgb      : #{to-rgb(#222222)};
+
+    --secondary                  : #{$gray-900};
     --endpoint                   : #{$gray-800};
     --border-theme               : #{$gray-700};
 
@@ -182,8 +192,8 @@ html[data-mode="dark"] {
     @include dark;
 }
 
-@media (prefers-color-scheme : dark) {
-    html[data-mode="device"] {
-        @include dark;
-    }
-}
+//@media (prefers-color-scheme : dark) {
+//    html[data-mode="device"] {
+//        @include dark;
+//    }
+//}

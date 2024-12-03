@@ -11,9 +11,9 @@ $fonts : (
         font-family : $custom-font-family;
         font-style  : normal;
         font-weight : $value;
-        src         : url("#{$font-src}#{$custom-font-family}-#{$weight}.woff2") format("woff2"),
-        url("#{$font-src}#{$custom-font-family}-#{$weight}.woff") format("woff"),
-        url("#{$font-src}#{$custom-font-family}-#{$weight}.ttf") format("truetype");
+        src         : url("#{$font-src}/#{$custom-font-family}-#{$weight}.woff2") format("woff2"),
+        url("#{$font-src}/#{$custom-font-family}-#{$weight}.woff") format("woff"),
+        url("#{$font-src}/#{$custom-font-family}-#{$weight}.ttf") format("truetype");
     }
 }
 
@@ -23,9 +23,9 @@ $fonts : (
         font-family   : $custom-font-family;
         font-style    : normal;
         font-weight   : $value;
-        src           : url("#{$font-src}#{$custom-font-family-won}-#{$weight}.woff2") format("woff2"),
-        url("#{$font-src}#{$custom-font-family-won}-#{$weight}.woff") format("woff"),
-        url("#{$font-src}#{$custom-font-family-won}-#{$weight}.ttf") format("truetype");
+        src           : url("#{$font-src}/#{$custom-font-family-won}-#{$weight}.woff2") format("woff2"),
+        url("#{$font-src}/#{$custom-font-family-won}-#{$weight}.woff") format("woff"),
+        url("#{$font-src}/#{$custom-font-family-won}-#{$weight}.ttf") format("truetype");
         unicode-range : U+005C;
     }
 }
@@ -35,9 +35,9 @@ $fonts : (
     font-family : $icon-font-family;
     font-style  : normal;
     font-weight : normal;
-    src         : url("#{$font-src}#{$icon-font-family}.woff2") format("woff2"),
-    url("#{$font-src}#{$icon-font-family}.woff") format("woff"),
-    url("#{$font-src}#{$icon-font-family}.ttf") format("truetype");
+    src         : url("#{$font-src}/#{$icon-font-family}.woff2") format("woff2"),
+    url("#{$font-src}/#{$icon-font-family}.woff") format("woff"),
+    url("#{$font-src}/#{$icon-font-family}.ttf") format("truetype");
 }
 
 // LNB 아이콘 폰트
@@ -45,7 +45,7 @@ $fonts : (
     font-family : $menu-icon-font-family;
     font-style  : normal;
     font-weight : normal;
-    src         : url("#{$font-src}#{$menu-icon-font-family}.woff2") format("woff2"),
-    url("#{$font-src}#{$menu-icon-font-family}.woff") format("woff"),
-    url("#{$font-src}#{$menu-icon-font-family}.ttf") format("truetype");
+    src         : url("#{$font-src}/#{$menu-icon-font-family}.woff2") format("woff2"),
+    url("#{$font-src}/#{$menu-icon-font-family}.woff") format("woff"),
+    url("#{$font-src}/#{$menu-icon-font-family}.ttf") format("truetype");
 }

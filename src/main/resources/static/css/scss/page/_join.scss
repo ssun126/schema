@@ -1,8 +1,4 @@
 [data-module="join"] {
-    .cui_main {
-        padding : 50px 0;
-    }
-
     .cui_title {
         padding-bottom : 12px;
     }
@@ -11,11 +7,54 @@
         padding-bottom : 12px;
     }
 
-    .cui_scroll_section {
-        overflow : hidden auto;
-        width    : 100%;
-        height   : 300px;
-        padding  : var(--widget-padding);
-        border   : 1px solid var(--border-primary);
+    .privacy_area {
+        * {
+            margin  : 0;
+            padding : 0;
+        }
+
+        .privacy_con {
+            margin-top : 24px;
+        }
+
+        table {
+            margin          : 8px 0;
+            border-collapse : collapse;
+            border          : 1px solid var(--border-endpoint);
+
+            th, td {
+                font-size : 0.96em;
+                padding   : 4px;
+            }
+
+            th {
+                text-align  : center;
+                white-space : nowrap;
+            }
+        }
+
+        p {
+            & + p {
+                margin-top : 12px;
+            }
+
+            & + ul {
+                margin-top : 8px;
+            }
+        }
+
+        ul {
+            li + li {
+                margin-top : 16px;
+            }
+
+            & ul {
+                padding : 8px 0 12px 0;
+            }
+        }
+
+        li {
+            list-style : none;
+        }
     }
 }

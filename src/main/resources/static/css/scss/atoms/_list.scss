@@ -1,0 +1,33 @@
+.cui_list {
+    margin     : 0;
+    padding    : 0;
+    list-style : none;
+
+    &[data-bullet="dash"] {
+        & > li {
+            &:before {
+                width      : 5px;
+                height     : 2px;
+                background : var(--text-primary);
+            }
+        }
+    }
+
+    & > li {
+        line-height  : 1.3em;
+        position     : relative;
+        padding-left : calc(1em + 4px);
+
+        &:before {
+            position : absolute;
+            top      : calc(1.3em / 2);
+            left     : 2px;
+            display  : block;
+            content  : '';
+        }
+
+        & + li {
+            margin-top : 4px;
+        }
+    }
+}

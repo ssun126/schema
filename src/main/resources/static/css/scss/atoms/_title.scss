@@ -8,10 +8,28 @@
 }
 
 .cui_bullet_title {
-    @include bullet-title;
-    margin-bottom:6px;
+    display    : flex;
+    min-height : var(--control-size);
 
-    & + .cui_border_box {
-        margin-top : 12px;
+    .bullet_title_label {
+        flex       : 0 1 auto;
+        padding    : 6px 0;
+        word-break : break-all;
+
+        span {
+            @include bullet-title;
+        }
+    }
+
+    .bullet_title_aside {
+        display     : flex;
+        flex        : 0 0 auto;
+        margin-left : auto;
+        gap         : 4px;
+
+        & > * {
+            flex : 0 0 auto;
+        }
+
     }
 }

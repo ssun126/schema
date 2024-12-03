@@ -1,9 +1,11 @@
 .cui_table {
     width           : 100%;
     border-collapse : collapse;
+    vertical-align  : top;
     border-top      : 1px solid var(--border-endpoint);
+
     & + .cui_table {
-        margin-top:24px;
+        margin-top : 24px;
     }
 
     &:has(colgroup) {
@@ -14,9 +16,17 @@
         text-align : center;
     }
 
-    &.vertical-top {
-        & > tbody {
-            vertical-align:top;
+    &.vertical-middle {
+        vertical-align : middle;
+    }
+
+    &.cui_post_table {
+        & > tbody > tr:hover > :is(th,td) {
+            background : var(--hover-fill);
+        }
+
+        & > :is(tbody,thead,tfoot) > tr > :is(th,td) {
+            border-right-width : 0;
         }
     }
 
@@ -24,13 +34,12 @@
         text-align : center;
     }
 
-    thead {
+    & > thead {
         text-align : center;
     }
 
     th {
         font-weight : $text-font-weight;
-        //background:rgba(var(--default), 0.04);
 
         &.required {
             & > span:after {
@@ -44,27 +53,33 @@
         }
     }
 
-    th, td {
-        padding       : 6px;
-        text-align    : inherit;
-        border-bottom : 1px solid var(--border-primary);
-        word-break:break-all;
-        vertical-align:inherit;
-    }
+    & > :where(tbody, thead, tfoot) {
+        vertical-align : inherit;
 
-    :is(th,td) {
-        border-right : 1px solid var(--border-primary);
+        & > tr {
+            & > :where(th, td) {
+                padding        : 6px;
+                text-align     : inherit;
+                vertical-align : inherit;
+                word-break     : break-all;
+                border-right   : 1px solid var(--border-primary);
+                border-bottom  : 1px solid var(--border-primary);
 
-        &:last-child {
-            border-right-width : 0;
-        }
+                &:last-child {
+                    border-right-width : 0;
+                }
 
-        & > span {
-            display : inline-block;
-            padding : 8px 0;
-        }
-        & > div,p {
-            padding : 8px 0;
+                & > span {
+                    line-height : var(--line-height);
+                    display     : inline-block;
+                    padding     : 6px 0;
+                }
+
+                & > :is(div:not(.cui_items_wrap, .cui_attachments), p) {
+                    padding : 6px 0;
+                }
+            }
+
         }
     }
 

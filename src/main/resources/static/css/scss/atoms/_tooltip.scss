@@ -1,7 +1,5 @@
 /* Tooltip */
 .cui_tooltip {
-    $tooltip-light : #ffffff;
-    $tooltip-dark  : #14284b;
     font-size      : $text-font-size-sm;
     font-weight    : $text-font-weight-medium;
     line-height    : 20px;
@@ -11,7 +9,7 @@
     pointer-events : none;
     border-radius  : 5px;
     //color          : $text-primary;
-    background     : $tooltip-light;
+    background     : var(--contextmenu-bg-primary);
     box-shadow     : 0 0 10px rgba($black, 0.2);
 
     &:before {
@@ -43,21 +41,21 @@
 
     &.tooltip_bottom:before {
         top           : -6px;
-        border-bottom : 7px solid $tooltip-light;
+        border-bottom : 7px solid var(--contextmenu-bg-primary);
     }
 
     &.tooltip_top:before {
         bottom     : -6px;
-        border-top : 7px solid $tooltip-light;
+        border-top : 7px solid var(--contextmenu-bg-primary);
     }
 
     &.tooltip_left:before {
         right       : -6px;
-        border-left : 7px solid $tooltip-light;
+        border-left : 7px solid var(--contextmenu-bg-primary);
     }
 
     &.tooltip_right:before {
         left         : -6px;
-        border-right : 7px solid $tooltip-light;
+        border-right : 7px solid var(--contextmenu-bg-primary);
     }
 }

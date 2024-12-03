@@ -1,0 +1,62 @@
+.cui_pagination {
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    margin-top      : 32px;
+    gap             : 2px;
+
+    & > * {
+        line-height     : var(--control-size);
+        display         : flex;
+        align-items     : center;
+        flex            : 0 0 auto;
+        justify-content : center;
+        height          : var(--control-size);
+        padding         : 0;
+        cursor          : pointer;
+        text-align      : center;
+        border          : none;
+        border-radius   : 4px;
+        background      : transparent;
+
+        &:hover {
+            background : var(--hover-fill);
+        }
+    }
+
+    & > *:not(.pagination_page) {
+        &:before {
+            @include icon-font;
+            line-height : var(--control-size);
+            width       : var(--control-size);
+            height      : var(--control-size);
+        }
+
+        $icons : (
+                "pagination_first" $ci_angles_left,
+                "pagination_prev" $ci_angle_left,
+                "pagination_next" $ci_angle_right,
+                "pagination_last" $ci_angles_right
+        );
+
+        @each $name, $icon in $icons {
+            &.#{$name}:before {
+                content : #{$icon};
+            }
+
+        }
+
+        span {
+            @include clip
+        }
+    }
+
+    & > .pagination_page {
+        min-width : var(--control-size);
+
+        &[aria-selected="true"] {
+            color      : #fff;
+            background : var(--primary);
+        }
+    }
+}

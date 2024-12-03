@@ -108,7 +108,8 @@
 
 
 @mixin bullet-title() {
-    display     : block;
+    display     : flex;
+    align-items : center;
     position    : relative;
     margin      : 0;
     border      : 0;

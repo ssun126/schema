@@ -1,14 +1,15 @@
 .cui_items_wrap {
     display     : inline-flex;
     align-items : flex-start;
+    width       : fit-content;
     max-width   : 100%;
-    width:fit-content;
     gap         : 8px;
 
     $align      : (
             "left" "flex-start",
             "right" "flex-end",
-            "center" "center"
+            "center" "center",
+            "space" "space-between"
     );
 
     &[data-direction] {
@@ -23,6 +24,7 @@
             }
         }
     }
+
     &[data-direction=column] {
         flex-direction : column;
 
@@ -30,6 +32,7 @@
             flex  : 1 0 auto;
             width : 100%;
         }
+
         & > .item_content {
             flex-direction : column;
         }
@@ -67,19 +70,24 @@
         width   : 100%;
         gap     : 0 6px;
 
+        & > span {
+            padding : 6px 0;
+        }
 
-        &[data-role=calendar-picker]{
+
+        &[data-role=calendar-picker] {
             position : relative;
             width    : 116px;
 
             .cui_text_field {
-                width         : 100%;
+                width : 100%;
             }
 
-            &:has(.cui_button.icon){
+            &:has(.cui_button.icon) {
                 .cui_text_field {
                     padding-right : 24px;
                 }
+
                 .cui_button.icon {
                     position : absolute;
                     top      : 0;

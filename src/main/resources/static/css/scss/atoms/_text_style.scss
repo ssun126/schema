@@ -1,0 +1,11 @@
+.cui_subject {
+    .data_subject {
+        @include text-truncate;
+        display   : inline-block;
+        max-width : 100%;
+
+        &:hover {
+            text-decoration : underline;
+        }
+    }
+}
