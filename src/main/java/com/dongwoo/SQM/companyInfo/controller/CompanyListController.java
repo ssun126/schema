@@ -107,7 +107,7 @@ public class CompanyListController {
         return "companyList/cpApprovallist";
     }
 
-    //업체 승인 목록 검색 LIST  2024.11.12 sylee
+    //업체 승인 목록 검색 LIST
     @PostMapping("/admin/companyInfo/getCompanyApprovalList")
     public ResponseEntity<?> getCompanyApprovalList(@RequestBody CompanyInfoParamDTO companyInfoParamDTO ) {
         try {
@@ -121,7 +121,7 @@ public class CompanyListController {
         }
     }
 
-    //업체 승인 목록 상세 검색-> 업체 상세  2024.11.08 sylee
+    //업체 승인 목록 상세 검색-> 업체 상세
     @GetMapping("/admin/companyInfo/cpApprovalDetail")
     public String cpApprovalDetail(@RequestParam("com_code") String com_code
                              ,@RequestParam("user_idx") int useridx
@@ -163,7 +163,6 @@ public class CompanyListController {
 
         return "companyList/cpApprovalDetail";
     }
-
 
 
 /////////////
