@@ -35,6 +35,10 @@ public class CompanyInfoService {
         return companyInfoRepository.approvalCompanySearch(companyInfoParamDTO);
     }
 
+    public List<CompanyInfoDTO> cpMaterialSearch(CompanyInfoParamDTO companyInfoParamDTO ) {
+        return companyInfoRepository.approvalCompanySearch(companyInfoParamDTO);
+    }
+
     //업체 거래사업부
     public List<CompanyInfoDTO> findCompanyCodeWork(CompanyInfoParamDTO companyInfoParamDTO) {
         return companyInfoRepository.findCompanyCodeWork(companyInfoParamDTO);
