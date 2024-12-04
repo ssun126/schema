@@ -18,6 +18,8 @@ public class IsoAuthItemDTO {
     private String AUTH_DATE;
     @JsonProperty("EXP_DATE")
     private String EXP_DATE;
+    @JsonProperty("REG_INPUT_DATE")
+    private String REG_INPUT_DATE;
     @JsonProperty("REG_DATE")
     private String REG_DATE;
     @JsonProperty("UP_DATE")

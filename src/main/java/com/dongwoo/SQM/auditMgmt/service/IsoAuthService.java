@@ -40,16 +40,20 @@ public class IsoAuthService {
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
-    public void saveIsoAuthData(String tableData, MultipartFile[] fileNames) throws IOException {
+    public void saveIsoAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         List<IsoAuthItemDTO> isoAuthItems = objectMapper.readValue(tableData, new TypeReference<List<IsoAuthItemDTO>>() {});
 
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String comCode = user.getCOM_CODE();
+        int loginIdx = user.getUSER_IDX();
+
         // 파일이 존재하면 처리
         if (fileNames != null && fileNames.length > 0) {
-            if (fileNames.length != isoAuthItems.size()) {
+           /* if (fileNames.length != isoAuthItems.size()) {
                 throw new IOException("파일의 개수와 데이터의 개수가 일치하지 않습니다.");
-            }
+            }*/
 
             // 각 파일을 저장하고 경로를 DTO에 추가
             for (int i = 0; i < fileNames.length; i++) {
@@ -62,29 +66,32 @@ public class IsoAuthService {
                 log.info("파일명: " + fileName);
                 isoAuthItems.get(i).setFILE_NAME(fileName);  // 파일명 추가
                 isoAuthItems.get(i).setFILE_PATH(filePath);  // 파일 경로 추가
+
+                //인증서 데이터 저장
+                for (IsoAuthItemDTO dto : isoAuthItems) {
+                    dto.setCOM_CODE(comCode);
+                    dto.setITEM_STATE(type); //제출 또는 저장
+                    dto.setREG_DW_USER_IDX(loginIdx);
+                    dto.setUP_DW_USER_IDX(loginIdx);
+                    isoAuthRepository.saveItems(dto);  // 데이터베이스에 저장
+                }
+
+                //회사별 Audit 데이터 저장
+                AuditMgmtDTO isoAuthDTO = new AuditMgmtDTO();
+                isoAuthDTO.setAUTH_TYPE("ISO");
+                isoAuthDTO.setAPPROVE_STATE(type); //제출 또는 저장
+                isoAuthDTO.setCOM_CODE(comCode);
+                isoAuthDTO.setREG_DW_USER_IDX(loginIdx);
+                isoAuthDTO.setUP_DW_USER_IDX(loginIdx);
+                saveAuth(isoAuthDTO); //저장
+
+                //type이 send이면 제출 >> POVIS 전송
+                if(type.equals("SEND")){
+                    //POVIS 전송
+                    log.info("POVIS에 ISO정보 제출");
+                }
             }
         }
-        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String comCode = user.getCOM_CODE();
-        int loginIdx = user.getUSER_IDX();
-        //인증서 데이터 저장
-        for (IsoAuthItemDTO dto : isoAuthItems) {
-            dto.setCOM_CODE(comCode);
-            dto.setREG_DW_USER_IDX(loginIdx);
-            dto.setUP_DW_USER_IDX(loginIdx);
-            isoAuthRepository.saveItems(dto);  // 데이터베이스에 저장
-        }
-
-        //회사별 Audit 데이터 저장
-        AuditMgmtDTO isoAuthDTO = new AuditMgmtDTO();
-        isoAuthDTO.setAUTH_TYPE("ISO");
-        isoAuthDTO.setAPPROVE_STATE("SEND"); //제출
-        isoAuthDTO.setCOM_CODE(comCode);
-        isoAuthDTO.setREG_DW_USER_IDX(loginIdx);
-        isoAuthDTO.setUP_DW_USER_IDX(loginIdx);
-        saveAuth(isoAuthDTO); //저장
-
-        // 데이터를 POVIS에 전송
     }
 
     private String saveFile(MultipartFile file) throws IOException {

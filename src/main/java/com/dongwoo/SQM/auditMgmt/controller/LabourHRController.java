@@ -22,7 +22,7 @@ public class LabourHRController {
 
     @GetMapping("/admin/auditMgmt/labourHRDetail")
     public String labourHRDetail(Model model, @RequestParam("COM_CODE") String com_code) {
-        // 회사의 ISO 상태 정보를 가져옵니다.
+        // 회사의 노동인권 상태 정보를 가져옵니다.
         AuditMgmtDTO companyAuth = isoAuthService.getCompanyAuth("LABOUR", com_code);
         model.addAttribute("companyAuth", companyAuth);
 

@@ -6,6 +6,7 @@ import com.dongwoo.SQM.auditMgmt.dto.AuditSearchResult;
 import com.dongwoo.SQM.auditMgmt.service.IsoAuthService;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
+import com.dongwoo.SQM.common.service.FileStorageService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -39,6 +43,15 @@ public class AuditMgmtRestController {
     @Autowired
     private IsoAuthService isoAuthService;
 
+    @Value("${Upload.path.attach}")
+    private String uploadPath;
+
+    private final FileStorageService fileStorageService;
+
+    @Autowired
+    public AuditMgmtRestController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
     // admin -검색어로 ISO 업체리스트
     @GetMapping("/searchAuditMgmt")
     public AuditSearchResult searchCompanies(@RequestParam("type") String type, @RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("state") String state, Criteria criteria) {
@@ -80,8 +93,7 @@ public class AuditMgmtRestController {
             return ResponseEntity.ok("Form submitted fail!");
         }
     }
-    @Value("${Upload.path.attach}")
-    private String uploadPath;
+
 
     /**
      * ISO 인증서 정보 리스트
@@ -105,54 +117,40 @@ public class AuditMgmtRestController {
 
     //인증서 파일 다운로드
     @GetMapping("/getIsoAuthFileDown")
-    public ResponseEntity<FileSystemResource> downloadFile(@RequestParam("fileName") String filename) {
-        try {
-            // 파일 경로 설정
-            File file = new File(uploadPath + File.separator + filename);
-            if (file.exists()) {
-                // 파일이 존재하면, 파일을 반환
-                FileSystemResource resource = new FileSystemResource(file);
+    public ResponseEntity<Resource> downloadFile(@RequestParam("filename") String filename) throws Exception {
+        Path path = fileStorageService.getUploadDirectory().resolve(filename).normalize();
+        FileSystemResource resource = new FileSystemResource(path);
 
-                // 파일 MIME 타입을 설정 (파일의 확장자에 맞는 MIME 타입을 설정)
-                String mimeType = "application/octet-stream"; // 기본값은 application/octet-stream (모든 파일 유형에 적용 가능)
-                try {
-                    mimeType = Files.probeContentType(file.toPath()); // 파일의 MIME 타입을 자동으로 추정
-                } catch (Exception e) {
-                    e.printStackTrace(); // 오류가 발생하면 기본 MIME 타입을 사용
-                }
-
-                // 파일 다운로드 헤더 설정
-                HttpHeaders headers = new HttpHeaders();
-                // 파일 다운로드시 원본 파일명으로 다운로드되도록 설정
-                String encodedFileName = URLEncoder.encode(filename, StandardCharsets.UTF_8.toString());
-                headers.add("Content-Disposition", "attachment; filename=\"" + encodedFileName + "\"");
-                headers.setContentType(MediaType.parseMediaType(mimeType)); // MIME 타입 설정
-
-                return ResponseEntity.ok()
-                        .headers(headers)
-                        .body(resource);
-            } else {
-                // 파일이 존재하지 않으면 404 상태 반환
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new Exception("File not found or not readable: " + filename);
         }
+
+        // Encode the filename in UTF-8 and handle non-ASCII characters
+        String encodedFilename = encodeFileName(filename);
+
+        // Return the file as a downloadable resource
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
+                .body(resource);
     }
 
     //IsoAuth 정보 제출
     @PostMapping("/sendIsoAuthData")
-    public String sendIsoAuthData(@RequestParam("data") String data, @RequestParam(value = "file_name") MultipartFile[] fileNames) throws IOException {
+    public String sendIsoAuthData(@RequestParam("data") String data,@RequestParam("type") String type, @RequestParam(value = "file_name") MultipartFile[] fileNames) throws IOException {
         try {
-            isoAuthService.saveIsoAuthData(data, fileNames);  // 데이터와 파일을 서비스에 전달
+            isoAuthService.saveIsoAuthData(data, type, fileNames);  // 데이터와 파일을 서비스에 전달
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {
             return "데이터 저장에 실패했습니다: " + e.getMessage();
         }
-
-
-
     }
 
+    private String encodeFileName(String filename) throws UnsupportedEncodingException {
+        // Encode filename in UTF-8
+        String encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+
+        // Ensure that non-ASCII characters are correctly encoded
+        return encodedFilename;
+    }
 
 }

@@ -36,7 +36,7 @@ public class ISOAuthController {
     public String isoAuthAdminDetail(Model model, @RequestParam("COM_CODE") String com_code) {
         // 회사의 ISO 상태 정보를 가져옵니다.
         AuditMgmtDTO companyIsoAuth = isoAuthService.getCompanyAuth("ISO", com_code);
-        model.addAttribute("companyIsoAuth", companyIsoAuth);
+        model.addAttribute("companyAuth", companyIsoAuth);
         return "isoAuth/detail";
     }
 
