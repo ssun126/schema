@@ -15,6 +15,9 @@
             <div class="head_content">
                 <h2 class="cui_title"><span th:text="${#authentication.principal.COM_NAME}"></span></h2>
             </div>
+            <div class="head_aside">
+                <p>(제출:<span>2024.01.01</span>)</p>
+            </div>
         </div>
         <div class="cui_body">
             <form class="cui_form_section" data-legend="true">
@@ -32,7 +35,7 @@
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
                                         <div class="cui_attachments">
-                                            <input type="file" class="cui_file_field">
+                                            <input type="file" multiple class="cui_file_field">
                                             <div class="cui_items_wrap" data-direction="left">
                                                 <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
                                                 <div class="item_content">

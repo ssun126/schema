@@ -25,9 +25,14 @@
         </nav>
 
         <div class="global_utility">
+            <select class="cui_select_field">
+                <option>KOR</option>
+                <option>ENG</option>
+                <option>JPN</option>
+                <option>CHN</option>
+            </select>
             <div class="utility_profile" onclick="goMenu('/member/myPage')">
                 <div class="info">
-
                     <strong><span th:text="${#authentication.principal.USER_NAME}"></span></strong>
                     <span sec:authorize="isAuthenticated()" sec:authentication="name"></span><!--<span th:text="${#authentication.authorities}"></span>-->
                 </div>

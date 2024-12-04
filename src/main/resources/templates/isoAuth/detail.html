@@ -6,7 +6,7 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span th:text="${companyIsoAuth.COM_NAME}">ISO 인증</span></h2>
+                <h2 class="cui_title"><span th:text="${companyAuth.COM_NAME}">ISO 인증</span></h2>
             </div>
         </div>
         <div class="cui_body">
@@ -15,7 +15,7 @@
                     <div class="toolbar_default"></div>
                 </div>
             </div>
-            <form class="cui_form_field" data-legend="true">
+            <form class="cui_form_section" data-legend="true">
                 <fieldset>
                     <legend><span>인증서 관리(배점 4점)</span></legend>
                     <table class="cui_table center" id="isoAuthItemTable">
@@ -48,7 +48,7 @@
                 <fieldset id="rejectArea" style="display:none;">
                     <legend><span>반려사유</span></legend>
                     <div>
-                        <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason" th:text="${companyIsoAuth.STATE_REASON}"></textarea>
+                        <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason" th:text="${companyAuth.STATE_REASON}"></textarea>
                     </div>
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
@@ -94,7 +94,7 @@
         loadPage(1);
         // 페이지 로드 함수
         function loadPage(pageNum) {
-            const code = `[[${companyIsoAuth.COM_CODE}]]`;
+            const code = `[[${companyAuth.COM_CODE}]]`;
            // 페이지가 로드되면 서버에서 데이터를 가져옴
             $.ajax({
                 url: '/api/isoAuthItemList',  // 서버의 API URL
@@ -164,7 +164,7 @@
 
     // 반려 사유 저장
     $('#ReasonAdd').on('click', function() {
-        const code = `[[${companyIsoAuth.COM_CODE}]]`;
+        const code = `[[${companyAuth.COM_CODE}]]`;
         const inputReason = $('#inputReason').val();  // 반려사유
         const state = 'REJECT';
         $.ajax({
@@ -184,7 +184,7 @@
 
      // 반려 버튼 클릭시 반려사유 입력
     $('#approveIsoAuth').on('click', function() {
-        const code = `[[${companyIsoAuth.COM_CODE}]]`;
+        const code = `[[${companyAuth.COM_CODE}]]`;
         const state = 'APPROVE';
         $.ajax({
             url: '/api/setIsoAuthData',  // 서버의 API URL

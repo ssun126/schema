@@ -3,164 +3,194 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">
 <body>
 <div class="cui_content">
-  <div class="cui_main">
-    <div class="cui_head">
-      <div class="head_content">
-        <h2 class="cui_title"><span>노동인권 TITLE</span>
-          <div style="float: right;padding-left: 20px;">(제출 : 2024-11-18)</div></h2>
-      </div>
-    </div>
-    <div class="cui_body">
-      <form class="cui_form_field" data-legend="true">
-        <fieldset>
-          <legend><span>노동인권/윤리경영 (배점 10점)</span></legend>
-          <table class="cui_table">
-            <colgroup>
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>파일 첨부</span></th>
-            </tr>
-            <tr>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <div class="cui_attachments">
-                      <div class="cui_items_wrap" data-direction="left">
-                        <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                        <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span th:text="${companyAuth.COM_NAME}">노동인권</span>
+                    <div style="float: right;padding-left: 20px;">(제출 : 2024-11-18)</div>
+                </h2>
+            </div>
+            <div class="head_aside">
+                <p>(제출:<span>2024.01.01</span>)</p>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form class="cui_form_section" data-legend="true">
+                <fieldset>
+                    <legend><span>노동인권/윤리경영 (배점 10점)</span></legend>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>파일 첨부</span></th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
+                                                </div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint"
+                                                            data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </form>
+            <div class="cui_items_wrap" data-direction="right">
+                <div class="item_content">
+                    <span>평가점수 0 ~ 10 점</span>
                 </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-      </form>
-      <div class="cui_items_wrap" data-direction="right">
-        <div class="item_content">
-          <span>평가점수 0 ~ 10 점</span>
+            </div>
+            <form class="cui_border_section" data-legend="true">
+                <div class="cui_section">
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>제조소 공통 정보</span></div>
+                    </div>
+                    <table class="cui_table center">
+                        <thead>
+                        <tr>
+                            <th><span>항목</span></th>
+                            <th><span>내용</span></th>
+                            <th><span>답변</span></th>
+                            <th><span>답변 가이던스</span></th>
+                            <th><span>평가점수</span></th>
+                            <th>
+                                <button type="button" class="cui_button secondary"><span>추가</span></button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td>
+                                <button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cui_section">
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>노동인권</span></div>
+                    </div>
+                    <table class="cui_table center">
+                        <thead>
+                        <tr>
+                            <th><span>항목</span></th>
+                            <th><span>내용</span></th>
+                            <th><span>답변</span></th>
+                            <th><span>답변 가이던스</span></th>
+                            <th><span>평가점수</span></th>
+                            <th>
+                                <button type="button" class="cui_button secondary"><span>추가</span></button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td>
+                                <button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cui_section">
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>윤리경영</span></div>
+                    </div>
+                    <table class="cui_table center">
+                        <thead>
+                        <tr>
+                            <th><span>항목</span></th>
+                            <th><span>내용</span></th>
+                            <th><span>답변</span></th>
+                            <th><span>답변 가이던스</span></th>
+                            <th><span>평가점수</span></th>
+                            <th>
+                                <button type="button" class="cui_button secondary"><span>추가</span></button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td>
+                                <button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cui_section">
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>결과</span></div>
+                    </div>
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>점수</span></th>
+                            <td></td>
+                            <th><span>처리결과</span></th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th><span>처리자</span></th>
+                            <td></td>
+                            <th><span>처리일자</span></th>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th><span>반려사유</span></th>
+                            <td colspan="3"><textarea rows="2" style="width:100%"></textarea></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cui_items_wrap" data-direction="right">
+                    <div class="item_content">
+                        <button type="submit" class="cui_button primary"><span>승인</span></button>
+                        <button type="submit" class="cui_button primary"><span>반려</span></button>
+                    </div>
+                </div>
+            </form>
         </div>
-      </div>
-      <form class="cui_form_field" data-legend="true">
-        <fieldset>
-          <legend><span>1.제조소 공통 정보</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>항목</span></th>
-              <th><span>내용</span></th>
-              <th><span>답변</span></th>
-              <th><span>답변 가이던스</span></th>
-              <th><span>평가점수</span></th>
-              <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>2.노동인권</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>항목</span></th>
-              <th><span>내용</span></th>
-              <th><span>답변</span></th>
-              <th><span>답변 가이던스</span></th>
-              <th><span>평가점수</span></th>
-              <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>3.윤리경영</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>항목</span></th>
-              <th><span>내용</span></th>
-              <th><span>답변</span></th>
-              <th><span>답변 가이던스</span></th>
-              <th><span>평가점수</span></th>
-              <th><button type="button" class="cui_button secondary"><span>추가</span></button></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span>삭제</span></button></td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>결과</span></legend>
-          <table class="cui_table center">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>점수</span></th>
-              <td></td>
-              <th><span>처리결과</span></th>
-              <td></td>
-            </tr>
-            <tr>
-              <th><span>처리자</span></th>
-              <td></td>
-              <th><span>처리일자</span></th>
-              <td></td>
-            </tr>
-            <tr>
-              <th><span>반려사유</span></th>
-              <td colspan="3"><textarea rows="2" style="width:100%"></textarea></td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <div class="cui_items_wrap" data-direction="right">
-          <div class="item_content">
-            <button type="submit" class="cui_button primary"><span>승인</span></button>
-            <button type="submit" class="cui_button primary"><span>반려</span></button>
-          </div>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 </body>
 </html>

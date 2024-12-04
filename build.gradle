@@ -14,12 +14,12 @@ java {
 	}
 }
 
-
 bootWar {
 	archiveBaseName = "schema"
 	archiveFileName = "schema.war"
 	archiveVersion = "0.0.0"
 }
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
