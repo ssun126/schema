@@ -29,5 +29,31 @@ public class PartCodeRepository {
         return sql.selectList("partCode.partCodeList", partCodeDTO);
     }
 
+    public List<PartCodeDTO> getMaterialList(Criteria criteria) {
+        return sql.selectList("partCode.getMaterialList",criteria);
+    }
+
+    public List<CompanyInfoDTO> getCompanyInfoList(Criteria criteria) {
+        return sql.selectList("partCode.getCompanyInfoList",criteria);
+    }
+
+    public int setPartCode(PartCodeDTO partCodeDTO) {
+        String savetype  = partCodeDTO.getSavetype() ;
+
+        if(savetype.equals("update")) {
+            return sql.update("partCode.updatePartCode", partCodeDTO);
+        }else {
+            return sql.insert("partCode.setPartCode", partCodeDTO);
+        }
+    }
+
+    public int deletePartCode(String partCode, String plantCode) {
+        PartCodeDTO partCodeDTO = new PartCodeDTO();
+        partCodeDTO.setPART_CODE(partCode);
+        partCodeDTO.setPLANT_CODE(plantCode);
+        return sql.delete("partCode.deletePartCode", partCodeDTO);
+    }
+
+
 
 }
