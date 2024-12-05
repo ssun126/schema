@@ -16,18 +16,21 @@
 
     <select id="searchPartMgmt" parameterType="partManagement" resultType="partManagement">
 
-        SELECT PM_IDX
+        SELECT
+        PM_IDX
         ,PM_PART_CODE
         ,pc.PART_NAME as PM_PART_NAME
-        ,bc.base_value as PM_PLANT
-        ,pc.PART_COUNTRY as PM_COUNTRY
+        --,bc.base_value as PM_PLANT
+        ,PM_PART_PLANT_CODE
+        --,pc.PART_COUNTRY as PM_COUNTRY
+        ,PM_PART_COUNTRY
         ,ui.USER_NAME as PM_REG_USER
         ,NVL(PM_ACTIVE_YN, ' ') as PM_ACTIVE_YN
         ,NVL(PM_APPROVAL_STATUS, ' ') as PM_APPROVAL_STATUS
         ,NVL(TO_CHAR(PM_APPROVAL_DATE, 'YYYY-MM-DD'),' ') as PM_APPROVAL_DATE
         FROM SC_PART_MANAGEMENT_DATA pmd
         LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE
-        LEFT OUTER JOIN (SELECT Base_code, base_value FROM SC_BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
+        --LEFT OUTER JOIN (SELECT Base_code, base_value FROM SC_BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
         LEFT OUTER JOIN SC_USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_ID
         WHERE 1 =1
         <if test="PM_PART_CODE != null and PM_PART_CODE != ''">
@@ -42,8 +45,8 @@
         <if test="PM_ACTIVE_YN != null and PM_ACTIVE_YN != ''">
             AND (PM_ACTIVE_YN = #{PM_ACTIVE_YN})
         </if>
-        <if test="PM_PLANT != null and PM_PLANT != ''">
-            AND (PM_PLANT LIKE CONCAT(CONCAT('%',  #{PM_PLANT}), '%'))
+        <if test="PM_PART_PLANT_CODE != null and PM_PART_PLANT_CODE != ''">
+            AND (PM_PART_PLANT_CODE LIKE CONCAT(CONCAT('%',  #{PM_PLANT}), '%'))
         </if>
         <if test="PM_APPROVAL_STATUS != null and PM_APPROVAL_STATUS != ''">
             AND (PM_APPROVAL_STATUS LIKE CONCAT(CONCAT('%',  #{PM_APPROVAL_STATUS}), '%'))
@@ -58,16 +61,28 @@
     </select>
 
     <select id="partCodeList" resultType="HashMap">
-        SELECT PART_CODE,PART_COUNTRY,PART_NAME,bc.BASE_VALUE
+        SELECT PART_CODE,COM_NATION AS  PART_COUNTRY,PART_NAME,bc.BASE_VALUE
         FROM SC_PART_CODE pc
         LEFT OUTER JOIN  (SELECT Base_code, base_value FROM SC_BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
+        INNER JOIN SC_COMPANY_CODE scc ON pc.COM_CODE  = scc.COM_CODE
 
     </select>
 
     <insert id="save" parameterType="partManagement">
-        INSERT INTO SC_PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER)
-        VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,'xp')
-    </insert>
+    <!-- INSERT INTO SC_PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER)
+     VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,'xp') -->
+        INSERT INTO SC_PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_PART_PLANT_CODE,PM_PART_COUNTRY,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER)
+        VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_PART_PLANT_CODE},#{PM_PART_COUNTRY},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,'xp')
+ </insert>
+
+    <select id="getEtcFileData" parameterType="String" resultType="HashMap">
+        select ETC_IFILE_NAME, ETC_IFILE_PATH
+        from SC_PART_MGMT_DETAIL_ETC
+        where ETC_IDX = #{idx}
+
+
+
+    </select>
 
 <!--   Detail    -->
     <update id="msdsUpdate" parameterType="partDetailMsds">
@@ -120,18 +135,15 @@
     </insert>
 
     <select id="getSvhcList" resultType="svhcList">
-        <![CDATA[
         SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
         FROM SC_SVHC_DATA
-        ]]>
-
     </select>
 
     <select id="getDeclarList" resultType="Declaration">
-        <![CDATA[
+
         SELECT NVL(DECL_NUM,DECL_SUB_NUM) AS DECL_NUM ,DECL_NAME, DECL_CASNUM,DECL_WEIGHT,DECL_CLASS
         FROM SC_DECLARATION_DATA
-        ]]>
+
 
     </select>
 

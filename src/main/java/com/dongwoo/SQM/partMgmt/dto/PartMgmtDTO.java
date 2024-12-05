@@ -10,6 +10,10 @@ public class PartMgmtDTO {
     private int PM_IDX;
     @JsonProperty("PM_PART_CODE")
     private String PM_PART_CODE;    //자재코드
+    @JsonProperty("PM_PART_PLANT_CODE")
+    private String PM_PART_PLANT_CODE;    //자재코드
+    @JsonProperty("PM_PART_COUNTRY")
+    private String PM_PART_COUNTRY;    //자재코드
     @JsonProperty("PM_QUALITY")
     private String PM_QUALITY;          //성상
     @JsonProperty("PM_STATUS")

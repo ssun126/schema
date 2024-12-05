@@ -35,6 +35,23 @@ public class PartDetailService {
 
     }
 
+    public void deleteFileData_Idx (String idx){
+        String orgName= null;
+        String orgPath= null;
+
+        HashMap<String,Object> map = partMgmtRepository.getFileData(idx);
+
+        orgName = (String) map.get("FILE_NAME");
+        orgPath = (String) map.get("FILE_PATH");
+
+        if( orgName != null && orgPath != null ){
+            //파일 삭제
+            File file = new File(orgName+orgPath);
+            if(file.exists()) file.delete();
+        }
+
+    }
+
     public String uploadFileData(String partcode, MultipartFile fileInfo){
         String sUrl = "/"+partcode+"/";
         String filePath = "";
@@ -84,10 +101,22 @@ public class PartDetailService {
 
     }
 
-    public void saveEtcData(partDetailEtcDTO etcDTO){
+    public void saveEtcData(partDetailEtcDTO etcDTO,MultipartFile files,String comCode){
         if(etcDTO.getETC_IDX().equals("")){
             partMgmtRepository.saveEtcData(etcDTO);
         }else{
+            //수정
+            if(!files.isEmpty()){
+                //기존파일 삭제
+                deleteFileData_Idx(etcDTO.getETC_IDX());
+                //String etc_filepath = uploadFileData(msdsDTO.getMSDS_PART_CODE(),files);
+                String etc_filepath = uploadFileData(comCode,files);
+                String etc_filename = files.getOriginalFilename();
+
+                etcDTO.setETC_FILE_NAME(etc_filename);
+                etcDTO.setETC_FILE_PATH(etc_filepath);
+
+            }
             partMgmtRepository.updateEtcData(etcDTO);
         }
 

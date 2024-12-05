@@ -1,9 +1,11 @@
 package com.dongwoo.SQM.partMgmt.controller;
 
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartDetailService;
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,16 +37,20 @@ public class PartDetailMSDSController {
                              , @RequestParam("ROHS_FILE") MultipartFile rohsFile
                              , @RequestParam("HALOGEN_FILE") MultipartFile halgFile
                              , @RequestParam("ETC_FILE") MultipartFile[] etcFile
+                             , @AuthenticationPrincipal UserCustom user
                              , Model model){
         log.info("test===========================" + etcDTO);
+        log.info("test22222-----user ====="+user.getUSER_IDX());
+        log.info("test22222-----COM_CODE ====="+user.getCOM_CODE());
         //log.info("test12222==================="+ etcFile);
         String pm_idx = msdsDTO.getPM_IDX();
         //msds
         //파일 저장 및 삭제
-        if(msdsDTO.getFILE_STATUS().equals("Del")) {
-            partDetailService.deleteFileData(msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_PATH());
-        }
-        //신규파일 업로드 후 경로 가져오기
+//
+        //신규파일 업로드 후 경로 가져오기if(msdsDTO.getFILE_STATUS().equals("Del")) {
+        ////            partDetailService.deleteFileData(msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_PATH());
+        ////        }
+        //if(!msdsDTO.getMSDS_REG_DATE().equals("") || !msdsDTO.getMSDS_LANG().equals("") || !msdsDTO.getMSDS_APPROVAL_NUM().equals("") || !mdsdFile.isEmpty() ){
         if(!mdsdFile.isEmpty()){
             String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),mdsdFile);
             String etc_filename = mdsdFile.getOriginalFilename();
@@ -54,8 +60,9 @@ public class PartDetailMSDSController {
 
         }
         partDetailService.saveMsdsData(msdsDTO);
+        //}
 
-//        //
+//        !rohsDTO.getROHS_CONFIRM_DATE().equals("") || !rohsDTO.getROHS_CONFIRM_DATE().equals("")|| !rohsFile.isEmpty()
 //        String msdsFilePath = partDetailService.deleteFileData(msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_PATH(),msdsDTO.getMSDS_FILE_PATH(),"MSDS",mdsdFile);
 //        String msdsFileName = msdsFilePath.substring((msdsFilePath.lastIndexOf("/"))+1);
 //        msdsDTO.setMSDS_FILE_NAME(msdsFileName);
@@ -111,33 +118,31 @@ public class PartDetailMSDSController {
         String[] ETC_FILE_PATH = FILE_PATH.split(",");
         String[] ETC_FILE_STATUS = FILE_STATUS.split(",");
 
+        //파일 새로 등록(수정) 시 기존 파일 삭제
+//        for(int j = 0; j < ETC_FILE_STATUS.length; j++) {
+//            if(ETC_FILE_STATUS[j].equals("Del")) {
+//                partDetailService.deleteFileData(ETC_FILE_NAME[j],ETC_FILE_PATH[j]);
+//            }
+//        }
+
+
         for(int i = 0; i<etcFile.length; i++){
             partDetailEtcDTO newetcdto = new partDetailEtcDTO();
 
-            newetcdto.setETC_IDX(ETC_ETC_IDX[i]);
-            newetcdto.setPM_IDX(ETC_PM_IDX[i]);
+            if(ETC_ETC_IDX.length  !=  0) newetcdto.setETC_IDX(ETC_ETC_IDX[i]);
+            else    newetcdto.setETC_IDX("");
+
+            newetcdto.setPM_IDX(ETC_PM_IDX[0]);
             newetcdto.setETC_CONFIRM_DATE(ETC_CONFIRM_DATE[i]);
             newetcdto.setETC_ANALYSE_ENTRY(ETC_ANALYSE_ENTRY[i]);
             newetcdto.setETC_ANALYSE_RESULT(ETC_ANALYSE_RESULT[i]);
 
-            //파일 새로 등록(수정) 시 기존 파일 삭제
-            if(ETC_FILE_STATUS[i].equals("Del")) {
-                partDetailService.deleteFileData(ETC_FILE_NAME[i],ETC_FILE_PATH[i]);
-                newetcdto.setETC_FILE_NAME("");
-                newetcdto.setETC_FILE_PATH("");
-            }
+
             //신규파일 업로드 후 경로 가져오기
             MultipartFile files = etcFile[i];
-            if(!files.isEmpty()){
-                String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),files);
-                String etc_filename = files.getOriginalFilename();
 
-                newetcdto.setETC_FILE_NAME(etc_filename);
-                newetcdto.setETC_FILE_PATH(etc_filepath);
 
-            }
-
-            partDetailService.saveEtcData(newetcdto);
+            partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
         }
 
         //다음버튼(insert, or updqte)

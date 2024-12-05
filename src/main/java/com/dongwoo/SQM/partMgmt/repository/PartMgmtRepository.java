@@ -35,6 +35,13 @@ public class PartMgmtRepository {
         return sql.insert("partManagement.save",partMgmtDTO);
     }
 
+    public HashMap<String,Object> getFileData(String idx){
+
+//        HashMap<String,Object> map = new HashMap<>();
+//        map.put("idx",idx);
+//        map.put("gubun",gubun);
+        return sql.selectOne("partManagement.getEtcFileData",idx);
+    }
 
     //detailpage
     public int updateMsdsData(partDetailMsdsDTO msdsDTO){ return sql.update("partManagement.msdsUpdate",msdsDTO);}

@@ -56,7 +56,7 @@
                     <li><span>SCCS / 성분명세서 / 기타</span></li>
                 </ol>
             </div>
-            <form class="cui_form_field" data-legend="true" id="frmDeclar" action="/user/partMgmt/goSccs" method="post"  enctype="multipart/form-data">
+            <form class="cui_form_section" data-legend="true" id="frmDeclar" action="/user/partMgmt/goSccs" method="post"  enctype="multipart/form-data">
                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <fieldset id="msdsFieldset">
                     <legend><span>Declaration Letter</span></legend>
@@ -264,7 +264,8 @@
         $('select[id^="declar_"]').each(function(){
             var value = $(this).val();
             if(value ==='Y'){
-                selectValues.push(value);
+                var key = $(this).closest("tr").find('td')[0].innerText;
+                selectValues.push(key);
             }
         });
 

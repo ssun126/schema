@@ -150,7 +150,7 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" name="formPartMgmt">
+                <form class="cui_form_section" data-legend="true" name="formPartMgmt">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">자재 코드</strong>
@@ -162,7 +162,7 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">자재판매국가</strong>
                             <div class="item_content">
-                                <input id="modalPartCountry" name="PM_COUNTRY" class="cui_text_field fixdata">
+                                <input id="modalPartCountry" name="PM_PART_COUNTRY" class="cui_text_field fixdata">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -202,7 +202,7 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">취급 PLANT</strong>
                             <div class="item_content">
-                                <input id="modalPartPlant" name="PM_PLANT" class="cui_text_field ">
+                                <input id="modalPartPlant" name="PM_PART_PLANT_CODE" class="cui_text_field ">
                             </div>
                         </label>
 
@@ -271,7 +271,8 @@
             // 폼 데이터를 직렬화하여 가져오기
             var PartMgmtDTO = {
                 PM_PART_CODE: $('#modalPartCode').val(),
-                //PM_COUNTRY: $('#modalPartCountry').val(),
+                PM_PART_PLANT_CODE: $('#modalPartPlant').val(),
+                PM_PART_COUNTRY: $('#modalPartCountry').val(),
                 PM_QUALITY: $('select[name=PM_QUALITY]').val(),
                 PM_STATUS: $('select[name=PM_STATUS]').val(),
                 PM_CHEMICAL_YN: $('select[name=PM_CHEMICAL_YN]').val()
@@ -359,8 +360,8 @@
                                         '<td>' + partmgmt.PM_PART_CODE + '</td>' +
                                         //'<td><a href="javascript:void(0);" onclick="modal_open(\'PartCode\', \'second\', \'/user/getPartCodeData\', \''+ partmgmt.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
                                         '<td><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></td>' +
-                                        '<td>' + partmgmt.PM_PLANT + '</td>' +
-                                        '<td>' + partmgmt.PM_COUNTRY + '</td>' +
+                                        '<td>' + partmgmt.PM_PART_PLANT_CODE + '</td>' +
+                                        '<td>' + partmgmt.PM_PART_COUNTRY + '</td>' +
                                         '<td>' + partmgmt.PM_REG_USER + '</td>' +
                                         '<td>' + partmgmt.PM_ACTIVE_YN + '</td>' +
                                         '<td>' + partmgmt.PM_APPROVAL_STATUS + '</td>' +

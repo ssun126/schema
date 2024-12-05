@@ -23,19 +23,12 @@ public class PartDetailSvhcController {
     private final PartDetailService partDetailService;
 
     @GetMapping("/getSvhcListData")
-    public List<SvhcListDTO> getSvhcData(){
+    public @ResponseBody  List<SvhcListDTO> getSvhcData(){
         log.info("test=-11111=================");
         List<SvhcListDTO> svhcList = partDetailService.getSvhcData();
         log.info("test=-11111================="+svhcList);
 
         return svhcList;
-    }
-
-    @GetMapping("/getDeclarData")
-    public List<DeclarationDTO> getDeclarData(){
-        List<DeclarationDTO> declarList = partDetailService.getDeclarData();
-        log.info("test=3232222-================="+declarList);
-        return declarList;
     }
 
 

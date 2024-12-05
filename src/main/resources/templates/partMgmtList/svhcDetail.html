@@ -56,7 +56,7 @@
                     <li><span>SCCS / 성분명세서 / 기타</span></li>
                 </ol>
             </div>
-            <form class="cui_form_field" data-legend="true" id="frmSvhc" action="/user/partMgmt/goDeclaration" method="post"  enctype="multipart/form-data">
+            <form class="cui_form_section" data-legend="true" id="frmSvhc" action="/user/partMgmt/goDeclaration" method="post"  enctype="multipart/form-data">
                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <fieldset id="msdsFieldset">
                     <legend><span>SVHC</span></legend>
@@ -73,6 +73,7 @@
                             <th><span>제출구분</span></th>
                             <td colspan="3">
                                 <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
+                                    <input type="hidden" name="SVHC_IDX" >
                                     <div class="item_content">
                                         <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="ATTACH" id="Attach" checked="true"><i></i><span>파일첨부</span></label>
                                         <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="WRITE" id="Write"><i></i><span>직접입력</span></label>
@@ -226,6 +227,7 @@
                 bindSvhcData(response);
             },
             error : function(xhr,status,error){
+                console.log(xhr.responseText); // 에러 메시지 확인
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
             }
         });
@@ -261,7 +263,8 @@
         $('select[id^="svhc_"]').each(function(){
             var value = $(this).val();
             if(value ==='Y'){
-                selectValues.push(value);
+                var key = $(this).closest("tr").find('td')[0].innerText;
+                selectValues.push(key);
             }
         });
 

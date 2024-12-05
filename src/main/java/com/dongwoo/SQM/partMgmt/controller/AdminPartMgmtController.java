@@ -1,15 +1,21 @@
 package com.dongwoo.SQM.partMgmt.controller;
 
+import com.dongwoo.SQM.partMgmt.service.PartDetailService;
+import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class AdminPartMgmtController {
+
     @GetMapping("/admin/partMgmt/approvalState")
     public String PartMgmtList(Model model) {
         return "approvalState/adminMain";
@@ -44,5 +50,11 @@ public class AdminPartMgmtController {
     public String expDateDeclList(Model model) {
         return "expDateDecl/main";
     }
+
+
+
+
+
+
 
 }
