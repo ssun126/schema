@@ -7,7 +7,7 @@
     <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
         SELECT * FROM SC_base_code
         WHERE  GROUP_CODE != BASE_CODE
-        AND BASE_OPTION = 'SYSTEM'
+<!--        AND BASE_OPTION = 'SYSTEM'-->
         AND BASE_STATUS ='Y'
         AND GROUP_CODE  =#{GROUP_CODE}
         ORDER BY BASE_SORT ASC
@@ -228,7 +228,7 @@
         FROM SC_base_code b
         LEFT JOIN SC_USER_INFO_COMPANY_CONNECT_GOAL g ON b.BASE_CODE = g.BASE_CODE
         WHERE b.GROUP_CODE != b.BASE_CODE
-        AND b.BASE_OPTION = 'SYSTEM'
+<!--        AND b.BASE_OPTION = 'SYSTEM'-->
         AND b.BASE_STATUS = 'Y'
         AND b.GROUP_CODE = 'CONNECT'
         AND g.USER_IDX = u.USER_IDX) AS BASE_NAMES,
