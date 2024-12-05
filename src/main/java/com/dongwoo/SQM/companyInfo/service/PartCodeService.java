@@ -31,4 +31,24 @@ public class PartCodeService {
     }
 
 
+    public List<PartCodeDTO> getMaterialList(Criteria cri) {
+        return partCodeRepository.getMaterialList(cri);
+    }
+
+
+    public List<CompanyInfoDTO> getCompanyInfoList(Criteria cri) {
+        return partCodeRepository.getCompanyInfoList(cri);
+    }
+
+    public int setPartCode(PartCodeDTO partCodeDTO) {
+        return partCodeRepository.setPartCode(partCodeDTO);
+    }
+
+    public int deletePartCode(String partCode, String plantCode) {
+        return partCodeRepository.deletePartCode(partCode, plantCode);
+    }
+
+
+
+
 }
