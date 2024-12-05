@@ -17,7 +17,7 @@ public class PartCodeDTO {
 
 
     @JsonProperty("DEPT_CODE")
-    private String  DEPT_CODE		; //검색 사업부
+    private String  DEPT_CODE		; //검색 사업부 CpWorkCode base_option 3100,4100,5100 ....
     //COMPANY_CODE_WORK
     @JsonProperty("BASE_CODE")
     private String BASE_CODE       ;// -- 기초코드 코드 (사업본부는 기초코드로 관리)  // --사업본부 ■

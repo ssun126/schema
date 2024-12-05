@@ -44,6 +44,12 @@
         <if test="COM_NAME != null and COM_NAME != ''">
             AND pc.COM_NAME LIKE '%' || #{COM_NAME} || '%'
         </if>
+        <if test="DEPT_CODE != null and DEPT_CODE != ''">
+            AND pc.PLANT_CODE IN
+            <foreach item="item" index="index" collection="DEPT_CODE.split(',')" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="PLANT_CODE != null and PLANT_CODE != ''">
             AND pc.PLANT_CODE LIKE '%' || #{PLANT_CODE} || '%'
         </if>
