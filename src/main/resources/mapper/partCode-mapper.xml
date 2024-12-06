@@ -7,7 +7,7 @@
     <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
         SELECT * FROM SC_base_code
         WHERE  GROUP_CODE != BASE_CODE
-        AND BASE_OPTION = 'SYSTEM'
+<!--        AND BASE_OPTION = 'SYSTEM'-->
         AND BASE_STATUS ='Y'
         AND GROUP_CODE  =#{GROUP_CODE}
         ORDER BY BASE_SORT ASC
@@ -44,6 +44,12 @@
         <if test="COM_NAME != null and COM_NAME != ''">
             AND pc.COM_NAME LIKE '%' || #{COM_NAME} || '%'
         </if>
+        <if test="DEPT_CODE != null and DEPT_CODE != ''">
+            AND pc.PLANT_CODE IN
+            <foreach item="item" index="index" collection="DEPT_CODE.split(',')" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="PLANT_CODE != null and PLANT_CODE != ''">
             AND pc.PLANT_CODE LIKE '%' || #{PLANT_CODE} || '%'
         </if>
@@ -51,5 +57,85 @@
             AND cc.COM_NATION LIKE '%' || #{COM_NATION} || '%'
         </if>
     </select>
+
+
+    <!--    팝업 회사코드-->
+    <select id="getCompanyInfoList" resultType="companyInfo">
+        <![CDATA[
+        SELECT RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
+        FROM
+        (
+            SELECT /*+ INDEX_DESC(SC_COMPANY_CODE PK_COMPANY_CODE) */
+            ROWNUM RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
+            FROM SC_COMPANY_CODE
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE RN > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getCompanyInfoListTotal" resultType="int">
+        select count(*) CNT
+        from SC_COMPANY_CODE
+    </select>
+
+    <!--    팝업 자재코드 지켐스 IF -->
+    <select id="getMaterialList" resultType="partCode">
+        <![CDATA[
+        SELECT ROWNUM RN
+            ,MAT_ID
+            ,MAT_NAME
+            ,PLAND_ID
+            ,PLAND_NAME
+            ,IF_DATETIME
+            ,IF_SYSTEM
+        FROM
+        (
+            SELECT
+             ROWNUM RN
+            ,MAT_ID
+            ,MAT_NAME
+            ,PLAND_ID
+            ,PLAND_NAME
+            ,IF_DATETIME
+            ,IF_SYSTEM
+           FROM INTER_PART_MATERIAL
+            WHERE ROWNUM <= #{pageNum} * #{amount}
+        )
+           WHERE RN > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+
+    <select id="getMaterialListTotal" resultType="int">
+        select count(*) CNT
+        from INTER_PART_MATERIAL
+    </select>
+
+
+    <insert id="setPartCode" parameterType="companyInfo">
+        INSERT INTO SC_PART_CODE
+        (PART_CODE, PART_NAME, COM_CODE, PLANT_CODE, PART_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
+        VALUES(#{PART_CODE}, #{PART_NAME}, #{COM_CODE}, #{PLANT_CODE}, #{PART_STATUS}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate)
+    </insert>
+
+
+    <update id="updatePartCode" parameterType="companyInfo">
+        UPDATE SC_PART_CODE
+        SET
+          PART_NAME =#{PART_NAME}
+        , COM_CODE =#{COM_CODE}
+        , PLANT_CODE =#{PLANT_CODE}
+        , PART_STATUS =#{PART_STATUS}
+        , UP_DW_USER_IDX =#{UP_DW_USER_IDX}
+        , UP_DATE =sysdate
+        WHERE PART_CODE = #{PART_CODE}
+            AND PLANT_CODE =#{PLANT_CODE}
+    </update>
+
+    <delete id="deletePartCode" parameterType="companyInfo">
+        DELETE FROM SC_PART_CODE
+            WHERE PART_CODE = #{PART_CODE}
+              AND PLANT_CODE =#{PLANT_CODE}
+    </delete>
 
 </mapper>

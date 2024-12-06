@@ -76,11 +76,15 @@ public class CompanyListController {
     List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
     model.addAttribute("deptList", deptList);
 
-    //업체코드 사업본부
+    //자재가 하나도 없을때~!!!업체코드 사업본부
     CompanyInfoParamDTO companyInfoParamDTO = new CompanyInfoParamDTO();
     companyInfoParamDTO.setCOM_CODE(com_code);
     List<CompanyInfoDTO> companyCodeWorkList = companyInfoService.findCompanyCodeWork(companyInfoParamDTO);
     model.addAttribute("companyCodeWorkList", companyCodeWorkList);
+
+    //TODO: 확인요망
+        // 자재 코드가 등록이 될경우??????
+
 
     //회원 ID 관리
     List<CompanyInfoDTO> companyUserIDList = companyInfoService.findCompanyCodeWorkEx(companyInfoParamDTO);
