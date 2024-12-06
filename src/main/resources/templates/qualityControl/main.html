@@ -4,337 +4,410 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>품질관리</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>품질관리</title>
 </head>
 <body>
 <div class="cui_content">
-  <div class="cui_main">
-    <div class="cui_head">
-      <div class="head_content">
-        <h2 class="cui_title"><span></span></h2>
-      </div>
-    </div>
-    <div class="cui_body">
-      <form class="cui_form_field" data-legend="true">
-        <fieldset>
-          <legend><span>품질 Audit 계획</span></legend>
-          <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
-          <div class="cui_items_wrap" data-direction="right">
-            <div class="item_content">
-              <button type="submit" class="cui_button secondary"><span>양식다운로드1</span></button>
-              <button type="submit" class="cui_button secondary"><span>양식다운로드2</span></button>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span></span></h2>
             </div>
-          </div>
-          <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>업체명</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>코비젼</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>담당자</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>동우</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>PR</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span>Audit 계획일</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>2024-10-01</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>Audit 방법</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>대면</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>Audit 구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>정기</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <!-- Audit 방법 : 대면 -->
-        <fieldset>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:200px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>Audit 내용</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>POVIS의 audit 요청사항 그대로 기재</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span>File 첨부</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <div class="cui_attachments">
-                      <input type="file" class="cui_file_field">
-                      <div class="cui_items_wrap" data-direction="left">
-                        <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                        <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <!-- Audit 방법 : 대면 -->
-        <!-- Audit 방법 : Self -->
-        <fieldset>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:200px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>제출 구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file" checked><i></i><span>파일첨부</span></label>
-                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="text"><i></i><span>직접입력</span></label>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset id="fs_file">
-          <div class="cui_items_wrap" data-direction="right">
-            <div class="item_content">
-              <button type="submit" class="cui_button secondary"><span>양식다운로드</span></button>
-            </div>
-          </div>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:200px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>파일 첨부</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <div class="cui_attachments">
-                      <input type="file" class="cui_file_field">
-                      <div class="cui_items_wrap" data-direction="left">
-                        <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                        <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset id="fs_text">
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>항목</span></th>
-              <th><span>내용</span></th>
-              <th><span>답변</span></th>
-              <th><span>평가점수</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-              <td><input type="text" class="cui_text_field"></td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-              <td colspan="3">Total</td>
-              <td></td>
-            </tr>
-            </tfoot>
-          </table>
-        </fieldset>
-        <!-- Audit 방법 : Self -->
-        <div class="cui_items_wrap" data-direction="right">
-          <div class="item_content">
-            <button type="submit" class="cui_button primary"><span>제출</span></button>
-          </div>
         </div>
-        <!-- Audit 방법 : 대면 -->
-        <fieldset>
-          <legend><span>품질 Audit 결과</span></legend>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>Audit 실시일</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>2024-10-01</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>담당자</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>동우</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>Audit 등급</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>A</span>
-                  </div>
-                </div>
-              </td>
-              <th><span>NCR 발행여부</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>Y</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:200px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>Audit 결과</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <span>POVIS의 audit 요청사항 그대로 기재</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span>첨부자료</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <div class="cui_attachments">
-                      <input type="file" class="cui_file_field">
-                      <div class="cui_items_wrap" data-direction="left">
-                        <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                        <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
-                        </div>
-                      </div>
+        <div class="cui_body">
+            <form class="cui_form_section" data-legend="true">
+                <fieldset>
+                    <legend><span>품질 Audit 계획</span></legend>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>업체명</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>코비젼</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>담당자</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>동우</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>PR</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>Audit 계획일</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>2024-10-01</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Audit 방법</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>대면</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Audit 구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>정기</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
+                <div class="cui_items_wrap visit" data-direction="right">
+                    <div class="item_content">
+                        <button type="submit" class="cui_button secondary"><span>양식다운로드1</span></button>
+                        <button type="submit" class="cui_button secondary"><span>양식다운로드2</span></button>
                     </div>
-                  </div>
                 </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <!-- Audit 방법 : 대면 -->
-      </form>
+                <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
+                <!-- Audit 방법 : 대면 -->
+                <fieldset class="visit">
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 내용</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>POVIS의 audit 요청사항 그대로 기재</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>File 첨부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <input type="file" class="cui_file_field" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
+                                                </div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : 대면 -->
+                <!-- Audit 방법 : Self -->
+                <fieldset class="self">
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>제출 구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file"
+                                                                           checked><i></i><span>파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="checkbox1"
+                                                                           value="text"><i></i><span>직접입력</span></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="fs_file">
+                    <div class="cui_items_wrap" data-direction="right">
+                        <div class="item_content">
+                            <button type="submit" class="cui_button secondary"><span>양식다운로드</span></button>
+                        </div>
+                    </div>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>파일 첨부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <input type="file" class="cui_file_field" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
+                                                </div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="fs_text">
+                    <table class="cui_table center">
+                        <thead>
+                        <tr>
+                            <th><span>항목</span></th>
+                            <th><span>내용</span></th>
+                            <th><span>답변</span></th>
+                            <th><span>평가점수</span></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                            <td><input type="text" class="cui_text_field"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="3">Total</td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : Self -->
+                <div class="cui_items_wrap self" data-direction="right">
+                    <div class="item_content">
+                        <button type="submit" class="cui_button primary"><span>제출</span></button>
+                    </div>
+                </div>
+                <!-- Audit 결과 -->
+                <fieldset class="resultField">
+                    <legend><span>품질 Audit 결과</span></legend>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 실시일</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>2024-10-01</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>담당자</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>동우</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Audit 등급</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>A</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>NCR 발행여부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>Y</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset class="resultField">
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 결과</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <span>POVIS의 audit 요청사항 그대로 기재</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>첨부자료</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments">
+                                            <input type="file" class="cui_file_field" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                            <div class="cui_items_wrap" data-direction="left">
+                                                <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
+                                                </div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <!-- Audit 방법 : 대면 -->
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 </body>
 </html>
 <script>
-  $(document).ready(function () {
-      //Audit 방법 : Self 일때 제출구분 초기값
-      $("#fs_text").hide();
+    $(document).ready(function () {
+        //Audit 방법 : Self 일때 제출구분 초기값
+        $("#fs_text").hide();
+        $(".resultField").hide();
+        $(".visit").hide();
 
-      $("input:radio[name=checkbox1]").change(function () {
-          var chkvalue = $("input:radio[name=checkbox1]:checked").val();
+        $("input:radio[name=checkbox1]").change(function () {
+            var chkValue = $("input:radio[name=checkbox1]:checked").val();
 
-          if(chkvalue == "file"){
-              $("#fs_file").show();
-              $("#fs_text").hide();
-          }
-          else if(chkvalue == "text"){
-              $("#fs_file").hide();
-              $("#fs_text").show();
-          }
-      });
-  });
+            if(chkValue == "file"){
+                $("#fs_file").show();
+                $("#fs_text").hide();
+            }
+            else if(chkValue == "text"){
+                $("#fs_file").hide();
+                $("#fs_text").show();
+            }
+        });
+
+        //  첨부파일 '추가' 버튼 클릭 시 테이블에 행 추가
+        $('#addRowBtn').on('click', function() {
+            const newAttachment = `
+            <div class="cui_attachments">
+                <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                    <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                    </div>
+                </div>
+                <button type="button" class="cui_button delete"><span>삭제</span></button>
+            </div>`;
+
+            // 새로운 첨부 구간을 #attachmentsContainer에 추가
+            $('#attachmentsContainer').append(newAttachment);
+        });
+
+        // 동적으로 추가된 "삭제" 버튼에 클릭 이벤트 리스너 추가
+        $(document).on('click', '.cui_button.delete', function() {
+            $(this).closest('.cui_attachments').remove(); // 해당 첨부 구간 삭제
+        });
+    });
+
+    // 파일 선택 시 삭제 버튼 표시
+    function toggleDeleteButton(input) {
+        const deleteButton = input.closest('.cui_attachments').querySelector('.cui_button');
+        const fileLabel = input.closest('.cui_attachments').querySelector('.item_label span');
+        const fileLabelDiv = input.closest('.cui_attachments').querySelector('.item_label');
+
+        if (input.files && input.files.length > 0) {
+            var fileName = input.files[0].name;  // Get the file name
+            fileLabel.textContent = fileName;    // Update the file name
+            fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
+            deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
+        } else {
+            fileLabel.textContent = '';
+            fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
+            deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
+        }
+    }
+
+    // 파일 삭제
+    function clearFile(button) {
+        const fileInput = button.closest('.cui_attachments').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
+        const fileLabel = button.closest('.cui_attachments').querySelector('.item_label span');
+        const fileLabelDiv = button.closest('.cui_attachments').querySelector('.item_label');
+
+        // 파일 입력 초기화
+        fileInput.value = "";
+        fileLabel.textContent = '';
+        // 삭제 버튼 숨기기
+        button.style.display = 'none';
+        fileLabelDiv.style.display = 'none';
+    }
+
+    setTimeout(function() {
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(event) {
+                const files = event.target.files;  // 선택된 모든 파일
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file && !validation(file)) {
+                        event.target.value = '';  // 잘못된 파일 선택시 input 초기화
+                        console.log('잘못된 파일: ', file.name);
+                        break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
+                    }
+                }
+            });
+        }
+    }, 100);  // 100ms 후에 실행
 </script>

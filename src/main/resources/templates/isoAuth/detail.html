@@ -20,11 +20,11 @@
                     <legend><span>인증서 관리(배점 4점)</span></legend>
                     <table class="cui_table center" id="isoAuthItemTable">
                         <colgroup>
-                            <col style="width:120px;">
+                            <col style="width:200px;">
                             <col>
-                            <col style="width:120px;">
-                            <col style="width:120px;">
-                            <col style="width:120px;">
+                            <col style="width:140px;">
+                            <col style="width:140px;">
+                            <col style="width:140px;">
                             <col style="width:120px;">
                             <col style="width:180px;">
                             <col style="width:120px;">
@@ -48,7 +48,7 @@
                 <fieldset id="rejectArea" style="display:none;">
                     <legend><span>반려사유</span></legend>
                     <div>
-                        <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason" th:text="${companyAuth.STATE_REASON}"></textarea>
+                        <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason"></textarea>
                     </div>
                 </fieldset>
             </form>
@@ -69,10 +69,13 @@
         <div class="dialog_body">
             <div class="body_root">
                 <form class="cui_form_field" data-legend="true" id="formReason">
-                    <div>
-                        <textarea class="cui_text_field" rows="2" style="width:100%;" id="inputReason"></textarea>
+                    <input type="hidden" name="authCode">
+                    <div class="cui_items_wrap" data-direction="center" >
+                        <div class="item_content">
+                            <label for="inputReason"></label><textarea class="cui_text_field" rows="2" style="width:100%;" id="inputReason"></textarea>
+                        </div>
                     </div>
-                    <div class="cui_items_wrap" data-direction="center" style="top-margin:20px;">
+                    <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
                             <button type="submit" id="ReasonAdd" class="cui_button primary"><span>저장</span></button>
                             <button type="button" id="ReasonPop" class="cui_button secondary" onClick="modal_close('Reason')"><span>닫기</span></button>
@@ -83,6 +86,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function() {
         loadPage(1);
@@ -92,7 +96,7 @@
 
            // 페이지가 로드되면 서버에서 데이터를 가져옴
             $.ajax({
-                url: '/api/isoAuthItemList',  // 서버의 API URL
+                url: '/auditMgmt/isoAuthItemList',  // 서버의 API URL
                 type: 'GET',
                 data: { pageNum: pageNum, amount: 10, COM_CODE: code },
                 success: function(response) {
@@ -141,15 +145,16 @@
                                                 '<td>' + (existingDataItem.regInputDate || '') + '</td>' +
                                                 '<td>';
                                                 if (existingDataItem.fileName) {
-                                                    row += '<a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(existingDataItem.fileName) + '" download>다운로드</a>';
+                                                    row += '<a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(existingDataItem.fileName) + '" download>다운로드</a>';
                                                 }
-                                            row +='</td><td>';
-                                                 if (existingDataItem.fileName) {
-                                                    row += '<div style="padding:1px;">'+
-                                                    '<button type="button" class="cui_button first" onClick="approveIsoAuth()"><span>승인</span></button> '+
-                                                    '<button type="button" class="cui_button secondary" onClick="rejectIsoAuth()"><span>반려</span></button></div>';
+                                            row +='</td><td><div style="padding:1px;" name="stateField">';
+                                                 if (existingDataItem.state == 'SEND') {
+                                                    row +=  '<button type="button" class="cui_button first" onClick="approveIsoAuth(\'' + key + '\')"><span>승인</span></button> '+
+                                                            '<button type="button" class="cui_button secondary" onClick="rejectIsoAuth(\'' + key + '\')"><span>반려</span></button>';
+                                                 }else{
+                                                    row +=  (existingDataItem.state || '');
                                                  }
-                                            row +='</td><td>' + (existingDataItem.updateDate || '')  + '</td>' +
+                                            row +='</div></td><td>' + (existingDataItem.updateDate || '')  + '</td>' +
                                               '</tr>';
                                 tableBody.append(row);
                             }
@@ -164,23 +169,24 @@
     });
 
     // 반려 버튼 클릭시 반려사유 입력
-    function rejectIsoAuth(){
+    function rejectIsoAuth(key){
+        $('input[name="authCode"]').val(key);
         modal_open('Reason', 'add', '', '') //모달창 오픈
     }
 
     // 반려 사유 저장
     $('#ReasonAdd').on('click', function() {
-        const code = `[[${companyAuth.COM_CODE}]]`;
+        const comCode = `[[${companyAuth.COM_CODE}]]`;
+        const authCode =  $('input[name="authCode"]').val();
         const inputReason = $('#inputReason').val();  // 반려사유
         const state = 'REJECT';
         $.ajax({
-            url: '/api/setIsoAuthData',  // 서버의 API URL
-            type: 'GET',
-            data: { reason: inputReason, state: state, com_code: code },
+            url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
+            type: 'POST',
+            data: { reason: inputReason, state: state, com_code: comCode, auth_code: authCode },
             success: function(response) {
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                //리스트 새로 로드 - 상태가 바뀌므로
-                loadPage(1);
+                //상태만 변경
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
@@ -189,17 +195,18 @@
     });
 
      // 승인 버튼 클릭시 승인 처리
-    function approveIsoAuth() {
-        const code = `[[${companyAuth.COM_CODE}]]`;
+    function approveIsoAuth(key) {
+        const comCode = `[[${companyAuth.COM_CODE}]]`;
+        const authCode = key;
         const state = 'APPROVE';
         $.ajax({
-            url: '/api/setIsoAuthData',  // 서버의 API URL
-            type: 'GET',
-            data: { reason: inputReason, state: state, com_code: code },
+            url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
+            type: 'POST',
+            data: { reason: '', state: state, com_code: comCode, auth_code: authCode },
             success: function(response) {
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                //리스트 새로 로드 - 상태가 바뀌므로
-                loadPage(1);
+                //상태에 승인 상태 저장
+                 $(this).closest('div[name="stateField"]').text('승인');
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');

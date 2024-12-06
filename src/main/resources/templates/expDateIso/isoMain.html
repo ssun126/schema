@@ -131,7 +131,7 @@
                     var expDate = $('#searchExpDate').val();
 
                     $.ajax({
-                        url: '/api/searchIsoExpDate',  // 서버의 검색 API URL
+                        url: '/auditMgmt/searchIsoExpDate',  // 서버의 검색 API URL
                         type: 'GET',
                         data: {
                             name: name,      // 업체명
@@ -156,11 +156,11 @@
                                                     '<td>' + isoAuthItem.COM_CODE + '</td>' +
                                                     '<td>' + isoAuthItem.COM_NAME + '</td>' +
                                                     '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
-                                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/api/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
+                                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/auditMgmt/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
                                                     '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
                                                     '<td>' + isoAuthItem.EXP_DATE + '</td>' +
                                                     '<td>' + isoAuthItem.REG_DATE + '</td>' +
-                                                    '<td><a href="/api/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuthItem.FILE_NAME) + '">다운로드</a></td>' +
+                                                    '<td><a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuthItem.FILE_NAME) + '">다운로드</a></td>' +
                                                     '<td>' + isoAuthItem.ITEM_STATE + '</td>' +
                                                   '</tr>';
                                     tableBody.append(row);

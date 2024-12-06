@@ -22,6 +22,9 @@ public class QualityControlController {
 
     @GetMapping("/user/auditMgmt/qualityControl")
     public String GetUserList(Model model) {
+        //업체의 품질관리 Audit 기본 정보를 보여준다.
+
+
         return "qualityControl/main";
     }
 }

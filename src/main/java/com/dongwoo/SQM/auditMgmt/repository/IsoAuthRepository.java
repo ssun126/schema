@@ -17,12 +17,20 @@ import java.util.Map;
 public class IsoAuthRepository {
     private final SqlSessionTemplate sql;
 
-    public int saveAuth(AuditMgmtDTO auditMgmtDTO) {
-        return sql.insert("IsoAuthItem.saveAuth", auditMgmtDTO);
+    public int insertAuth(AuditMgmtDTO auditMgmtDTO) {
+        return sql.insert("IsoAuthItem.insertAuth", auditMgmtDTO);
+    }
+
+    public int updateAuth(AuditMgmtDTO auditMgmtDTO) {
+        return sql.insert("IsoAuthItem.insertAuth", auditMgmtDTO);
     }
     //인증서 정보 저장
-    public int saveItems(IsoAuthItemDTO isoAuthItemDTO) {
-        return sql.insert("IsoAuthItem.saveItem", isoAuthItemDTO);
+    public int insertItem(IsoAuthItemDTO isoAuthItemDTO) {
+        return sql.insert("IsoAuthItem.insertItem", isoAuthItemDTO);
+    }
+
+    public int updateItem(IsoAuthItemDTO isoAuthItemDTO) {
+        return sql.insert("IsoAuthItem.updateItem", isoAuthItemDTO);
     }
     //인증서 전체 저장
     public void saveItemAll(IsoAuthItemDTO isoAuthItemDTO) {
@@ -59,6 +67,16 @@ public class IsoAuthRepository {
         return sql.selectOne("IsoAuthItem.findByIsoAuthItem", params);
     }
 
+    //iso 인증코드와 업체 코드로 수 조회
+    public int selectAuthItem(IsoAuthItemDTO isoAuthItemDTO) {
+        return sql.selectOne("IsoAuthItem.selectAuthItem", isoAuthItemDTO);
+    }
+
+    //iso 인증코드와 업체 코드로 수 조회
+    public int selectAuth(AuditMgmtDTO auditMgmtDTO) {
+        return sql.selectOne("IsoAuthItem.selectAuth", auditMgmtDTO);
+    }
+
     //업체 코드로 iso 정보 조회
     public List<IsoAuthItemDTO> findByCompanyId(Map<String, Object> params) {
         return sql.selectList("IsoAuthItem.findByCompanyId", params);
@@ -74,7 +92,7 @@ public class IsoAuthRepository {
         return sql.selectOne("IsoAuthItem.countByKeyword", params);
     }
 
-    //Auth 승인/반려 처리
+    //Auth 업체별/메뉴별 승인/반려 처리
     public int saveAuthResult(AuditMgmtDTO auditMgmtDTO) {
         return sql.update("IsoAuthItem.saveAuthResult", auditMgmtDTO);
     }
