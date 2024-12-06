@@ -399,7 +399,6 @@
         updateCpUser(userIdx,"N") ;
     }
 
-
    function updateCpUser(userIdx , ApprovalType) {
 
          let comCode = document.getElementById('COM_CODE').value ;
@@ -429,19 +428,27 @@
    }
 
 
+    function modalConfirmClose(id){
+    overlay.style.display = "none";
+        $("#" + id).fadeOut();
+    }
+
    //모달 열기
     function modal(id){
+      overlay.style.display = "block";
       $("#" + id).fadeIn()
     }
 
     //닫기
     function modal_close(id){
+        overlay.style.display = "none";
         $("#" + id).fadeOut();
         goList();
     }
 
     //반려 닫기
     function modalReject_close_(id){
+        overlay.style.display = "none";
         $("#" + id).fadeOut();
     }
 

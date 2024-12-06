@@ -241,7 +241,7 @@
                 <div class="main_label"><span>자재코드 선택</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('partMatrail')"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close_second('partMatrail')"><span>Close</span></button>
             </div>
         </div>
         <div class="dialog_body">
@@ -283,7 +283,7 @@
                 <div class="main_label"><span>업체코드 선택</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close_second('CpCode')"><span>Close</span></button>
             </div>
         </div>
         <div class="dialog_body">
@@ -468,6 +468,7 @@
                }
            });
        });
+
        //삭제
        $(document).on('click', '#deleteCheckedBtn', function() {
             const selectedData = [];
@@ -496,9 +497,8 @@
                    showAlert('warning', xhr.responseText);
                 }
             });
-        });
-
-  });
+       });
+   });
 
     document.getElementById('modalplant').addEventListener('change', function() {
         const selectedValue = this.value;
@@ -571,8 +571,9 @@
                    ${company.cp_CODE_WORK_CD5 !=null  ? company.cp_CODE_WORK_CD5 +",": ""}
                   </span>
                </td>
-               <td style="text-align:center"><span>${company.PART_STATUS}</span></td>
-
+               <td style="text-align:center">
+                    <span>${company.PART_STATUS == 'D' ? '신청' : (company.PART_STATUS == 'Y' ? '사용' : (company.PART_STATUS == 'R' ? '반려' : ''))} </span>
+               </td>
            </tr>
        `;
        tableBody.append(row);
@@ -610,7 +611,7 @@
 
     //선택된 자재코드 셋팅 MATERIAL
     function setPartCd(matid, matname,plandid){
-        modal_close1('partMatrail');
+        modal_close_second('partMatrail');
         $('#modalPartCode').val(matid);
         $('#modalPartName').val(matname);
         $('#hdnmodalplant').val(plandid);
@@ -636,7 +637,7 @@
 
     //선택된 업체코드, 업체명 셋팅
     function setCpCd(code, name){
-        modal_close1('CpCode');
+        modal_close_second('CpCode');
         $('#modalCompanyCode').val(code);
         $('#modalCompanyName').val(name);
     }
@@ -702,10 +703,14 @@
      });
   }
 
-    function modal_close1(id){
+    function modal_close_second(id){
         $("#" + id).fadeOut();
         //초기화
         modal_init(id, 'add');
+        var readonlyValue = $('#modalPartCode').attr("readonly");
+        if (readonlyValue !== undefined) {
+            $('#modalTitle').text('자재 수정');
+        }
     }
 
 

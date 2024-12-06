@@ -15,9 +15,27 @@
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
     <script type="text/javascript" src="../../../js/app.js"></script>
+    <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
     <title>회원가입</title>
 </head>
 <body>
+<!--==alert==-->
+<div class="cui_dialog" style="width:420px;display:none" id="dialog">
+    <div class="dialog_container">
+        <div class="dialog_body">
+            <div class="body_root">
+                <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
+                <div class="cui_items_wrap" data-direction="center">
+                    <div class="item_content">
+                        <button type="button" class="cui_button primary modal-close" onClick="modal_close('dialog')"><span>확인</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--==alert==-->
+<div id="overlay" class="overlay"></div>
 <div class="cui_app">
     <div class="cui_global">
         <h1 class="global_logo">
@@ -550,9 +568,11 @@
       if (!searchCustomer) {
          $('#searchCustomer').focus();
          if(searchType == "VendorNum"){
-             alert("Vendor 번호를 입력해주세요.");
+             //alert("Vendor 번호를 입력해주세요.");
+              showAlert('warning', 'Vendor 번호를 입력해주세요.');
          } else{
-             alert("사업자등록번호를 입력해주세요.");
+             //alert("사업자등록번호를 입력해주세요.");
+              showAlert('warning', '사업자등록번호를 입력해주세요.');
          }
         return;
       }
@@ -961,7 +981,8 @@
 
         const message = document.getElementById('IdValidatorMsg').innerHTML;
         if(message != "사용할 수 있는 아이디입니다."){
-            alert("아이디를 확인해 주십시오.");
+<!--            alert("아이디를 확인해 주십시오.");-->
+            showAlert('warning', '아이디를 확인해 주십시오.');
             $('#memberID').focus();
             return;
         }
@@ -969,20 +990,24 @@
         const selectedValue = document.getElementById('userSelect').value;
         if (selectedValue == "0") {
             $('#selectOwner').focus();
-            alert("담당자를 선택해 주세요.");
+<!--            alert("담당자를 선택해 주세요.");-->
+            showAlert('warning', '담당자를 선택해 주세요.');
             return;
         }
 
         if (selectedValue == "" ) {
             $('#selectOwner').focus();
-            alert("공동 업무자 정보를 확인해주세요. 기본 1인은 필수 입니다.");
+<!--            alert("공동 업무자 정보를 확인해주세요. 기본 1인은 필수 입니다.");-->
+            showAlert('warning', '공동 업무자 정보를 확인해주세요. 기본 1인은 필수 입니다.');
+
             return;
         }
 
         const confirmMsg = document.getElementById('confirmMsg').innerHTML;
         if(confirmMsg != "비밀번호가 일치합니다."){
             $('#UserPass').focus();
-            alert("비밀번호를 확인해 주십시오.");
+<!--            alert("비밀번호를 확인해 주십시오.");-->
+            showAlert('warning', '비밀번호를 확인해 주십시오.');
             return;
         }
 
@@ -992,7 +1017,8 @@
 
             if (reason == "") {
                 $('#ID_PW_ADD_REASON').focus();
-                alert("ID/PW 추가사유를 입력해 주세요.");
+<!--                alert("ID/PW 추가사유를 입력해 주세요.");-->
+                showAlert('warning', 'ID/PW 추가사유를 입력해 주세요.');
                 return;
             }
         }

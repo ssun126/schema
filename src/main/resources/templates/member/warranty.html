@@ -241,7 +241,7 @@
             </div>
         </div>
         <!--==alert==-->
-
+        <div id="overlay" class="overlay"></div>
 
     </div>
 </div>
@@ -255,6 +255,7 @@
   window.onload = function() {
    var messageElement = document.getElementById('messageContent');
        if (messageElement && messageElement.innerText.trim() !== "") {
+           overlay.style.display = "block";
            document.getElementById('dialog').style.display = 'block';
 
            const button = document.getElementById('request');
@@ -283,6 +284,7 @@
 
   //모달 열기
   function modal(id){
+    overlay.style.display = "block";
     $("#" + id).fadeIn();
   }
 
@@ -291,6 +293,7 @@
     e.preventDefault();
     const modal = $(this).parents('.cui_dialog');
     modal.fadeOut();
+    overlay.style.display = "none";
 
     // 닫을때
     redirectToLogin();
@@ -301,6 +304,7 @@
     e.preventDefault();
     const modal = $(this).parents('.cui_dialog');
     modal.fadeOut();
+    overlay.style.display = "none";
   });
 
 
@@ -314,6 +318,7 @@
 
   //파일 찾기
   function findfile() {
+      overlay.style.display = "block";
       $("#dialog2").fadeIn();
   }
 
@@ -400,6 +405,7 @@
 
   //모달 파일 저장 닫기
   function sevefileClose() {
+      overlay.style.display = "none";
       $("#dialog2").fadeOut();
   }
 
