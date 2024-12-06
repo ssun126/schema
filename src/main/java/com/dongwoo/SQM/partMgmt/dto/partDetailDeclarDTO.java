@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class partDetailDeclarDTO {
 
-    @JsonProperty("SVHC_IDX")
-    private String SVHC_IDX;
+    @JsonProperty("DECL_IDX")
+    private String DECL_IDX;
     @JsonProperty("PM_IDX")
     private String PM_IDX;
     @JsonProperty("DATA_GUBUN")

@@ -1,9 +1,6 @@
 package com.dongwoo.SQM.partMgmt.service;
 
-import com.dongwoo.SQM.partMgmt.dto.partDetailEtcDTO;
-import com.dongwoo.SQM.partMgmt.dto.partDetailHalGDTO;
-import com.dongwoo.SQM.partMgmt.dto.partDetailMsdsDTO;
-import com.dongwoo.SQM.partMgmt.dto.partDetailRohsDTO;
+import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.repository.PartMgmtRepository;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
@@ -128,10 +125,72 @@ public class PartDetailService {
 
     }
 
+    public int  saveDetailSvhcData(PartDetailSvhcDTO partDetailSvhcDTO, MultipartFile files, String comCode){
+        if(!files.isEmpty()) {
+            String svhc_filepath = uploadFileData(comCode,files);
+            String svhc_filename = files.getOriginalFilename();
+
+            partDetailSvhcDTO.setFILE_NAME(svhc_filename);
+            partDetailSvhcDTO.setFILE_PATH(svhc_filepath);
+        }
+
+        if(partDetailSvhcDTO.getSVHC_IDX().equals("")) {
+            return partMgmtRepository.saveDetailSvhcData(partDetailSvhcDTO);
+        }else{
+            return partMgmtRepository.updateDetailSvhcData(partDetailSvhcDTO);
+        }
+    }
+
     //declar
     public List<DeclarationDTO> getDeclarData(){
         return partMgmtRepository.getDeclarData();
 
+    }
+
+    public int  saveDetailDeclarData(partDetailDeclarDTO declarDTO, MultipartFile files, String comCode){
+        if(!files.isEmpty()) {
+            String svhc_filepath = uploadFileData(comCode,files);
+            String svhc_filename = files.getOriginalFilename();
+
+            declarDTO.setFILE_NAME(svhc_filename);
+            declarDTO.setFILE_PATH(svhc_filepath);
+        }
+
+        if(declarDTO.getDECL_IDX().equals("")) {
+            return partMgmtRepository.saveDetailDeclarData(declarDTO);
+        }else{
+            return partMgmtRepository.updateDetailDeclarData(declarDTO);
+        }
+    }
+
+    //sccs
+    public int saveSccsData(partDetailSccsDTO sccsDTO){
+
+        if(sccsDTO.getSCCS_IDX().equals("")){
+            return partMgmtRepository.saveSccsData(sccsDTO);
+        }else{
+            return partMgmtRepository.updateSccsData(sccsDTO);
+        }
+    }
+
+    //ingred
+    public int saveIngredData(partDetailIngredDTO ingredDTO){
+
+        if(ingredDTO.getINGRED_IDX().equals("")){
+            return partMgmtRepository.saveIngredData(ingredDTO);
+        }else{
+            return partMgmtRepository.updateIngredData(ingredDTO);
+        }
+    }
+
+    //guarant
+    public int saveGuarantData(partDetailGuarantDTO guarantDTO){
+
+        if(guarantDTO.getGUARANT_IDX().equals("")){
+            return partMgmtRepository.saveGuarantData(guarantDTO);
+        }else{
+            return partMgmtRepository.updateGuarantData(guarantDTO);
+        }
     }
 
 

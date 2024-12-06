@@ -1,7 +1,9 @@
 package com.dongwoo.SQM.partMgmt.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class partDetailSccsDTO {
 
     @JsonProperty("SCCS_IDX")

@@ -3,7 +3,7 @@ package com.dongwoo.SQM.partMgmt.controller;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartDetailService;
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -44,6 +44,7 @@ public class PartDetailMSDSController {
         log.info("test22222-----COM_CODE ====="+user.getCOM_CODE());
         //log.info("test12222==================="+ etcFile);
         String pm_idx = msdsDTO.getPM_IDX();
+
         //msds
         //파일 저장 및 삭제
 //

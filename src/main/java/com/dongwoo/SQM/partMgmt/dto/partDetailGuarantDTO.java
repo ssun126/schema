@@ -1,7 +1,9 @@
 package com.dongwoo.SQM.partMgmt.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class partDetailGuarantDTO {
 
     @JsonProperty("GUARANT_IDX")
