@@ -22,7 +22,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체코드</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" data-ui-size="small" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
@@ -112,7 +112,7 @@
             var state = $('#searchState').val();  // state
 
             $.ajax({
-                url: '/api/searchAuditMgmt',  // 서버의 검색 API URL
+                url: '/auditMgmt/searchAuditMgmt',  // 서버의 검색 API URL
                 type: 'GET',
                 data: {
                     type: type,      // audit 타입

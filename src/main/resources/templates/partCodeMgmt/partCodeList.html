@@ -33,7 +33,6 @@
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap ">
 
-
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">자재코드</strong>
                             <div class="item_content">
@@ -48,8 +47,6 @@
                             </div>
                         </div>
 
-                        <div></div><div></div>
-
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체코드</strong>
                             <div class="item_content">
@@ -62,7 +59,6 @@
                                 <input id="comName" name="comName" class="cui_text_field" type="text" >
                             </div>
                         </div>
-                        <div></div><div></div>
 
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">사업본부</strong>
@@ -70,7 +66,7 @@
                                 <select id="deptCode" name="deptCode" class="cui_select_field wide">
                                     <option value=""></option>
                                     <option th:each="dept : ${deptList}"
-                                            th:value="${dept.BASE_CODE}"
+                                            th:value="${dept.BASE_OPTION}"
                                             th:text="${dept.BASE_NAME}">
                                     </option>
                                 </select>
@@ -95,7 +91,6 @@
                                 <input id="comNation" name="comNation" class="cui_text_field" type="text">
                             </div>
                         </div>
-                        <div></div>
 
                     </div>
                     <div class="search_action">
@@ -175,7 +170,7 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" name="formPartCodeMgmt">
+                <form class="cui_form_section" data-legend="true" name="formPartCodeMgmt">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">자재 코드</strong>
@@ -246,12 +241,12 @@
                 <div class="main_label"><span>자재코드 선택</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('partMatrail')"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close_second('partMatrail')"><span>Close</span></button>
             </div>
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" id="formpartMatrail">
+                <form class="cui_form_section" data-legend="true" id="formpartMatrail">
                     <table class="cui_table center" id="partMatrailTable">
                         <colgroup>
                             <col style="width:120px;">
@@ -288,12 +283,12 @@
                 <div class="main_label"><span>업체코드 선택</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close_second('CpCode')"><span>Close</span></button>
             </div>
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_field" data-legend="true" id="formCpCode">
+                <form class="cui_form_section" data-legend="true" id="formCpCode">
                     <table class="cui_table center" id="cpCodeTable">
                         <colgroup>
                             <col style="width:120px;">
@@ -473,6 +468,7 @@
                }
            });
        });
+
        //삭제
        $(document).on('click', '#deleteCheckedBtn', function() {
             const selectedData = [];
@@ -501,9 +497,8 @@
                    showAlert('warning', xhr.responseText);
                 }
             });
-        });
-
-  });
+       });
+   });
 
     document.getElementById('modalplant').addEventListener('change', function() {
         const selectedValue = this.value;
@@ -576,8 +571,9 @@
                    ${company.cp_CODE_WORK_CD5 !=null  ? company.cp_CODE_WORK_CD5 +",": ""}
                   </span>
                </td>
-               <td style="text-align:center"><span>${company.PART_STATUS}</span></td>
-
+               <td style="text-align:center">
+                    <span>${company.PART_STATUS == 'D' ? '신청' : (company.PART_STATUS == 'Y' ? '사용' : (company.PART_STATUS == 'R' ? '반려' : ''))} </span>
+               </td>
            </tr>
        `;
        tableBody.append(row);
@@ -615,7 +611,7 @@
 
     //선택된 자재코드 셋팅 MATERIAL
     function setPartCd(matid, matname,plandid){
-        modal_close('partMatrail');
+        modal_close_second('partMatrail');
         $('#modalPartCode').val(matid);
         $('#modalPartName').val(matname);
         $('#hdnmodalplant').val(plandid);
@@ -641,7 +637,7 @@
 
     //선택된 업체코드, 업체명 셋팅
     function setCpCd(code, name){
-        modal_close('CpCode');
+        modal_close_second('CpCode');
         $('#modalCompanyCode').val(code);
         $('#modalCompanyName').val(name);
     }
@@ -706,6 +702,16 @@
          console.error('데이터 조회 실패:', error);
      });
   }
+
+    function modal_close_second(id){
+        $("#" + id).fadeOut();
+        //초기화
+        modal_init(id, 'add');
+        var readonlyValue = $('#modalPartCode').attr("readonly");
+        if (readonlyValue !== undefined) {
+            $('#modalTitle').text('자재 수정');
+        }
+    }
 
 
 

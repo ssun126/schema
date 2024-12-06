@@ -172,7 +172,7 @@
 
         <div class="dialog_body">
             <div class="body_root">
-                <form id="updateForm" method="POST" action="/userMgr/updateUserMgr" class="cui_form_field" data-legend="true">
+                <form id="updateForm" method="POST" action="/userMgr/updateUserMgr" class="cui_form_section" data-legend="true">
                     <fieldset>
 <!--                        <legend><span>사용자 수정</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
@@ -318,9 +318,14 @@
 
 <script>
 
+    $(document).ready(function() {
+       fetchDataLis();
+    });
+
+
     //모달 열기 조회
     function modal(id,userid){
-     overlay.style.display = "block"; // 오버레이 배경 표시
+     overlay.style.display = "block";
       $("#" + id).fadeIn();
       if (!userid) {
         initPopform('I') ;
@@ -333,7 +338,7 @@
 
     //모달 닫기
     $('.modal-close').on('click', function(e){
-     overlay.style.display = "none"; // 오버레이 숨기기
+     overlay.style.display = "none";
       e.preventDefault();
       const modal = $(this).parents('.cui_dialog');
       modal.fadeOut();

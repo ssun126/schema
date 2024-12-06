@@ -34,6 +34,8 @@ public class IsoAuthItemDTO {
     private int DEL_DW_USER_IDX;
     @JsonProperty("ITEM_STATE")
     private String ITEM_STATE;
+    private String REASON;
+    private int POINT;
     @JsonProperty("FILE_NAME")
     private String FILE_NAME; // 파일 이름
     @JsonProperty("FILE_PATH")
