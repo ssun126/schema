@@ -16,7 +16,7 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>업체코드</span></h2>
+                <h2 class="cui_title"><span data-langsid="업체코드"></span></h2>
             </div>
         </div>
         <div class="cui_body">
@@ -24,35 +24,35 @@
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap ">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체코드</strong>
+                            <strong class="item_label" data-langsid="업체코드"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="searchCode" data-langsid="업체코드를 입력해주세요" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체명</strong>
+                            <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="searchName" data-langsid="업체명을 입력해주세요" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">사업본부</strong>
+                            <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchFactory">
-                                    고체                                    <option value="CODEGROUP" selected>선택</option>
-                                    <option value="BASECODE">사업본부</option>
+                                    <option value="CODEGROUP" data-langsid="선택" selected></option>
+                                    <option value="BASECODE" data-langsid="사업본부"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">국가</strong>
+                            <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
                                 <input class="cui_text_field" type="text" id="searchNation">
                             </div>
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="button" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+                        <button type="button" class="cui_button primary search_btn" id="searchBtn"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
             </form>
@@ -61,9 +61,9 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button secondary" onclick="modal_open('CpCodeMgmt','add', '', '')"><span>추가</span></button>
-                    <button type="button" class="cui_button secondary" onclick="delCompany()"><span>삭제</span></button>
-                    <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span>엑셀다운로드</span></button>
+                    <button type="button" class="cui_button secondary" onclick="modal_open('CpCodeMgmt','add', '', '')"><span data-langsid="추가"></span></button>
+                    <button type="button" class="cui_button secondary" onclick="delCompany()"><span data-langsid="삭제"></span></button>
+                    <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀다운로드"></span></button>
                 </div>
             </div>
 
@@ -98,7 +98,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span id="modalTitle">신규추가</span></div>
+                <div class="main_label"><span id="modalTitle" data-langsid="신규추가"></span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCodeMgmt')"><span>Close</span></button>
@@ -109,20 +109,20 @@
                 <form class="cui_form_section" data-legend="true" name="formCpCodeMgmt">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체 코드</strong>
+                            <strong class="item_label" data-langsid="업체 코드"></strong>
                             <div class="item_content">
                                 <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata">
-                                <button type="button" class="cui_button icon" data-cui-icon="search" id="getCpCode"><span>검색</span></button>
+                                <button type="button" class="cui_button icon" data-cui-icon="search" id="getCpCode"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체명</strong>
+                            <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
                                 <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">사업본부</strong>
+                            <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
                                 <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label>
                                 <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label>
@@ -130,13 +130,13 @@
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">국가</strong>
+                            <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
                                 <input id="modalCompanyNation" name="COM_NATION" class="cui_text_field ">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">사용</strong>
+                            <strong class="item_label" data-langsid="사용"></strong>
                             <div class="item_content">
                                 <select class="cui_select_field wide" id="modalCompanyStatus" name="COM_STATUS">
                                     <option value="Y">Y</option>
@@ -147,8 +147,8 @@
 
                         <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                             <div class="item_content">
-                                <button type="submit" id="CpCodeMgmtAdd" class="cui_button primary"><span>저장</span></button>
-                                <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" onClick="modal_close('CpCodeMgmt')"><span>닫기</span></button>
+                                <button type="submit" id="CpCodeMgmtAdd" class="cui_button primary"><span data-langsid="저장"></span></button>
+                                <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" onClick="modal_close('CpCodeMgmt')"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -162,7 +162,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span>업체코드 선택</span></div>
+                <div class="main_label"><span data-langsid="업체코드 선택"></span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
@@ -180,10 +180,10 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>업체코드</span></th>
-                            <th><span>업체명</span></th>
-                            <th><span>국가</span></th>
-                            <th><span>선택</span></th>
+                            <th><span data-langsid="업체코드"></span></th>
+                            <th><span data-langsid="업체명"></span></th>
+                            <th><span data-langsid="국가"></span></th>
+                            <th><span data-langsid="선택"></span></th>
                         </tr>
                         </thead>
                         <tbody>

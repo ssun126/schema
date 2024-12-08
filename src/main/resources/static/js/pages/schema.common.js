@@ -345,6 +345,23 @@ siteLang.showLangs = function () {
         } catch (e) {
         }
     });
+
+    $('input[placeholder]').each(function () {
+        var kor = $(this).attr("data-langsid");
+
+        try {
+            const item = siteLang.langsData.find(entry => entry.KOR === kor);
+            if (item && item[siteLang.selLang]) {
+                $(this).attr("placeholder", item[siteLang.selLang]);
+            }
+            else
+            {
+                siteLang.devDBSet(kor);
+                $(this).attr("placeholder", kor);
+            }
+        } catch (e) {
+        }
+    });
 }
 siteLang.getLang = function (kor) {
     try {
