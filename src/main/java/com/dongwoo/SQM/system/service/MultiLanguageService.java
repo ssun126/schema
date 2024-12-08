@@ -25,4 +25,17 @@ public class MultiLanguageService {
     public List<HashMap> getMultiLanguageList_HashMap(){
         return multiLanguageRepository.getMultiLanguageList_HashMap();
     }
+
+    //다국어 가져오기
+    public List<HashMap> getMultiLangsList_HashMap(){
+        return multiLanguageRepository.getMultiLangsList_HashMap();
+    }
+
+    public List<HashMap> getMultiLangs_HashMap(String KOR){
+        return multiLanguageRepository.getMultiLangs_HashMap(KOR);
+    }
+
+    public void saveMultiLanguage(String KOR){
+        multiLanguageRepository.saveMultiLanguage(KOR);
+    }
 }

@@ -38,4 +38,23 @@ public class MultiLanguageController {
 
         return multiLanguageList;
     }
+
+    @PostMapping("/multiLanguage/getLocalStorage")
+    public @ResponseBody List<HashMap> getLocalStorage()  throws Exception{
+
+        List<HashMap> multiLangsList =  multiLanguageService.getMultiLangsList_HashMap();
+        //log.info("multiLanguageList = " + multiLanguageList);
+
+        return multiLangsList;
+    }
+
+    @PostMapping("/multiLanguage/saveMultiLanguage")
+    public @ResponseBody void saveMultiLanguage(@RequestParam() String KOR)  throws Exception{
+        //System.out.println("saveMultiLanguage????"+KOR);
+        List<HashMap> multiLangsList =  multiLanguageService.getMultiLangs_HashMap(KOR);
+
+        if (multiLangsList.size() == 0) {
+            multiLanguageService.saveMultiLanguage(KOR);
+        }
+    }
 }
