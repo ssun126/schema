@@ -3,22 +3,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="IsoAuthItem">
-    <insert id="saveItem" parameterType="isoAuthItem">
+    <insert id="insertItem" parameterType="isoAuthItem">
         INSERT INTO SC_ISO_AUTH_COMPANY_ITEM(COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_INPUT_DATE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH)
         VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_INPUT_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, #{ITEM_STATE}, #{FILE_NAME}, #{FILE_PATH})
     </insert>
 
-    <insert id="saveAuth" parameterType="isoAuth">
-        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, AUTH_TYPE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE)
-        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{AUTH_TYPE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate)
+    <update id="updateItem" parameterType="isoAuthItem">
+        UPDATE SC_ISO_AUTH_COMPANY_ITEM
+        SET ITEM_STATE=#{ITEM_STATE},
+            AUTH_DATE=#{AUTH_DATE}, EXP_DATE=#{EXP_DATE}, REG_INPUT_DATE=#{REG_INPUT_DATE},
+            FILE_NAME=#{FILE_NAME}, FILE_PATH=#{FILE_PATH},
+            UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+        WHERE COM_CODE=#{COM_CODE} AND AUTH_CODE=#{AUTH_CODE}
+    </update>
+
+    <select id="selectAuthItem" parameterType="isoAuthItem" resultType="int">
+        SELECT COUNT(*) from SC_ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
+    </select>
+
+    <insert id="insertAuth" parameterType="isoAuth">
+        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, SEND_DATE, AUTH_TYPE, POINT)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{AUTH_TYPE}, #{POINT})
     </insert>
 
-    <insert id="saveAuthResult" parameterType="isoAuth">
+    <update id="updateAuth" parameterType="isoAuth">
         UPDATE SC_AUTH_COMPANY_INFO
-            SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}, STATE_REASON = #{STATE_REASON}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}
         WHERE COM_CODE = #{COM_CODE}
         AND AUTH_TYPE = #{AUTH_TYPE}
-    </insert>
+    </update>
+
+    <select id="selectAuth" parameterType="isoAuth" resultType="int">
+        select COUNT(*) from SC_AUTH_COMPANY_INFO where AUTH_TYPE=#{AUTH_TYPE} and COM_CODE=#{COM_CODE}
+    </select>
 
     <select id="findByIsoAuthItem" parameterType="map" resultType="isoAuthItem">
         select * from SC_ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
@@ -129,7 +146,15 @@
     </select>
 
     <update id="updateStatus" parameterType="isoAuthItem">
-        update SC_ISO_AUTH_COMPANY_ITEM set ITEM_STATE=#{ITEM_STATE}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
-        where COM_CODE=#{COM_CODE}
+        UPDATE SC_ISO_AUTH_COMPANY_ITEM
+        SET ITEM_STATE=#{ITEM_STATE}, REASON=#{REASON}, POINT=#{POINT}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+        WHERE COM_CODE=#{COM_CODE} AND AUTH_CODE=#{AUTH_CODE}
+    </update>
+
+    <update id="saveAuthResult" parameterType="isoAuth">
+        UPDATE SC_AUTH_COMPANY_INFO
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}
+        WHERE COM_CODE = #{COM_CODE}
+        AND AUTH_TYPE = #{AUTH_TYPE}
     </update>
 </mapper>

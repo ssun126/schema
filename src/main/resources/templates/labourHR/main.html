@@ -15,7 +15,7 @@
             <div class="head_content">
                 <h2 class="cui_title"><span th:text="${#authentication.principal.COM_NAME}"></span></h2>
             </div>
-            <div class="head_aside">
+            <div class="head_aside" id="stateDate">
                 <p>(제출:<span>2024.01.01</span>)</p>
             </div>
         </div>
@@ -23,7 +23,7 @@
             <form class="cui_form_section" data-legend="true">
                 <fieldset>
                     <legend><span>노동인권/윤리경영 (배점 10점)</span></legend>
-                    <table class="cui_table">
+                    <table class="cui_table" id="attachTable">
                         <colgroup>
                             <col style="width:200px;">
                             <col>
@@ -31,21 +31,16 @@
                         <tbody>
                         <tr>
                             <th><span>파일 첨부</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <input type="file" multiple class="cui_file_field">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
-                                                </div>
-                                            </div>
+                            <td id="attachmentsContainer">
+                                <div class="cui_attachments">
+                                    <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
                                         </div>
                                     </div>
+                                    <button type="submit" class="cui_button secondary"><span>양식다운로드</span></button>
                                 </div>
                             </td>
                         </tr>
@@ -54,21 +49,28 @@
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button primary"><span>제출</span></button>
+                        <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
                     </div>
                 </div>
             </form>
-            <div class="cui_items_wrap" data-direction="right">
+            <div class="cui_items_wrap resultField" data-direction="right">
                 <div class="item_content">
                     <span>평가점수 0 ~ 10 점</span>
                 </div>
             </div>
-            <form class="cui_border_section" data-legend="true">
+            <form class="cui_border_section resultField" data-legend="true">
                 <div class="cui_section">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>제조소 공통 정보</span></div>
                     </div>
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                            <col style="width:200px;">
+                            <col style="width:300px;">
+                            <col style="width:80px;">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th><span>항목</span></th>
@@ -94,6 +96,13 @@
                         <div class="bullet_title_label"><span>노동인권</span></div>
                     </div>
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                            <col style="width:200px;">
+                            <col style="width:300px;">
+                            <col style="width:80px;">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th><span>항목</span></th>
@@ -119,6 +128,13 @@
                         <div class="bullet_title_label"><span>윤리경영</span></div>
                     </div>
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:200px;">
+                            <col>
+                            <col style="width:200px;">
+                            <col style="width:300px;">
+                            <col style="width:80px;">
+                        </colgroup>
                         <thead>
                         <tr>
                             <th><span>항목</span></th>
@@ -139,7 +155,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="cui_section">
+                <div class="cui_section" id="rejectReason">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>반려사유</span></div>
                     </div>
@@ -151,5 +167,92 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('#rejectReason').hide();
+        $('#stateDate').text('(미제출)');
+        $('.resultField').hide();
+
+        // 저장 버튼,제출 버튼 클릭 시 데이터 저장
+        $("#sendAuth").click(function() {
+            saveTableData('SEND');
+        });
+    });
+
+    // 파일 선택 시 삭제 버튼 표시
+    function toggleDeleteButton(input) {
+        const deleteButton = input.closest('td').querySelector('.cui_button');
+        const fileLabel = input.closest('td').querySelector('.item_label span');
+        const fileLabelDiv = input.closest('td').querySelector('.item_label');
+
+        if (input.files && input.files.length > 0) {
+            var fileName = input.files[0].name;  // Get the file name
+            fileLabel.textContent = fileName;    // Update the file name
+            fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
+            deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
+        } else {
+            fileLabel.textContent = '';
+            fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
+            deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
+        }
+    }
+
+    // 파일 삭제
+    function clearFile(button) {
+        const fileInput = button.closest('td').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
+        const fileLabel = button.closest('td').querySelector('.item_label span');
+        const fileLabelDiv = button.closest('td').querySelector('.item_label');
+
+        // 파일 입력 초기화
+        fileInput.value = "";
+        fileLabel.textContent = '';
+        // 삭제 버튼 숨기기
+        button.style.display = 'none';
+        fileLabelDiv.style.display = 'none';
+    }
+
+    // 저장/제출
+    function saveTableData(flag) {
+        const fileInput = document.find('input[type="file"]')[0];
+
+        const formData = new FormData();
+        formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
+
+        $.ajax({
+            url: '/auditMgmt/sendLabourAuthData',
+            type: 'POST',
+            data: formData,
+            processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
+            contentType: false,  // 기본 contentType을 사용하지 않음
+            success: function(response) {
+                console.log(response);
+                if(response.ok){
+                    showAlert('success','데이터가 성공적으로 저장되었습니다.');
+                }
+            },
+            error: function(xhr, status, error) {
+                showAlert('warning','데이터 저장에 실패했습니다.');
+            }
+        });
+    }
+
+    setTimeout(function() {
+        const fileInput = document.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(event) {
+                const files = event.target.files;  // 선택된 모든 파일
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file && !validation(file)) {
+                        event.target.value = '';  // 잘못된 파일 선택시 input 초기화
+                        clearFile(fileInput.closest('.cui_attachments').querySelector('.cui_button'));
+                        console.log('잘못된 파일: ', file.name);
+                        break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
+                    }
+                }
+            });
+        }
+    }, 100);  // 100ms 후에 실행
+</script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.common.repository;
 
+import com.dongwoo.SQM.common.dto.CommonDTO;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -16,16 +17,19 @@ public class CodeRepository {
     public List<BaseCodeDTO> GetBaseCode(String GROUP_CODE) {
         return sql.selectList("CompanyInfo.GetBaseCode",GROUP_CODE );
     }
-/*
-    public List<CodeDto> selectCodeList(CodeDto codeDto) {
-        return sql.selectList("Menu.getAllAdminSubMenu", codeDto);
+    public List<BaseCodeDTO> selectCodeList(BaseCodeDTO codeDto) {
+        return sql.selectList("CompanyInfo.GetBaseCode", codeDto);
     }
 
-    public CodeDto selectCodeByCd(String code) {
-        return sql.selectOne("Menu.getAllAdminSubMenus", code);
+    public BaseCodeDTO selectCodeByCd(String code) {
+        return sql.selectOne("CompanyInfo.GetBaseCode", code);
     }
 
-    public int deleteCode(CodeDto codeDto) {
+    public BaseCodeDTO selectCode(BaseCodeDTO codeDto) {
+        return sql.selectOne("CompanyInfo.GetBaseCode", codeDto);
+    }
+
+    public int deleteCode(BaseCodeDTO codeDto) {
         return sql.delete("Board.delete", codeDto);
-    }*/
+    }
 }

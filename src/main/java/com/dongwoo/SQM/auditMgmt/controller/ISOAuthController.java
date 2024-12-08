@@ -19,7 +19,6 @@ public class ISOAuthController {
     private final IsoAuthService isoAuthService;
 
     @GetMapping("/user/auditMgmt/isoAuth")
-
     public String isoAuthMain(Model model, @AuthenticationPrincipal UserCustom user) {
         // 회사의 ISO 상태 정보를 가져옵니다.
         AuditMgmtDTO companyAuth = isoAuthService.getCompanyAuth("ISO", user.getCOM_CODE());

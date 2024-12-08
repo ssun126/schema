@@ -13,7 +13,7 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-              <h2 class="cui_title"><span>노동인권</span></h2>
+              <h2 class="cui_title"><span>안전보건/환경관리</span></h2>
             </div>
         </div>
         <div class="cui_body">
@@ -57,6 +57,7 @@
                     <col style="width:130px;">
                     <col style="width:130px;">
                     <col style="width:130px;">
+                    <col style="width:130px;">
                 </colgroup>
                 <thead>
                 <tr>
@@ -66,10 +67,11 @@
                     <th><span>점수</span></th>
                     <th><span>제출일자</span></th>
                     <th><span>승인일자</span></th>
+                    <th><span>메일발송</span></th>
                 </tr>
                 </thead>
                 <tbody>
-                  <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
+                  <tr><td colspan="7">검색 버튼을 눌러 조회하세요.</td></tr>
                 </tbody>
             </table>
             <div id="pagination" class="pagination" style="text-align: center"></div>
@@ -104,7 +106,7 @@
                 var state = $('#searchState').val();  // state
 
                 $.ajax({
-                    url: '/api/searchAuditMgmt',  // 서버의 검색 API URL
+                    url: '/auditMgmt/searchAuditMgmt',  // 서버의 검색 API URL
                     type: 'GET',
                     data: {
                         type: type,      // audit 타입
@@ -128,7 +130,7 @@
                         };
 
                         if (!response.resultList || response.resultList.length === 0) {
-                            var row = '<tr><td colspan="6">데이터가 없습니다.</td>></tr>';
+                            var row = '<tr><td colspan="7">데이터가 없습니다.</td>></tr>';
                             tableBody.append(row);  // 테이블에 새 행 추가
                         }else{
                             // 검색된 결과를 테이블에 추가
@@ -144,6 +146,7 @@
                                                 '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
                                                 '<td>' + auth.SEND_DATE + '</td>' +
                                                 '<td>' + itemApvDate + '</td>' +
+                                                '<td><button type="button">메일발송</button></td>' +
                                               '</tr>';
                                 tableBody.append(row);  // 테이블에 새 행 추가
                             });

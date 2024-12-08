@@ -66,7 +66,7 @@
     $(document).ready(function() {
 
         $.ajax({
-            url: '/api/boardList/pageMaker',  // 서버에서 pageMaker 객체를 가져오는 API URL
+            url: '/board/boardList/pageMaker',  // 서버에서 pageMaker 객체를 가져오는 API URL
             type: 'GET',
             data: {
                 pageNum: 1,  // 기본값으로 첫 페이지를 설정, 필요에 따라 변경
@@ -125,7 +125,7 @@
         function loadPage(pageNum) {
            // 페이지가 로드되면 서버에서 데이터를 가져옴
             $.ajax({
-                url: '/api/boardList',  // 서버의 API URL
+                url: '/board/boardList',  // 서버의 API URL
                 type: 'GET',
                 data: { pageNum: pageNum, amount: 10 },
                 success: function(response) {

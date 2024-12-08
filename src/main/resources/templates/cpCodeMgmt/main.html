@@ -213,7 +213,7 @@
             console.log("formData>>>>>>>>>"+JSON.stringify(CpCodeDTO));
             $.ajax({
                 type: 'POST',
-                url: '/api/setCompanyData',  //'/admin/companyInfo/company/save',    //
+                url: '/companyInfo/setCompanyData',  //'/admin/companyInfo/company/save',    //
                 contentType: 'application/json',
                 data: JSON.stringify(CpCodeDTO),
                 success: function(response) {
@@ -235,14 +235,14 @@
             var nation = $('#searchNation').val();  // 국가
 
             $.ajax({
-                url: '/api/searchCompanies',  // 서버의 검색 API URL
+                url: '/companyInfo/searchCompanies',  // 서버의 검색 API URL
                 type: 'GET',
                 data: {
                     name: name,      // 업체명
                     code: code,      // 업체 코드
                     nation: nation,  // 국가
                     pageNum: 1,      // 기본값으로 첫 페이지
-                    amount: 10       // 한 페이지에 표시할 항목 수
+                    amount: 20       // 한 페이지에 표시할 항목 수
                 },
                 success: function(response) {
                     // 테이블에 결과 채우기
@@ -256,7 +256,7 @@
                                         '<td><input type="checkbox" id=\'' + company.COM_CODE + '\'></td>' :
                                         '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
                                         '<td>' + company.COM_CODE + '</td>' +
-                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCodeMgmt\', \'detail\', \'/api/getCompanyData\', \''+ company.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
+                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCodeMgmt\', \'detail\', \'/companyInfo/getCompanyData\', \''+ company.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
                                         '<td>' + company.COM_NATION + '</td>' +
                                         '<td>' + company.COM_STATUS + '</td>' +
                                       '</tr>';
@@ -275,9 +275,9 @@
         $('#getCpCode').on('click', function() {
             var param = {
                     pageNum: 1,      // 기본값으로 첫 페이지
-                    amount: 10       // 한 페이지에 표시할 항목 수
+                    amount: 20       // 한 페이지에 표시할 항목 수
                 };
-            modal_open('CpCode', 'second', '/api/companyList', param) //모달창 오픈
+            modal_open('CpCode', 'second', '/companyInfo/companyList', param) //모달창 오픈
         });
     });
 
@@ -317,7 +317,7 @@
         $('.page, .prev, .next').on('click', function(event) {
             event.preventDefault();
             var pageNum = $(this).data('page');
-            searchCompanies(pageNum);
+            //searchCompanies(pageNum);
         });
     }
 
@@ -342,7 +342,7 @@
     //엑셀 다운로드
     function downloadExcel() {
         // 버튼 클릭 시 서버에서 엑셀 파일을 다운로드하도록 요청
-        window.location.href = '/api/downloadExcel';  // 서버 엔드포인트로 이동
+        window.location.href = '/companyInfo/downloadExcel';  // 서버 엔드포인트로 이동
     }
 
 

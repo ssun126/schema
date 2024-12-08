@@ -25,7 +25,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/companyInfo")
 public class CompanyInfoRestController {
     @Autowired
     private CompanyInfoService companyInfoService;
