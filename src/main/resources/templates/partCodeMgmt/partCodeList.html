@@ -322,9 +322,6 @@
 <script>
 
    $(document).ready(function() {
-
-      ListSearch();
-
       $(document).on("click", ".load-page", function(e) {
 
         if ($(e.target).closest('td[name="tdchkbox"]').length > 0 || $(e.target).is('input[type="checkbox"]')) {
@@ -463,7 +460,6 @@
         var ReqInfo = new Common.RequestInfo();
         ReqInfo.AddParameter($("#searchArea"));
 
-
         Common.Ajax(url, ReqInfo, function (data) {
             var dataJson = JSON.parse(data);
 
@@ -478,7 +474,7 @@
 
             $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
             $("#gridArea").pqGrid("refreshView");
-        }, { responseType : "json" });
+        }, { contentType : "application/json" });
     }
 
 <!--  function fetchDataLis() {-->
@@ -750,6 +746,8 @@ $(function () {
         $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
         $("#gridArea").pqGrid("refreshView");
     });
+
+    ListSearch();
 });
 
 </script>

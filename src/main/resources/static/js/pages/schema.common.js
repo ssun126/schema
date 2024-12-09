@@ -553,7 +553,7 @@ Common.Ajax = function (url, data, callback, info) {
         return;
     }
 
-    var responseType, formMethod, async, errback, okErr;
+    var contentType, responseType, formMethod, async, errback, okErr;
 
     if (info == undefined) {
         formMethod = "POST";
@@ -563,6 +563,7 @@ Common.Ajax = function (url, data, callback, info) {
 
         formMethod = (info.formMethod || "POST");
         responseType = (info.responseType || undefined);
+        contentType = (info.contentType || "application/x-www-form-urlencoded;charset=utf-8");
         errback = (info.errback || undefined);
         okErr = (info.okErr || undefined);
     }
@@ -578,14 +579,19 @@ Common.Ajax = function (url, data, callback, info) {
     } else {
         if (data.formData == null) {
             AType = {
-                type: "POST", contentType: "application/x-www-form-urlencoded;charset=utf-8", processData: true
+                type: "POST", contentType: contentType, processData: true
             };
         } else {
             AType = {
                 type: "POST", contentType: false, processData: false
             };
         }
+
         Parameters = data.GetJson();
+
+        if (contentType == "application/json") {
+            Parameters = JSON.stringify(Parameters);
+        }
     }
 
     $.ajax({
