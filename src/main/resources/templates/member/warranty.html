@@ -31,12 +31,12 @@
 <div class="cui_app">
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('/main')"><span class="blind" data-langsid="동우화인캠"></span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
                 <li class="more">
-                    <a href="#" class="toggle"><span>더보기</span></a>
+                    <a href="#" class="toggle"><span data-langsid="더보기"></span></a>
                     <ul></ul>
                 </li>
             </ul>
@@ -44,7 +44,7 @@
         <div class="global_utility">
             <div class="utility_profile">
                 <div class="info">
-                    <strong>안녕하세요.</strong>
+                    <strong data-langsid="안녕하세요."></strong>
                 </div>
             </div>
             <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home"  onclick="goMenu('/logout')"><span>Home</span></button>
@@ -54,14 +54,14 @@
         <div class="cui_lnb">
             <div class="lnb_root">
                 <div class="lnb_head">
-                    <h2 class="lnb_title"><span>회원가입</span></h2>
+                    <h2 class="lnb_title"><span data-langsid="회원가입"></span></h2>
                 </div>
                 <div class="cui_nav">
                     <nav class="nav_root">
                         <ul>
                             <li>
                                 <a href="#" class="nav_item">
-                                    <span class="nav_label">회원가입</span>
+                                    <span class="nav_label" data-langsid="회원가입"></span>
                                 </a>
                             </li>
                         </ul>
@@ -73,7 +73,7 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title center"><span>회원가입</span></h2>
+                        <h2 class="cui_title center"><span data-langsid="회원가입"></span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
@@ -81,19 +81,19 @@
                         <ol>
                             <li>
                                 <i data-cui-icon="file_search"></i>
-                                <span>정보수집 동의</span>
+                                <span data-langsid="정보수집 동의"></span>
                             </li>
                             <li>
                                 <i data-cui-icon="lock"></i>
-                                <span>ID/PW 및 벤더정보</span>
+                                <span data-langsid="ID/PW 및 벤더정보"></span>
                             </li>
                             <li class="active">
                                 <i data-cui-icon="receipt"></i>
-                                <span>워런티 협약</span>
+                                <span data-langsid="워런티 협약"></span>
                             </li>
                             <li>
                                 <i data-cui-icon="task"></i>
-                                <span>동우 승인</span>
+                                <span data-langsid="동우 승인"></span>
                             </li>
                         </ol>
                     </div>
@@ -102,19 +102,19 @@
                     <form id="approvalForm" onsubmit="handleSubmit(event)" action="/member/resubmit"  method="post" enctype="multipart/form-data" class="cui_form_section" data-legend="true">
 
                         <fieldset>
-                            <legend><span>워런티 협약 상태</span></legend>
+                            <legend><span data-langsid="워런티 협약 상태"></span></legend>
                             <div class="cui_items_wrap" data-direction="right" >
                                 <div class="item_content">
-                                    <button type="button" class="cui_button secondary" onclick ="downSamplefile()"><span>양식다운로드</span></button>
+                                    <button type="button" class="cui_button secondary" onclick ="downSamplefile()"><span data-langsid="양식다운로드"></span></button>
                                 </div>
                             </div>
                             <table class="cui_table center">
                                 <thead>
                                 <tr>
-                                    <th><span>제출일</span></th>
-                                    <th><span>승인일</span></th>
-                                    <th><span>관리상태</span></th>
-                                    <th><span>양식첨부</span></th>
+                                    <th><span data-langsid="제출일"></span></th>
+                                    <th><span data-langsid="승인일"></span></th>
+                                    <th><span data-langsid="관리상태"></span></th>
+                                    <th><span data-langsid="양식첨부"></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -136,11 +136,6 @@
                                             <div class="item_content">
                                                 <button type="button" class="cui_button primary" onclick="findfile()" th:if="${memberDTO.COM_OK_DATE == ''}"><span>첨부</span></button>
                                                 <button type="button" class="cui_button secondary"  onclick ="downloadFile()"><span>보기</span></button>
-
-<!--                                                <div class="item" style="color:#00ab55; display: flex; justify-content: center; align-items: center;" th:if="${memberDTO.COM_FILE_NAME? != ''}">-->
-<!--                                                    <i data-cui-icon="file_check_fill" data-scss-variable="ci_file_check_fill"></i>-->
-<!--                                                </div>-->
-
                                             </div>
                                         </div>
                                     </td>
@@ -150,7 +145,7 @@
                         </fieldset>
                         <br>
                         <div th:if="${memberDTO.USER_STATUS == '3'}">
-                            <div class="cui_bullet_title"><span>반려 사유</span></div>
+                            <div class="cui_bullet_title"><span data-langsid="반려 사유"></span></div>
                             <div class="cui_border_box">
                                 <p name="RETURN_REASON" id="RETURN_REASON"><span th:text="${memberDTO.RETURN_REASON}"></span> </p>
                             </div>
@@ -183,7 +178,7 @@
                         <div class="cui_alert alert_modal" data-type="success" role="alert"> <p id="messageContent" th:text="${resultMsg}"></p> </div>
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span>확인</span></button>
+                                <button type="button" class="cui_button primary modal-close" onClick="modal('cui_dialog')"><span data-langsid="확인"></span></button>
                             </div>
                         </div>
                     </div>
@@ -195,7 +190,7 @@
             <div class="dialog_container">
                 <div class="dialog_head">
                     <div class="dialog_title">
-                        <div class="main_label">양식업로드</div>
+                        <div class="main_label" data-langsid="양식업로드"></div>
                     </div>
                     <div class="dialog_toolbar">
                         <button class="cui_button icon endpoint" data-cui-icon="xmark" onclick ="sevefileClose()"><span>Close</span></button>
@@ -205,7 +200,7 @@
                     <div class="body_root">
                         <form id="uploadForm" class="cui_form_section" method="POST" enctype="multipart/form-data" action="/member/warrantyfileupload">
                             <fieldset>
-                                <legend><span>파일 업로드</span></legend>
+                                <legend><span data-langsid="파일 업로드"></span></legend>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
                                         <div class="cui_attachments">
@@ -215,7 +210,7 @@
                                 </div>
                                 <div class="cui_items_wrap" data-direction="center">
                                     <div class="item_content">
-                                        <button type="button"  class="cui_button primary" onclick ="sevefile()"><span>저장</span></button>
+                                        <button type="button"  class="cui_button primary" onclick ="sevefile()"><span data-langsid="저장"></span></button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -233,7 +228,7 @@
                         <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContentW" ></p> </div>
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary modal-closeW" onClick="modal('cui_dialog')"><span>확인</span></button>
+                                <button type="button" class="cui_button primary modal-closeW" onClick="modal('cui_dialog')"><span data-langsid="확인"></span></button>
                             </div>
                         </div>
                     </div>
