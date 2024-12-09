@@ -14,7 +14,7 @@
 
     .cui_checkbox_group {
          gap: 0px; /* 체크박스 사이의 간격 조정 */
-         grid-template-columns: 300px 200px 200px; /* 각 열의 너비를 수동으로 설정 */
+         grid-template-columns: 300px 200px 200px;
 
     }
 
@@ -23,8 +23,7 @@
         display               : grid;
         align-items           : start;
         gap                   : 12px 24px;
-<!--        grid-template-columns : repeat(auto-fill, $grid-columns-max);-->
-        grid-template-columns: 300px 200px 200px; /* 각 열의 너비를 수동으로 설정 */
+        grid-template-columns: 300px 200px 200px;
 
         @for $i from 1 to 4 {
             & > [data-size="#{$i}"] {
@@ -43,28 +42,27 @@
         <div class="cui_main">
             <div class="cui_head">
                 <div class="head_content">
-                    <h2 class="cui_title"><span>동우 사용자 관리</span></h2>
+                    <h2 class="cui_title"><span data-langsid="동우 사용자 관리"></span></h2>
                 </div>
             </div>
 
             <div class="cui_body">
-<!--                    <form id="searchForm"  method="post">-->
                     <div class="cui_search">
                         <div class="search_list cui_grid_wrap">
                             <div class="cui_items_wrap required_field"  data-direction="left">
-                                <strong class="item_label">아이디</strong>
+                                <strong class="item_label" data-langsid="아이디"></strong>
                                 <div class="item_content">
-                                    <input id="userid" name="USER_ID" class="cui_text_field" type="text" placeholder="아이디를 입력해주세요">
+                                    <input id="userid" name="USER_ID" class="cui_text_field" type="text"  data-langsid="아이디를 입력해주세요" placeholder="">
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">이름</strong>
+                                <strong class="item_label" data-langsid="이름"></strong>
                                 <div class="item_content">
-                                    <input id ="username" name = "USER_NAME" class="cui_text_field" type="text" placeholder="이름을 입력해주세요">
+                                    <input id ="username" name = "USER_NAME" class="cui_text_field" type="text" data-langsid="이름을 입력해주세요" placeholder="">
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">사업부</strong>
+                                <strong class="item_label" data-langsid="사업부" ></strong>
                                 <div class="item_content">
                                     <select id="deptcode" name="DEPT_CODE" class="cui_select_field wide">
                                         <option value=""></option>
@@ -76,34 +74,34 @@
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">이메일</strong>
+                                <strong class="item_label" data-langsid="이메일"></strong>
                                 <div class="item_content">
-                                    <input id = "email" name = "EMAIL" class="cui_text_field" type="email" placeholder="이메일을 입력해주세요">
+                                    <input id = "email" name = "EMAIL" class="cui_text_field" type="email" data-langsid="이메일을 입력해주세요" placeholder="">
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">구분</strong>
+                                <strong class="item_label" data-langsid="구분"></strong>
                                 <div class="item_content">
                                     <select id = "userlevel" name = "USER_LEVEL" class="cui_select_field wide">
                                         <option value=""></option>
-                                        <option value="100">관리자</option>
-                                        <option value="1">사용자</option>
+                                        <option value="100" data-langsid="관리자"></option>
+                                        <option value="1" data-langsid="사용자"></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label">상태</strong>
+                                <strong class="item_label" data-langsid="상태"></strong>
                                 <div class="item_content">
                                     <select id = "userStatus" name = "USER_STATUS" class="cui_select_field wide">
                                         <option value=""></option>
-                                        <option value="Y">사용</option>
-                                        <option value="N">미사용</option>
+                                        <option value="Y" data-langsid="사용"></option>
+                                        <option value="N" data-langsid="미사용"></option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="search_action">
-                            <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span>검색</span></button>
+                            <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span data-langsid="검색"></span></button>
                         </div>
                     </div>
                     <div class="cui_toolbar">
@@ -111,8 +109,8 @@
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                            <button type="button" class="cui_button"><span>엑셀 다운</span></button>
-                            <button type="button" class="cui_button secondary" onClick="modal('dialogUserUpdate','')"><span>신규 추가</span></button>
+                            <button type="button" class="cui_button"><span data-langsid="엑셀 다운"></span></button>
+                            <button type="button" class="cui_button secondary" onClick="modal('dialogUserUpdate','')"><span data-langsid="신규 추가"></span></button>
                         </div>
                     </div>
                     <table class="cui_table center" id="userTable">
@@ -127,13 +125,13 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>아이디</span></th>
-                            <th><span>이름</span></th>
-                            <th><span>사업부</span></th>
-                            <th><span>이메일</span></th>
-                            <th><span>구분</span></th>
-                            <th><span>상태</span></th>
-                            <th><span>등록일</span></th>
+                            <th><span data-langsid="아이디"></span></th>
+                            <th><span data-langsid="이름"></span></th>
+                            <th><span data-langsid="사업부"></span></th>
+                            <th><span data-langsid="이메일"></span></th>
+                            <th><span data-langsid="구분"></span></th>
+                            <th><span data-langsid="상태"></span></th>
+                            <th><span data-langsid="등록일"></span></th>
                         </tr>
                         </thead>
                         <tbody id="userTableBody">
@@ -149,7 +147,6 @@
 
                         </tbody>
                     </table>
-<!--                   </form>-->
             </div>
 
         </div>
@@ -163,7 +160,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span id="popTitle">사용자 수정</span></div>
+                <div class="main_label"><span id="popTitle" data-langsid="사용자 수정"></span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
@@ -176,7 +173,7 @@
                     <fieldset>
 <!--                        <legend><span>사용자 수정</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">아이디</strong>
+                            <strong class="item_label" data-langsid="아이디"></strong>
                             <div class="item_content">
                                 <input id="user_id" name = "USER_ID" type="text" class="cui_text_field">
                                 <input id="user_idx" name="USER_IDX" class="cui_text_field" type="hidden" >
@@ -184,14 +181,14 @@
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">이름</strong>
+                            <strong class="item_label" data-langsid="이름"></strong>
                             <div class="item_content">
                                 <input id="user_name" name = "USER_NAME" type="text" class="cui_text_field">
                             </div>
                         </label>
 
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">사업부</strong>
+                            <strong class="item_label" data-langsid="사업부"></strong>
                             <div class="item_content">
                                 <select id="dept_code" name="DEPT_CODE" class="cui_select_field wide">
                                     <option th:each="dept : ${deptList}"
@@ -203,33 +200,33 @@
                         </label>
 
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">이메일</strong>
+                            <strong class="item_label" data-langsid="이메일"></strong>
                             <div class="item_content">
                                 <input id="e_mail" name = "EMAIL" type="text" class="cui_text_field">
                             </div>
                         </label>
 
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">구분</strong>
+                            <strong class="item_label" data-langsid="구분"></strong>
                             <div class="item_content">
                                 <select id="user_level" name = "USER_LEVEL" class="cui_select_field wide">
-                                    <option value="100">관리자</option>
-                                    <option value="1">사용자</option>
+                                    <option value="100" data-langsid="관리자"></option>
+                                    <option value="1" data-langsid="사용자"></option>
                                 </select>
                             </div>
                         </label>
 
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">상태</strong>
+                            <strong class="item_label" data-langsid="상태"></strong>
                             <div class="item_content">
                                 <select id="user_status" name = "USER_STATUS" class="cui_select_field wide">
-                                    <option value="Y">사용</option>
-                                    <option value="N">미사용</option>
+                                    <option value="Y" data-langsid="사용"></option>
+                                    <option value="N" data-langsid="미사용"></option>
                                 </select>
                             </div>
                         </label>
 
-                        <div class="cui_grid_wrap_member" >
+                        <div class="cui_grid_wrap_member_b" >
                             <table class="cui_checkbox_group" style="width: 100%; table-layout: fixed;">
                                 <tr>
                                     <td id="tditdm1" style="width: 45%;">
@@ -238,19 +235,15 @@
                                             <div class="item_content">
 
                                                 <div id = "chkIos" >
-<!--                                                    <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>MANAGE_SYSTEM_YN</span></label>-->
-
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_01" name = "MANAGE_ISO_YN_01"><i></i><span>ISO/노동환경
-                                                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                    </span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_02" name = "MANAGE_ISO_YN_02"><i></i><span>ISO/환경안전(평택공장)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_03" name = "MANAGE_ISO_YN_03"><i></i><span>ISO/환경안전(신흥공장)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_04" name = "MANAGE_ISO_YN_04"><i></i><span>ISO/환경안전(삼기공장)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_05" name = "MANAGE_ISO_YN_05"><i></i><span>ISO/품질체계/분쟁.책임광물(반도체)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_06" name = "MANAGE_ISO_YN_06"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단소재)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_07" name = "MANAGE_ISO_YN_07"><i></i><span>ISO/품질체계/분쟁.책임광물(첨단-삼기)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_08" name = "MANAGE_ISO_YN_08"><i></i><span>ISO/품질체계/분쟁.책임광물(옵티칼)</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_09" name = "MANAGE_ISO_YN_09"><i></i><span>ISO/품질체계/분쟁.책임광물(통신디바이스)</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_01" name = "MANAGE_ISO_YN_01"><i></i><span data-langsid="ISO/노동환경"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_02" name = "MANAGE_ISO_YN_02"><i></i><span data-langsid="ISO/환경안전(평택공장)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_03" name = "MANAGE_ISO_YN_03"><i></i><span data-langsid="ISO/환경안전(신흥공장)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_04" name = "MANAGE_ISO_YN_04"><i></i><span data-langsid="ISO/환경안전(삼기공장)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_05" name = "MANAGE_ISO_YN_05"><i></i><span data-langsid="ISO/품질체계/분쟁.책임광물(반도체)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_06" name = "MANAGE_ISO_YN_06"><i></i><span data-langsid="ISO/품질체계/분쟁.책임광물(첨단소재)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_07" name = "MANAGE_ISO_YN_07"><i></i><span data-langsid="ISO/품질체계/분쟁.책임광물(첨단-삼기)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_08" name = "MANAGE_ISO_YN_08"><i></i><span data-langsid="ISO/품질체계/분쟁.책임광물(옵티칼)"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_iso_yn_09" name = "MANAGE_ISO_YN_09"><i></i><span data-langsid="ISO/품질체계/분쟁.책임광물(통신디바이스)"></span></label>
                                                 </div>
                                             </div>
                                         </div>
@@ -263,18 +256,18 @@
                                             <div class="item_content">
 
                                                 <div id = "chkCoa" style="display: flex; flex-direction: column;">
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_part_yn" name = "MANAGE_PART_YN"><i></i><span>PART 관리자</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_part_yn" name = "MANAGE_PART_YN"><i></i><span data-langsid="PART 관리자"></span></label>
                                                 </div>
                                             </div>
                                             <div class="item_label"><span> </span></div>
-                                            <div class="item_label"><span>CoA 관리</span></div>
+                                            <div class="item_label"><span data-langsid="CoA 관리"></span></div>
                                             <div class="item_content" >
 
                                                 <div id = "chkCoa2" class="cui_checkbox_group"  style="display: flex; flex-direction: column;" data-direction="column">
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_01" name = "MANAGE_COA_YN_01"><i></i><span>COA 반도체</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_02" name = "MANAGE_COA_YN_02"><i></i><span>COA 첨단소재</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_03" name = "MANAGE_COA_YN_03"><i></i><span>COA 첨단-삼기</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_04" name = "MANAGE_COA_YN_04"><i></i><span>COA 통신디바이스</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_01" name = "MANAGE_COA_YN_01"><i></i><span data-langsid="COA 반도체"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_02" name = "MANAGE_COA_YN_02"><i></i><span data-langsid="COA 첨단소재"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_03" name = "MANAGE_COA_YN_03"><i></i><span data-langsid="COA 첨단-삼기"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_coa_yn_04" name = "MANAGE_COA_YN_04"><i></i><span data-langsid="COA 통신디바이스"></span></label>
                                                 </div>
                                             </div>
 
@@ -284,15 +277,15 @@
                                     <td id ="tditdm3" style="width: 25%;align-content: baseline;">
                                         <div id = "chkend"  class="cui_items_wrap" data-direction="column"  style="flex: 1; margin-right: 5px;">
 
-                                            <div class="item_label"><span>변경점 관리</span></div>
+                                            <div class="item_label"><span data-langsid="변경점 관리"></span></div>
                                             <div class="item_content" >
 
                                                 <div id = "chkchange" class="cui_checkbox_group"  style="display: flex; flex-direction: column;" data-direction="column">
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_01" name = "MANAGE_CHANGE_YN_01"><i></i><span>변경점관리 반도체</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_02" name = "MANAGE_CHANGE_YN_02"><i></i><span>첨단소재</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_03" name = "MANAGE_CHANGE_YN_03"><i></i><span>첨단-삼기</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_04" name = "MANAGE_CHANGE_YN_04"><i></i><span>옵티칼</span></label>
-                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_05" name = "MANAGE_CHANGE_YN_05"><i></i><span>통신디바이스</span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_01" name = "MANAGE_CHANGE_YN_01"><i></i><span data-langsid="변경점관리 반도체"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_02" name = "MANAGE_CHANGE_YN_02"><i></i><span data-langsid="첨단소재"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_03" name = "MANAGE_CHANGE_YN_03"><i></i><span data-langsid="첨단-삼기"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_04" name = "MANAGE_CHANGE_YN_04"><i></i><span data-langsid="옵티칼"></span></label>
+                                                    <label class="cui_checkbox"><input type="checkbox" id="manage_change_yn_05" name = "MANAGE_CHANGE_YN_05"><i></i><span data-langsid="통신디바이스"></span></label>
                                                 </div>
                                             </div>
 
@@ -304,7 +297,7 @@
 
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" onClick="save()"><span>저장</span></button>
+                                <button type="button" class="cui_button primary" onClick="save()"><span data-langsid="저장"></span></button>
                             </div>
                         </div>
                     </fieldset>
