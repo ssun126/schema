@@ -15,8 +15,6 @@
             <form id="searchForm" method="get">
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap " id="searchArea">
-                        <input type="hidden" name="pageNum" value="1">
-                        <input type="hidden" name="amount" value="20">
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체코드"></strong>
                             <div class="item_content">
@@ -62,33 +60,6 @@
             </div>
 
             <div id="gridArea"></div>
-
-            <!--
-            <table class="cui_table center" id="companyTable">
-                <colgroup>
-                    <col style="width:50px;">
-                    <col style="width:130px;">
-                    <col>
-                    <col style="width:130px;">
-                    <col style="width:80px;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th><span>선택</span></th>
-                    <th><span>업체코드</span></th>
-                    <th><span>업체명</span></th>
-                    <th><span>국가</span></th>
-                    <th><span>구분</span></th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-            <div id="pagination" class="pagination" style="text-align: center"></div>
-            <div class="table-wrapper">
-            </div>
-            -->
         </div>
     </div>
 </div>
@@ -109,28 +80,28 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체 코드"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata">
+                                <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata" disabled="disabled">
                                 <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata">
+                                <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata" disabled="disabled">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
-                            <div class="item_content">
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label>
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label>
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>에너지 기능재료 사업부</span></label>
+                            <div class="item_content" style="display:table;">
+                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label></div>
+                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label></div>
+                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>에너지 기능재료 사업부</span></label></div>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyNation" name="COM_NATION" class="cui_text_field ">
+                                <input id="modalCompanyNation" name="COM_NATION" class="cui_text_field " disabled="disabled">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -155,51 +126,13 @@
         </div>
     </div>
 </div>
-
-<div class="cui_dialog" style="width:700px;display:none;" id="CpCode">
-    <div class="dialog_container">
-        <div class="dialog_head">
-            <div class="dialog_title">
-                <div class="main_label"><span data-langsid="업체코드 선택"></span></div>
-            </div>
-            <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
-            </div>
-        </div>
-        <div class="dialog_body">
-            <div class="body_root">
-                <form class="cui_form_section" data-legend="true" id="formCpCode">
-                    <table class="cui_table center" id="cpCodeTable">
-                        <colgroup>
-                            <col style="width:50px;">
-                            <col style="width:130px;">
-                            <col>
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span data-langsid="업체코드"></span></th>
-                            <th><span data-langsid="업체명"></span></th>
-                            <th><span data-langsid="국가"></span></th>
-                            <th><span data-langsid="선택"></span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
 var addOpen = function () {
     Common.Dialog({ obj : $("#CpCodeMgmt"), blockClose : false });
 }
 
 var selCpCodeOpen = function () {
-    Common.Dialog({ obj : $("#CpCode") });
+    Common.Dialog({ url : "/admin/companyInfo/cpCodeApiList" });
 }
 
 var ListSearch = function () {

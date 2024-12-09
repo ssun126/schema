@@ -46,7 +46,7 @@ public class CompanyInfoRestController {
         return new SearchResult(companyInfoList, pageMaker);
     }
 
-    // 검색 API 처리 (여러 검색 조건 처리)
+    //
     @PostMapping("/listSearchCompanies")
     public List<CompanyInfoDTO> listSearchCompanies(HttpServletRequest req) {
         String name = req.getParameter("searchName");
@@ -55,6 +55,15 @@ public class CompanyInfoRestController {
 
         // 검색 결과와 페이지
         return companyInfoService.listSearchCompanies(name, code, nation);
+    }
+
+    @PostMapping("/companyApiList")
+    public List<HashMap> companyApiList(HttpServletRequest req) {
+        String name = req.getParameter("searchNameCpCode");
+        String code = req.getParameter("searchCodeCpCode");
+
+        // 검색 결과와 페이지
+        return companyInfoService.companyApiList(name, code);
     }
 
     //업체 정보 가져오기

@@ -325,8 +325,10 @@ siteLang.getLangsList = function () {
     	}
     });
 }
-siteLang.showLangs = function () {
-    $('[data-langsid]').each(function () {
+siteLang.showLangs = function (obj) {
+    obj = (obj || $('body'))
+
+    obj.find('[data-langsid]').each(function () {
         var kor = $(this).attr("data-langsid");
 
         try {
@@ -343,7 +345,7 @@ siteLang.showLangs = function () {
         }
     });
 
-    $('input[placeholder]').each(function () {
+    obj.find('input[placeholder]').each(function () {
         var kor = $(this).attr("data-langsid");
 
         try {
@@ -611,7 +613,7 @@ Common.Ajax = function (url, data, callback, info) {
     });
 }
 Common.AjaxError = function (XMLHttpRequest, textStatus, errorThrown) {
-    Common.Loading.Hide();
+    //Common.Loading.Hide();
     if (errorThrown == "")
         return;
 
@@ -784,7 +786,79 @@ Common.Dialog = function (info) {
 
         setTimeout(function () {
             Common.Ajax(url, reqInfo, function (html) {
+                var diaObj = $(html);
+                siteLang.showLangs(diaObj);
 
+                $('body').append(diaObj);
+                obj = diaObj;
+
+                Common.DialogIndex = Common.DialogIndex + 100;
+                overlayObj.css("opacity", "0%");
+                overlayObj.show(); // 오버레이 배경 표시
+                overlayObj.css("z-index", Common.DialogIndex);
+                overlayObj.animate({opacity: '100%'}, 500);
+                obj.css("z-index", Common.DialogIndex + 1);
+                obj.fadeIn({
+                    complete : function () {
+                        if (typeof openFn == "function") {
+                            openFn(obj);
+                        }
+                    }
+                });
+
+                obj.find("button[dialogBtn=close]").bind("click", function () {
+                    obj.data("Hide")();
+                });
+
+                obj.data("Hide", function () {
+                    Common.DialogIndex = Common.DialogIndex - 100;
+                    overlayObj.animate({opacity: '0%'},{duration: 500, complete: function(){
+                        overlayObj.remove();
+                    }});
+                    obj.fadeOut({
+                        complete : function () {
+                            if (typeof closeFn == "function") {
+                                closeFn(obj);
+                            }
+                            obj.remove();
+                        }
+                    });
+                });
+
+                if (blockClose) {
+                    overlayObj.one("click", function () {
+                        obj.data("Hide")();
+                    });
+                }
+
+                if (drag) {
+                    var modalHeader = obj.find(".dialog_head");
+                    modalHeader.unbind("mousedown");
+                    modalHeader.unbind("mouseup");
+
+                    var isDragging = false;
+                    modalHeader.bind("mousedown", function (e) {
+                        isDragging = true;
+                    });
+                    modalHeader.bind("mouseup", function () {
+                        isDragging = false;
+                    });
+
+                    obj.draggable({
+                        start: function (event, ui) {
+                            if (!isDragging) {
+                                return false;
+                            }
+                        }, drag: function( event, ui ) {
+                            if (isDragging) {
+                                ui.position.left = ui.position.left + (obj.width() / 2);
+                                ui.position.top = ui.position.top + (obj.height() / 2);
+                            } else {
+                                return false;
+                            }
+                        }
+                    });
+                }
             }, { formMethod: formMethod, async: async });
         }, 10);
     }
