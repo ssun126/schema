@@ -15,27 +15,26 @@
         <div class="cui_main">
             <div class="cui_head">
                 <div class="head_content">
-                    <h2 class="cui_title"><span>업체목록</span></h2>
+                    <h2 class="cui_title"><span data-langsid="업체목록"></span></h2>
                 </div>
             </div>
             <div class="cui_body">
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap ">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체Code</strong>
+                            <strong class="item_label" data-langsid="업체Code"></strong>
                             <div class="item_content">
-                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" placeholder="업체Code를 입력해주세요">
+                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" data-langsid="업체Code를 입력해주세요" placeholder="">
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체명</strong>
                             <div class="item_content">
-                                <input id="comName" name="comName" class="cui_text_field" type="text" placeholder="업체명을 입력해주세요">
-<!--                                <button type="button" class="cui_button icon" data-cui-icon="search"><span>검색</span></button>-->
+                                <input id="comName" name="comName" class="cui_text_field" type="text" data-langsid="업체명을 입력해주세요" placeholder="">
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">사업부</strong>
+                            <strong class="item_label" data-langsid="사업부"></strong>
                             <div class="item_content">
                                 <select id="deptCode" name="deptCode" class="cui_select_field wide">
                                     <option value=""></option>
@@ -47,7 +46,7 @@
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">책임광물</strong>
+                            <strong class="item_label" data-langsid="책임광물"></strong>
                             <div class="item_content">
                                 <select id="mineral" name="mineral" class="cui_select_field" >
                                     <option value=""></option>
@@ -61,7 +60,7 @@
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">Audit 점수</strong>
+                            <strong class="item_label" data-langsid="Audit 점수"></strong>
                             <div class="item_content">
                                 <input type="text" class="cui_text_field" id="pointFrom" name="pointFrom">
                                 <div class="field_connect">~</div>
@@ -82,8 +81,7 @@
                         </div>
                     </div>
                     <div class="search_action">
-<!--                        <button type="button" class="cui_button primary"><span>검색</span></button>-->
-                        <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span>검색</span></button>
+                        <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
                 <div class="cui_toolbar">
@@ -91,7 +89,7 @@
                         <div class="toolbar_default"></div>
                     </div>
                     <div class="toolbar_aside">
-                        <button type="button" class="cui_button secondary"><span>엑셀 다운로드</span></button>
+                        <button type="button" class="cui_button secondary"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
 
