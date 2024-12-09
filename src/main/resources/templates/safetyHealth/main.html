@@ -390,6 +390,7 @@
                     const file = files[i];
                     if (file && !validation(file)) {
                         event.target.value = '';  // 잘못된 파일 선택시 input 초기화
+                        clearFile(fileInput.closest('.cui_attachments').querySelector('.cui_button'));
                         console.log('잘못된 파일: ', file.name);
                         break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
                     }

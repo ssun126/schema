@@ -71,8 +71,29 @@ function modal_init(id, status){
 }
 
 //모달 열기
-function modal_open(id, status, sUrl, param){
-    overlay.style.display = "block"; // 오버레이 배경 표시
+function modal_overlay(status) {
+    if (status) {
+        overlay.style.display = "block"; // 오버레이 배경 표시
+        $(overlay).css("opacity", "0%");
+        $(overlay).animate({opacity: '100%'}, 500);
+    } else {
+        $(overlay).animate({opacity: '0%'},{duration: 500, complete: function(){
+            overlay.style.display = "none"; // 오버레이 숨기기
+        }});
+    }
+}
+
+function modal_open(id, status, sUrl, param, info){
+    var overlayStatus = true;
+
+    if (info != undefined) {
+        overlayStatus = (info.overlayStatus || true);
+    }
+
+    if (overlayStatus) {
+        modal_overlay(true);
+    }
+
     $("#modalState").val(status); // status 저장
     if(status !='add'){
         var sUrl = sUrl;
@@ -118,8 +139,21 @@ function modal_open(id, status, sUrl, param){
 }
 
 //모달 닫기
-function modal_close(id){
-    overlay.style.display = "none"; // 오버레이 숨기기
+function modal_close(id, info){
+    var overlayStatus = false;
+
+    if (info != undefined) {
+        overlayStatus = (info.overlayStatus || false);
+    }
+
+    if (overlayStatus) {
+        modal_overlay(overlayStatus);
+    }
+
+    $(overlay).animate({opacity: '0%'},{duration: 500, complete: function(){
+        overlay.style.display = "none"; // 오버레이 숨기기
+    }});
+
     $("#" + id).fadeOut();
     //초기화
     modal_init(id, 'add');
@@ -190,7 +224,7 @@ function showAlert(type, message ) {
    var alertDiv = document.querySelector('#alertTypeimg');
    alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
    document.getElementById('messageContent').innerText = message;  // 메시지 설정
-   modal('dialog');
+   modal_open('dialog', 'add');
 }
 
      //모달 열기
@@ -205,7 +239,7 @@ function validation(obj){
                       'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp',
                       'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'audio/mpeg', 'audio/wav',
-                      'video/mp4', 'application/zip'
+                      'video/mp4', 'application/zip', 'application/xlsx'
                     ];
     if (obj.name.length > 100) {
         alert("파일명이 100자 이상인 파일은 제외되었습니다.");
@@ -229,3 +263,140 @@ function validation(obj){
 
 }
 
+var Cookies = function (name, value, expire) {
+    if (typeof value != "undefined" && typeof expire != "undefined") {
+        var day = new Date();
+        day.setDate(day.getDate() + expire);
+        document.cookie = name + "=" + escape(value) + "; path=/; expires=" + day.toGMTString() + ";";
+    } else {
+        var org = document.cookie;
+        var dlm = name + "=";
+        var x = 0;
+        var y = 0;
+        var z = 0;
+
+        while (x <= org.length) {
+            y = x + dlm.length;
+
+            if (org.substring(x, y) == dlm) {
+                if ((z = org.indexOf(";", y)) == -1) {
+                    z = org.length;
+                }
+
+                return org.substring(y, z);
+            }
+
+            x = org.indexOf(" ", x) + 1;
+
+            if (x == 0) {
+                break;
+            }
+        }
+
+        return "";
+    }
+}
+
+var siteLang = {}
+siteLang.selLang = (Cookies("selLang") || "KOR");
+siteLang.langsData = null;
+siteLang.clear = function () {
+    localStorage.clear();
+}
+siteLang.init = function () {
+    var data = localStorage.getItem('SITE_LANGUAGE_DATA');
+    if (!data) {
+        siteLang.getLangsList(siteLang.selLang);
+        data = localStorage.getItem('SITE_LANGUAGE_DATA');
+    }
+
+    if (!data) {
+        return;
+    }
+
+    siteLang.langsData = JSON.parse(data);
+}
+siteLang.getLangsList = function () {
+    $.ajax({
+    	url : '/multiLanguage/getLocalStorage',
+    	type : "post",
+    	async : false,
+    	success : function(data) {
+       		localStorage.setItem("SITE_LANGUAGE_DATA", JSON.stringify(data)); //로컬스토리지에 저장
+    	},
+    	error : function() {
+    	}
+    });
+}
+siteLang.showLangs = function () {
+    $('[data-langsid]').each(function () {
+        var kor = $(this).attr("data-langsid");
+
+        try {
+            const item = siteLang.langsData.find(entry => entry.KOR === kor);
+            if (item && item[siteLang.selLang]) {
+                $(this).html(item[siteLang.selLang]);
+            }
+            else
+            {
+                siteLang.devDBSet(kor);
+                $(this).html(kor);
+            }
+        } catch (e) {
+        }
+    });
+
+    $('input[placeholder]').each(function () {
+        var kor = $(this).attr("data-langsid");
+
+        try {
+            const item = siteLang.langsData.find(entry => entry.KOR === kor);
+            if (item && item[siteLang.selLang]) {
+                $(this).attr("placeholder", item[siteLang.selLang]);
+            }
+            else
+            {
+                siteLang.devDBSet(kor);
+                $(this).attr("placeholder", kor);
+            }
+        } catch (e) {
+        }
+    });
+}
+siteLang.getLang = function (kor) {
+    try {
+       const item = siteLang.langsData.find(entry => entry.KOR === kor);
+        if (item && item[siteLang.selLang]) {
+            return item[siteLang.selLang];
+        }
+        else
+        {
+            siteLang.devDBSet(kor);
+            return kor;
+        }
+    } catch (e) {
+    }
+}
+siteLang.chgLangs = function (selLang) {
+    Cookies("selLang", selLang, 365);
+    siteLang.selLang = selLang;
+    siteLang.showLangs();
+}
+$(document).ready(function () {
+    siteLang.init();
+    siteLang.showLangs();
+});
+
+siteLang.devDBSet = function (KOR) {
+    $.ajax({
+    	url : '/multiLanguage/saveMultiLanguage',
+    	type : "post",
+    	data : "KOR=" + KOR,
+    	dataType : "text",
+    	contentType : "application/x-www-form-urlencoded;charset=utf-8",
+    	success : function(data) {
+    	},
+    	error : function() {
+    	}
+    });
+}

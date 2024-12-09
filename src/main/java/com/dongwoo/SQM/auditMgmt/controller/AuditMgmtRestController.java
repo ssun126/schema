@@ -89,7 +89,7 @@ public class AuditMgmtRestController {
         }
     }
 
-    //IsoAuth 정보 업데이트
+    //IsoAuth 승인/반려 처리
     @PostMapping("/setIsoAuthData")
     public ResponseEntity<?> setIsoAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("auth_code")String auth_code, @RequestParam("state")String state) {
         //ISO 인증서 승인 상태 업데이트
@@ -133,6 +133,23 @@ public class AuditMgmtRestController {
                 .body(resource);
     }
 
+    /**
+     * 노동인권 제출
+     * @param data
+     * @param type
+     * @param fileNames
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/sendLabourAuthData")
+    public String sendLabourAuthData(@RequestParam(value = "file_name") MultipartFile[] fileNames) throws IOException {
+        try {
+            //isoAuthService.saveIsoAuthData(type, fileNames);  // 데이터와 파일을 서비스에 전달
+            return "데이터가 성공적으로 저장되었습니다.";
+        } catch (Exception e) {
+            return "데이터 저장에 실패했습니다: " + e.getMessage();
+        }
+    }
 
     //파일명 인코딩
     private String encodeFileName(String filename) throws UnsupportedEncodingException {

@@ -49,7 +49,7 @@
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button primary"><span>제출</span></button>
+                        <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
                     </div>
                 </div>
             </form>
@@ -172,6 +172,11 @@
         $('#rejectReason').hide();
         $('#stateDate').text('(미제출)');
         $('.resultField').hide();
+
+        // 저장 버튼,제출 버튼 클릭 시 데이터 저장
+        $("#sendAuth").click(function() {
+            saveTableData('SEND');
+        });
     });
 
     // 파일 선택 시 삭제 버튼 표시
@@ -206,6 +211,31 @@
         fileLabelDiv.style.display = 'none';
     }
 
+    // 저장/제출
+    function saveTableData(flag) {
+        const fileInput = document.find('input[type="file"]')[0];
+
+        const formData = new FormData();
+        formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
+
+        $.ajax({
+            url: '/auditMgmt/sendLabourAuthData',
+            type: 'POST',
+            data: formData,
+            processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
+            contentType: false,  // 기본 contentType을 사용하지 않음
+            success: function(response) {
+                console.log(response);
+                if(response.ok){
+                    showAlert('success','데이터가 성공적으로 저장되었습니다.');
+                }
+            },
+            error: function(xhr, status, error) {
+                showAlert('warning','데이터 저장에 실패했습니다.');
+            }
+        });
+    }
+
     setTimeout(function() {
         const fileInput = document.querySelector('input[type="file"]');
         if (fileInput) {
@@ -215,6 +245,7 @@
                     const file = files[i];
                     if (file && !validation(file)) {
                         event.target.value = '';  // 잘못된 파일 선택시 input 초기화
+                        clearFile(fileInput.closest('.cui_attachments').querySelector('.cui_button'));
                         console.log('잘못된 파일: ', file.name);
                         break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
                     }

@@ -28,6 +28,7 @@
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SampleFileDTO" alias="sampleFile"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO" alias="isoAuth"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO" alias="isoAuthItem"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO" alias="labour"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO" alias="safetyHealth"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO" alias="companyInfoParam"></typeAlias>

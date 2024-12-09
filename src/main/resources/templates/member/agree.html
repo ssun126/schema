@@ -9,8 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../../../plugin/jqGrid/jQuery.jqGrid.css" >
     <link rel="stylesheet" type="text/css" href="../../../plugin/jqGrid/ui.jqGrid.css" >
     <link rel="stylesheet" type="text/css" href="../../../css/style.css" >
-    <link rel="stylesheet" type="text/css" href="../../../css/schema.css" >
-
+    <link rel="stylesheet" type="text/css" href="../../../css/schema.css?v=20241122" >
     <script type="text/javascript" src="../../../plugin/jquery/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
@@ -27,7 +26,7 @@
                 <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
                 <div class="cui_items_wrap" data-direction="center">
                     <div class="item_content">
-                        <button type="button" class="cui_button primary modal-close" onClick="modal_close('dialog')"><span>확인</span></button>
+                        <button type="button" class="cui_button primary modal-close" onClick="modal_close('dialog')"><span data-langsid="확인"></span></button>
                     </div>
                 </div>
             </div>
@@ -39,12 +38,12 @@
 <div class="cui_app">
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('/main')"><span class="blind" data-langsid="동우화인캠"></span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
                 <li class="more">
-                    <a href="#" class="toggle"><span>더보기</span></a>
+                    <a href="#" class="toggle"><span data-langsid="더보기"></span></a>
                     <ul></ul>
                 </li>
             </ul>
@@ -52,7 +51,7 @@
         <div class="global_utility">
             <div class="utility_profile">
                 <div class="info">
-                    <strong>안녕하세요.</strong>
+                    <strong data-langsid="안녕하세요."></strong>
                 </div>
             </div>
             <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home" onclick="goMenu('/main')"><span>Home</span></button>
@@ -62,14 +61,14 @@
         <div class="cui_lnb">
             <div class="lnb_root">
                 <div class="lnb_head">
-                    <h2 class="lnb_title"><span>회원가입</span></h2>
+                    <h2 class="lnb_title"><span data-langsid="회원가입"></span></h2>
                 </div>
                 <div class="cui_nav">
                     <nav class="nav_root">
                         <ul>
                             <li>
                                 <a href="#" class="nav_item">
-                                    <span class="nav_label">회원가입</span>
+                                    <span class="nav_label" data-langsid="회원가입"></span>
                                 </a>
                             </li>
                         </ul>
@@ -81,7 +80,7 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title center"><span>회원가입</span></h2>
+                        <h2 class="cui_title center"><span data-langsid="회원가입"></span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
@@ -89,19 +88,19 @@
                         <ol>
                             <li class="active">
                                 <i data-cui-icon="file_search"></i>
-                                <span>정보수집 동의</span>
+                                <span data-langsid="정보수집 동의"></span>
                             </li>
                             <li>
                                 <i data-cui-icon="lock"></i>
-                                <span>ID/PW 및 벤더정보</span>
+                                <span data-langsid="ID/PW 및 벤더정보">ID/PW 및 벤더정보</span>
                             </li>
                             <li>
                                 <i data-cui-icon="receipt"></i>
-                                <span>워런티 협약</span>
+                                <span data-langsid="워런티 협약">워런티 협약</span>
                             </li>
                             <li>
                                 <i data-cui-icon="task"></i>
-                                <span>동우 승인</span>
+                                <span data-langsid="동우 승인">동우 승인</span>
                             </li>
                         </ol>
                     </div>
@@ -495,13 +494,13 @@
                         <fieldset>
                             <div class="cui_items_wrap" data-direction="left">
                                 <div class="item_content">
-                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="agree"><i></i><span>동의합니다.</span></label>
-                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="disagree"><i></i><span>동의하지 않습니다.</span></label>
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="agree"><i></i><span data-langsid="동의합니다."></span></label>
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="disagree"><i></i><span data-langsid="동의하지 않습니다."></span></label>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="right" >
                                 <div class="item_content">
-                                    <a href="#" class="cui_button primary" id="nextButton" ><span>다음</span></a>
+                                    <a href="#" class="cui_button primary" id="nextButton" ><span data-langsid="다음"></span></a>
                                 </div>
                             </div>
                         </fieldset>
@@ -515,12 +514,9 @@
 </html>
 
 <script>
-
     const goMenu = (menuPage) => {
         location.href = menuPage;
     }
-
-
     $(document).ready(function() {
         $('#nextButton').on('click', function(event) {
             event.preventDefault();
@@ -530,8 +526,7 @@
             if (checkedValue === 'agree') {
                 window.location.href = "/member/join";
             } else {
-             showAlert('warning', '약관에 동의해 주세요.');
-<!--                alert("동의를 선택해 주세요.");-->
+                showAlert('warning', siteLang.getLang('약관에 동의해 주세요.'));
             }
         });
     });

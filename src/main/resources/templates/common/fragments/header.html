@@ -25,11 +25,11 @@
         </nav>
 
         <div class="global_utility">
-            <select class="cui_select_field">
-                <option>KOR</option>
-                <option>ENG</option>
-                <option>JPN</option>
-                <option>CHN</option>
+            <select class="cui_select_field" id="multiLanguage">
+                <option value="KOR">KOR</option>
+                <option value="ENG">ENG</option>
+                <option value="JPN">JPN</option>
+                <option value="CHN">CHN</option>
             </select>
             <div class="utility_profile" onclick="goMenu('/member/myPage')">
                 <div class="info">
@@ -113,5 +113,13 @@
             console.log("Scripts initialized");
         }
 
+        $("#multiLanguage").bind("change", function () {
+            siteLang.chgLangs($(this).val());
+        });
+
+        $(document).ready(function () {
+            var selOption = $("#multiLanguage").find("option[value=" + siteLang.selLang + "]");
+            selOption.attr("selected", "selected");
+        });
     </script>
 </html>

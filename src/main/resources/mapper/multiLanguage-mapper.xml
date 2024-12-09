@@ -29,4 +29,29 @@
                 , 'cn' as CN
                 , 'ja' as JA ))
     </select>
+
+    <select id="getMultiLangsList_HashMap" resultType="hashMap">
+        SELECT KOR
+            , ENG
+            , JPN
+            , CHN
+        FROM SC_LANGS
+        WHERE SCRIPT_DOWN_YN = 'Y'
+    </select>
+
+    <select id="getMultiLangs_HashMap" parameterType="hashMap" resultType="hashMap">
+        SELECT KOR
+        , ENG
+        , JPN
+        , CHN
+        FROM SC_LANGS
+        WHERE KOR = #{KOR}
+    </select>
+
+    <insert id="saveMultiLanguage" parameterType="hashMap">
+        INSERT INTO SC_LANGS
+            (KOR, ENG, JPN, CHN, SCRIPT_DOWN_YN)
+        VALUES
+            (#{KOR}, '', '', '', 'Y')
+    </insert>
 </mapper>

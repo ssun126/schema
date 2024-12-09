@@ -20,8 +20,8 @@
                     <legend><span>인증서 관리(배점 4점)</span></legend>
                     <table class="cui_table center" id="isoAuthItemTable">
                         <colgroup>
+                            <col style="width:150px;">
                             <col style="width:200px;">
-                            <col>
                             <col style="width:140px;">
                             <col style="width:140px;">
                             <col style="width:140px;">
@@ -48,7 +48,7 @@
                 <fieldset id="rejectArea" style="display:none;">
                     <legend><span>반려사유</span></legend>
                     <div>
-                        <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason"></textarea>
+                        <textarea class="cui_text_field" rows="3" style="width:100%;" id="rejectReason"></textarea>
                     </div>
                 </fieldset>
             </form>
@@ -56,7 +56,7 @@
     </div>
 </div>
 
-<div class="cui_dialog" style="width:400px;display:none;" id="Reason">
+<div class="cui_dialog" style="width:600px;display:none;" id="Reason">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
@@ -71,7 +71,7 @@
                 <form class="cui_form_field" data-legend="true" id="formReason">
                     <input type="hidden" name="authCode">
                     <div class="cui_items_wrap" data-direction="center" >
-                        <div class="item_content">
+                        <div class="item_content" style="padding: 10px;">
                             <label for="inputReason"></label><textarea class="cui_text_field" rows="2" style="width:100%;" id="inputReason"></textarea>
                         </div>
                     </div>

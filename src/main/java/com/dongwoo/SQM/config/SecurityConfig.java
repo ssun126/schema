@@ -54,8 +54,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
-                        .requestMatchers("/", "/login", "/auth/login", "/member/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/sendIsoAuthData").permitAll()  // Allow POST without authentication
+                        .requestMatchers("/", "/login", "/auth/login", "/member/**", "/multiLanguage/getLocalStorage").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/sendIsoAuthData", "/multiLanguage/saveMultiLanguage").permitAll()  // Allow POST without authentication
                         // 관리자 권한만 가능
                         //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
