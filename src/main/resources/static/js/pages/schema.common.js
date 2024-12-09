@@ -793,3 +793,45 @@ Common.Dialog = function (info) {
 $(document).ready(function () {
     Common.Load();
 });
+
+
+//그리드 설정
+var commonSettings = {
+    sortable: false,
+    resizable: true,
+    menuIcon: true,
+    scrollModel: { autoFit: false },
+    hoverMode: 'row',
+    rowHtHead: 30,
+    rowHt: 30,
+    roundCorners: false,
+    rowBorders: true,
+    showBottom: true,
+    showHeader: true,
+    showTitle: true,
+    showTop: false,
+    showToolbar: true,
+    stripeRows: true,
+    wrap: false,
+    autoAddRow: false,
+    freezeCols: 0,
+    autoRow: false,
+    autoRowHead: false,
+    rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+};
