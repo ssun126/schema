@@ -4,6 +4,7 @@ import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
+import com.dongwoo.SQM.companyInfo.dto.PartCodeDTO;
 import com.dongwoo.SQM.companyInfo.dto.SearchResult;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -82,14 +83,18 @@ public class CompanyInfoRestController {
     //업체정보 신규 저장
     @PostMapping("/setCompanyData")
     public ResponseEntity<?> setCompanyData(@RequestBody CpCodeDTO cpCodeDTO) {
-        log.info("companyInfoDTO??????????????    "+cpCodeDTO);
-        int resultCnt = companyInfoService.save(cpCodeDTO);
+        try {
+            int resultCnt = companyInfoService.save(cpCodeDTO);
 
-        // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
-        if(resultCnt > 0){
-            return ResponseEntity.ok("Form submitted successfully!");
-        }else{
-            return ResponseEntity.ok("Form submitted fail!");
+            // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
+            if(resultCnt > 0){
+                return ResponseEntity.ok("Form submitted successfully!");
+            }else{
+                return ResponseEntity.ok("Form submitted fail!");
+            }
+        } catch (Exception e) {
+            log.info("저장 에러!!!: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 에러 발생");
         }
     }
 

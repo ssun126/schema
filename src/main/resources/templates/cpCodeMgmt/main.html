@@ -75,19 +75,19 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_section" data-legend="true" name="formCpCodeMgmt">
+                <form class="cui_form_section" data-legend="true" name="formCpCodeMgmt" onsubmit="return false;">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체 코드"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata" disabled="disabled">
+                                <input type="text" id="COM_CODE" name="COM_CODE" class="cui_text_field fixdata" reqcheck="reqcheck" data-messages="업체 코드를 입력하세요." messages="">
                                 <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata" disabled="disabled">
+                                <input type="text" id="COM_NAME" name="COM_NAME" class="cui_text_field fixdata" disabled="disabled" reqcheck="reqcheck" data-messages="업체명을 입력하세요." messages="">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -101,13 +101,13 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyNation" name="COM_NATION" class="cui_text_field " disabled="disabled">
+                                <input type="text" id="COM_NATION" name="COM_NATION" class="cui_text_field " disabled="disabled">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사용"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field wide" id="modalCompanyStatus" name="COM_STATUS">
+                                <select class="cui_select_field wide" id="COM_STATUS" name="COM_STATUS">
                                     <option value="Y">Y</option>
                                     <option value="N">N</option>
                                 </select>
@@ -116,7 +116,7 @@
 
                         <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                             <div class="item_content">
-                                <button type="submit" id="CpCodeMgmtAdd" class="cui_button primary"><span data-langsid="저장"></span></button>
+                                <button type="button" id="CpCodeMgmtAdd" class="cui_button primary" onclick="addComCodeSave();"><span data-langsid="저장"></span></button>
                                 <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
@@ -129,6 +129,38 @@
 <script>
 var addOpen = function () {
     Common.Dialog({ obj : $("#CpCodeMgmt"), blockClose : false });
+}
+
+var addComCodeSave = function() {
+    if (Common.Validate($("#CpCodeMgmt")) == true) {
+        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                if (Common.Validate($("#CpCodeMgmt")) == true) {
+                    Common.Loading.Show();
+
+                    setTimeout(function () {
+                        var ReqInfo = new Common.RequestInfo();
+                        ReqInfo.AddParameter("COM_CODE", $('#COM_CODE').val());
+                        ReqInfo.AddParameter("COM_NAME", $('#COM_NAME').val());
+                        ReqInfo.AddParameter("COM_NATION", $('#COM_NATION').val());
+                        ReqInfo.AddParameter("COM_STATUS", "Y");
+
+                        Common.Ajax("/companyInfo/setCompanyData", ReqInfo, function (response) {
+                            if (response == "Form submitted successfully!") {
+                                $("#CpCodeMgmt").data("Hide")();
+                                ListSearch();
+                                Common.Loading.Hide();
+                            } else {
+                                Common.Loading.Hide();
+                                Common.Msg(response);
+                            }
+                        }, { contentType : "application/json" });
+                    }, 10);
+                }
+            }
+        });
+    }
 }
 
 var selCpCodeOpen = function () {
