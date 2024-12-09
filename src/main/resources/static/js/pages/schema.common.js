@@ -1,4 +1,4 @@
-/*SCHEMA 공통 스크립트*/
+/*SCHEMA 공통 스크립트
 document.addEventListener("DOMContentLoaded", function() {
     //모달 Draggable 처리
     const modalHeader = document.querySelector(".dialog_head");
@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
       isDragging = false;
     });
 });
+*/
 
 //모달 초기화
 function modal_init(id, status){
@@ -87,7 +88,7 @@ function modal_open(id, status, sUrl, param, info){
     var overlayStatus = true;
 
     if (info != undefined) {
-        overlayStatus = (info.overlayStatus || true);
+        if (info.overlayStatus == false) overlayStatus = false;
     }
 
     if (overlayStatus) {
@@ -140,19 +141,15 @@ function modal_open(id, status, sUrl, param, info){
 
 //모달 닫기
 function modal_close(id, info){
-    var overlayStatus = false;
+    var overlayStatus = true;
 
     if (info != undefined) {
-        overlayStatus = (info.overlayStatus || false);
+        if (info.overlayStatus == false) overlayStatus = false;
     }
 
     if (overlayStatus) {
-        modal_overlay(overlayStatus);
+        modal_overlay(false);
     }
-
-    $(overlay).animate({opacity: '0%'},{duration: 500, complete: function(){
-        overlay.style.display = "none"; // 오버레이 숨기기
-    }});
 
     $("#" + id).fadeOut();
     //초기화
@@ -400,3 +397,399 @@ siteLang.devDBSet = function (KOR) {
     	}
     });
 }
+
+var Common = {};
+//===========================================================================================
+//제목 : Ajax
+//===========================================================================================
+//Param : [{ Key: key, Value: value }, { Key: key, Value: value }] 형태의 Default로 무조건 들어가는 값
+Common.RequestInfo = function (Param) {
+    var thisObj = this;
+    var defaultParam;
+    this.Parameters = [];
+    this.formData = null;
+
+    this.Default = function () {
+        if (this.Parameters.length == 0 && defaultParam) {
+            for (var i = 0; i < defaultParam.length; i++) {
+                var dataInfo = defaultParam[i];
+                this.Parameters[i] = { Key: dataInfo.Key, Value: dataInfo.Value };
+            }
+        }
+    };
+
+    this.AddParameter = function (key, value, addCheck) {
+        if (typeof value == "undefined" && typeof key == "object" && key != null && key.find) {
+            var NoSearchObj = null;
+            if (key.attr("NoSearchParam") != undefined && $("#" + key.attr("NoSearchParam")).length > 0) {
+                NoSearchObj = $("#" + key.attr("NoSearchParam")).find("input,textarea,select");
+            }
+            key.find("input,textarea,select").not(NoSearchObj).each(function (n) {
+                if ($(this).attr("name") && $(this).attr("name") != "") {
+                    if ($(this)[0].tagName == "INPUT" && $(this).attr("type") && $(this).attr("type").toLowerCase() == "radio") {
+                        if ($(this).prop("checked") == true) {
+                            thisObj.AddParameter($(this).attr("name"), $(this).val());
+                        }
+                    } else if ($(this)[0].tagName == "INPUT" && $(this).attr("type") && $(this).attr("type").toLowerCase() == "checkbox") {
+                        if ($(this).prop("checked") == true) {
+                            var tmpValue = thisObj.GetParameter($(this).attr("name"));
+                            if (tmpValue == "") {
+                                thisObj.AddParameter($(this).attr("name"), $(this).val());
+                            } else {
+                                if ($(this).attr("multiNumber") != undefined) {
+                                    thisObj.AddParameter($(this).attr("name"), Common.Convert.Int(tmpValue) + Common.Convert.Int($(this).val()));
+                                } else {
+                                    thisObj.AddParameter($(this).attr("name"), tmpValue + "," + $(this).val());
+                                }
+                            }
+                        }
+                    } else if ($(this)[0].tagName == "INPUT" && $(this).attr("type") && $(this).attr("type").toLowerCase() == "file" && thisObj.formData != null) {
+                        if ($(this).val() == "" && $(this).attr("dragFile") != undefined) {
+                            thisObj.formData.append($(this).attr("name"), Common.RequestInfo.Files[$(this).attr("dragFile")]);
+                        } else if ($(this).val() == "" && $(this).attr("dragFiles") != undefined) {
+                            var file_arr = Common.RequestInfo.Files[$(this).attr("dragFiles")];
+                            for (var Idx in file_arr) {
+                                if (file_arr[Idx]) {
+                                    thisObj.formData.append($(this).attr("uploadFileName"), file_arr[Idx].file);
+                                }
+                            }
+                        } else {
+                            thisObj.formData.append($(this).attr("name"), $(this)[0].files[0]);
+                        }
+                    } else if ($(this)[0].tagName == "SELECT" && $(this).attr("multiple") && $(this).attr("multiple") == "multiple") {
+                        thisObj.AddParameter($(this).attr("name"), $(this).val().toString(), true);
+                    } else {
+                        thisObj.AddParameter($(this).attr("name"), $(this).val(), true);
+                    }
+                }
+            });
+        } else {
+            value = (value || "");
+            var dataParametersLength = this.Parameters.length;
+            var exists = false;
+            for (var i = 0; i < dataParametersLength; i++) {
+                var dataInfo = this.Parameters[i];
+                if (dataInfo.Key == key) {
+                    if (typeof addCheck == "undefined") {
+                        this.Parameters[i] = { Key: key, Value: value };
+                    } else if (addCheck == true) {
+                        var tmpValue = dataInfo.Value;
+                        this.Parameters[i] = { Key: key, Value: tmpValue + "," + value };
+                    }
+                    exists = true;
+                }
+            }
+
+            if (exists == false)
+                this.Parameters.push({ Key: key, Value: value });
+        }
+    };
+
+    this.GetParameter = function (key) {
+        var rtnParam = "1=1";
+        var dataParametersLength = this.Parameters.length;
+        if (typeof key == "undefined") {
+            for (var i = 0; i < dataParametersLength; i++) {
+                rtnParam = rtnParam + "&" + this.Parameters[i].Key + "=" + this.Parameters[i].Value;
+            }
+            return rtnParam;
+        } else {
+            rtnParam = "";
+            for (var i = 0; i < dataParametersLength; i++) {
+                if (this.Parameters[i].Key == key) {
+                    rtnParam = this.Parameters[i].Value;
+                    break;
+                }
+            }
+            return rtnParam;
+        }
+    };
+
+    this.SetParameter = function (param) {
+        var params = param.split("&");
+        for (var i = 0; i < params.length; i++) {
+            if (params[i] != "") {
+                var p = params[i].split("=");
+                if (p.length == 2)
+                    AddParameter(p[0], p[1]);
+            }
+        }
+    };
+
+    this.GetJson = function () {
+        var rtnParam = {};
+        var dataParametersLength = this.Parameters.length;
+
+        for (var i = 0; i < dataParametersLength; i++) {
+            if (thisObj.formData == null) {
+                rtnParam[this.Parameters[i].Key] = this.Parameters[i].Value;
+            } else {
+                thisObj.formData.append(this.Parameters[i].Key, this.Parameters[i].Value);
+            }
+        }
+
+        if (thisObj.formData == null) {
+            return rtnParam;
+        } else {
+            return thisObj.formData;
+        }
+    };
+
+    return (function () {
+        defaultParam = Param;
+        if (Param)
+            thisObj.Default();
+    })();
+}
+Common.RequestInfo.Files = {};
+
+//url(string) : 실행경로, data(Common.RequestInfo) : 파라메타 데이타, callback(function) : 처리, responseType(string) : 처리내역 형태
+//formMethod(string) : 전송방식, async(bool) : 시크타입, errback(function) : 에러 처리
+Common.Ajax = function (url, data, callback, info) {
+    if (url == undefined || url == "") {
+        Common.Msg("No Url Info.");
+        return;
+    }
+
+    var responseType, formMethod, async, errback, okErr;
+
+    if (info == undefined) {
+        formMethod = "POST";
+    } else {
+        if (info.async == undefined) async = false
+        else async = info.async
+
+        formMethod = (info.formMethod || "POST");
+        responseType = (info.responseType || undefined);
+        errback = (info.errback || undefined);
+        okErr = (info.okErr || undefined);
+    }
+
+    async = (async || false);
+    data = (data || new Common.RequestInfo());
+    var Parameters;
+
+    if (formMethod && formMethod == "GET") {
+        data.formData = null;
+        AType = { type: "GET", contentType: "charset=utf-8", processData: true };
+        Parameters = data.GetParameter();
+    } else {
+        if (data.formData == null) {
+            AType = {
+                type: "POST", contentType: "application/x-www-form-urlencoded;charset=utf-8", processData: true
+            };
+        } else {
+            AType = {
+                type: "POST", contentType: false, processData: false
+            };
+        }
+        Parameters = data.GetJson();
+    }
+
+    $.ajax({
+        type: AType.type,
+        contentType: AType.contentType,
+        processData: AType.processData,
+        headers: {
+            "cache-control": "no-cache", "pragma": "no-cache", "requestType": "ajax"
+        },
+        async: async,
+        cache: false,
+        url: url,
+        data: Parameters,
+        dataType: (responseType || "text"),
+        timeout: 1000 * 60 * 60 * 24,
+        success: function (result, textStatus) {
+            if (typeof callback == "function")
+                callback(result);
+        },
+        error: ((errback == null || errback == undefined) ? Common.AjaxError : function (XMLHttpRequest, textStatus, errorThrown) {
+            //Common.Loading.Hide();
+            if (typeof errback == "function")
+                errback(errorThrown);
+        })
+    });
+}
+Common.AjaxError = function (XMLHttpRequest, textStatus, errorThrown) {
+    Common.Loading.Hide();
+    if (errorThrown == "")
+        return;
+
+    try {
+        alert(errorThrown);
+    } catch (e) {
+    };
+}
+
+//EnterKey 체크
+Common.Enter = function (e, textareaCheck) {
+    textareaCheck = (textareaCheck || false);
+
+    var EventObj;
+    // Event Setting
+    if (window.event) {
+        EventObj = window.event;
+    } else {
+        EventObj = e;
+    }
+
+    if (EventObj.keyCode == 13 && (textareaCheck == false || (textareaCheck == true && EventObj.srcElement.tagName != "TEXTAREA"))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Common.Load = function (Obj) {
+    Obj = (Obj || $("body"));
+
+    // Input Enter Event Set
+    Obj.find("input[search]").each(function () {
+        var BtnId = $(this).attr("search");
+
+        if ($("#" + BtnId).length > 0) {
+            $(this).bind("keypress", function (e) {
+                if (Common.Enter(e) == true) {
+                    $("#" + BtnId).click();
+                }
+            });
+        }
+    });
+}
+
+//현재 날짜시간 포함 string 리턴
+Common.GetTodayTimeString = function () {
+    var RtnValue = "";
+
+    var date = new Date(); // 날짜
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var min = date.getMinutes();
+    var sec = date.getSeconds();
+    if (String(month).length == 1) { month = "0" +month; };
+    if(String(day).length == 1) { day = "0" +day; };
+    if (String(hour).length == 1) { hour = "0" +hour; };
+    if(String(min).length == 1) { min = "0" +min; };
+    if(String(sec).length == 1) { sec = "0" +sec; };
+
+    RtnValue = String(year) + String(month) + String(day) + String(hour) + String(min) +String(sec);
+
+    return RtnValue;
+}
+
+Common.DialogIndex = 1000;
+Common.Dialog = function (info) {
+    var diaObj = null;
+    var obj = (info.obj || null);
+    var url = (info.url || "");
+    var name = (info.name || Common.GetTodayTimeString());
+    var formMethod = (info.formMethod || "POST");
+    var async, loading, blockClose, drag;
+    var openFn = (info.openFn || undefined);
+    var closeFn = (info.closeFn || undefined);
+
+    if (info.blockClose == undefined) blockClose = true
+    else blockClose = info.blockClose
+
+    if (info.drag == undefined) drag = true
+    else drag = info.drag
+
+    var overlayObj = $('<div class="overlay"></div>');
+    $('body').append(overlayObj);
+
+    if (obj) {
+        Common.DialogIndex = Common.DialogIndex + 100;
+        overlayObj.css("opacity", "0%");
+        overlayObj.show(); // 오버레이 배경 표시
+        overlayObj.css("z-index", Common.DialogIndex);
+        overlayObj.animate({opacity: '100%'}, 500);
+        obj.css("z-index", Common.DialogIndex + 1);
+        obj.fadeIn({
+            complete : function () {
+                if (typeof openFn == "function") {
+                    openFn(obj);
+                }
+            }
+        });
+
+        obj.find("button[dialogBtn=close]").bind("click", function () {
+            obj.data("Hide")();
+        });
+
+        obj.data("Hide", function () {
+            Common.DialogIndex = Common.DialogIndex - 100;
+            overlayObj.animate({opacity: '0%'},{duration: 500, complete: function(){
+                overlayObj.remove();
+            }});
+            obj.fadeOut({
+                complete : function () {
+                    if (typeof closeFn == "function") {
+                        closeFn(obj);
+                    }
+                }
+            });
+        });
+
+        if (blockClose) {
+            overlayObj.one("click", function () {
+                obj.data("Hide")();
+            });
+        }
+
+        if (drag) {
+            var modalHeader = obj.find(".dialog_head");
+            modalHeader.unbind("mousedown");
+            modalHeader.unbind("mouseup");
+
+            var isDragging = false;
+            modalHeader.bind("mousedown", function (e) {
+                isDragging = true;
+            });
+            modalHeader.bind("mouseup", function () {
+                isDragging = false;
+            });
+
+            obj.draggable({
+                start: function (event, ui) {
+                    if (!isDragging) {
+                        return false;
+                    }
+                }, drag: function( event, ui ) {
+                    if (isDragging) {
+                        ui.position.left = ui.position.left + (obj.width() / 2);
+                        ui.position.top = ui.position.top + (obj.height() / 2);
+                    } else {
+                        return false;
+                    }
+                }
+            });
+        }
+    } else {
+        if (url == "")
+            return;
+
+        if (info.async == undefined) async = false
+        else async = info.async
+
+        if (info.loading == undefined) loading = false
+        else loading = info.loading
+
+        var reqInfo = new Common.RequestInfo();
+
+        for (var keyName in info.param) {
+            reqInfo.AddParameter(keyName, info.param[keyName]);
+        }
+
+        setTimeout(function () {
+            Common.Ajax(url, reqInfo, function (html) {
+
+            }, { formMethod: formMethod, async: async });
+        }, 10);
+    }
+}
+
+$(document).ready(function () {
+    Common.Load();
+});
