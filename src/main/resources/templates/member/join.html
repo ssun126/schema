@@ -16,7 +16,7 @@
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
     <script type="text/javascript" src="../../../js/app.js"></script>
     <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
-    <title>회원가입</title>
+    <title data-langsid="회원가입"></title>
 </head>
 <body>
 <!--==alert==-->
@@ -27,7 +27,7 @@
                 <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContent" ></p> </div>
                 <div class="cui_items_wrap" data-direction="center">
                     <div class="item_content">
-                        <button type="button" class="cui_button primary modal-close" onClick="modal_close('dialog')"><span>확인</span></button>
+                        <button type="button" class="cui_button primary modal-close" onClick="modal_close('dialog')"><span data-langsid="확인"></span></button>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
 <div class="cui_app">
     <div class="cui_global">
         <h1 class="global_logo">
-            <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
+            <a href="#" onclick="goMenu('/main')"><span class="blind" data-langsid="동우화인캠"></span></a>
         </h1>
         <nav class="cui_gnb" role="navigation">
             <ul>
@@ -52,7 +52,7 @@
         <div class="global_utility">
             <div class="utility_profile">
                 <div class="info">
-                    <strong>안녕하세요.</strong>
+                    <strong data-langsid="안녕하세요."></strong>
                 </div>
             </div>
             <button type="button" class="global_icon" data-cui-icon="logout" data-tooltip-title="Home"  onclick="goMenu('/logout')"><span>Home</span></button>
@@ -62,14 +62,14 @@
         <div class="cui_lnb">
             <div class="lnb_root">
                 <div class="lnb_head">
-                    <h2 class="lnb_title"><span>회원가입</span></h2>
+                    <h2 class="lnb_title"><span data-langsid="회원가입"></span></h2>
                 </div>
                 <div class="cui_nav">
                     <nav class="nav_root">
                         <ul>
                             <li>
                                 <a href="#" class="nav_item">
-                                    <span class="nav_label">회원가입</span>
+                                    <span class="nav_label" data-langsid="회원가입"></span>
                                 </a>
                             </li>
                         </ul>
@@ -81,7 +81,7 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title center"><span>회원가입</span></h2>
+                        <h2 class="cui_title center"><span data-langsid="회원가입"></span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
@@ -89,25 +89,25 @@
                         <ol>
                             <li>
                                 <i data-cui-icon="file_search"></i>
-                                <span>정보수집 동의</span>
+                                <span data-langsid="정보수집 동의"></span>
                             </li>
                             <li class="active">
                                 <i data-cui-icon="lock"></i>
-                                <span>ID/PW 및 벤더정보</span>
+                                <span data-langsid="ID/PW 및 벤더정보"></span>
                             </li>
                             <li>
                                 <i data-cui-icon="receipt"></i>
-                                <span>워런티 협약</span>
+                                <span data-langsid="워런티 협약"></span>
                             </li>
                             <li>
                                 <i data-cui-icon="task"></i>
-                                <span>동우 승인</span>
+                                <span data-langsid="동우 승인"></span>
                             </li>
                         </ol>
                     </div>
                     <form id="frmJoin" class="cui_form_section" data-legend="true" action="/member/warranty" method="post">
                         <fieldset>
-                            <legend><span>기본정보</span></legend>
+                            <legend><span data-langsid="기본정보"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -115,7 +115,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>Vendor 번호 및 사업자등록번호 검색</span></th>
+                                    <th><span data-langsid="Vendor 번호 및 사업자등록번호 검색"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -133,7 +133,7 @@
 
                                 </tr>
                                 <tr>
-                                    <th><span>귀사 정보</span></th>
+                                    <th><span data-langsid="귀사 정보"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -143,18 +143,18 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>Vendor 업종 형태</span></th>
+                                    <th><span data-langsid="Vendor 업종 형태"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                             <div class="item_content">
-                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer" ><i></i><span>제조사</span></label>
-                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"><i></i><span>물류사</span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer" ><i></i><span data-langsid="제조사"></span></label>
+                                                <label class="cui_checkbox"><input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"><i></i><span data-langsid="물류사"></span></label>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>국가</span></th>
+                                    <th><span data-langsid="국가"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -192,26 +192,26 @@
                         <div id="joinBasicStep1">
 
                         <fieldset id="userInfoFieldset">
-                            <legend><span>공동 업무자 정보</span></legend>
+                            <legend><span data-langsid="공동 업무자 정보"></span></legend>
 
                             <table class="cui_table center">
                                 <thead>
                                 <tr>
-                                    <th><span>성명(영문)</span></th>
-                                    <th><span>직위</span></th>
-                                    <th><span>부서명</span></th>
-                                    <th><span>email</span></th>
-                                    <th><span>연락처</span></th>
-                                    <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
+                                    <th><span data-langsid="성명"></span></th>
+                                    <th><span data-langsid="직위"></span></th>
+                                    <th><span data-langsid="부서명"></span></th>
+                                    <th><span data-langsid="email"></span></th>
+                                    <th><span data-langsid="연락처"></span></th>
+                                    <th><button type="button" class="cui_button secondary" id="addRowButton" ><span data-langsid="추가"></span></button></th>
                                 </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                 <tr>
-                                    <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름"  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_NAME" data-langsid="이름" placeholder=""  onblur="setUserSelectReset()"></td>
                                     <td><input type="text" class="cui_text_field" name="USER_POSITION" onblur="setUserSelectReset()"></td>
                                     <td><input type="text" class="cui_text_field" name="USER_DEPT"  onblur="setUserSelectReset()"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" id="USER_EMAIL"  onblur="setUserSelectReset()"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호"  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" data-langsid="이메일" placeholder="" id="USER_EMAIL"  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_PHONE" data-langsid="전화번호" placeholder=""  onblur="setUserSelectReset()"></td>
                                     <td></td>
                                 </tr>
                                 </tbody>
@@ -238,7 +238,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>담당자</span></th>
+                                    <th><span data-langsid="담당자"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -258,17 +258,17 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>PW 확인</span></th>
+                                    <th><span data-langsid="PW 확인"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="password" autocomplete="off" id="UserPassRe" onkeyup="passConfirm()" placeholder="비밀번호 확인" onblur="passConfirm()">
+                                                <input class="cui_text_field" type="password" autocomplete="off" id="UserPassRe" onkeyup="passConfirm()" data-langsid="비밀번호 확인" placeholder="" onblur="passConfirm()">
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                                 <tr id="tr_id_pw_add_reason" >
-                                    <th><span>ID/PW 추가사유</span></th>
+                                    <th><span data-langsid="ID/PW 추가사유"></span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -282,17 +282,17 @@
                             </table>
                             <div class="cui_alert alert_basic" data-type="warning" role="alert" id = "dupliCation">
                                 <div class="alert_message">
-                                    <p>동일 사업부/공장에서 업무자별 ID 생성은 승인 불가 합니다</p>
+                                    <p data-langsid="동일 사업부/공장에서 업무자별 ID 생성은 승인 불가 합니다."></p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="missPass">
                                 <div class="alert_message">
-                                    <p>ID/PW 문의는 Main 담당자 또는 '공동업무자'에게 문의 바랍니다.</p>
+                                    <p data-langsid="ID/PW 문의는 Main 담당자 또는 '공동업무자'에게 문의 바랍니다."></p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="selectOwner">
                                 <div class="alert_message">
-                                    <p style = "color: #E40087;">담당자를 선택해 주세요.</p>
+                                    <p style = "color: #E40087;" data-langsid="담당자를 선택해 주세요."></p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="warning" role="alert" id ="IdVAL">
@@ -308,7 +308,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend><span>업체정보</span></legend>
+                            <legend><span data-langsid="업체정보"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -318,7 +318,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>회사명 (한글 또는 해당국가 언어)</span></th>
+                                    <th><span data-langsid="회사명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -326,7 +326,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>제조 공장명</span></th>
+                                    <th><span data-langsid="제조 공장명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -336,7 +336,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>사업자 등록번호</span></th>
+                                    <th><span data-langsid="사업자 등록번호"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -344,7 +344,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>회사주소 (영문)</span></th>
+                                    <th><span data-langsid="회사주소"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -354,7 +354,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>CEO 성명(영문)</span></th>
+                                    <th><span data-langsid="CEO 성명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -362,7 +362,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>CEO 연락처(영문)</span></th>
+                                    <th><span data-langsid="CEO 연락처"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -372,7 +372,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>CEO e-mail(영문)</span></th>
+                                    <th><span data-langsid="CEO e-mail"></span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -382,7 +382,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>접속 목적</span></th>
+                                    <th><span data-langsid="접속 목적"></span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="column">
                                             <div class="item_content">
@@ -401,7 +401,7 @@
 
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
-                                <a href="#" onclick="return chk_form()" class="cui_button primary"><span>다음</span></a>
+                                <a href="#" onclick="return chk_form()" class="cui_button primary"><span data-langsid="다음"></span></a>
                             </div>
                         </div>
                         </div>

@@ -12,10 +12,9 @@
                     </div>
                 </div>
                 <div class="cui_body">
-<!--                    <form class="cui_form_section" data-legend="true">-->
                     <form id="updateForm"  class="cui_form_section">
                         <fieldset>
-                            <legend><span>업체 기본정보</span></legend>
+                            <legend><span data-langsid="업체 기본정보"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -25,7 +24,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>Vendor 번호</span></th>
+                                    <th><span data-langsid="Vendor 번호"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -34,7 +33,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>귀사 정보</span></th>
+                                    <th><span data-langsid="귀사 정보"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -44,26 +43,26 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>Vendor 업종 형태</span></th>
+                                    <th><span data-langsid="Vendor 업종 형태"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <label class="cui_checkbox">
                                                     <input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer"
                                                            th:checked="${member.VENDOR_WORK_KIND == 'D'}" disabled>
-                                                    <i></i><span>제조사</span>
+                                                    <i></i><span data-langsid="제조사"></span>
                                                 </label>
 
                                                 <label class="cui_checkbox">
                                                     <input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"
                                                            th:checked="${member.VENDOR_WORK_KIND == 'L'}" disabled>
-                                                    <i></i><span>물류사</span>
+                                                    <i></i><span data-langsid="물류사"></span>
                                                 </label>
 
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>국가</span></th>
+                                    <th><span data-langsid="국가"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -73,7 +72,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>회사명</span></th>
+                                    <th><span data-langsid="회사명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -81,7 +80,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>제조 공장명</span></th>
+                                    <th><span data-langsid="제조 공장명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -91,7 +90,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>사업자 등록번호</span></th>
+                                    <th><span data-langsid="사업자 등록번호"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -99,7 +98,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>회사주소 (영문)</span></th>
+                                    <th><span data-langsid="회사주소 (영문)"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -109,7 +108,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>CEO 성명(영문)</span></th>
+                                    <th><span data-langsid="CEO 성명(영문)"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -117,7 +116,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>CEO 연락처(영문)</span></th>
+                                    <th><span data-langsid="CEO 연락처(영문)"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -127,7 +126,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>CEO e-mail(영문)</span></th>
+                                    <th><span data-langsid="CEO e-mail(영문)"></span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -174,7 +173,7 @@
                                         </div>
                                     </td>
 
-                                    <th><span>Audit 관리</span></th>
+                                    <th><span data-langsid="Audit 관리"></span></th>
                                     <td>
                                         <span th:text="${member.COM_AUDIT_POINT != null ? member.COM_AUDIT_POINT + '점  |  ' : ' 점수 없음 |'}"></span>
                                         <span th:text="${member.COM_AUDIT_LEVEL != null ? member.COM_AUDIT_LEVEL + '등급  |  ' : ' 등급 없음 | '}"></span>
@@ -194,8 +193,8 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th colspan="4"><span>분쟁광물(CMRT)</span></th>
-                                    <th colspan="2"><span>책임광물(EMRT)</span></th>
+                                    <th colspan="4"><span data-langsid="분쟁광물(CMRT)"></span></th>
+                                    <th colspan="2"><span data-langsid="책임광물(EMRT)"></span></th>
                                 </tr>
                                 <tr>
                                     <th><span>Tantalum</span></th>
@@ -220,7 +219,7 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend><span>DWFC 거래 사업부</span></legend>
+                            <legend><span data-langsid="DWFC 거래 사업부"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -228,7 +227,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>사업본부</span></th>
+                                    <th><span data-langsid="사업본부"></span></th>
                                     <td>
                                         <div th:each="companyCodeWork, iterStat : ${companyCodeWorkList}">
                                             <span th:text="${iterStat.index + 1} + ') ' + ${companyCodeWork.BASE_NAME}"></span><br>
@@ -241,23 +240,22 @@
                     </form>
                     <form class="cui_form_section" data-legend="true">
                         <fieldset>
-                            <legend><span>공동 업무자 정보</span></legend>
+                            <legend><span data-langsid="공동 업무자 정보"></span></legend>
                             <table class="cui_table center">
                                 <thead>
                                 <tr>
-                                    <th><span>담당자 구분</span></th>
-                                    <th><span>성명(영문)</span></th>
-                                    <th><span>직위</span></th>
-                                    <th><span>부서명</span></th>
-                                    <th><span>email</span></th>
-                                    <th><span>연락처</span></th>
+                                    <th><span data-langsid="담당자 구분"></span></th>
+                                    <th><span data-langsid="성명"></span></th>
+                                    <th><span data-langsid="직위"></span></th>
+                                    <th><span data-langsid="부서명"></span></th>
+                                    <th><span data-langsid="email"></span></th>
+                                    <th><span data-langsid="연락처"></span></th>
                                     <th>
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                 <tr class="collaborator-row" th:each=" user : ${companyUserList}">
-<!--                                    <td style="text-align: left;">-->
                                     <td>
                                         <span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
                                         <span th:text="${user.USER_STATUS == '1' ? '(검토중)' : ''}"></span>
@@ -283,7 +281,7 @@
 
                     <form class="cui_form_section" data-legend="true">
                         <fieldset>
-                            <legend><span>외부 인증 정보</span></legend>
+                            <legend><span data-langsid="외부 인증 정보"></span></legend>
                             <table class="cui_table center">
                                 <colgroup>
                                     <col>
@@ -294,11 +292,11 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th><span>인증 구분</span></th>
-                                    <th><span>인증일</span></th>
-                                    <th><span>유효일</span></th>
-                                    <th><span>인증기관</span></th>
-                                    <th><span>인증서</span></th>
+                                    <th><span data-langsid="인증 구분"></span></th>
+                                    <th><span data-langsid="인증일"></span></th>
+                                    <th><span data-langsid="유효일"></span></th>
+                                    <th><span data-langsid="인증기관"></span></th>
+                                    <th><span data-langsid="인증서"></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -310,7 +308,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center">
                                             <div class="item_content">
-                                                <button type="submit" class="cui_button secondary"><span>다운로드</span></button>
+                                                <button type="submit" class="cui_button secondary"><span data-langsid="다운로드"></span></button>
                                             </div>
                                         </div>
                                     </td>
@@ -323,7 +321,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center">
                                             <div class="item_content">
-                                                <button type="submit" class="cui_button secondary"><span>다운로드</span></button>
+                                                <button type="submit" class="cui_button secondary"><span data-langsid="다운로드"></span></button>
                                             </div>
                                         </div>
                                     </td>
@@ -334,7 +332,7 @@
                     </form>
                     <form class="cui_form_section" data-legend="true">
                         <fieldset>
-                            <legend><span>회원 ID 관리</span></legend>
+                            <legend><span data-langsid="회원 ID 관리"></span></legend>
                             <table class="cui_table center">
                                 <colgroup>
                                     <col style="width:180px;">
@@ -347,12 +345,12 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th><span>ID</span></th>
-                                    <th><span>이름</span></th>
-                                    <th><span>email</span></th>
-                                    <th><span>가입일</span></th>
-                                    <th><span>승인일</span></th>
-                                    <th><span>접속 목적</span></th>
+                                    <th><span data-langsid="ID"></span></th>
+                                    <th><span data-langsid="이름"></span></th>
+                                    <th><span data-langsid="email"></span></th>
+                                    <th><span data-langsid="가입일"></span></th>
+                                    <th><span data-langsid="승인일"></span></th>
+                                    <th><span data-langsid="접속 목적"></span></th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -371,7 +369,7 @@
                                                     <button type="button" name="deleteCpUser" class="cui_button primary approval-button-visible"
                                                             th:if="${user.USER_STATUS == '1'}"
                                                             th:onclick="'goApprovalDetail(' + '\'' + ${user.USER_IDX} + '\'' + ')'">
-                                                        <span>승인</span>
+                                                        <span data-langsid="승인"></span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -383,7 +381,7 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="button" class="cui_button secondary" onClick="goList()"><span>목록</span></button>
+                                <button type="button" class="cui_button secondary" onClick="goList()"><span data-langsid="목록"></span></button>
                             </div>
                         </div>
                     </form>

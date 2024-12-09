@@ -143,7 +143,7 @@
                     </form>
                     <form class="cui_form_section" data-legend="true">
                         <fieldset>
-                            <legend><span>DWFC 거래 사업부</span></legend>
+                            <legend><span data-langsid="DWFC 거래 사업부"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -151,7 +151,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>사업본부</span></th>
+                                    <th><span data-langsid="사업본부"></span></th>
                                     <td>
                                         <div th:each="companyCodeWork, iterStat : ${companyCodeWorkList}">
                                             <span th:text="${iterStat.index + 1} + ') ' + ${companyCodeWork.BASE_NAME}"></span><br>
@@ -163,16 +163,16 @@
                         </fieldset>
 
                         <fieldset>
-                            <legend><span>공동 업무자 정보</span></legend>
+                            <legend><span data-langsid="공동 업무자 정보"></span></legend>
                             <table class="cui_table center">
                                 <thead>
                                 <tr>
-                                    <th><span>담당자 구분</span></th>
-                                    <th><span>성명(영문)</span></th>
-                                    <th><span>직위</span></th>
-                                    <th><span>부서명</span></th>
-                                    <th><span>email</span></th>
-                                    <th><span>연락처</span></th>
+                                    <th><span data-langsid="담당자 구분"></span></th>
+                                    <th><span data-langsid="성명"></span></th>
+                                    <th><span data-langsid="직위"></span></th>
+                                    <th><span data-langsid="부서명"></span></th>
+                                    <th><span data-langsid="email"></span></th>
+                                    <th><span data-langsid="연락처"></span></th>
                                     <th>
                                     </th>
                                 </tr>
@@ -201,7 +201,7 @@
                     </form>
                     <form class="cui_form_section" data-legend="true">
                         <fieldset>
-                            <legend><span>Warranty 협약 상태</span></legend>
+                            <legend><span data-langsid="Warranty 협약 상태"></span></legend>
                             <table class="cui_table center">
                                 <colgroup>
                                     <col>
@@ -211,10 +211,10 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>승인일</span></th>
-                                    <th><span>제출일</span></th>
-                                    <th><span>관리상태</span></th>
-                                    <th><span>양식 첨부</span></th>
+                                    <th><span data-langsid="승인일"></span></th>
+                                    <th><span data-langsid="제출일"></span></th>
+                                    <th><span data-langsid="관리상태"></span></th>
+                                    <th><span data-langsid="양식 첨부"></span></th>
                                 </tr>
                                 <tr>
                                     <td>
@@ -244,7 +244,7 @@
                     </form>
                     <form class="cui_form_section" data-legend="true">
                         <fieldset>
-                            <legend><span>신청 정보</span></legend>
+                            <legend><span data-langsid="신청 정보"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:200px;">
@@ -255,7 +255,7 @@
                                 <tbody>
                                 <tbody>
                                 <tr>
-                                    <th><span>신청구분</span></th>
+                                    <th><span data-langsid="신청구분"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -264,7 +264,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>신청일</span></th>
+                                    <th><span data-langsid="신청일"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -283,7 +283,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>이름</span></th>
+                                    <th><span data-langsid="이름"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -294,7 +294,7 @@
                                 </tr>
 
                                 <tr>
-                                    <th><span>처리상태</span></th>
+                                    <th><span data-langsid="처리상태"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -302,7 +302,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>처리일</span></th>
+                                    <th><span data-langsid="처리일"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -312,7 +312,7 @@
                                     </td>
                                 </tr>
                                 <tr th:if="${companyApprovalID.USER_STATUS == '반려'}">
-                                    <th><span>반려사유</span></th>
+                                    <th><span data-langsid="반려사유"></span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -328,8 +328,8 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="'approval(' + ${companyApprovalID.USER_IDX} + ')'"><span>승인</span></button>
-                                <button type="button" class="cui_button primary" onclick="modal('dialogUserUpdate')"><span>반려</span></button>
+                                <button type="button" class="cui_button primary" th:onClick="'approval(' + ${companyApprovalID.USER_IDX} + ')'"><span data-langsid="승인"></span></button>
+                                <button type="button" class="cui_button primary" onclick="modal('dialogUserUpdate')"><span data-langsid="반려"></span></button>
                                 <button type="button" class="cui_button secondary" onClick="goList()">
                                     <span th:text="${prepage != '' ? '뒤로' : '목록'}"></span>
                                 </button>
@@ -369,8 +369,8 @@
 
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="'reject(' + ${companyApprovalID.USER_IDX} + ')'"><span>반려 처리</span></button>
-                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span>닫기</span></button>
+                                <button type="button" class="cui_button primary" th:onClick="'reject(' + ${companyApprovalID.USER_IDX} + ')'"><span data-langsid="반려 처리"></span></button>
+                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span >data-langsid="닫기"</span></button>
                             </div>
                         </div>
                     </fieldset>
