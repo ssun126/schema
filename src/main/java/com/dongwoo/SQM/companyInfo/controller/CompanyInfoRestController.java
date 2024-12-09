@@ -6,6 +6,7 @@ import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.dto.SearchResult;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -42,6 +44,17 @@ public class CompanyInfoRestController {
 
         // 검색 결과와 페이지 네비게이터를 포함한 결과 객체 반환
         return new SearchResult(companyInfoList, pageMaker);
+    }
+
+    // 검색 API 처리 (여러 검색 조건 처리)
+    @PostMapping("/listSearchCompanies")
+    public List<CompanyInfoDTO> listSearchCompanies(HttpServletRequest req) {
+        String name = req.getParameter("searchName");
+        String code = req.getParameter("searchCode");
+        String nation = req.getParameter("searchNation");
+
+        // 검색 결과와 페이지
+        return companyInfoService.listSearchCompanies(name, code, nation);
     }
 
     //업체 정보 가져오기

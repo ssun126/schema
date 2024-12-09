@@ -90,6 +90,10 @@ public class CompanyInfoRepository {
         return sql.selectList("CompanyInfo.findByCriteria", params);
     }
 
+    public List<CompanyInfoDTO> findSearch(Map<String, Object> params) {
+        return sql.selectList("CompanyInfo.findSearch", params);
+    }
+
     public int countByKeyword(Map<String, Object> params) {
         return sql.selectOne("CompanyInfo.countByKeyword", params);
     }
