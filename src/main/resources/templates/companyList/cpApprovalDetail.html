@@ -4,9 +4,6 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 
-<!--<html lang="kr" xmlns:th="http://www.thymeleaf.org"-->
-<!--      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">-->
-<!--<script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>-->
 <body>
         <div class="cui_content">
             <div class="cui_main">
@@ -462,7 +459,7 @@
         let comCode = document.getElementById('COM_CODE').value ;
         if(!prePage){
             let url = "/admin/companyInfo/cpApproval";
-            renderContent(url,true);
+            location.href =url ;
         }else{
             let url = "/admin/companyInfo/cpMainListDetail?com_code="+comCode;
             location.href = url;
@@ -494,7 +491,6 @@
            return response.blob();
        })
        .then(blob => {
-           // Blob URL 생성
            const url = window.URL.createObjectURL(blob);
            const a = document.createElement('a');
            a.href = url;
@@ -506,6 +502,7 @@
        })
        .catch(error => {
            console.error('파일 다운로드 실패:', error);
+           showAlert('warning', '파일 다운로드 실패.');
        });
    }
 
