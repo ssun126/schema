@@ -3,14 +3,6 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
-<style>
-    #CpCode {
-        z-index: 1050; /* 두 번째 모달은 첫 번째보다 높은 z-index */
-        top: 60%;
-        left: 70%;
-        transform: translate(-60%, -70%);
-    }
-</style>
 <body>
 <div class="cui_content">
     <div class="cui_main">
@@ -22,23 +14,23 @@
         <div class="cui_body">
             <form id="searchForm" method="get">
                 <div class="cui_search">
-                    <div class="search_list cui_grid_wrap ">
+                    <div class="search_list cui_grid_wrap " id="searchArea">
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체코드"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" data-langsid="업체코드를 입력해주세요" placeholder=""/>
+                                <input class="cui_text_field" type="text" id="searchCode" name="searchCode" search="searchBtn" data-langsid="업체코드를 입력해주세요" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" data-langsid="업체명을 입력해주세요" placeholder=""/>
+                                <input class="cui_text_field" type="text" id="searchName" name="searchName" search="searchBtn" data-langsid="업체명을 입력해주세요" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchFactory">
+                                <select class="cui_select_field" id="searchFactory" name="searchFactory">
                                     <option value="CODEGROUP" data-langsid="선택" selected></option>
                                     <option value="BASECODE" data-langsid="사업본부"></option>
                                 </select>
@@ -47,12 +39,12 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchNation">
+                                <input class="cui_text_field" type="text" id="searchNation" name="searchNation" search="searchBtn">
                             </div>
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="button" class="cui_button primary search_btn" id="searchBtn"><span data-langsid="검색"></span></button>
+                        <button type="button" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
             </form>
@@ -61,36 +53,13 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button secondary" onclick="modal_open('CpCodeMgmt','add', '', '')"><span data-langsid="추가"></span></button>
+                    <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
                     <button type="button" class="cui_button secondary" onclick="delCompany()"><span data-langsid="삭제"></span></button>
                     <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀다운로드"></span></button>
                 </div>
             </div>
 
-            <table class="cui_table center" id="companyTable">
-                <colgroup>
-                    <col style="width:50px;">
-                    <col style="width:130px;">
-                    <col>
-                    <col style="width:130px;">
-                    <col style="width:80px;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th><span>선택</span></th>
-                    <th><span>업체코드</span></th>
-                    <th><span>업체명</span></th>
-                    <th><span>국가</span></th>
-                    <th><span>구분</span></th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-            <div id="pagination" class="pagination" style="text-align: center"></div>
-            <div class="table-wrapper">
-            </div>
+            <div id="gridArea" gridYN=""></div>
         </div>
     </div>
 </div>
@@ -101,44 +70,45 @@
                 <div class="main_label"><span id="modalTitle" data-langsid="신규추가"></span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCodeMgmt')"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
             </div>
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_section" data-legend="true" name="formCpCodeMgmt">
+                <form class="cui_form_section" data-legend="true" name="formCpCodeMgmt" onsubmit="return false;">
+                    <input type="hidden" name="CpCodeMgmtMode" value="add">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체 코드"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyCode" name="COM_CODE" class="cui_text_field fixdata">
-                                <button type="button" class="cui_button icon" data-cui-icon="search" id="getCpCode"><span data-langsid="검색"></span></button>
+                                <input type="text" id="COM_CODE" name="COM_CODE" class="cui_text_field fixdata" reqcheck="reqcheck" data-messages="업체 코드를 입력하세요." messages="">
+                                <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyName" name="COM_NAME" class="cui_text_field fixdata">
+                                <input type="text" id="COM_NAME" name="COM_NAME" class="cui_text_field fixdata" disabled="disabled" reqcheck="reqcheck" data-messages="업체명을 입력하세요." messages="">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
-                            <div class="item_content">
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label>
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label>
-                                <label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>에너지 기능재료 사업부</span></label>
+                            <div class="item_content" style="display:table;">
+                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label></div>
+                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label></div>
+                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>에너지 기능재료 사업부</span></label></div>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
-                                <input id="modalCompanyNation" name="COM_NATION" class="cui_text_field ">
+                                <input type="text" id="COM_NATION" name="COM_NATION" class="cui_text_field " disabled="disabled">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사용"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field wide" id="modalCompanyStatus" name="COM_STATUS">
+                                <select class="cui_select_field wide" id="COM_STATUS" name="COM_STATUS">
                                     <option value="Y">Y</option>
                                     <option value="N">N</option>
                                 </select>
@@ -147,8 +117,8 @@
 
                         <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                             <div class="item_content">
-                                <button type="submit" id="CpCodeMgmtAdd" class="cui_button primary"><span data-langsid="저장"></span></button>
-                                <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" onClick="modal_close('CpCodeMgmt')"><span data-langsid="닫기"></span></button>
+                                <button type="button" id="CpCodeMgmtAdd" class="cui_button primary" onclick="addComCodeSave();"><span data-langsid="저장"></span></button>
+                                <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -157,220 +127,192 @@
         </div>
     </div>
 </div>
-
-<div class="cui_dialog" style="width:400px;display:none;" id="CpCode">
-    <div class="dialog_container">
-        <div class="dialog_head">
-            <div class="dialog_title">
-                <div class="main_label"><span data-langsid="업체코드 선택"></span></div>
-            </div>
-            <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('CpCode')"><span>Close</span></button>
-            </div>
-        </div>
-        <div class="dialog_body">
-            <div class="body_root">
-                <form class="cui_form_section" data-legend="true" id="formCpCode">
-                    <table class="cui_table center" id="cpCodeTable">
-                        <colgroup>
-                            <col style="width:50px;">
-                            <col style="width:130px;">
-                            <col>
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span data-langsid="업체코드"></span></th>
-                            <th><span data-langsid="업체명"></span></th>
-                            <th><span data-langsid="국가"></span></th>
-                            <th><span data-langsid="선택"></span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <script>
-    $(document).ready(function() {
-        $('#searchBtn').click();
+var addOpen = function () {
+    $("#modalTitle").html(siteLang.getLang("신규추가"));
+    $("#modalTitle").attr("data-langsid", siteLang.getLang("신규추가"));
+    $("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val("add");
 
-          //업체 정보 추가
-        $("form[name='formCpCodeMgmt']").on('submit', function(e) {
-            e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
+    $("#CpCodeMgmt").find("input[name=COM_CODE]").val("");
+    $("#CpCodeMgmt").find("input[name=COM_NAME]").val("");
+    $("#CpCodeMgmt").find("input[name=COM_NATION]").val("");
+    $("#CpCodeMgmt").find("select[name=COM_STATUS]").val("Y");
+    // 사업본부 체크 박스 구현후 수정 필요
+    Common.Dialog({ obj : $("#CpCodeMgmt"), blockClose : false });
+}
 
-            // 폼 데이터를 직렬화하여 가져오기
-            var CpCodeDTO = {
-                COM_CODE: $('#modalCompanyCode').val(),
-                COM_NAME: $('#modalCompanyName').val(),
-                COM_NATION: $('#modalCompanyNation').val(),
-                COM_STATUS: 'Y'
-            };
-            console.log("formData>>>>>>>>>"+JSON.stringify(CpCodeDTO));
-            $.ajax({
-                type: 'POST',
-                url: '/companyInfo/setCompanyData',  //'/admin/companyInfo/company/save',    //
-                contentType: 'application/json',
-                data: JSON.stringify(CpCodeDTO),
-                success: function(response) {
-                    console.log('Form successfully submitted!', response);
-                    // 성공적으로 제출 후
-                    modal_close('CpCodeMgmt'); //모달 닫기
-                    $('#searchBtn').click(); //리스트 새로 로드
-                },
-                error: function(xhr, status, error) {
-                    console.error('Form submission failed:', error);
+var addComCodeSave = function() {
+    if (Common.Validate($("#CpCodeMgmt")) == true) {
+        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                if (Common.Validate($("#CpCodeMgmt")) == true) {
+                    if ($("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val() == "edit") {
+                        alert("수정 저장 로직 구현 필요");
+                        return;
+                    }
+
+                    Common.Loading.Show();
+
+                    setTimeout(function () {
+                        var ReqInfo = new Common.RequestInfo();
+                        ReqInfo.AddParameter("COM_CODE", $("#CpCodeMgmt").find("input[name=COM_CODE]").val());
+                        ReqInfo.AddParameter("COM_NAME", $("#CpCodeMgmt").find("input[name=COM_NAME]").val());
+                        ReqInfo.AddParameter("COM_NATION", $("#CpCodeMgmt").find("input[name=COM_NATION]").val());
+                        ReqInfo.AddParameter("COM_STATUS", $("#CpCodeMgmt").find("select[name=COM_STATUS]").val());
+
+                        Common.Ajax("/companyInfo/setCompanyData", ReqInfo, function (response) {
+                            if (response == "Form submitted successfully!") {
+                                $("#CpCodeMgmt").data("Hide")();
+                                ListSearch();
+                                Common.Loading.Hide();
+                            } else {
+                                Common.Loading.Hide();
+                                Common.Msg(response);
+                            }
+                        }, { contentType : "application/json" });
+                    }, 10);
                 }
-            });
+            }
         });
+    }
+}
 
-        // 검색 버튼 클릭 시
-        $('#searchBtn').on('click', function() {
-            var name = $('#searchName').val();  // 업체명
-            var code = $('#searchCode').val();  // 업체 코드
-            var nation = $('#searchNation').val();  // 국가
+var selCpCodeOpen = function () {
+    Common.Dialog({ url : "/admin/companyInfo/cpCodeApiList" });
+}
 
-            $.ajax({
-                url: '/companyInfo/searchCompanies',  // 서버의 검색 API URL
-                type: 'GET',
-                data: {
-                    name: name,      // 업체명
-                    code: code,      // 업체 코드
-                    nation: nation,  // 국가
-                    pageNum: 1,      // 기본값으로 첫 페이지
-                    amount: 20       // 한 페이지에 표시할 항목 수
-                },
-                success: function(response) {
-                    // 테이블에 결과 채우기
-                    var tableBody = $('#companyTable tbody');
-                    tableBody.empty();  // 기존 내용 비우기
-
-                    // 검색된 결과를 테이블에 추가
-                    response.resultList.forEach(function(company) {
-                         var row = '<tr>' +
-                                     (company.COM_STATUS === 'N' ?
-                                        '<td><input type="checkbox" id=\'' + company.COM_CODE + '\'></td>' :
-                                        '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
-                                        '<td>' + company.COM_CODE + '</td>' +
-                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'CpCodeMgmt\', \'detail\', \'/companyInfo/getCompanyData\', \''+ company.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
-                                        '<td>' + company.COM_NATION + '</td>' +
-                                        '<td>' + company.COM_STATUS + '</td>' +
-                                      '</tr>';
-                        tableBody.append(row);  // 테이블에 새 행 추가
-                    });
-
-                    // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
-                    updatePagination(response.pageMaker);
-                },
-                error: function() {
-                    alert("검색 결과를 가져오는 데 실패했습니다.");
-                }
-            });
-        });
-        // 업체코드 검색
-        $('#getCpCode').on('click', function() {
-            var param = {
-                    pageNum: 1,      // 기본값으로 첫 페이지
-                    amount: 20       // 한 페이지에 표시할 항목 수
-                };
-            modal_open('CpCode', 'second', '/companyInfo/companyList', param) //모달창 오픈
-        });
-    });
-
-
-
-     // 페이지네이션 처리 함수 (updatePagination)
-    function updatePagination(pageMaker) {
-        var paginationHtml = '';
-        var currentPage = pageMaker.criteria.pageNum;
-        var startPage = pageMaker.startPage;
-        var endPage = pageMaker.endPage;
-        var totalPages = pageMaker.totalPages;
-
-        // 이전 페이지 버튼
-        if (currentPage > 1) {
-            paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+var delCompany = function () {
+    var grid = $("#gridArea").pqGrid("instance");
+    for (j = 0; j < grid.pdata.length; j++) {
+        if (grid.pdata[j]["CHECK_YN"] == true) {
+            alert("삭제체크 : " + grid.pdata[j]["COM_CODE"]);
         }
+    }
+}
 
-        // 페이지 번호
-        for (var i = startPage; i <= endPage; i++) {
-            if (i === currentPage) {
-                paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
+var ListSearch = function () {
+    var url = "/companyInfo/listSearchCompanies";
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter($("#searchArea"));
+
+    Common.Ajax(url, ReqInfo, function (data) {
+        var dataJson = JSON.parse(data);
+
+        for (var i = 0; i < dataJson.length; i++) {
+            dataJson[i].CHECK_YN = false;
+            if (dataJson[i].COM_STATUS == "Y") {
+                dataJson[i].COM_STATUS_NAME = siteLang.getLang("사용");
             } else {
-                paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
+                dataJson[i].COM_STATUS_NAME = siteLang.getLang("미사용");
             }
         }
 
-        // 다음 페이지 버튼
-        if (currentPage < totalPages) {
-            paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
+        $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+        $("#gridArea").pqGrid("refreshView");
+    });
+}
+
+$(function () {
+    var heightMinus = 330;
+
+    var data = [];
+
+    var obj = {
+        bubble: false,
+        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+        editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+        editModel: { clicksToEdit: 2 },
+        selectionModel: { type: 'cell', mode: 'block' },
+        height: $(window).height() - heightMinus,
+        title: "",
+        sortable: false,
+        resizable: true,
+        menuIcon: true,
+        scrollModel: { autoFit: false },
+        hoverMode: 'row',
+        rowHtHead: 30,
+        rowHt:30,
+        roundCorners: false,
+        rowBorders: true,
+        showBottom: true,
+        showHeader: true,
+        showTitle: true,
+        showTop: false,
+        showToolbar: true,
+        stripeRows: true,
+        wrap: false,
+        autoAddRow: false,
+        freezeCols:0,
+        autoRow: false,
+        autoRowHead: false,
+        rowInit: function () {
+            return { style: 'font-size:12px;' };
+        },
+        selectChange: function (event, ui) {
+        },
+        rowClick: function (event, ui) {
+        },
+        cellClick: function (event, ui) {
+        },
+        rowDblClick: function (event, ui) {
+            var data = ui.rowData;
+            $("#modalTitle").html(siteLang.getLang("수정"));
+            $("#modalTitle").attr("data-langsid", siteLang.getLang("수정"));
+            $("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val("edit");
+
+            $("#CpCodeMgmt").find("input[name=COM_CODE]").val(data.COM_CODE);
+            $("#CpCodeMgmt").find("input[name=COM_NAME]").val(data.COM_NAME);
+            $("#CpCodeMgmt").find("input[name=COM_NATION]").val(data.COM_NATION);
+            $("#CpCodeMgmt").find("select[name=COM_STATUS]").val(data.COM_STATUS);
+            // 사업본부 체크 박스 구현후 수정 필요
+
+            Common.Dialog({ obj : $("#CpCodeMgmt"), blockClose : false });
+        },
+        rowSelect: function (event, ui) {
+        },
+        open: function () {
+        },
+        headerCellClick: function (event, ui) {
         }
+    };
+    obj.colModel = [
+        {
+            dataIndx: "CHECK_YN", width: 50, halign: "center", align: "center", resizable: true,
+            title: "",
+            type: 'checkBoxSelection', sortable: true, editor: true, editable: true,
+            dataType: 'bool',
+            cb: {
+                all: false,
+                header: false
+            }, render: function (ui) {
+                if (ui.cellData == undefined) {
+                    return { text: "" };
+                } else {
+                    return;
+                }
+            }
+        },
+        { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+        { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+        { data_langsid: "국가", title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: true, editor: false, editable: false },
+        { data_langsid: "구분", title: siteLang.getLang("구분"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_STATUS_NAME", sortable: true, editor: false, editable: false },
+        { data_langsid: "", title: "", hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_STATUS", sortable: true, editor: false, editable: false }
+    ];
+    obj.dataModel = { data: data };
+    $("#gridArea").pqGrid(obj);
+    $("#gridArea").attr("gridYN", "Y");
 
-        // 페이지네이션 HTML 업데이트
-        $('#pagination').html(paginationHtml);
+    $(window).resize(function () {
+        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+        $("#gridArea").pqGrid("refreshView");
+    });
+});
 
-        // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-        $('.page, .prev, .next').on('click', function(event) {
-            event.preventDefault();
-            var pageNum = $(this).data('page');
-            //searchCompanies(pageNum);
-        });
-    }
-
-    //상세 항목 정보 - Ajax로 받아온 데이터 바인딩
-    function bindModalData(status, data) {
-        const searchButton = document.querySelector('[data-cui-icon="search"]');
-        if (searchButton) { //업체 검색 버튼 가리기
-          searchButton.style.display = 'none';
-        }
-        $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-        $('#modalCompanyCode').val(data.COM_CODE);
-        $('#modalCompanyName').val(data.COM_NAME);
-        $('#modalCompanyNation').val(data.COM_NATION);
-
-        //업체코드 수정 불가 처리
-        $('#modalCompanyCode').attr("readonly",true);
-        //COM_Status는 select box 타입으로 처리
-        const statusSelect = document.getElementById("modalCompanyStatus");
-        statusSelect.value = data.COM_STATUS; // COM_STATUS을 표시
-    }
-
-    //엑셀 다운로드
-    function downloadExcel() {
-        // 버튼 클릭 시 서버에서 엑셀 파일을 다운로드하도록 요청
-        window.location.href = '/companyInfo/downloadExcel';  // 서버 엔드포인트로 이동
-    }
-
-
-
-    //두번째 모달 응답 정보 - Ajax로 받아온 데이터 바인딩
-    function bindModalData2(status, data) {
-        // 테이블에 결과 채우기
-        var tableBody = $('#cpCodeTable tbody');
-        tableBody.empty();  // 기존 내용 비우기
-
-        // 검색된 결과를 테이블에 추가
-        data.forEach(function(company) {
-            var row = '<tr>' +
-                            '<td>' + company.COM_CODE + '</td>' +
-                            '<td>' + company.COM_NAME + '</a></td>' +
-                            '<td>' + company.COM_NATION + '</td>' +
-                            '<td><button type="button" class="cui_button secondary" onClick="setCpCd(\''+company.COM_CODE+ '\', \''+company.COM_NAME+ '\')">선택</button></td>' +
-                          '</tr>';
-            tableBody.append(row);  // 테이블에 새 행 추가
-        });
-    }
-    //선택된 업체코드, 업체명 셋팅
-    function setCpCd(code, name){
-        modal_close('CpCode');
-        $('#modalCompanyCode').val(code);
-        $('#modalCompanyName').val(name);
-    }
-
+$(document).ready(function() {
+    ListSearch();
+});
 </script>
 </body>
 </html>

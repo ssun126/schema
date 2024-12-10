@@ -173,7 +173,7 @@
 <script>
 
     $(document).ready(function() {
-
+      preSearchSetting();
       fetchDataLis();
 
       history.replaceState({ comCode: null }, null, location.href);
@@ -184,8 +184,6 @@
           const useridx = $(this).data("useridx");
           const url = "/admin/companyInfo/cpMainListDetail?com_code=" + code  ;
           let urlOri = "/admin/companyInfo/cpMainList";
-
-          history.pushState({ comCode: code }, null, urlOri);
 
           sessionStorage.setItem('comCode', code);
 
@@ -203,12 +201,7 @@
               sessionStorage.setItem(key, queryParams[key]);
           });
 
-          renderContent(url,false);
-      });
-
-       window.addEventListener("popstate", function(event) {
-          let url = "/admin/companyInfo/cpMainList";
-          renderContent(url,true);
+           location.href = url;
       });
 
   });
@@ -241,7 +234,6 @@
           return response.json();
       })
       .then(data => {
-           console.log('응답 데이터:', data);
            if (data && Array.isArray(data)) {
                 populateTable(data);
            } else {
@@ -286,29 +278,6 @@
     });
    }
 
-   function renderContent(url,searchList) {
-       $(".cui_content").fadeOut(200, function() {
-           $.ajax({
-               url: url,
-               type: "GET",
-               success: function(response) {
-                   const sanitizedResponse = response
-                       .replace(/<script(?![^>]*id\s*=\s*['"][^'"]*detailscript[^'"]*['"])[^>]*>[\s\S]*?<\/script>/gi, "")
-                       .replace(/<link[^>]*>/gi, "");
-
-                   $(".cui_app").html(sanitizedResponse).fadeIn(200);
-
-                    if(searchList){
-                       preSearchSetting();
-                    }
-               },
-               error: function() {
-                   console.log("콘텐츠 로드 실패");
-               }
-           });
-       });
-    }
-
    function preSearchSetting() {
       const storedCode = sessionStorage.getItem('comCode');
        if (storedCode) {
@@ -321,12 +290,7 @@
                 document.getElementById('pointTo').value = sessionStorage.getItem('COM_AUDIT_POINT_TO');
                 $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
        }
-       fetchDataLis();
+
    }
-
-
-<!--   const goDetail = (com_code) => {-->
-<!--       location.href = '/admin/companyInfo/cpMainListDetail?com_code='+com_code;-->
-<!--   }-->
 
 </script>

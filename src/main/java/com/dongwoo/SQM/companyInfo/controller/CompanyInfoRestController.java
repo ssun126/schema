@@ -4,8 +4,10 @@ import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
+import com.dongwoo.SQM.companyInfo.dto.PartCodeDTO;
 import com.dongwoo.SQM.companyInfo.dto.SearchResult;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -44,6 +47,26 @@ public class CompanyInfoRestController {
         return new SearchResult(companyInfoList, pageMaker);
     }
 
+    //
+    @PostMapping("/listSearchCompanies")
+    public List<CompanyInfoDTO> listSearchCompanies(HttpServletRequest req) {
+        String name = req.getParameter("searchName");
+        String code = req.getParameter("searchCode");
+        String nation = req.getParameter("searchNation");
+
+        // 검색 결과와 페이지
+        return companyInfoService.listSearchCompanies(name, code, nation);
+    }
+
+    @PostMapping("/companyApiList")
+    public List<HashMap> companyApiList(HttpServletRequest req) {
+        String name = req.getParameter("searchNameCpCode");
+        String code = req.getParameter("searchCodeCpCode");
+
+        // 검색 결과와 페이지
+        return companyInfoService.companyApiList(name, code);
+    }
+
     //업체 정보 가져오기
     @GetMapping("/getCompanyData")
     public ResponseEntity<?> getCompanyData(@RequestParam("param1")String param) {
@@ -60,14 +83,18 @@ public class CompanyInfoRestController {
     //업체정보 신규 저장
     @PostMapping("/setCompanyData")
     public ResponseEntity<?> setCompanyData(@RequestBody CpCodeDTO cpCodeDTO) {
-        log.info("companyInfoDTO??????????????    "+cpCodeDTO);
-        int resultCnt = companyInfoService.save(cpCodeDTO);
+        try {
+            int resultCnt = companyInfoService.save(cpCodeDTO);
 
-        // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
-        if(resultCnt > 0){
-            return ResponseEntity.ok("Form submitted successfully!");
-        }else{
-            return ResponseEntity.ok("Form submitted fail!");
+            // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
+            if(resultCnt > 0){
+                return ResponseEntity.ok("Form submitted successfully!");
+            }else{
+                return ResponseEntity.ok("Form submitted fail!");
+            }
+        } catch (Exception e) {
+            log.info("저장 에러!!!: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 에러 발생");
         }
     }
 

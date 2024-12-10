@@ -3,6 +3,7 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
+
 <body>
         <div class="cui_content">
             <div class="cui_main">
@@ -14,7 +15,7 @@
                 <div class="cui_body">
                     <form id="updateForm" method="POST" action="/companyInfo/mainUpdate"  class="cui_form_section">
                         <fieldset>
-                            <legend><span>업체 기본정보</span></legend>
+                            <legend><span data-langsid="업체 기본정보"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
                                     <col style="width:154px;">
@@ -24,7 +25,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>Vendor 번호</span></th>
+                                    <th><span data-langsid="Vendor 번호"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -33,7 +34,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>귀사 정보</span></th>
+                                    <th><span data-langsid="귀사 정보"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -43,26 +44,26 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>Vendor 업종 형태</span></th>
+                                    <th><span data-langsid="Vendor 업종 형태"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <label class="cui_checkbox">
                                                     <input type="radio" name="VENDOR_WORK_KIND" value="D" id="Manufacturer"
                                                            th:checked="${member.VENDOR_WORK_KIND == 'D'}" disabled>
-                                                    <i></i><span>제조사</span>
+                                                    <i></i><span data-langsid="제조사"></span>
                                                 </label>
 
                                                 <label class="cui_checkbox">
                                                     <input type="radio" name="VENDOR_WORK_KIND" value="L" id="Logistics"
                                                            th:checked="${member.VENDOR_WORK_KIND == 'L'}" disabled>
-                                                    <i></i><span>물류사</span>
+                                                    <i></i><span data-langsid="물류사"></span>
                                                 </label>
 
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>국가</span></th>
+                                    <th><span data-langsid="국가"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -72,7 +73,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>회사명</span></th>
+                                    <th><span data-langsid="회사명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -80,7 +81,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>제조 공장명</span></th>
+                                    <th><span data-langsid="제조 공장명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -90,7 +91,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>사업자 등록번호</span></th>
+                                    <th><span data-langsid="사업자 등록번호"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -98,7 +99,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>회사주소 (영문)</span></th>
+                                    <th><span data-langsid="회사주소"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -108,7 +109,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>CEO 성명(영문)</span></th>
+                                    <th><span data-langsid="CEO 성명"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -116,7 +117,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <th><span>CEO 연락처(영문)</span></th>
+                                    <th><span data-langsid="CEO 연락처"></span></th>
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -126,7 +127,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><span>CEO e-mail(영문)</span></th>
+                                    <th><span data-langsid="CEO e-mail"></span></th>
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
@@ -233,7 +234,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <button type="button" class="cui_button"  onclick ="downloadFile()"><span>보기</span></button>
+                                        <button type="button" class="cui_button"  onclick ="downloadFile()"><span data-langsid="보기"></span></button>
                                         <input type="hidden" name ="COM_FILE_NAME" id="COM_FILE_NAME"  th:value="${member.COM_FILE_NAME}" >
                                     </td>
                                 </tr>
@@ -361,7 +362,7 @@
                     <fieldset>
 
                         <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">반려사유</strong>
+                            <strong class="item_label" data-langsid="반려사유"></strong>
                             <div class="item_content">
                                 <textarea  style="height:80px;" class="cui_text_field" id="RETURN_REASON" name="RETURN_REASON"></textarea>
                             </div>
@@ -370,7 +371,7 @@
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
                                 <button type="button" class="cui_button primary" th:onClick="'reject(' + ${companyApprovalID.USER_IDX} + ')'"><span data-langsid="반려 처리"></span></button>
-                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span >data-langsid="닫기"</span></button>
+                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -458,7 +459,7 @@
         let comCode = document.getElementById('COM_CODE').value ;
         if(!prePage){
             let url = "/admin/companyInfo/cpApproval";
-            renderContent(url,true);
+            location.href =url ;
         }else{
             let url = "/admin/companyInfo/cpMainListDetail?com_code="+comCode;
             location.href = url;
@@ -473,7 +474,6 @@
        let comCode = document.getElementById('COM_CODE').value ;
 
        if(fileName == ""){
-           //alert('첨부된 파일이 없습니다.') ;
            showAlert('warning', '첨부된 파일이 없습니다.');
            return;
        }
@@ -491,7 +491,6 @@
            return response.blob();
        })
        .then(blob => {
-           // Blob URL 생성
            const url = window.URL.createObjectURL(blob);
            const a = document.createElement('a');
            a.href = url;
@@ -503,6 +502,7 @@
        })
        .catch(error => {
            console.error('파일 다운로드 실패:', error);
+           showAlert('warning', '파일 다운로드 실패.');
        });
    }
 
