@@ -378,6 +378,32 @@ siteLang.showLangs = function (obj) {
         } catch (e) {
         }
     });
+
+    obj.find('div[gridYN=Y]').each(function () {
+        var grid = $(this).pqGrid("instance");
+        var colModel = grid.getColModel();
+
+        for (j = 0; j < colModel.length; j++) {
+            var kor = colModel[j].data_langsid;
+
+            try {
+                const item = siteLang.langsData.find(entry => entry.KOR === kor);
+                if (item && item[siteLang.selLang]) {
+                    colModel[j].title = item[siteLang.selLang];
+                }
+                else
+                {
+                    siteLang.devDBSet(kor);
+                    colModel[j].title = kor;
+                }
+            } catch (e) {
+            }
+        }
+
+        grid.option( "colModel", colModel );
+        grid.refreshCM();
+        grid.refreshView();
+    });
 }
 siteLang.getLang = function (kor) {
     try {
