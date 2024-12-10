@@ -1,21 +1,20 @@
 package com.dongwoo.SQM.companyInfo.service;
 
-import com.dongwoo.SQM.board.dto.BoardDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.repository.CompanyInfoRepository;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
-import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
-import com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CompanyInfoService {
@@ -54,7 +53,27 @@ public class CompanyInfoService {
     }
 
     public int save(CpCodeDTO cpCodeDTO) {
-        return companyInfoRepository.save(cpCodeDTO);
+        int retCntCp = 0;
+        //업체코드로 데이터 가져오기
+        CompanyInfoDTO companyInfoDTO = companyInfoRepository.findByCompanyId(cpCodeDTO.getCOM_CODE());
+        //MODE가 edit이면 UPDATE
+        if(companyInfoDTO != null){
+            //update 처리
+            retCntCp = companyInfoRepository.updateComCode(cpCodeDTO);
+            //사업본부는 삭제 후 저장
+            companyInfoRepository.deleteComCodeWork(cpCodeDTO);
+            //TO-DO 사업본부 데이터는 여러개 입력 가능해야 함
+            log.info(cpCodeDTO.getDEPT_CODES());
+            companyInfoRepository.insertComCodeWork(cpCodeDTO);
+        }else{
+            //insert 처리
+            retCntCp = companyInfoRepository.insertComCode(cpCodeDTO);
+
+            //TO-DO 사업본부 데이터는 여러개 입력 가능해야 함
+            companyInfoRepository.insertComCodeWork(cpCodeDTO);
+        }
+
+        return retCntCp;
     }
 
     public List<CompanyInfoDTO> findAll() {
@@ -71,11 +90,12 @@ public class CompanyInfoService {
         return companyInfoRepository.findByCriteria(params);
     }
 
-    public List<CompanyInfoDTO> listSearchCompanies(String name, String code, String nation) {
+    public List<CompanyInfoDTO> listSearchCompanies(String name, String code, String nation, String dept ) {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_NAME", name);
         params.put("COM_CODE", code);
         params.put("COM_NATION", nation);
+        params.put("DEPT_CODES", dept);
         return companyInfoRepository.findSearch(params);
     }
 

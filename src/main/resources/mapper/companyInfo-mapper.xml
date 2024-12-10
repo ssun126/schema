@@ -265,28 +265,61 @@
         u.user_idx =#{USER_IDX}
     </select>
 
-    <insert id="save" parameterType="companyInfo">
+    <insert id="insertComCode" parameterType="companyInfo">
         insert into SC_COMPANY_CODE(COM_CODE, COM_NAME, COM_NATION, COM_STATUS, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE,COM_MANAGE_STATUS)
         values (#{COM_CODE}, #{COM_NAME}, #{COM_NATION}, #{COM_STATUS}, 1, 1, sysdate, sysdate,1)
     </insert>
+
+    <update id="updateComCode" parameterType="companyInfo">
+        UPDATE SC_COMPANY_CODE
+        SET
+        <if test="COM_NATION != '' ">
+            COM_NATION = #{COM_NATION},
+        </if>
+        <if test="COM_STATUS != '' ">
+            COM_STATUS = #{COM_STATUS},
+        </if>
+        UP_DATE = sysdate,
+        UP_DW_USER_IDX = #{UP_DW_USER_IDX}
+        WHERE COM_CODE = #{COM_CODE}
+    </update>
+
+    <insert id="insertComCodeWork" parameterType="companyInfo">
+        insert into SC_COMPANY_CODE_WORK(COM_CODE, BASE_CODE, REG_DW_USER_IDX, REG_DATE)
+        values (#{COM_CODE},#{BASE_CODE}, #{REG_DW_USER_IDX}, sysdate)
+    </insert>
+
+    <delete id="deleteComCodeWork" parameterType="companyInfo">
+        DELETE SC_COMPANY_CODE_WORK WHERE COM_CODE = #{COM_CODE}
+    </delete>
 
     <select id="findById" parameterType="companyInfo" resultType="companyInfo">
         select * from SC_COMPANY_CODE where COM_CODE=#{COM_CODE}
     </select>
 
     <select id="findSearch" parameterType="companyInfo" resultType="companyInfo">
-        select COM_CODE, COM_NAME, COM_NATION, COM_STATUS from SC_COMPANY_CODE
-       <!-- INNER JOIN COMPANY_CODE_WORK ccw ON ccd.COM_CODE = ccw.COM_CODE-->
+        select SCC.COM_CODE, COM_NAME, COM_NATION, COM_STATUS,
+                LISTAGG(SCCW.BASE_CODE, ',') AS DEPT_CODES
+        from SC_COMPANY_CODE SCC
+        LEFT OUTER JOIN SC_COMPANY_CODE_WORK SCCW ON SCCW.COM_CODE = SCC.COM_CODE
         WHERE 1=1
         <if test="COM_CODE != '' ">
-            and COM_CODE = #{COM_CODE}
+            AND SCC.COM_CODE = #{COM_CODE}
         </if>
         <if test="COM_NAME != '' ">
-            and COM_NAME = #{COM_NAME}
+            AND COM_NAME = #{COM_NAME}
         </if>
         <if test="COM_NATION != '' ">
-            and COM_NAME = #{COM_NATION}
+            AND COM_NAME = #{COM_NATION}
         </if>
+        <if test="DEPT_CODES != '' ">
+            AND #{DEPT_CODES} IN SCCW.BASE_CODE
+        </if>
+        GROUP BY
+            SCC.COM_CODE,
+            SCC.COM_NAME,
+            SCC.COM_NATION,
+            SCC.COM_STATUS
     </select>
 
     <delete id="delete" parameterType="int">
@@ -337,17 +370,10 @@
     </select>
 
     <select id="getList" resultType="companyInfo">
-        <![CDATA[
-        SELECT RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
-        FROM
-        (
-            SELECT /*+ INDEX_DESC(SC_COMPANY_CODE PK_COMPANY_CODE) */
-            ROWNUM RN, COM_CODE, COM_NAME, COM_NATION, COM_STATUS
-            FROM SC_COMPANY_CODE
-            WHERE ROWNUM <= #{pageNum} * #{amount}
-        )
-           WHERE RN > (#{pageNum}-1) * #{amount}
-        ]]>
+        SELECT /*+ INDEX_DESC(SC_COMPANY_CODE PK_COMPANY_CODE) */
+            ROWNUM RN, SCC.COM_CODE, COM_NAME, COM_NATION, COM_STATUS,
+            (SELECT LISTAGG(SCCW.BASE_CODE, ',') WITHIN GROUP (ORDER BY SCCW.BASE_CODE) FROM SC_COMPANY_CODE_WORK SCCW WHERE SCCW.COM_CODE = SCC.COM_CODE) AS DEPT_CODES
+        FROM SC_COMPANY_CODE SCC
     </select>
 
     <select id="getApiList" parameterType="map" resultType="hashMap">
