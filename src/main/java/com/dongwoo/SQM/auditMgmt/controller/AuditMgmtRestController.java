@@ -15,6 +15,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -62,9 +64,11 @@ public class AuditMgmtRestController {
      * @return
      */
     @GetMapping("/isoAuthItemList")
+    @ResponseBody
     public List<IsoAuthItemDTO> getIsoAuthList(Criteria criteria, @RequestParam("COM_CODE") String com_code) {
         // 선택 회사의 ISO 인증서 리스트를 가져옵니다
         List<IsoAuthItemDTO> companyIsoAuthList = isoAuthService.getList(criteria, com_code);
+
         return companyIsoAuthList;
     }
 
