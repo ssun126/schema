@@ -93,7 +93,7 @@ public class CompanyInfoRestController {
                 return ResponseEntity.ok("Form submitted fail!");
             }
         } catch (Exception e) {
-            log.info("저장 에러!!!: " + e);
+            log.info("저장 에러!!!: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("저장 에러 발생");
         }
     }

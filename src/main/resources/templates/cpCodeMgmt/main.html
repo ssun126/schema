@@ -158,7 +158,7 @@ var addComCodeSave = function() {
                         var ReqInfo = new Common.RequestInfo();
                         ReqInfo.AddParameter("COM_CODE", $("#CpCodeMgmt").find("input[name=COM_CODE]").val());
                         ReqInfo.AddParameter("COM_NAME", $("#CpCodeMgmt").find("input[name=COM_NAME]").val());
-                        ReqInfo.AddParameter("COM_NATION", $("#CpCodeMgmt").find("input[name=COM_NATION]").find('#COM_NATION').val());
+                        ReqInfo.AddParameter("COM_NATION", $("#CpCodeMgmt").find("input[name=COM_NATION]").val());
                         ReqInfo.AddParameter("COM_STATUS", $("#CpCodeMgmt").find("select[name=COM_STATUS]").val());
 
                         Common.Ajax("/companyInfo/setCompanyData", ReqInfo, function (response) {

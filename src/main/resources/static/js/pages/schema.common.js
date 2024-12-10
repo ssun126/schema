@@ -386,6 +386,10 @@ siteLang.showLangs = function (obj) {
         for (j = 0; j < colModel.length; j++) {
             var kor = colModel[j].data_langsid;
 
+            if (typeof kor == "undefined" || kor == "") {
+                continue;
+            }
+
             try {
                 const item = siteLang.langsData.find(entry => entry.KOR === kor);
                 if (item && item[siteLang.selLang]) {
