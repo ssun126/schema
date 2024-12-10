@@ -430,6 +430,10 @@ $(document).ready(function () {
 });
 
 siteLang.devDBSet = function (KOR) {
+    if (typeof KOR == "undefined" || KOR == "") {
+        return;
+    }
+
     $.ajax({
     	url : '/multiLanguage/saveMultiLanguage',
     	type : "post",
