@@ -16,26 +16,34 @@
     <link rel="stylesheet" type="text/css" href="../../../plugin/pqgrid/pqgrid.min.css" >
     <link rel="stylesheet" type="text/css" href="../../../plugin/pqgrid/pqgrid.ui.min.css" >
     <link rel="stylesheet" type="text/css" href="../../../plugin/pqgrid/themes/Office/pqgrid.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/loading/iosOverlay.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/sweetalert/sweetalert2.css" >
 
     <script type="text/javascript" src="../../../plugin/jquery/jquery-3.7.1.min.js?v=20241122"></script>
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js?v=20241122"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js?v=20241122"></script>
     <script type="text/javascript" src="../../../plugin/pqgrid/pqgrid.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/loading/iosOverlay.js"></script>
+    <script type="text/javascript" src="../../../plugin/loading/spin.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/core.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/sweetalert2.min.js"></script>
     <script type="text/javascript" src="../../../js/app.js?v=20241122"></script>
     <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
     <title>SCHEMA</title>
     <style>
-        tr.pq-grid-oddRow > td.pq-state-select, tr.pq-grid-oddRow.pq-state-select, tr.pq-grid-oddRow > .pq-grid-cell-hover, tr.pq-grid-oddRow.pq-grid-row-hover, td.pq-state-select-hover {background:#feffee;color:#333;};
+        tr.pq-grid-oddRow > td.pq-state-select, tr.pq-grid-oddRow.pq-state-select, tr.pq-grid-oddRow > .pq-grid-cell-hover, tr.pq-grid-oddRow.pq-grid-row-hover, td.pq-state-select-hover {
+            background:#f8f9de;color:#333;
+        };
         .ui-state-hover {
-            background: #feffee;
+            background: #f8f9de;
             color:#333;
         }
         .pq-grid-row-hover.ui-state-hover {
-            background: #feffee;
+            background: #f8f9de;
             color:#333;
         }
         .pq-state-select.ui-state-highlight {
-            background: #feffee;
+            background: #f8f9de;
             color:#333;
         }
     </style>

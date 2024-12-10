@@ -49,11 +49,11 @@ public class MultiLanguageController {
     }
 
     @PostMapping("/multiLanguage/saveMultiLanguage")
-    public @ResponseBody void saveMultiLanguage(@RequestParam() String KOR)  throws Exception{
+    public @ResponseBody void saveMultiLanguage(@RequestParam("KOR") String KOR)  throws Exception{
         //System.out.println("saveMultiLanguage????"+KOR);
         List<HashMap> multiLangsList =  multiLanguageService.getMultiLangs_HashMap(KOR);
 
-        if (multiLangsList.size() == 0) {
+        if (multiLangsList.isEmpty()) {
             multiLanguageService.saveMultiLanguage(KOR);
         }
     }

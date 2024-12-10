@@ -198,7 +198,7 @@
     function approveIsoAuth(key) {
         const comCode = `[[${companyAuth.COM_CODE}]]`;
         const authCode = key;
-        const state = 'APPROVE';
+        const state = 'APPROVED';
         $.ajax({
             url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
             type: 'POST',

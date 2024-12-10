@@ -350,6 +350,18 @@
         ]]>
     </select>
 
+    <select id="getApiList" parameterType="map" resultType="hashMap">
+        select COM_CODE, COM_NAME, COM_NATION, COM_STATUS from SC_COMPANY_CODE
+        <!-- INNER JOIN COMPANY_CODE_WORK ccw ON ccd.COM_CODE = ccw.COM_CODE-->
+        WHERE 1=1
+        <if test="COM_CODE != '' ">
+            and COM_CODE = #{COM_CODE}
+        </if>
+        <if test="COM_NAME != '' ">
+            and COM_NAME = #{COM_NAME}
+        </if>
+    </select>
+
     <select id="getTotal" resultType="int">
         select count(*) CNT
         from SC_COMPANY_CODE

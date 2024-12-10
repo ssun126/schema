@@ -79,6 +79,13 @@ public class CompanyInfoService {
         return companyInfoRepository.findSearch(params);
     }
 
+    public List<HashMap> companyApiList(String name, String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_NAME", name);
+        params.put("COM_CODE", code);
+        return companyInfoRepository.getApiList(params);
+    }
+
     // 검색 조건에 맞는 총 개수를 반환
     public int getTotalByKeyword(String name, String code, String nation) {
         Map<String, Object> params = new HashMap<>();

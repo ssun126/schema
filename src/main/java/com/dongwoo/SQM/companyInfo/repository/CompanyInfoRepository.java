@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -96,5 +97,9 @@ public class CompanyInfoRepository {
 
     public int countByKeyword(Map<String, Object> params) {
         return sql.selectOne("CompanyInfo.countByKeyword", params);
+    }
+
+    public List<HashMap> getApiList(Map<String, Object> params) {
+        return sql.selectList("CompanyInfo.getApiList", params);
     }
 }
