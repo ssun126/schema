@@ -2,6 +2,7 @@ package com.dongwoo.SQM.partMgmt.controller;
 
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +62,7 @@ public class PartMgmtController {
             PartMgmtDTO parmDTO = new PartMgmtDTO();
             parmDTO.setPM_PART_CODE(code);
             parmDTO.setPM_PART_NAME(name);
-            parmDTO.setPM_REG_USER(reguser);
+            parmDTO.setREG_USER(reguser);
             parmDTO.setPM_PLANT(plant);
             parmDTO.setPM_ACTIVE_YN(useyn);
             parmDTO.setPM_APPROVAL_STATUS(approval);
@@ -95,10 +97,22 @@ public class PartMgmtController {
     }
 
     @PostMapping("/setPartMgmtData")
-    public ResponseEntity<?> insertData(@RequestBody PartMgmtDTO partMgmtDTO) {
+    public ResponseEntity<?> insertData(@RequestBody PartMgmtDTO partMgmtDTO
+                                        , @AuthenticationPrincipal UserCustom user) {
         log.info("PartMgmtDTO??????????????????"+partMgmtDTO);
 
-        int resultCnt = partMgmtService.save(partMgmtDTO);
+        partMgmtDTO.setPM_REG_USER_IDX(user.getUSER_IDX());
+        partMgmtDTO.setPM_COM_CODE(user.getCOM_CODE());
+
+        int resultCnt = 0;
+
+        if(partMgmtDTO.getPM_IDX() == 0){
+            //insert
+            resultCnt = partMgmtService.save(partMgmtDTO);
+        }else{
+            //update
+            resultCnt = partMgmtService.updatePartMgmt(partMgmtDTO);
+        }
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
         if(resultCnt > 0){
@@ -109,6 +123,33 @@ public class PartMgmtController {
 
     }
 
+
+    ///getPartMgmtData
+    @GetMapping("/getPartMgmtData")
+    public ResponseEntity<?> getPartMgmtData(@RequestParam("param1") String idx) {
+        PartMgmtDTO partMgmtDTO = partMgmtService.getPartMgmtData(idx);
+
+        if (partMgmtDTO != null) {
+            return ResponseEntity.ok().body(partMgmtDTO);  // 회사 정보가 있을 경우 frvv5cov응답
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found.");
+        }
+    }
+
+    @GetMapping("/deletePartMgmt")
+    public ResponseEntity<?> deletePartMgmt(@RequestParam("ARR_PM_IDX") String arrIdx){
+        //int delResult = partMgmtService.deletePartMgmt(arrIdx);
+        int delResult =0;
+
+        if(delResult > 0) {
+            return ResponseEntity.ok("Form submitted successfully!");
+        }else{
+            return ResponseEntity.ok("Form submitted fail!");
+        }
+    }
+
+
+
     // 엑셀 파일을 다운로드하는 엔드포인트
     @GetMapping("/downloadExcel")
     public ResponseEntity<byte[]> downloadExcel(@RequestParam("code") String code, @RequestParam("name") String name,@RequestParam("reguser") String reguser,
@@ -118,7 +159,7 @@ public class PartMgmtController {
         PartMgmtDTO parmDTO = new PartMgmtDTO();
         parmDTO.setPM_PART_CODE(code);
         parmDTO.setPM_PART_NAME(name);
-        parmDTO.setPM_REG_USER(reguser);
+        parmDTO.setREG_USER(reguser);
         parmDTO.setPM_PLANT(plant);
         parmDTO.setPM_ACTIVE_YN(useyn);
         parmDTO.setPM_APPROVAL_STATUS(approval);

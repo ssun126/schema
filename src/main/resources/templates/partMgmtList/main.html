@@ -155,6 +155,7 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">자재 코드</strong>
                             <div class="item_content">
+                                <input type="hidden" name="PM_IDX"/>
                                 <input id="modalPartCode" name="PM_PART_CODE" class="cui_text_field fixdata">
                                 <button type="button" class="cui_button icon" data-cui-icon="search" id="getPartCode"><span>검색</span></button>
                             </div>
@@ -193,7 +194,7 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">Chemical 여부</strong>
                             <div class="item_content">
-                                <select class="cselect_field wide" id="modalPartChemical" name="PM_CHEMICAL_YN">
+                                <select class="cui_select_field wide" id="modalPartChemical" name="PM_CHEMICAL_YN">
                                     <option value="Y">Y</option>
                                     <option value="N">N</option>
                                 </select>
@@ -202,7 +203,7 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">취급 PLANT</strong>
                             <div class="item_content">
-                                <input id="modalPartPlant" name="PM_PART_PLANT_CODE" class="cui_text_field ">
+                                <input id="modalPartPlant" name="PM_PART_PLANT_CODE" class="cui_text_field fixdata">
                             </div>
                         </label>
 
@@ -261,21 +262,21 @@
 <script>
     $(document).ready(function() {
         $('#searchBtn').click();
-
-
-
           //업체 정보 추가
         $("form[name='formPartMgmt']").on('submit', function(e) {
             e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
 
             // 폼 데이터를 직렬화하여 가져오기
+            // 최초 자재 관리 등록 시 INACTIVE (승인 : ACTIVE, 반려 : INACTIVE)
             var PartMgmtDTO = {
+                PM_IDX : $('input[name=PM_IDX]').val() == '' ? 0:$('input[name=PM_IDX]').val(),
                 PM_PART_CODE: $('#modalPartCode').val(),
                 PM_PART_PLANT_CODE: $('#modalPartPlant').val(),
                 PM_PART_COUNTRY: $('#modalPartCountry').val(),
                 PM_QUALITY: $('select[name=PM_QUALITY]').val(),
                 PM_STATUS: $('select[name=PM_STATUS]').val(),
-                PM_CHEMICAL_YN: $('select[name=PM_CHEMICAL_YN]').val()
+                PM_CHEMICAL_YN: $('select[name=PM_CHEMICAL_YN]').val(),
+                PM_ACTIVE_YN : 'INACTIVE'
             };
             console.log("formData>>>>>>>>>"+JSON.stringify(PartMgmtDTO));
             $.ajax({
@@ -353,18 +354,23 @@
                     //response.resultList.forEach(function(partmgmt) {
                     response.forEach(function(partmgmt) {
                          var row = '<tr>' +
-                                     //(partmgmt.PM_APPROVAL_DATE === '' ?
-                                     (partmgmt.PM_APPROVAL_DATE != '' ?
-                                        '<td><input type="checkbox" id=\'' + partmgmt.PM_IDX + '\'></td>' :
+                                     //(partmgmt.PM_APPROVAL_DATE === '' ? 삭제는 승인 요청 전까지만 가능
+                                     (partmgmt.PM_REQUEST_APPROVAL_DATE != '' ?
+                                        '<td><input type="checkbox" id=\'pmIdx_' + partmgmt.PM_IDX + '\' value=\''+ partmgmt.PM_IDX +'\'></td>' :
                                         '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
-                                        '<td>' + partmgmt.PM_PART_CODE + '</td>' +
+                                        //'<td>' + partmgmt.PM_PART_CODE + '</td>' +
+                                        (partmgmt.PM_REQUEST_APPROVAL_DATE != '' ?
+                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'MODIFY\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>'  :
+                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'READ\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>' ) +  // company.COM_STATUS가 'N'이 아닌 경우에
                                         //'<td><a href="javascript:void(0);" onclick="modal_open(\'PartCode\', \'second\', \'/user/getPartCodeData\', \''+ partmgmt.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
                                         '<td><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></td>' +
                                         '<td>' + partmgmt.PM_PART_PLANT_CODE + '</td>' +
                                         '<td>' + partmgmt.PM_PART_COUNTRY + '</td>' +
                                         '<td>' + partmgmt.PM_REG_USER + '</td>' +
                                         '<td>' + partmgmt.PM_ACTIVE_YN + '</td>' +
-                                        '<td>' + partmgmt.PM_APPROVAL_STATUS + '</td>' +
+                                        '<td>' + partmgmt.PM_APPROVAL_STATUS +
+                                        ' <input type=\'hidden\' name=\'PM_REQUEST_APPROVAL_DATE\' value=\''+partmgmt.PM_REQUEST_APPROVAL_DATE+'\' >'
+                                        +'</td>' +
                                         '<td>' + partmgmt.PM_APPROVAL_DATE + '</td>' +
                                         (partmgmt.PM_APPROVAL_STATUS === '3' || partmgmt.PM_APPROVAL_STATUS === '4' ?
                                         '<td><button id=\'' + partmgmt.PM_IDX + '\'>수정</button></td>' : '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
@@ -403,26 +409,112 @@
         });
 
 
+    //삭제
+    function delPart(){
+        var selectValues = [];
+        var count = 0;
+
+        $('select[id^="pmIdx_"]').find('input:checked').each(function(){
+            var value = $(this).val();
+            var apprDate = $(this).closest("tr").find('input[name="PM_REQUEST_APPROVAL_DATE"]').val();
+            if(value ===''){
+                selectValues.push(key);
+            }else{
+                count++;
+            }
+        });
 
 
+        if(count>0){
+            showAlert('warning', '삭제할 수 없는 데이터가 있습니다');
+            return;
+        }else{
+            if(selectValues.length == 0){
+                showAlert('warning', '삭제할 데이터가 없습니다');
+            return;
+            }else{
 
-    //상세 항목 정보 - Ajax로 받아온 데이터 바인딩
-    function bindModalData(status, data) {
-        const searchButton = document.querySelector('[data-cui-icon="search"]');
-        if (searchButton) { //업체 검색 버튼 가리기
-          searchButton.style.display = 'none';
+                var app_num = selectValues.join(',');
+                $.ajax({
+                    url : '/user/partMgmt/deletePartMgmt',
+                    type : 'GET',
+                    data : {
+                        ARR_PM_IDX : app_num
+                    },
+                    success : function(response){
+                        showAlert('success', '삭제되었습니다');
+                        $('#searchBtn').click();
+                    },
+                    error : function(xhr,status,error) {
+                        console.error("error : " + error)
+                    }
+                });
+            }
+
         }
-        $('#modalTitle').text(status == 'detail'?'업체 수정':'신규 추가'); //모달창의 제목 변경
-        $('#modalCompanyCode').val(data.COM_CODE);
-        $('#modalCompanyName').val(data.COM_NAME);
-        $('#modalCompanyNation').val(data.COM_NATION);
-
-        //업체코드 수정 불가 처리
-        $('#modalCompanyCode').attr("readonly",true);
-        //COM_Status는 select box 타입으로 처리
-        const statusSelect = document.getElementById("modalCompanyStatus");
-        statusSelect.value = data.COM_STATUS; // COM_STATUS을 표시
     }
+
+
+    //모달 초기화
+    function modal_init(id,flag){
+        if(flag=="MODIFY"){
+           $(".fixdata").attr("readonly",true);
+           $("#modalPartQulity").attr("disabled", false);
+           $("#modalPartStatus").attr("disabled", false);
+           $("#modalPartChemical").attr("disabled", false);
+           //버튼 바꾸기
+            $("#getPartCode").css("display","none");
+            $("#PartCodeMgmtAdd").css("display","block");
+
+        }else if(flag=="READ"){
+            $(".fixdata").attr("readonly",true);
+            $("#modalPartQulity").attr("disabled", true);
+            $("#modalPartStatus").attr("disabled", true);
+            $("#modalPartChemical").attr("disabled", true);
+           //버튼 바꾸기
+            $("#getPartCode").css("display","none");
+            $("#PartCodeMgmtAdd").css("display","none");
+        }else{
+            //초기화
+
+            $(".fixdata").attr("readonly",false);
+            $("#modalPartQulity").attr("disabled", false);
+            $("#modalPartStatus").attr("disabled", false);
+            $("#modalPartChemical").attr("disabled", false);
+
+            document.getElementsByName("PM_IDX")[0].value = "";
+            document.getElementsByName("PM_PART_CODE")[0].value = "";
+            document.getElementsByName("PM_PART_COUNTRY")[0].value = "";
+            document.getElementsByName("PM_PART_NAME")[0].value = "";
+            document.getElementsByName("PM_PART_PLANT_CODE")[0].value = "";
+
+            $("select[name=PM_QUALITY] option:eq(0)").prop("selected", true);
+            $("select[name=PM_STATUS] option:eq(0)").prop("selected", true);
+            $("select[name=PM_CHEMICAL_YN] option:eq(0)").prop("selected", true);
+
+            //버튼 바꾸기
+            $("#getPartCode").css("display","block");
+            $("#PartCodeMgmtAdd").css("display","block");
+        }
+    }
+
+
+    function bindModalData(status, parMgmt){
+        if(parMgmt != null){
+
+            document.getElementsByName("PM_IDX")[0].value = parMgmt.PM_IDX;
+            document.getElementsByName("PM_PART_CODE")[0].value = parMgmt.PM_PART_CODE;
+            document.getElementsByName("PM_PART_COUNTRY")[0].value = parMgmt.PM_PART_COUNTRY;
+            document.getElementsByName("PM_PART_NAME")[0].value = parMgmt.PM_PART_NAME;
+            document.getElementsByName("PM_PART_PLANT_CODE")[0].value = parMgmt.PM_PART_PLANT_CODE;
+
+            $("select[name=PM_QUALITY]").val(parMgmt.PM_QUALITY).prop("selected", true);
+            $("select[name=PM_STATUS]").val(parMgmt.PM_STATUS).prop("selected", true);
+            $("select[name=PM_CHEMICAL_YN] ").val(parMgmt.PM_CHEMICAL_YN).prop("selected", true);
+
+        }
+    }
+
 
     //엑셀 다운로드
     function downloadExcel() {

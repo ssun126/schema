@@ -2,9 +2,12 @@ package com.dongwoo.SQM.partMgmt.controller;
 
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.PartDetailSvhcDTO;
+import com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO;
 import com.dongwoo.SQM.partMgmt.service.PartDetailService;
+import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
+import com.dongwoo.SQM.partMgmt.dto.partDetailDeclarDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +26,7 @@ import java.util.List;
 public class PartDetailSvhcController {
 
     private final PartDetailService partDetailService;
+    private final PartMgmtService partMgmtService;
 
     @GetMapping("/getSvhcListData")
     public @ResponseBody  List<SvhcListDTO> getSvhcData(){
@@ -45,8 +49,29 @@ public class PartDetailSvhcController {
 
         partDetailService.saveDetailSvhcData(partDetailSvhcDTO,svhcfile,user.getCOM_CODE());
 
+        if(partDetailSvhcDTO.getINFO_FLAG().equals("save")){
+            //목록
 
-        model.addAttribute("PM_IDX",pm_idx);
-        return "partMgmtList/declarationDetail";
+            List<HashMap> searchPlantList = partMgmtService.getPlantList();
+            //검색 basecode 승인현황
+            //List<HashMap> searhApprovalStatus = partMgmtService.getApprovalStatus();
+
+            model.addAttribute("searchPlantList",searchPlantList);
+            //model.addAttribute("searhApprovalStatus", searhApprovalStatus);
+
+            return "partMgmtList/main";
+        }else{
+            model.addAttribute("PM_IDX",pm_idx);
+            PartMgmtDTO partMgmtDTO = partDetailService.getPartData(pm_idx);
+            if(partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
+            model.addAttribute("partMgmtDTO",partMgmtDTO);
+            log.info("partMgmtDTO=============================" + partMgmtDTO);
+            //svhc data 들고가기
+            partDetailDeclarDTO  declarDTO = partDetailService.getDetailDeclarData(pm_idx);
+            if(declarDTO != null) model.addAttribute("declarDTO",declarDTO);
+            return "partMgmtList/declarationDetail";
+        }
+
+
     }
 }

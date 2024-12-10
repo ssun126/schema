@@ -24,6 +24,8 @@ public class PartMgmtDTO {
     private String PM_ACTIVE_YN;        //사용여부
     @JsonProperty("PM_REG_DATE")
     private String PM_REG_DATE;         //등록날짜
+    @JsonProperty("PM_REG_USER_IDX")
+    private int PM_REG_USER_IDX;         //등록자
     @JsonProperty("PM_REG_USER")
     private String PM_REG_USER;         //등록자
     @JsonProperty("PM_APPROVAL_STATUS")
@@ -31,7 +33,12 @@ public class PartMgmtDTO {
     @JsonProperty("PM_APPROVAL_DATE")
     private String PM_APPROVAL_DATE;        //승인일자
     @JsonProperty("PM_MODIFY_USER")
-    private String PM_MODIFY_USER;          //수정자
+    private int PM_MODIFY_USER;          //수정자
+    @JsonProperty("PM_REQUEST_APPROVAL_DATE")
+    private String PM_REQUEST_APPROVAL_DATE;          //승인요청날짜
+    @JsonProperty("PM_COM_CODE")
+    private String PM_COM_CODE;          //회사코드
+
 
     @JsonProperty("PM_COUNTRY")
     private String PM_COUNTRY;    //판매국가
@@ -44,5 +51,8 @@ public class PartMgmtDTO {
     private String PM_SDATE;    //검색 시작날짜
     @JsonProperty("PM_EDATE")
     private String PM_EDATE;    //검색 마지막날짜
+
+    @JsonProperty("REG_USER")
+    private String REG_USER;    //검색 등록자
 
 }

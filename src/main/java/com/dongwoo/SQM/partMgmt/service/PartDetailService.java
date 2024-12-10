@@ -37,15 +37,17 @@ public class PartDetailService {
         String orgPath= null;
 
         HashMap<String,Object> map = partMgmtRepository.getFileData(idx);
+        if(map != null){
+            orgName = (String) map.get("FILE_NAME");
+            orgPath = (String) map.get("FILE_PATH");
 
-        orgName = (String) map.get("FILE_NAME");
-        orgPath = (String) map.get("FILE_PATH");
-
-        if( orgName != null && orgPath != null ){
-            //파일 삭제
-            File file = new File(orgName+orgPath);
-            if(file.exists()) file.delete();
+            if( orgName != null && orgPath != null ){
+                //파일 삭제
+                File file = new File(orgName+orgPath);
+                if(file.exists()) file.delete();
+            }
         }
+
 
     }
 
@@ -69,6 +71,25 @@ public class PartDetailService {
         }
 
         return filePath;
+    }
+
+    //상단 공통 자재코드 정보
+    public PartMgmtDTO getPartData(String idx){
+        return partMgmtRepository.getPartData(idx);
+    }
+
+    //detail  첫번째 페이지 데이터 가져오기
+    public partDetailMsdsDTO getMsdsData(String idx) {
+        return partMgmtRepository.getMsdsData(idx);
+    }
+    public partDetailRohsDTO getRohsData(String idx) {
+        return partMgmtRepository.getRohsData(idx);
+    }
+    public partDetailHalGDTO getHalgData(String idx) {
+        return partMgmtRepository.getHalgData(idx);
+    }
+    public List<partDetailEtcDTO> getEtcData(String idx) {
+        return partMgmtRepository.getEtcData(idx);
     }
 
     public void saveMsdsData(partDetailMsdsDTO msdsDTO){
@@ -125,6 +146,10 @@ public class PartDetailService {
 
     }
 
+    public PartDetailSvhcDTO getDetailSvhcData(String idx){
+        return partMgmtRepository.getDetailSvhcData(idx);
+    }
+
     public int  saveDetailSvhcData(PartDetailSvhcDTO partDetailSvhcDTO, MultipartFile files, String comCode){
         if(!files.isEmpty()) {
             String svhc_filepath = uploadFileData(comCode,files);
@@ -147,6 +172,10 @@ public class PartDetailService {
 
     }
 
+    public partDetailDeclarDTO getDetailDeclarData(String idx){
+        return partMgmtRepository.getDetailDeclarData(idx);
+    }
+
     public int  saveDetailDeclarData(partDetailDeclarDTO declarDTO, MultipartFile files, String comCode){
         if(!files.isEmpty()) {
             String svhc_filepath = uploadFileData(comCode,files);
@@ -164,6 +193,11 @@ public class PartDetailService {
     }
 
     //sccs
+    public partDetailSccsDTO getSccsData(String idx) {
+        return partMgmtRepository.getSccsData(idx);
+    }
+
+
     public int saveSccsData(partDetailSccsDTO sccsDTO){
 
         if(sccsDTO.getSCCS_IDX().equals("")){
@@ -174,6 +208,10 @@ public class PartDetailService {
     }
 
     //ingred
+    public partDetailIngredDTO getIngredData(String idx) {
+        return partMgmtRepository.getIngredData(idx);
+    }
+
     public int saveIngredData(partDetailIngredDTO ingredDTO){
 
         if(ingredDTO.getINGRED_IDX().equals("")){
@@ -184,6 +222,10 @@ public class PartDetailService {
     }
 
     //guarant
+    public List<partDetailGuarantDTO> getGuarantData(String idx) {
+        return partMgmtRepository.getGuarantData(idx);
+    }
+
     public int saveGuarantData(partDetailGuarantDTO guarantDTO){
 
         if(guarantDTO.getGUARANT_IDX().equals("")){

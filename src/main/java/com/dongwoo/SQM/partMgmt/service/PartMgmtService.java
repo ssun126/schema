@@ -2,6 +2,7 @@ package com.dongwoo.SQM.partMgmt.service;
 
 import com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO;
 import com.dongwoo.SQM.partMgmt.repository.PartMgmtRepository;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,14 @@ public class PartMgmtService {
         return partMgmtRepository.searchPartMgmt(parmDTO);
     }
 
+    public PartMgmtDTO getPartMgmtData(String idx) {
+        return partMgmtRepository.getPartMgmtData(idx);
+    }
+
     public List<HashMap> getpartCodeList(){ return partMgmtRepository.getpartCodeList();}
 
     public int save(PartMgmtDTO partMgmtDTO){
         return partMgmtRepository.save(partMgmtDTO);
     }
+    public int updatePartMgmt(PartMgmtDTO partMgmtDTO) { return partMgmtRepository.updatePartMgmt(partMgmtDTO);}
 }

@@ -39,14 +39,14 @@
     <div class="cui_main">
         <div class="cui_head head_title">
             <div class="head_content">
-                <h3><span>자재코드 : DATA</span></h3>
-                <h3><span>자재명 : 테스트</span></h3>
-                <h3><span>승인현황 : 승인</span></h3>
-                <h3><span>사용여부 : Active</span></h3>
-<!--                <h3><span>자재코드 : </span><span th:text="{$partMgmtDTO.PM_PART_CODE}"></span></h3>-->
-<!--                <h3><span>자재명 : </span><span th:text="{$partMgmtDTO.PM_PART_NAME}">자재명</span></h3>-->
-<!--                <h3><span>승인현황 : </span><span th:text="{$partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>-->
-<!--                <h3><span>사용여부 : </span><span th:text="{$partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>-->
+<!--                <h3><span>자재코드 : DATA</span></h3>-->
+<!--                <h3><span>자재명 : 테스트</span></h3>-->
+<!--                <h3><span>승인현황 : 승인</span></h3>-->
+<!--                <h3><span>사용여부 : Active</span></h3>-->
+                <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PM_PART_NAME}">자재명</span></h3>
+                <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
+                <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
             </div>
 
         </div>
@@ -83,17 +83,17 @@
                         <tr>
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
-                                    <input type="hidden" name="MSDS_IDX" >
-                                    <input type="text" class="cui_text_field datepicker" name="MSDS_REG_DATE" >
+                                    <input type="hidden" name="MSDS_IDX" th:value="${msdsDTO.MSDS_IDX}" >
+                                    <input type="text" class="cui_text_field datepicker" name="MSDS_REG_DATE"  th:value="${msdsDTO.MSDS_REG_DATE}" reqcheck="reqcheck">
                                 </div>
                             </td>
-                            <td><input type="text" class="cui_text_field" name="MSDS_LANG" ></td>
-                            <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM" ></td>
+                            <td><input type="text" class="cui_text_field" name="MSDS_LANG" th:value="${msdsDTO.MSDS_LANG}" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM" th:value="${msdsDTO.MSDS_APPROVAL_NUM}" reqcheck="reqcheck"></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="MSDS_FILE">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"></span></div>
+                                    <input type="file" class="cui_file_field" name="MSDS_FILE" reqcheck="reqcheck">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"  th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span>다운로드</span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
@@ -147,24 +147,24 @@
                         <tr>
                             <td>
                                 <input type="hidden" name="ROHS_IDX" >
-                                <input type="text" class="cui_text_field datepicker" name="ROHS_CONFIRM_DATE"  >
+                                <input type="text" class="cui_text_field datepicker" name="ROHS_CONFIRM_DATE"  th:value="${rohsDTO.ROHS_CONFIRM_DATE}" reqcheck="reqcheck">
                             </td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_CD" ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_HG"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_PB"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_CR6" ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_PBBS"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_PBDES"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_DEHP"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_BBP"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_DBP"  ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_DIBP"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_CD"    th:value="${rohsDTO.ROHS_CD}"    reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_HG"    th:value="${rohsDTO.ROHS_HG}"    reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PB"    th:value="${rohsDTO.ROHS_PB}"    reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_CR6"   th:value="${rohsDTO.ROHS_CR6}"   reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PBBS"  th:value="${rohsDTO.ROHS_PBBS}"  reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PBDES" th:value="${rohsDTO.ROHS_PBDES}" reqcheck="reqcheck" ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DEHP"  th:value="${rohsDTO.ROHS_DEHP}"  reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_BBP"   th:value="${rohsDTO.ROHS_BBP}"   reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DBP"   th:value="${rohsDTO.ROHS_DBP}"   reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DIBP"  th:value="${rohsDTO.ROHS_DIBP}"  reqcheck="reqcheck"></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="ROHS_FILE">
+                                    <input type="file" class="cui_file_field" name="ROHS_FILE" reqcheck="reqcheck">
                                     <input type="hidden" name="FILE_STATUS">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME"></span></div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
@@ -199,18 +199,18 @@
                         <tr>
                             <td>
                                 <input type="hidden" name="HALOGEN_IDX" >
-                                <input type="text" class="cui_text_field datepicker" name="HALOGEN_CONFIRM_DATE"  >
+                                <input type="text" class="cui_text_field datepicker" name="HALOGEN_CONFIRM_DATE" th:value="${halGDTO.HALOGEN_CONFIRM_DATE}"  reqcheck="reqcheck">
                             </td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_CL" ></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_BR"  ></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_CLBR" ></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_F"></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_I"  ></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_CL"   th:value="${halGDTO.HALOGEN_CL}"   reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_BR"   th:value="${halGDTO.HALOGEN_BR}"   reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_CLBR" th:value="${halGDTO.HALOGEN_CLBR}" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_F"    th:value="${halGDTO.HALOGEN_F}"    reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_I"    th:value="${halGDTO.HALOGEN_I}"    reqcheck="reqcheck"></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="HALOGEN_FILE">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME"></span></div>
+                                    <input type="file" class="cui_file_field" name="HALOGEN_FILE" reqcheck="reqcheck">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
@@ -238,18 +238,18 @@
                         </tr>
                         </thead>
                         <tbody id="tableBody4">
-                        <tr>
+                        <tr th:each="etcDTO : ${etcListDTO}" >
                             <td>
-                                <input type="hidden" name="ETC_IDX" >
-                                <input type="text" class="cui_text_field" name="ETC_CONFIRM_DATE"  >
+                                <input type="hidden" name="ETC_IDX" th:value="${etcDTO.ETC_IDX}">
+                                <input type="text" class="cui_text_field" name="ETC_CONFIRM_DATE" th:value="${etcDTO.ETC_CONFIRM_DATE}" >
                             </td>
-                            <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY" ></td>
-                            <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT"  ></td>
+                            <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY"  th:value="${etcDTO.ETC_ANALYSE_ENTRY}" ></td>
+                            <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT"  th:value="${etcDTO.ETC_ANALYSE_RESULT}" ></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="ETC_FILE">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>
+                                    <input type="file" class="cui_file_field " name="ETC_FILE">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${etcDTO.ETC_FILE_NAME == null ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span name="ETC_FILE_NAME"  th:value="${etcDTO.ETC_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
@@ -354,8 +354,66 @@
 
        //action="/user/partMgmt/goSvhc"
        $("input[name=INFO_FLAG]").val(flag);
-       //window.location.href=url;
-       document.getElementById('frmDetail').submit();
+
+       if(flag == "save"){
+            //데이터 저장
+<!--            var form = $("#frmDetail")[0];-->
+<!--            var formData = new FormData(form);-->
+<!--            $.ajax({-->
+<!--                type: "post",-->
+<!--                url: "/user/partMgmt/goSvhcimsi",-->
+<!--                //data: $('#frmDetail').serialize(),-->
+<!--                data : formData,-->
+<!--                contentType : false,-->
+<!--                processData : false,-->
+<!--                success: function(response) {-->
+<!--                   showAlert('success', '정보가 저장 되었습니다.');-->
+<!--                },-->
+<!--                error: function(err) {-->
+<!--                    console.log("에러발생", err);-->
+<!--                    showAlert('warning', '저장 중 오류가 발생했습니다.');-->
+<!--                }-->
+<!--            });-->
+            document.getElementById('frmDetail').submit();
+       }else{
+            //유효성체크
+            let isValid = true;
+            // msds halg rohs 데이터 전부 잇기
+            isValid = Common.Validate($("#frmDetail"));
+
+            if(!isValid){
+                //showAlert('warning', '데이터를 마저 기입해주십시오.');
+                return;
+            }
+
+            // etc 파일이나 데이터가 있으면 무조건 둘 다 있어야함. 데이터가 아무것도 없다면 기타는 데이터가 없을 수 있음
+            const rows = document.querySelectorAll('#tableBody4 tr');
+
+            // 각 tr(row)에 대해 유효성 검사 수행
+            rows.forEach(row => {
+                const confirmDate = row.querySelector('[name="ETC_CONFIRM_DATE"]').value.trim();
+                const analyseEntry = row.querySelector('[name="ETC_ANALYSE_ENTRY"]').value.trim();
+                const analyseResult = row.querySelector('[name="ETC_ANALYSE_RESULT"]').value.trim();
+                const fileInput = row.querySelector('[name="ETC_FILE"]');
+                const fileName = fileInput.value.trim();
+
+                // 해당 tr에 대해 모두 값이 채워졌거나 모두 비어 있어야 유효
+                if (confirmDate || analyseEntry || analyseResult || fileName) {
+                    // 값이 하나라도 있다면, 나머지 값들도 있어야 함
+                    if (!confirmDate || !analyseEntry || !analyseResult || !fileName) {
+                        isValid = false;
+                        alert('모든 항목을 채우거나 모든 항목을 비워야 합니다. 확인일자, 분석항목, 분석결과, 첨부파일이 모두 필요합니다.');
+                        return false; // 유효성 검사를 중지하고 오류 메시지 표시
+                    }
+                }
+            });
+            //window.location.href=url;
+            if(isValid){
+                document.getElementById('frmDetail').submit();
+            }
+
+       }
+
     }
 
     //status 업데이트
@@ -376,3 +434,4 @@
 
 </script>
 </html>
+<input type="file" class="cui_file_field" name="HALOGEN_FILE">
