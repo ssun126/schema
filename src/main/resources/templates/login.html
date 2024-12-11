@@ -5,13 +5,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" type="text/css" href="../../plugin/jqGrid/jQuery.jqGrid.css" >
-    <link rel="stylesheet" type="text/css" href="../../plugin/jqGrid/ui.jqGrid.css" >
     <link rel="stylesheet" type="text/css" href="../../css/style.css" >
     <link rel="stylesheet" type="text/css" href="../../css/schema.css?v=20241122" >
+    <link rel="stylesheet" type="text/css" href="../../plugin/loading/iosOverlay.css" >
+    <link rel="stylesheet" type="text/css" href="../../plugin/sweetalert/sweetalert2.css" >
+
     <script type="text/javascript" src="../../plugin/jquery/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../../plugin/jqueryUi/jquery-ui.js"></script>
-    <script type="text/javascript" src="../../plugin/jqGrid/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="../../plugin/loading/iosOverlay.js"></script>
+    <script type="text/javascript" src="../../plugin/loading/spin.min.js"></script>
+    <script type="text/javascript" src="../../plugin/sweetalert/core.js"></script>
+    <script type="text/javascript" src="../../plugin/sweetalert/sweetalert2.min.js"></script>
     <script type="text/javascript" src="../../js/app.js"></script>
     <script type="text/javascript" src="../../js/pages/schema.common.js?v=20241122"></script>
     <title>Schema</title>
@@ -36,27 +40,26 @@
                                         </select>
                                     </div>
                                 </div>
-                                <h1 class="login_form_logo"><span data-langsid="동우화인캠">동우화인캠</span></h1>
+                                <h1 class="login_form_logo"><span data-langsid="동우화인캠"></span></h1>
                                 <div class="cui_items_wrap" data-direction="left">
-                                    <input name="username" class="cui_text_field" type="text" placeholder="ID">
+                                    <input name="username" class="cui_text_field" type="text" placeholder="ID" reqcheck="reqcheck" data-messages="ID를 입력해주세요." messages="">
                                 </div>
                                 <div class="cui_items_wrap" data-direction="left">
-                                    <input name="password" class="cui_text_field" type="password" placeholder="PW">
+                                    <input name="password" class="cui_text_field" type="password" placeholder="PW" reqcheck="reqcheck" data-messages="비밀번호를 입력해주세요." messages="">
                                 </div>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <button type="submit" class="cui_button primary"><span>LOGIN</span></button>
                                 </div>
                             </form>
                             <!-- 로그인 실패 메시지 표시 -->
-                            <div th:if="${error}" class="cui_alert alert_basic" data-type="warning" role="alert">
+                            <div th:if="${error}" class="cui_alert alert_basic" data-type="warning" role="alert" style="margin-top:10px;">
                                 <div class="alert_message">
-                                    <p th:text="${exception}"></p>
+                                    <p class="data-langsid" th:text="${exception}"></p>
                                 </div>
                             </div>
 
                             <div class="login_form_settings">
-                                <a href="#" onClick="modal_open('dialog', 'add');return false;" class="cui_button endpoint" data-cui-icon="search"><span data-langsid="ID/PW 찾기"></span></a>
-                                <!--<a href="/member/unlock" class="cui_button endpoint" data-cui-icon="lock"><span>PW 잠김해제</span></a>-->
+                                <a href="#" onClick="Common.Dialog({ obj : $('#dialog') });return false;" class="cui_button endpoint" data-cui-icon="search"><span data-langsid="ID/PW 찾기"></span></a>
                                 <a href="/member/agree" class="cui_button endpoint" data-cui-icon="user_plus"><span data-langsid="회원가입"></span></a>
                             </div>
                         </article>
@@ -78,15 +81,15 @@
                     <div class="main_label" data-langsid="ID/PW 찾기"></div>
                 </div>
                 <div class="dialog_toolbar">
-                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('cui_dialog')"><span>Close</span></button>
+                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
                 </div>
             </div>
             <div class="dialog_body">
                 <div class="body_root">
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
-                            <button type="button" class="cui_button primary" onClick="modal('dialogD')" ><span>Dongwoo</span></button>
-                            <button type="button" class="cui_button primary" onClick="modal('dialogP')" ><span>Partner</span></button>
+                            <button type="button" class="cui_button primary" onClick="Common.Dialog({ obj : $('#dialogD')});" ><span>Dongwoo</span></button>
+                            <button type="button" class="cui_button primary" onClick="Common.Dialog({ obj : $('#dialogP')});" ><span>Partner</span></button>
                         </div>
                     </div>
                 </div>
@@ -101,7 +104,7 @@
                     <div class="main_label" data-langsid="DONGWOO ID/PW 찾기"></div>
                 </div>
                 <div class="dialog_toolbar">
-                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
                 </div>
             </div>
             <div class="dialog_body">
@@ -112,18 +115,18 @@
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label">PC ID</strong>
                                 <div class="item_content">
-                                    <input type="text" class="cui_text_field">
+                                    <input type="text" class="cui_text_field" id="DWPCID" name="DWPCID" reqcheck="reqcheck" data-messages="PC ID를 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="이메일"></strong>
                                 <div class="item_content">
-                                    <input type="email" class="cui_text_field">
+                                    <input type="email" class="cui_text_field" id="DWEMail" name="DWEMail" reqcheck="reqcheck" data-messages="이메일을 입력하세요." messages="">
                                 </div>
                             </label>
                             <div class="cui_items_wrap" data-direction="right">
                                 <div class="item_content">
-                                    <button type="button" class="cui_button primary" onClick="alert(siteLang.getLang('메일이 발송되었습니다.'))" ><span>찾기</span></button>
+                                    <button type="button" class="cui_button primary" onClick="findDW();"><span>찾기</span></button>
                                 </div>
                             </div>
                         </fieldset>
@@ -133,7 +136,6 @@
         </div>
     </div>
 
-
     <div class="cui_dialog" style="width:420px;display:none;" id="dialogP">
         <div class="dialog_container">
             <div class="dialog_head">
@@ -141,7 +143,7 @@
                     <div class="main_label" data-langsid="PARTNER ID/PW 찾기"></div>
                 </div>
                 <div class="dialog_toolbar">
-                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
                 </div>
             </div>
             <div class="dialog_body">
@@ -152,18 +154,18 @@
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="영문이름"></strong>
                                 <div class="item_content">
-                                    <input type="text" class="cui_text_field">
+                                    <input type="text" class="cui_text_field" id="CompanySearchIDName" name="CompanySearchIDName" reqcheck="reqcheck" data-messages="이름을 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="이메일"></strong>
                                 <div class="item_content">
-                                    <input type="email" class="cui_text_field">
+                                    <input type="email" class="cui_text_field" id="CompanySearchIDEmail" name="CompanySearchIDEmail" reqcheck="reqcheck" data-messages="이메일을 입력하세요." messages="">
                                 </div>
                             </label>
                             <div class="cui_items_wrap" data-direction="right">
                                 <div class="item_content">
-                                    <button type="button" class="cui_button primary" onClick="alert(siteLang.getLang('메일이 발송되었습니다.'))"><span>ID 찾기</span></button>
+                                    <button type="button" class="cui_button primary" onClick="findCompanyID();"><span>ID 찾기</span></button>
                                 </div>
                             </div>
                         </fieldset>
@@ -172,20 +174,26 @@
                         <fieldset>
                             <legend><span data-langsid="비밀번호 찾기"></span></legend>
                             <label class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" data-langsid="ID"></strong>
+                                <div class="item_content">
+                                    <input type="text" class="cui_text_field" id="CompanySearchPWID" name="CompanySearchPWID" reqcheck="reqcheck" data-messages="ID를 입력하세요." messages="">
+                                </div>
+                            </label>
+                            <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="영문이름"></strong>
                                 <div class="item_content">
-                                    <input type="text" class="cui_text_field">
+                                    <input type="text" class="cui_text_field" id="CompanySearchPWName" name="CompanySearchPWName" reqcheck="reqcheck" data-messages="이름을 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="이메일"></strong>
                                 <div class="item_content">
-                                    <input type="email" class="cui_text_field">
+                                    <input type="email" class="cui_text_field" id="CompanySearchPWEmail" name="CompanySearchPWEmail" reqcheck="reqcheck" data-messages="이메일을 입력하세요." messages="">
                                 </div>
                             </label>
                             <div class="cui_items_wrap" data-direction="right">
                                 <div class="item_content">
-                                    <button type="button" class="cui_button primary" onClick="alert(siteLang.getLang('메일이 발송되었습니다.'))"><span>PW 찾기</span></button>
+                                    <button type="button" class="cui_button primary" onClick="findCompanyPW();"><span>PW 찾기</span></button>
                                 </div>
                             </div>
                         </fieldset>
@@ -193,7 +201,7 @@
                     <div class="cui_alert alert_basic" data-type="info" role="alert">
                         <div class="alert_message">
                             <p data-langsid="검색 불가시는 아래 메일로 연락 주시기 바랍니다."></p>
-                            <p>ooooo@dwchem.co.kr</p>
+                            <p>partnerhelp@dwchem.co.kr</p>
                         </div>
                     </div>
                 </div>
@@ -203,37 +211,37 @@
 
 
 </div>
-<div id="overlay" class="overlay"></div>
 </body>
 <script>
-    //모달 열기
-    function modal(id){
-      $("#" + id).fadeIn()
+    function loginFormCheck (obj) {
+        return Common.Validate($(".login_form_filed"));
     }
 
-    //모달 닫기
-    $('.modal-close').on('click', function(e){
-      e.preventDefault();
-      const modal = $(this).parents('.cui_dialog');
-      modal.fadeOut();
-    });
+    var findDW = function () {
+        Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
+            okback : function () {
+                $("#dialog").data("Hide")();
+                $("#dialogD").data("Hide")();
+            }
+        });
+    }
 
-    function loginFormCheck (obj) {
-        var usernameObj = obj.find("input[name=username]");
-        var passwordObj = obj.find("input[name=password]");
+    var findCompanyID = function () {
+        Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
+            okback : function () {
+                $("#dialog").data("Hide")();
+                $("#dialogP").data("Hide")();
+            }
+        });
+    }
 
-        if (usernameObj.val() == "") {
-            alert(siteLang.getLang("아이디를 입력해주세요."));
-            usernameObj.focus();
-            return false;
-        }
-        if (passwordObj.val() == "") {
-            alert(siteLang.getLang("비밀번호를 입력해주세요."));
-            passwordObj.focus();
-            return false;
-        }
-
-        return true;
+    var findCompanyPW = function () {
+        Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
+            okback : function () {
+                $("#dialogP").data("Hide")();
+                $("#dialog").data("Hide")();
+            }
+        });
     }
 
     $("#multiLanguage").bind("change", function () {
