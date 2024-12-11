@@ -121,4 +121,7 @@ public class CompanyInfoRepository {
     public List<HashMap> getApiList(Map<String, Object> params) {
         return sql.selectList("CompanyInfo.getApiList", params);
     }
+
+
+
 }

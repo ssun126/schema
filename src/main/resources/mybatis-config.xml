@@ -38,6 +38,11 @@
         <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailHalGDTO" alias="partDetailHalg"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailMsdsDTO" alias="partDetailMsds"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailRohsDTO" alias="partDetailRohs"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.partMgmt.dto.PartDetailSvhcDTO" alias="partDetailSvhc"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailDeclarDTO" alias="partDetailDeclar"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailSccsDTO" alias="partDetailSccs"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailIngredDTO" alias="partDetailIngred"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailGuarantDTO" alias="partDetailGuarant"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.common.dto.CommonDTO" alias="common"></typeAlias>
 
 

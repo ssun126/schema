@@ -10,6 +10,7 @@ import com.dongwoo.SQM.companyInfo.service.PartCodeService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,12 +34,11 @@ public class PartCodeController {
     private final MemberService memberService;
 
 
-    //자재등록   2024.11.11 sylee
+    //자재등록
     @GetMapping("/admin/companyInfo/partCodeList")
     public String cpMaterial(Model model) {
         List<BaseCodeDTO> deptList = partCodeService.GetBaseCode("CpWorkCode");
         List<BaseCodeDTO> plantList = partCodeService.GetBaseCode("PLANT");
-
 
         model.addAttribute("deptList", deptList);
         model.addAttribute("plantList", plantList);
@@ -58,18 +61,18 @@ public class PartCodeController {
         }
     }
 
-    @GetMapping("/admin/companyInfo/getMaterialList")
-    @ResponseBody
-    public List<PartCodeDTO> getMaterialList(Criteria criteria) {
-        List<PartCodeDTO> materialList = partCodeService.getMaterialList(criteria);
-        return materialList;
+    @PostMapping("/admin/companyInfo/materialList")
+    public String partCodeMgmtApi(Criteria criteria, Model model) {
+        return "partCodeMgmt/apiList";
     }
 
-    @GetMapping("/admin/companyInfo/getCompanyList")
+
+    @PostMapping("/admin/companyInfo/getMaterialList")
     @ResponseBody
-    public List<CompanyInfoDTO> getCompanyList(Criteria criteria) {
-        List<CompanyInfoDTO> companyInfoList = partCodeService.getCompanyInfoList(criteria);
-        return companyInfoList;
+    public List<HashMap> getMaterialList(HttpServletRequest req) {
+        String code = req.getParameter("searchCodeMaterialCode");
+        String name = req.getParameter("searchNameMaterialCode");
+        return partCodeService.getMaterialList(code,name);
     }
 
 

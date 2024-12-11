@@ -36,16 +36,15 @@
     <div class="cui_main">
         <div class="cui_head head_title">
             <div class="head_content">
-                <h3><span>자재코드 : DATA</span></h3>
-                <h3><span>자재명 : 테스트</span></h3>
-                <h3><span>승인현황 : 승인</span></h3>
-                <h3><span>사용여부 : Active</span></h3>
-                <!--                <h3><span>자재코드 : </span><span th:text="{$partMgmtDTO.PM_PART_CODE}"></span></h3>-->
-                <!--                <h3><span>자재명 : </span><span th:text="{$partMgmtDTO.PM_PART_NAME}">자재명</span></h3>-->
-                <!--                <h3><span>승인현황 : </span><span th:text="{$partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>-->
-                <!--                <h3><span>사용여부 : </span><span th:text="{$partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>-->
+<!--                <h3><span>자재코드 : DATA</span></h3>-->
+<!--                <h3><span>자재명 : 테스트</span></h3>-->
+<!--                <h3><span>승인현황 : 승인</span></h3>-->
+<!--                <h3><span>사용여부 : Active</span></h3>-->
+                <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PM_PART_NAME}">자재명</span></h3>
+                <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
+                <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
             </div>
-            <input type="hidden" id="PM_IDX" th:value="${PM_IDX}"/>
         </div>
         <div class="cui_body">
             <div class="cui_step">
@@ -56,7 +55,7 @@
                     <li><span>SCCS / 성분명세서 / 기타</span></li>
                 </ol>
             </div>
-            <form class="cui_form_field" data-legend="true" id="frmDeclar" action="/user/partMgmt/goSccs" method="post"  enctype="multipart/form-data">
+            <form class="cui_form_section" data-legend="true" id="frmDeclar" action="/user/partMgmt/goSccs" method="post"  enctype="multipart/form-data">
                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <fieldset id="msdsFieldset">
                     <legend><span>Declaration Letter</span></legend>
@@ -73,9 +72,10 @@
                             <th><span>제출구분</span></th>
                             <td colspan="3">
                                 <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
+                                    <input type="hidden" name="DECL_IDX"  th:value="${declarDTO.DECL_IDX}">
                                     <div class="item_content">
-                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="ATTACH" id="Attach" checked="true"><i></i><span>파일첨부</span></label>
-                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="WRITE" id="Write"><i></i><span>직접입력</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="ATTACH" id="Attach" th:checked="${declarDTO.DATA_GUBUN eq 'ATTACH'}" ><i></i><span>파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="WRITE" id="Write" th:checked="${declarDTO.DATA_GUBUN eq 'WRITE'}"><i></i><span>직접입력</span></label>
                                     </div>
                                 </div>
                             </td>
@@ -85,7 +85,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field datepicker" id="confirmDate" name="CONFIRM_DATE">
+                                        <input type="text" class="cui_text_field datepicker" id="confirmDate" name="CONFIRM_DATE" th:value="${declarDTO.CONFIRM_DATE}">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -94,7 +94,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  >
+                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${declarDTO.WARRANTY_ITEM}">
                                     </div>
                                 </div>
                             </td>
@@ -119,8 +119,8 @@
                                         <div class="cui_attachments">
                                             <input type="file" class="cui_file_field" name="DECLAR_FILE">
                                             <input type="hidden" name="FILE_STATUS">
-                                            <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">
-                                                <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME"></span></div>
+                                            <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${declarDTO.FILE_NAME == '' ? 'display:none;' : '' }">
+                                                <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:value="${declarDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
                                                     <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                 </div>
@@ -137,7 +137,7 @@
                 </fieldset>
 
                 <fieldset id="declarDataFieldset" style="display:none;">
-                    <input type="hidden" name="APPLICABLE_NO" >
+                    <input type="hidden" name="APPLICABLE_NO" th:value="${declarDTO.APPLICABLE_NO}">
                     <table class="cui_table center">
                         <thead>
                         <tr>
@@ -214,6 +214,25 @@
             tableBody.empty(); // 기존 내용 비우기
 		}
 
+
+		//처음 로드 시 기존 저장된 데이터 있는지 확인
+        if($("input[name=DECL_IDX]").val() != ''){
+            //저장된 데이터 로드됨
+            //제출 구분이 직접입력일때만 데이터 바꿔줌
+            if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+                //$('input:radio[name="DATA_GUBUN"]:input[value="WRITE"]').prop('checked',true);
+                $('#declarFileFieldset').hide();
+			    $('#declarDataFieldset').show();
+			    getDeclarData();
+
+            }
+
+
+        }else{
+            //신규 제출구분 파일첨부 기본
+            $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
+        }
+
 	});
 
 
@@ -228,8 +247,25 @@
             },
             error : function(xhr,status,error){
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
+            },
+            complete : function(){
+                //기존 데이터 있을 시 바인딩
+                if($("input[name=APPLICABLE_NO]").val() != ''){
+                    setSavedDeclar();
+                }
+
             }
         });
+    }
+
+    function setSavedDeclar(){
+        var Data = $("input[name=APPLICABLE_NO]").val();
+        var ArrData = Data.split(',');
+
+        for(var i=0; i<ArrData.length; i++){
+            $("#svhc_"+ArrData[i]).val('Y').prop("selected",true);
+        }
+
     }
 
     function bindDeclarData(response){
@@ -264,7 +300,8 @@
         $('select[id^="declar_"]').each(function(){
             var value = $(this).val();
             if(value ==='Y'){
-                selectValues.push(value);
+                var key = $(this).closest("tr").find('td')[0].innerText;
+                selectValues.push(key);
             }
         });
 
@@ -275,8 +312,23 @@
 
     //submit 전 체크
     function chk_form(flag) {
+        $("input[name=INFO_FLAG]").val(flag);
 
-        //flag 가 다음으로 넘어갈 때
+        if(flag == "save"){
+            //데이터 저장
+            document.getElementById('frmDeclar').submit();
+       }else{
+            //유효성체크
+            let isValid = true;
+            // msds halg rohs 데이터 전부 잇기
+            isValid = Common.Validate($("#frmDeclar"));
+
+            if(!isValid){
+                //showAlert('warning', '데이터를 마저 기입해주십시오.');
+                return;
+            }
+
+            //flag 가 다음으로 넘어갈 때
             //구분이 직접입력일 때 해당 비해당에 해당 항목이 하나도 없을 때
 
             //구분이 첨부일 때 파일이 없을 때
@@ -284,11 +336,15 @@
             //보증항목값이 없을 때
 
             //날짜가 없을 때
-       //저장일때는 걍 저장함
-       //action="/user/partMgmt/goSvhc"
-       $("input[name=INFO_FLAG]").val(flag);
+            //window.location.href=url;
+            if(isValid){
+                document.getElementById('frmDeclar').submit();
+            }
+
+       }
+
        //window.location.href=url;
-       document.getElementById('frmDeclar').submit();
+       //document.getElementById('frmDeclar').submit();
     }
 
     //status 업데이트

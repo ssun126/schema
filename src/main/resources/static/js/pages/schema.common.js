@@ -345,6 +345,29 @@ siteLang.showLangs = function (obj) {
         }
     });
 
+    obj.find('.data-langsid').each(function () {
+        var kor = $(this).attr("data-langsid");
+
+        if (kor == undefined) {
+            kor = $(this).html();
+            $(this).attr("data-langsid", kor);
+            $(this).removeClass("data-langsid");
+        }
+
+        try {
+            const item = siteLang.langsData.find(entry => entry.KOR === kor);
+            if (item && item[siteLang.selLang]) {
+                $(this).html(item[siteLang.selLang]);
+            }
+            else
+            {
+                siteLang.devDBSet(kor);
+                $(this).html(kor);
+            }
+        } catch (e) {
+        }
+    });
+
     obj.find('input[placeholder]').each(function () {
         var kor = $(this).attr("data-langsid");
 
@@ -452,6 +475,78 @@ siteLang.devDBSet = function (KOR) {
 }
 
 var Common = {};
+
+//페이지 이동
+Common.MoveUrl = function (Url, Msg, Check) {
+    if (Url == "")
+        return;
+
+    if (Msg == null || Msg == undefined) {
+		location.href = Url;
+	} else if (Check == null || Check == undefined || Check == false) {
+	    swal({
+	        title: Msg,
+	        showCancelButton: false,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "확인",
+            closeOnConfirm: true,
+            animation : false
+	    }).then(function () {
+	        location.href = Url;
+	    });
+	} else if (Check == true) {
+	    swal({
+	        title: Msg,
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: "#DD6B55",
+	        confirmButtonText: "확인",
+	        cancelButtonText: "취소",
+            closeOnConfirm: false,
+            animation: false
+	    }).then(function () {
+	        location.href = Url;
+	    });
+	}
+}
+
+//페이지 새창
+Common.OpenUrl = function (url, wname, width, height, scrl, resi, stat, addOption) {
+    if (typeof wname == "undefined") {
+        return window.open(url);
+    }
+
+	// 듀얼모니터 일경우 가운데 정렬에 문제가 좀 있어서 우선 선택한 창에서 나오게는 처리함
+	//var winl = (screen.width - width) / 2;
+	var winl = window.screenX + (screen.width / 2) - (width / 2);
+	var wint = (screen.height - height) / 2;
+
+	if (typeof scrl == "undefined") {
+		var scroll = "no";
+	} else {
+		var scroll = scrl;
+	}
+
+	if (typeof resi == "undefined") {
+		var resizable = "no";
+	} else {
+		var resizable = resi;
+	}
+
+	if (typeof stat == "undefined") {
+		var status = "yes";
+	} else {
+		var status = stat;
+	}
+
+	if (typeof addOption == "undefined") {
+		addOption = "";
+	} else {
+		addOption = "," + addOption;
+	}
+
+	return window.open(url, wname, "left=" + winl + ", top=" + wint + ", scrollbars=" + scroll + ", status=" + status + ", resizable=" + resizable + ", width=" + width + ", height=" + height + addOption);
+}
 
 Common.Msg = function (Msg, info) {
     info = (info || {});

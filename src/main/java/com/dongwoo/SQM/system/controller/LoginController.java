@@ -1,15 +1,20 @@
 package com.dongwoo.SQM.system.controller;
 
+import com.dongwoo.SQM.common.util.JWTSecretKeyUtils;
 import com.dongwoo.SQM.system.dto.LoginDTO;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.system.service.LoginService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +22,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -62,6 +69,98 @@ public class LoginController {
             // login 실패
             model.addAttribute("loginError", "아이디 또는 비밀번호가 올바르지 않습니다.");
             return "login";
+        }
+    }
+
+    @PostMapping("/findDW")
+    public ResponseEntity<?> findDW(HttpServletRequest req) {
+        try {
+            String DWPCID = req.getParameter("DWPCID");
+            String DWEMail = req.getParameter("DWEMail");
+
+            Map<String, Object> DW_INFO = loginService.findDW(DWPCID, DWEMail);
+
+            if (DW_INFO == null || DW_INFO.size() == 0) {
+                return ResponseEntity.ok("정보가 없습니다.");
+            } else {
+                int USER_IDX = Integer.parseInt(DW_INFO.get("USER_IDX").toString());
+
+                // 기존 비밀번호 신규 생성
+                JWTSecretKeyUtils.refreshSecretKey256();
+                String NewPass = JWTSecretKeyUtils.getSecretKey256().toString().substring(3);
+                log.info("findDW - NewPass:::::::::::::::"+NewPass);
+                PasswordEncoder encoder = new BCryptPasswordEncoder();
+                String encodedPassword = encoder.encode(NewPass);
+
+                // 신규 생성 업데이트
+                loginService.updateUserPWD(USER_IDX, encodedPassword);
+
+                // 메일 발송
+                
+                return ResponseEntity.ok("OK");
+            }
+        } catch (Exception e) {
+            log.info("findDW === "+e.getMessage());
+            return ResponseEntity.ok("오류가 발생하였습니다.");
+        }
+    }
+
+    @PostMapping("/findCompanyID")
+    public ResponseEntity<?> findCompanyID(HttpServletRequest req) {
+        try {
+            String CompanySearchIDName = req.getParameter("CompanySearchIDName");
+            String CompanySearchIDEmail = req.getParameter("CompanySearchIDEmail");
+
+            Map<String, Object> COM_INFO = loginService.findCompanyID(CompanySearchIDName, CompanySearchIDEmail);
+
+            if (COM_INFO == null || COM_INFO.size() == 0) {
+                return ResponseEntity.ok("정보가 없습니다.");
+            } else {
+                int USER_IDX = Integer.parseInt(COM_INFO.get("USER_IDX").toString());
+                String USER_ID = COM_INFO.get("USER_ID").toString();
+
+                // 메일 발송
+                log.info("findCompanyID - USER_ID:::::::::::::::"+USER_ID);
+
+                return ResponseEntity.ok("OK");
+            }
+        } catch (Exception e) {
+            log.info("findCompanyID === "+e.getMessage());
+            return ResponseEntity.ok("오류가 발생하였습니다.");
+        }
+    }
+
+    @PostMapping("/findCompanyPW")
+    public ResponseEntity<?> findCompanyPW(HttpServletRequest req) {
+        try {
+            String CompanySearchPWID = req.getParameter("CompanySearchPWID");
+            String CompanySearchPWName = req.getParameter("CompanySearchPWName");
+            String CompanySearchPWEmail = req.getParameter("CompanySearchPWEmail");
+
+            Map<String, Object> COM_INFO = loginService.findCompanyPW(CompanySearchPWID, CompanySearchPWName, CompanySearchPWEmail);
+
+            if (COM_INFO == null || COM_INFO.size() == 0) {
+                return ResponseEntity.ok("정보가 없습니다.");
+            } else {
+                int USER_IDX = Integer.parseInt(COM_INFO.get("USER_IDX").toString());
+
+                // 기존 비밀번호 신규 생성
+                JWTSecretKeyUtils.refreshSecretKey256();
+                String NewPass = JWTSecretKeyUtils.getSecretKey256().toString().substring(3);
+                log.info("findCompanyPW - NewPass:::::::::::::::"+NewPass);
+                PasswordEncoder encoder = new BCryptPasswordEncoder();
+                String encodedPassword = encoder.encode(NewPass);
+
+                // 신규 생성 업데이트
+                loginService.updateUserPWD(USER_IDX, encodedPassword);
+
+                // 메일 발송
+
+                return ResponseEntity.ok("OK");
+            }
+        } catch (Exception e) {
+            log.info("findCompanyPW === "+e.getMessage());
+            return ResponseEntity.ok("오류가 발생하였습니다.");
         }
     }
 

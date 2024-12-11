@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +30,9 @@ public class PartCodeRepository {
         return sql.selectList("partCode.partCodeList", partCodeDTO);
     }
 
-    public List<PartCodeDTO> getMaterialList(Criteria criteria) {
-        return sql.selectList("partCode.getMaterialList",criteria);
+    //지켐스 자재코드 정보 조회
+    public List<HashMap> getMaterialList(Map<String, Object> params) {
+        return sql.selectList("partCode.getMaterialList", params);
     }
 
     public List<CompanyInfoDTO> getCompanyInfoList(Criteria criteria) {
