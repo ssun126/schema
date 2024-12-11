@@ -32,6 +32,10 @@
         .cui_table{
             vertical-align: middle;
         }
+
+        .cui_attachments{
+            display:block;
+        }
     </style>
 </head>
 <body>
@@ -91,7 +95,7 @@
                             <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM" th:value="${msdsDTO.MSDS_APPROVAL_NUM}" reqcheck="reqcheck"></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="MSDS_FILE" reqcheck="reqcheck">
+                                    <input type="file" class="cui_file_field" name="MSDS_FILE" >
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == '' ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"  th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}" ></span></div>
                                         <div class="item_content">
@@ -146,7 +150,7 @@
                         <tbody id="tableBody2">
                         <tr>
                             <td>
-                                <input type="hidden" name="ROHS_IDX" >
+                                <input type="hidden" name="ROHS_IDX" th:value="${rohsDTO.ROHS_IDX}" >
                                 <input type="text" class="cui_text_field datepicker" name="ROHS_CONFIRM_DATE"  th:value="${rohsDTO.ROHS_CONFIRM_DATE}" reqcheck="reqcheck">
                             </td>
                             <td><input type="text" class="cui_text_field" name="ROHS_CD"    th:value="${rohsDTO.ROHS_CD}"    reqcheck="reqcheck"></td>
@@ -161,7 +165,7 @@
                             <td><input type="text" class="cui_text_field" name="ROHS_DIBP"  th:value="${rohsDTO.ROHS_DIBP}"  reqcheck="reqcheck"></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="ROHS_FILE" reqcheck="reqcheck">
+                                    <input type="file" class="cui_file_field" name="ROHS_FILE">
                                     <input type="hidden" name="FILE_STATUS">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}" ></span></div>
@@ -198,7 +202,7 @@
                         <tbody id="tableBody3">
                         <tr>
                             <td>
-                                <input type="hidden" name="HALOGEN_IDX" >
+                                <input type="hidden" name="HALOGEN_IDX"  th:value="${halGDTO.HALOGEN_IDX}" >
                                 <input type="text" class="cui_text_field datepicker" name="HALOGEN_CONFIRM_DATE" th:value="${halGDTO.HALOGEN_CONFIRM_DATE}"  reqcheck="reqcheck">
                             </td>
                             <td><input type="text" class="cui_text_field" name="HALOGEN_CL"   th:value="${halGDTO.HALOGEN_CL}"   reqcheck="reqcheck"></td>
@@ -208,7 +212,7 @@
                             <td><input type="text" class="cui_text_field" name="HALOGEN_I"    th:value="${halGDTO.HALOGEN_I}"    reqcheck="reqcheck"></td>
                             <td>
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="HALOGEN_FILE" reqcheck="reqcheck">
+                                    <input type="file" class="cui_file_field" name="HALOGEN_FILE">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}"></span></div>
                                         <div class="item_content">
@@ -386,6 +390,26 @@
                 return;
             }
 
+            //파일 체크 이미 저장되어있으면 넘어가도됨
+            var flag = '';
+            if($("input[name=MSDS_FILE]") == '' && $("#MSDS_FILE_NAME").val() == '') {
+                 isValid=false;
+                 flag='MSDS';
+            }
+            if($("input[name=ROHS_FILE]") == '' && $("#ROHS_FILE_NAME]").val() == '') {
+                 isValid=false;
+                 flag='ROHS';
+            }
+            if($("input[name=HALOGEN_FILE]") == '' && $("#HALOGEN_FILE_NAME").val() == '') {
+                 isValid=false;
+                 flag='HALOGEN';
+            }
+
+            if(!isValid){
+                showAlert('warning', flag+'파일을 첨부해주십시오.');
+                return;
+            }
+
             // etc 파일이나 데이터가 있으면 무조건 둘 다 있어야함. 데이터가 아무것도 없다면 기타는 데이터가 없을 수 있음
             const rows = document.querySelectorAll('#tableBody4 tr');
 
@@ -421,6 +445,7 @@
         //삭제버튼 클릭 시 DELETE
         //$(status).closest('name="FILE_STATUS"').val('DELETE');
         $(status).closest('.cui_attachments').find('input[name="FILE_STATUS"]').val('DELETE');
+        $(status).closest('.item_label').find('span').val('');
 
         //안보이게 처리
         $(status).closest('.file_wrap').css('display','none');
@@ -434,4 +459,3 @@
 
 </script>
 </html>
-<input type="file" class="cui_file_field" name="HALOGEN_FILE">

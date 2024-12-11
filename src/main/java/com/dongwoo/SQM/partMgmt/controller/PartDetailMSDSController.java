@@ -184,6 +184,9 @@ public class PartDetailMSDSController {
                     partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
                 }
             }
+        }else{
+            //데이터없음 - 삭제
+            partDetailService.deleteEtcData(pm_idx);
         }
 
 

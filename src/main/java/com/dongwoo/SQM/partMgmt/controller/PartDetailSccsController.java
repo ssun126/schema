@@ -36,6 +36,7 @@ public class PartDetailSccsController {
                                 , Model model){
 
         String pm_idx = sccsDTO.getPM_IDX();
+        String flag = sccsDTO.getINFO_FLAG();
         log.info("test5455555555========999999===========");
         if(!sccsDTO.getSCCS_CONFIRM_DATE().equals("") || !sccsDTO.getSCCS_CHAR().equals("") || !sccsFile.isEmpty() ){
             if(!sccsFile.isEmpty()){
@@ -82,6 +83,9 @@ public class PartDetailSccsController {
         log.info("test5455555555==========2222=========");
 
         //승인요청 pm_idx 상태 바꿈
+        if(flag == "next"){
+            partDetailService.updateApprovalStatus(pm_idx);
+        }
 
 
         //바인딩 리스트

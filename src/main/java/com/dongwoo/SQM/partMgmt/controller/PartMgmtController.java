@@ -138,8 +138,8 @@ public class PartMgmtController {
 
     @GetMapping("/deletePartMgmt")
     public ResponseEntity<?> deletePartMgmt(@RequestParam("ARR_PM_IDX") String arrIdx){
-        //int delResult = partMgmtService.deletePartMgmt(arrIdx);
-        int delResult =0;
+        int delResult = partMgmtService.deletePartMgmt(arrIdx);
+        //int delResult =0;
 
         if(delResult > 0) {
             return ResponseEntity.ok("Form submitted successfully!");
