@@ -58,7 +58,7 @@
                 <div class="toolbar_aside">
                     <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
                     <button type="button" class="cui_button secondary" onclick="delCompany()"><span data-langsid="삭제"></span></button>
-                    <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀다운로드"></span></button>
+                    <button type="button" class="cui_button primary" onclick="downloadExcel()"><span data-langsid="엑셀다운로드"></span></button>
                 </div>
             </div>
 
@@ -169,14 +169,15 @@ var addComCodeSave = function() {
                         ReqInfo.AddParameter("COM_NAME", $("#CpCodeMgmt").find("input[name=COM_NAME]").val());
                         ReqInfo.AddParameter("COM_NATION", $("#CpCodeMgmt").find("input[name=COM_NATION]").val());
                         ReqInfo.AddParameter("COM_STATUS", $("#CpCodeMgmt").find("select[name=COM_STATUS]").val());
-                        //사업본부 설정
+                        //사업본부 설정 - multiple checkbox
                         const checkboxes = document.querySelectorAll('input[name="DEPT_CODES"]:checked');
                         const selectedValues = [];
 
                         checkboxes.forEach(function(checkbox) {
                             selectedValues.push(checkbox.value);  // 체크된 체크박스 값 추가
                         });
-                        ReqInfo.AddParameter("DEPT_CODES", selectedValues);
+                        ReqInfo.AddParameter("DEPT_CODE", selectedValues);
+                        console.log(selectedValues);
 
                         if ($("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val() == "edit") {
                             ReqInfo.AddParameter("MODE", "edit");
@@ -250,17 +251,34 @@ $(function () {
         title: "",
         sortable: false,
         resizable: true,
+        toolbar: {
+            items: [
+            {
+                type: 'button',
+                label: "Excel Download",
+                icon: 'ui-icon-arrowthickstop-1-s',
+                listener: function () {
+                    this.exportData({
+                        url: "/common/exportData",
+                        format: "xlsx",
+                        zip: false,
+                        filename: "ISO_AUTH_LIST",
+                        render: true
+                    });
+                }
+            }]
+        },
         menuIcon: true,
         scrollModel: { autoFit: false },
         hoverMode: 'row',
         rowHtHead: 30,
-        rowHt:30,
+        //rowHt:30,
         roundCorners: false,
         rowBorders: true,
         showBottom: true,
         showHeader: true,
         showTitle: true,
-        showTop: false,
+        showTop: true, //excel 버튼 보이기
         showToolbar: true,
         stripeRows: true,
         wrap: false,

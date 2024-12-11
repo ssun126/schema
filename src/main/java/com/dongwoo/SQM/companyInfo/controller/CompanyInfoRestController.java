@@ -7,6 +7,7 @@ import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.dto.PartCodeDTO;
 import com.dongwoo.SQM.companyInfo.dto.SearchResult;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
+import com.dongwoo.SQM.config.security.UserCustom;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
@@ -86,7 +88,9 @@ public class CompanyInfoRestController {
     public ResponseEntity<?> setCompanyData(@RequestBody CpCodeDTO cpCodeDTO) {
         try {
             log.info("cpCodeDTO === "+cpCodeDTO);
-            log.info(cpCodeDTO.getDEPT_CODES());
+            log.info(String.valueOf(cpCodeDTO.getDEPT_CODE()));
+
+
             int resultCnt = companyInfoService.save(cpCodeDTO);
 
             // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
