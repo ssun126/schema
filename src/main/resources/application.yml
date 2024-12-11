@@ -54,6 +54,18 @@ spring:
         max-file-size: 10MB
         max-request-size: 10MB
     check-template-location: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hansun126@gmail.com
+    password: gkstjsgml12!@
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true  # STARTTLS 활성화
+          timeout: 5000
 
 # mybatis
 mybatis:
