@@ -148,7 +148,7 @@
             </div>
             <div class="dialog_body">
                 <div class="body_root">
-                    <form class="cui_form_section" data-legend="true">
+                    <form class="cui_form_section" id="dialogPID" data-legend="true">
                         <fieldset>
                             <legend><span data-langsid="ID 찾기"></span></legend>
                             <label class="cui_items_wrap" data-direction="left">
@@ -170,7 +170,7 @@
                             </div>
                         </fieldset>
                     </form>
-                    <form class="cui_form_section" data-legend="true">
+                    <form class="cui_form_section" id="dialogPPW" data-legend="true">
                         <fieldset>
                             <legend><span data-langsid="비밀번호 찾기"></span></legend>
                             <label class="cui_items_wrap" data-direction="left">
@@ -238,9 +238,9 @@
     }
 
     var findCompanyID = function () {
-        if (Common.Validate($("#dialogP")) == true) {
+        if (Common.Validate($("#dialogPID")) == true) {
             var ReqInfo = new Common.RequestInfo();
-            ReqInfo.AddParameter($("#dialogP"));
+            ReqInfo.AddParameter($("#dialogPID"));
 
             Common.Ajax("/findCompanyID", ReqInfo, function (response) {
                 if (response == "OK") {
@@ -258,9 +258,9 @@
     }
 
     var findCompanyPW = function () {
-        if (Common.Validate($("#dialogP")) == true) {
+        if (Common.Validate($("#dialogPPW")) == true) {
             var ReqInfo = new Common.RequestInfo();
-            ReqInfo.AddParameter($("#dialogP"));
+            ReqInfo.AddParameter($("#dialogPPW"));
 
             Common.Ajax("/findCompanyPW", ReqInfo, function (response) {
                 if (response == "OK") {

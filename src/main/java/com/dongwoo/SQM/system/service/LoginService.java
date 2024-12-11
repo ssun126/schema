@@ -58,6 +58,14 @@ public class LoginService {
         return loginRepository.findDW(USER_ID, EMAIL);
     }
 
+    public Map<String, Object> findCompanyID(String NAME, String EMAIL) {
+        return loginRepository.findCompanyID(NAME, EMAIL);
+    }
+
+    public Map<String, Object> findCompanyPW(String USER_ID, String NAME, String EMAIL) {
+        return loginRepository.findCompanyPW(USER_ID, NAME, EMAIL);
+    }
+
     public void updateUserPWD(int USER_IDX, String USER_PWD) {
         loginRepository.updateUserPWD(USER_IDX, USER_PWD);
     }

@@ -39,10 +39,33 @@
         AND UIDW.EMAIL = #{EMAIL}
     </select>
     <select id="findCompanyID" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-
+        SELECT
+            UI.USER_IDX
+            , UI.USER_ID
+            , UICU.USER_EMAIL
+        FROM
+            SC_USER_INFO UI
+        LEFT OUTER JOIN
+            SC_USER_INFO_COMPANY UIC ON UI.USER_IDX = UIC.USER_IDX
+        LEFT OUTER JOIN
+            SC_USER_INFO_COMPANY_USER UICU ON UIC.USER_IDX = UICU.USER_IDX AND UIC.COM_USER_IDX = UICU.COM_USER_IDX
+        WHERE UICU.USER_NAME = #{NAME}
+        AND UICU.USER_EMAIL = #{EMAIL}
     </select>
     <select id="findCompanyPW" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-
+        SELECT
+            UI.USER_IDX
+            , UI.USER_ID
+            , UICU.USER_EMAIL
+        FROM
+            SC_USER_INFO UI
+        LEFT OUTER JOIN
+            SC_USER_INFO_COMPANY UIC ON UI.USER_IDX = UIC.USER_IDX
+        LEFT OUTER JOIN
+            SC_USER_INFO_COMPANY_USER UICU ON UIC.USER_IDX = UICU.USER_IDX AND UIC.COM_USER_IDX = UICU.COM_USER_IDX
+        WHERE UICU.USER_NAME = #{NAME}
+        AND UICU.USER_EMAIL = #{EMAIL}
+        AND UI.USER_ID = #{USER_ID}
     </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
         SELECT

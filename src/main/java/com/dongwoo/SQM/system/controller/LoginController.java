@@ -80,7 +80,7 @@ public class LoginController {
 
             Map<String, Object> DW_INFO = loginService.findDW(DWPCID, DWEMail);
 
-            if (DW_INFO.size() == 0) {
+            if (DW_INFO == null || DW_INFO.size() == 0) {
                 return ResponseEntity.ok("정보가 없습니다.");
             } else {
                 int USER_IDX = Integer.parseInt(DW_INFO.get("USER_IDX").toString());
@@ -107,19 +107,61 @@ public class LoginController {
 
     @PostMapping("/findCompanyID")
     public ResponseEntity<?> findCompanyID(HttpServletRequest req) {
-        String CompanySearchIDName = req.getParameter("CompanySearchIDName");
-        String CompanySearchIDEmail = req.getParameter("CompanySearchIDEmail");
+        try {
+            String CompanySearchIDName = req.getParameter("CompanySearchIDName");
+            String CompanySearchIDEmail = req.getParameter("CompanySearchIDEmail");
 
-        return ResponseEntity.ok("OK");
+            Map<String, Object> COM_INFO = loginService.findCompanyID(CompanySearchIDName, CompanySearchIDEmail);
+
+            if (COM_INFO == null || COM_INFO.size() == 0) {
+                return ResponseEntity.ok("정보가 없습니다.");
+            } else {
+                int USER_IDX = Integer.parseInt(COM_INFO.get("USER_IDX").toString());
+                String USER_ID = COM_INFO.get("USER_ID").toString();
+
+                // 메일 발송
+                log.info("findCompanyID - USER_ID:::::::::::::::"+USER_ID);
+
+                return ResponseEntity.ok("OK");
+            }
+        } catch (Exception e) {
+            log.info("findCompanyID === "+e.getMessage());
+            return ResponseEntity.ok("오류가 발생하였습니다.");
+        }
     }
 
     @PostMapping("/findCompanyPW")
     public ResponseEntity<?> findCompanyPW(HttpServletRequest req) {
-        String CompanySearchPWID = req.getParameter("CompanySearchPWID");
-        String CompanySearchPWName = req.getParameter("CompanySearchPWName");
-        String CompanySearchPWEmail = req.getParameter("CompanySearchPWEmail");
+        try {
+            String CompanySearchPWID = req.getParameter("CompanySearchPWID");
+            String CompanySearchPWName = req.getParameter("CompanySearchPWName");
+            String CompanySearchPWEmail = req.getParameter("CompanySearchPWEmail");
 
-        return ResponseEntity.ok("OK");
+            Map<String, Object> COM_INFO = loginService.findCompanyPW(CompanySearchPWID, CompanySearchPWName, CompanySearchPWEmail);
+
+            if (COM_INFO == null || COM_INFO.size() == 0) {
+                return ResponseEntity.ok("정보가 없습니다.");
+            } else {
+                int USER_IDX = Integer.parseInt(COM_INFO.get("USER_IDX").toString());
+
+                // 기존 비밀번호 신규 생성
+                JWTSecretKeyUtils.refreshSecretKey256();
+                String NewPass = JWTSecretKeyUtils.getSecretKey256().toString().substring(3);
+                log.info("findCompanyPW - NewPass:::::::::::::::"+NewPass);
+                PasswordEncoder encoder = new BCryptPasswordEncoder();
+                String encodedPassword = encoder.encode(NewPass);
+
+                // 신규 생성 업데이트
+                loginService.updateUserPWD(USER_IDX, encodedPassword);
+
+                // 메일 발송
+
+                return ResponseEntity.ok("OK");
+            }
+        } catch (Exception e) {
+            log.info("findCompanyPW === "+e.getMessage());
+            return ResponseEntity.ok("오류가 발생하였습니다.");
+        }
     }
 
     @GetMapping("/logout")

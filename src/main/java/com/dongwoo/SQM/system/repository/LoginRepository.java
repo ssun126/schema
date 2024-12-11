@@ -52,6 +52,23 @@ public class LoginRepository {
         return sql.selectOne("Login.findDW", params);
     }
 
+    public Map<String, Object> findCompanyID(String NAME, String EMAIL) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("NAME", NAME);
+        params.put("EMAIL", EMAIL);
+
+        return sql.selectOne("Login.findCompanyID", params);
+    }
+
+    public Map<String, Object> findCompanyPW(String USER_ID, String NAME, String EMAIL) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("USER_ID", USER_ID);
+        params.put("NAME", NAME);
+        params.put("EMAIL", EMAIL);
+
+        return sql.selectOne("Login.findCompanyPW", params);
+    }
+
     public void updateUserPWD(int USER_IDX, String USER_PWD) {
         Map<String, Object> params = new HashMap<>();
         params.put("USER_IDX", USER_IDX);
