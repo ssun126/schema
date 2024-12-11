@@ -73,7 +73,8 @@ function getMultiLanguageData() {
 function getLocalizedValue(id, lang) {
     const data = getMultiLanguageData();
     if (!data) {
-        return "로컬스토리지에 데이터가 없습니다.";
+        console.log("No Lang Data");
+        return "";
     }
 
     // 해당 ID와 lang을 기반으로 데이터 찾기

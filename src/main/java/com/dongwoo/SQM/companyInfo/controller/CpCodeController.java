@@ -1,7 +1,7 @@
 package com.dongwoo.SQM.companyInfo.controller;
 
 import com.dongwoo.SQM.board.dto.Criteria;
-import com.dongwoo.SQM.board.dto.PageDTO;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,10 +23,14 @@ public class CpCodeController {
 
     @GetMapping("/admin/companyInfo/cpCode")
     public String cpCodeMgmtMain(Criteria criteria, Model model) {
+        //회사코드 리스트
         List<CompanyInfoDTO> companyInfoList = companyInfoService.getList(criteria);
         model.addAttribute("companyList", companyInfoList);
-        model.addAttribute("pageMaker", new PageDTO(companyInfoService.getTotal(), 10, criteria));
-        log.info("companyList = " + companyInfoList);
+
+        //사업본부 리스트
+        List<BaseCodeDTO> deptList = companyInfoService.GetBaseCode("CpWorkCode");
+        model.addAttribute("deptList", deptList);
+
         return "cpCodeMgmt/main";
     }
 
@@ -66,9 +69,7 @@ public class CpCodeController {
 
     @PostMapping("/admin/companyInfo/update/{id}")
     public String update(CompanyInfoDTO companyInfoDTO, Model model) {
-        //companyInfoService.update(companyInfoDTO);
-       /* CompanyInfoDTO dto = companyInfoService.findById(companyInfoDTO.getBOARD_IDX());
-        model.addAttribute("companyInfo", dto);*/
+
         return "/companyInfo/detail";
     }
 

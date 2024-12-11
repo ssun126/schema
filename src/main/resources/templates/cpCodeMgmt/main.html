@@ -30,9 +30,12 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchFactory" name="searchFactory">
-                                    <option value="CODEGROUP" data-langsid="선택" selected></option>
-                                    <option value="BASECODE" data-langsid="사업본부"></option>
+                                <select id="searchDept" name="searchDept" class="cui_select_field">
+                                    <option value="" data-langsid="선택" selected></option>
+                                    <option th:each="dept : ${deptList}"
+                                            th:value="${dept.BASE_CODE}"
+                                            th:text="${dept.BASE_NAME}">
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -82,7 +85,7 @@
                             <strong class="item_label" data-langsid="업체 코드"></strong>
                             <div class="item_content">
                                 <input type="text" id="COM_CODE" name="COM_CODE" class="cui_text_field fixdata" reqcheck="reqcheck" data-messages="업체 코드를 입력하세요." messages="">
-                                <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
+                                <button type="button" id="iconSearch" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -94,15 +97,19 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content" style="display:table;">
-                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>반도체 사업본부</span></label></div>
-                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>첨단소재 사업본부</span></label></div>
-                                <div><label class="cui_checkbox"><input type="checkbox" name="checkbox1"><i></i><span>에너지 기능재료 사업부</span></label></div>
+                                <div th:each="dept : ${deptList}">
+                                    <label class="cui_checkbox">
+                                        <input type="checkbox" name="DEPT_CODES" th:value="${dept.BASE_CODE}" />
+                                        <i></i>
+                                        <span th:text="${dept.BASE_NAME}"></span>
+                                    </label>
+                                </div>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="국가"></strong>
                             <div class="item_content">
-                                <input type="text" id="COM_NATION" name="COM_NATION" class="cui_text_field " disabled="disabled">
+                                <input type="text" id="COM_NATION" name="COM_NATION" class="cui_text_field">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -132,12 +139,19 @@ var addOpen = function () {
     $("#modalTitle").html(siteLang.getLang("신규추가"));
     $("#modalTitle").attr("data-langsid", siteLang.getLang("신규추가"));
     $("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val("add");
+    $("#CpCodeMgmt").find("input[name=COM_CODE]").prop("disabled", false); //업체코드
+    $("#iconSearch").css("display", "block"); //업체코드 선택
 
     $("#CpCodeMgmt").find("input[name=COM_CODE]").val("");
     $("#CpCodeMgmt").find("input[name=COM_NAME]").val("");
     $("#CpCodeMgmt").find("input[name=COM_NATION]").val("");
     $("#CpCodeMgmt").find("select[name=COM_STATUS]").val("Y");
-    // 사업본부 체크 박스 구현후 수정 필요
+    //사업본부 초기화
+    var checkboxes = document.querySelectorAll('#CpCodeMgmt input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;  // 체크박스 초기화
+    });
+
     Common.Dialog({ obj : $("#CpCodeMgmt"), blockClose : false });
 }
 
@@ -147,11 +161,6 @@ var addComCodeSave = function() {
             mode : "confrim"
             , okback : function () {
                 if (Common.Validate($("#CpCodeMgmt")) == true) {
-                    if ($("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val() == "edit") {
-                        alert("수정 저장 로직 구현 필요");
-                        return;
-                    }
-
                     Common.Loading.Show();
 
                     setTimeout(function () {
@@ -160,6 +169,18 @@ var addComCodeSave = function() {
                         ReqInfo.AddParameter("COM_NAME", $("#CpCodeMgmt").find("input[name=COM_NAME]").val());
                         ReqInfo.AddParameter("COM_NATION", $("#CpCodeMgmt").find("input[name=COM_NATION]").val());
                         ReqInfo.AddParameter("COM_STATUS", $("#CpCodeMgmt").find("select[name=COM_STATUS]").val());
+                        //사업본부 설정
+                        const checkboxes = document.querySelectorAll('input[name="DEPT_CODES"]:checked');
+                        const selectedValues = [];
+
+                        checkboxes.forEach(function(checkbox) {
+                            selectedValues.push(checkbox.value);  // 체크된 체크박스 값 추가
+                        });
+                        ReqInfo.AddParameter("DEPT_CODES", selectedValues);
+
+                        if ($("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val() == "edit") {
+                            ReqInfo.AddParameter("MODE", "edit");
+                        }
 
                         Common.Ajax("/companyInfo/setCompanyData", ReqInfo, function (response) {
                             if (response == "Form submitted successfully!") {
@@ -205,7 +226,7 @@ var ListSearch = function () {
             if (dataJson[i].COM_STATUS == "Y") {
                 dataJson[i].COM_STATUS_NAME = siteLang.getLang("사용");
             } else {
-                dataJson[i].COM_STATUS_NAME = siteLang.getLang("미사용");
+                dataJson[i].COM_STATUS_NAME = siteLang.getLang("미거래");
             }
         }
 
@@ -261,12 +282,29 @@ $(function () {
             $("#modalTitle").html(siteLang.getLang("수정"));
             $("#modalTitle").attr("data-langsid", siteLang.getLang("수정"));
             $("#CpCodeMgmt").find("input[name=CpCodeMgmtMode]").val("edit");
+            $("#CpCodeMgmt").find("input[name=COM_CODE]").prop("disabled", true); //업체코드 수정 불가
+            $("#iconSearch").css("display", "none"); //업체코드 수정 불가
 
             $("#CpCodeMgmt").find("input[name=COM_CODE]").val(data.COM_CODE);
             $("#CpCodeMgmt").find("input[name=COM_NAME]").val(data.COM_NAME);
             $("#CpCodeMgmt").find("input[name=COM_NATION]").val(data.COM_NATION);
             $("#CpCodeMgmt").find("select[name=COM_STATUS]").val(data.COM_STATUS);
-            // 사업본부 체크 박스 구현후 수정 필요
+            //사업본부 초기화 후 설정- 다중 체크
+            var checkboxes = document.querySelectorAll('#CpCodeMgmt input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;  // 체크박스 초기화
+            });
+            const deptCodesString = data.DEPT_CODES;
+            if(deptCodesString != null && deptCodesString != ""){
+                var deptCodesArray = deptCodesString.split(',');
+
+                deptCodesArray.forEach(function(deptCode) {
+                    const checkbox = document.querySelector('input[name="DEPT_CODES"][value="' + deptCode + '"]');
+                    if (checkbox) {
+                        checkbox.checked = true;  // 해당 체크박스 선택
+                    }
+                });
+            }
 
             Common.Dialog({ obj : $("#CpCodeMgmt"), blockClose : false });
         },
@@ -281,16 +319,21 @@ $(function () {
         {
             dataIndx: "CHECK_YN", width: 50, halign: "center", align: "center", resizable: true,
             title: "",
-            type: 'checkBoxSelection', sortable: true, editor: true, editable: true,
+            type: 'checkBoxSelection', sortable: false, editor: true, editable: true,
             dataType: 'bool',
             cb: {
                 all: false,
                 header: false
             }, render: function (ui) {
+                var state = ui.rowData.COM_STATUS;
                 if (ui.cellData == undefined) {
                     return { text: "" };
                 } else {
-                    return;
+                    if(state === "Y"){ // 상태값이 "N"일 경우에는 체크박스 표시하지 않음.
+                        return { text: "" };
+                    }else{
+                        return;
+                    }
                 }
             }
         },

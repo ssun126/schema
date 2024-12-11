@@ -53,9 +53,10 @@ public class CompanyInfoRestController {
         String name = req.getParameter("searchName");
         String code = req.getParameter("searchCode");
         String nation = req.getParameter("searchNation");
+        String dept = req.getParameter("searchDept");
 
         // 검색 결과와 페이지
-        return companyInfoService.listSearchCompanies(name, code, nation);
+        return companyInfoService.listSearchCompanies(name, code, nation, dept);
     }
 
     @PostMapping("/companyApiList")
@@ -84,6 +85,8 @@ public class CompanyInfoRestController {
     @PostMapping("/setCompanyData")
     public ResponseEntity<?> setCompanyData(@RequestBody CpCodeDTO cpCodeDTO) {
         try {
+            log.info("cpCodeDTO === "+cpCodeDTO);
+            log.info(cpCodeDTO.getDEPT_CODES());
             int resultCnt = companyInfoService.save(cpCodeDTO);
 
             // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)

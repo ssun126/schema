@@ -13,6 +13,7 @@ public class ComPanyCodeDTO {
    private String  COM_NAME		    ; //  업체명
    private String  COM_NATION		; //  국가 (KOR...)     ★
    private String  COM_STATUS			; // 구분 (Y:사용, N:미거래)	!!
+   private String  DEPT_CODES		    ; // 설정된 사업본부
    private int  REG_DW_USER_IDX	    ; // 등록자 IDX   IF 받고 최초는 대기 0  일때 IF
    private int  UP_DW_USER_IDX		    ; // 수정자 IDX   IF 받고 최초는 대기 0 일때 IF
    private String  REG_DATE		    ; //  등록일

@@ -19,6 +19,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.web.cors.CorsConfiguration;
@@ -52,6 +53,21 @@ public class SecurityConfig {
         http
 
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
+                .headers(headers ->
+                            headers.xssProtection(
+                                    xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+                            ).contentSecurityPolicy(csp -> csp
+                                    .policyDirectives("default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:")
+                                    //.reportOnly()
+                            )
+                        )
+                .headers(
+                        headersConfigurer ->
+                                headersConfigurer
+                                        .frameOptions(
+                                                HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                                        )
+                )
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
                         .requestMatchers("/", "/login", "/auth/login", "/member/**", "/multiLanguage/getLocalStorage").permitAll()
@@ -76,13 +92,7 @@ public class SecurityConfig {
                 .securityContext((securityContext) -> securityContext
                         .requireExplicitSave(true)
                 )
-                .headers(
-                        headersConfigurer ->
-                                headersConfigurer
-                                        .frameOptions(
-                                                HeadersConfigurer.FrameOptionsConfig::sameOrigin
-                                        )
-                )
+
                 .sessionManagement((auth)->auth
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1) // 추가 로그인 차단

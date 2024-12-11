@@ -16,4 +16,8 @@ public class CpCodeDTO {
     private String COM_NATION;
     @JsonProperty("COM_STATUS")
     private String COM_STATUS;
+    @JsonProperty("DEPT_CODES")
+    private String DEPT_CODES; // 설정된 사업본부
+    @JsonProperty("MODE")
+    private String MODE;
 }
