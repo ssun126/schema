@@ -20,86 +20,74 @@
         <div class="cui_search">
           <div class="search_list cui_grid_wrap ">
             <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">업체코드</strong>
-              <div class="item_content">
-                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
-              </div>
-            </div>
-            <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">업체명</strong>
-              <div class="item_content">
-                <input class="cui_text_field" type="text" placeholder="업체명을 입력해주세요"/>
-              </div>
-            </div>
-            <div></div><div></div>
-            <div class="cui_items_wrap" data-direction="left">
               <strong class="item_label">자재코드</strong>
               <div class="item_content">
-                <input class="cui_text_field" type="text" placeholder="자재코드를 입력해주세요"/>
+                <input class="cui_text_field" type="text" id="searhPartCode" placeholder="업체코드를 입력해주세요"/>
               </div>
             </div>
             <div class="cui_items_wrap" data-direction="left">
               <strong class="item_label">자재명</strong>
               <div class="item_content">
-                <input class="cui_text_field" type="text" placeholder="자재명을 입력해주세요"/>
+                <input class="cui_text_field" type="text" id="searchPartName" placeholder="업체명을 입력해주세요"/>
               </div>
             </div>
             <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">신청인 ID</strong>
+              <strong class="item_label">신청인ID</strong>
               <div class="item_content">
-                <input class="cui_text_field" type="text" placeholder="신청인 ID를 입력해주세요"/>
+                <input class="cui_text_field" type="text" id="searchRegUser" placeholder="업체명을 입력해주세요"/>
               </div>
             </div>
-            <div></div>
             <div class="cui_items_wrap" data-direction="left">
               <strong class="item_label">사용여부</strong>
               <div class="item_content">
-                <select class="cui_select_field">
-                  <option value="">사용</option>
-                  <option value="">미사용</option>
+                <select class="cui_select_field" id="searchUseYN">
+                  <option value="" selected >전체</option>
+                  <option value="active" >active</option>
+                  <option value="inactive">inactive</option>
                 </select>
               </div>
             </div>
             <div class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">취급Plant</strong>
+              <strong class="item_label">취급PLANT</strong>
               <div class="item_content">
-                <select class="cui_select_field">
-                  <option value="">사용</option>
-                  <option value="">미사용</option>
+                <select class="cui_select_field" id="searchPlant">
+                  <option value="" selected >전체</option>
+                  <option th:each="searchPlantList : ${searchPlantList}" th:value="${searchPlantList.BASE_CODE}"
+                          th:text="${searchPlantList.BASE_VALUE}"></option>
+
                 </select>
               </div>
             </div>
             <div class="cui_items_wrap" data-direction="left">
               <strong class="item_label">승인현황</strong>
               <div class="item_content">
-                <select class="cui_select_field">
-                  <option value="">사용</option>
-                  <option value="">미사용</option>
+                <select class="cui_select_field" id="searchApproval">
+                  <option value=""  > 전체</option>
+                  <option value="0" >신규</option>
+                  <option value="1" >작성중</option>
+                  <option value="2" >검토중</option>
+                  <option value="3" >승인</option>
+                  <option value="4" >반려</option>
+                  <option value="5" >자료보완</option>
                 </select>
               </div>
             </div>
-            <div></div>
             <div class="cui_items_wrap" data-direction="left">
               <strong class="item_label">승인일자</strong>
-              <div class="item_content">
-                <div class="cui_items_wrap">
-                  <div class="item_content" data-role="calendar-picker" >
-                    <input type="text" id="Sch_StartDate" class="cui_text_field cui_calendar_val" value="2024.12.13" onclick="SetDatePicker(this);">
-                    <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
-                  </div>
-                </div>
-                <div class="field_connect">~</div>
-                <div class="cui_items_wrap">
-                  <div class="item_content" data-role="calendar-picker" >
-                    <input type="text" id="Sch_EndDate" class="cui_text_field cui_calendar_val" value="2024.12.13" onclick="SetDatePicker(this);">
-                    <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span>달력 선택</span></button>
-                  </div>
-                </div>
+              <div class="item_content" data-role="calendar-picker">
+                <input type="text" class="cui_text_field datepicker" id="searchStartDate">
+                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="startDate"><span>날자 선택</span></button>
+              </div>
+              ~
+              <div class="item_content" data-role="calendar-picker">
+                <input type="text" class="cui_text_field datepicker" id="searchEndDate">
+                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="endDate"><span>날자 선택</span></button>
               </div>
             </div>
+
           </div>
           <div class="search_action">
-            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+            <button type="button" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
           </div>
         </div>
       </form>
@@ -112,18 +100,18 @@
         </div>
       </div>
 
-      <table class="cui_table" id="Table">
+      <table class="cui_table center" id="partMgmtTable">
         <colgroup>
-          <col style="width:100px;">
-          <col style="width:100px;">
-          <col style="width:100px;">
+          <col >
+          <col >
+          <col >
           <col>
-          <col style="width:100px;">
-          <col style="width:100px;">
-          <col style="width:100px;">
-          <col style="width:100px;">
-          <col style="width:130px;">
-          <col style="width:130px;">
+          <col >
+          <col >
+          <col >
+          <col >
+          <col >
+          <col >
         </colgroup>
         <thead>
         <tr>
@@ -151,5 +139,270 @@
     </div>
   </div>
 </div>
+<div class="cui_dialog" style="width:400px;display:none;" id="PartMgmt">
+  <div class="dialog_container">
+    <div class="dialog_head">
+      <div class="dialog_title">
+        <div class="main_label"><span id="modalTitle">신규추가</span></div>
+      </div>
+      <div class="dialog_toolbar">
+        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('PartMgmt')"><span>Close</span></button>
+      </div>
+    </div>
+    <div class="dialog_body">
+      <div class="body_root">
+        <form class="cui_form_section" data-legend="true" name="formPartMgmt">
+          <fieldset>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">자재 코드</strong>
+              <div class="item_content">
+                <input type="hidden" name="PM_IDX"/>
+                <input id="modalPartCode" name="PM_PART_CODE" class="cui_text_field fixdata">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">자재판매국가</strong>
+              <div class="item_content">
+                <input id="modalPartCountry" name="PM_PART_COUNTRY" class="cui_text_field fixdata">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">자재명칭</strong>
+              <div class="item_content">
+                <input id="modalPartName" name="PM_PART_NAME" class="cui_text_field fixdata">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">성상</strong>
+              <div class="item_content">
+                <select class="cui_select_field wide" id="modalPartQulity" name="PM_QUALITY" disabled="disabled">
+                  <option value="LIQUID">액체</option>
+                  <option value="SOLID">고체</option>
+                  <option value="GAS">기체</option>
+                </select>
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">혼합/단일</strong>
+              <div class="item_content">
+                <select class="cui_select_field wide" id="modalPartStatus" name="PM_STATUS" disabled="disabled">
+                  <option value="MIX">혼합</option>
+                  <option value="SINGLE">단일</option>
+                </select>
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">Chemical 여부</strong>
+              <div class="item_content">
+                <select class="cui_select_field wide" id="modalPartChemical" name="PM_CHEMICAL_YN" disabled="disabled">
+                  <option value="Y">Y</option>
+                  <option value="N">N</option>
+                </select>
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label">취급 PLANT</strong>
+              <div class="item_content">
+                <input id="modalPartPlant" name="PM_PART_PLANT_CODE" class="cui_text_field fixdata">
+              </div>
+            </label>
+
+            <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+              <div class="item_content">
+                <button type="button" id="PartCodeMgmtPop" class="cui_button secondary" onClick="modal_close('PartMgmt')"><span>닫기</span></button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $(document).ready(function() {
+      $('#searchBtn').click();
+
+ });
+
+       // datepicker를 input 필드에 적용
+       $('.datepicker').datepicker({
+           dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
+           showOn: "focus",
+       });
+
+       // 버튼 클릭 시 input 필드의 datepicker 열기
+       $('[data-cui-icon="calendar"]').on('click', function() {
+           var targetId = $(this).attr('id'); // 클릭된 요소의 id 가져오기
+           console.log(targetId + " was clicked");
+
+           // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
+           if (targetId === "startDate") {
+              $('#searchStartDate').datepicker('show'); // 첫 번째 datepicker 열기
+           } else if (targetId === "endDate") {
+              $('#searchEndDate').datepicker('show'); // 두 번째 datepicker 열기
+           }
+       });
+
+      // 검색 버튼 클릭 시
+      $('#searchBtn').on('click', function() {
+          var code = $('#searhPartCode').val();  // 자재코드
+          var name = $('#searchPartName').val();  // 자재명
+          var reguser = $('#searchRegUser').val();  // 등록자
+          var useyn = $('#searchUseYN').val();  // 사용유무
+          var plant = $('#searchPlant').val();  // plant
+          var approval = $('#searchApproval').val();  // 승인현황
+          var sdate = $('#searchStartDate').val();  // 시작날짜
+          var edate = $('#searchEndDate').val();  // 끝날짜
+
+
+          $.ajax({
+              url: '/admin/partMgmt/searchAdminPartMgmt',  // 서버의 검색 API URL
+              type: 'GET',
+              data: {
+                  code    :code     ,      // 업체명
+                  name    :name     ,      // 업체 코드
+                  reguser :reguser ,            // 국가
+                  useyn   :useyn   ,          // 기본값으로 첫 페이지
+                  plant   :plant   ,          // 한 페이지에 표시할 항목 수
+                  approval:approval,
+                  sdate   :sdate   ,
+                  edate   :edate
+
+              },
+              success: function(response) {
+                  // 테이블에 결과 채우기
+                  var tableBody = $('#partMgmtTable tbody');
+                  tableBody.empty();  // 기존 내용 비우기
+
+                  // 검색된 결과를 테이블에 추가
+                  //response.resultList.forEach(function(partmgmt) {
+                  response.forEach(function(partmgmt) {
+                       var row = '<tr>' +
+                                   //(partmgmt.PM_APPROVAL_DATE === '' ? 삭제는 승인 요청 전까지만 가능
+                                      '<td>' + partmgmt.PM_COM_CODE + '</td>' +
+                                      '<td>' + partmgmt.COM_NAME + '</td>' +
+                                      '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'READ\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>'  +  // company.COM_STATUS가 'N'이 아닌 경우에
+                                      '<td><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></td>' +
+                                      '<td>' + partmgmt.PM_PART_PLANT_CODE + '</td>' +
+                                      '<td>' + partmgmt.PM_PART_COUNTRY + '</td>' +
+                                      '<td>' + partmgmt.PM_REG_USER + '</td>' +
+                                      '<td>' + partmgmt.PM_ACTIVE_YN + '</td>' +
+                                      '<td>' + partmgmt.PM_APPROVAL_STATUS +'</td>' +
+                                      '<td>' + partmgmt.PM_APPROVAL_DATE + '</td>' +
+                                    '</tr>';
+                      tableBody.append(row);  // 테이블에 새 행 추가
+                  });
+
+              },
+              error: function() {
+                  alert("검색 결과를 가져오는 데 실패했습니다.");
+              }
+          });
+      });
+
+
+     //수정 버튼 클릭 후
+          // 링크 클릭 시 콘텐츠를 로드
+      $(document).on("click", ".load-page", function(e) {
+          e.preventDefault();
+
+          const idx = $(this).data("code");
+          const url = "/admin/partMgmt/goReadDetail?PM_IDX="+idx;
+
+          history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
+          //loadContent(url);
+          window.location.href=url;
+          //goMenu(url);
+      });
+
+
+  //삭제
+  function delPart(){
+      var selectValues = [];
+      var count = 0;
+
+      $('select[id^="pmIdx_"]').find('input:checked').each(function(){
+          var value = $(this).val();
+          var apprDate = $(this).closest("tr").find('input[name="PM_REQUEST_APPROVAL_DATE"]').val();
+          if(value ===''){
+              selectValues.push(key);
+          }else{
+              count++;
+          }
+      });
+
+
+      if(count>0){
+          showAlert('warning', '삭제할 수 없는 데이터가 있습니다');
+          return;
+      }else{
+          if(selectValues.length == 0){
+              showAlert('warning', '삭제할 데이터가 없습니다');
+          return;
+          }else{
+
+              var app_num = selectValues.join(',');
+              $.ajax({
+                  url : '/user/partMgmt/deletePartMgmt',
+                  type : 'GET',
+                  data : {
+                      ARR_PM_IDX : app_num
+                  },
+                  success : function(response){
+                      showAlert('success', '삭제되었습니다');
+                      $('#searchBtn').click();
+                  },
+                  error : function(xhr,status,error) {
+                      console.error("error : " + error)
+                  }
+              });
+          }
+
+      }
+  }
+
+
+  function bindModalData(status, parMgmt){
+      if(parMgmt != null){
+
+          document.getElementsByName("PM_IDX")[0].value = parMgmt.PM_IDX;
+          document.getElementsByName("PM_PART_CODE")[0].value = parMgmt.PM_PART_CODE;
+          document.getElementsByName("PM_PART_COUNTRY")[0].value = parMgmt.PM_PART_COUNTRY;
+          document.getElementsByName("PM_PART_NAME")[0].value = parMgmt.PM_PART_NAME;
+          document.getElementsByName("PM_PART_PLANT_CODE")[0].value = parMgmt.PM_PART_PLANT_CODE;
+
+
+          $("select[name=PM_QUALITY]").val(parMgmt.PM_QUALITY).prop("selected", true);
+          $("select[name=PM_STATUS]").val(parMgmt.PM_STATUS).prop("selected", true);
+          $("select[name=PM_CHEMICAL_YN] ").val(parMgmt.PM_CHEMICAL_YN).prop("selected", true);
+
+      }
+  }
+
+  //엑셀 다운로드
+  function downloadExcel() {
+      // 버튼 클릭 시 서버에서 엑셀 파일을 다운로드하도록 요청
+
+
+      var code = $('#searhPartCode').val();  // 자재코드
+       var name = $('#searchPartName').val();  // 자재명
+       var reguser = $('#searchRegUser').val();  // 등록자
+       var useyn = $('#searchUseYN').val();  // 사용유무
+       var plant = $('#searchPlant').val();  // plant
+       var approval = $('#searchApproval').val();  // 승인현황
+       var sdate = $('#searchStartDate').val();  // 시작날짜
+       var edate = $('#searchEndDate').val();  // 끝날짜
+
+       window.location.href = '/user/partMgmt/downloadExcel?code='+code+'&name='+name
+                              +'&reguser='+reguser+'&useyn='+useyn+'&plant='+plant
+                              +'&approval='+approval+'&sdate='+sdate+'&edate='+edate;  // 서버 엔드포인트로 이동
+
+  }
+
+
+
+
+</script>
+
 </body>
 </html>

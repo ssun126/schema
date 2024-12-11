@@ -120,7 +120,7 @@
                                             <input type="file" class="cui_file_field" name="DECLAR_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${declarDTO.FILE_NAME == '' ? 'display:none;' : '' }">
-                                                <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:value="${declarDTO.FILE_NAME}"></span></div>
+                                                <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:value="${declarDTO.FILE_NAME}"  th:text="${declarDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
                                                     <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                 </div>
@@ -263,7 +263,7 @@
         var ArrData = Data.split(',');
 
         for(var i=0; i<ArrData.length; i++){
-            $("#svhc_"+ArrData[i]).val('Y').prop("selected",true);
+            $("#declar_"+ArrData[i]).val('Y').prop("selected",true);
         }
 
     }

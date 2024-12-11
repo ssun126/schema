@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminPartMgmt">
+    <select id ="searchAdminPartMgmt" parameterType="adminPartMgmt" resultType="adminPartMgmt">
+        SELECT
+        PM_IDX
+        ,pmd.PM_COM_CODE
+        ,scc.COM_NAME
+        ,PM_PART_CODE
+        ,pc.PART_NAME as PM_PART_NAME
+        --,bc.base_value as PM_PLANT
+        ,PM_PART_PLANT_CODE
+        --,pc.PART_COUNTRY as PM_COUNTRY
+        ,PM_PART_COUNTRY
+        ,ui.USER_NAME as PM_REG_USER
+        ,NVL(PM_ACTIVE_YN, ' ') as PM_ACTIVE_YN
+        ,NVL(BASE_NAME , ' ') as PM_APPROVAL_STATUS
+        ,NVL(TO_CHAR(PM_APPROVAL_DATE, 'YYYY-MM-DD'),' ') as PM_APPROVAL_DATE
+        FROM SC_PART_MANAGEMENT_DATA pmd
+        LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE
+        LEFT JOIN (SELECT BASE_NAME, BASE_VALUE FROM SC_BASE_CODE  WHERE GROUP_CODE != BASE_CODE AND GROUP_CODE='PartApproval') sbc ON pmd.PM_APPROVAL_STATUS  = sbc.BASE_VALUE
+        LEFT OUTER JOIN SC_USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_IDX
+        LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pmd.PM_COM_CODE
+        WHERE 1 =1
+        <if test="PM_PART_CODE != null and PM_PART_CODE != ''">
+            AND (PM_PART_CODE LIKE CONCAT(CONCAT('%',  #{PM_PART_CODE}), '%'))
+        </if>
+        <if test="PM_PART_NAME != null and PM_PART_NAME != ''">
+            AND (PM_PART_NAME LIKE CONCAT(CONCAT('%',  #{PM_PART_NAME}), '%'))
+        </if>
+        <if test="REG_USER != null and REG_USER != ''">
+            AND (ui.USER_NAME  LIKE CONCAT(CONCAT('%',  #{REG_USER}), '%'))
+        </if>
+        <if test="PM_ACTIVE_YN != null and PM_ACTIVE_YN != ''">
+            AND (PM_ACTIVE_YN = #{PM_ACTIVE_YN})
+        </if>
+        <if test="PM_PART_PLANT_CODE != null and PM_PART_PLANT_CODE != ''">
+            AND (PM_PART_PLANT_CODE LIKE CONCAT(CONCAT('%',  #{PM_PLANT}), '%'))
+        </if>
+        <if test="PM_APPROVAL_STATUS != null and PM_APPROVAL_STATUS != ''">
+            AND (PM_APPROVAL_STATUS LIKE CONCAT(CONCAT('%',  #{PM_APPROVAL_STATUS}), '%'))
+        </if>
+        <if test="PM_SDATE != null and PM_SDATE != ''">
+            <![CDATA[ AND (PM_REG_DATE > #{PM_SDATE})]]>
+        </if>
+        <if test="PM_EDATE != null and PM_EDATE != ''">
+            <![CDATA[ AND (PM_REG_DATE  <= #{PM_EDATE})]]>
+        </if>
+    </select>
+</mapper>
