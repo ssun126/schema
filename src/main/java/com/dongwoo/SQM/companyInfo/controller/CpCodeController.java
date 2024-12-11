@@ -37,6 +37,12 @@ public class CpCodeController {
         return "cpCodeMgmt/apiList";
     }
 
+    @PostMapping("/admin/companyInfo/cpCodeApiList2")
+    public String cpCodeMgmtApi2(Criteria criteria, Model model) {
+
+        return "cpCodeMgmt/apiList2";
+    }
+
     @PostMapping("/admin/companyInfo/cpCode/save")
     public String cpCodeSave(CompanyInfoDTO companyInfoDTO) throws IOException {
        // companyInfoService.save(companyInfoDTO);

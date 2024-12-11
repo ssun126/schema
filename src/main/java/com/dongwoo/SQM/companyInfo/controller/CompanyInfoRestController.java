@@ -67,6 +67,10 @@ public class CompanyInfoRestController {
         return companyInfoService.companyApiList(name, code);
     }
 
+
+
+
+
     //업체 정보 가져오기
     @GetMapping("/getCompanyData")
     public ResponseEntity<?> getCompanyData(@RequestParam("param1")String param) {

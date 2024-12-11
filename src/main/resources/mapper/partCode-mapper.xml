@@ -28,7 +28,11 @@
         cc.COM_NAME,
         pc.PLANT_CODE,
         cc.COM_NATION ,
-        pc.PART_STATUS
+        pc.PART_STATUS,
+        ( SELECT BASE_VALUE FROM SC_BASE_CODE
+            WHERE GROUP_CODE ='CpWorkCode' AND GROUP_CODE != BASE_CODE
+            AND BASE_OPTION  LIKE '%'|| pc.PLANT_CODE  ||'%'
+        ) BASE_CODE
         FROM SC_PART_CODE pc
         JOIN SC_COMPANY_CODE cc ON pc.COM_CODE = cc.COM_CODE
         WHERE 1=1
@@ -80,30 +84,21 @@
     </select>
 
     <!--    팝업 자재코드 지켐스 IF -->
-    <select id="getMaterialList" resultType="partCode">
-        <![CDATA[
-        SELECT ROWNUM RN
-            ,MAT_ID
-            ,MAT_NAME
-            ,PLAND_ID
-            ,PLAND_NAME
-            ,IF_DATETIME
-            ,IF_SYSTEM
-        FROM
-        (
-            SELECT
-             ROWNUM RN
-            ,MAT_ID
-            ,MAT_NAME
-            ,PLAND_ID
-            ,PLAND_NAME
-            ,IF_DATETIME
-            ,IF_SYSTEM
-           FROM INTER_PART_MATERIAL
-            WHERE ROWNUM <= #{pageNum} * #{amount}
-        )
-           WHERE RN > (#{pageNum}-1) * #{amount}
-        ]]>
+    <select id="getMaterialList" parameterType="map" resultType="hashMap">
+        SELECT
+        MAT_ID
+        ,MAT_NAME
+        ,PLAND_ID
+        ,PLAND_NAME
+        FROM INTER_PART_MATERIAL
+        WHERE 1=1
+        <if test="MAT_ID != null and MAT_ID != ''">
+            and MAT_ID = #{MAT_ID}
+        </if>
+        <if test="MAT_NAME != null and MAT_NAME != ''">
+            and MAT_NAME = #{MAT_NAME}
+        </if>
+
     </select>
 
     <select id="getMaterialListTotal" resultType="int">

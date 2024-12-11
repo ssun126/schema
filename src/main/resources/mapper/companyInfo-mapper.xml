@@ -371,4 +371,6 @@
         update SC_COMPANY_CODE set COM_STATUS=#{COM_STATUS}
         where COM_CODE=#{COM_CODE}
     </update>
+
+
 </mapper>
