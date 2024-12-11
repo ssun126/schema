@@ -74,7 +74,7 @@ public class PartDetailMSDSController {
                              , @RequestParam("MSDS_FILE") MultipartFile mdsdFile
                              , @RequestParam("ROHS_FILE") MultipartFile rohsFile
                              , @RequestParam("HALOGEN_FILE") MultipartFile halgFile
-                             , @RequestParam("ETC_FILE") MultipartFile[] etcFile
+                             , @RequestParam(value="ETC_FILE",required = false) MultipartFile[] etcFile
                              , @AuthenticationPrincipal UserCustom user
                              , Model model){
         log.info("test===========================" + etcDTO);
@@ -136,54 +136,56 @@ public class PartDetailMSDSController {
 
         }
         partDetailService.saveHalogenData(halgDTO);
+        if(etcDTO != null){
+            //etc
+            String ETC_IDX = etcDTO.getETC_IDX();
+            String PM_IDX = etcDTO.getPM_IDX();
+            String CONFIRM_DATE = etcDTO.getETC_CONFIRM_DATE();
+            String ANALYSE_ENTRY = etcDTO.getETC_ANALYSE_ENTRY();
+            String ANALYSE_RESULT = etcDTO.getETC_ANALYSE_RESULT();
+            String FILE_NAME = etcDTO.getETC_FILE_NAME() == null ? "":etcDTO.getETC_FILE_NAME();
+            String FILE_PATH = etcDTO.getETC_FILE_PATH()== null ? "":etcDTO.getETC_FILE_PATH();
+            String FILE_STATUS = etcDTO.getFILE_STATUS();
 
-        //etc
-        String ETC_IDX = etcDTO.getETC_IDX();
-        String PM_IDX = etcDTO.getPM_IDX();
-        String CONFIRM_DATE = etcDTO.getETC_CONFIRM_DATE();
-        String ANALYSE_ENTRY = etcDTO.getETC_ANALYSE_ENTRY();
-        String ANALYSE_RESULT = etcDTO.getETC_ANALYSE_RESULT();
-        String FILE_NAME = etcDTO.getETC_FILE_NAME() == null ? "":etcDTO.getETC_FILE_NAME();
-        String FILE_PATH = etcDTO.getETC_FILE_PATH()== null ? "":etcDTO.getETC_FILE_PATH();
-        String FILE_STATUS = etcDTO.getFILE_STATUS();
 
+            String[] ETC_ETC_IDX = ETC_IDX.split(",");
+            String[] ETC_PM_IDX = PM_IDX.split(",");
+            String[] ETC_CONFIRM_DATE = CONFIRM_DATE.split(",");
+            String[] ETC_ANALYSE_ENTRY = ANALYSE_ENTRY.split(",");
+            String[] ETC_ANALYSE_RESULT = ANALYSE_RESULT.split(",");
+            String[] ETC_FILE_NAME = FILE_NAME.split(",");
+            String[] ETC_FILE_PATH = FILE_PATH.split(",");
+            String[] ETC_FILE_STATUS = FILE_STATUS.split(",");
 
-        String[] ETC_ETC_IDX = ETC_IDX.split(",");
-        String[] ETC_PM_IDX = PM_IDX.split(",");
-        String[] ETC_CONFIRM_DATE = CONFIRM_DATE.split(",");
-        String[] ETC_ANALYSE_ENTRY = ANALYSE_ENTRY.split(",");
-        String[] ETC_ANALYSE_RESULT = ANALYSE_RESULT.split(",");
-        String[] ETC_FILE_NAME = FILE_NAME.split(",");
-        String[] ETC_FILE_PATH = FILE_PATH.split(",");
-        String[] ETC_FILE_STATUS = FILE_STATUS.split(",");
-
-        //파일 새로 등록(수정) 시 기존 파일 삭제
+            //파일 새로 등록(수정) 시 기존 파일 삭제
 //        for(int j = 0; j < ETC_FILE_STATUS.length; j++) {
 //            if(ETC_FILE_STATUS[j].equals("Del")) {
 //                partDetailService.deleteFileData(ETC_FILE_NAME[j],ETC_FILE_PATH[j]);
 //            }
 //        }
 
-        if(etcFile.length>0){
-            for(int i = 0; i<etcFile.length; i++){
-                partDetailEtcDTO newetcdto = new partDetailEtcDTO();
+            if(etcFile.length>0){
+                for(int i = 0; i<etcFile.length; i++){
+                    partDetailEtcDTO newetcdto = new partDetailEtcDTO();
 
-                if(ETC_ETC_IDX.length  !=  0) newetcdto.setETC_IDX(ETC_ETC_IDX[i]);
-                else    newetcdto.setETC_IDX("");
+                    if(ETC_ETC_IDX.length  !=  0) newetcdto.setETC_IDX(ETC_ETC_IDX[i]);
+                    else    newetcdto.setETC_IDX("");
 
-                newetcdto.setPM_IDX(ETC_PM_IDX[0]);
-                newetcdto.setETC_CONFIRM_DATE(ETC_CONFIRM_DATE[i]);
-                newetcdto.setETC_ANALYSE_ENTRY(ETC_ANALYSE_ENTRY[i]);
-                newetcdto.setETC_ANALYSE_RESULT(ETC_ANALYSE_RESULT[i]);
-
-
-                //신규파일 업로드 후 경로 가져오기
-                MultipartFile files = etcFile[i];
+                    newetcdto.setPM_IDX(ETC_PM_IDX[0]);
+                    newetcdto.setETC_CONFIRM_DATE(ETC_CONFIRM_DATE[i]);
+                    newetcdto.setETC_ANALYSE_ENTRY(ETC_ANALYSE_ENTRY[i]);
+                    newetcdto.setETC_ANALYSE_RESULT(ETC_ANALYSE_RESULT[i]);
 
 
-                partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
+                    //신규파일 업로드 후 경로 가져오기
+                    MultipartFile files = etcFile[i];
+
+
+                    partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
+                }
             }
         }
+
 
 
         //다음버튼(insert, or updqte)
@@ -252,7 +254,9 @@ public class PartDetailMSDSController {
             log.info("partMgmtDTO=============================" + partMgmtDTO);
             //svhc data 들고가기
             PartDetailSvhcDTO svhcDTO = partDetailService.getDetailSvhcData(pm_idx);
-            if(svhcDTO != null) model.addAttribute("svhcDTO",svhcDTO);
+            if(svhcDTO == null) svhcDTO = new PartDetailSvhcDTO();
+            model.addAttribute("svhcDTO",svhcDTO);
+            log.info("svhcDTO=============================" + svhcDTO);
             return "partMgmtList/svhcDetail";
         }
 

@@ -148,15 +148,15 @@
                 <div class="cui_section">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>기타 보증서류</span></div>
-                        <div class="bullet_title_aside">
-                            <button type="button" class="cui_button secondary"><span>추가</span></button>
-                            <button type="button" class="cui_button secondary"><span>삭제</span></button>
-                        </div>
+<!--                        <div class="bullet_title_aside">-->
+<!--                            <button type="button" class="cui_button secondary"  id="addRowButton" ><span>추가</span></button>-->
+<!--                        </div>-->
                     </div>
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:120px">
                             <col style="width:120px">
+                            <col>
                             <col>
                         </colgroup>
                         <thead>
@@ -164,9 +164,10 @@
                             <th><span>보증서 종류</span></th>
                             <th><span>확인일자</span></th>
                             <th><span>첨부</span></th>
+                            <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody  id="tableBody4">
                         <tr  th:each="guarantDTO : ${guarantListDTO}" >
                             <td>
                                 <input type="hidden" name="GUARANT_IDX" th:value="${guarantDTO.GUARANT_IDX}">
@@ -190,6 +191,7 @@
                                 </div>
 
                             </td>
+                            <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
                         </tr>
                         </tbody>
                     </table>

@@ -31,7 +31,7 @@ public class PartDetailSccsController {
                                 , @ModelAttribute partDetailGuarantDTO guarantDTO
                                 , @RequestParam("SCCS_FILE") MultipartFile sccsFile
                                 , @RequestParam("INGRED_FILE") MultipartFile ingredFile
-                                , @RequestParam("GUARANT_FILE") MultipartFile guarantFile
+                                , @RequestParam(value="GUARANT_FILE",required = false) MultipartFile guarantFile
                                 , @AuthenticationPrincipal UserCustom user
                                 , Model model){
 
@@ -64,19 +64,21 @@ public class PartDetailSccsController {
 
         }
         log.info("test5455555555======11111=============");
+        if(guarantDTO != null){
+            if(!guarantDTO.getGUARANT_CONFIRM_DATE().equals("") || !guarantDTO.getGUARANT_TYPE().equals("") ||!guarantFile.isEmpty() ){
+                if(!ingredFile.isEmpty()){
+                    String guarant_filepath = partDetailService.uploadFileData(user.getCOM_CODE(),guarantFile);
+                    String guarant_filename = ingredFile.getOriginalFilename();
 
-        if(!guarantDTO.getGUARANT_CONFIRM_DATE().equals("") || !guarantDTO.getGUARANT_TYPE().equals("") ||!guarantFile.isEmpty() ){
-            if(!ingredFile.isEmpty()){
-                String guarant_filepath = partDetailService.uploadFileData(user.getCOM_CODE(),guarantFile);
-                String guarant_filename = ingredFile.getOriginalFilename();
+                    guarantDTO.setGUARANT_FILE_PATH(guarant_filepath);
+                    guarantDTO.setGUARANT_FILE_NAME(guarant_filename);
 
-                guarantDTO.setGUARANT_FILE_PATH(guarant_filepath);
-                guarantDTO.setGUARANT_FILE_NAME(guarant_filename);
+                }
+                partDetailService.saveGuarantData(guarantDTO);
 
             }
-            partDetailService.saveGuarantData(guarantDTO);
-
         }
+
         log.info("test5455555555==========2222=========");
 
         //승인요청 pm_idx 상태 바꿈

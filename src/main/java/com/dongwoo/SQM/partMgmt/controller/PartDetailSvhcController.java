@@ -68,7 +68,8 @@ public class PartDetailSvhcController {
             log.info("partMgmtDTO=============================" + partMgmtDTO);
             //svhc data 들고가기
             partDetailDeclarDTO  declarDTO = partDetailService.getDetailDeclarData(pm_idx);
-            if(declarDTO != null) model.addAttribute("declarDTO",declarDTO);
+            if(declarDTO == null) declarDTO = new partDetailDeclarDTO();
+            model.addAttribute("declarDTO",declarDTO);
             return "partMgmtList/declarationDetail";
         }
 

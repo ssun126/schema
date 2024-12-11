@@ -221,7 +221,9 @@
             //제출 구분이 직접입력일때만 데이터 바꿔줌
             if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
                 //$('input:radio[name="DATA_GUBUN"]:input[value="WRITE"]').prop('checked',true);
-                $("input[name='DATA_GUBUN']").change();
+                $('#svhcFileFieldset').hide();
+		    	$('#svhcDataFieldset').show();
+		    	getSvhcData();
 
             }
 
