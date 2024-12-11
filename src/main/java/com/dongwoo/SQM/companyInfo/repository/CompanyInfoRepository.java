@@ -62,6 +62,25 @@ public class CompanyInfoRepository {
     public int save(CpCodeDTO cpCodeDTO) {
         return sql.insert("CompanyInfo.save", cpCodeDTO);
     }
+    // 신규저장
+    public int insertComCode(CpCodeDTO cpCodeDTO) {
+        return sql.insert("CompanyInfo.insertComCode", cpCodeDTO);
+    }
+
+    // 수정
+    public int updateComCode(CpCodeDTO cpCodeDTO) {
+        return sql.insert("CompanyInfo.updateComCode", cpCodeDTO);
+    }
+
+    // 신규 저장
+    public int insertComCodeWork(CpCodeDTO cpCodeDTO) {
+        return sql.insert("CompanyInfo.insertComCodeWork", cpCodeDTO);
+    }
+
+    // 삭제
+    public int deleteComCodeWork(CpCodeDTO cpCodeDTO) {
+        return sql.insert("CompanyInfo.deleteComCodeWork", cpCodeDTO);
+    }
 
     public List<CompanyInfoDTO> findAll() {
         return sql.selectList("CompanyInfo.findAll");
