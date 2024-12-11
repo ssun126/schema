@@ -71,7 +71,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/css/**", "/js/**", "/plugin/**","/images/**", "/font/**", "/favicon.ico").permitAll() //resource 허용
                         .requestMatchers("/", "/login", "/auth/login", "/member/**", "/multiLanguage/getLocalStorage").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/sendIsoAuthData", "/multiLanguage/saveMultiLanguage").permitAll()  // Allow POST without authentication
+                        .requestMatchers(HttpMethod.POST, "/sendIsoAuthData", "/multiLanguage/saveMultiLanguage", "/findDW", "/findCompanyID", "/findCompanyPW").permitAll()  // Allow POST without authentication
                         // 관리자 권한만 가능
                         //.requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

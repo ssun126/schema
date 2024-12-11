@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -40,6 +42,22 @@ public class LoginRepository {
 
     public LoginDTO findByLoginEmail(String loginEmail) {
         return sql.selectOne("Login.findByLoginEmail", loginEmail);
+    }
+
+    public Map<String, Object> findDW(String USER_ID, String EMAIL) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("USER_ID", USER_ID);
+        params.put("EMAIL", EMAIL);
+
+        return sql.selectOne("Login.findDW", params);
+    }
+
+    public void updateUserPWD(int USER_IDX, String USER_PWD) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("USER_IDX", USER_IDX);
+        params.put("USER_PWD", USER_PWD);
+
+        sql.update("Login.updateUserPWD", params);
     }
 
     public LoginDTO findByLoginName(String loginName) {

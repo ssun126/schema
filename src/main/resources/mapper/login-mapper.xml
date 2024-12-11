@@ -26,6 +26,24 @@
     <select id="findByLoginEmail" parameterType="String" resultType="login">
         select * from SC_USER_INFO where USER_EMAIL=#{USER_EMAIL}
     </select>
+    <select id="findDW" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            UI.USER_IDX
+            , UI.USER_ID
+            , UIDW.EMAIL
+        FROM
+            SC_USER_INFO UI
+        LEFT OUTER JOIN
+            SC_USER_INFO_DW UIDW ON UI.USER_IDX = UIDW.USER_IDX
+        WHERE UI.USER_ID = #{USER_ID}
+        AND UIDW.EMAIL = #{EMAIL}
+    </select>
+    <select id="findCompanyID" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    </select>
+    <select id="findCompanyPW" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    </select>
     <select id="findByLoginId" parameterType="String" resultType="login">
         SELECT
             UI.*,
@@ -49,4 +67,10 @@
         where USER_IDX=#{USER_idx}
     </update>
 
+    <update id="updateUserPWD" parameterType="java.util.HashMap">
+        UPDATE SC_USER_INFO SET
+            USER_PWD = #{USER_PWD}
+            , UP_DATE = SYSDATE
+        WHERE USER_IDX = #{USER_IDX}
+    </update>
 </mapper>

@@ -54,6 +54,14 @@ public class LoginService {
         return loginRepository.findByLoginEmail(loginEmail);
     }
 
+    public Map<String, Object> findDW(String USER_ID, String EMAIL) {
+        return loginRepository.findDW(USER_ID, EMAIL);
+    }
+
+    public void updateUserPWD(int USER_IDX, String USER_PWD) {
+        loginRepository.updateUserPWD(USER_IDX, USER_PWD);
+    }
+
     public LoginDTO findByLoginId(String loginId) {
         return loginRepository.findByLoginId(loginId);
     }
@@ -77,7 +85,4 @@ public class LoginService {
             return "no";
         }
     }
-
-
-
 }

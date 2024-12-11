@@ -218,30 +218,63 @@
     }
 
     var findDW = function () {
-        Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
-            okback : function () {
-                $("#dialog").data("Hide")();
-                $("#dialogD").data("Hide")();
-            }
-        });
+        if (Common.Validate($("#dialogD")) == true) {
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#dialogD"));
+
+            Common.Ajax("/findDW", ReqInfo, function (response) {
+                if (response == "OK") {
+                    Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
+                        okback : function () {
+                            $("#dialogD").data("Hide")();
+                            $("#dialog").data("Hide")();
+                        }
+                    });
+                } else {
+                    Common.Msg(siteLang.getLang(response));
+                }
+            });
+        }
     }
 
     var findCompanyID = function () {
-        Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
-            okback : function () {
-                $("#dialog").data("Hide")();
-                $("#dialogP").data("Hide")();
-            }
-        });
+        if (Common.Validate($("#dialogP")) == true) {
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#dialogP"));
+
+            Common.Ajax("/findCompanyID", ReqInfo, function (response) {
+                if (response == "OK") {
+                    Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
+                        okback : function () {
+                            $("#dialogP").data("Hide")();
+                            $("#dialog").data("Hide")();
+                        }
+                    });
+                } else {
+                    Common.Msg(siteLang.getLang(response));
+                }
+            });
+        }
     }
 
     var findCompanyPW = function () {
-        Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
-            okback : function () {
-                $("#dialogP").data("Hide")();
-                $("#dialog").data("Hide")();
-            }
-        });
+        if (Common.Validate($("#dialogP")) == true) {
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#dialogP"));
+
+            Common.Ajax("/findCompanyPW", ReqInfo, function (response) {
+                if (response == "OK") {
+                    Common.Msg(siteLang.getLang("메일이 발송되었습니다."), {
+                        okback : function () {
+                            $("#dialogP").data("Hide")();
+                            $("#dialog").data("Hide")();
+                        }
+                    });
+                } else {
+                    Common.Msg(siteLang.getLang(response));
+                }
+            });
+        }
     }
 
     $("#multiLanguage").bind("change", function () {
