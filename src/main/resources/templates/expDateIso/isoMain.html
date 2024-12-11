@@ -48,15 +48,16 @@
                         </div>
                     </div>
                 </form>
-
-                <div class="cui_toolbar">
-                    <div class="toolbar_content">
-                        <div class="toolbar_default"></div>
+                <form id="sendForm" method="get">
+                    <div class="cui_toolbar">
+                        <div class="toolbar_content">
+                            <div class="toolbar_default"></div>
+                        </div>
+                        <div class="toolbar_aside">
+                            <button type="button" class="cui_button secondary" onClick="sendMail();"><span>갱신요청 발송</span></button>
+                        </div>
                     </div>
-                    <div class="toolbar_aside">
-                        <button type="button" class="cui_button secondary"><span>갱신요청 발송</span></button>
-                    </div>
-                </div>
+                </form>
 
                 <table class="cui_table center" id="isoExpDateTable">
                     <colgroup>
@@ -93,86 +94,101 @@
                 </div>
             </div>
         </div>
-        <script>
-            $(document).ready(function() {
-                $(document).ready(function () {
-                    $('#searchExpDate').datepicker({
-                        dateFormat: 'yy.mm',  // 월 단위로 포맷 설정 (yyyy.mm 형식)
-                        showOn: "focus",          // 인풋에 포커스가 가면 달력 보이기
-                        changeMonth: true,        // 월 선택기 활성화
-                        changeYear: true,         // 연도 선택기 활성화
-                        showButtonPanel: true,    // "오늘" 버튼과 같은 버튼 패널 표시
-                        defaultViewDate: new Date(), // 기본 표시 날짜
-                        minDate: new Date(2000, 0), // 최소 선택 가능 연도 (예: 2000년부터)
-                        maxDate: new Date(2099, 11), // 최대 선택 가능 연도 (예: 2099년까지)
-                        onClose: function(dateText, inst) {
-                            // 날짜가 선택되었을 때
-                            var selectedMonth = $("#searchExpDate").val();
-                            console.log('Selected Month:', selectedMonth);
-                        }
-                    });
+<script>
+    var sendMail = function () {
+        alert("test!!!!!");
+        $.ajax({
+            url: '/sendEmail?to=recipient@example.com&subject=Test&text=Hello+World!',
+            type: 'GET',
+            success: function(response) {
+                 Common.Msg(response);
+            },
+            error: function() {
+                alert("검색 결과를 가져오는 데 실패했습니다.");
+            }
+        });
+    }
 
-                    $(".cui_calendar_ico").on('click', function() {
-                        var inputField = $(this).prev('input');
-                        // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
-                        if (inputField.datepicker("widget").is(":visible")) {
-                            inputField.datepicker("hide"); // datepicker 숨기기
-                        } else {
-                            inputField.datepicker("show"); // datepicker 보이기
-                        }
-                      });
-                  });
-                // 검색 버튼 클릭 시
-                $('#searchBtn').on('click', function(event) {
-                     event.preventDefault();  // 기본 폼 제출 동작 방지
+    $(document).ready(function() {
 
-                    var name = $('#searchName').val();  // 업체명
-                    var code = $('#searchCode').val();  // 업체 코드
-                    var expDate = $('#searchExpDate').val();
+        //만료일(월 선택)
+        $('#searchExpDate').datepicker({
+            dateFormat: 'yy.mm',  // 월 단위로 포맷 설정 (yyyy.mm 형식)
+            showOn: "focus",          // 인풋에 포커스가 가면 달력 보이기
+            changeMonth: true,        // 월 선택기 활성화
+            changeYear: true,         // 연도 선택기 활성화
+            showButtonPanel: true,    // "오늘" 버튼과 같은 버튼 패널 표시
+            defaultViewDate: new Date(), // 기본 표시 날짜
+            minDate: new Date(2000, 0), // 최소 선택 가능 연도 (예: 2000년부터)
+            maxDate: new Date(2099, 11), // 최대 선택 가능 연도 (예: 2099년까지)
+            onClose: function(dateText, inst) {
+                // 날짜가 선택되었을 때
+                var selectedMonth = $("#searchExpDate").val();
+                console.log('Selected Month:', selectedMonth);
+            }
+        });
 
-                    $.ajax({
-                        url: '/auditMgmt/searchIsoExpDate',  // 서버의 검색 API URL
-                        type: 'GET',
-                        data: {
-                            name: name,      // 업체명
-                            code: code,      // 업체 코드
-                            expDate: expDate,  // expDate
-                            pageNum: 1,      // 기본값으로 첫 페이지
-                            amount: 10       // 한 페이지에 표시할 항목 수
-                        },
-                        success: function(response) {
-                            // 테이블에 결과 채우기
-                            var tableBody = $('#isoExpDateTable tbody');
-                            tableBody.empty();  // 기존 내용 비우기
+        $(".cui_calendar_ico").on('click', function() {
+            var inputField = $(this).prev('input');
+            // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
+            if (inputField.datepicker("widget").is(":visible")) {
+                inputField.datepicker("hide"); // datepicker 숨기기
+            } else {
+                inputField.datepicker("show"); // datepicker 보이기
+            }
+        });
 
-                            if (!response || response.length === 0) {
-                                var row = '<tr><td colspan="10">데이터가 없습니다.</td>></tr>';
-                                tableBody.append(row);  // 테이블에 새 행 추가
-                            }else{
-                                // 검색된 결과를 테이블에 추가
-                                response.forEach(function(isoAuthItem) {
-                                    var row = '<tr>' +
-                                                    '<td><input type="checkbox" name="checkbox1"/></td>' +
-                                                    '<td>' + isoAuthItem.COM_CODE + '</td>' +
-                                                    '<td>' + isoAuthItem.COM_NAME + '</td>' +
-                                                    '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
-                                                    '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/auditMgmt/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
-                                                    '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
-                                                    '<td>' + isoAuthItem.EXP_DATE + '</td>' +
-                                                    '<td>' + isoAuthItem.REG_DATE + '</td>' +
-                                                    '<td><a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuthItem.FILE_NAME) + '">다운로드</a></td>' +
-                                                    '<td>' + isoAuthItem.ITEM_STATE + '</td>' +
-                                                  '</tr>';
-                                    tableBody.append(row);
-                                });
-                            }
-                        },
-                        error: function() {
-                            alert("검색 결과를 가져오는 데 실패했습니다.");
-                        }
-                    });
-                });
+        // 검색 버튼 클릭 시
+        $('#searchBtn').on('click', function(event) {
+             event.preventDefault();  // 기본 폼 제출 동작 방지
+
+            var name = $('#searchName').val();  // 업체명
+            var code = $('#searchCode').val();  // 업체 코드
+            var expDate = $('#searchExpDate').val();
+
+            $.ajax({
+                url: '/auditMgmt/searchIsoExpDate',  // 서버의 검색 API URL
+                type: 'GET',
+                data: {
+                    name: name,      // 업체명
+                    code: code,      // 업체 코드
+                    expDate: expDate,  // expDate
+                    pageNum: 1,      // 기본값으로 첫 페이지
+                    amount: 10       // 한 페이지에 표시할 항목 수
+                },
+                success: function(response) {
+                    // 테이블에 결과 채우기
+                    var tableBody = $('#isoExpDateTable tbody');
+                    tableBody.empty();  // 기존 내용 비우기
+
+                    if (!response || response.length === 0) {
+                        var row = '<tr><td colspan="10">데이터가 없습니다.</td>></tr>';
+                        tableBody.append(row);  // 테이블에 새 행 추가
+                    }else{
+                        // 검색된 결과를 테이블에 추가
+                        response.forEach(function(isoAuthItem) {
+                            var row = '<tr>' +
+                                            '<td><input type="checkbox" name="checkbox1"/></td>' +
+                                            '<td>' + isoAuthItem.COM_CODE + '</td>' +
+                                            '<td>' + isoAuthItem.COM_NAME + '</td>' +
+                                            '<td>' + isoAuthItem.AUTH_TYPE + '</td>' +
+                                            '<td><a href="javascript:void(0);" onclick="modal_open(\'IsoAuth\', \'detail\', \'/auditMgmt/getIsoAuthData\', \''+ isoAuthItem.AUTH_CODE + '|'+ isoAuthItem.COM_CODE + '\')">' +  isoAuthItem.AUTH_CODE + '</a></td>' +
+                                            '<td>' + isoAuthItem.AUTH_DATE + '</td>' +
+                                            '<td>' + isoAuthItem.EXP_DATE + '</td>' +
+                                            '<td>' + isoAuthItem.REG_DATE + '</td>' +
+                                            '<td><a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(isoAuthItem.FILE_NAME) + '">다운로드</a></td>' +
+                                            '<td>' + isoAuthItem.ITEM_STATE + '</td>' +
+                                          '</tr>';
+                            tableBody.append(row);
+                        });
+                    }
+                },
+                error: function() {
+                    alert("검색 결과를 가져오는 데 실패했습니다.");
+                }
             });
-        </script>
+        });
+    });
+</script>
 </body>
 </html>

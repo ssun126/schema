@@ -5,9 +5,11 @@ import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.dongwoo.SQM.companyInfo.dto.CpCodeDTO;
 import com.dongwoo.SQM.companyInfo.repository.CompanyInfoRepository;
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -53,27 +55,39 @@ public class CompanyInfoService {
     }
 
     public int save(CpCodeDTO cpCodeDTO) {
+        //세션 정보 가져오기
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int loginIdx = user.getUSER_IDX();
+        cpCodeDTO.setREG_DW_USER_IDX(loginIdx);
+        cpCodeDTO.setUP_DW_USER_IDX(loginIdx);
+
         int retCntCp = 0;
-        //업체코드로 데이터 가져오기
+        //업체코드로 데이터 가져오기 ??? factory_id도 비교해야 하나
         CompanyInfoDTO companyInfoDTO = companyInfoRepository.findByCompanyId(cpCodeDTO.getCOM_CODE());
-        //MODE가 edit이면 UPDATE
-        if(companyInfoDTO != null){
-            //update 처리
-            retCntCp = companyInfoRepository.updateComCode(cpCodeDTO);
-            //사업본부는 삭제 후 저장
-            companyInfoRepository.deleteComCodeWork(cpCodeDTO);
-            //TO-DO 사업본부 데이터는 여러개 입력 가능해야 함
-            log.info(cpCodeDTO.getDEPT_CODES());
-            companyInfoRepository.insertComCodeWork(cpCodeDTO);
+
+        if(companyInfoDTO != null){ //기존 업체정보가 있다면
+            if(saveDeptCode(cpCodeDTO) > 0){ //사업본부 정보 입력 후 update
+                retCntCp = companyInfoRepository.updateComCode(cpCodeDTO);
+            }
         }else{
-            //insert 처리
-            retCntCp = companyInfoRepository.insertComCode(cpCodeDTO);
-
-            //TO-DO 사업본부 데이터는 여러개 입력 가능해야 함
-            companyInfoRepository.insertComCodeWork(cpCodeDTO);
+            if(saveDeptCode(cpCodeDTO) > 0){ //사업본부 정보 입력 insert
+                retCntCp = companyInfoRepository.insertComCode(cpCodeDTO);
+            }
         }
-
         return retCntCp;
+    }
+
+    // 사업본부 정보 저장
+    private int saveDeptCode(CpCodeDTO cpCodeDTO) {
+        int retCnt = 0;
+        //사업본부는 삭제 후 저장
+        companyInfoRepository.deleteComCodeWork(cpCodeDTO);
+        //사업본부 데이터는 여러개 입력 가능
+        for (String deptCode : cpCodeDTO.getDEPT_CODE()) {
+            cpCodeDTO.setDEPT_CODES(deptCode);
+            retCnt = companyInfoRepository.insertComCodeWork(cpCodeDTO);
+        }
+        return retCnt;
     }
 
     public List<CompanyInfoDTO> findAll() {

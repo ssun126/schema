@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CpCodeDTO {
     private Integer RN;
@@ -18,6 +20,12 @@ public class CpCodeDTO {
     private String COM_STATUS;
     @JsonProperty("DEPT_CODES")
     private String DEPT_CODES; // 설정된 사업본부
+    @JsonProperty("DEPT_CODE")
+    private List<String> DEPT_CODE; // 설정된 사업본부
     @JsonProperty("MODE")
     private String MODE;
+    @JsonProperty("REG_DW_USER_IDX")
+    private int REG_DW_USER_IDX;
+    @JsonProperty("UP_DW_USER_IDX")
+    private int UP_DW_USER_IDX;
 }

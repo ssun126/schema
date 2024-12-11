@@ -286,7 +286,7 @@
 
     <insert id="insertComCodeWork" parameterType="companyInfo">
         insert into SC_COMPANY_CODE_WORK(COM_CODE, BASE_CODE, REG_DW_USER_IDX, REG_DATE)
-        values (#{COM_CODE},#{BASE_CODE}, #{REG_DW_USER_IDX}, sysdate)
+        values (#{COM_CODE},#{DEPT_CODES}, #{REG_DW_USER_IDX}, sysdate)
     </insert>
 
     <delete id="deleteComCodeWork" parameterType="companyInfo">
@@ -377,14 +377,13 @@
     </select>
 
     <select id="getApiList" parameterType="map" resultType="hashMap">
-        select COM_CODE, COM_NAME, COM_NATION, COM_STATUS from SC_COMPANY_CODE
-        <!-- INNER JOIN COMPANY_CODE_WORK ccw ON ccd.COM_CODE = ccw.COM_CODE-->
+        select FACTORY_ID, VENDOR_ID AS COM_CODE, NAME AS COM_NAME from VENDOR
         WHERE 1=1
         <if test="COM_CODE != '' ">
-            and COM_CODE = #{COM_CODE}
+            and VENDOR_ID = #{COM_CODE}
         </if>
         <if test="COM_NAME != '' ">
-            and COM_NAME = #{COM_NAME}
+            and NAME = #{COM_NAME}
         </if>
     </select>
 
