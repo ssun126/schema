@@ -1,4 +1,4 @@
-<div class="cui_dialog" style="width:400px;display:none;" id="diaOtpArea">
+<div class="cui_dialog" style="width:400px;display:none;" id="diaOtpArea" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
@@ -17,7 +17,10 @@
                             <strong class="item_label" data-langsid="업무자"></strong>
                             <div class="item_content">
                                 <select class="cui_select_field" id="comUserIdx" name="comUserIdx">
-                                    <option value="홍길동">홍길동</option>
+                                    <option th:each="user : ${companyUserList}"
+                                            th:value="${user.COM_USER_IDX}"
+                                            th:text="${user.USER_NAME}">
+                                    </option>
                                 </select>
                                 <button type="button" class="cui_button" onclick="sendOtp();"><span data-langsid="발송"></span></button>
                             </div>
@@ -41,8 +44,26 @@
         </div>
     </div>
     <script>
+
         var sendOtp = function () {
             // OTP 인증번호 발송
+            var ReqInfo = new Common.RequestInfo();
+
+            var com_user_idx = $("#comUserIdx").val();
+            var user_name = $("#comUserIdx option:selected").text();
+
+            ReqInfo.AddParameter("COM_USER_IDX", com_user_idx);
+            ReqInfo.AddParameter("USER_NAME", user_name);
+
+            Common.Ajax("/otpSend", ReqInfo, function (response) {
+                if (response.substring(0, 2) == "OK") {
+                      Common.Msg(siteLang.getLang("OTP 코드 인증 메일이 발송되었습니다.")) ;
+                      Common.Msg("OTP :" + response.substring(3, 9));  //임시.
+                } else {
+                    Common.Msg(siteLang.getLang(response));
+                }
+            });
+
         }
 
         var otpOk = function () {
@@ -50,8 +71,23 @@
 
             if (Common.Validate(objDia)) {
                 // OTP 인증번호 체크
+                var ReqInfo = new Common.RequestInfo();
+                var com_user_idx = $("#comUserIdx").val();
+                var user_name = $("#comUserIdx option:selected").text();
+                var otpNum = $("#otpNum").val();
 
-                objDia.data("Hide")();
+                ReqInfo.AddParameter("COM_USER_IDX", com_user_idx);
+                ReqInfo.AddParameter("USER_NAME", user_name);
+                ReqInfo.AddParameter("otpNum", otpNum);
+
+                Common.Ajax("/otpOk", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        Common.Msg("OTP인증 성공");  //임시
+                        objDia.data("Hide")();
+                    } else {
+                        Common.Msg(siteLang.getLang(response));
+                    }
+                });
             }
         }
     </script>
