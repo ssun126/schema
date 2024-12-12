@@ -809,6 +809,13 @@ Common.Ajax = function (url, data, callback, info) {
         dataType: (responseType || "text"),
         timeout: 1000 * 60 * 60 * 24,
         success: function (result, textStatus) {
+            if (Common.CheckErrorMsg(result, false) == false) {
+                Common.Loading.Hide();
+                Common.CheckErrorMsg(result);
+
+                return;
+            }
+
             if (typeof callback == "function")
                 callback(result);
         },
@@ -828,6 +835,22 @@ Common.AjaxError = function (XMLHttpRequest, textStatus, errorThrown) {
         alert(XMLHttpRequest.responseText);
     } catch (e) {
     };
+}
+Common.CheckErrorMsg = function (MsgStr, ShowMsg) {
+    ShowMsg = (ShowMsg == undefined ? true : ShowMsg);
+    if (MsgStr != null && !MsgStr.ResultCode) {
+        if (MsgStr.substring(0, 13) == "|||[ERROR]|||") {
+            var mString = MsgStr.replace("|||[ERROR]|||", "");
+            if (ShowMsg == true) {
+                Common.Msg(mString);
+            }
+            return false;
+        }
+    } else if (!MsgStr) {
+        Common.Msg("Message Is Null!");
+        return false;
+    }
+    return true;
 }
 
 //형식변환

@@ -9,12 +9,12 @@
     </insert>
 
     <select id="login" parameterType="login" resultType="login">
-        select * from SC_USER_INFO where USER_STATUS  = 'Y' AND  DEL_DATE IS NULL AND USER_ID=#{USER_ID} and USER_PWD=#{USER_PWD}
+        select * from SC_USER_INFO where USER_STATUS  = 'Y' AND  DEL_DATE IS NULL AND USER_ID=#{USER_ID} and USER_PWD=#{PASSWORD}
     </select>
     <select id="findAll" resultType="login">
         select USER_EMAIL, USER_PWD, USER_NAME, USER_Mobile from SC_USER_INFO
     </select>
-    <select id="findById" parameterType="String" resultType="member">
+    <select id="findById" parameterType="String" resultType="login">
         select * from SC_USER_INFO where USER_ID=#{USER_ID}
     </select>
     <select id="findByIdUsePass" parameterType="String" resultType="login">

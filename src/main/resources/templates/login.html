@@ -213,8 +213,42 @@
 </div>
 </body>
 <script>
-    function loginFormCheck (obj) {
-        return Common.Validate($(".login_form_filed"));
+    function loginFormCheck (obj, otp) {
+        if (Common.Validate(obj)) {
+            if (otp == undefined) {
+                var rtnValue = false;
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.AddParameter(obj);
+
+                Common.Ajax("/idpwCheck", ReqInfo, function (response) {
+                    if (response.substring(0, 2) == "OK") {
+                        if (response.substring(3, 4) == "0") {
+                            rtnValue = true;
+                            return;
+                        } else {
+                            var param = { username: obj.find("input[name=username]").val() };
+                            Common.Dialog({ url : "/otp", param : param });
+                            $("#errorMsg").remove();
+                        }
+                    } else {
+                        if ($("#errorMsg").length == 0) {
+                            var msgDiv = '<div id="errorMsg" class="cui_alert alert_basic" data-type="warning" role="alert" style="margin-top:10px;">';
+                            msgDiv += '<div class="alert_message">';
+                            msgDiv += '<p class="" data-langsid="' + response + '">' + siteLang.getLang(response) + '</p>';
+                            msgDiv += '</div>';
+                            msgDiv += '</div>';
+                            obj.after(msgDiv)
+                        }
+                    }
+                });
+
+                return rtnValue;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     var findDW = function () {

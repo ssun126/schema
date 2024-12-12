@@ -183,17 +183,16 @@
                                     <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
                                         <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
                                         <input type="hidden"  name="MAIN_USER_IDX"  class="cui_text_field" th:value="${user.USER_IDX}">
-
                                     </td>
 
                                     <td>
                                         <span th:text="${user.USER_NAME}"></span>
                                         <input type="hidden"  name="COM_USER_IDX"  class="cui_text_field" th:value="${user.COM_USER_IDX}">
                                     </td>
-                                    <td><span  th:text="${user.USER_POSITION}"></span></td>
+                                    <td><span th:text="${user.USER_POSITION}"></span></td>
                                     <td><span th:text="${user.USER_DEPT}"></span></td>
-                                    <td><span  th:text="${user.USER_EMAIL}"></span></td>
-                                    <td><span  th:text="${user.USER_PHONE}"></span></td>
+                                    <td><span th:text="${user.USER_EMAIL}"></span></td>
+                                    <td><span th:text="${user.USER_PHONE}"></span></td>
                                     <td></td>
                                 </tr>
                                 </tbody>
@@ -329,12 +328,13 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="right">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="'approval(' + ${companyApprovalID.USER_IDX} + ')'"><span data-langsid="승인"></span></button>
-                                <button type="button" class="cui_button primary" onclick="modal('dialogUserUpdate')"><span data-langsid="반려"></span></button>
+                                <button type="button" class="cui_button primary" th:onClick="approval()"><span data-langsid="승인"></span></button>
+                                <button type="button" class="cui_button primary" onClick="rejectOpen()"><span data-langsid="반려"></span></button>
                                 <button type="button" class="cui_button secondary" onClick="goList()">
                                     <span th:text="${prepage != '' ? '뒤로' : '목록'}"></span>
                                 </button>
                                 <input type="hidden" name="prePage" id="prePage" th:value="${prepage}">
+                                <input type="hidden" name="approvalUseridx" id="approvalUseridx" th:value="${companyApprovalID.USER_IDX}">
                             </div>
                         </div>
 
@@ -352,7 +352,7 @@
                 <div class="main_label"><span id="popTitle">반려</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
             </div>
         </div>
 
@@ -364,14 +364,14 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="반려사유"></strong>
                             <div class="item_content">
-                                <textarea  style="height:80px;" class="cui_text_field" id="RETURN_REASON" name="RETURN_REASON"></textarea>
+                                <textarea  style="height:80px;" class="cui_text_field" id="RETURN_REASON" name="RETURN_REASON" reqcheck="reqcheck" data-messages="반려 사유를 입력하세요." messages=""></textarea>
                             </div>
                         </label>
 
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="'reject(' + ${companyApprovalID.USER_IDX} + ')'"><span data-langsid="반려 처리"></span></button>
-                                <button type="button" class="cui_button secondary" onClick="modalReject_close_('dialogUserUpdate')"><span data-langsid="닫기"></span></button>
+                                <button type="button" class="cui_button primary" th:onClick="reject()"><span data-langsid="반려 처리"></span></button>
+                                <button type="button" id="dialogUserUpdatePop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -386,22 +386,35 @@
 
 <script id ='detailscript'>
 
-    function approval(userIdx) {
-        showConfirm('warning', '승인하시겠습니까?', function(isConfirmed) {
-            if (isConfirmed) {
-              updateCpUser(userIdx,"Y");
-            } else {
-                //alert('아니오');
-            }
-        });
+
+    function approval() {
+         Common.Msg(siteLang.getLang("승인 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                   updateCpUser("Y");
+                }
+         });
     }
 
-    function reject(userIdx) {
-        updateCpUser(userIdx,"N") ;
+    function reject() {
+         if (Common.Validate($("#dialogUserUpdate")) == true){
+
+            Common.Msg(siteLang.getLang("반려 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                       updateCpUser("N");
+                    }
+            });
+        }
     }
 
-   function updateCpUser(userIdx , ApprovalType) {
+    var rejectOpen = function () {
+        Common.Dialog({ obj : $("#dialogUserUpdate"), blockClose : false });
+    }
 
+   function updateCpUser( ApprovalType) {
+
+         let userIdx = document.getElementById('approvalUseridx').value ;
          let comCode = document.getElementById('COM_CODE').value ;
          let returnReason = document.getElementById('RETURN_REASON').value ;
          let idAddType = document.getElementById('ID_ADD_TYPE').value ;
@@ -418,40 +431,17 @@
               },
             success: function(response) {
                 if(response.status === "success") {
-                    showAlert('success', response.message);
+                    location.reload();
                 }
             },
             error: function(err) {
               console.log("에러발생", err);
-              showAlert('warning',err);
+               //showAlert('warning',err);
+               Common.Msg(err)  ;
+               //Common.Loading.Hide();
             }
         });
    }
-
-
-    function modalConfirmClose(id){
-    overlay.style.display = "none";
-        $("#" + id).fadeOut();
-    }
-
-   //모달 열기
-    function modal(id){
-      overlay.style.display = "block";
-      $("#" + id).fadeIn()
-    }
-
-    //닫기
-    function modal_close(id){
-        overlay.style.display = "none";
-        $("#" + id).fadeOut();
-        goList();
-    }
-
-    //반려 닫기
-    function modalReject_close_(id){
-        overlay.style.display = "none";
-        $("#" + id).fadeOut();
-    }
 
     function goList() {
 
@@ -502,9 +492,15 @@
        })
        .catch(error => {
            console.error('파일 다운로드 실패:', error);
-           showAlert('warning', '파일 다운로드 실패.');
+           //showAlert('warning', '파일 다운로드 실패.');
+           Common.Msg('파일 다운로드 실패.')
        });
    }
+
+
+</script>
+
+
 
 
 </script>

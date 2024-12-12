@@ -1,0 +1,58 @@
+<div class="cui_dialog" style="width:400px;display:none;" id="diaOtpArea">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span data-langsid="OTP 입력 (이메일)"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_section" data-legend="true" name="formOTP" onsubmit="return false;">
+                    <input type="hidden" name="username" value="">
+                    <fieldset>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="업무자"></strong>
+                            <div class="item_content">
+                                <select class="cui_select_field" id="comUserIdx" name="comUserIdx">
+                                    <option value="홍길동">홍길동</option>
+                                </select>
+                                <button type="button" class="cui_button" onclick="sendOtp();"><span data-langsid="발송"></span></button>
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="인증번호"></strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="otpNum" name="otpNum" reqcheck="reqcheck" data-messages="인증번호를 입력해주세요." messages="" />
+                            </div>
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                            <div class="item_content">
+                                <button type="button" id="CpCodeMgmtAdd" class="cui_button primary" onclick="otpOk();"><span data-langsid="로그인"></span></button>
+                                <button type="button" id="CpCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var sendOtp = function () {
+            // OTP 인증번호 발송
+        }
+
+        var otpOk = function () {
+            var objDia = $("#diaOtpArea");
+
+            if (Common.Validate(objDia)) {
+                // OTP 인증번호 체크
+
+                objDia.data("Hide")();
+            }
+        }
+    </script>
+</div>
