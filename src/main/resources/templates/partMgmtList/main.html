@@ -276,7 +276,8 @@
                 PM_QUALITY: $('select[name=PM_QUALITY]').val(),
                 PM_STATUS: $('select[name=PM_STATUS]').val(),
                 PM_CHEMICAL_YN: $('select[name=PM_CHEMICAL_YN]').val(),
-                PM_ACTIVE_YN : 'INACTIVE'
+                PM_ACTIVE_YN : 'INACTIVE',
+                PM_APPROVAL_STATUS : $('input[name=PM_IDX]').val() == ''? '0' : ''
             };
             console.log("formData>>>>>>>>>"+JSON.stringify(PartMgmtDTO));
             $.ajax({
@@ -303,7 +304,7 @@
          // datepicker를 input 필드에 적용
          $('.datepicker').datepicker({
              dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
-             showOn: "focus",
+             showOn: "focus"
          });
 
          // 버튼 클릭 시 input 필드의 datepicker 열기
@@ -355,7 +356,7 @@
                     response.forEach(function(partmgmt) {
                          var row = '<tr>' +
                                      //(partmgmt.PM_APPROVAL_DATE === '' ? 삭제는 승인 요청 전까지만 가능
-                                     (partmgmt.PM_REQUEST_APPROVAL_DATE != '' ?
+                                     (partmgmt.PM_REQUEST_APPROVAL_DATE != '' || partmgmt.PM_APPROVAL_STATUS != ''?
                                         '<td><input type="checkbox" id=\'pmIdx_' + partmgmt.PM_IDX + '\' value=\''+ partmgmt.PM_IDX +'\'></td>' :
                                         '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
                                         //'<td>' + partmgmt.PM_PART_CODE + '</td>' +

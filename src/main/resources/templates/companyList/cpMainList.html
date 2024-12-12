@@ -24,13 +24,13 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체Code"></strong>
                             <div class="item_content">
-                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" data-langsid="업체Code를 입력해주세요" placeholder="">
+                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" search="searchBtn" >
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체명</strong>
                             <div class="item_content">
-                                <input id="comName" name="comName" class="cui_text_field" type="text" data-langsid="업체명을 입력해주세요" placeholder="">
+                                <input id="comName" name="comName" class="cui_text_field" type="text" search="searchBtn" >
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
@@ -50,21 +50,21 @@
                             <div class="item_content">
                                 <select id="mineral" name="mineral" class="cui_select_field" >
                                     <option value=""></option>
-                                    <option value="TANTALUM_YN">티타늄</option>
-                                    <option value="TIN_YN">주석</option>
-                                    <option value="TUNGSTEN_YN">텅스텐</option>
-                                    <option value="GOLD_YN">금</option>
-                                    <option value="COBALT_YN">코발트</option>
-                                    <option value="MICA_YN">운모</option>
+                                    <option value="TANTALUM_YN" data-langsid="티타늄"></option>
+                                    <option value="TIN_YN" data-langsid="주석"></option>
+                                    <option value="TUNGSTEN_YN" data-langsid="텅스텐"></option>
+                                    <option value="GOLD_YN" data-langsid="금"></option>
+                                    <option value="COBALT_YN" data-langsid="코발트"></option>
+                                    <option value="MICA_YN" data-langsid="운모"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="Audit 점수"></strong>
                             <div class="item_content">
-                                <input type="text" class="cui_text_field" id="pointFrom" name="pointFrom">
+                                <input type="text" class="cui_text_field" id="pointFrom" name="pointFrom" search="searchBtn">
                                 <div class="field_connect">~</div>
-                                <input type="text" class="cui_text_field" id="pointTo" name="pointTo">
+                                <input type="text" class="cui_text_field" id="pointTo" name="pointTo" search="searchBtn">
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
@@ -72,7 +72,6 @@
                             <div class="item_content">
                                 <select class="cui_select_field wide" id="comManageStatus" name="comManageStatus">
                                     <option value=""></option>
-<!--                                    <option value="0">Pending</option>-->
                                     <option value="1">Waiting</option>
                                     <option value="2">Approved</option>
                                     <option value="3">Rejected</option>
@@ -81,7 +80,7 @@
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span data-langsid="검색"></span></button>
+                        <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
                 <div class="cui_toolbar">
@@ -93,122 +92,21 @@
                     </div>
                 </div>
 
-                 <table class="cui_table cui_font_xs">
-                     <colgroup>
-                         <col style="width:100px">
-                         <col style="width:300px">
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                         <col>
-                     </colgroup>
-                     <thead>
-                         <tr>
-                             <th rowspan="2"><span>업체코드</span></th>
-                             <th rowspan="2"><span>업체명(영문)</span></th>
-                             <th rowspan="2"><span>Warranty</span></th>
-                             <th colspan="2"><span>Audit 결과</span></th>
-                             <th colspan="6"><span>분쟁 및 책임광물</span></th>
-                             <th colspan="5"><span>사업부</span></th>
-                         </tr>
-                         <tr>
-                             <th><span>점수</span></th>
-                             <th><span>실시일</span></th>
-                             <th><span>티타늄</span></th>
-                             <th><span>주석</span></th>
-                             <th><span>텅스텐</span></th>
-                             <th><span>금</span></th>
-                             <th><span>코발트</span></th>
-                             <th><span>운모</span></th>
-                             <th><span>반도체</span></th>
-                             <th><span>첨단<br>소재</span></th>
-                             <th><span>옵티칼</span></th>
-                             <th><span>통신<br>디바이스</span></th>
-                             <th><span>에너지<br>기능재료</span></th>
-                         </tr>
-                     </thead>
-                     <tbody id="companyTableBody">
-                         <tr>
-                             <td style="text-align:center">
-                                <a href="#" class="cui_link">
-                                    <span></span>
-                                </a>
-                             </td>
-                             <td style="text-align:center"><span id = "com_name" name = "COM_NAME"></span></td>
-                             <td style="text-align:center"><span id = "com_file_name" name = "COM_FILE_NAME"></span></td>
-                             <td style="text-align:center"><span id = "com_audit_point" name = "COM_AUDIT_POINT" ></span></td>
-                             <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" ></span></td>
-                             <td style="text-align:center"><span id = "tantalum_yn" name = "TANTALUM_YN" ></span></td>
-                             <td style="text-align:center"><span id = "tin_yn" name = "TIN_YN" ></span></td>
-                             <td style="text-align:center"><span id = "tungsten_yn" name = "TUNGSTEN_YN" ></span></td>
-                             <td style="text-align:center"><span id = "gold_yn" name = "GOLD_YN" ></span></td>
-                             <td style="text-align:center"><span id = "cobalt_yn" name = "COBALT_YN" ></span></td>
-                             <td style="text-align:center"><span id = "mica_yn" name = "MICA_YN" ></span></td>
-                             <td style="text-align:center"><span id = "user_status1" name = "USER_STATUS" ></span></td>
-                             <td style="text-align:center"><span id = "user_status2" name = "USER_STATUS" ></span></td>
-                             <td style="text-align:center"><span id = "user_status3" name = "USER_STATUS" ></span></td>
-                             <td style="text-align:center"><span id = "user_status4" name = "USER_STATUS" ></span></td>
-                             <td style="text-align:center"><span id = "user_status5" name = "USER_STATUS" ></span></td>
-                         </tr>
-                     </tbody>
-                 </table>
-
+                <div id="gridArea" gridYN=""></div>
             </div>
         </div>
     </div>
 </body>
 </html>
 
-
 <script>
 
     $(document).ready(function() {
       preSearchSetting();
-      fetchDataLis();
+      ListSearch();
+    });
 
-      history.replaceState({ comCode: null }, null, location.href);
-
-      $(document).on("click", ".load-page", function(e) {
-          e.preventDefault();
-          const code = $(this).data("code");
-          const useridx = $(this).data("useridx");
-          const url = "/admin/companyInfo/cpMainListDetail?com_code=" + code  ;
-          let urlOri = "/admin/companyInfo/cpMainList";
-
-          sessionStorage.setItem('comCode', code);
-
-          const queryParams = {
-              COM_CODE: document.getElementById('comCode').value,
-              COM_NAME: document.getElementById('comName').value,
-              DEPT_CODE: document.getElementById('deptCode').value,
-              MINERAL: document.getElementById('mineral').value,
-              COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
-              COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
-              COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
-          };
-
-          Object.keys(queryParams).forEach(key => {
-              sessionStorage.setItem(key, queryParams[key]);
-          });
-
-           location.href = url;
-      });
-
-  });
-
-
-
-   function fetchDataLis() {
+   function ListSearch() {
 
       const dto = {
           "COM_CODE": document.getElementById('comCode').value,
@@ -234,10 +132,10 @@
           return response.json();
       })
       .then(data => {
+           var dataJson =data;
            if (data && Array.isArray(data)) {
-                populateTable(data);
-           } else {
-                alert("nodata");
+                $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea").pqGrid("refreshView");
            }
       })
       .catch(error => {
@@ -245,38 +143,28 @@
       });
    }
 
+    function loadPage(cpcode) {
 
-   function populateTable(data) {
+          const url = "/admin/companyInfo/cpMainListDetail?com_code=" + cpcode  ;
 
-    const tableBody = $("#companyTableBody");
-    tableBody.empty();
+          sessionStorage.setItem('comCode', cpcode);
+          const queryParams = {
+              COM_CODE: document.getElementById('comCode').value,
+              COM_NAME: document.getElementById('comName').value,
+              DEPT_CODE: document.getElementById('deptCode').value,
+              MINERAL: document.getElementById('mineral').value,
+              COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
+              COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
+              COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
+          };
 
-    data.forEach(company => {
-        const row = `
-            <tr class='load-page' data-code='${company.COM_CODE}'>
-                <td style="text-align:center">
-                   <span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span>
-                </td>
-                <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
-                <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
-                <td style="text-align:center"><span id = "com_audit_point" name = "COM_AUDIT_POINT" >${company.com_AUDIT_POINT}</span></td>
-                <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" >${company.com_OK_DATE}</span></td>
-                <td style="text-align:center"><span id = "tantalum_yn" name = "TANTALUM_YN" >${company.tantalum_YN}</span></td>
-                <td style="text-align:center"><span id = "tin_yn" name = "TIN_YN" >${company.tin_YN}</span></td>
-                <td style="text-align:center"><span id = "tungsten_yn" name = "TUNGSTEN_YN" >${company.tungsten_YN}</span></td>
-                <td style="text-align:center"><span id = "gold_yn" name = "GOLD_YN" >${company.gold_YN}</span></td>
-                <td style="text-align:center"><span id = "cobalt_yn" name = "COBALT_YN" >${company.cobalt_YN}</span></td>
-                <td style="text-align:center"><span id = "mica_yn" name = "MICA_YN" >${company.mica_YN}</span></td>
-                <td style="text-align:center"><span id = "company_code_work1" name = "COMPANY_CODE_WORK1" >${company.cp_CODE_WORK_CD1}</span></td>
-                <td style="text-align:center"><span id = "company_code_work2" name = "COMPANY_CODE_WORK2" >${company.cp_CODE_WORK_CD2}</span></td>
-                <td style="text-align:center"><span id = "company_code_work3" name = "COMPANY_CODE_WORK3" >${company.cp_CODE_WORK_CD3}</span></td>
-                <td style="text-align:center"><span id = "company_code_work4" name = "COMPANY_CODE_WORK4" >${company.cp_CODE_WORK_CD4}</span></td>
-                <td style="text-align:center"><span id = "company_code_work5" name = "COMPANY_CODE_WORK5" >${company.cp_CODE_WORK_CD5}</span></td>
-            </tr>
-        `;
-        tableBody.append(row);
-    });
-   }
+          Object.keys(queryParams).forEach(key => {
+              sessionStorage.setItem(key, queryParams[key]);
+          });
+
+           location.href = url;
+    }
+
 
    function preSearchSetting() {
       const storedCode = sessionStorage.getItem('comCode');
@@ -290,7 +178,111 @@
                 document.getElementById('pointTo').value = sessionStorage.getItem('COM_AUDIT_POINT_TO');
                 $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
        }
-
    }
+
+    $(function () {
+       var heightMinus = 330;
+
+       var data = [];
+
+       var obj = {
+           bubble: false,
+           numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+           editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+           editModel: { clicksToEdit: 2 },
+           selectionModel: { type: 'cell', mode: 'block' },
+           height: $(window).height() - heightMinus,
+           title: "",
+           sortable: false,
+           resizable: true,
+           menuIcon: true,
+           scrollModel: { autoFit: false },
+           hoverMode: 'row',
+           rowHtHead: 30,
+           rowHt:30,
+           roundCorners: false,
+           rowBorders: true,
+           showBottom: true,
+           showHeader: true,
+           showTitle: true,
+           showTop: false,
+           showToolbar: true,
+           stripeRows: true,
+           wrap: false,
+           autoAddRow: false,
+           freezeCols:0,
+           autoRow: false,
+           autoRowHead: false,
+           rowInit: function () {
+               return { style: 'font-size:12px;' };
+           },
+           selectChange: function (event, ui) {
+           },
+           rowClick: function (event, ui) {
+           },
+           cellClick: function (event, ui) {
+           },
+           rowDblClick: function (event, ui) {
+               var data = ui.rowData;
+               const cpcode = data.COM_CODE ;
+               loadPage(cpcode) ;
+           },
+           rowSelect: function (event, ui) {
+           },
+           open: function () {
+           },
+           headerCellClick: function (event, ui) {
+           }
+       };
+       obj.colModel = [
+
+            {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+            {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+            {  data_langsid :"Warranty" ,title: siteLang.getLang("Warranty"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "com_MANAGE_STATUS", sortable: true, editor: false, editable: false },
+            {
+                data_langsid :"Audit결과" , title: siteLang.getLang("Audit결과"), width: 170 , halign: "center", align: "center"
+                ,colModel:
+                [
+                  {  data_langsid :"점수" ,title: siteLang.getLang("점수"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "com_AUDIT_POINT", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"실시일" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "com_OK_DATE", sortable: true, editor: false, editable: false }
+                ]
+            },
+            {
+                data_langsid :"분쟁 및 책임광물" , title: siteLang.getLang("분쟁 및 책임광물"), width: 540 , halign: "center", align: "center"
+                ,colModel:
+                [
+                  {  data_langsid :"티타늄" ,title: siteLang.getLang("티타늄"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tantalum_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"주석" ,title: siteLang.getLang("주석"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tin_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"텅스텐" ,title: siteLang.getLang("텅스텐"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tungsten_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"금" ,title: siteLang.getLang("금"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "gold_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"코발트" ,title: siteLang.getLang("코발트"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "cobalt_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"운모" ,title: siteLang.getLang("운모"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "mica_YN", sortable: true, editor: false, editable: false }
+                ]
+            },
+            {
+                data_langsid :"사업부" , title: siteLang.getLang("사업부"), width: 500 , halign: "center", align: "center"
+                ,colModel:
+                [
+                  {  data_langsid :"반도체" ,title: siteLang.getLang("반도체"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD1", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"첨단소재" ,title: siteLang.getLang("첨단소재"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD2", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"옵티칼" ,title: siteLang.getLang("옵티칼"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD3", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"통신 디바이스" ,title: siteLang.getLang("통신 디바이스"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD4", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"에너지기능재료" ,title: siteLang.getLang("에너지기능재료"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD5", sortable: true, editor: false, editable: false }
+                ]
+            }
+
+       ];
+       obj.dataModel = { data: data };
+       $("#gridArea").pqGrid(obj);
+       $("#gridArea").attr("gridYN", "Y");
+
+       $(window).resize(function () {
+           $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+           $("#gridArea").pqGrid("refreshView");
+       });
+
+       ListSearch();
+    });
+
 
 </script>

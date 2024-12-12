@@ -140,6 +140,10 @@ public class PartDetailService {
 
     }
 
+    public void deleteEtcData(String idx){
+        partMgmtRepository.deleteEtcData(idx);
+    }
+
     //svhc
     public List<SvhcListDTO> getSvhcData(){
         return  partMgmtRepository.getSvhcData();
@@ -233,6 +237,11 @@ public class PartDetailService {
         }else{
             return partMgmtRepository.updateGuarantData(guarantDTO);
         }
+    }
+
+    //승인요청
+    public int updateApprovalStatus(String idx){
+        return partMgmtRepository.updateApprovalStatus(idx);
     }
 
 

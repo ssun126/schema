@@ -39,4 +39,13 @@ public class PartMgmtService {
         return partMgmtRepository.save(partMgmtDTO);
     }
     public int updatePartMgmt(PartMgmtDTO partMgmtDTO) { return partMgmtRepository.updatePartMgmt(partMgmtDTO);}
+
+    public int deletePartMgmt(String idx) {
+        String[] arrIdx = idx.split(",");
+        int flag =0;
+        for(int i =0; i<arrIdx.length; i++){
+            flag += partMgmtRepository.deletePartMgmt(arrIdx[i]);
+        }
+        return flag;
+    }
 }

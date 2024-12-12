@@ -39,6 +39,8 @@ public class PartMgmtRepository {
 
     public int updatePartMgmt (PartMgmtDTO partMgmtDTO) { return  sql.update("partManagement.updatePartMgmt",partMgmtDTO);}
 
+    public int deletePartMgmt(String idx){return sql.delete("partManagement.deletePartMgmt",idx);}
+
     public HashMap<String,Object> getFileData(String idx){
 
 //        HashMap<String,Object> map = new HashMap<>();
@@ -76,6 +78,8 @@ public class PartMgmtRepository {
     public int saveHalogenData(partDetailHalGDTO halgDTO){ return sql.insert("partManagement.halgSave",halgDTO);}
 
     public int saveEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.etcSave",etcDTO);}
+
+    public int deleteEtcData(String idx){ return sql.delete("partManagement.deleteEtcData",idx);}
 
 
     //svhc
@@ -119,6 +123,8 @@ public class PartMgmtRepository {
     }
     public int saveGuarantData(partDetailGuarantDTO guarantDTO){ return sql.insert("partManagement.guarantSave",guarantDTO);}
     public int updateGuarantData(partDetailGuarantDTO guarantDTO){ return sql.update("partManagement.guarantUpdate",guarantDTO);}
+
+    public int updateApprovalStatus(String idx){ return sql.update("partManagement.updateApprovalStatus",idx);}
 
 
 

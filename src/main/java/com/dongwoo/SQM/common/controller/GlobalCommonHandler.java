@@ -51,19 +51,5 @@ public class GlobalCommonHandler {
         String queryString = request.getQueryString();
         return request.getRequestURI() + (queryString != null ? "?" + queryString : "");
     }
-    //현재 사용자 정보 가져오기
-    @ModelAttribute("currentUser")
-    public String getCurrentUser(@AuthenticationPrincipal UserCustom user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            return authentication.getName();
-        }
-        return "testUser";
-    }
-
-    //
-    @ModelAttribute("currentAside")
-    public String currentAside(HttpServletRequest request) {
-        return request.getRequestURI().startsWith("/board") ? "AsideFragment-board" : "AsideFragment-company";
-    }
+    
 }
