@@ -4,17 +4,7 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <body>
-<style>
-    /* 기본 스타일 */
-    tr.load-page {
-        cursor: pointer; /* 클릭 가능하게 */
-    }
 
-    /* 마우스 오버 시 밑줄 스타일 */
-    tr.load-page:hover td {
-        text-decoration: underline; /* 텍스트 밑줄 */
-    }
-</style>
         <div class="cui_main">
             <div class="cui_head">
                 <div class="head_content">
@@ -27,13 +17,13 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체Code"></strong>
                             <div class="item_content">
-                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" data-langsid="업체Code를 입력해주세요" placeholder="">
+                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" search="searchBtn">
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input id="comName" name="comName" class="cui_text_field" type="text" data-langsid="업체명을 입력해주세요" placeholder="">
+                                <input id="comName" name="comName" class="cui_text_field" type="text" search="searchBtn">
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
@@ -91,7 +81,7 @@
 
                     </div>
                     <div class="search_action">
-                        <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span data-langsid="검색"></span></button>
+                        <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
                 <div class="cui_toolbar">
@@ -99,48 +89,11 @@
                         <div class="toolbar_default"></div>
                     </div>
                     <div class="toolbar_aside">
-                        <button type="button" class="cui_button secondary"><span data-langsid="엑셀 다운로드"></span></button>
+                        <button type="button" id="exportBtn" class="cui_button secondary"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
 
-                 <table class="cui_table cui_font_xs">
-                     <colgroup>
-                         <col style="width:100px">
-                         <col style="width:150px">
-                         <col style="width:300px">
-                         <col style="width:200px">
-                         <col style="width:100px">
-                         <col style="width:100px">
-                         <col >
-                     </colgroup>
-                     <thead>
-                         <tr>
-                             <th><span data-langsid="신청구분"></span></th>
-                             <th><span data-langsid="업체코드"></span></th>
-                             <th><span data-langsid="업체명"></span></th>
-                             <th><span data-langsid="사업자번호"></span></th>
-                             <th><span data-langsid="Warranty"></span></th>
-                             <th><span data-langsid="처리상태"></span></th>
-                             <th><span data-langsid="사업본부"></span></th>
-                         </tr>
-                     </thead>
-                     <tbody id="companyTableBody">
-                         <tr>
-                             <td style="text-align:center"><span id = "com_file_name" name = "COM_FILE_NAME"></span></td>
-                             <td style="text-align:center">
-                                <a href="#" class="cui_link">
-                                    <span id = "com_code" name = "COM_CODE" ></span>
-                                </a>
-                             </td>
-                             <td style="text-align:center"><span id = "com_name" name = "COM_NAME"></span></td>
-                             <td style="text-align:center"><span id = "bus_number" name = "BUS_NUMBER" ></span></td>
-                             <td style="text-align:center"><span id = "com_ok_date" name = "COM_OK_DATE" ></span></td>
-                             <td style="text-align:center"><span id = "com_manage_status" name = "com_manage_status" ></span></td>
-                             <td style="text-align:center"><span id = "code_work" name = "CODE_WORK" ></span></td>
-
-                         </tr>
-                     </tbody>
-                 </table>
+                <div id="gridArea" gridYN=""></div>
 
             </div>
         </div>
@@ -151,43 +104,12 @@
 
 <script>
 
-    $(document).ready(function() {
+   $(document).ready(function() {
        preSearchSetting();
-       fetchDataLis();
-
-       history.replaceState({ comCode: null }, null, location.href);
-
-       $(document).on("click", ".load-page", function(e) {
-           e.preventDefault();
-           const code = $(this).data("code");
-           const useridx = $(this).data("useridx");
-           const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx+ '&prePage=';
-           //let urlOri = "/admin/companyInfo/cpApproval";
-
-           sessionStorage.setItem('comCode', code);
-
-           const queryParams = {
-               COM_CODE: document.getElementById('comCode').value,
-               COM_NAME: document.getElementById('comName').value,
-               DEPT_CODE: document.getElementById('deptCode').value,
-               COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,
-               BUS_NUMBER: document.getElementById('busNumber').value,
-               USER_STATUS: document.getElementById('userStatus').value,
-               ID_ADD_TYPE: document.getElementById('idAddType').value
-           };
-
-           Object.keys(queryParams).forEach(key => {
-               sessionStorage.setItem(key, queryParams[key]);
-           });
-
-           location.href = url;
-       });
-
+       ListSearch();
    });
 
-
-   function fetchDataLis() {
-
+   function ListSearch() {
       const dto = {
           "COM_CODE": document.getElementById('comCode').value,
           "COM_NAME": document.getElementById('comName').value,
@@ -212,11 +134,11 @@
           return response.json();
       })
       .then(data => {
-           //console.log('응답 데이터:', data);
+
+           var dataJson =data;
            if (data && Array.isArray(data)) {
-                populateTable(data);
-           } else {
-                alert("nodata");
+                $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea").pqGrid("refreshView");
            }
       })
       .catch(error => {
@@ -224,52 +146,176 @@
       });
    }
 
-   function populateTable(data) {
+    function loadPage(code ,useridx ) {
 
-    const tableBody = $("#companyTableBody");
-    tableBody.empty();
+           const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx+ '&prePage=';
 
-    data.forEach(company => {
-        const row = `
-            <tr class='load-page' data-code='${company.COM_CODE}' data-useridx='${company.USER_IDX}'>
-                <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.ID_ADD_TYPE == 0 ? '신규' : 'ID추가'}</span></td>
-                <td style="text-align:center"><span id = "com_code" name = "COM_CODE" >${company.COM_CODE}</span></td>
-                <td style="text-align:center"><span id = "com_name" name = "COM_NAME">${company.COM_NAME}</span></td>
-                <td style="text-align:center"><span id = "bus_number" name = "BUS_NUMBER">${company.bus_NUMBER}</span></td>
-                <td style="text-align:center"><span id = "com_manage_status" name = "COM_MANAGE_STATUS">${company.com_MANAGE_STATUS}</span></td>
-                <td style="text-align:center"><span id = "user_status" name = "user_status" >${company.user_STATUS}</span></td>
-                <td style="text-align:center">
-                   <span class="company_code_work" >
-                    ${company.cp_CODE_WORK_CD1 !=null  ? company.cp_CODE_WORK_CD1 +",": ""}
-                    ${company.cp_CODE_WORK_CD2 !=null  ? company.cp_CODE_WORK_CD2 +",": ""}
-                    ${company.cp_CODE_WORK_CD3 !=null  ? company.cp_CODE_WORK_CD3 +",": ""}
-                    ${company.cp_CODE_WORK_CD4 !=null  ? company.cp_CODE_WORK_CD4 +",": ""}
-                    ${company.cp_CODE_WORK_CD5 !=null  ? company.cp_CODE_WORK_CD5 +",": ""}
-                   </span>
-                </td>
+           sessionStorage.setItem('comCode', code);
 
-            </tr>
-        `;
-        tableBody.append(row);
+           const queryParams = {
+               COM_CODE: document.getElementById('comCode').value,
+               COM_NAME: document.getElementById('comName').value,
+               DEPT_CODE: document.getElementById('deptCode').value,
+               COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,
+               BUS_NUMBER: document.getElementById('busNumber').value,
+               USER_STATUS: document.getElementById('userStatus').value,
+               ID_ADD_TYPE: document.getElementById('idAddType').value
+           };
+
+           Object.keys(queryParams).forEach(key => {
+               sessionStorage.setItem(key, queryParams[key]);
+           });
+
+           location.href = url;
+    }
+
+
+    function preSearchSetting() {
+      const storedCode = sessionStorage.getItem('comCode');
+       if (storedCode) {
+           document.getElementById('comCode').value = sessionStorage.getItem('COM_CODE');
+           document.getElementById('comName').value = sessionStorage.getItem('COM_NAME');
+           $('#deptCode').val(sessionStorage.getItem('DEPT_CODE'));
+           $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
+           $('#idAddType').val(sessionStorage.getItem('ID_ADD_TYPE'));
+           $('#userStatus').val(sessionStorage.getItem('USER_STATUS'));
+           document.getElementById('busNumber').value  = sessionStorage.getItem('BUS_NUMBER');
+       }
+    }
+
+
+      $(function () {
+       var heightMinus = 330;
+
+       var data = [];
+
+       var obj = {
+           bubble: false,
+           numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+           editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+           editModel: { clicksToEdit: 2 },
+           selectionModel: { type: 'cell', mode: 'block' },
+           height: $(window).height() - heightMinus,
+           title: "",
+           sortable: false,
+           resizable: true,
+           menuIcon: true,
+           scrollModel: { autoFit: false },
+           hoverMode: 'row',
+           rowHtHead: 30,
+           rowHt:30,
+           roundCorners: false,
+           rowBorders: true,
+           showBottom: true,
+           showHeader: true,
+           showTitle: true,
+           showTop: false,
+           showToolbar: true,
+           stripeRows: true,
+           wrap: false,
+           autoAddRow: false,
+           freezeCols:0,
+           autoRow: false,
+           autoRowHead: false,
+           rowInit: function () {
+               return { style: 'font-size:12px;' };
+           },
+           selectChange: function (event, ui) {
+           },
+           rowClick: function (event, ui) {
+           },
+           cellClick: function (event, ui) {
+           },
+           rowDblClick: function (event, ui) {
+               var data = ui.rowData;
+               const cpcode = data.COM_CODE ;
+               const useridx = data.USER_IDX ;
+
+               loadPage(cpcode ,useridx ) ;
+           },
+           rowSelect: function (event, ui) {
+           },
+           open: function () {
+           },
+           headerCellClick: function (event, ui) {
+           }
+       };
+       obj.colModel = [
+
+             {
+                data_langsid: "신청구분",
+                title: siteLang.getLang("신청구분"),
+                width: 100,
+                halign: "center",
+                align: "center",
+                dataType: "string",
+                dataIndx: "ID_ADD_TYPE",
+                sortable: true,
+                editor: false,
+                editable: false,
+                render: function (ui) {
+                    var idaddtype = ui.cellData;
+                    if (idaddtype == 0) {
+                        return siteLang.getLang("신규") ;
+                    }
+                    else {
+                       return siteLang.getLang("ID추가") ;
+                    }
+                }
+            },
+            {  data_langsid :"업체코드" ,title: siteLang.getLang("업체코드"), width: 150, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+            {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+            {  data_langsid :"사업자번호" ,title: siteLang.getLang("사업자번호"), width: 150, halign: "center", align: "center", dataType: "string", dataIndx: "bus_NUMBER", sortable: true, editor: false, editable: false },
+            {  data_langsid :"Warranty" ,title: siteLang.getLang("Warranty"), width: 150, halign: "center", align: "center", dataType: "string", dataIndx: "com_MANAGE_STATUS", sortable: true, editor: false, editable: false },
+            {  data_langsid :"처리상태" ,title: siteLang.getLang("처리상태"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "user_STATUS", sortable: true, editor: false, editable: false },
+            {
+                    data_langsid: "사업본부",
+                    title: siteLang.getLang("사업본부"),
+                    width: 350,
+                    halign: "center",
+                    align: "center",
+                    dataType: "string",
+                    dataIndx: "cp_CODE_WORK_CD1",
+                    sortable: true,
+                    editor: false,
+                    editable: false,
+                    render: function (ui) {
+
+                        var cp_CODE_WORK_CD1 = ui.rowData.cp_CODE_WORK_CD1 !=null ? ui.rowData.cp_CODE_WORK_CD1 + "," : "";
+                        var cp_CODE_WORK_CD2 = ui.rowData.cp_CODE_WORK_CD2 !=null ? ui.rowData.cp_CODE_WORK_CD2 + "," : "";
+                        var cp_CODE_WORK_CD3 = ui.rowData.cp_CODE_WORK_CD3 !=null ? ui.rowData.cp_CODE_WORK_CD3 + "," : "";
+                        var cp_CODE_WORK_CD4 = ui.rowData.cp_CODE_WORK_CD4 !=null ? ui.rowData.cp_CODE_WORK_CD4 + "," : "";
+                        var cp_CODE_WORK_CD5 = ui.rowData.cp_CODE_WORK_CD5 !=null ? ui.rowData.cp_CODE_WORK_CD5 + "," : "";
+                        var ret = cp_CODE_WORK_CD1 + cp_CODE_WORK_CD2 +  cp_CODE_WORK_CD3 +  cp_CODE_WORK_CD4 +  cp_CODE_WORK_CD5 ;
+                        ret = ret.replace(/,\s*$/, '');
+                        return ret;
+                    }
+            }
+       ];
+       obj.dataModel = { data: data };
+       $("#gridArea").pqGrid(obj);
+       $("#gridArea").attr("gridYN", "Y");
+
+       $(window).resize(function () {
+           $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+           $("#gridArea").pqGrid("refreshView");
+       });
+
+       ListSearch();
     });
 
-        $(".company_code_work").each(function() {
-           $(this).text($(this).text().replace(/,\s*$/, ''));
-        });
-   }
+<!--       $("#BtnExcel").bind("click", function() {-->
+<!--            var grid = $("#IngList").pqGrid("instance");-->
 
-function preSearchSetting() {
-  const storedCode = sessionStorage.getItem('comCode');
-   if (storedCode) {
-       document.getElementById('comCode').value = sessionStorage.getItem('COM_CODE');
-       document.getElementById('comName').value = sessionStorage.getItem('COM_NAME');
-       $('#deptCode').val(sessionStorage.getItem('DEPT_CODE'));
-       $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
-       $('#idAddType').val(sessionStorage.getItem('ID_ADD_TYPE'));
-       $('#userStatus').val(sessionStorage.getItem('USER_STATUS'));
-       document.getElementById('busNumber').value  = sessionStorage.getItem('BUS_NUMBER');
-   }
-}
-
-
+<!--            var format = "xlsx"-->
+<!--              , blob = grid.exportData({-->
+<!--                format: format,-->
+<!--                nopqdata: true,-->
+<!--                render: true-->
+<!--            });-->
+<!--            if (typeof blob === "string") {-->
+<!--                blob = new Blob([blob]);-->
+<!--            }-->
+<!--            saveAs(blob, "진행프로젝트_DEV." + format);-->
+<!--        });-->
 </script>
