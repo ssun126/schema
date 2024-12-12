@@ -200,23 +200,25 @@
         });
 
         $("input[name='DATA_GUBUN']").change(function(){
-		// 직접입력
-		if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
-		    $('#declarFileFieldset').hide();
-			$('#declarDataFieldset').show();
-			//초기화
-			$("input[name=DECLAR_FILE]").val('');
-			getDeclarData();
+		    // 직접입력
+		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+		        $('#declarFileFieldset').hide();
+		    	$('#declarDataFieldset').show();
+		    	//초기화
+		    	$("input[name=DECLAR_FILE]").val('');
+		    	getDeclarData();
 
-		}
-		// 첨부파일
-		else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
-		    $('#declarFileFieldset').show();
-			$('#declarDataFieldset').hide();
-			//초기화
-			var tableBody = $('#tableBody4');
-            tableBody.empty(); // 기존 내용 비우기
-		}
+		    }
+		    // 첨부파일
+		    else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
+		        $('#declarFileFieldset').show();
+		    	$('#declarDataFieldset').hide();
+		    	//초기화
+		    	$("input[name=APPLICABLE_NO]").val('');
+		    	var tableBody = $('#tableBody4');
+                tableBody.empty(); // 기존 내용 비우기
+		    }
+		});
 
 
 		//처음 로드 시 기존 저장된 데이터 있는지 확인
@@ -236,9 +238,6 @@
             //신규 제출구분 파일첨부 기본
             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
         }
-
-	});
-
 
     });
 

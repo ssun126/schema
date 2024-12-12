@@ -53,6 +53,13 @@ public class PartMgmtRepository {
         return sql.selectOne("partManagement.getPartMgmtData",idx);
     }
 
+    public void updateApprovalStatus(String idx, String status){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("idx",idx);
+        map.put("status",status);
+        sql.update("partManagement.updateApprovalStatus",map);
+    }
+
     //detailpage
     public PartMgmtDTO getPartData(String idx) { return sql.selectOne("partManagement.getPartData",idx);}
 

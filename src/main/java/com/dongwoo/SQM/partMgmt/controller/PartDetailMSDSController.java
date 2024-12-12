@@ -202,6 +202,9 @@ public class PartDetailMSDSController {
 //            partDetailService.updateMsds(msdsDTO);
 //        }
 
+        //뭐든 pm_mgmt 작성중으로 변경
+        partMgmtService.updateApprovalStatus(pm_idx,"2");
+
 
         if(msdsDTO.getINFO_FLAG().equals("save")){
 //            model.addAttribute("PM_IDX",pm_idx);

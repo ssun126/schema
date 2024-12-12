@@ -48,4 +48,8 @@ public class PartMgmtService {
         }
         return flag;
     }
+
+    public void updateApprovalStatus(String idx, String status){
+         partMgmtRepository.updateApprovalStatus(idx,status);
+    }
 }

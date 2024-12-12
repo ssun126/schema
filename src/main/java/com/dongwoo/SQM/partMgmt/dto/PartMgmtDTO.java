@@ -29,7 +29,10 @@ public class PartMgmtDTO {
     @JsonProperty("PM_REG_USER")
     private String PM_REG_USER;         //등록자
     @JsonProperty("PM_APPROVAL_STATUS")
-    private String PM_APPROVAL_STATUS;      //승일현황
+    private String PM_APPROVAL_STATUS;      //승일현황 명
+    @JsonProperty("PM_APPROVAL_STATUS_VAL")
+    private String PM_APPROVAL_STATUS_VAL;      //승인현황 값
+
     @JsonProperty("PM_APPROVAL_DATE")
     private String PM_APPROVAL_DATE;        //승인일자
     @JsonProperty("PM_MODIFY_USER")

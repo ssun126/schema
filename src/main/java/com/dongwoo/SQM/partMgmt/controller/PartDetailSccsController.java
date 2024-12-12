@@ -37,14 +37,14 @@ public class PartDetailSccsController {
 
         String pm_idx = sccsDTO.getPM_IDX();
         String flag = sccsDTO.getINFO_FLAG();
-        log.info("test5455555555========999999===========");
+        log.info("test5455555555========999999==========="+sccsDTO);
         if(!sccsDTO.getSCCS_CONFIRM_DATE().equals("") || !sccsDTO.getSCCS_CHAR().equals("") || !sccsFile.isEmpty() ){
             if(!sccsFile.isEmpty()){
                 String sccs_filepath = partDetailService.uploadFileData(user.getCOM_CODE(),sccsFile);
                 String sccs_filename = sccsFile.getOriginalFilename();
 
-                sccsDTO.setSCCS_FILE_NAME(sccs_filepath);
-                sccsDTO.setSCCS_FILE_PATH(sccs_filename);
+                sccsDTO.setSCCS_FILE_NAME(sccs_filename);
+                sccsDTO.setSCCS_FILE_PATH(sccs_filepath);
 
             }
             partDetailService.saveSccsData(sccsDTO);
@@ -83,8 +83,8 @@ public class PartDetailSccsController {
         log.info("test5455555555==========2222=========");
 
         //승인요청 pm_idx 상태 바꿈
-        if(flag == "next"){
-            partDetailService.updateApprovalStatus(pm_idx);
+        if(flag.equals("next")){
+            partMgmtService.updateApprovalStatus(pm_idx,"3");
         }
 
 

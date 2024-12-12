@@ -53,6 +53,8 @@ public class PartMgmtController {
 
     }
 
+
+
     @GetMapping("/searchPartMgmt")
     public ResponseEntity<?>  searchPartMgmt(@RequestParam("code") String code, @RequestParam("name") String name,@RequestParam("reguser") String reguser,
                                             @RequestParam("useyn") String useyn,@RequestParam("plant") String plant,@RequestParam("approval") String approval,
