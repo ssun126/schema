@@ -126,7 +126,7 @@ public class LoginController {
                 return "blank";
             }
 
-            model.addAttribute("username", username);
+            //model.addAttribute("username", username);
         } catch (Exception e) {
             log.info("otp === "+e.getMessage());
         }

@@ -42,13 +42,15 @@
     </div>
     <script>
         var sendOtp = function () {
-
+            // OTP 인증번호 발송
         }
 
         var otpOk = function () {
             var objDia = $("#diaOtpArea");
 
             if (Common.Validate(objDia)) {
+                // OTP 인증번호 체크
+
                 objDia.data("Hide")();
             }
         }
