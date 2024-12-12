@@ -404,26 +404,31 @@ siteLang.showLangs = function (obj) {
 
     obj.find('div[gridYN=Y]').each(function () {
         var grid = $(this).pqGrid("instance");
-        var colModel = grid.getColModel();
+        var colModel;
 
-        for (j = 0; j < colModel.length; j++) {
-            var kor = colModel[j].data_langsid;
+        if (this.gridColModel) {
+            colModel = this.gridColModel;
+        } else {
+            colModel = grid.getColModel();
+            for (j = 0; j < colModel.length; j++) {
+                var kor = colModel[j].data_langsid;
 
-            if (typeof kor == "undefined" || kor == "") {
-                continue;
-            }
-
-            try {
-                const item = siteLang.langsData.find(entry => entry.KOR === kor);
-                if (item && item[siteLang.selLang]) {
-                    colModel[j].title = item[siteLang.selLang];
+                if (typeof kor == "undefined" || kor == "") {
+                    continue;
                 }
-                else
-                {
-                    siteLang.devDBSet(kor);
-                    colModel[j].title = kor;
+
+                try {
+                    const item = siteLang.langsData.find(entry => entry.KOR === kor);
+                    if (item && item[siteLang.selLang]) {
+                        colModel[j].title = item[siteLang.selLang];
+                    }
+                    else
+                    {
+                        siteLang.devDBSet(kor);
+                        colModel[j].title = kor;
+                    }
+                } catch (e) {
                 }
-            } catch (e) {
             }
         }
 
@@ -475,6 +480,58 @@ siteLang.devDBSet = function (KOR) {
 }
 
 var Common = {};
+
+// Property 추가
+Common.AddProperty = function (obj, name, onGet, onSet) {
+    // wrapper functions
+    var oldValue = obj[name],
+        getFn = function () {
+            return onGet.apply(obj, [oldValue]);
+        },
+        setFn = function (newValue) {
+            return oldValue = onSet.apply(obj, [newValue]);
+        };
+
+    // Modern browsers, IE9+, and IE8 (must be a DOM object),
+    if (Object.defineProperty) {
+
+        Object.defineProperty(obj, name, {
+            get: getFn,
+            set: setFn
+        });
+
+        // Older Mozilla
+    } else if (obj.__defineGetter__) {
+
+        obj.__defineGetter__(name, getFn);
+        obj.__defineSetter__(name, setFn);
+
+        // IE6-7
+        // must be a real DOM object (to have attachEvent) and must be attached to document (for onpropertychange to fire)
+    } else {
+        var onPropertyChange = function (e) {
+            if (event.propertyName == name) {
+                // temporarily remove the event so it doesn't fire again and create a loop
+                obj.detachEvent("onpropertychange", onPropertyChange);
+
+                // get the changed value, run it through the set function
+                var newValue = setFn(obj[name]);
+
+                // restore the get function
+                //obj[name] = getFn;
+                //obj[name].toString = getFn;
+
+                // restore the event
+                obj.attachEvent("onpropertychange", onPropertyChange);
+            }
+        };
+
+        obj[name] = onGet;
+        obj[name].toString = onGet;
+
+        obj.attachEvent("onpropertychange", onPropertyChange);
+    }
+}
 
 //페이지 이동
 Common.MoveUrl = function (Url, Msg, Check) {

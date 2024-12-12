@@ -57,13 +57,11 @@
 
             Common.Ajax("/otpSend", ReqInfo, function (response) {
                 if (response.substring(0, 2) == "OK") {
-                      Common.Msg(siteLang.getLang("OTP 코드 인증 메일이 발송되었습니다.")) ;
-                      Common.Msg("OTP :" + response.substring(3, 9));  //임시.
+                      Common.Msg(siteLang.getLang("OTP 코드 인증 메일이 발송되었습니다."), {text : "OTP : " + response.substring(3, 9)});
                 } else {
                     Common.Msg(siteLang.getLang(response));
                 }
             });
-
         }
 
         var otpOk = function () {
@@ -82,7 +80,8 @@
 
                 Common.Ajax("/otpOk", ReqInfo, function (response) {
                     if (response == "OK") {
-                        Common.Msg("OTP인증 성공");  //임시
+                        $(".login_form_filed").attr("otpok", "Y");
+                        $(".login_form_filed").submit();
                         objDia.data("Hide")();
                     } else {
                         Common.Msg(siteLang.getLang(response));

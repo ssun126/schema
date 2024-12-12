@@ -383,7 +383,7 @@
             and VENDOR_ID = #{COM_CODE}
         </if>
         <if test="COM_NAME != '' ">
-            and NAME = #{COM_NAME}
+            and NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%')
         </if>
     </select>
 

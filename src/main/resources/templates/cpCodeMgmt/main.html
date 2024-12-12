@@ -30,7 +30,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
-                                <select id="searchDept" name="searchDept" class="cui_select_field">
+                                <select id="searchDept" name="searchDept" class="cui_select_field" onchange="ListSearch();">
                                     <option value="" data-langsid="선택" selected></option>
                                     <option th:each="dept : ${deptList}"
                                             th:value="${dept.BASE_CODE}"
@@ -213,6 +213,22 @@ var delCompany = function () {
     }
 }
 
+var downloadExcel = function () {
+    var grid = $("#gridArea").pqGrid("instance");
+    var colModel = grid.getColModel();
+    colModel[0].hidden = true;
+
+    grid.exportData({
+        url: "/common/exportData",
+        format: "xlsx",
+        zip: false,
+        filename: "COMPANY_CODE_" + Common.GetTodayTimeString(),
+        render: true
+    });
+
+    colModel[0].hidden = false;
+}
+
 var ListSearch = function () {
     var url = "/companyInfo/listSearchCompanies";
 
@@ -251,23 +267,6 @@ $(function () {
         title: "",
         sortable: false,
         resizable: true,
-        toolbar: {
-            items: [
-            {
-                type: 'button',
-                label: "Excel Download",
-                icon: 'ui-icon-arrowthickstop-1-s',
-                listener: function () {
-                    this.exportData({
-                        url: "/common/exportData",
-                        format: "xlsx",
-                        zip: false,
-                        filename: "ISO_AUTH_LIST",
-                        render: true
-                    });
-                }
-            }]
-        },
         menuIcon: true,
         scrollModel: { autoFit: false },
         hoverMode: 'row',
@@ -278,9 +277,9 @@ $(function () {
         showBottom: true,
         showHeader: true,
         showTitle: true,
-        showTop: true, //excel 버튼 보이기
-        showToolbar: true,
-        stripeRows: true,
+        showTop: false, //excel 버튼 보이기
+        showToolbar: false,
+        stripeRows: false,
         wrap: false,
         autoAddRow: false,
         freezeCols:0,
