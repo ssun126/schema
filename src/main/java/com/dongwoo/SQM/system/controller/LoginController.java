@@ -209,7 +209,7 @@ public class LoginController {
                 return ResponseEntity.ok("OK");
             } else {
                 log.info("OTP 인증 실패!! === " + false);
-                return ResponseEntity.ok("Fail");
+                return ResponseEntity.ok("인증번호를 다시 확인해주세요.");
             }
 
         } catch (Exception e) {

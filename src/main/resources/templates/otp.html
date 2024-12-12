@@ -80,6 +80,7 @@
 
                 Common.Ajax("/otpOk", ReqInfo, function (response) {
                     if (response == "OK") {
+                        Common.Loading.Show();
                         $(".login_form_filed").attr("otpok", "Y");
                         $(".login_form_filed").submit();
                         objDia.data("Hide")();
