@@ -24,7 +24,6 @@ public class ISOAuthController {
         // 회사의 ISO 상태 정보를 가져옵니다.
         AuditMgmtDTO companyAuth = isoAuthService.getCompanyAuth("ISO", user.getCOM_CODE());
         model.addAttribute("companyIsoAuth", companyAuth);
-        log.info("companyAuth==============================="+companyAuth);
         return "isoAuth/main";
     }
 

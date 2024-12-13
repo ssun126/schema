@@ -35,10 +35,10 @@
             <strong class="item_label">승인상태</strong>
             <div class="item_content">
               <select class="cui_select_field" id="searchState">
-                <option value="" selected>선택</option>
+                <option value="" selected>선택하세요</option>
                 <option value="SEND">제출</option>
-                <option value="APRROVE">승인</option>
-                <option value="NOTAPPROVE">반려</option>
+                <option value="APPROVED">승인</option>
+                <option value="REJECT">반려</option>
               </select>
             </div>
           </div>
@@ -79,51 +79,79 @@
 </body>
 </html>
 <script>
-  // 페이지네이션 처리 함수 (updatePagination)
-function updatePagination(pageMaker) {
-    var paginationHtml = '';
-    var currentPage = pageMaker.criteria.pageNum;
-    var startPage = pageMaker.startPage;
-    var endPage = pageMaker.endPage;
-    var totalPages = pageMaker.totalPages;
-
-    // 이전 페이지 버튼
-    if (currentPage > 1) {
-        paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
-    }
-
-    // 페이지 번호
-    for (var i = startPage; i <= endPage; i++) {
-        if (i === currentPage) {
-            paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-        } else {
-            paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-        }
-    }
-
-    // 다음 페이지 버튼
-    if (currentPage < totalPages) {
-        paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-    }
-
-    // 페이지네이션 HTML 업데이트
-    $('#pagination').html(paginationHtml);
-
-    // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-    $('.page, .prev, .next').on('click', function(event) {
-        event.preventDefault();
-        var pageNum = $(this).data('page');
-        searchCompanies(pageNum);
-    });
-}
-
   $(document).ready(function() {
-    $('#searchBtn').on('click', function(event){
-      event.preventDefault();  // 기본 폼 제출 동작 방지
+      // 링크 클릭 시 콘텐츠를 로드
+      $(document).on("click", ".load-page", function(e) {
+          e.preventDefault();
 
-      var name = $('#searchName').val();  // 업체명
-      var code = $('#searchCode').val();  // 업체 코드
-      var state = $('#searchState').val();  // state
-    });
+          const comCode = $(this).data("code");
+          const url = "/admin/auditMgmt/conflictMineralsDetail?COM_CODE="+comCode;
+          location.href = url;
+      });
+
+      // 검색 버튼 클릭 시
+      $('#searchBtn').on('click', function(event) {
+          event.preventDefault();  // 기본 폼 제출 동작 방지
+
+          var type = 'CONFLICT';      // audit 타입
+          var name = $('#searchName').val();  // 업체명
+          var code = $('#searchCode').val();  // 업체 코드
+          var state = $('#searchState').val();  // state
+
+          $.ajax({
+              url: '/auditMgmt/searchAuditMgmt',  // 서버의 검색 API URL
+              type: 'GET',
+              data: {
+                  type: type,      // audit 타입
+                  name: name,      // 업체명
+                  code: code,      // 업체 코드
+                  state: state,  // state
+                  pageNum: 1,      // 기본값으로 첫 페이지
+                  amount: 10       // 한 페이지에 표시할 항목 수
+              },
+              success: function(response) {
+                  // 테이블에 결과 채우기
+                  var tableBody = $('#companyTable tbody');
+                  tableBody.empty();  // 기존 내용 비우기
+
+                  // APPROVE_STATE 매핑 객체 선언
+                  var appTypeMap = {
+                      'SAVE': '작성중',
+                      'SEND': '제출',
+                      'OK': '승인',
+                      'REJECT': '반려'
+                  };
+
+
+                      // 검색된 결과를 테이블에 추가
+                  if (!response.resultList || response.resultList.length === 0) {
+                      var row = '<tr><td colspan="6">데이터가 없습니다.</td>></tr>';
+                      tableBody.append(row);  // 테이블에 새 행 추가
+                  }else{
+                      // 검색된 결과를 테이블에 추가
+                      response.resultList.forEach(function(auth) {
+                          var appTypeText = appTypeMap[auth.APPROVE_STATE] || auth.APPROVE_STATE;  // 기본값은 'APPROVE_STATE'값 그대로
+                          var itemPoint = auth.POINT ? auth.POINT: '-';  // null일 경우 '0'로 대체
+                          var itemApvDate = auth.APPROVE_DATE ? auth.APPROVE_DATE: '';  // null일 경우 ''로 대체
+                          var row = '<tr>' +
+                                          '<td>' + appTypeText + '</td>' +
+                                          '<td>' + auth.COM_CODE + '</td>' +
+                                          '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
+                                          '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
+                                          '<td>' + auth.APPROVE_DATE + '</td>' +
+                                          '<td>' + itemApvDate + '</td>' +
+                                        '</tr>';
+                          tableBody.append(row);  // 테이블에 새 행 추가
+                      });
+                  }
+
+                  // 페이지네이션 업데이트 (페이지 객체가 반환된다고 가정)
+                  //updatePagination(response.pageMaker);
+              },
+              error: function() {
+                  alert("검색 결과를 가져오는 데 실패했습니다.");
+              }
+          });
+      });
   });
 </script>

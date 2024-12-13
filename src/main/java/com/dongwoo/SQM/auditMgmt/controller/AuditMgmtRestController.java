@@ -151,7 +151,7 @@ public class AuditMgmtRestController {
     }
 
     /**
-     * 노동인권 제출
+     * 노동환경 제출
      * @param fileNames
      * @return
      * @throws IOException

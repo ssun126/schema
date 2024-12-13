@@ -34,9 +34,6 @@ public class SafetyHealthController {
     public String GetList(Model model) {
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
-        // 회사의 Auth 상태 정보를 가져옵니다.
-        //AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuthFile("SAFETY", comCode);
-        //model.addAttribute("companyAuth", companyAuth);
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("SAFETY", comCode);
         model.addAttribute("companyAuthFile", companyAuthFile);

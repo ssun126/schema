@@ -30,6 +30,7 @@
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO" alias="isoAuthItem"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO" alias="labour"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO" alias="safetyHealth"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO" alias="conflict"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO" alias="companyInfo"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO" alias="companyInfoParam"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.companyInfo.dto.PartCodeDTO" alias="partCode"></typeAlias>

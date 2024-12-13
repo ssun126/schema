@@ -32,8 +32,6 @@ public class SafetyHealthService {
     private final SafetyHealthRepository safetyHealthRepository;
     private final AuditMgmtRepository auditMgmtRepository;
 
-    private final IsoAuthRepository isoAuthRepository;
-
     @Value("${Upload.path.attach}")
     private String uploadPath;
 

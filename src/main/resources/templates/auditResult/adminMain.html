@@ -152,6 +152,8 @@
   $(document).ready(function () {
     $('#searchBtn').on('click', function (event) {
       event.preventDefault();  // 기본 폼 제출 동작 방지
+
+      showAlert('warning','API 연동 후 조회 가능합니다');
     });
   });
 </script>

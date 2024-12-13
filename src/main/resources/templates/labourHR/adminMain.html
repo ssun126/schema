@@ -13,7 +13,7 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>노동인권</span></h2>
+                <h2 class="cui_title"><span>노동환경</span></h2>
             </div>
         </div>
         <div class="cui_body">
@@ -86,27 +86,10 @@
         $(document).on("click", ".load-page", function(e) {
             e.preventDefault();
 
-            const code = $(this).data("code");
-            const url = "/admin/auditMgmt/labourHRDetail";
-
-            $.ajax({
-                url: url,  // 서버에서 HTML을 반환할 URL
-                type: 'GET',         // GET 방식으로 요청
-                data: {
-                    COM_CODE: code
-                },
-                success: function(response) {
-                    // 서버에서 받은 HTML 콘텐츠를 <div class="cui_content"> 영역에 삽입
-                    $(".cui_content").html(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error("HTML 콘텐츠 로드에 실패했습니다: " + error);
-                    $(".cui_content").html("<p>페이지 로드에 실패했습니다.</p>");
-                }
-            });
+            const comCode = $(this).data("code");
+            const url = "/admin/auditMgmt/labourHRDetail?COM_CODE="+comCode;
+            location.href = url;
         });
-
-
 
         // 검색 버튼 클릭 시
         $('#searchBtn').on('click', function(event) {

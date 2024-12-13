@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ConflictMinerals">
+    <insert id="insertFile" parameterType="conflict">
+        INSERT INTO SC_AUTH_FILE(COM_CODE, AUTH_TYPE, FILE_NAME, FILE_PATH, AUTH_SEQ)
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ})
+    </insert>
+
+    <select id="getCompanyAuthFile" parameterType="map" resultType="conflict">
+        SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH
+        FROM SC_AUTH_COMPANY_INFO ACI
+        INNER JOIN SC_AUTH_FILE AF ON AF.COM_CODE = ACI.COM_CODE AND AF.AUTH_TYPE = ACI.AUTH_TYPE
+        WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
+    </select>
+
+    <select id="getConflictMinerals" parameterType="map" resultType="conflict">
+        SELECT
+            PM_IDX
+            ,PM_PART_CODE
+            ,pc.PART_NAME as PM_PART_NAME
+            ,PM_PART_PLANT_CODE
+            ,PM_APPROVAL_STATUS
+            ,PM_APPROVAL_DATE
+            ,cm.TANTALUM_YN
+            ,cm.TUNGSTEN_YN
+            ,cm.TIN_YN
+            ,cm.GOLD_YN
+            ,cm.COBALT_YN
+            ,cm.MICA_YN
+            ,cm.INSPECTION_DATE
+        FROM SC_PART_MANAGEMENT_DATA pmd
+        LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE
+        LEFT OUTER JOIN  SC_CONFLICT_MINERAL cm ON cm.COM_CODE  = pmd.PM_COM_CODE
+        WHERE 1 =1
+        AND pmd.PM_COM_CODE = #{COM_CODE}
+    </select>
+
+</mapper>

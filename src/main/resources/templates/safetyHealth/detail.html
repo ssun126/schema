@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
 <body>
 <div class="cui_content">
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>변경관리</span></h2>
+                <h2 class="cui_title"><span>안전보건/환경관리</span></h2>
             </div>
         </div>
         <div class="cui_body">
             <form class="cui_form_section" data-legend="true">
                 <fieldset>
-                    <legend><span>안전보건환경 Audit 결과</span></legend>
+                    <legend><span>안전보건환경 Audit 계획</span></legend>
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -60,7 +62,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <span>대면</span>
+                                        <span id="auditPWay">대면</span>
                                     </div>
                                 </div>
                             </td>
@@ -75,7 +77,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <table class="cui_table">
+                    <table class="cui_table visit">
                         <colgroup>
                             <col style="width:154px;">
                             <col>
@@ -93,6 +95,72 @@
                         </tr>
                         <tr>
                             <th><span>File 첨부</span></th>
+                            <td class="attachmentsContainer">
+                                <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
+                                    <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="cui_button" id="addVisitBtn"><span>추가</span></button>
+                                </div>
+                                <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                    <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table class="cui_table self">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit 항목</span></th>
+                            <td>
+                                <table class="cui_table center" id="companyTable">
+                                    <colgroup>
+                                        <col style="width:100px;">
+                                        <col style="width:130px;">
+                                        <col>
+                                        <col style="width:80px;">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th><span>항목</span></th>
+                                        <th><span>내용</span></th>
+                                        <th><span>답변</span></th>
+                                        <th><span>평가점수</span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>AAAA1</td>
+                                        <td>코비젼-</td>
+                                        <td class="center"></td>
+                                        <td class="center">10</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="3">Total</td>
+                                        <td>88</td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>근거서류</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -114,7 +182,7 @@
                         </tbody>
                     </table>
                 </fieldset>
-                <fieldset>
+                <fieldset class="resultField">
                     <legend><span>안전보건환경 Audit 결과</span></legend>
                     <table class="cui_table">
                         <colgroup>
@@ -198,142 +266,37 @@
                         </tbody>
                     </table>
                 </fieldset>
-                <fieldset>
-                    <legend><span>안전보건환경 Audit 계획</span></legend>
-                    <table class="cui_table">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>업체명</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>코비젼</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>담당자</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>동우</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>구분</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>PR</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><span>Audit 계획일</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>2024-10-01</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>Audit 방법</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>대면</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>Audit 구분</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>정기</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <table class="cui_table">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>Audit 항목</span></th>
-                            <td>
-                                <table class="cui_table center" id="companyTable">
-                                    <colgroup>
-                                        <col style="width:100px;">
-                                        <col style="width:130px;">
-                                        <col>
-                                        <col style="width:80px;">
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th><span>항목</span></th>
-                                        <th><span>내용</span></th>
-                                        <th><span>답변</span></th>
-                                        <th><span>평가점수</span></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>AAAA1</td>
-                                        <td>코비젼-</td>
-                                        <td class="center"></td>
-                                        <td class="center">10</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <td colspan="3">Total</td>
-                                        <td>88</td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><span>근거서류</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="search_square" data-tooltip-title="미리보기">
-                                                        <span>미리보기</span></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </fieldset>
+
             </form>
         </div>
     </div>
 </div>
 <script>
     $(document).ready(function() {
-
+        $("#auditPWay").text("셀프");
+        console.log($("#auditPWay").text());
+        if($("#auditPWay").text() === "셀프"){
+            $("#fs_text").hide(); //파일첨부가 초기값이므로
+            $(".visit").hide();
+        }else{
+            $(".self").hide();
+        }
+        //Audit 결과
+        //$(".resultField").hide();
     });
+
+    function downloadFile(fileName) {
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
+    }
 </script>
 </body>
 </html>

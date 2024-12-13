@@ -83,17 +83,15 @@
 </html>
 <script>
   $(document).ready(function() {
-           // 링크 클릭 시 콘텐츠를 로드
-           $(document).on("click", ".load-page", function(e) {
-               e.preventDefault();
+       // 링크 클릭 시 콘텐츠를 로드
+       $(document).on("click", ".load-page", function(e) {
+           e.preventDefault();
 
-               const code = $(this).data("code");
-               const url = "/admin/auditMgmt/qualityControlDetail?COM_CODE="+code;
+            const comCode = $(this).data("code");
+            const url = "/admin/auditMgmt/qualityControlDetail?COM_CODE="+comCode;
+            location.href = url;
 
-               history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-               loadContent(url);
-               //goMenu(url);
-           });
+       });
 
            // 검색 버튼 클릭 시
            $('#searchBtn').on('click', function(event) {
