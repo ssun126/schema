@@ -46,7 +46,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
-                                <select id="deptCode" name="DEPT_CODE" class="cui_select_field wide">
+                                <select id="deptCode" name="DEPT_CODE" class="cui_select_field wide" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option th:each="dept : ${deptList}"
                                             th:value="${dept.BASE_OPTION}"
@@ -58,7 +58,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="Plant"></strong>
                             <div class="item_content">
-                                <select id="plantCode" name="PLANT_CODE" class="cui_select_field wide">
+                                <select id="plantCode" name="PLANT_CODE" class="cui_select_field wide" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option th:each="plant : ${plantList}"
                                             th:value="${plant.BASE_CODE}"
@@ -180,7 +180,19 @@
 
     //엑셀 다운로드
    function downloadExcel() {
-       window.location.href = '/api/downloadExcel';
+        var grid = $("#gridArea").pqGrid("instance");
+        var colModel = grid.getColModel();
+        colModel[0].hidden = true;
+
+        grid.exportData({
+            url: "/common/exportData",
+            format: "xlsx",
+            zip: false,
+            filename: "PART_CODE_" + Common.GetTodayTimeString(),
+            render: true
+        });
+
+        colModel[0].hidden = false;
    }
 
    var selCpCodeOpen = function () {
@@ -438,7 +450,7 @@ $(function () {
        showTitle: true,
        showTop: false,
        showToolbar: true,
-       stripeRows: true,
+       stripeRows: false,
        wrap: false,
        autoAddRow: false,
        freezeCols:0,
@@ -488,7 +500,7 @@ $(function () {
        {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "PART_CODE", sortable: true, editor: false, editable: false },
        {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: true, editor: false, editable: false },
        {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-       {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+       {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
        {                         title: "Plant"                  , width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PLANT_CODE", sortable: true, editor: false, editable: false },
        {  data_langsid :"국가" , title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: true, editor: false, editable: false },
        {  data_langsid :"사업본부" , title: siteLang.getLang("사업본부"), width: 300, halign: "center", align: "center", dataType: "string", dataIndx: "BASE_CODE", sortable: true, editor: false, editable: false },
@@ -507,7 +519,8 @@ $(function () {
                     var partStatus = ui.cellData;
 
                     if (partStatus == "D") {
-                        return siteLang.getLang("신청") ;
+                        //return siteLang.getLang("신청") ;
+                        return { style: "background-color:red", text : siteLang.getLang("신청") } ;
                     } else if (partStatus == "Y") {
                         return siteLang.getLang("사용");
                     } else if (partStatus == "R") {

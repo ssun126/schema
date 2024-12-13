@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="partManagement">
     <select id="getPlantList" resultType="HashMap">
-        SELECT BASE_CODE,BASE_VALUE FROM SC_BASE_CODE
+        SELECT BASE_CODE,BASE_CODE AS BASE_VALUE FROM SC_BASE_CODE
         WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE
         ORDER BY BASE_SORT asc
     </select>
@@ -21,6 +21,12 @@
         ORDER BY BASE_SORT asc
     </select>
 
+    <update id="updateApprovalStatus" parameterType="HashMap">
+        UPDATE SC_PART_MANAGEMENT_DATA
+        SET PM_APPROVAL_STATUS= #{status}
+        WHERE PM_IDX=#{idx}
+    </update>
+
     <select id="searchPartMgmt" parameterType="partManagement" resultType="partManagement">
 
         SELECT
@@ -34,6 +40,7 @@
         ,ui.USER_NAME as PM_REG_USER
         ,NVL(PM_ACTIVE_YN, ' ') as PM_ACTIVE_YN
         ,NVL(BASE_NAME , ' ') as PM_APPROVAL_STATUS
+        ,PM_APPROVAL_STATUS as PM_APPROVAL_STATUS_VAL
         ,NVL(TO_CHAR(PM_APPROVAL_DATE, 'YYYY-MM-DD'),' ') as PM_APPROVAL_DATE
         ,NVL(TO_CHAR(PM_REQUEST_APPROVAL_DATE, 'YYYY-MM-DD'),' ') as PM_REQUEST_APPROVAL_DATE
         FROM SC_PART_MANAGEMENT_DATA pmd
@@ -70,7 +77,7 @@
     </select>
 
     <select id="partCodeList" resultType="HashMap">
-        SELECT PART_CODE,COM_NATION AS  PART_COUNTRY,PART_NAME,bc.BASE_VALUE
+        SELECT PART_CODE,COM_NATION AS  PART_COUNTRY,PART_NAME,bc.BASE_CODE
         FROM SC_PART_CODE pc
         LEFT OUTER JOIN  (SELECT Base_code, base_value FROM SC_BASE_CODE WHERE GROUP_CODE ='PLANT' AND GROUP_CODE != BASE_CODE ) bc ON pc.PLANT_CODE  = bc.base_code
         INNER JOIN SC_COMPANY_CODE scc ON pc.COM_CODE  = scc.COM_CODE
@@ -78,15 +85,37 @@
     </select>
 
     <insert id="save" parameterType="partManagement">
-        INSERT INTO SC_PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_PART_PLANT_CODE,PM_PART_COUNTRY,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER,PM_COM_CODE)
-        VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_PART_PLANT_CODE},#{PM_PART_COUNTRY},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,#{PM_REG_USER_IDX},#{PM_COM_CODE})
- </insert>
+        INSERT INTO SC_PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_PART_PLANT_CODE,PM_PART_COUNTRY,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER,PM_COM_CODE,PM_APPROVAL_STATUS,PM_ACTIVE_YN)
+        VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_PART_PLANT_CODE},#{PM_PART_COUNTRY},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,#{PM_REG_USER_IDX},#{PM_COM_CODE},#{PM_APPROVAL_STATUS},#{PM_ACTIVE_YN})
+    </insert>
 
     <update id="updatePartMgmt" parameterType="partManagement">
         UPDATE SC_PART_MANAGEMENT_DATA
         SET PM_QUALITY=#{PM_QUALITY},PM_STATUS=#{PM_STATUS},PM_CHEMICAL_YN=#{PM_CHEMICAL_YN},PM_MODIFY_USER=#{PM_MODIFY_USER}
         WHERE PM_IDX = #{PM_IDX}
     </update>
+
+    <delete id="deletePartMgmt" parameterType="String">
+        {
+        call
+            declare
+        BEGIN
+            DELETE FROM SC_PART_MANAGEMENT_DATA WHERE PM_IDX=#{idx};
+            DELETE FROM SC_PART_MGMT_DETAIL_MSDS WHERE PM_IDX=#{idx};
+            DELETE FROM SC_PART_MGMT_DETAIL_ROHS WHERE PM_IDX=#{idx};
+            DELETE FROM SC_PART_MGMT_DETAIL_HALOGEN WHERE PM_IDX=#{idx};
+            DELETE FROM SC_PART_MGMT_DETAIL_ETC WHERE PM_IDX=#{idx};
+
+            DELETE FROM SC_PART_MGMT_SVHC_DATA WHERE PM_IDX=#{idx};
+
+            DELETE FROM SC_PART_MGMT_DECLARATION_DATA WHERE PM_IDX=#{idx};
+
+            DELETE FROM SC_PART_MGMT_DETAIL_SCCS WHERE PM_IDX=#{idx};
+            DELETE FROM SC_PART_MGMT_DETAIL_INGRED WHERE PM_IDX=#{idx};
+            DELETE FROM SC_PART_MGMT_DETAIL_GUARANT WHERE PM_IDX=#{idx};
+        END
+        }
+    </delete>
 
     <select id="getEtcFileData" parameterType="String" resultType="HashMap">
         select ETC_FILE_NAME, ETC_FILE_PATH
@@ -177,6 +206,11 @@
         VALUES (SEQ_ETC_IDX.NEXTVAL,#{PM_IDX},#{ETC_CONFIRM_DATE},#{ETC_ANALYSE_ENTRY},#{ETC_ANALYSE_RESULT},#{ETC_FILE_NAME},#{ETC_FILE_PATH})
     </insert>
 
+    <delete id="deleteEtcData" parameterType="String">
+        DELETE SC_PART_MGMT_DETAIL_ETC
+        WHERE PM_IDX = #{idx}
+    </delete>
+
     <!--   SVHC   -->
     <select id="getSvhcList" resultType="svhcList">
         SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
@@ -240,7 +274,7 @@
     </insert>
 
     <update id="sccsUpdate" parameterType="partDetailSccs">
-        UPADTE SC_PART_MGMT_DETAIL_SCCS
+        UPDATE SC_PART_MGMT_DETAIL_SCCS
         SET SCCS_CONFIRM_DATE = #{SCCS_CONFIRM_DATE},SCCS_CHAR = #{SCCS_CHAR},SCCS_FILE_NAME = #{SCCS_FILE_NAME},SCCS_FILE_PATH=#{SCCS_FILE_PATH}
         WHERE SCCS_IDX =#{SCCS_IDX}
     </update>
@@ -258,7 +292,7 @@
     </insert>
 
     <update id="ingredUpdate" parameterType="partDetailIngred">
-        UPADTE SC_PART_MGMT_DETAIL_INGRED
+        UPDATE SC_PART_MGMT_DETAIL_INGRED
         SET INGRED_CONFIRM_DATE = #{INGRED_CONFIRM_DATE},INGRED_FILE_NAME = #{INGRED_FILE_NAME},INGRED_FILE_PATH = #{INGRED_FILE_PATH}
         WHERE INGRED_IDX =#{INGRED_IDX}
     </update>
@@ -276,10 +310,11 @@
     </insert>
 
     <update id="guarantUpdate" parameterType="partDetailGuarant">
-        UPADTE SC_PART_MGMT_DETAIL_GUARANT
+        UPDATE SC_PART_MGMT_DETAIL_GUARANT
         SET GUARANT_TYPE = #{GUARANT_TYPE},GUARANT_CONFIRM_DATE = #{GUARANT_CONFIRM_DATE},GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
         WHERE GUARANT_IDX =#{GUARANT_IDX}
     </update>
+
 
 
 

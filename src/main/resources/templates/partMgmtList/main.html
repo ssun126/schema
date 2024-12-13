@@ -10,6 +10,9 @@
         left: 70%;
         transform: translate(-60%, -70%);
     }
+    .cui_items_wrap>.item_label{
+        width: 100px;
+    }
 </style>
 <body>
 <div class="cui_content">
@@ -67,12 +70,12 @@
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchApproval">
                                     <option value=""  > 전체</option>
-                                    <option value="0" >신규</option>
-                                    <option value="1" >작성중</option>
-                                    <option value="2" >검토중</option>
-                                    <option value="3" >승인</option>
-                                    <option value="4" >반려</option>
-                                    <option value="5" >자료보완</option>
+                                    <option value="1" >신규</option>
+                                    <option value="2" >작성중</option>
+                                    <option value="3" >검토중</option>
+                                    <option value="4" >승인</option>
+                                    <option value="5" >반려</option>
+                                    <option value="6" >자료보완</option>
                                 </select>
                             </div>
                         </div>
@@ -235,7 +238,7 @@
                 <form class="cui_form_section" data-legend="true" id="formPartCode">
                     <table class="cui_table center" id="partCodeTable">
                         <colgroup>
-                            <col style="width:50px;">
+                            <col style="width:90px;">
                             <col>
                             <col>
                             <col>
@@ -276,7 +279,8 @@
                 PM_QUALITY: $('select[name=PM_QUALITY]').val(),
                 PM_STATUS: $('select[name=PM_STATUS]').val(),
                 PM_CHEMICAL_YN: $('select[name=PM_CHEMICAL_YN]').val(),
-                PM_ACTIVE_YN : 'INACTIVE'
+                PM_ACTIVE_YN : 'INACTIVE',
+                PM_APPROVAL_STATUS : $('input[name=PM_IDX]').val() == ''? '1' : $('input[name=PM_IDX]').val()
             };
             console.log("formData>>>>>>>>>"+JSON.stringify(PartMgmtDTO));
             $.ajax({
@@ -303,7 +307,7 @@
          // datepicker를 input 필드에 적용
          $('.datepicker').datepicker({
              dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
-             showOn: "focus",
+             showOn: "focus"
          });
 
          // 버튼 클릭 시 input 필드의 datepicker 열기
@@ -355,24 +359,29 @@
                     response.forEach(function(partmgmt) {
                          var row = '<tr>' +
                                      //(partmgmt.PM_APPROVAL_DATE === '' ? 삭제는 승인 요청 전까지만 가능
-                                     (partmgmt.PM_REQUEST_APPROVAL_DATE != '' ?
-                                        '<td><input type="checkbox" id=\'pmIdx_' + partmgmt.PM_IDX + '\' value=\''+ partmgmt.PM_IDX +'\'></td>' :
+                                     (partmgmt.PM_REQUEST_APPROVAL_DATE == ' ' && parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) <= 2?
+                                        '<td><input type="checkbox" name=\'PM_IDX_CHECK\' value=\''+ partmgmt.PM_IDX +'\'></td>' :
                                         '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
                                         //'<td>' + partmgmt.PM_PART_CODE + '</td>' +
-                                        (partmgmt.PM_REQUEST_APPROVAL_DATE != '' ?
+
+                                        (partmgmt.PM_REQUEST_APPROVAL_DATE != ' '  && parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) <= 2?
                                         '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'MODIFY\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>'  :
                                         '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'READ\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>' ) +  // company.COM_STATUS가 'N'이 아닌 경우에
+
                                         //'<td><a href="javascript:void(0);" onclick="modal_open(\'PartCode\', \'second\', \'/user/getPartCodeData\', \''+ partmgmt.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
+
                                         '<td><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></td>' +
+
                                         '<td>' + partmgmt.PM_PART_PLANT_CODE + '</td>' +
                                         '<td>' + partmgmt.PM_PART_COUNTRY + '</td>' +
                                         '<td>' + partmgmt.PM_REG_USER + '</td>' +
                                         '<td>' + partmgmt.PM_ACTIVE_YN + '</td>' +
                                         '<td>' + partmgmt.PM_APPROVAL_STATUS +
-                                        ' <input type=\'hidden\' name=\'PM_REQUEST_APPROVAL_DATE\' value=\''+partmgmt.PM_REQUEST_APPROVAL_DATE+'\' >'
-                                        +'</td>' +
+                                        ' <input type=\'hidden\' name=\'PM_APPROVAL_STATUS_VAL\' value=\''+partmgmt.PM_APPROVAL_STATUS_VAL+'\' >'+
+                                        ' <input type=\'hidden\' name=\'PM_REQUEST_APPROVAL_DATE\' value=\''+partmgmt.PM_REQUEST_APPROVAL_DATE+'\' >'+
+                                        '</td>' +
                                         '<td>' + partmgmt.PM_APPROVAL_DATE + '</td>' +
-                                        (partmgmt.PM_APPROVAL_STATUS === '3' || partmgmt.PM_APPROVAL_STATUS === '4' ?
+                                        (parseInt(partmgmt.PM_APPROVAL_STATUS) >3 ?
                                         '<td><button id=\'' + partmgmt.PM_IDX + '\'>수정</button></td>' : '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
                                       '</tr>';
                         tableBody.append(row);  // 테이블에 새 행 추가
@@ -400,7 +409,12 @@
             e.preventDefault();
 
             const idx = $(this).data("code");
+            var status = parseInt($(this).closest("tr").find("input[name=PM_APPROVAL_STATUS_VAL]").val());
             const url = "/user/partMgmt/goDetail?PM_IDX="+idx;
+
+            if(status>2){
+                url = "/user/partMgmt/goReadDetail?PM_IDX="+idx;
+            }
 
             history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
             //loadContent(url);
@@ -414,14 +428,18 @@
         var selectValues = [];
         var count = 0;
 
-        $('select[id^="pmIdx_"]').find('input:checked').each(function(){
-            var value = $(this).val();
-            var apprDate = $(this).closest("tr").find('input[name="PM_REQUEST_APPROVAL_DATE"]').val();
-            if(value ===''){
-                selectValues.push(key);
-            }else{
-                count++;
+        //$('input:checkbox[name=PM_IDX_CHECK]').find('input:checked').each(function(){
+        $('input:checkbox[name=PM_IDX_CHECK]').each(function(){
+            if($(this).is(":checked")==true){
+                var value = $(this).val();
+                var apprDate = $(this).closest("tr").find('input[name="PM_REQUEST_APPROVAL_DATE"]').val();
+                if(apprDate == ' '){
+                    selectValues.push(value);
+                }else{
+                    count++;
+                }
             }
+
         });
 
 
@@ -471,6 +489,11 @@
             $("#modalPartQulity").attr("disabled", true);
             $("#modalPartStatus").attr("disabled", true);
             $("#modalPartChemical").attr("disabled", true);
+
+            $("#modalPartQulity").attr("disabled", true);
+            $("#modalPartStatus").attr("disabled", true);
+            $("#modalPartChemical").attr("disabled", true);
+
            //버튼 바꾸기
             $("#getPartCode").css("display","none");
             $("#PartCodeMgmtAdd").css("display","none");
@@ -566,13 +589,13 @@
 
         // 검색된 결과를 테이블에 추가
         data.forEach(function(ptcode) {
-        //PART_CODE,PART_COUNTRY,PART_NAME,bc.BASE_VALUE
+        //PART_CODE,PART_COUNTRY,PART_NAME,bc.BASE_CODE
             var row = '<tr>' +
                             '<td>' + ptcode.PART_CODE + '</td>' +
                             '<td>' + ptcode.PART_NAME + '</a></td>' +
-                            '<td>' + ptcode.BASE_VALUE + '</td>' +
+                            '<td>' + ptcode.BASE_CODE + '</td>' +
                             '<td>' + ptcode.PART_COUNTRY + '</td>' +
-                            '<td><button type="button" class="cui_button secondary" onClick="setPartCd(\''+ptcode.PART_CODE+ '\', \''+ptcode.PART_NAME+ '\', \''+ptcode.BASE_VALUE+ '\', \''+ptcode.PART_COUNTRY+ '\')">선택</button></td>' +
+                            '<td><button type="button" class="cui_button secondary" onClick="setPartCd(\''+ptcode.PART_CODE+ '\', \''+ptcode.PART_NAME+ '\', \''+ptcode.BASE_CODE+ '\', \''+ptcode.PART_COUNTRY+ '\')">선택</button></td>' +
                           '</tr>';
             tableBody.append(row);  // 테이블에 새 행 추가
         });

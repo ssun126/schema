@@ -63,7 +63,7 @@ public class CompanyInfoRestController {
 
     @PostMapping("/companyApiList")
     public List<HashMap> companyApiList(HttpServletRequest req) {
-        String name = req.getParameter("searchNameCpCode");
+        String name = req.getParameter("searchNameCpName");
         String code = req.getParameter("searchCodeCpCode");
 
         // 검색 결과와 페이지

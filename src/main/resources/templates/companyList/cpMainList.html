@@ -36,7 +36,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업부"></strong>
                             <div class="item_content">
-                                <select id="deptCode" name="deptCode" class="cui_select_field wide">
+                                <select id="deptCode" name="deptCode" class="cui_select_field wide" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option th:each="dept : ${deptList}"
                                             th:value="${dept.BASE_CODE}"
@@ -70,7 +70,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">Warranty</strong>
                             <div class="item_content">
-                                <select class="cui_select_field wide" id="comManageStatus" name="comManageStatus">
+                                <select class="cui_select_field wide" id="comManageStatus" name="comManageStatus" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option value="1">Waiting</option>
                                     <option value="2">Approved</option>
@@ -88,7 +88,7 @@
                         <div class="toolbar_default"></div>
                     </div>
                     <div class="toolbar_aside">
-                        <button type="button" class="cui_button secondary"><span data-langsid="엑셀 다운로드"></span></button>
+                        <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
 
@@ -100,6 +100,47 @@
 </html>
 
 <script>
+    Common.AddProperty(document.getElementById('gridArea'), 'gridColModel', function () {
+        colModel = [
+
+            {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+            {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+            {  data_langsid :"Warranty" ,title: siteLang.getLang("Warranty"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "com_MANAGE_STATUS", sortable: true, editor: false, editable: false },
+            {
+                data_langsid :"Audit결과" , title: siteLang.getLang("Audit결과"), width: 170 , halign: "center", align: "center"
+                ,colModel:
+                [
+                  {  data_langsid :"점수" ,title: siteLang.getLang("점수"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "com_AUDIT_POINT", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"실시일" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "com_OK_DATE", sortable: true, editor: false, editable: false }
+                ]
+            },
+            {
+                data_langsid :"분쟁 및 책임광물" , title: siteLang.getLang("분쟁 및 책임광물"), width: 540 , halign: "center", align: "center"
+                ,colModel:
+                [
+                  {  data_langsid :"티타늄" ,title: siteLang.getLang("티타늄"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tantalum_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"주석" ,title: siteLang.getLang("주석"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tin_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"텅스텐" ,title: siteLang.getLang("텅스텐"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tungsten_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"금" ,title: siteLang.getLang("금"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "gold_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"코발트" ,title: siteLang.getLang("코발트"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "cobalt_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"운모" ,title: siteLang.getLang("운모"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "mica_YN", sortable: true, editor: false, editable: false }
+                ]
+            },
+            {
+                data_langsid :"사업부" , title: siteLang.getLang("사업부"), width: 500 , halign: "center", align: "center"
+                ,colModel:
+                [
+                  {  data_langsid :"반도체" ,title: siteLang.getLang("반도체"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD1", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"첨단소재" ,title: siteLang.getLang("첨단소재"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD2", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"옵티칼" ,title: siteLang.getLang("옵티칼"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD3", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"통신 디바이스" ,title: siteLang.getLang("통신 디바이스"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD4", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"에너지기능재료" ,title: siteLang.getLang("에너지기능재료"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD5", sortable: true, editor: false, editable: false }
+                ]
+            }
+
+       ];
+       return colModel;
+    });
 
     $(document).ready(function() {
       preSearchSetting();
@@ -180,6 +221,19 @@
        }
    }
 
+    var downloadExcel = function () {
+        var grid = $("#gridArea").pqGrid("instance");
+        var colModel = grid.getColModel();
+
+        grid.exportData({
+            url: "/common/exportData",
+            format: "xlsx",
+            zip: false,
+            filename: "COMPANY_LIST_" + Common.GetTodayTimeString(),
+            render: true
+        });
+    }
+
     $(function () {
        var heightMinus = 330;
 
@@ -207,7 +261,7 @@
            showTitle: true,
            showTop: false,
            showToolbar: true,
-           stripeRows: true,
+           stripeRows: false,
            wrap: false,
            autoAddRow: false,
            freezeCols:0,
@@ -234,44 +288,7 @@
            headerCellClick: function (event, ui) {
            }
        };
-       obj.colModel = [
-
-            {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-            {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-            {  data_langsid :"Warranty" ,title: siteLang.getLang("Warranty"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "com_MANAGE_STATUS", sortable: true, editor: false, editable: false },
-            {
-                data_langsid :"Audit결과" , title: siteLang.getLang("Audit결과"), width: 170 , halign: "center", align: "center"
-                ,colModel:
-                [
-                  {  data_langsid :"점수" ,title: siteLang.getLang("점수"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "com_AUDIT_POINT", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"실시일" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "com_OK_DATE", sortable: true, editor: false, editable: false }
-                ]
-            },
-            {
-                data_langsid :"분쟁 및 책임광물" , title: siteLang.getLang("분쟁 및 책임광물"), width: 540 , halign: "center", align: "center"
-                ,colModel:
-                [
-                  {  data_langsid :"티타늄" ,title: siteLang.getLang("티타늄"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tantalum_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"주석" ,title: siteLang.getLang("주석"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tin_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"텅스텐" ,title: siteLang.getLang("텅스텐"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tungsten_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"금" ,title: siteLang.getLang("금"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "gold_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"코발트" ,title: siteLang.getLang("코발트"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "cobalt_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"운모" ,title: siteLang.getLang("운모"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "mica_YN", sortable: true, editor: false, editable: false }
-                ]
-            },
-            {
-                data_langsid :"사업부" , title: siteLang.getLang("사업부"), width: 500 , halign: "center", align: "center"
-                ,colModel:
-                [
-                  {  data_langsid :"반도체" ,title: siteLang.getLang("반도체"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD1", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"첨단소재" ,title: siteLang.getLang("첨단소재"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD2", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"옵티칼" ,title: siteLang.getLang("옵티칼"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD3", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"통신 디바이스" ,title: siteLang.getLang("통신 디바이스"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD4", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"에너지기능재료" ,title: siteLang.getLang("에너지기능재료"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "cp_CODE_WORK_CD5", sortable: true, editor: false, editable: false }
-                ]
-            }
-
-       ];
+       obj.colModel = $("#gridArea").get(0).gridColModel;
        obj.dataModel = { data: data };
        $("#gridArea").pqGrid(obj);
        $("#gridArea").attr("gridYN", "Y");

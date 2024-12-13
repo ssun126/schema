@@ -1,10 +1,10 @@
-package com.dongwoo.SQM.partMgmt.dto;
+package com.dongwoo.SQM.adminPartMgmt.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class PartMgmtDTO {
+public class AdminPartMgmtDTO {
 
     @JsonProperty("PM_IDX")
     private int PM_IDX;
@@ -29,10 +29,7 @@ public class PartMgmtDTO {
     @JsonProperty("PM_REG_USER")
     private String PM_REG_USER;         //등록자
     @JsonProperty("PM_APPROVAL_STATUS")
-    private String PM_APPROVAL_STATUS;      //승일현황 명
-    @JsonProperty("PM_APPROVAL_STATUS_VAL")
-    private String PM_APPROVAL_STATUS_VAL;      //승인현황 값
-
+    private String PM_APPROVAL_STATUS;      //승일현황
     @JsonProperty("PM_APPROVAL_DATE")
     private String PM_APPROVAL_DATE;        //승인일자
     @JsonProperty("PM_MODIFY_USER")
@@ -41,7 +38,8 @@ public class PartMgmtDTO {
     private String PM_REQUEST_APPROVAL_DATE;          //승인요청날짜
     @JsonProperty("PM_COM_CODE")
     private String PM_COM_CODE;          //회사코드
-
+    @JsonProperty("COM_NAME")
+    private String COM_NAME;
 
     @JsonProperty("PM_COUNTRY")
     private String PM_COUNTRY;    //판매국가

@@ -184,6 +184,9 @@ public class PartDetailMSDSController {
                     partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
                 }
             }
+        }else{
+            //데이터없음 - 삭제
+            partDetailService.deleteEtcData(pm_idx);
         }
 
 
@@ -198,6 +201,9 @@ public class PartDetailMSDSController {
 //        }else{
 //            partDetailService.updateMsds(msdsDTO);
 //        }
+
+        //뭐든 pm_mgmt 작성중으로 변경
+        partMgmtService.updateApprovalStatus(pm_idx,"2");
 
 
         if(msdsDTO.getINFO_FLAG().equals("save")){

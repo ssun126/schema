@@ -53,6 +53,8 @@ public class PartMgmtController {
 
     }
 
+
+
     @GetMapping("/searchPartMgmt")
     public ResponseEntity<?>  searchPartMgmt(@RequestParam("code") String code, @RequestParam("name") String name,@RequestParam("reguser") String reguser,
                                             @RequestParam("useyn") String useyn,@RequestParam("plant") String plant,@RequestParam("approval") String approval,
@@ -138,8 +140,8 @@ public class PartMgmtController {
 
     @GetMapping("/deletePartMgmt")
     public ResponseEntity<?> deletePartMgmt(@RequestParam("ARR_PM_IDX") String arrIdx){
-        //int delResult = partMgmtService.deletePartMgmt(arrIdx);
-        int delResult =0;
+        int delResult = partMgmtService.deletePartMgmt(arrIdx);
+        //int delResult =0;
 
         if(delResult > 0) {
             return ResponseEntity.ok("Form submitted successfully!");
