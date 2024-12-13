@@ -37,26 +37,22 @@ public class UserMgrController {
 
     @GetMapping("/admin/siteMgr/dwUserList")
     public String userMgr(Model model) {
-        List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("DEPT");
+        List<BaseCodeDTO> deptList = userMgrService.GetBaseCode("CpWorkCode");
         model.addAttribute("deptList", deptList);
-        //System.out.println("userMgrDTOList = " + deptList);
 
-        return "userMgr/list";
+        return "userMgr/dwUserList";
     }
 
     @PostMapping("/userMgr/save")
     public String save(UserMgrDTO userMgrDTO) throws IOException {
         System.out.println("userMgrDTO = " + userMgrDTO);
         userMgrService.save(userMgrDTO);
-        return "redirect:/userMgr/list";
+        return "redirect:/userMgr/dwUserList";
     }
 
     @GetMapping("/userMgr/list")
     public String findAll(Model model) {
-        //List<UserMgrDTO> userMgrDTOList = userMgrService.findAll();
-        //model.addAttribute("userMgrList", userMgrDTOList);
-        //System.out.println("userMgrDTOList = " + userMgrDTOList);
-        return "/userMgr/list";
+        return "/userMgr/dwUserList";
     }
 
     @GetMapping("/userMgr/{id}")
@@ -100,11 +96,7 @@ public class UserMgrController {
     @PostMapping("/userMgr/getUserInfo")
     public ResponseEntity<?> getUserInfo(@RequestBody UserMgrParamDTO userMgrParamDTO ) {
         try {
-           // System.out.println("Received UserDto: " + userMgrParamDTO);
-
             List<UserMgrDTO> companyUserList = userMgrService.findUserMgrSearch(userMgrParamDTO);
-
-            //System.out.println("select companyUserList: " + companyUserList);
             return ResponseEntity.ok(companyUserList);
         } catch (Exception e) {
             System.out.println("검색 에러!!!: " + e);
@@ -174,6 +166,11 @@ public class UserMgrController {
         if (info_flag.equals("U")) {
             userMgrService.updateUserMgr(userMgrDTO);
         } else {
+
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            String encodedPassword = encoder.encode(userMgrDTO.getUSER_PWD());
+            userMgrDTO.setUSER_PWD(encodedPassword);
+
             userMgrService.insertUserMgr(userMgrDTO);
         }
 

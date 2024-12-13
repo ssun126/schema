@@ -257,19 +257,19 @@
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" style="width: 140px;" data-langsid="기존 비밀번호"></strong>
                                 <div class="item_content">
-                                    <input type="password" data-langsid="기존 비밀번호" placeholder="" id="user_pwd" name = "USER_PWD" class="cui_text_field" >
+                                    <input type="password" data-langsid="기존 비밀번호" placeholder="" id="user_pwd" name = "USER_PWD" class="cui_text_field" reqcheck="reqcheck" data-messages="기존 비밀번호를 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" style="width: 140px;" data-langsid="신규 비밀번호"></strong>
                                 <div class="item_content">
-                                    <input type="password" data-langsid="신규 비밀번호" placeholder="" id="user_pwd_new" name = "USER_PWD_NEW" class="cui_text_field" onkeyup="passConfirm()">
+                                    <input type="password" data-langsid="신규 비밀번호" placeholder="" id="user_pwd_new" name = "USER_PWD_NEW" class="cui_text_field" onkeyup="passConfirm()" reqcheck="reqcheck" data-messages="신규 비밀번호를 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" style="width: 140px;" data-langsid="신규 비밀번호 확인"></strong>
                                 <div class="item_content">
-                                    <input type="password" data-langsid="비밀번호 확인" placeholder="" id="user_pwd_new_re" name = "USER_PWD_NEW_RE" class="cui_text_field" onkeyup="passConfirm()">
+                                    <input type="password" data-langsid="비밀번호 확인" placeholder="" id="user_pwd_new_re" name = "USER_PWD_NEW_RE" class="cui_text_field" onkeyup="passConfirm()" reqcheck="reqcheck" data-messages="신규 비밀번호확인을 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
@@ -340,6 +340,12 @@
    }
 
   function savepws() {
+
+        if (Common.Validate($("#dialogPassChange")) == false){
+            return;
+        }
+
+
        if(passConfirm()){
           $.ajax({
              type: "post",

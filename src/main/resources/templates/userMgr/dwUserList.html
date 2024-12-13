@@ -4,39 +4,6 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 
-<style>
-    .cui_dialog {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .cui_checkbox_group {
-         gap: 0px; /* 체크박스 사이의 간격 조정 */
-         grid-template-columns: 300px 200px 200px;
-
-    }
-
-    .cui_grid_wrap_member {
-        $grid-columns-max     : 326px;
-        display               : grid;
-        align-items           : start;
-        gap                   : 12px 24px;
-        grid-template-columns: 300px 200px 200px;
-
-        @for $i from 1 to 4 {
-            & > [data-size="#{$i}"] {
-                grid-column : auto / span #{$i};
-            }
-        }
-    }
-
-
-
-</style>
-<!-- [종료] 퍼블본용 style. 개발 반영되면 안됨 -->
-
 <body>
     <div class="cui_content">
         <div class="cui_main">
@@ -48,23 +15,23 @@
 
             <div class="cui_body">
                     <div class="cui_search">
-                        <div class="search_list cui_grid_wrap">
+                        <div class="search_list cui_grid_wrap" id="searchArea">
                             <div class="cui_items_wrap required_field"  data-direction="left">
                                 <strong class="item_label" data-langsid="아이디"></strong>
                                 <div class="item_content">
-                                    <input id="userid" name="USER_ID" class="cui_text_field" type="text"  data-langsid="아이디를 입력해주세요" placeholder="">
+                                    <input id="userid" name="USER_ID" class="cui_text_field" type="text" search="searchBtn"  data-langsid="아이디를 입력해주세요">
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="이름"></strong>
                                 <div class="item_content">
-                                    <input id ="username" name = "USER_NAME" class="cui_text_field" type="text" data-langsid="이름을 입력해주세요" placeholder="">
+                                    <input id ="username" name = "USER_NAME" class="cui_text_field" type="text"  search="searchBtn" data-langsid="이름을 입력해주세요" >
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="사업부" ></strong>
                                 <div class="item_content">
-                                    <select id="deptcode" name="DEPT_CODE" class="cui_select_field wide">
+                                    <select id="deptcode" name="DEPT_CODE" class="cui_select_field wide" onchange="ListSearch();">
                                         <option value=""></option>
                                         <option th:each="dept : ${deptList}"
                                                 th:value="${dept.BASE_CODE_IDX}"
@@ -76,13 +43,13 @@
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="이메일"></strong>
                                 <div class="item_content">
-                                    <input id = "email" name = "EMAIL" class="cui_text_field" type="email" data-langsid="이메일을 입력해주세요" placeholder="">
+                                    <input id = "email" name = "EMAIL" class="cui_text_field" type="email" search="searchBtn" data-langsid="이메일을 입력해주세요" >
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="구분"></strong>
                                 <div class="item_content">
-                                    <select id = "userlevel" name = "USER_LEVEL" class="cui_select_field wide">
+                                    <select id = "userlevel" name = "USER_LEVEL" class="cui_select_field wide" onchange="ListSearch();">
                                         <option value=""></option>
                                         <option value="100" data-langsid="관리자"></option>
                                         <option value="1" data-langsid="사용자"></option>
@@ -92,7 +59,7 @@
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="상태"></strong>
                                 <div class="item_content">
-                                    <select id = "userStatus" name = "USER_STATUS" class="cui_select_field wide">
+                                    <select id = "userStatus" name = "USER_STATUS" class="cui_select_field wide" onchange="ListSearch();">
                                         <option value=""></option>
                                         <option value="Y" data-langsid="사용"></option>
                                         <option value="N" data-langsid="미사용"></option>
@@ -101,7 +68,7 @@
                             </div>
                         </div>
                         <div class="search_action">
-                            <button type="button" id = "searchUser"  onclick="fetchDataLis()" class="cui_button primary"><span data-langsid="검색"></span></button>
+                            <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
                         </div>
                     </div>
                     <div class="cui_toolbar">
@@ -109,46 +76,12 @@
                             <div class="toolbar_default"></div>
                         </div>
                         <div class="toolbar_aside">
-                            <button type="button" class="cui_button"><span data-langsid="엑셀 다운"></span></button>
-                            <button type="button" class="cui_button secondary" onClick="modal('dialogUserUpdate','')"><span data-langsid="신규 추가"></span></button>
+                            <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                            <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀 다운로드"></span></button>
                         </div>
                     </div>
-                    <table class="cui_table center" id="userTable">
-                        <colgroup>
-                            <col style="width:220px;">
-                            <col style="width:140px;">
-                            <col>
-                            <col>
-                            <col style="width:120px;">
-                            <col style="width:80px;">
-                            <col style="width:110px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span data-langsid="아이디"></span></th>
-                            <th><span data-langsid="이름"></span></th>
-                            <th><span data-langsid="사업부"></span></th>
-                            <th><span data-langsid="이메일"></span></th>
-                            <th><span data-langsid="구분"></span></th>
-                            <th><span data-langsid="상태"></span></th>
-                            <th><span data-langsid="등록일"></span></th>
-                        </tr>
-                        </thead>
-                        <tbody id="userTableBody">
-                        <tr>
-                            <td><button type="button" class="cui_button endpoint"></button></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                        </tr>
-
-                        </tbody>
-                    </table>
+                    <div id="gridArea" gridYN=""></div>
             </div>
-
         </div>
     </div>
 
@@ -160,10 +93,10 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span id="popTitle" data-langsid="사용자 수정"></span></div>
+                <div class="main_label"><span id="popTitle">title</span></div>
             </div>
             <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
             </div>
         </div>
 
@@ -171,19 +104,24 @@
             <div class="body_root">
                 <form id="updateForm" method="POST" action="/userMgr/updateUserMgr" class="cui_form_section" data-legend="true">
                     <fieldset>
-<!--                        <legend><span>사용자 수정</span></legend>-->
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="아이디"></strong>
                             <div class="item_content">
-                                <input id="user_id" name = "USER_ID" type="text" class="cui_text_field">
+                                <input id="user_id" name = "USER_ID" type="text" class="cui_text_field" reqcheck="reqcheck" data-messages="아이디 입력하세요." messages="">
                                 <input id="user_idx" name="USER_IDX" class="cui_text_field" type="hidden" >
                                 <input id="info_flag" name="INFO_FLAG" class="cui_text_field" type="hidden" >
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left" id = "userPWD">
+                            <strong class="item_label" data-langsid="비밀번호"></strong>
+                            <div class="item_content">
+                                <input id="user_pwd" name = "USER_PWD" type="text" class="cui_text_field" reqcheck="reqcheck" data-messages="비밀번호를 입력하세요." messages="">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="이름"></strong>
                             <div class="item_content">
-                                <input id="user_name" name = "USER_NAME" type="text" class="cui_text_field">
+                                <input id="user_name" name = "USER_NAME" type="text" class="cui_text_field" reqcheck="reqcheck" data-messages="이름을 입력하세요." messages="">
                             </div>
                         </label>
 
@@ -202,7 +140,7 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="이메일"></strong>
                             <div class="item_content">
-                                <input id="e_mail" name = "EMAIL" type="text" class="cui_text_field">
+                                <input id="e_mail" name = "EMAIL" type="email" class="cui_text_field" reqcheck="reqcheck" data-messages="Email를 입력하세요." messages="">
                             </div>
                         </label>
 
@@ -297,7 +235,8 @@
 
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" onClick="save()"><span data-langsid="저장"></span></button>
+                                <button type="button" id="userinfoAdd" class="cui_button primary" onclick="save();"><span data-langsid="저장"></span></button>
+                                <button type="button" id="userinfoPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
                     </fieldset>
@@ -311,48 +250,58 @@
 
 <script>
 
-    $(document).ready(function() {
-       fetchDataLis();
-    });
+  var ListSearch = function () {
+       var url = "/userMgr/getUserInfo";
+
+       var ReqInfo = new Common.RequestInfo();
+       ReqInfo.AddParameter($("#searchArea"));
+
+       Common.Ajax(url, ReqInfo, function (data) {
+           var dataJson = JSON.parse(data);
+
+           for (var i = 0; i < dataJson.length; i++) {
+
+               if (dataJson[i].user_STATUS == "Y") {
+                   dataJson[i].user_STATUS = siteLang.getLang("사용");
+               } else {
+                   dataJson[i].user_STATUS = siteLang.getLang("미사용");
+               }
+           }
+
+           $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+           $("#gridArea").pqGrid("refreshView");
+       }, { contentType : "application/json" });
+   }
 
 
-    //모달 열기 조회
-    function modal(id,userid){
-     overlay.style.display = "block";
-      $("#" + id).fadeIn();
-      if (!userid) {
-        initPopform('I') ;
-      }else{
-        initPopform('U') ;
-        getUserData(userid);
-      }
-
-    }
-
-    //모달 닫기
-    $('.modal-close').on('click', function(e){
-     overlay.style.display = "none";
-      e.preventDefault();
-      const modal = $(this).parents('.cui_dialog');
-      modal.fadeOut();
-    });
-
+      var addOpen = function () {
+            initPopform("I");
+            Common.Dialog({ obj : $("#dialogUserUpdate"), blockClose : false });
+        }
 
      function initPopform(type) {
 
         if(type =="U"){
-            document.getElementById('popTitle').innerHTML = "사용자 수정";
+            document.getElementById('popTitle').innerHTML =  siteLang.getLang("사용자 수정");
             document.getElementById('user_id').readOnly = true ;
             document.getElementById('user_name').readOnly = true ;
             document.getElementById('info_flag').value = "U";
+
+            document.getElementById('user_pwd').value = "" ;
+            document.getElementById('userPWD').style.display = 'none';
+            document.getElementById('user_pwd').removeAttribute('reqcheck');
+
         }else{
             document.getElementById('info_flag').value = "I";
-            document.getElementById('popTitle').innerHTML = "사용자 등록";
+            document.getElementById('popTitle').innerHTML = siteLang.getLang("사용자 등록");
             document.getElementById('user_id').readOnly = false ;
             document.getElementById('user_name').readOnly = false ;
             document.getElementById('e_mail').value = "";
             document.getElementById('user_id').value = "" ;
             document.getElementById('user_name').value = "" ;
+            document.getElementById('user_pwd').value = "" ;
+            document.getElementById('userPWD').style.display = '';
+            document.getElementById('user_pwd').setAttribute('reqcheck', 'reqcheck');
 
             $('#manage_iso_yn_01').prop('checked',false);
             $('#manage_iso_yn_02').prop('checked',false);
@@ -388,24 +337,33 @@
          Validator = false ;
          const user_id = document.getElementById('user_id').value ;
          const user_name = document.getElementById('user_name').value ;
+         const user_pwd = document.getElementById('user_pwd').value ;
 
-            if (user_name.length == 0) {
-                IdValidatorMsg = "이름을 입력해 주세요.";
-                alert(IdValidatorMsg);
-                $('#user_name').focus();
+            if (Common.Validate($("#dialogUserUpdate")) == false){
+                return;
+            }
+
+
+            // 정규식: 6자리 이상 숫자와 영문 (대문자 또는 소문자) 포함
+            const regex = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$/;
+
+            if (!regex.test(user_pwd)) {
+                IdValidatorMsg = siteLang.getLang("비밀번호는 6자리 이상의 숫자와 영문자로만 구성되어야 합니다.") ;
+                Common.Msg(IdValidatorMsg);
+                $('#user_pwd').focus();
                 return;
             }
 
             // 영어 또는 숫자 외의 값을 입력했을 경우
             if(onlyNumberAndEnglish(user_id) === false) {
-                IdValidatorMsg = "아이디는 영어 또는 숫자만 가능합니다.";
-                alert(IdValidatorMsg);
+                IdValidatorMsg = siteLang.getLang("아이디는 영어 또는 숫자만 가능합니다.");
+                Common.Msg(IdValidatorMsg);
                 $('#user_id').focus();
             }
             // 글자 수가 4~12글자가 아닐 경우
             else if(idLength(user_id) === false) {
-                IdValidatorMsg ="아이디는 6~12글자이어야 합니다.";
-                alert(IdValidatorMsg);
+                IdValidatorMsg =    siteLang.getLang("아이디는 6~12글자이어야 합니다.");
+                Common.Msg(IdValidatorMsg);
                 $('#user_id').focus();
             }
             // 조건을 모두 만족할 경우
@@ -420,35 +378,35 @@
                             url: "/userMgr/updateUserMgr",
                             data: $('#updateForm').serialize(),
                             success: function(response) {
-
-                               showAlert('success', '사용자 정보가 추가 되었습니다.');
-                               $("#dialogUserUpdate").fadeOut();
-                               fetchDataLis();
+                               Common.Msg(siteLang.getLang("사용자 정보가 추가 되었습니다."));
+                               $("#dialogUserUpdate").data("Hide")();
+                               ListSearch();
                             },
                             error: function(err) {
                                 console.log("에러발생", err);
-                                showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+                                Common.Msg(err);
                             }
                         });
                     }
                 });
             }
         }else{
-            //document.getElementById("updateForm").submit();
-             $.ajax({
-                type: "post",
-                url: "/userMgr/updateUserMgr",
-                data: $('#updateForm').serialize(),
-                success: function(response) {
-                   showAlert('success', '사용자 정보가 수정되었습니다.');
-                   $("#dialogUserUpdate").fadeOut();
-                   fetchDataLis();
-                },
-                error: function(err) {
-                    console.log("에러발생", err);
-                    showAlert('warning', '업데이트 중 오류가 발생했습니다.');
-                }
-            });
+            if ( Common.Validate( $("#dialogUserUpdate") ) == true){
+                 $.ajax({
+                    type: "post",
+                    url: "/userMgr/updateUserMgr",
+                    data: $('#updateForm').serialize(),
+                    success: function(response) {
+                       Common.Msg(siteLang.getLang("사용자 정보가 수정되었습니다."));
+                       $("#dialogUserUpdate").data("Hide")();
+                       ListSearch();
+                    },
+                    error: function(err) {
+                        console.log("에러발생", err);
+                        Common.Msg(err);
+                    }
+                });
+            }
         }
     }
 
@@ -477,7 +435,7 @@
                 if (res == "ok") {
                     resolve(true);
                 } else {
-                    alert("동일한 아이디가 존재합니다.");
+                    Common.Msg(siteLang.getLang("동일한 아이디가 존재합니다."));
                     $('#user_id').focus();
                     resolve(false);
                 }
@@ -507,7 +465,7 @@
             contentType: "application/json",
             data: JSON.stringify({ "USER_ID": userid }),
             success: function(res) {
-                //console.log("요청 성공", res);
+
                 if (res) {
                     document.getElementById('user_id').value = res.user_ID;
                     document.getElementById('user_idx').value = res.user_IDX;
@@ -565,69 +523,105 @@
     }
 
 
+$(function () {
+    var heightMinus = 330;
+
+    var data = [];
+
+    var obj = {
+        bubble: false,
+        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+        editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+        editModel: { clicksToEdit: 2 },
+        selectionModel: { type: 'cell', mode: 'block' },
+        height: $(window).height() - heightMinus,
+        title: "",
+        sortable: false,
+        resizable: true,
+        menuIcon: true,
+        scrollModel: { autoFit: false },
+        hoverMode: 'row',
+        rowHtHead: 30,
+        //rowHt:30,
+        roundCorners: false,
+        rowBorders: true,
+        showBottom: true,
+        showHeader: true,
+        showTitle: true,
+        showTop: false, //excel 버튼 보이기
+        showToolbar: false,
+        stripeRows: false,
+        wrap: false,
+        autoAddRow: false,
+        freezeCols:0,
+        autoRow: false,
+        autoRowHead: false,
+        rowInit: function () {
+            return { style: 'font-size:12px;' };
+        },
+        selectChange: function (event, ui) {
+        },
+        rowClick: function (event, ui) {
+        },
+        cellClick: function (event, ui) {
+        },
+        rowDblClick: function (event, ui) {
+            var data = ui.rowData;
+            const user_ID = data.user_ID ;
+            initPopform('U') ;
+            getUserData(user_ID);
+            Common.Dialog({ obj : $("#dialogUserUpdate"), blockClose : false });
+        },
+        rowSelect: function (event, ui) {
+        },
+        open: function () {
+        },
+        headerCellClick: function (event, ui) {
+        }
+    };
+    obj.colModel = [
+
+        { data_langsid: "아이디", title: siteLang.getLang("아이디"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "user_ID", sortable: true, editor: false, editable: false },
+        { data_langsid: "이름", title: siteLang.getLang("이름"), width: 200, halign: "center", align: "left", dataType: "string", dataIndx: "user_NAME", sortable: true, editor: false, editable: false },
+        { data_langsid: "사업부", title: siteLang.getLang("사업부"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "dept_CODE", sortable: true, editor: false, editable: false },
+        { data_langsid: "이메일", title: siteLang.getLang("이메일"), width: 250, halign: "center", align: "center", dataType: "string", dataIndx: "email", sortable: true, editor: false, editable: false },
+        { data_langsid: "구분", title: siteLang.getLang("구분"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "user_STATUS", sortable: true, editor: false, editable: false },
+        { data_langsid: "등록일", title: siteLang.getLang("등록일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "reg_DATE", sortable: true, editor: false, editable: false }
+    ];
+    obj.dataModel = { data: data };
+    $("#gridArea").pqGrid(obj);
+    $("#gridArea").attr("gridYN", "Y");
+
+    $(window).resize(function () {
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
+    });
+           ListSearch();
+});
 
 
-    function fetchDataLis() {
+    $(document).ready(function() {
+       ListSearch();
+    });
 
-       const dto = {
-           "USER_ID": document.getElementById('userid').value,
-           "USER_NAME": document.getElementById('username').value,
-           "DEPT_CODE": document.getElementById('deptcode').value,
-           "EMAIL": document.getElementById('email').value,
-           "USER_LEVEL": document.getElementById('userlevel').value,
-           "USER_STATUS": document.getElementById('userStatus').value
-       };
 
-       fetch('/userMgr/getUserInfo', {
-           method: 'POST',
-           headers: {
-               'Content-Type': 'application/json',
-           },
-           body: JSON.stringify(dto)
-       })
-       .then(response => {
-           if (!response.ok) {
-               throw new Error('Network response was not ok');
-           }
-           return response.json();
-       })
-       .then(data => {
-            console.log('응답 데이터:', data);
-            if (data && Array.isArray(data)) {
-                 populateTable(data);
-            } else {
-                 alert("nodata");
-            }
-       })
-       .catch(error => {
-           console.error('데이터 조회 실패:', error);
-       });
-    }
+   function downloadExcel() {
+        var grid = $("#gridArea").pqGrid("instance");
+        var colModel = grid.getColModel();
+        colModel[0].hidden = true;
 
-    function populateTable(data) {
+        grid.exportData({
+            url: "/common/exportData",
+            format: "xlsx",
+            zip: false,
+            filename: "USER_INFO" + Common.GetTodayTimeString(),
+            render: true
+        });
 
-     const tableBody = $("#userTableBody");
-     tableBody.empty();
-
-     data.forEach(user => {
-         const row = `
-             <tr>
-                 <td><button type="button" class="cui_button endpoint" onClick="modal('dialogUserUpdate','${user.user_ID}')" >${user.user_ID}</button></td>
-                 <td><span>${user.user_NAME}</span></td>
-                 <td><span>${user.dept_CODE}</span></td>
-                 <td><span>${user.email}</span></td>
-                 <td><span>${user.user_LEVEL}</span></td>
-                 <td><span>${user.user_STATUS}</span></td>
-                 <td><span>${user.reg_DATE}</span></td>
-             </tr>
-         `;
-         tableBody.append(row);
-     });
-    }
+        colModel[0].hidden = false;
+   }
 
 </script>
-
-
 
 
 

@@ -43,6 +43,7 @@
     </header>
     <script>
         const goMenu = (menuPage) => {
+            sessionStorage.removeItem('preSearch');
             location.href = menuPage;
         }
 
