@@ -3,7 +3,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Labour">
-    <select id="findList" resultType="labour">
-        SELECT * FROM DUAL
+    <insert id="insertFile" parameterType="labour">
+        INSERT INTO SC_AUTH_FILE(COM_CODE, AUTH_TYPE, FILE_NAME, FILE_PATH, AUTH_SEQ)
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ})
+    </insert>
+
+    <select id="getCompanyAuthFile" parameterType="map" resultType="labour">
+        SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH
+        FROM SC_AUTH_COMPANY_INFO ACI
+        INNER JOIN SC_AUTH_FILE AF ON AF.COM_CODE = ACI.COM_CODE AND AF.AUTH_TYPE = ACI.AUTH_TYPE
+        WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
     </select>
+
 </mapper>

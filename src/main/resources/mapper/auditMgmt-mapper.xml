@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AuditMgmt">
+
+    <insert id="insertAuth" parameterType="authMgmt">
+        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, APPROVE_DATE, AUTH_TYPE, POINT,REG_DW_USER_IDX,UP_DW_USER_IDX)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{AUTH_TYPE}, #{POINT}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX})
+    </insert>
+
+    <update id="updateAuth" parameterType="authMgmt">
+        UPDATE SC_AUTH_COMPANY_INFO
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}
+        WHERE COM_CODE = #{COM_CODE}
+        AND AUTH_TYPE = #{AUTH_TYPE}
+    </update>
+
+    <select id="selectAuth" parameterType="authMgmt" resultType="authMgmt">
+        select * from SC_AUTH_COMPANY_INFO where AUTH_TYPE=#{AUTH_TYPE} and COM_CODE=#{COM_CODE}
+    </select>
+
+    <select id="selectAuthCnt" parameterType="authMgmt" resultType="int">
+        select COUNT(*) from SC_AUTH_COMPANY_INFO where AUTH_TYPE=#{AUTH_TYPE} and COM_CODE=#{COM_CODE}
+    </select>
+
+    <insert id="insertFile" parameterType="authMgmt">
+        INSERT INTO SC_AUTH_FILE(COM_CODE, AUTH_TYPE, FILE_NAME, FILE_PATH, AUTH_SEQ)
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ})
+    </insert>
+
+    <select id="getCompanyAuthFile" parameterType="map" resultType="authMgmt">
+        SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH
+        FROM SC_AUTH_COMPANY_INFO ACI
+        INNER JOIN SC_AUTH_FILE AF ON AF.COM_CODE = ACI.COM_CODE AND AF.AUTH_TYPE = ACI.AUTH_TYPE
+        WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
+    </select>
+</mapper>

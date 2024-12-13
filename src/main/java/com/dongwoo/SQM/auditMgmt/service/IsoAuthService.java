@@ -2,6 +2,7 @@ package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
+import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.config.security.UserCustom;
@@ -29,13 +30,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class IsoAuthService {
     private final IsoAuthRepository isoAuthRepository;
+    private final AuditMgmtRepository auditMgmtRepository;
 
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
 
     public int saveAuth(AuditMgmtDTO isoAuthDTO) {
-        return isoAuthRepository.insertAuth(isoAuthDTO);
+        return auditMgmtRepository.insertAuth(isoAuthDTO);
     }
 
     public int insertItem(IsoAuthItemDTO isoAuthItemDTO) {
@@ -51,14 +53,26 @@ public class IsoAuthService {
         String comCode = user.getCOM_CODE();
         int loginIdx = user.getUSER_IDX();
 
+        //회사별 Audit 데이터 저장
+        AuditMgmtDTO authDTO = new AuditMgmtDTO();
+        authDTO.setCOM_CODE(comCode);
+        authDTO.setAUTH_TYPE("ISO");
+        authDTO.setAPPROVE_STATE(type); //제출 또는 저장
+        authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
+        authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
+
+        int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
+        if(comCnt > 0) {
+            int rsltCnt = auditMgmtRepository.updateAuth(authDTO);  // updateItem
+        }else{
+            int rsltCnt = auditMgmtRepository.insertAuth(authDTO); //저장
+        }
+        AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
         // 파일이 존재하면 처리
-        if (fileNames != null && fileNames.length > 0) {
-           /* if (fileNames.length != isoAuthItems.size()) {
-                throw new IOException("파일의 개수와 데이터의 개수가 일치하지 않습니다.");
-            }*/
+        if (fileNames != null && fileNames.length > 0 && authMgmtDTO.getAUTH_SEQ() != null) {
 
             // 각 파일을 저장하고 경로를 DTO에 추가
-            for (int i = 0; i < fileNames.length; i++) {
+            for(int i = 0; i < fileNames.length; i++) {
                 String filePath = saveFile(fileNames[i]);
 
                 // Paths 클래스를 사용하여 파일명 추출
@@ -100,19 +114,6 @@ public class IsoAuthService {
             }
         }
 
-        //회사별 Audit 데이터 저장
-        AuditMgmtDTO isoAuthDTO = new AuditMgmtDTO();
-        isoAuthDTO.setAUTH_TYPE("ISO");
-        isoAuthDTO.setAPPROVE_STATE(type); //제출 또는 저장
-        isoAuthDTO.setCOM_CODE(comCode);
-
-        int count = isoAuthRepository.selectAuth(isoAuthDTO);
-        if(count > 0) {
-            isoAuthRepository.updateAuth(isoAuthDTO);  // updateItem
-        }else{
-            isoAuthRepository.insertAuth(isoAuthDTO); //저장
-        }
-
         //type이 send이면 제출 >> POVIS 전송
         if(type.equals("SEND")){
             //POVIS 전송
@@ -133,7 +134,7 @@ public class IsoAuthService {
         return destinationFile.getAbsolutePath();  // 저장된 파일 경로 반환
     }
 
-    //업체별 인증서 정보
+    //업체별 인증 정보
     public AuditMgmtDTO getCompanyAuth(String type, String code) {
         Map<String, Object> params = new HashMap<>();
         params.put("AUTH_TYPE", type);

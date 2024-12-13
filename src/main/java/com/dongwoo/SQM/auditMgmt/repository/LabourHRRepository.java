@@ -1,17 +1,27 @@
 package com.dongwoo.SQM.auditMgmt.repository;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Map;
+
 @Repository
 @RequiredArgsConstructor
 public class LabourHRRepository {
     private final SqlSessionTemplate sql;
 
-    public int insertLabour(LabourHRDTO labourHRDTO) {
-        return sql.insert("IsoAuthItem.insertItem", labourHRDTO);
+    public int insertFileInfo(LabourHRDTO labourHRDTO) {
+        return sql.insert("Labour.insertFile", labourHRDTO);
     }
+
+    //업체별-Auth type별 첨부 파일 조회
+    public LabourHRDTO getCompanyAuthFile(Map<String, Object> params) {
+        return sql.selectOne("Labour.getCompanyAuthFile", params);
+    }
+
 }

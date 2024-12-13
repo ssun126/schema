@@ -35,7 +35,7 @@
                             <strong class="item_label" data-langsid="승인상태"></strong>
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchState">
-                                    <option value=""  data-langsid="선택" selected></option>
+                                    <option value=""  data-langsid="선택하세요" selected></option>
                                     <option value="SEND" data-langsid="제출"></option>
                                     <option value="APPROVE" data-langsid="승인"></option>
                                     <option value="REJECT" data-langsid="반려"></option>
@@ -82,25 +82,9 @@
         $(document).on("click", ".load-page", function(e) {
             e.preventDefault();
 
-            const code = $(this).data("code");
-            const url = "/admin/auditMgmt/isoDetail";
-
-            // 링크 클릭 시 콘텐츠를 로드
-            $.ajax({
-                url: url,  // 서버에서 HTML을 반환할 URL
-                type: 'GET',         // GET 방식으로 요청
-                data: {
-                    COM_CODE: code
-                },
-                success: function(response) {
-                    // 서버에서 받은 HTML 콘텐츠를 <div class="cui_content"> 영역에 삽입
-                    $(".cui_content").html(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error("HTML 콘텐츠 로드에 실패했습니다: " + error);
-                    $(".cui_content").html("<p>페이지 로드에 실패했습니다.</p>");
-                }
-            });
+            const comCode = $(this).data("code");
+            const url = "/admin/auditMgmt/isoDetail?COM_CODE="+comCode;
+            location.href = url;
         });
 
         // 검색 버튼 클릭 시
@@ -149,7 +133,7 @@
                                             '<td>' + auth.COM_CODE + '</td>' +
                                             '<td><a href="javascript:void(0);" class=\'load-page\' data-code=\''+ auth.COM_CODE +'\'">' + auth.COM_NAME + '</a></td>' +
                                             '<td>' + itemPoint + '</td>' + // null일 경우 '0'로 대체
-                                            '<td>' + auth.SEND_DATE + '</td>' +
+                                            '<td>' + auth.APPROVE_DATE + '</td>' +
                                             '<td>' + itemApvDate + '</td>' +
                                           '</tr>';
                             tableBody.append(row);  // 테이블에 새 행 추가

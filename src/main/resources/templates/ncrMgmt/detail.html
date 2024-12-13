@@ -5,238 +5,265 @@
       layout:fragment="Content">
 <body>
 <div class="cui_content">
-  <div class="cui_main">
-    <div class="cui_head">
-      <div class="head_content">
-        <h2 class="cui_title"><span>NCR 관리</span></h2>
-      </div>
-    </div>
-    <div class="cui_body">
-      <form class="cui_form_section" data-legend="true">
-        <fieldset>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>Audit구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-              <th><span>업체명</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-              <th><span>심사일</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-              <th><span>등록일</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span>지적구분</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-              <th><span>Auditor</span></th>
-              <td>
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-              <td colspan="2">
-              </td>
-              <td colspan="2">
-              </td>
-            </tr>
-            <tr>
-              <th><span>제목</span></th>
-              <td colspan="7">
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <th><span>지적내용</span></th>
-              <td colspan="7">
-                <div class="cui_items_wrap" data-direction="left">
-                  <div class="item_content">
-                    <input class="cui_text_field" type="text" value="12341234" disabled>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <!-- 공급사 기재 항목 1~3차 -->
-        <fieldset>
-          <div class="cui_btn_group">
-            <button role="button" type="button" id="s1" name="INFO_FLAG" value="Reg" class="cui_button primary toggle_btn"><span>1차</span></button>
-            <button role="button" type="button" id="s2" name="INFO_FLAG" value="Reg" class="cui_button toggle_btn"><span>2차</span></button>
-            <button role="button" type="button" id="s3" name="INFO_FLAG" value="Reg" class="cui_button toggle_btn"><span>3차</span></button>
-          </div>
-        </fieldset>
-        <!-- 공급사 기재 항목 1~3차 -->
-        <!-- 기재 항목 Set -->
-        <fieldset>
-          <legend><span>조치계획</span></legend>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>등록일시</span></th>
-              <td></td>
-              <th><span>작성자</span></th>
-              <td></td>
-              <th><span>시정조치계획일</span></th>
-              <td></td>
-              <th><span>메일주소</span></th>
-              <td></td>
-            </tr>
-            <tr>
-              <th><span>사유</span></th>
-              <td colspan="7"></td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>조치결과</span></legend>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>등록일시</span></th>
-              <td></td>
-              <th><span>조치완료일</span></th>
-              <td></td>
-              <td colspan="2"></td>
-              <td colspan="2"></td>
-            </tr>
-            <tr>
-              <th><span>첨부파일</span></th>
-              <td colspan="7">
-                <div class="cui_attachments">
-                  <input type="file" class="cui_file_field">
-                  <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>
-                    <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <!-- 공급사 기재 항목 -->
-          <legend><span>조치확인</span></legend>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>확인일</span></th>
-              <td></td>
-              <th><span>확인자</span></th>
-              <td></td>
-              <th><span>승인여부</span></th>
-              <td></td>
-              <td colspan="2"></td>
-            </tr>
-            <tr>
-              <th><span>COMMENT</span></th>
-              <td colspan="7">
-                <textarea rows="5" style="width:100%" class="cui_text_field"></textarea>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <!-- 기재 항목 Set -->
-        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-          <div class="item_content">
-            <button type="button" id="BT1" name="INFO_FLAG" value="Reg" class="cui_button secondary"><span>조치결과 저장</span></button>
-            <button type="button" id="BT2" name="INFO_FLAG" value="Save" class="cui_button secondary"><span>조치결과 등록</span></button>
-            <button type="button" id="BtnClose" name="INFO_FLAG" value="Close" class="cui_button primary"><span>목록</span></button>
-          </div>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>NCR 관리</span></h2>
+            </div>
         </div>
-      </form>
+        <div class="cui_body">
+            <form class="cui_form_section" data-legend="true">
+                <fieldset>
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>Audit구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>업체명</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>등록일</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>지적구분</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>Auditor</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>심사일</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>제목</span></th>
+                            <td colspan="7">
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>지적내용</span></th>
+                            <td colspan="7">
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset>
+                    <!-- 공급사 기재 항목 1~3차 -->
+                    <div class="cui_tab">
+                        <div class="tab_list">
+                            <ul>
+                                <li aria-selected="true">
+                                    <button type="button" class="tab_button" data-tab-target="#tab1"><span>탭버튼1</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="tab_button" data-tab-target="#tab2"><span>탭버튼2</span>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="tab_button" data-tab-target="#tab3"><span>탭버튼3</span>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab_contents">
+                            <div id="tab1" class="tab_content" aria-expanded="true">
+                                <!-- 기재 항목 Set -->
+                                <fieldset>
+                                    <legend><span>조치계획</span></legend>
+                                    <table class="cui_table">
+                                        <colgroup>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th><span>등록일시</span></th>
+                                            <td></td>
+                                            <th><span>작성자</span></th>
+                                            <td></td>
+                                            <th><span>시정조치계획일</span></th>
+                                            <td></td>
+                                            <th><span>메일주소</span></th>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th><span>사유</span></th>
+                                            <td colspan="7"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                                <fieldset>
+                                    <legend><span>조치결과</span></legend>
+                                    <table class="cui_table">
+                                        <colgroup>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th><span>등록일시</span></th>
+                                            <td></td>
+                                            <th><span>조치완료일</span></th>
+                                            <td></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><span>첨부파일</span></th>
+                                            <td colspan="7">
+                                                <div class="cui_attachments">
+                                                    <input type="file" class="cui_file_field">
+                                                    <div class="cui_items_wrap" data-direction="left">
+                                                        <div class="item_label" data-cui-icon="paperclip">
+                                                            <span>파일명.html</span></div>
+                                                        <div class="item_content">
+                                                            <button type="button" class="cui_button icon endpoint"
+                                                                    data-cui-icon="download" data-tooltip-title="다운로드">
+                                                                <span>다운로드</span></button>
+                                                            <button type="button" class="cui_button icon endpoint"
+                                                                    data-cui-icon="search_square"
+                                                                    data-tooltip-title="미리보기"><span>미리보기</span></button>
+                                                            <button type="button" class="cui_button icon endpoint"
+                                                                    data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                                <fieldset>
+                                    <!-- 공급사 기재 항목 -->
+                                    <legend><span>조치확인</span></legend>
+                                    <table class="cui_table">
+                                        <colgroup>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                            <col style="width:154px;">
+                                            <col>
+                                        </colgroup>
+                                        <tbody>
+                                        <tr>
+                                            <th><span>확인일</span></th>
+                                            <td></td>
+                                            <th><span>확인자</span></th>
+                                            <td></td>
+                                            <th><span>승인여부</span></th>
+                                            <td></td>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><span>COMMENT</span></th>
+                                            <td colspan="7">
+                                                <textarea rows="5" style="width:100%" class="cui_text_field"></textarea>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </fieldset>
+                                <!-- 기재 항목 Set -->
+
+                            </div>
+                            <div id="tab2" class="tab_content">
+                                2번탭 내용
+                            </div>
+                            <div id="tab3" class="tab_content">
+                                3번탭 내용
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                        <div class="item_content">
+                            <button type="button" id="BT1" name="INFO_FLAG" value="Reg"
+                                    class="cui_button secondary"><span>조치결과 저장</span></button>
+                            <button type="button" id="BT2" name="INFO_FLAG" value="Save"
+                                    class="cui_button secondary"><span>조치결과 등록</span></button>
+                            <button type="button" id="BtnClose" name="INFO_FLAG" value="Close"
+                                    class="cui_button primary"><span>목록</span></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
 </body>
 </html>
 <script>
-  $('.toggle_btn').on('click', function() {
-  $(this).addClass('primary').siblings().removeClass('primary');
-});
+    $('.toggle_btn').on('click', function() {
+    $(this).addClass('primary').siblings().removeClass('primary');
+  });
 </script>

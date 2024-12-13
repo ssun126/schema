@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>품질관리</title>
+    <title>안전보건/환경관리</title>
 </head>
 <body>
 <div class="cui_content">
@@ -19,7 +19,8 @@
         <div class="cui_body">
             <form class="cui_form_section" data-legend="true">
                 <fieldset>
-                    <legend><span>품질 Audit 계획</span></legend>
+                    <legend><span>품질관리 Audit 계획</span></legend>
+
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -67,7 +68,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <span>대면</span>
+                                        <span id="auditPWay">대면</span>
                                     </div>
                                 </div>
                             </td>
@@ -86,8 +87,8 @@
                 <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
                 <div class="cui_items_wrap visit" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button secondary"><span>양식다운로드1</span></button>
-                        <button type="submit" class="cui_button secondary"><span>양식다운로드2</span></button>
+                        <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드1</span></button>
+                        <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드2</span></button>
                     </div>
                 </div>
                 <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
@@ -111,18 +112,22 @@
                         </tr>
                         <tr>
                             <th><span>File 첨부</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <input type="file" class="cui_file_field" onchange="toggleDeleteButton(this)" style="width: 75px;">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
-                                                </div>
-                                            </div>
+                            <td class="attachmentsContainer">
+                                <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
+                                    <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="cui_button" id="addVisitBtn"><span>추가</span></button>
+                                </div>
+                                <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                    <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -145,10 +150,8 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file"
-                                                                           checked><i></i><span>파일첨부</span></label>
-                                        <label class="cui_checkbox"><input type="radio" name="checkbox1"
-                                                                           value="text"><i></i><span>직접입력</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file" checked><i></i><span>파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="text"><i></i><span>직접입력</span></label>
                                     </div>
                                 </div>
                             </td>
@@ -156,13 +159,14 @@
                         </tbody>
                     </table>
                 </fieldset>
-                <fieldset id="fs_file">
+                <fieldset class="self" id="fs_file">
                     <div class="cui_items_wrap" data-direction="right">
                         <div class="item_content">
-                            <button type="submit" class="cui_button secondary"><span>양식다운로드</span></button>
+                            <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드1</span></button>
+                            <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드2</span></button>
                         </div>
                     </div>
-                    <table class="cui_table">
+                    <table class="cui_table" id="authItemTable">
                         <colgroup>
                             <col style="width:200px;">
                             <col>
@@ -170,18 +174,22 @@
                         <tbody>
                         <tr>
                             <th><span>파일 첨부</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <input type="file" class="cui_file_field" onchange="toggleDeleteButton(this)" style="width: 75px;">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
-                                                </div>
-                                            </div>
+                            <td class="attachmentsContainer">
+                                <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
+                                    <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="cui_button" id="addSelfBtn"><span>추가</span></button>
+                                </div>
+                                <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                    <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -190,7 +198,7 @@
                         </tbody>
                     </table>
                 </fieldset>
-                <fieldset id="fs_text">
+                <fieldset class="self" id="fs_text">
                     <table class="cui_table center">
                         <thead>
                         <tr>
@@ -217,14 +225,14 @@
                     </table>
                 </fieldset>
                 <!-- Audit 방법 : Self -->
-                <div class="cui_items_wrap self" data-direction="right">
-                    <div class="item_content">
-                        <button type="submit" class="cui_button primary"><span>제출</span></button>
+                <div class="cui_items_wrap" data-direction="right">
+                    <div class="item_content" th:if="${#lists.isEmpty(companyAuthFile)}">
+                        <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
                     </div>
                 </div>
                 <!-- Audit 결과 -->
                 <fieldset class="resultField">
-                    <legend><span>품질 Audit 결과</span></legend>
+                    <legend><span>품질관리 Audit 결과</span></legend>
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -291,18 +299,13 @@
                         </tr>
                         <tr>
                             <th><span>첨부자료</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <input type="file" class="cui_file_field" onchange="toggleDeleteButton(this)" style="width: 75px;">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
-                                                </div>
-                                            </div>
+                            <td >
+                                <div class="cui_attachments">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
+                                        </div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -320,10 +323,16 @@
 </html>
 <script>
     $(document).ready(function () {
-        //Audit 방법 : Self 일때 제출구분 초기값
-        $("#fs_text").hide();
+        $("#auditPWay").text("대면");
+        console.log($("#auditPWay").text());
+        if($("#auditPWay").text() === "셀프"){
+            $("#fs_text").hide(); //파일첨부가 초기값이므로
+            $(".visit").hide();
+        }else{
+            $(".self").hide();
+        }
+        //Audit 결과
         $(".resultField").hide();
-        $(".visit").hide();
 
         $("input:radio[name=checkbox1]").change(function () {
             var chkValue = $("input:radio[name=checkbox1]:checked").val();
@@ -339,7 +348,7 @@
         });
 
         //  첨부파일 '추가' 버튼 클릭 시 테이블에 행 추가
-        $('#addRowBtn').on('click', function() {
+        $('#addVisitBtn, #addSelfBtn').on('click', function() {
             const newAttachment = `
             <div class="cui_attachments">
                 <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
@@ -353,12 +362,74 @@
             </div>`;
 
             // 새로운 첨부 구간을 #attachmentsContainer에 추가
-            $('#attachmentsContainer').append(newAttachment);
-        });
+            $(this).closest('.attachmentsContainer').append(newAttachment);
+       });
 
         // 동적으로 추가된 "삭제" 버튼에 클릭 이벤트 리스너 추가
         $(document).on('click', '.cui_button.delete', function() {
             $(this).closest('.cui_attachments').remove(); // 해당 첨부 구간 삭제
+        });
+
+    });
+
+    function downloadFile(fileName) {
+        console.log("fileName????????????"+fileName);
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
+    }
+
+    //샘플다운로드
+    function downSampleFile() {
+        alert("양식파일 등록후 다운로드.");
+    }
+
+    // 제출 버튼 클릭 시 데이터 저장
+    $("#sendAuth").click(function() {
+        var tableData = [];
+        var formData = new FormData();
+
+        $("#authItemTable .cui_attachments").each(function() {
+            var row = {};
+            var fileInput = $(this).find('input[type="file"]')[0];
+
+            // 파일이 선택되었으면 파일 이름 저장
+            if (fileInput && fileInput.files.length > 0) {
+                row['FILE_NAME'] = fileInput.files[0].name;
+
+                // 파일에 대한 유효성 검증
+                var file = fileInput.files[0];
+                if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
+                    formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
+                } else {
+                    showAlert('warning','파일 검증 실패했습니다.');
+                    console.log("파일 검증 실패: " + file.name);
+                }
+            }
+        });
+
+        formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
+        formData.append('type', 'QUALITY');  // flag가 SAFETY / QUALITY
+
+         $.ajax({
+            url: '/auditMgmt/sendAuthData',
+            type: 'POST',
+            data: formData,
+            processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
+            contentType: false,  // 기본 contentType을 사용하지 않음
+            success: function(response) {
+                showAlert('success', response);
+            },
+            error: function(xhr, status, error) {
+                showAlert('warning','데이터 저장에 실패했습니다.');
+            }
         });
     });
 
@@ -403,6 +474,7 @@
                     const file = files[i];
                     if (file && !validation(file)) {
                         event.target.value = '';  // 잘못된 파일 선택시 input 초기화
+                        clearFile(fileInput.closest('.cui_attachments').querySelector('.cui_button'));
                         console.log('잘못된 파일: ', file.name);
                         break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
                     }

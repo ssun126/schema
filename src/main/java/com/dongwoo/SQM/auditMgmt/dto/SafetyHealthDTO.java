@@ -7,6 +7,8 @@ import lombok.Data;
 public class SafetyHealthDTO {
     @JsonProperty("AUTH_SEQ")
     private String AUTH_SEQ;
+    @JsonProperty("AUTH_TYPE")
+    private String AUTH_TYPE;
     @JsonProperty("COM_CODE")
     private String COM_CODE;
     @JsonProperty("REG_INPUT_DATE")

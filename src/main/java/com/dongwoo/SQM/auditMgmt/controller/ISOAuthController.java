@@ -1,6 +1,7 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
+import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
 import com.dongwoo.SQM.auditMgmt.service.IsoAuthService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class ISOAuthController {
         // 회사의 ISO 상태 정보를 가져옵니다.
         AuditMgmtDTO companyAuth = isoAuthService.getCompanyAuth("ISO", user.getCOM_CODE());
         model.addAttribute("companyIsoAuth", companyAuth);
+        log.info("companyAuth==============================="+companyAuth);
         return "isoAuth/main";
     }
 
@@ -32,9 +34,9 @@ public class ISOAuthController {
     }
 
     @GetMapping("/admin/auditMgmt/isoDetail")
-    public String isoAuthAdminDetail(Model model, @RequestParam("COM_CODE") String com_code) {
+    public String isoAuthAdminDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
         // 회사의 ISO 상태 정보를 가져옵니다.
-        AuditMgmtDTO companyIsoAuth = isoAuthService.getCompanyAuth("ISO", com_code);
+        AuditMgmtDTO companyIsoAuth = isoAuthService.getCompanyAuth("ISO", COM_CODE);
         model.addAttribute("companyAuth", companyIsoAuth);
         return "isoAuth/detail";
     }

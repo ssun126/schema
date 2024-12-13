@@ -11,11 +11,20 @@ public class AuditMgmtDTO {
     private String COM_NAME;
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
+    @JsonProperty("AUTH_SEQ")
+    private String AUTH_SEQ;
     @JsonProperty("APPROVE_STATE")
     private String APPROVE_STATE;
     @JsonProperty("APPROVE_DATE")
     private String APPROVE_DATE;
-    @JsonProperty("SEND_DATE")
-    private String SEND_DATE;
+    @JsonProperty("REG_DW_USER_IDX")
+    private int REG_DW_USER_IDX;
+    @JsonProperty("UP_DW_USER_IDX")
+    private int UP_DW_USER_IDX;
+    @JsonProperty("FILE_NAME")
+    private String FILE_NAME;
+    @JsonProperty("FILE_PATH")
+    private String FILE_PATH;
+    @JsonProperty("POINT")
     private int POINT;
 }

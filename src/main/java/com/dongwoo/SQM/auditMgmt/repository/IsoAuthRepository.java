@@ -17,13 +17,6 @@ import java.util.Map;
 public class IsoAuthRepository {
     private final SqlSessionTemplate sql;
 
-    public int insertAuth(AuditMgmtDTO auditMgmtDTO) {
-        return sql.insert("IsoAuthItem.insertAuth", auditMgmtDTO);
-    }
-
-    public int updateAuth(AuditMgmtDTO auditMgmtDTO) {
-        return sql.insert("IsoAuthItem.insertAuth", auditMgmtDTO);
-    }
     //인증서 정보 저장
     public int insertItem(IsoAuthItemDTO isoAuthItemDTO) {
         return sql.insert("IsoAuthItem.insertItem", isoAuthItemDTO);
@@ -73,8 +66,8 @@ public class IsoAuthRepository {
     }
 
     //iso 인증코드와 업체 코드로 수 조회
-    public int selectAuth(AuditMgmtDTO auditMgmtDTO) {
-        return sql.selectOne("IsoAuthItem.selectAuth", auditMgmtDTO);
+    public int selectAuthCnt(AuditMgmtDTO auditMgmtDTO) {
+        return sql.selectOne("IsoAuthItem.selectAuthCnt", auditMgmtDTO);
     }
 
     //업체 코드로 iso 정보 조회

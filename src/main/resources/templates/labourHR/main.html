@@ -15,8 +15,8 @@
             <div class="head_content">
                 <h2 class="cui_title"><span th:text="${#authentication.principal.COM_NAME}"></span></h2>
             </div>
-            <div class="head_aside" id="stateDate">
-                <p>(제출:<span>2024.01.01</span>)</p>
+            <div class="head_aside">
+                <p><span id="authState"></span></p>
             </div>
         </div>
         <div class="cui_body">
@@ -35,12 +35,13 @@
                                 <div class="cui_attachments">
                                     <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
                                     <div class="cui_items_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="downFileName"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" id="downloadButton" onclick="downloadFile()"><span>다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" id="deleteButton" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
                                         </div>
                                     </div>
-                                    <button type="submit" class="cui_button secondary"><span>양식다운로드</span></button>
+                                    <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드</span></button>
                                 </div>
                             </td>
                         </tr>
@@ -170,18 +171,85 @@
 <script>
     $(document).ready(function() {
         $('#rejectReason').hide();
-        $('#stateDate').text('(미제출)');
+        $('#authState').text('(미제출)');
         $('.resultField').hide();
+        loadInfo();
+    });
 
-        // 저장 버튼,제출 버튼 클릭 시 데이터 저장
-        $("#sendAuth").click(function() {
-            saveTableData('SEND');
-        });
+    //입력 파일 출력
+    function loadInfo(){
+        var dataSize = [[${companyAuthFile != null ? 1 : 0}]];
+        if (dataSize > 0) {
+            var state = '[[${companyAuthFile.APPROVE_STATE != null ? companyAuthFile.APPROVE_STATE : ''}]]';
+            if (state !== '') {
+                var fileName = '[[${companyAuthFile.FILE_NAME}]]';
+                $('#downFileName').text(fileName);
+                $('#deleteButton').css("display", "block");
+
+                var approvedDate = '[[${companyAuthFile.APPROVE_DATE}]]';
+                if (state === 'SEND') {
+                    $('#authState').text('[제출:' +approvedDate+']');
+                    $('.resultField').show();
+                    $('#sendAuth').hide();
+                }
+            }
+        }
+    }
+
+
+    //파일다운로드
+    function downloadFile() {
+        var fileName = '[[${companyAuthFile.FILE_NAME}]]';
+        var url = "/auditMgmt/getIsoAuthFileDown?filename=" + encodeURIComponent(fileName);
+
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;  // Optionally set the download filename if needed
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+    }
+
+    function downSampleFile() {
+        alert("양식파일 등록후 다운로드.");
+    }
+
+    // 제출 버튼 클릭 시 데이터 저장
+    $("#sendAuth").click(function() {
+        const fileInput = document.querySelector('input[type="file"]');
+        const formData = new FormData();
+        if (fileInput && fileInput.files.length > 0) {
+            // 파일에 대한 유효성 검증
+            var file = fileInput.files[0];
+            if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
+                formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
+
+                 $.ajax({
+                    url: '/auditMgmt/sendLabourAuthData',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
+                    contentType: false,  // 기본 contentType을 사용하지 않음
+                    success: function(response) {
+                        showAlert('success',response);
+                    },
+                    error: function(xhr, status, error) {
+                        showAlert('warning','데이터 저장에 실패했습니다.');
+                    }
+                });
+            } else {
+                showAlert('warning','파일 검증 실패했습니다.');
+                console.log("파일 검증 실패: " + file.name);
+            }
+        }
     });
 
     // 파일 선택 시 삭제 버튼 표시
     function toggleDeleteButton(input) {
-        const deleteButton = input.closest('td').querySelector('.cui_button');
+        const deleteButton = input.closest('td').querySelector('#deleteButton');
         const fileLabel = input.closest('td').querySelector('.item_label span');
         const fileLabelDiv = input.closest('td').querySelector('.item_label');
 
@@ -211,31 +279,6 @@
         fileLabelDiv.style.display = 'none';
     }
 
-    // 저장/제출
-    function saveTableData(flag) {
-        const fileInput = document.find('input[type="file"]')[0];
-
-        const formData = new FormData();
-        formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
-
-        $.ajax({
-            url: '/auditMgmt/sendLabourAuthData',
-            type: 'POST',
-            data: formData,
-            processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
-            contentType: false,  // 기본 contentType을 사용하지 않음
-            success: function(response) {
-                console.log(response);
-                if(response.ok){
-                    showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                }
-            },
-            error: function(xhr, status, error) {
-                showAlert('warning','데이터 저장에 실패했습니다.');
-            }
-        });
-    }
-
     setTimeout(function() {
         const fileInput = document.querySelector('input[type="file"]');
         if (fileInput) {
@@ -245,7 +288,7 @@
                     const file = files[i];
                     if (file && !validation(file)) {
                         event.target.value = '';  // 잘못된 파일 선택시 input 초기화
-                        clearFile(fileInput.closest('.cui_attachments').querySelector('.cui_button'));
+                        clearFile(fileInput.closest('.cui_attachments').querySelector('#deleteButton'));
                         console.log('잘못된 파일: ', file.name);
                         break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
                     }
