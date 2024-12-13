@@ -84,7 +84,7 @@ public class PartCodeController {
 
         String loginId = authentication.getName();
 
-        UserMgrDTO memberDTO = memberService.findByMemberId(loginId);
+        UserMgrDTO memberDTO = memberService.findByMemberId(loginId); //동우 로그인 사용자
         partCodeDTO.setREG_DW_USER_IDX(memberDTO.getUSER_IDX());
         partCodeDTO.setUP_DW_USER_IDX(memberDTO.getUSER_IDX());
 
