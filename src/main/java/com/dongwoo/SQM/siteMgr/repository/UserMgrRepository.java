@@ -55,8 +55,6 @@ public class UserMgrRepository {
     public void insertUserMgr(UserMgrDTO userMgrDTO) {
 
         //ID 생성
-        String defultPassWord = "123456t" ;  //기본password
-        userMgrDTO.setUSER_PWD(defultPassWord);
         userMgrDTO.setUSER_GUBN(0);  //사용자 구분 (0:동우화인켐, 1:업체)
         userMgrDTO.setREG_DW_USER_IDX(0);  //등록자 로그인 사용자 처리  //
         userMgrDTO.setUP_DW_USER_IDX(0);  //수정자  로그인 사용자 처리

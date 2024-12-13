@@ -89,7 +89,8 @@
                         <div class="toolbar_default"></div>
                     </div>
                     <div class="toolbar_aside">
-                        <button type="button" id="exportBtn" class="cui_button secondary"><span data-langsid="엑셀 다운로드"></span></button>
+<!--                        <button type="button" id="exportBtn" class="cui_button secondary"><span data-langsid="엑셀 다운로드"></span></button>-->
+                        <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
 
@@ -150,16 +151,16 @@
 
            const url = "/admin/companyInfo/cpApprovalDetail?com_code=" + code + '&user_idx=' + useridx+ '&prePage=';
 
-           sessionStorage.setItem('comCode', code);
+           sessionStorage.setItem('preSearch', code);
 
            const queryParams = {
-               COM_CODE: document.getElementById('comCode').value,
-               COM_NAME: document.getElementById('comName').value,
-               DEPT_CODE: document.getElementById('deptCode').value,
-               COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,
-               BUS_NUMBER: document.getElementById('busNumber').value,
-               USER_STATUS: document.getElementById('userStatus').value,
-               ID_ADD_TYPE: document.getElementById('idAddType').value
+               approval_COM_CODE: document.getElementById('comCode').value,
+               approval_COM_NAME: document.getElementById('comName').value,
+               approval_DEPT_CODE: document.getElementById('deptCode').value,
+               approval_COM_MANAGE_STATUS: document.getElementById('comManageStatus').value,
+               approval_BUS_NUMBER: document.getElementById('busNumber').value,
+               approval_USER_STATUS: document.getElementById('userStatus').value,
+               approval_ID_ADD_TYPE: document.getElementById('idAddType').value
            };
 
            Object.keys(queryParams).forEach(key => {
@@ -171,15 +172,15 @@
 
 
     function preSearchSetting() {
-      const storedCode = sessionStorage.getItem('comCode');
+      const storedCode = sessionStorage.getItem('preSearch');
        if (storedCode) {
-           document.getElementById('comCode').value = sessionStorage.getItem('COM_CODE');
-           document.getElementById('comName').value = sessionStorage.getItem('COM_NAME');
-           $('#deptCode').val(sessionStorage.getItem('DEPT_CODE'));
-           $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
-           $('#idAddType').val(sessionStorage.getItem('ID_ADD_TYPE'));
-           $('#userStatus').val(sessionStorage.getItem('USER_STATUS'));
-           document.getElementById('busNumber').value  = sessionStorage.getItem('BUS_NUMBER');
+           document.getElementById('comCode').value = sessionStorage.getItem('approval_COM_CODE');
+           document.getElementById('comName').value = sessionStorage.getItem('approval_COM_NAME');
+           $('#deptCode').val(sessionStorage.getItem('approval_DEPT_CODE'));
+           $('#comManageStatus').val(sessionStorage.getItem('approval_COM_MANAGE_STATUS'));
+           $('#idAddType').val(sessionStorage.getItem('approval_ID_ADD_TYPE'));
+           $('#userStatus').val(sessionStorage.getItem('approval_USER_STATUS'));
+           document.getElementById('busNumber').value  = sessionStorage.getItem('approval_BUS_NUMBER');
        }
     }
 
@@ -202,7 +203,7 @@
            menuIcon: true,
            scrollModel: { autoFit: false },
            hoverMode: 'row',
-           rowHtHead: 30,
+           //rowHtHead: 30,
            rowHt:30,
            roundCorners: false,
            rowBorders: true,
@@ -210,8 +211,8 @@
            showHeader: true,
            showTitle: true,
            showTop: false,
-           showToolbar: true,
-           stripeRows: true,
+           showToolbar: false,
+           stripeRows: false,
            wrap: false,
            autoAddRow: false,
            freezeCols:0,
@@ -304,18 +305,19 @@
        ListSearch();
     });
 
-<!--       $("#BtnExcel").bind("click", function() {-->
-<!--            var grid = $("#IngList").pqGrid("instance");-->
+    var downloadExcel = function () {
+        var grid = $("#gridArea").pqGrid("instance");
+        var colModel = grid.getColModel();
+        colModel[0].hidden = true;
 
-<!--            var format = "xlsx"-->
-<!--              , blob = grid.exportData({-->
-<!--                format: format,-->
-<!--                nopqdata: true,-->
-<!--                render: true-->
-<!--            });-->
-<!--            if (typeof blob === "string") {-->
-<!--                blob = new Blob([blob]);-->
-<!--            }-->
-<!--            saveAs(blob, "진행프로젝트_DEV." + format);-->
-<!--        });-->
+        grid.exportData({
+            url: "/common/exportData",
+            format: "xlsx",
+            zip: false,
+            filename: "COMPANY_APPROVAL_" + Common.GetTodayTimeString(),
+            render: true
+        });
+
+        colModel[0].hidden = false;
+    }
 </script>

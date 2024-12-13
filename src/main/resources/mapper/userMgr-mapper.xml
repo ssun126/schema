@@ -72,7 +72,8 @@
         u.USER_PWD,
         u.USER_NAME,
         u.USER_GUBN,
-        DECODE(u.USER_STATUS,'Y','사용','미사용')  USER_STATUS ,
+<!--        DECODE(u.USER_STATUS,'Y','사용','미사용')  USER_STATUS ,-->
+        u.USER_STATUS,
         u.REG_DW_USER_IDX,
         u.UP_DW_USER_IDX,
         u.DEL_DW_USER_IDX,

@@ -214,7 +214,7 @@ public class CompanyInfoController {
         try {
 
             String loginId = authentication.getName();
-            UserMgrDTO loginMemberDTO = memberService.findByMemberId(loginId);  //로그인 사용자
+            UserMgrDTO loginMemberDTO = memberService.findByMemberId(loginId);  //동우 로그인 사용자
 
             //SC_USER_INFO ID 상태 변경
             UserInfoDTO userInfoDTO =  new UserInfoDTO();

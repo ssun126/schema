@@ -210,8 +210,6 @@
                                     </td>
                                 </tr>
 
-
-
                                 <tr th:style="${member.USER_GUBN == 0 ? '' : 'display:none;'}">
                                     <th><span data-langsid="알림설정"></span></th>
                                     <td colspan="3">
@@ -230,9 +228,9 @@
                         </fieldset>
                         <div class="cui_items_wrap" data-direction="center" >
                             <div class="item_content">
-<!--                                <a href="#" class="cui_button primary"><span>저장</span></a>-->
                                 <button type="button" class="cui_button primary" onClick="save()"><span data-langsid="저장"></span></button>
-                                <a href="#" class="cui_button" onClick="modal('dialogPassChange')"><span data-langsid="비밀번호 변경"></span></a>
+<!--                                <a href="#" class="cui_button" onClick="modal('dialogPassChange')"><span data-langsid="비밀번호 변경"></span></a>-->
+                                <button type="button" class="cui_button secondary" onclick="passChangeOpen();"><span data-langsid="비밀번호 변경"></span></button>
                             </div>
                         </div>
                     </form>
@@ -249,7 +247,7 @@
                     <div class="main_label" data-langsid="비밀번호 변경"></div>
                 </div>
                 <div class="dialog_toolbar">
-                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                    <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
                 </div>
             </div>
             <div class="dialog_body">
@@ -259,19 +257,19 @@
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" style="width: 140px;" data-langsid="기존 비밀번호"></strong>
                                 <div class="item_content">
-                                    <input type="password" data-langsid="기존 비밀번호" placeholder="" id="user_pwd" name = "USER_PWD" class="cui_text_field" >
+                                    <input type="password" data-langsid="기존 비밀번호" placeholder="" id="user_pwd" name = "USER_PWD" class="cui_text_field" reqcheck="reqcheck" data-messages="기존 비밀번호를 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" style="width: 140px;" data-langsid="신규 비밀번호"></strong>
                                 <div class="item_content">
-                                    <input type="password" data-langsid="신규 비밀번호" placeholder="" id="user_pwd_new" name = "USER_PWD_NEW" class="cui_text_field" onkeyup="passConfirm()">
+                                    <input type="password" data-langsid="신규 비밀번호" placeholder="" id="user_pwd_new" name = "USER_PWD_NEW" class="cui_text_field" onkeyup="passConfirm()" reqcheck="reqcheck" data-messages="신규 비밀번호를 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" style="width: 140px;" data-langsid="신규 비밀번호 확인"></strong>
                                 <div class="item_content">
-                                    <input type="password" data-langsid="비밀번호 확인" placeholder="" id="user_pwd_new_re" name = "USER_PWD_NEW_RE" class="cui_text_field" onkeyup="passConfirm()">
+                                    <input type="password" data-langsid="비밀번호 확인" placeholder="" id="user_pwd_new_re" name = "USER_PWD_NEW_RE" class="cui_text_field" onkeyup="passConfirm()" reqcheck="reqcheck" data-messages="신규 비밀번호확인을 입력하세요." messages="">
                                 </div>
                             </label>
                             <label class="cui_items_wrap" data-direction="left">
@@ -303,36 +301,28 @@
 
 <script>
 
-  //모달 닫기
-  $('.modal-close').on('click', function(e){
-    e.preventDefault();
-    const modal = $(this).parents('.cui_dialog');
-    modal.fadeOut();
-  });
-
+   var passChangeOpen = function () {
+       $("#user_pwd").val("");
+       $("#user_pwd_new").val("");
+       $("#user_pwd_new_re").val("");
+       Common.Dialog({ obj : $("#dialogPassChange"), blockClose : false });
+   }
 
   function save() {
-
-    // 체크된 체크박스의 id와 value를 수집
     const selectedGoals = [];
-
     $('#divGoal input[type="checkbox"]').each(function() {
-        const isChecked = $(this).is(':checked');  // 체크 여부 확인
+        const isChecked = $(this).is(':checked');
         selectedGoals.push({
-            id: $(this).attr("id"),  // 체크박스의 ID
-            checked: isChecked       // 체크 여부
+            id: $(this).attr("id"),
+            checked: isChecked
         });
     });
 
-    // 폼 데이터 직렬화
     const formData = $('#updateForm').serialize();
-
-    // selectedGoals를 JSON 문자열로 변환
     const additionalData = {
-        checkboxes: JSON.stringify(selectedGoals) // JSON.stringify()로 직렬화
+        checkboxes: JSON.stringify(selectedGoals)
     };
 
-    // 두 데이터를 병합
     const dataToSend = formData + '&' + $.param(additionalData);
 
       $.ajax({
@@ -340,28 +330,34 @@
          url: "/userMgr/updateUserMgrMyPage",
          data: dataToSend,
          success: function(response) {
-            showAlert('success', '사용자 정보가 수정되었습니다.');
+           Common.Msg(siteLang.getLang("사용자 정보가 수정되었습니다."));
          },
          error: function(err) {
            console.log("에러발생", err);
-           showAlert('warning', '업데이트 중 오류가 발생했습니다.');
+           Common.Msg(siteLang.getLang("업데이트 중 오류가 발생했습니다."));
          }
      });
    }
 
   function savepws() {
+
+        if (Common.Validate($("#dialogPassChange")) == false){
+            return;
+        }
+
+
        if(passConfirm()){
           $.ajax({
              type: "post",
              url: "/userMgr/updateUserPWS",
              data: $('#updateChangePass').serialize(),
              success: function(response) {
-                $("#dialogPassChange").fadeOut();
-                showAlert('success', response);
+                $("#dialogPassChange").data("Hide")();
+                Common.Msg(response);
              },
              error: function(err) {
                console.log("에러발생", err);
-               showAlert('warning', err.responseText);
+               Common.Msg(err.responseText);
              }
          });
     }
@@ -383,7 +379,7 @@
 
         if (regex.test(UserPassNew.value)) {
             confirmMsg.style.color = correctColor;
-            confirmMsg.innerHTML =  "비밀번호가 유효합니다.";
+            confirmMsg.innerHTML = siteLang.getLang("비밀번호가 유효합니다.")  ;
 
             if (UserPassNew.value === UserPassNewRe.value) {
                 confirmMsg.style.color = correctColor;
@@ -392,14 +388,14 @@
                 return true;
             } else {
                 confirmMsg.style.color = wrongColor;
-                confirmMsg.innerHTML = "비밀번호가 일치하지 않습니다.";
+                confirmMsg.innerHTML = siteLang.getLang("비밀번호가 일치하지 않습니다.") ;
                 $('#PassVAL').show();
                 return false;
             }
 
         } else {
             confirmMsg.style.color = wrongColor;
-            confirmMsg.innerHTML = "비밀번호는 6자리 이상의 숫자와 영문자로만 구성되어야 합니다.";
+            confirmMsg.innerHTML = siteLang.getLang("비밀번호는 6자리 이상의 숫자와 영문자로만 구성되어야 합니다.") ;
             $('#PassVAL').show();
             return false;
         }

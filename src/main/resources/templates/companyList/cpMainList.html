@@ -103,27 +103,47 @@
     Common.AddProperty(document.getElementById('gridArea'), 'gridColModel', function () {
         colModel = [
 
-            {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+            {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
             {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+            {
+                data_langsid: "사용여부",
+                title: siteLang.getLang("사용여부"),
+                width: 70,
+                halign: "center",
+                align: "center",
+                dataType: "string",
+                dataIndx: "COM_STATUS",
+                sortable: true,
+                editor: false,
+                editable: false,
+                render: function (ui) {
+                    var com_status = ui.cellData;
+                    if (com_status == "Y") {
+                        return siteLang.getLang("사용");
+                    } else {
+                        return siteLang.getLang("미거래") ;
+                    }
+                }
+            },
             {  data_langsid :"Warranty" ,title: siteLang.getLang("Warranty"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "com_MANAGE_STATUS", sortable: true, editor: false, editable: false },
             {
-                data_langsid :"Audit결과" , title: siteLang.getLang("Audit결과"), width: 170 , halign: "center", align: "center"
+                data_langsid :"Audit결과" , title: siteLang.getLang("Audit결과"), width: 160 , halign: "center", align: "center"
                 ,colModel:
                 [
-                  {  data_langsid :"점수" ,title: siteLang.getLang("점수"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "com_AUDIT_POINT", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"점수" ,title: siteLang.getLang("점수"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "com_AUDIT_POINT", sortable: true, editor: false, editable: false },
                   {  data_langsid :"실시일" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "com_OK_DATE", sortable: true, editor: false, editable: false }
                 ]
             },
             {
-                data_langsid :"분쟁 및 책임광물" , title: siteLang.getLang("분쟁 및 책임광물"), width: 540 , halign: "center", align: "center"
+                data_langsid :"분쟁 및 책임광물" , title: siteLang.getLang("분쟁 및 책임광물"), width: 480 , halign: "center", align: "center"
                 ,colModel:
                 [
-                  {  data_langsid :"티타늄" ,title: siteLang.getLang("티타늄"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tantalum_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"주석" ,title: siteLang.getLang("주석"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tin_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"텅스텐" ,title: siteLang.getLang("텅스텐"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "tungsten_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"금" ,title: siteLang.getLang("금"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "gold_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"코발트" ,title: siteLang.getLang("코발트"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "cobalt_YN", sortable: true, editor: false, editable: false },
-                  {  data_langsid :"운모" ,title: siteLang.getLang("운모"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "mica_YN", sortable: true, editor: false, editable: false }
+                  {  data_langsid :"티타늄" ,title: siteLang.getLang("티타늄"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "tantalum_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"주석" ,title: siteLang.getLang("주석"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "tin_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"텅스텐" ,title: siteLang.getLang("텅스텐"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "tungsten_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"금" ,title: siteLang.getLang("금"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "gold_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"코발트" ,title: siteLang.getLang("코발트"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "cobalt_YN", sortable: true, editor: false, editable: false },
+                  {  data_langsid :"운모" ,title: siteLang.getLang("운모"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "mica_YN", sortable: true, editor: false, editable: false }
                 ]
             },
             {
@@ -188,15 +208,15 @@
 
           const url = "/admin/companyInfo/cpMainListDetail?com_code=" + cpcode  ;
 
-          sessionStorage.setItem('comCode', cpcode);
+          sessionStorage.setItem('preSearch', cpcode);
           const queryParams = {
-              COM_CODE: document.getElementById('comCode').value,
-              COM_NAME: document.getElementById('comName').value,
-              DEPT_CODE: document.getElementById('deptCode').value,
-              MINERAL: document.getElementById('mineral').value,
-              COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
-              COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
-              COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
+              cpMain_COM_CODE: document.getElementById('comCode').value,
+              cpMain_COM_NAME: document.getElementById('comName').value,
+              cpMain_DEPT_CODE: document.getElementById('deptCode').value,
+              cpMain_MINERAL: document.getElementById('mineral').value,
+              cpMain_COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
+              cpMain_COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
+              cpMain_COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
           };
 
           Object.keys(queryParams).forEach(key => {
@@ -208,16 +228,15 @@
 
 
    function preSearchSetting() {
-      const storedCode = sessionStorage.getItem('comCode');
+      const storedCode = sessionStorage.getItem('preSearch');
        if (storedCode) {
-
-                document.getElementById('comCode').value = sessionStorage.getItem('COM_CODE');
-                document.getElementById('comName').value = sessionStorage.getItem('COM_NAME');
-                $('#deptCode').val(sessionStorage.getItem('DEPT_CODE'));
-                $('#mineral').val(sessionStorage.getItem('MINERAL'));
-                document.getElementById('pointFrom').value = sessionStorage.getItem('COM_AUDIT_POINT_FROM');
-                document.getElementById('pointTo').value = sessionStorage.getItem('COM_AUDIT_POINT_TO');
-                $('#comManageStatus').val(sessionStorage.getItem('COM_MANAGE_STATUS'));
+            document.getElementById('comCode').value = sessionStorage.getItem('cpMain_COM_CODE');
+            document.getElementById('comName').value = sessionStorage.getItem('cpMain_COM_NAME');
+            $('#deptCode').val(sessionStorage.getItem('cpMain_DEPT_CODE'));
+            $('#mineral').val(sessionStorage.getItem('cpMain_MINERAL'));
+            document.getElementById('pointFrom').value = sessionStorage.getItem('cpMain_COM_AUDIT_POINT_FROM');
+            document.getElementById('pointTo').value = sessionStorage.getItem('cpMain_COM_AUDIT_POINT_TO');
+            $('#comManageStatus').val(sessionStorage.getItem('cpMain_COM_MANAGE_STATUS'));
        }
    }
 

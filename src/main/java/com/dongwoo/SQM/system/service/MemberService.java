@@ -84,9 +84,13 @@ public class MemberService {
         return memberRepository.findByCompanyUserAll(userInfoCompanyUserDTO);
     }
 
-    //My page 정보조회
+    //My page 정보조회(동우 사용자)
     public UserMgrDTO findByMemberId(String loginId) {
         return memberRepository.findUserInfoDataById(loginId);
+    }
+    //My page 정보조회(업체 사용자)
+    public UserMgrDTO findByCpMemberId(String loginId) {
+        return memberRepository.findCPUserInfoDataById(loginId);
     }
 
     //My page 업체용 접속목적  체크박스

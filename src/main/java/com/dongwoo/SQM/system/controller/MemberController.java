@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.system.controller;
 
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 
 import com.dongwoo.SQM.system.dto.*;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -89,13 +91,23 @@ public class MemberController {
 
     //마이페이지 2024.11.24 sylee
     @GetMapping("/member/myPage")
-    public String myPage(HttpSession session, Model model,Authentication authentication) {
+    public String myPage(HttpSession session, Model model,@AuthenticationPrincipal UserCustom user) {
 
 
-        String loginId = authentication.getName();
+        String loginId = user.getUsername();
         //System.out.println("loginId????"+loginId);
 
-        UserMgrDTO memberDTO = memberService.findByMemberId(loginId);
+        String usergubun = user.getUSER_GUBUN();
+
+        UserMgrDTO memberDTO = new UserMgrDTO();
+
+        if(Objects.equals(usergubun, "0")) {
+            memberDTO = memberService.findByMemberId(loginId); //동우 사용자
+        }
+        else{
+
+            memberDTO = memberService.findByCpMemberId(loginId); //업체 사용자
+        }
 
         //업체 사용자 접속목적 코드
         List<UserMgrDTO> memberGoalList = memberService.findConnectGoalByUserId(loginId);
