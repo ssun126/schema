@@ -1,24 +1,26 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
+import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
-import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.service.BaseCodeService;
+import com.dongwoo.SQM.system.service.MemberService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.PrintWriter;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -26,131 +28,216 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BaseCodeController {
 
-    private final BaseCodeService baseCodeService;
-    @GetMapping("/baseCode/save")
-    public String save() {
-        return "/baseCode/save";
-    }
+    private static final Logger log = LoggerFactory.getLogger(BaseCodeController.class);
+    private final BaseCodeService BaseCodeService;
+    private final MemberService memberService;
 
-    @PostMapping("/siteMgr/baseCode/save")
-    public String save(BaseCodeDTO baseCodeDTO) throws IOException {
-        log.info("post baseCodeDTO = {}", baseCodeDTO);
-        baseCodeService.save(baseCodeDTO);
-        return "redirect:/baseCode/list";
-    }
+    @RequestMapping("/baseCode")
+    public String findAll(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header){
+        try {
+            List<BaseCodeDTO> baseCodeDTOGroupList = BaseCodeService.findByCodeGroupAll();
+            model.addAttribute("baseGroupList",baseCodeDTOGroupList);
 
+            ObjectMapper mapper = new ObjectMapper();
 
-    //@GetMapping("/baseCode/list")
-    @GetMapping("/baseCode")
-    public String findAll(Model model) {
-        log.info("test-===============findall");
-        List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findAll();
-        List<BaseCodeDTO> baseGubunList = baseCodeService.getbaseGubunList();
-        List<BaseCodeDTO> baseGroupCDList = baseCodeService.getbaseGroupCDList();
-        //기초코드 리스트
-        model.addAttribute("baseCodeList", baseCodeDTOList);
-        //검색,모달 업무구분 리스트
-        model.addAttribute("baseGubunList",baseGubunList);
-        //모달 그룹코드 리스트
-        model.addAttribute("baeGroupCDList",baseGroupCDList);
-        log.info("get List = {}", baseCodeDTOList);
+            String sGubn = GetParam(request, "gubn", "");
+            String sCodeGroup = GetParam(request, "codeGroup", "");
+            String sSearchKey = GetParam(request, "searchkey", "");
+            String sSearchVal = GetParam(request, "searchval", "");
+
+            model.addAttribute("gubn",sGubn);
+            model.addAttribute("codeGroup",sCodeGroup);
+            model.addAttribute("searchkey",sSearchKey);
+            model.addAttribute("searchval",sSearchVal);
+
+            List<BaseCodeDTO> baseCodeDTOList = BaseCodeService.findSearch(sGubn,sCodeGroup,sSearchKey,sSearchVal);
+            String baseCodeJsonStr = mapper.writeValueAsString(baseCodeDTOList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(baseCodeJsonStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("baseCodeList",baseCodeJsonStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
         return "/baseCode/list";
     }
 
-    @GetMapping("/baseCode/baseCodeInfo")
-    public ResponseEntity<?> getBaseConfigInfo(@RequestParam("param1") String idx) {
-        BaseCodeDTO baseCodeDTO = baseCodeService.getbaseCodeInfo(idx);
+    @PostMapping("/baseCodePopup")
+    public String baseCode_Popup(Model model, HttpServletRequest request, HttpServletResponse response){
+        List<BaseCodeDTO> baseCodeDTOGroupList = BaseCodeService.findByCodeGroupAll();
+        model.addAttribute("baseGroupList",baseCodeDTOGroupList);
 
-        if (baseCodeDTO != null) {
-            return ResponseEntity.ok().body(baseCodeDTO);  // 회사 정보가 있을 경우 응답
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Data not found.");
+        String mode = request.getParameter("mode");
+        model.addAttribute("mode",mode);
+
+        String BASE_CODE_IDX = "";
+        String GUBN = "";
+        String BASE_CODE = "";
+        String BASE_NAME = "";
+        String BASE_OPTION = "";
+        String BASE_OPTION2 = "";
+        String BASE_OPTION3 = "";
+        String BASE_VALUE = "";
+        String BASE_SUMMARY = "";
+        String BASE_STATUS = "";
+        int BASE_SORT = 0;
+        String GROUP_CODE = "";
+
+        if (mode.equals("Edit")) {
+            BASE_CODE_IDX = GetParam(request,"BASE_CODE_IDX", "");
+            BaseCodeDTO baseCodeDTO = BaseCodeService.getbaseCodeInfo(BASE_CODE_IDX);
+            if (baseCodeDTO != null) {
+                GUBN = baseCodeDTO.getGUBN();
+                BASE_CODE = baseCodeDTO.getBASE_CODE();
+                BASE_NAME = baseCodeDTO.getBASE_NAME();
+                BASE_OPTION = baseCodeDTO.getBASE_OPTION();
+                BASE_OPTION2 = baseCodeDTO.getBASE_OPTION2();
+                BASE_OPTION3 = baseCodeDTO.getBASE_OPTION3();
+                BASE_VALUE = baseCodeDTO.getBASE_VALUE();
+                BASE_SUMMARY = baseCodeDTO.getBASE_SUMMARY();
+                BASE_STATUS = baseCodeDTO.getBASE_STATUS();
+                BASE_SORT = baseCodeDTO.getBASE_SORT();
+                GROUP_CODE = baseCodeDTO.getGROUP_CODE();
+            } else {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||기초설정 정보가 존재하지 않습니다.");
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            }
         }
+
+        model.addAttribute("BASE_CODE_IDX",BASE_CODE_IDX);
+        model.addAttribute("GUBN",GUBN);
+        model.addAttribute("BASE_CODE",BASE_CODE);
+        model.addAttribute("BASE_NAME",BASE_NAME);
+        model.addAttribute("BASE_OPTION",BASE_OPTION);
+        model.addAttribute("BASE_OPTION2",BASE_OPTION2);
+        model.addAttribute("BASE_OPTION3",BASE_OPTION3);
+        model.addAttribute("BASE_VALUE",BASE_VALUE);
+        model.addAttribute("BASE_SUMMARY",BASE_SUMMARY);
+        model.addAttribute("BASE_STATUS",BASE_STATUS);
+        model.addAttribute("BASE_SORT",BASE_SORT);
+        model.addAttribute("GROUP_CODE",GROUP_CODE);
+
+        return "/baseCode/BaseCodePopUp";
     }
 
-    @GetMapping("/baseCode/action")
-    public String save(@ModelAttribute BaseCodeDTO baseCodeDTO,HttpSession session) {
-        log.info("test111111");
-        //log.info(GUBN);
-        //log.info(String.valueOf(baseCodeDTO.getREG_DW_USER_IDX()));
-        String sUserID = (String) session.getAttribute("loginId");
-        if(sUserID==null) sUserID="0";
-        log.info(sUserID);
-        //baseCodeDTO.setREG_DW_USER_IDX();
+    @PostMapping("/baseCodePopupSave")
+    public ResponseEntity<?> baseCode_PopupSave(HttpServletRequest request, HttpSession session) {
+        try {
+            String mode = GetParam(request, "mode", "");
+            int BASE_CODE_IDX = Integer.parseInt(GetParam(request, "BASE_CODE_IDX", "0"));
+            String GUBN = GetParam(request, "GUBN", "");
+            String BASE_CODE = GetParam(request, "BASE_CODE", "");
+            String BASE_NAME = GetParam(request, "BASE_NAME", "");
+            String BASE_OPTION = GetParam(request, "BASE_OPTION", "");
+            String BASE_OPTION2 = GetParam(request, "BASE_OPTION2", "");
+            String BASE_OPTION3 = GetParam(request, "BASE_OPTION3", "");
+            String BASE_VALUE = GetParam(request, "BASE_VALUE", "");
+            String BASE_SUMMARY = GetParam(request, "BASE_SUMMARY", "");
+            String BASE_STATUS = GetParam(request, "BASE_STATUS", "");
+            int BASE_SORT = Integer.parseInt(GetParam(request, "BASE_SORT", "0"));
+            String GROUP_CODE = GetParam(request, "GROUP_CODE", "");
 
-        //String sFlag = httpServletRequest.getParameter("baseConfigFlag");
-        String sFlag = baseCodeDTO.getINFO_FLAG();
-        log.info(sFlag);
-        // add : 추가, Mod : 수정, Del :  삭제
-        if(sFlag.equals("Add")) {
-            log.info("test= 추가");
-            //코드그룹 추가 일 경우 그룹코드와 코드가 동일하게 저장된다
-            String sGROUP_CODE= baseCodeDTO.getGROUP_CODE();
-            log.info(sGROUP_CODE);
-            log.info(baseCodeDTO.getBASE_CODE());
-            if(Objects.equals(sGROUP_CODE, "GroupAdd"))
-                baseCodeDTO.setGROUP_CODE(baseCodeDTO.getBASE_CODE());
-            log.info(baseCodeDTO.getGROUP_CODE());
+            if ((mode.equals("Edit") || mode.equals("Del")) && BASE_CODE_IDX == 0) {
+                return ResponseEntity.ok("|||[ERROR]|||코드 정보가 없습니다.");
+            }
+            if ((mode.equals("New") || mode.equals("Edit")) && BASE_CODE.isEmpty()) {
+                return ResponseEntity.ok("|||[ERROR]|||설정키 정보가 없습니다.");
+            }
 
-            baseCodeDTO.setREG_DW_USER_IDX(1);
-            baseCodeService.save(baseCodeDTO);
-            log.info("test= 추가끝");
-        }else if(sFlag.equals("Mod")){
+            BaseCodeDTO baseCodeDTO = new BaseCodeDTO();
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String loginId = user.getUsername();
+            UserMgrDTO memberDTO = memberService.findByMemberId(loginId); //동우 사용자
 
-            baseCodeService.update(baseCodeDTO);
-        }else{
-            int sidx = baseCodeDTO.getBASE_CODE_IDX();
-            baseCodeService.delete(sidx);
+            int loginIdx = memberDTO.getUSER_IDX();
+            baseCodeDTO.setREG_DW_USER_IDX(loginIdx);
+            baseCodeDTO.setUP_DW_USER_IDX(loginIdx);
+
+            if ((mode.equals("New") || mode.equals("Edit"))) {
+                if (GROUP_CODE.isEmpty()) {
+                    GROUP_CODE = BASE_CODE.trim();
+                }
+
+                baseCodeDTO.setGUBN(GUBN);
+                baseCodeDTO.setBASE_CODE(BASE_CODE.trim());
+                baseCodeDTO.setBASE_NAME(BASE_NAME);
+                baseCodeDTO.setBASE_OPTION(BASE_OPTION);
+                baseCodeDTO.setBASE_OPTION2(BASE_OPTION2);
+                baseCodeDTO.setBASE_OPTION3(BASE_OPTION3);
+                baseCodeDTO.setBASE_VALUE(BASE_VALUE);
+                baseCodeDTO.setBASE_SUMMARY(BASE_SUMMARY);
+                baseCodeDTO.setBASE_STATUS(BASE_STATUS);
+                baseCodeDTO.setBASE_SORT(BASE_SORT);
+                baseCodeDTO.setGROUP_CODE(GROUP_CODE);
+            }
+
+            if ((mode.equals("Edit") || mode.equals("Del"))) {
+                baseCodeDTO.setBASE_CODE_IDX(BASE_CODE_IDX);
+            }
+
+            if (mode.equals("New")) {
+                BaseCodeDTO baseCodeDTOInfo = BaseCodeService.getbaseCodeInfoCode(BASE_CODE.trim());
+
+                if (baseCodeDTOInfo != null) {
+                    return ResponseEntity.ok("|||[ERROR]|||이미 등록되어 있는 코드 입니다.");
+                }
+
+                BaseCodeService.save(baseCodeDTO);
+            } else if (mode.equals("Edit")) {
+                BaseCodeService.update(baseCodeDTO);
+            } else if (mode.equals("Del")) {
+                BaseCodeDTO baseCodeDTOInfo = BaseCodeService.getbaseCodeInfo(BASE_CODE_IDX);
+
+                if (baseCodeDTOInfo.getBASE_CODE().equals(baseCodeDTOInfo.getGROUP_CODE())) {
+                    List<BaseCodeDTO> baseCodeDTOUse = BaseCodeService.findByCodeGroupUse(baseCodeDTOInfo.getBASE_CODE());
+                    if (!baseCodeDTOUse.isEmpty()) {
+                        return ResponseEntity.ok("|||[ERROR]|||사용중인 그룹코드 입니다.");
+                    }
+                }
+
+                BaseCodeService.delete(BASE_CODE_IDX);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
         }
 
-
-        return  "redirect:/admin/siteMgr/baseCode";
+        return ResponseEntity.ok("OK");
     }
 
-    @GetMapping("/baseCode/search")
-    public String findSearch(Model model, HttpServletRequest request){
-        String sGubun = request.getParameter("GUBUN");
-        String sSearchKey = request.getParameter("SEARCHKEY");
-        String sSearchVal = request.getParameter("SEARCHVAL");
+    private String GetParam(HttpServletRequest request, String pName, String pDefault) {
+        String ParamValue = request.getParameter(pName);
 
-        List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findSearch(sGubun,sSearchKey,sSearchVal);
-        model.addAttribute("baseCodeList",baseCodeDTOList);
-        List<BaseCodeDTO> baseGubunList = baseCodeService.getbaseGubunList();
-        List<BaseCodeDTO> baseGroupCDList = baseCodeService.getbaseGroupCDList();
-        //검색,모달 업무구분 리스트
-        model.addAttribute("baseGubunList",baseGubunList);
-        //모달 그룹코드 리스트
-        model.addAttribute("baeGroupCDList",baseGroupCDList);
-        log.info("111get List = {}", baseCodeDTOList);
-        //return "/siteMgr/baseConfig";
-        return "/baseCode/list";
-    }
+        if (ParamValue == null || ParamValue.isEmpty()) {
+            ParamValue = pDefault;
+        };
 
-
-    /**
-     *  코드그룹으로 검색
-     * @param baseCodeDTO
-     * @return
-     */
-    @PostMapping("/baseCode/getCode")
-    public String findByCodeGroup(BaseCodeDTO baseCodeDTO) {
-        // 상세내용 가져옴
-        List<BaseCodeDTO> baseCodeDTOList = baseCodeService.findByCodeGroup(baseCodeDTO);
-        log.info("baseCodeDTO = {}", baseCodeDTOList);
-        return "/baseCode/detail";
-    }
-
-    /**
-     * 코드명으로 검색
-     *
-     * @param baseCodeDTO
-     * @return
-     */
-    @GetMapping("/baseCode/get")
-    @ResponseBody
-    public List<BaseCodeDTO> findByCode(BaseCodeDTO baseCodeDTO){
-        List<BaseCodeDTO> baseCodeDTOList= baseCodeService.findByCodeGroup(baseCodeDTO);
-        log.info("get baseCodeDTOList = {}", baseCodeDTOList);
-        return baseCodeDTOList;
+        return ParamValue;
     }
 }

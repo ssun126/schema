@@ -29,13 +29,20 @@ public class BaseCodeRepository {
         return sql.selectList("BaseCode.getbaseGroupCDList");
     }
 
+    public BaseCodeDTO getbaseCodeInfo(int idx){
+        return sql.selectOne("BaseCode.getbaseCodeInfoIdx",idx);
+    }
     public BaseCodeDTO getbaseCodeInfo(String idx){
         return sql.selectOne("BaseCode.getbaseCodeInfo",idx);
     }
+    public BaseCodeDTO getbaseCodeInfoCode(String BASE_CODE){
+        return sql.selectOne("BaseCode.getbaseCodeInfoCode",BASE_CODE);
+    }
 
-    public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextval){
+    public List<BaseCodeDTO> findSearch(String sGubun, String sCodeGroup, String sKey, String sTextval){
         HashMap<String,Object> data = new HashMap<>();
         data.put("sGubun",sGubun);
+        data.put("sCodeGroup",sCodeGroup);
         data.put("sKey",sKey);
         data.put("sTextval",sTextval);
 
@@ -50,6 +57,13 @@ public class BaseCodeRepository {
         return sql.selectList("BaseCode.findByCodeGroup", baseCodeDTO);
     }
 
+    public List<BaseCodeDTO> findByCodeGroupAll() {
+        return sql.selectList("BaseCode.findByCodeGroupAll");
+    }
+
+    public List<BaseCodeDTO> findByCodeGroupUse(String BASE_CODE) {
+        return sql.selectList("BaseCode.findByCodeGroupUse", BASE_CODE);
+    }
     public void update(BaseCodeDTO baseCodeDTO) {
         sql.update("BaseCode.update", baseCodeDTO);
     }

@@ -30,6 +30,10 @@ public class BaseConfigRepository {
         return sql.selectOne("BaseConfig.getBaseConfig_Info",idx);
     }
 
+    public BaseConfigDTO getBaseConfig_InfoCode(String CONFIG_CODE){
+        return sql.selectOne("BaseConfig.getBaseConfig_InfoCode",CONFIG_CODE);
+    }
+
     public int save(BaseConfigDTO baseConfigDTO) {
         return sql.insert("BaseConfig.save", baseConfigDTO);
     }

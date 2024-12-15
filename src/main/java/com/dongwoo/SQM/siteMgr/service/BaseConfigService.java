@@ -26,6 +26,10 @@ public class BaseConfigService {
         return baseConfigRepository.getBaseConfig_Info(idx);
     }
 
+    public BaseConfigDTO getBaseConfig_InfoCode(String CONFIG_CODE) {
+        return baseConfigRepository.getBaseConfig_InfoCode(CONFIG_CODE);
+    }
+
     public void save(BaseConfigDTO baseConfigDTO) {
          baseConfigRepository.save(baseConfigDTO);
     }

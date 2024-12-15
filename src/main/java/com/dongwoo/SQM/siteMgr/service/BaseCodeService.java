@@ -27,12 +27,18 @@ public class BaseCodeService {
         return baseCodeRepository.getbaseGroupCDList();
     }
 
+    public BaseCodeDTO getbaseCodeInfo(int idx) {
+        return baseCodeRepository.getbaseCodeInfo(idx);
+    }
     public BaseCodeDTO getbaseCodeInfo(String idx) {
         return baseCodeRepository.getbaseCodeInfo(idx);
     }
+    public BaseCodeDTO getbaseCodeInfoCode(String BASE_CODE) {
+        return baseCodeRepository.getbaseCodeInfoCode(BASE_CODE);
+    }
 
-    public List<BaseCodeDTO> findSearch(String sGubun, String sKey, String sTextVal) {
-        return baseCodeRepository.findSearch(sGubun,sKey,sTextVal);
+    public List<BaseCodeDTO> findSearch(String sGubun, String sCodeGroup, String sKey, String sTextVal) {
+        return baseCodeRepository.findSearch(sGubun,sCodeGroup,sKey,sTextVal);
     }
 
     public BaseCodeDTO findByCodeName(BaseCodeDTO baseCodeDTO) {
@@ -41,6 +47,14 @@ public class BaseCodeService {
 
     public List<BaseCodeDTO> findByCodeGroup(BaseCodeDTO baseCodeDTO) {
         return baseCodeRepository.findByCodeGroup(baseCodeDTO);
+    }
+
+    public List<BaseCodeDTO> findByCodeGroupAll() {
+        return baseCodeRepository.findByCodeGroupAll();
+    }
+
+    public List<BaseCodeDTO> findByCodeGroupUse(String BASE_CODE) {
+        return baseCodeRepository.findByCodeGroupUse(BASE_CODE);
     }
 
     public void update(BaseCodeDTO baseCodeDTO) {

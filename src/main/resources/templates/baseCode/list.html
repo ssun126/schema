@@ -5,310 +5,209 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-    <title>기초설정</title>
 </head>
 <body>
-        <div class="cui_content">
-            <div class="cui_main">
-                <div class="cui_head">
-                    <div class="head_content">
-                        <h2 class="cui_title"><span>기초코드</span></h2>
-                    </div>
-                </div>
-                <div class="cui_body">
-                    <form id="searchForm" action="/admin/siteMgr/baseCode/search" method="get">
-                        <div class="cui_search">
-                            <div class="search_list cui_grid_wrap ">
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">업무구분</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" th:name="GUBUN">
-                                            <option value="">전체</option>
-                                            <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
-                                            th:text="${baseGubunList.BASE_NAME}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="cui_items_wrap" data-size="2">
-                                    <strong class="item_label">검색조건</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field" name="SEARCHKEY">
-                                            <option value="CODEGROUP" selected>코드그룹</option>
-                                            <option value="BASECODE">코드</option>
-                                        </select>
-                                        <input class="cui_text_field" type="text" name="SEARCHVAL">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="search_action">
-                                <button type="submit" class="cui_button primary search_btn" ><span>검색</span></button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="cui_toolbar">
-                        <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
-                        </div>
-                        <div class="toolbar_aside">
-                            <button type="button" class="cui_button secondary" onclick="modal_open('PopupBaseCode','add', '','')"><span>추가</span></button>
-
-                        </div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:130px;">
-                            <col style="width:130px;">
-                            <col style="width:130px;">
-                            <col style="width:80px;">
-                            <col style="width:130px;">
-                            <col>
-                            <col style="width:110px;">
-                            <col style="width:110px;">
-                            <col style="width:110px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>업무구분</span></th>
-                            <th><span>코드그룹</span></th>
-                            <th><span>코드</span></th>
-                            <th><span>정렬</span></th>
-                            <th><span>코드명</span></th>
-                            <th><span>설명</span></th>
-                            <th><span>등록자</span></th>
-                            <th><span>사용</span></th>
-                            <th><span>등록일</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="baseCodeList : ${baseCodeList}"
-                            th:onclick="modal_open('PopupBaseCode','MODIFY','/admin/siteMgr/baseCode/baseCodeInfo',[[${baseCodeList.BASE_CODE_IDX}]])">
-                            <!--<td style="display:none;" th:text="${baseCodeList.BASE_CODE_IDX}"><span></span></td>-->
-                            <td th:text="${baseCodeList.GUBN}"><span></span></td>
-                            <td ><button th:text="${baseCodeList.GROUP_CODE}" type="button" class="cui_button endpoint" th:onclick="modal_open('PopupBaseCode', 'MODIFY', '/admin/siteMgr/baseCode/baseCodeInfo',[[${baseCodeList.BASE_CODE_IDX}]])"></button></td>
-                            <td th:text="${baseCodeList.BASE_CODE}"><span></span></td>
-                            <td th:text="${baseCodeList.BASE_SORT}"><span></span></td>
-                            <td th:text="${baseCodeList.BASE_NAME}"><span></span></td>
-                            <td th:text="${baseCodeList.BASE_SUMMARY}"><span></span></td>
-                            <td th:text="${baseCodeList.REGISTER_NAME}"><span></span></td>
-                            <td th:text="${baseCodeList.BASE_STATUS}"><span></span></td>
-                            <td th:text="${baseCodeList.REG_DATE}"><span></span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span data-langsid="기초코드"></span></h2>
             </div>
         </div>
-        <div class="cui_dialog" style="width:400px;display:none;" id="PopupBaseCode">
-            <div class="dialog_container">
-                <div class="dialog_head">
-                    <div class="dialog_title">
-                        <div class="main_label">기초코드</div>
+        <div class="cui_body">
+            <form id="searchArea" onsubmit="return false;">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap ">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="업무구분"></strong>
+                            <div class="item_content">
+                                <select class="cui_select_field wide" name="gubn" onchange="ListSearch();">
+                                    <option value=""></option>
+                                    <option value="Base" th:selected="${gubn}=='Base'">Base</option>
+                                    <option value="Company" th:selected="${gubn}=='Company'">Company Management</option>
+                                    <option value="Audit" th:selected="${gubn}=='Audit'">Audit Management</option>
+                                    <option value="Part" th:selected="${gubn}=='Part'">Part Management</option>
+                                    <option value="Quality" th:selected="${gubn}=='Quality'">Quality Control</option>
+                                    <option value="Board" th:selected="${gubn}=='Board'">Board</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="코드그룹"></strong>
+                            <div class="item_content">
+                                <select id="codeGroup" name="codeGroup" class="cui_select_field" onchange="ListSearch();">
+                                    <option value="" data-langsid="선택" selected></option>
+                                    <option th:each="group : ${baseGroupList}"
+                                            th:value="${group.BASE_CODE}"
+                                            th:text="${group.BASE_NAME}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-size="2">
+                            <strong class="item_label" data-langsid="검색조건"></strong>
+                            <div class="item_content">
+                                <select class="cui_select_field" name="searchkey">
+                                    <option value="BASECODE" data-langsid="코드" th:selected="${searchkey}=='BASECODE'"></option>
+                                    <option value="BASECODENAME" data-langsid="코드명" th:selected="${searchkey}=='BASECODENAME'"></option>
+                                </select>
+                                <input class="cui_text_field" type="text" name="searchval" search="searchBtn" th:value="${searchval}">
+                            </div>
+                        </div>
                     </div>
-                    <div class="dialog_toolbar">
-                        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+                    <div class="search_action">
+                        <button type="button" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
-                <div class="dialog_body">
-                    <div class="body_root">
-                        <form class="cui_form_section" data-legend="true" id="baseCodeForm" onsubmit="handleSubmit(event)" action="/admin/siteMgr/baseCode/action" method="get">
-                            <fieldset>
-                                <!--                        <legend><span>ID 찾기</span></legend>-->
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">업무구분</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" id="GUBN" th:name="GUBN">
-                                            <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
-                                                    th:text="${baseGubunList.BASE_NAME}"></option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">코드그룹</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" id="GROUP_CODE" th:name="GROUP_CODE">
-                                            <option value="GroupAdd">코드그룹추가</option>
-                                            <option th:each="baeGroupCDList : ${baeGroupCDList}" th:value="${baeGroupCDList.GROUP_CODE}"
-                                                    th:text="${baeGroupCDList.BASE_NAME}"></option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">코드</strong>
-                                    <div class="item_content">
-                                        <input name="BASE_CODE" class="cui_text_field fixdata">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">코드명</strong>
-                                    <div class="item_content">
-                                        <input name="BASE_NAME" class="cui_text_field ">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">코드값</strong>
-                                    <div class="item_content">
-                                        <input name="BASE_VALUE" class="cui_text_field ">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">옵션</strong>
-                                    <div class="item_content">
-                                        <input name="BASE_OPTION" class="cui_text_field ">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">정렬</strong>
-                                    <div class="item_content">
-                                        <input type="number" name="BASE_SORT" class="cui_text_field ">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">상태</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" id="BASE_STATUS" name="BASE_STATUS">
-                                            <option value="Y">Y</option>
-                                            <option value="N">N</option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">설명</strong>
-                                    <div class="item_content">
-                                        <textarea  style="height:80px;" class="cui_text_field" name="BASE_SUMMARY"></textarea>
-                                        <input name="REG_DW_USER_IDX" value=1  style="display:none;">
-                                        <input name="BASE_CODE_IDX" value=0 style="display:none;">
-                                    </div>
-                                </label>
-
-                                <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-                                    <div class="item_content">
-                                        <input type="hidden"  name="INFO_FLAG" >
-                                        <button type="submit" id="BaseCodeAdd"  value="Add" class="cui_button primary"><span>추가</span></button>
-                                        <button type="submit" id="BaseCodeMod"  value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
-                                        <button type="submit" id="BaseCodeDel"  value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
-                                    </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
+            </form>
+            <div class="cui_toolbar">
+                <div class="toolbar_content">
+                    <div class="toolbar_default"></div>
+                </div>
+                <div class="toolbar_aside">
+                    <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
                 </div>
             </div>
+
+            <div id="gridArea" gridYN="" th:initData="${baseCodeList}"></div>
         </div>
-</body>
+    </div>
+</div>
 <script>
-    $(document).ready(function() {
-         modal_init("Init");
+    var SheetDataConvert = function (data) {
+        var dataJson = JSON.parse(data);
+
+        for (var i = 0; i < dataJson.length; i++) {
+            dataJson[i].CHECK_YN = false;
+            if (dataJson[i].BASE_STATUS == "Y") {
+                dataJson[i].BASE_STATUS_NAME = siteLang.getLang("사용");
+            } else {
+                dataJson[i].BASE_STATUS_NAME = siteLang.getLang("미사용");
+            }
+
+            if (dataJson[i].GUBN == "Base") {
+                dataJson[i].GUBN_NAME = "Base";
+            } else if (dataJson[i].GUBN == "Company") {
+                dataJson[i].GUBN_NAME = "Company Management";
+            } else if (dataJson[i].GUBN == "Audit") {
+                dataJson[i].GUBN_NAME = "Audit Management";
+            } else if (dataJson[i].GUBN == "Part") {
+                dataJson[i].GUBN_NAME = "Part Management";
+            } else if (dataJson[i].GUBN == "Quality") {
+                dataJson[i].GUBN_NAME = "Quality Control";
+            } else if (dataJson[i].GUBN == "Board") {
+                dataJson[i].GUBN_NAME = "Board";
+            }
+        }
+
+        return dataJson;
+    }
+
+    var ListSearch = function () {
+        var url = location.pathname;
+
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter($("#searchArea"));
+
+        Common.Ajax(url, ReqInfo, function (data) {
+            var dataJson = SheetDataConvert(data);
+
+            $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+            $("#gridArea").pqGrid("refreshView");
+        });
+    }
+
+    var addOpen = function () {
+        Common.Dialog({ url : "/admin/siteMgr/baseCodePopup", param : { mode : "New" }, blockClose : false });
+    }
+
+    $(function () {
+        var heightMinus = 330;
+
+        var data = SheetDataConvert($("#gridArea").attr("initData"));
+
+        var RowColorChg = function (ui) {
+            var data = ui.rowData;
+            if (data.GROUP_CODE == data.BASE_CODE) {
+                return { style: "background-color:#e0ffdd" } ;
+            }
+        }
+
+        var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 2 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: true,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+                var data = ui.rowData;
+                Common.Dialog({ url : "/admin/siteMgr/baseCodePopup", param : { mode : "Edit", BASE_CODE_IDX : data.BASE_CODE_IDX }, blockClose : false });
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+        };
+        obj.colModel = [
+            { data_langsid: "업무구분", title: siteLang.getLang("업무구분"), width: 170, halign: "center", align: "left", dataType: "string", dataIndx: "GUBN_NAME", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "코드그룹", title: siteLang.getLang("코드그룹"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "GROUP_CODE", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "코드그룹명", title: siteLang.getLang("코드그룹명"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "GROUP_NAME", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "코드", title: siteLang.getLang("코드"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "BASE_CODE", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "코드명", title: siteLang.getLang("코드명"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "BASE_NAME", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "정렬", title: siteLang.getLang("정렬"), width: 80, halign: "center", align: "right", dataType: "integer", dataIndx: "BASE_SORT", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "설명", title: siteLang.getLang("설명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "BASE_SUMMARY", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "상태", title: siteLang.getLang("상태"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "BASE_STATUS_NAME", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "등록자", title: siteLang.getLang("등록자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "REGISTER_NAME", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "등록일", title: siteLang.getLang("등록일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "REG_DATE", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { data_langsid: "수정일", title: siteLang.getLang("수정일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "UP_DATE", sortable: true, editor: false, editable: false, render: RowColorChg },
+            { hidden : true, dataType: "string", dataIndx: "GUBN", editor: false, editable: false },
+            { hidden : true, dataType: "string", dataIndx: "BASE_STATUS", editor: false, editable: false },
+            { hidden : true, dataType: "string", dataIndx: "IDX", editor: false, editable: false }
+        ];
+        obj.dataModel = { data: data };
+        $("#gridArea").pqGrid(obj);
+        $("#gridArea").attr("gridYN", "Y");
+
+        $(window).resize(function () {
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
+        });
     });
-
-    //모달 초기화
-    function modal_init(flag){
-        if(flag=="MODIFY"){
-           $(".fixdata").attr("readonly",true);
-           //버튼 바꾸기
-            $("#BaseCodeAdd").css("display","none");
-            $("#BaseCodeMod").css("display","block");
-            $("#BaseCodeDel").css("display","block");
-
-        }else{
-            //초기화
-            document.getElementsByName("BASE_CODE")[0].value = "";
-            document.getElementsByName("BASE_NAME")[0].value = "";
-            document.getElementsByName("BASE_VALUE")[0].value = "";
-            document.getElementsByName("BASE_SUMMARY")[0].value = "";
-            document.getElementsByName("BASE_SORT")[0].value = "";
-            document.getElementsByName("BASE_OPTION")[0].value = "";
-            document.getElementsByName("BASE_CODE_IDX")[0].value = 0;
-            $("select[name=GUBN] option:eq(0)").prop("selected", true);
-            $("select[name=GROUP_CODE] option:eq(0)").prop("selected", true);
-            $("select[name=BASE_STATUS] option:eq(0)").prop("selected", true);
-            $(".fixdata").attr("readonly",false);
-
-            //버튼 바꾸기
-            $("#BaseCodeAdd").css("display","block");
-            $("#BaseCodeMod").css("display","none");
-            $("#BaseCodeDel").css("display","none");
-        }
-    }
-
-
-    function bindModalData(status, baseCode){
-        if(baseCode != null){
-            document.getElementsByName("BASE_CODE")[0].value = baseCode.BASE_CODE ;
-            document.getElementsByName("BASE_NAME")[0].value = baseCode.BASE_NAME ;
-            document.getElementsByName("BASE_VALUE")[0].value = baseCode.BASE_VALUE ;
-            document.getElementsByName("BASE_SUMMARY")[0].value = baseCode.BASE_SUMMARY ;
-            document.getElementsByName("BASE_SORT")[0].value = baseCode.BASE_SORT ;
-            document.getElementsByName("BASE_OPTION")[0].value = baseCode.BASE_OPTION ;
-            document.getElementsByName("BASE_CODE_IDX")[0].value = baseCode.BASE_CODE_IDX ;
-
-            $("select[name=GUBN]").val(baseCode.GUBN).prop("selected", true);
-            $("select[name=GROUP_CODE]").val(baseCode.GROUP_CODE).prop("selected", true);
-            $("select[name=BASE_STATUS]").val(baseCode.BASE_STATUS).prop("selected", true);
-
-
-        }
-
-         if(status=="MODIFY"){
-           $(".fixdata").attr("readonly",true);
-           //버튼 바꾸기
-            $("#BaseCodeAdd").css("display","none");
-            $("#BaseCodeMod").css("display","block");
-            $("#BaseCodeDel").css("display","block");
-
-        }
-    }
-
-    //모달 닫기
-    $('.modal-close').on('click', function(e){
-        e.preventDefault();
-        overlay.style.display = "none"; // 오버레이 숨기기
-        const modal = $(this).parents('.cui_dialog');
-        modal.fadeOut();
-        modal_init("Init");
-    });
-
-
-  $('.modal-close-msg').on('click', function(e){
-    e.preventDefault();
-    const modal = $(this).parents('.cui_dialog');
-    modal.fadeOut();
-
-  });
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    $("input[name=INFO_FLAG]").val(event.submitter.value);
-
-    if(event.submitter.value != "Del"){
-      var code = $("input[name=BASE_CODE]").val();
-      var name = $("input[name=BASE_NAME]").val();
-      var value = $("input[name=BASE_VALUE]").val();
-      var group= $("select[name=GROUP_CODE]").val();
-      var sort =  $("input[name=BASE_SORT]").val();
-
-       if(code == ""){
-           showAlert('warning', '코드가 입력되지 않았습니다');
-           return;
-       }else if(name == ""){
-           showAlert('warning', '코드명이 입력되지 않았습니다');
-           return;
-       }else if(value == ""){
-            showAlert('warning', '코드값이 입력되지 않았습니다');
-           return;
-       }else if(group=="GroupAdd" && code != value){
-            showAlert('warning', '코드그룹 추가 시 코드와 코드값이 동일해야 합니다.');
-           return;
-       }else if(sort ==""){
-            showAlert('warning', '정렬값이 입력되지 않았습니다');
-           return;
-       }else{
-           document.getElementById('baseCodeForm').submit();
-       }
-    }else{
-           document.getElementById('baseCodeForm').submit();
-    }
-  }
-
 </script>
+</body>
 </html>

@@ -1,10 +1,10 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
 import com.dongwoo.SQM.config.security.UserCustom;
-import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
-import com.dongwoo.SQM.siteMgr.service.BaseCodeService;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.service.BaseConfigService;
+import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import groovy.util.logging.Slf4j;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,14 +13,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.PrintWriter;
 import java.util.*;
@@ -33,20 +30,16 @@ public class BaseConfigController {
 
     private static final Logger log = LoggerFactory.getLogger(BaseConfigController.class);
     private final BaseConfigService BaseConfigService;
-    private final BaseCodeService baseCodeService;
+    private final MemberService memberService;
 
     @RequestMapping("/baseConfig")
     public String findAll(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header){
         try {
             ObjectMapper mapper = new ObjectMapper();
 
-            String sGubn = request.getParameter("gubn");
-            String sSearchKey = request.getParameter("searchkey");
-            String sSearchVal = request.getParameter("searchval");
-
-            if (sGubn == null || "null".equals(sGubn)) { sGubn = ""; };
-            if (sSearchKey == null || "null".equals(sSearchKey)) { sSearchKey = ""; };
-            if (sSearchKey.equals("") || sSearchVal == null || "null".equals(sSearchVal)) { sSearchVal = ""; };
+            String sGubn = GetParam(request, "gubn", "");
+            String sSearchKey = GetParam(request, "searchkey", "");
+            String sSearchVal = GetParam(request, "searchval", "");
 
             model.addAttribute("gubn",sGubn);
             model.addAttribute("searchkey",sSearchKey);
@@ -55,12 +48,12 @@ public class BaseConfigController {
             List<BaseConfigDTO> baseConfigDTOList = BaseConfigService.findSearch(sGubn,sSearchKey,sSearchVal);
             String baseConfigJsonStr = mapper.writeValueAsString(baseConfigDTOList);
 
-            if (header.get("requesttype") != null && header.get("requesttype").toString().equals("ajax")) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
                 try {
                     PrintWriter printer = response.getWriter();
                     printer.print(baseConfigJsonStr);
                     printer.close();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
                 return "blank";
@@ -68,12 +61,12 @@ public class BaseConfigController {
 
             model.addAttribute("baseConfigList",baseConfigJsonStr);
         } catch (Exception e) {
-            if (header.get("requesttype") != null && header.get("requesttype").toString().equals("ajax")) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
                 try {
                     PrintWriter printer = response.getWriter();
                     printer.print("|||[ERROR]|||" + e.getMessage());
                     printer.close();
-                } catch (Exception e2) {
+                } catch (Exception ignored) {
                 }
 
                 return "blank";
@@ -101,10 +94,9 @@ public class BaseConfigController {
         String CONFIG_OPTION3 = "";
 
         if (mode.equals("Edit")) {
-            String idx = request.getParameter("IDX");
-            BaseConfigDTO baseConfigDTO = BaseConfigService.getBaseConfig_Info(idx);
+            IDX = GetParam(request,"IDX", "");
+            BaseConfigDTO baseConfigDTO = BaseConfigService.getBaseConfig_Info(IDX);
             if (baseConfigDTO != null) {
-                IDX = idx;
                 GUBN = baseConfigDTO.getGUBN();
                 CONFIG_CODE = baseConfigDTO.getCONFIG_CODE();
                 CONFIG_VALUE = baseConfigDTO.getCONFIG_VALUE();
@@ -164,20 +156,13 @@ public class BaseConfigController {
 
             BaseConfigDTO baseConfigDTO = new BaseConfigDTO();
             UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String comCode = user.getCOM_CODE();
-            int loginIdx = user.getUSER_IDX();
+            String loginId = user.getUsername();
+            UserMgrDTO memberDTO = memberService.findByMemberId(loginId); //동우 사용자
+
+            int loginIdx = memberDTO.getUSER_IDX();
             baseConfigDTO.setUSER_IDX(loginIdx);
 
-            if (mode.equals("New")) {
-                List<BaseConfigDTO> baseConfigDTOList = BaseConfigService.findSearch("","key",CONFIG_CODE);
-
-                if (!baseConfigDTOList.isEmpty()) {
-                    return ResponseEntity.ok("|||[ERROR]|||이미 등록되어 있는 코드 입니다.");
-                }
-
-                BaseConfigService.save(baseConfigDTO);
-            } else if (mode.equals("Edit")) {
-                baseConfigDTO.setIDX(IDX);
+            if ((mode.equals("New") || mode.equals("Edit"))) {
                 baseConfigDTO.setGUBN(GUBN);
                 baseConfigDTO.setCONFIG_CODE(CONFIG_CODE.trim());
                 baseConfigDTO.setCONFIG_VALUE(CONFIG_VALUE);
@@ -187,10 +172,23 @@ public class BaseConfigController {
                 baseConfigDTO.setCONFIG_OPTION3(CONFIG_OPTION3);
                 baseConfigDTO.setCONFIG_OPTION3(CONFIG_OPTION3);
                 baseConfigDTO.setCONFIG_SUMMARY(CONFIG_SUMMARY);
+            }
 
+            if ((mode.equals("Edit") || mode.equals("Del"))) {
+                baseConfigDTO.setIDX(IDX);
+            }
+
+            if (mode.equals("New")) {
+                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode(CONFIG_CODE.trim());
+
+                if (baseConfigDTOInfo != null) {
+                    return ResponseEntity.ok("|||[ERROR]|||이미 등록되어 있는 코드 입니다.");
+                }
+
+                BaseConfigService.save(baseConfigDTO);
+            } else if (mode.equals("Edit")) {
                 BaseConfigService.update(baseConfigDTO);
             } else if (mode.equals("Del")) {
-                baseConfigDTO.setIDX(IDX);
                 BaseConfigService.delete(IDX);
             }
         } catch (Exception e) {
@@ -203,7 +201,7 @@ public class BaseConfigController {
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
         String ParamValue = request.getParameter(pName);
 
-        if (ParamValue == null || "null".equals(ParamValue) || ParamValue.isEmpty()) {
+        if (ParamValue == null || ParamValue.isEmpty()) {
             ParamValue = pDefault;
         };
 

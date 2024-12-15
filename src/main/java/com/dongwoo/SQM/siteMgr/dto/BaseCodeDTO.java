@@ -14,6 +14,8 @@ public class BaseCodeDTO {
     private String GUBN;  //구분
     @JsonProperty("GROUP_CODE")
     private String GROUP_CODE;   //그룹
+    @JsonProperty("GROUP_NAME")
+    private String GROUP_NAME;   //그룹
     @JsonProperty("BASE_CODE")
     private String BASE_CODE;        //코드
     @JsonProperty("BASE_NAME")
@@ -34,6 +36,8 @@ public class BaseCodeDTO {
     private String REGISTER_NAME;   //등록자명
     @JsonProperty("UP_DW_USER_IDX")
     private int UP_DW_USER_IDX;   //수정자
+    @JsonProperty("UPDATE_NAME")
+    private String UPDATE_NAME;   //수정자명
     @JsonProperty("REG_DATE")
     private String REG_DATE;  //등록일
     @JsonProperty("UP_DATE")
@@ -42,6 +46,10 @@ public class BaseCodeDTO {
     private String BASE_STATUS;      //사용유무
     @JsonProperty("BASE_OPTION")
     private String BASE_OPTION;      //옵션
+    @JsonProperty("BASE_OPTION2")
+    private String BASE_OPTION2;      //옵션
+    @JsonProperty("BASE_OPTION3")
+    private String BASE_OPTION3;      //옵션
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;
 

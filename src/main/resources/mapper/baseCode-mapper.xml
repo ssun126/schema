@@ -4,8 +4,43 @@
 
 <mapper namespace="BaseCode">
     <insert id="save" parameterType="baseCode">
-        INSERT INTO SC_BASE_CODE(BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,REG_DW_USER_IDX,UP_DW_USER_IDX ,REG_DATE,UP_DATE,BASE_OPTION)
-        VALUES (SEQ_BASECODE.NEXTVAL, #{GROUP_CODE},#{GUBN},#{BASE_CODE},#{BASE_NAME},#{BASE_VALUE},#{BASE_SUMMARY},#{BASE_STATUS},#{BASE_SORT},#{REG_DW_USER_IDX},#{UP_DW_USER_IDX},sysdate,sysdate,#{BASE_OPTION})
+        INSERT INTO SC_BASE_CODE (
+            BASE_CODE_IDX
+            ,GROUP_CODE
+            ,GUBN
+            ,BASE_CODE
+            ,BASE_NAME
+            ,BASE_VALUE
+            ,BASE_SUMMARY
+            ,BASE_STATUS
+            ,BASE_SORT
+            ,REG_DW_USER_IDX
+            ,UP_DW_USER_IDX
+            ,REG_DATE
+            ,UP_DATE
+            ,BASE_OPTION
+            ,BASE_OPTION2
+            ,BASE_OPTION3
+        )
+        VALUES
+        (
+            SEQ_BASECODE.NEXTVAL
+            , #{GROUP_CODE}
+            ,#{GUBN}
+            ,#{BASE_CODE}
+            ,#{BASE_NAME}
+            ,#{BASE_VALUE}
+            ,#{BASE_SUMMARY}
+            ,#{BASE_STATUS}
+            ,#{BASE_SORT}
+            ,#{REG_DW_USER_IDX}
+            ,#{UP_DW_USER_IDX}
+            ,sysdate
+            ,sysdate
+            ,#{BASE_OPTION}
+            ,#{BASE_OPTION2}
+            ,#{BASE_OPTION3}
+        )
     </insert>
     <select id="baseCode" parameterType="baseCode" resultType="baseCode">
         select * from BASE_CODE where CODEGROUP=#{CODEGROUP}
@@ -15,13 +50,87 @@
         FROM SC_BASE_CODE bc
         INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
         ORDER BY BASE_CODE_IDX ASC
-
     </select>
+
+    <select id="getbaseCodeInfoIdx" parameterType="int" resultType="baseCode">
+        SELECT
+        bc.BASE_CODE_IDX
+        ,bc.GROUP_CODE
+        ,bc.GUBN
+        ,bc.BASE_CODE
+        ,bc.BASE_NAME
+        ,bc.BASE_VALUE
+        ,bc.BASE_SUMMARY
+        ,bc.BASE_STATUS
+        ,bc.BASE_SORT
+        ,ui.USER_NAME as REGISTER_NAME
+        ,ui2.USER_NAME as UPDATE_NAME
+        ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+        ,TO_CHAR(bc.UP_DATE, 'YYYY-MM-DD') as UP_DATE
+        ,bc.BASE_OPTION
+        ,bc.BASE_OPTION2
+        ,bc.BASE_OPTION3
+        ,bcg.BASE_NAME AS GROUP_NAME
+        FROM
+        SC_BASE_CODE bc
+        INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+        INNER JOIN SC_USER_INFO ui2 ON bc.UP_DW_USER_IDX = ui2.USER_IDX
+        INNER JOIN SC_BASE_CODE bcg ON bcg.GROUP_CODE = bcg.BASE_CODE AND bcg.BASE_CODE = bc.GROUP_CODE
+        where bc.BASE_CODE_IDX = #{idx}
+    </select>
+
     <select id="getbaseCodeInfo" parameterType="String" resultType="baseCode">
-        select BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,u.USER_NAME as REGISTER_NAME ,b.REG_DATE ,BASE_OPTION
-         FROM SC_BASE_CODE b
-        LEFT OUTER JOIN SC_USER_INFO u
-        ON b.BASE_CODE_IDX = u.USER_IDX where BASE_CODE_IDX = #{idx}
+        SELECT
+            bc.BASE_CODE_IDX
+            ,bc.GROUP_CODE
+            ,bc.GUBN
+            ,bc.BASE_CODE
+            ,bc.BASE_NAME
+            ,bc.BASE_VALUE
+            ,bc.BASE_SUMMARY
+            ,bc.BASE_STATUS
+            ,bc.BASE_SORT
+            ,ui.USER_NAME as REGISTER_NAME
+            ,ui2.USER_NAME as UPDATE_NAME
+            ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+            ,TO_CHAR(bc.UP_DATE, 'YYYY-MM-DD') as UP_DATE
+            ,bc.BASE_OPTION
+            ,bc.BASE_OPTION2
+            ,bc.BASE_OPTION3
+            ,bcg.BASE_NAME AS GROUP_NAME
+        FROM
+            SC_BASE_CODE bc
+            INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+            INNER JOIN SC_USER_INFO ui2 ON bc.UP_DW_USER_IDX = ui2.USER_IDX
+            INNER JOIN SC_BASE_CODE bcg ON bcg.GROUP_CODE = bcg.BASE_CODE AND bcg.BASE_CODE = bc.GROUP_CODE
+        where bc.BASE_CODE_IDX = #{idx}
+    </select>
+
+    <select id="getbaseCodeInfoCode" parameterType="String" resultType="baseCode">
+        SELECT
+            bc.BASE_CODE_IDX
+            ,bc.GROUP_CODE
+            ,bc.GUBN
+            ,bc.BASE_CODE
+            ,bc.BASE_NAME
+            ,bc.BASE_VALUE
+            ,bc.BASE_SUMMARY
+            ,bc.BASE_STATUS
+            ,bc.BASE_SORT
+            ,ui.USER_NAME as REGISTER_NAME
+            ,ui2.USER_NAME as UPDATE_NAME
+            ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+            ,TO_CHAR(bc.UP_DATE, 'YYYY-MM-DD') as UP_DATE
+            ,bc.BASE_OPTION
+            ,bc.BASE_OPTION2
+            ,bc.BASE_OPTION3
+            ,bcg.BASE_NAME AS GROUP_NAME
+        FROM
+            SC_BASE_CODE bc
+            INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+            INNER JOIN SC_USER_INFO ui2 ON bc.UP_DW_USER_IDX = ui2.USER_IDX
+            INNER JOIN SC_BASE_CODE bcg ON bcg.GROUP_CODE = bcg.BASE_CODE AND bcg.BASE_CODE = bc.GROUP_CODE
+        where bc.BASE_CODE = #{BASE_CODE}
     </select>
 
     <delete id="delete" parameterType="int">
@@ -30,10 +139,17 @@
 
     <update id="update" parameterType="baseCode">
         update SC_BASE_CODE
-        set GUBN=#{GUBN},BASE_NAME=#{BASE_NAME},BASE_VALUE=#{BASE_VALUE}
-        ,BASE_SUMMARY=#{BASE_SUMMARY},BASE_STATUS=#{BASE_STATUS},BASE_SORT=#{BASE_SORT}
-        ,UP_DW_USER_IDX=#{REG_DW_USER_IDX},UP_DATE=sysdate
-        ,BASE_OPTION =#{BASE_OPTION}
+            set GUBN=#{GUBN}
+            ,BASE_NAME=#{BASE_NAME}
+            ,BASE_VALUE=#{BASE_VALUE}
+            ,BASE_SUMMARY=#{BASE_SUMMARY}
+            ,BASE_STATUS=#{BASE_STATUS}
+            ,BASE_SORT=#{BASE_SORT}
+            ,UP_DW_USER_IDX=#{REG_DW_USER_IDX}
+            ,UP_DATE=sysdate
+            ,BASE_OPTION =#{BASE_OPTION}
+            ,BASE_OPTION2 =#{BASE_OPTION2}
+            ,BASE_OPTION3 =#{BASE_OPTION3}
         where BASE_CODE_IDX=#{BASE_CODE_IDX}
     </update>
 
@@ -48,23 +164,47 @@
         WHERE GROUP_CODE = BASE_CODE AND BASE_STATUS ='Y'
     </select>
 
-
-
     <select id="findSearch" parameterType="hashMap" resultType="baseCode">
-        SELECT BASE_CODE_IDX,GROUP_CODE ,GUBN,BASE_CODE,BASE_NAME,BASE_VALUE,BASE_SUMMARY,BASE_STATUS,BASE_SORT,ui.USER_NAME as REGISTER_NAME ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE ,BASE_OPTION
-        FROM SC_BASE_CODE bc
-        INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+        SELECT
+            bc.BASE_CODE_IDX
+            ,bc.GROUP_CODE
+            ,bc.GUBN
+            ,bc.BASE_CODE
+            ,bc.BASE_NAME
+            ,bc.BASE_VALUE
+            ,bc.BASE_SUMMARY
+            ,bc.BASE_STATUS
+            ,bc.BASE_SORT
+            ,ui.USER_NAME as REGISTER_NAME
+            ,ui2.USER_NAME as UPDATE_NAME
+            ,TO_CHAR(bc.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+            ,TO_CHAR(bc.UP_DATE, 'YYYY-MM-DD') as UP_DATE
+            ,bc.BASE_OPTION
+            ,bc.BASE_OPTION2
+            ,bc.BASE_OPTION3
+            ,bcg.BASE_NAME AS GROUP_NAME
+        FROM
+            SC_BASE_CODE bc
+            INNER JOIN SC_USER_INFO ui ON bc.REG_DW_USER_IDX = ui.USER_IDX
+            INNER JOIN SC_USER_INFO ui2 ON bc.UP_DW_USER_IDX = ui2.USER_IDX
+            INNER JOIN SC_BASE_CODE bcg ON bcg.GROUP_CODE = bcg.BASE_CODE AND bcg.BASE_CODE = bc.GROUP_CODE
         WHERE 1=1
         <if test="sGubun != '' ">
-            and GUBN = #{sGubun}
+            and bc.GUBN = #{sGubun}
+        </if>
+        <if test="sCodeGroup != '' ">
+            and bc.GROUP_CODE = #{sCodeGroup}
         </if>
         <if test="sKey.equals('CODEGROUP') and sTextval != ''">
-            and GROUP_CODE like '%' ||  #{sTextval} || '%'
+            and bc.GROUP_CODE like '%' ||  #{sTextval} || '%'
         </if>
         <if test="sKey.equals('BASECODE') and sTextval != ''">
-            and BASE_CODE like '%' ||  #{sTextval} || '%'
+            and bc.BASE_CODE like '%' ||  #{sTextval} || '%'
         </if>
-
+        <if test="sKey.equals('BASECODENAME') and sTextval != ''">
+            and bc.BASE_NAME like '%' ||  #{sTextval} || '%'
+        </if>
+        ORDER BY bc.UP_DATE DESC
     </select>
 
 
@@ -73,5 +213,13 @@
     </select>
     <select id="findByCodeGroup" parameterType="baseCode" resultType="baseCode">
         select * from SC_BASE_CODE where CODEGROUP LIKE '%' || #{CODEGROUP} ||'%'
+    </select>
+
+    <select id="findByCodeGroupAll" resultType="baseCode">
+        SELECT * FROM SC_BASE_CODE WHERE BASE_CODE = GROUP_CODE
+    </select>
+
+    <select id="findByCodeGroupUse" parameterType="String" resultType="baseCode">
+        SELECT * FROM SC_BASE_CODE WHERE BASE_CODE != GROUP_CODE AND GROUP_CODE = #{BASE_CODE}
     </select>
 </mapper>

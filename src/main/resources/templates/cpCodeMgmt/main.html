@@ -262,7 +262,7 @@ $(function () {
         numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
         editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
         editModel: { clicksToEdit: 2 },
-        selectionModel: { type: 'cell', mode: 'block' },
+        selectionModel: { type: 'cell' },
         height: $(window).height() - heightMinus,
         title: "",
         sortable: false,
@@ -280,11 +280,13 @@ $(function () {
         showTop: false, //excel 버튼 보이기
         showToolbar: false,
         stripeRows: false,
-        wrap: false,
         autoAddRow: false,
         freezeCols:0,
         autoRow: false,
         autoRowHead: false,
+        virtualY: true,
+        hwrap: false,
+        wrap: false,
         rowInit: function () {
             return { style: 'font-size:12px;' };
         },

@@ -996,6 +996,14 @@ Common.Enter = function (e, textareaCheck) {
 Common.Load = function (Obj) {
     Obj = (Obj || $("body"));
 
+    Obj.find('input[NumberKey]').each(function () {
+        var thisObj = $(this);
+
+        $(this).bind("keyup", function (e) {
+            Common.NumberKeyPress(thisObj);
+        });
+    });
+
     // Input Enter Event Set
     Obj.find("input[search]").each(function () {
         var BtnId = $(this).attr("search");

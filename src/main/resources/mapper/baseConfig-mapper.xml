@@ -61,7 +61,26 @@
             ,b.REG_DATE,u.USER_ID
         FROM
             SC_BASE_CONFIG b
-            LEFT OUTER JOIN SC_USER_INFO u ON b.REG_DW_USER_IDX = u.USER_IDX where BASE_CONFIG_IDX = #{idx}
+            LEFT OUTER JOIN SC_USER_INFO u ON b.REG_DW_USER_IDX = u.USER_IDX
+        where BASE_CONFIG_IDX = #{idx}
+    </select>
+
+    <select id="getBaseConfig_InfoCode" parameterType="String" resultType="baseConfig">
+        select
+        BASE_CONFIG_IDX as IDX
+        ,GUBN
+        ,CONFIG_CODE
+        ,CONFIG_VALUE
+        ,CONFIG_SUMMARY
+        ,CONFIG_STATUS
+        ,CONFIG_OPTION
+        ,CONFIG_OPTION2
+        ,CONFIG_OPTION3
+        ,b.REG_DATE,u.USER_ID
+        FROM
+            SC_BASE_CONFIG b
+            LEFT OUTER JOIN SC_USER_INFO u ON b.REG_DW_USER_IDX = u.USER_IDX
+        where CONFIG_CODE = #{CONFIG_CODE}
     </select>
 
     <insert id="save" parameterType="baseConfig">
