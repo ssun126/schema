@@ -1,7 +1,10 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
+import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.siteMgr.service.DeclarationService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -26,11 +29,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeclarationController {
     private final DeclarationService declarationService;
+    private final com.dongwoo.SQM.siteMgr.service.BaseConfigService BaseConfigService;
 
     @GetMapping("/admin/siteMgr/declarationList")
     public String findAll(Model model){
-        List<DeclarationDTO> declarationDTOList = declarationService.findAll();
-        model.addAttribute("declarationDataList",declarationDTOList);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<DeclarationDTO> declarationDTOList = declarationService.findAll();
+            String declarationDTOListJsonStr = mapper.writeValueAsString(declarationDTOList);
+            model.addAttribute("declarationDataList",declarationDTOListJsonStr);
+
+            BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("DECLARATIONREV");
+            model.addAttribute("declarationRev",baseConfigDTOInfo.getCONFIG_VALUE());
+        } catch (Exception e) {
+        }
+
         return "/deClarationList/list";
     }
 

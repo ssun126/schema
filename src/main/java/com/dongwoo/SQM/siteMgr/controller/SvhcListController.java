@@ -42,8 +42,8 @@ public class SvhcListController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             List<SvhcListDTO> svhcListDTOList = svhcListService.findAll();
-            String baseConfigJsonStr = mapper.writeValueAsString(svhcListDTOList);
-            model.addAttribute("svhcDataList",baseConfigJsonStr);
+            String svhcListDTOListJsonStr = mapper.writeValueAsString(svhcListDTOList);
+            model.addAttribute("svhcDataList",svhcListDTOListJsonStr);
 
             BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
             model.addAttribute("svhcRowCount",baseConfigDTOInfo.getCONFIG_VALUE());
