@@ -1,7 +1,11 @@
 package com.dongwoo.SQM.siteMgr.controller;
 
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
+import com.dongwoo.SQM.siteMgr.service.BaseConfigService;
 import com.dongwoo.SQM.siteMgr.service.SvhcListService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,11 +35,21 @@ import java.util.List;
 public class SvhcListController {
 
     private final SvhcListService svhcListService;
+    private final com.dongwoo.SQM.siteMgr.service.BaseConfigService BaseConfigService;
 
     @GetMapping("/admin/siteMgr/svhcList")
     public String findAll(Model model){
-        List<SvhcListDTO> svhcListDTOList = svhcListService.findAll();
-        model.addAttribute("svhcDataList",svhcListDTOList);
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<SvhcListDTO> svhcListDTOList = svhcListService.findAll();
+            String baseConfigJsonStr = mapper.writeValueAsString(svhcListDTOList);
+            model.addAttribute("svhcDataList",baseConfigJsonStr);
+
+            BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
+            model.addAttribute("svhcRowCount",baseConfigDTOInfo.getCONFIG_VALUE());
+        } catch (Exception e) {
+        }
+
         return "/svhclist/list";
     }
 
@@ -62,15 +77,18 @@ public class SvhcListController {
             svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
 
             svhcListDTOList.add(svhcListDTO);
-
         }
 
         try {
             //전체삭제
             svhcListService.deletAll();
-            log.info("test startttttttttttt");
             svhcListService.insert_svhcBulk(svhcListDTOList);
-            log.info("test 6666666666666666666666");
+
+            // Row수 업데이트
+            BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
+            baseConfigDTOInfo.setCONFIG_VALUE(String.valueOf(svhcListDTOList.size()));
+
+            BaseConfigService.update(baseConfigDTOInfo);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

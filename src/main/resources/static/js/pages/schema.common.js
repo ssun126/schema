@@ -1016,6 +1016,49 @@ Common.Load = function (Obj) {
             });
         }
     });
+
+    Obj.find('.cui_file_field').each(function () {
+        var thisObj = $(this);
+        var inputObj = $('<input type="text" class="cui_text_field" readonly>');
+        var buttonObj = $('<button type="button" class="cui_button"><span data-langsid="찾아보기">' + siteLang.getLang("찾아보기") + '</span></button>');
+        var delAreaObj = $('<div class="item_content" style="width:40px;"></div>');
+        var delObj = $('<button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" style="opacity:0;"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button>');
+
+        $(this).css("opacity", "0");
+        $(this).css("position", "fixed");
+        $(this).css("width", "0");
+        inputObj.css("border-top-right-radius", "0");
+        inputObj.css("border-bottom-right-radius", "0");
+        inputObj.css("border-right", "0");
+        buttonObj.css("border-top-left-radius", "0");
+        buttonObj.css("border-bottom-left-radius", "0");
+
+        inputObj.bind("click", function () {
+            if ($(this).val() == "") {
+                thisObj.click();
+            }
+        });
+        buttonObj.bind("click", function () {
+            thisObj.click();
+        });
+        delObj.bind("click", function () {
+            thisObj.val("");
+            inputObj.val("");
+            delObj.css("opacity", "0");
+        });
+
+        delAreaObj.append(delObj);
+        thisObj.before(inputObj);
+        thisObj.before(buttonObj);
+        thisObj.before(delAreaObj);
+
+        thisObj.bind("change", function () {
+            inputObj.val(thisObj.val());
+            if (thisObj.val() != "") {
+                delObj.css("opacity", "1");
+            }
+        });
+    });
 }
 
 //현재 날짜시간 포함 string 리턴
