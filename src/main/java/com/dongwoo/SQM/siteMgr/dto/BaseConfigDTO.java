@@ -21,6 +21,12 @@ public class BaseConfigDTO {
     private String CONFIG_VALUE;
     @JsonProperty("CONFIG_SUMMARY")
     private String CONFIG_SUMMARY;
+    @JsonProperty("CONFIG_OPTION")
+    private String CONFIG_OPTION;
+    @JsonProperty("CONFIG_OPTION2")
+    private String CONFIG_OPTION2;
+    @JsonProperty("CONFIG_OPTION3")
+    private String CONFIG_OPTION3;
     @JsonProperty("CONFIG_STATUS")
     private String CONFIG_STATUS;
     @JsonProperty("REGISTER_CODE")
@@ -35,6 +41,8 @@ public class BaseConfigDTO {
     private String USER_NAME;
     @JsonProperty("USER_ID")
     private String USER_ID;
+    @JsonProperty("USER_IDX")
+    private int USER_IDX;
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;
 

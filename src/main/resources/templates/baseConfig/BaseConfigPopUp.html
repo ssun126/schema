@@ -1,41 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<div class="cui_dialog" style="width:400px;" id="PopupBaseConfig">
+<div class="cui_dialog" style="width:400px;display:none;" id="PopupBaseConfig" xmlns:th="http://www.w3.org/1999/xhtml">
   <div class="dialog_container">
     <div class="dialog_head">
       <div class="dialog_title">
-        <div class="main_label">PARTNER ID/PW 찾기</div>
+        <div class="main_label" data-langsid="기초설정"></div>
       </div>
       <div class="dialog_toolbar">
-        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
+        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
       </div>
     </div>
     <div class="dialog_body">
       <div class="body_root">
-        <form class="cui_form_field" data-legend="true">
+        <form class="cui_form_section" data-legend="true" id="baseConfigForm" onsubmit="return false;">
           <fieldset>
-            <legend><span>ID 찾기</span></legend>
+            <input type="hidden" name="mode" th:value="${mode}">
+            <input type="hidden" name="IDX" th:value="${IDX}">
             <label class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">영문이름</strong>
+              <strong class="item_label" data-langsid="업무구분"></strong>
               <div class="item_content">
-                <input type="text" class="cui_text_field">
+                <select class="cui_select_field wide" name="GUBN" reqcheck="reqcheck" data-messages="업무구분을 선택하세요." messages="">
+                  <option value=""></option>
+                  <option value="Base" th:selected="${GUBN}=='Base'">Base</option>
+                  <option value="Company" th:selected="${GUBN}=='Company'">Company Management</option>
+                  <option value="Audit" th:selected="${GUBN}=='Audit'">Audit Management</option>
+                  <option value="Part" th:selected="${GUBN}=='Part'">Part Management</option>
+                  <option value="Quality" th:selected="${GUBN}=='Quality'">Quality Control</option>
+                  <option value="Board" th:selected="${GUBN}=='Board'">Board</option>
+                </select>
               </div>
             </label>
             <label class="cui_items_wrap" data-direction="left">
-              <strong class="item_label">이메일</strong>
+              <strong class="item_label" data-langsid="설정키"></strong>
               <div class="item_content">
-                <input type="email" class="cui_text_field">
+                <input type="text" name="CONFIG_CODE" class="cui_text_field fixdata" th:disabled="${mode != 'New'}" th:value="${CONFIG_CODE}" reqcheck="reqcheck" data-messages="설정키를 입력하세요." messages="">
               </div>
             </label>
-            <div class="cui_items_wrap" data-direction="center">
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label" data-langsid="설정값"></strong>
               <div class="item_content">
-                <button type="button" class="cui_button primary"><span>추가</span></button>
-                <button type="button" class="cui_button primary"><span>삭제</span></button>
+                <input type="text" name="CONFIG_VALUE" class="cui_text_field " th:value="${CONFIG_VALUE}" reqcheck="reqcheck" data-messages="설정값을 입력하세요." messages="">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label" data-langsid="상태"></strong>
+              <div class="item_content">
+                <select class="cui_select_field wide " name="CONFIG_STATUS">
+                  <option value="Y" data-langsid="사용" th:selected="${CONFIG_STATUS}=='Y'"></option>
+                  <option value="N" data-langsid="미사용" th:selected="${CONFIG_STATUS}=='N'"></option>
+                </select>
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label" data-langsid="옵션1"></strong>
+              <div class="item_content">
+                <input type="text" name="CONFIG_OPTION" class="cui_text_field " th:value="${CONFIG_OPTION}">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label" data-langsid="옵션2"></strong>
+              <div class="item_content">
+                <input type="text" name="CONFIG_OPTION2" class="cui_text_field " th:value="${CONFIG_OPTION2}">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label" data-langsid="옵션3"></strong>
+              <div class="item_content">
+                <input type="text" name="CONFIG_OPTION3" class="cui_text_field " th:value="${CONFIG_OPTION3}">
+              </div>
+            </label>
+            <label class="cui_items_wrap" data-direction="left">
+              <strong class="item_label" data-langsid="설명"></strong>
+              <div class="item_content">
+                <textarea style="height:80px;" class="cui_text_field" name="CONFIG_SUMMARY" th:text="${CONFIG_SUMMARY}"></textarea>
+              </div>
+            </label>
+            <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+              <div class="item_content">
+                <input type="hidden"  name="INFO_FLAG" >
+                <button type="button" class="cui_button primary" onclick="PopupBaseConfigSave();" th:style="${mode != 'New' ? 'display:none;' : ''}"><span data-langsid="추가"></span></button>
+                <button type="button" class="cui_button primary" onclick="PopupBaseConfigSave();" th:style="${mode == 'New' ? 'display:none;' : ''}"><span data-langsid="수정"></span></button>
+                <button type="button" class="cui_button primary" onclick="PopupBaseConfigDel();" th:style="${mode == 'New' ? 'display:none;' : ''}"><span data-langsid="삭제"></span></button>
+                <button type="button" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
               </div>
             </div>
           </fieldset>
@@ -43,10 +87,55 @@
       </div>
     </div>
   </div>
+  <script>
+    var PopupBaseConfigSave = function () {
+        var diaObj = $("#PopupBaseConfig");
+
+        if (Common.Validate(diaObj) == true) {
+          Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+              mode : "confrim"
+              , okback : function () {
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.AddParameter(diaObj);
+
+                Common.Loading.Show();
+                setTimeout(function () {
+                  Common.Ajax("/admin/siteMgr/baseConfigPopupSave", ReqInfo, function (response) {
+                    if (response == "OK") {
+                      ListSearch();
+                      $("#PopupBaseConfig").data("Hide")();
+                    }
+
+                    Common.Loading.Hide();
+                  });
+                }, 10);
+              }
+          });
+        }
+    }
+
+    var PopupBaseConfigDel = function () {
+          var diaObj = $("#PopupBaseConfig");
+          Common.Msg(siteLang.getLang("삭제 하시겠습니까?"), {
+              mode : "confrim"
+              , okback : function () {
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.AddParameter("mode", "Del");
+                ReqInfo.AddParameter("IDX", diaObj.find("input[name=IDX]").val());
+
+                Common.Loading.Show();
+                setTimeout(function () {
+                  Common.Ajax("/admin/siteMgr/baseConfigPopupSave", ReqInfo, function (response) {
+                    if (response == "OK") {
+                      ListSearch();
+                      $("#PopupBaseConfig").data("Hide")();
+                    }
+
+                    Common.Loading.Hide();
+                  });
+                }, 10);
+              }
+          });
+    }
+  </script>
 </div>
-
-</body>
-<script>
-
-</script>
-</html>

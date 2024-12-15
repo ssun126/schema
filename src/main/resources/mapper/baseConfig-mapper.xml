@@ -3,19 +3,37 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BaseConfig">
     <select id="findAll" resultType="baseConfig">
-        SELECT BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,u.USER_NAME,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
-        FROM SC_BASE_CONFIG b
-        LEFT OUTER JOIN SC_USER_INFO u
-        ON b.REG_DW_USER_IDX = u.USER_IDX
+        SELECT
+            BASE_CONFIG_IDX as IDX
+            ,GUBN
+            ,CONFIG_CODE
+            ,CONFIG_VALUE
+            ,CONFIG_SUMMARY
+            ,CONFIG_STATUS
+            ,u.USER_NAME
+            ,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+            ,TO_CHAR(b.UP_DATE, 'YYYY-MM-DD') as MODIFI_DATE
+        FROM
+            SC_BASE_CONFIG b
+            LEFT OUTER JOIN SC_USER_INFO u ON b.REG_DW_USER_IDX = u.USER_IDX
         ORDER BY b.BASE_CONFIG_IDX asc
 
     </select>
 
     <select id="findSearch" parameterType="hashMap" resultType="baseConfig">
-        select BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,u.USER_NAME,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
-        FROM SC_BASE_CONFIG b
-        LEFT OUTER JOIN SC_USER_INFO u
-        ON b.REG_DW_USER_IDX = u.USER_IDX
+        select
+            BASE_CONFIG_IDX as IDX
+            ,GUBN
+            ,CONFIG_CODE
+            ,CONFIG_VALUE
+            ,CONFIG_SUMMARY
+            ,CONFIG_STATUS
+            ,u.USER_NAME
+            ,TO_CHAR(b.REG_DATE, 'YYYY-MM-DD') as REG_DATE
+            ,TO_CHAR(b.UP_DATE, 'YYYY-MM-DD') as MODIFI_DATE
+        FROM
+            SC_BASE_CONFIG b
+            LEFT OUTER JOIN SC_USER_INFO u ON b.REG_DW_USER_IDX = u.USER_IDX
         WHERE 1=1
         <if test="gubun != '' ">
             and GUBN = #{gubun}
@@ -30,21 +48,67 @@
     </select>
 
     <select id="getBaseConfig_Info" parameterType="String" resultType="baseConfig">
-        select BASE_CONFIG_IDX as IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,b.REG_DATE,u.USER_ID
-        FROM SC_BASE_CONFIG b
-        LEFT OUTER JOIN SC_USER_INFO u
-        ON b.REG_DW_USER_IDX = u.USER_IDX where BASE_CONFIG_IDX = #{idx}
+        select
+            BASE_CONFIG_IDX as IDX
+            ,GUBN
+            ,CONFIG_CODE
+            ,CONFIG_VALUE
+            ,CONFIG_SUMMARY
+            ,CONFIG_STATUS
+            ,CONFIG_OPTION
+            ,CONFIG_OPTION2
+            ,CONFIG_OPTION3
+            ,b.REG_DATE,u.USER_ID
+        FROM
+            SC_BASE_CONFIG b
+            LEFT OUTER JOIN SC_USER_INFO u ON b.REG_DW_USER_IDX = u.USER_IDX where BASE_CONFIG_IDX = #{idx}
     </select>
 
     <insert id="save" parameterType="baseConfig">
-        INSERT into SC_BASE_CONFIG(BASE_CONFIG_IDX,GUBN,CONFIG_CODE,CONFIG_VALUE,CONFIG_SUMMARY,CONFIG_STATUS,REG_DW_USER_IDX,UP_DW_USER_IDX,REG_DATE,UP_DATE)
-        VALUES (SEQ_BASE_CONFIG.NEXTVAL,#{GUBN},#{CONFIG_CODE},#{CONFIG_VALUE},#{CONFIG_SUMMARY},#{CONFIG_STATUS},#{USER_ID},#{USER_ID},sysdate,sysdate)
+        INSERT into SC_BASE_CONFIG(
+            BASE_CONFIG_IDX
+            ,GUBN
+            ,CONFIG_CODE
+            ,CONFIG_VALUE
+            ,CONFIG_SUMMARY
+            ,CONFIG_STATUS
+            ,CONFIG_OPTION
+            ,CONFIG_OPTION2
+            ,CONFIG_OPTION3
+            ,REG_DW_USER_IDX
+            ,UP_DW_USER_IDX
+            ,REG_DATE,UP_DATE
+        )
+        VALUES (
+            SEQ_BASE_CONFIG.NEXTVAL
+            ,#{GUBN}
+            ,#{CONFIG_CODE}
+            ,#{CONFIG_VALUE}
+            ,#{CONFIG_SUMMARY}
+            ,#{CONFIG_STATUS}
+            ,#{CONFIG_OPTION}
+            ,#{CONFIG_OPTION2}
+            ,#{CONFIG_OPTION3}
+            ,#{USER_IDX}
+            ,#{USER_IDX}
+            ,sysdate
+            ,sysdate
+        )
     </insert>
     <update id="update" parameterType="baseConfig">
-        update SC_BASE_CONFIG
-        set GUBN=#{GUBN},CONFIG_CODE=#{CONFIG_CODE},CONFIG_VALUE=#{CONFIG_VALUE}
-        ,CONFIG_SUMMARY=#{CONFIG_SUMMARY},CONFIG_STATUS=#{CONFIG_STATUS},UP_DW_USER_IDX=#{USER_ID},UP_DATE=sysdate
-        where BASE_CONFIG_IDX=#{IDX}
+        update SC_BASE_CONFIG set
+            GUBN=#{GUBN}
+            ,CONFIG_CODE=#{CONFIG_CODE}
+            ,CONFIG_VALUE=#{CONFIG_VALUE}
+            ,CONFIG_SUMMARY=#{CONFIG_SUMMARY}
+            ,CONFIG_STATUS=#{CONFIG_STATUS}
+            ,CONFIG_OPTION=#{CONFIG_OPTION}
+            ,CONFIG_OPTION2=#{CONFIG_OPTION2}
+            ,CONFIG_OPTION3=#{CONFIG_OPTION3}
+            ,UP_DW_USER_IDX=#{USER_IDX}
+            ,UP_DATE=sysdate
+        where
+            BASE_CONFIG_IDX=#{IDX}
     </update>
     <delete id="delete" parameterType="int">
         delete from SC_BASE_CONFIG where BASE_CONFIG_IDX=#{IDX}

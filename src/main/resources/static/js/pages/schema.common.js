@@ -857,7 +857,7 @@ Common.Ajax = function (url, data, callback, info) {
         contentType: AType.contentType,
         processData: AType.processData,
         headers: {
-            "cache-control": "no-cache", "pragma": "no-cache", "requestType": "ajax"
+            "cache-control": "no-cache", "pragma": "no-cache", "requesttype": "ajax"
         },
         async: async,
         cache: false,

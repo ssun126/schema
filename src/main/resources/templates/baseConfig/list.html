@@ -5,302 +5,185 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-    <title>기초설정</title>
 </head>
 <body>
-        <div class="cui_content">
-            <div class="cui_main">
-                <div class="cui_head">
-                    <div class="head_content">
-                        <h2 class="cui_title"><span>기초설정</span></h2>
-                    </div>
-                </div>
-                <div class="cui_body">
-                    <form id="searchForm" action="/admin/siteMgr/baseConfig/search" method="get">
-                        <div class="cui_search">
-                            <div class="search_list cui_grid_wrap ">
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">업무구분</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" name="gubun">
-                                            <option value="">전체</option>
-                                            <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
-                                                    th:text="${baseGubunList.BASE_NAME}"></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="cui_items_wrap" data-size="2">
-                                    <strong class="item_label">검색조건</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field" name="searchkey">
-                                            <option value="key" selected>설정키</option>
-                                            <option value="val">설정값</option>
-                                        </select>
-                                        <input class="cui_text_field" type="text" name="searchval">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="search_action">
-                                <button type="submit" class="cui_button primary search_btn" ><span>검색</span></button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="cui_toolbar">
-                        <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
-                        </div>
-                        <div class="toolbar_aside">
-                         <button type="button" class="cui_button secondary" onclick="modal_open('PopupBaseConfig','add', '', '')"><span>추가</span></button>
-<!--                            <button type="button" class="cui_button secondary" onclick="BaseConfig_Popup()"><span>추가</span></button>-->
-
-                        </div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:140px;">
-                            <col style="width:140px;">
-                            <col style="width:140px;">
-                            <col>
-                            <col style="width:120px;">
-                            <col style="width:80px;">
-                            <col style="width:110px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>업무구분</span></th>
-                            <th><span>설정키</span></th>
-                            <th><span>설정값</span></th>
-                            <th><span>설명</span></th>
-                            <th><span>등록자</span></th>
-                            <th><span>상태</span></th>
-                            <th><span>등록일</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="baseConfigList : ${baseConfigList}"
-                            th:onclick="modal_open('PopupBaseConfig','MODIFY', '/admin/siteMgr/baseConfig/baseConfigInfo', [[${baseConfigList.IDX}]])">
-                            <td style="display:none;" th:text="${baseConfigList.IDX}"><span></span></td>
-                            <td th:text="${baseConfigList.GUBN}"><span></span></td>
-                            <!--                                <td ><button th:text="${baseConfigList.CONFIGCODE}" type="button" class="cui_button endpoint" onclick="BaseConfig_Popup('${baseConfigList.IDX}')"></button></td>-->
-                            <td th:text="${baseConfigList.CONFIG_CODE}"  ></td>
-                            <td th:text="${baseConfigList.CONFIG_VALUE}"><span></span></td>
-                            <td th:text="${baseConfigList.CONFIG_SUMMARY}"><span></span></td>
-                            <td th:text="${baseConfigList.USER_NAME}"><span></span></td>
-                            <td th:text="${baseConfigList.CONFIG_STATUS}"><span></span></td>
-                            <td th:text="${baseConfigList.REG_DATE}"><span></span></td>
-
-                        </tr>
-                        <!--                        <tr>-->
-                        <!--                            <td><span>기본</span></td>-->
-                        <!--                            <td><button type="button" class="cui_button endpoint">key1</button></td>-->
-                        <!--                            <td><span>Y</span></td>-->
-                        <!--                            <td><span>기본 key 설명</span></td>-->
-                        <!--                            <td><span>홍길동</span></td>-->
-                        <!--                            <td><span>사용</span></td>-->
-                        <!--                            <td><span>2024-08-29</span></td>-->
-                        <!--                        </tr>-->
-                        </tbody>
-                    </table>
+    <div class="cui_content">
+        <div class="cui_main">
+            <div class="cui_head">
+                <div class="head_content">
+                    <h2 class="cui_title"><span data-langsid="기초설정"></span></h2>
                 </div>
             </div>
-        </div>
-        <div class="cui_dialog" style="width:400px;display:none;" id="PopupBaseConfig">
-            <div class="dialog_container">
-                <div class="dialog_head">
-                    <div class="dialog_title">
-                        <div class="main_label">기초설정</div>
-                    </div>
-                    <div class="dialog_toolbar">
-                        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
-                    </div>
-                </div>
-                <div class="dialog_body">
-                    <div class="body_root">
-                        <form class="cui_form_section" data-legend="true" id="baseConfigForm" onsubmit="handleSubmit(event)" action="/admin/siteMgr/baseconfig/action">
-                            <fieldset>
-        <!--                        <legend><span>ID 찾기</span></legend>-->
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">구분</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide" name="GUBN">
-                                            <option th:each="baseGubunList : ${baseGubunList}" th:value="${baseGubunList.BASE_CODE}"
-                                                    th:text="${baseGubunList.BASE_NAME}"></option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">설정키</strong>
-                                    <div class="item_content">
-                                        <input name="CONFIG_CODE" class="cui_text_field fixdata">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">설정값</strong>
-                                    <div class="item_content">
-                                        <input name="CONFIG_VALUE" class="cui_text_field ">
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">상태</strong>
-                                    <div class="item_content">
-                                        <select class="cui_select_field wide " name="CONFIG_STATUS">
-                                            <option value="Y">Y</option>
-                                            <option value="N">N</option>
-                                        </select>
-                                    </div>
-                                </label>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label">설명</strong>
-                                    <div class="item_content">
-                                        <textarea  style="height:80px;" class="cui_text_field" name="CONFIG_SUMMARY"></textarea>
-                                        <input name="USERID" style="display:none;">
-                                        <input name="IDX" value=0 style="display:none;">
-                                    </div>
-                                </label>
-                                <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-                                    <div class="item_content">
-                                        <input type="hidden"  name="INFO_FLAG" >
-                                        <button type="submit" id="ConfigAdd" value="Add" class="cui_button primary"><span>추가</span></button>
-                                        <button type="submit" id="ConfigMod" value="Mod" class="cui_button primary" style="display:none;"><span>수정</span></button>
-                                        <button type="submit" id="ConfigDel" value="Del" class="cui_button primary" style="display:none;"><span>삭제</span></button>
-                                    </div>
+            <div class="cui_body">
+                <form id="searchArea" onsubmit="return false;">
+                    <div class="cui_search">
+                        <div class="search_list cui_grid_wrap ">
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" data-langsid="업무구분"></strong>
+                                <div class="item_content">
+                                    <select class="cui_select_field wide" name="gubn" onchange="ListSearch();">
+                                        <option value=""></option>
+                                        <option value="Base" th:selected="${gubn}=='Base'">Base</option>
+                                        <option value="Company" th:selected="${gubn}=='Company'">Company Management</option>
+                                        <option value="Audit" th:selected="${gubn}=='Audit'">Audit Management</option>
+                                        <option value="Part" th:selected="${gubn}=='Part'">Part Management</option>
+                                        <option value="Quality" th:selected="${gubn}=='Quality'">Quality Control</option>
+                                        <option value="Board" th:selected="${gubn}=='Board'">Board</option>
+                                    </select>
                                 </div>
-                            </fieldset>
-                        </form>
+                            </div>
+                            <div class="cui_items_wrap" data-size="2">
+                                <strong class="item_label" data-langsid="검색조건"></strong>
+                                <div class="item_content">
+                                    <select class="cui_select_field" name="searchkey">
+                                        <option value="key" data-langsid="설정키" th:selected="${searchkey}=='key'"></option>
+                                        <option value="val" data-langsid="설정값" th:selected="${searchkey}=='val'"></option>
+                                    </select>
+                                    <input class="cui_text_field" type="text" name="searchval" search="searchBtn" th:value="${searchval}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search_action">
+                            <button type="button" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();"><span data-langsid="검색"></span></button>
+                        </div>
+                    </div>
+                </form>
+                <div class="cui_toolbar">
+                    <div class="toolbar_content">
+                        <div class="toolbar_default"></div>
+                    </div>
+                    <div class="toolbar_aside">
+                        <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
                     </div>
                 </div>
+
+                <div id="gridArea" gridYN="" th:initData="${baseConfigList}"></div>
             </div>
         </div>
+    </div>
+    <script>
+        var SheetDataConvert = function (data) {
+            var dataJson = JSON.parse(data);
 
+            for (var i = 0; i < dataJson.length; i++) {
+                dataJson[i].CHECK_YN = false;
+                if (dataJson[i].CONFIG_STATUS == "Y") {
+                    dataJson[i].CONFIG_STATUS_NAME = siteLang.getLang("사용");
+                } else {
+                    dataJson[i].CONFIG_STATUS_NAME = siteLang.getLang("미사용");
+                }
+
+                if (dataJson[i].GUBN == "Base") {
+                    dataJson[i].GUBN_NAME = "Base";
+                } else if (dataJson[i].GUBN == "Company") {
+                    dataJson[i].GUBN_NAME = "Company Management";
+                } else if (dataJson[i].GUBN == "Audit") {
+                    dataJson[i].GUBN_NAME = "Audit Management";
+                } else if (dataJson[i].GUBN == "Part") {
+                    dataJson[i].GUBN_NAME = "Part Management";
+                } else if (dataJson[i].GUBN == "Quality") {
+                    dataJson[i].GUBN_NAME = "Quality Control";
+                } else if (dataJson[i].GUBN == "Board") {
+                    dataJson[i].GUBN_NAME = "Board";
+                }
+            }
+
+            return dataJson;
+        }
+
+        var ListSearch = function () {
+            var url = location.pathname;
+
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#searchArea"));
+
+            Common.Ajax(url, ReqInfo, function (data) {
+                var dataJson = SheetDataConvert(data);
+
+                $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea").pqGrid("refreshView");
+            });
+        }
+
+        var addOpen = function () {
+            Common.Dialog({ url : "/admin/siteMgr/baseConfigPopup", param : { mode : "New" }, blockClose : false });
+        }
+
+        $(function () {
+            var heightMinus = 330;
+
+            var data = SheetDataConvert($("#gridArea").attr("initData"));
+
+            var obj = {
+                bubble: false,
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+                editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+                editModel: { clicksToEdit: 2 },
+                selectionModel: { type: 'cell', mode: 'block' },
+                height: $(window).height() - heightMinus,
+                title: "",
+                sortable: false,
+                resizable: true,
+                menuIcon: true,
+                scrollModel: { autoFit: false },
+                hoverMode: 'row',
+                rowHtHead: 30,
+                //rowHt:30,
+                roundCorners: false,
+                rowBorders: true,
+                showBottom: true,
+                showHeader: true,
+                showTitle: true,
+                showTop: false, //excel 버튼 보이기
+                showToolbar: false,
+                stripeRows: false,
+                wrap: false,
+                autoAddRow: false,
+                freezeCols:0,
+                autoRow: false,
+                autoRowHead: false,
+                rowInit: function () {
+                    return { style: 'font-size:12px;' };
+                },
+                selectChange: function (event, ui) {
+                },
+                rowClick: function (event, ui) {
+                },
+                cellClick: function (event, ui) {
+                },
+                rowDblClick: function (event, ui) {
+                    var data = ui.rowData;
+                    Common.Dialog({ url : "/admin/siteMgr/baseConfigPopup", param : { mode : "Edit", IDX : data.IDX }, blockClose : false });
+                },
+                rowSelect: function (event, ui) {
+                },
+                open: function () {
+                },
+                headerCellClick: function (event, ui) {
+                }
+            };
+            obj.colModel = [
+                { data_langsid: "업무구분", title: siteLang.getLang("업무구분"), width: 170, halign: "center", align: "left", dataType: "string", dataIndx: "GUBN_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "설정키", title: siteLang.getLang("설정키"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "CONFIG_CODE", sortable: true, editor: false, editable: false },
+                { data_langsid: "설정값", title: siteLang.getLang("설정값"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "CONFIG_VALUE", sortable: true, editor: false, editable: false },
+                { data_langsid: "설명", title: siteLang.getLang("설명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "CONFIG_SUMMARY", sortable: true, editor: false, editable: false },
+                { data_langsid: "등록자", title: siteLang.getLang("등록자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "상태", title: siteLang.getLang("상태"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "CONFIG_STATUS_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "등록일", title: siteLang.getLang("등록일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "REG_DATE", sortable: true, editor: false, editable: false },
+                { data_langsid: "수정일", title: siteLang.getLang("수정일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "MODIFI_DATE", sortable: true, editor: false, editable: false },
+                { hidden : true, dataType: "string", dataIndx: "GUBN", editor: false, editable: false },
+                { hidden : true, dataType: "string", dataIndx: "CONFIG_STATUS", editor: false, editable: false },
+                { hidden : true, dataType: "string", dataIndx: "IDX", editor: false, editable: false }
+            ];
+            obj.dataModel = { data: data };
+            $("#gridArea").pqGrid(obj);
+            $("#gridArea").attr("gridYN", "Y");
+
+            $(window).resize(function () {
+                $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+                $("#gridArea").pqGrid("refreshView");
+            });
+        });
+    </script>
 </body>
-<script>
-    function BaseConfig_Popup(){
-        let popOption ="width=601,height=436,top=100,left=100";
-        let openUrl = "/admin/BaseConfig/Popup";
-        window.open(openUrl, 'BaseConfig', popOption);
-    }
-
-    //모달 초기화
-    function modal_init(id,flag){
-        if(flag=="MODIFY"){
-           $(".fixdata").attr("readonly",true);
-           //버튼 바꾸기
-             $("#ConfigAdd").css("display","none");
-            $("#ConfigMod").css("display","block");
-            $("#ConfigDel").css("display","block");
-
-        }else{
-            //초기화
-            document.getElementsByName("CONFIG_CODE")[0].value = "";
-            document.getElementsByName("CONFIG_VALUE")[0].value = "";
-            document.getElementsByName("CONFIG_SUMMARY")[0].value = "";
-            $("select[name=GUBN] option:eq(0)").prop("selected", true);
-            $("select[name=CONFIG_STATUS] option:eq(0)").prop("selected", true);
-            $(".fixdata").attr("readonly",false);
-
-            //버튼 바꾸기
-            $("#ConfigAdd").css("display","block");
-            $("#ConfigMod").css("display","none");
-            $("#ConfigDel").css("display","none");
-        }
-
-    }
-
-
-    //모달 열기
-<!--    function modal(id, status){-->
-<!--      if(status !='add'){-->
-<!--       var sUrl = "/admin/baseConfig/baseConfig_Info" ;-->
-
-<!--        $.ajax({-->
-<!--          type: "post",-->
-<!--          url:   sUrl,-->
-<!--          data: {-->
-<!--              "status": status-->
-<!--          },-->
-<!--          success: function(res) {-->
-<!--              console.log("요청성공", res);-->
-
-<!--              if (res.status == "ok") {-->
-<!--                //공동업무자정보-->
-<!--                //ID /PASS-->
-<!--                bindBasConfigInfo(res);           //정보 바인딩. ★-->
-<!--                $("#" + id).fadeIn();-->
-<!--                modal_init("MODIFY");-->
-
-<!--              }-->
-<!--          },-->
-<!--          error: function(err) {-->
-<!--              console.log("에러발생", err);-->
-<!--          }-->
-<!--        });-->
-<!--      }else{-->
-<!--        modal_init();-->
-<!--        $("#" + id).fadeIn();-->
-<!--      }-->
-<!--    }-->
-
-    //모달 열기
-  function modal(id){
-    $("#" + id).fadeIn();
-  }
-
-    function bindModalData(state, baseConfig){
-        if(baseConfig != null){
-            document.getElementsByName("CONFIG_CODE")[0].value = baseConfig.CONFIG_CODE ;
-            document.getElementsByName("CONFIG_VALUE")[0].value = baseConfig.CONFIG_VALUE ;
-            document.getElementsByName("CONFIG_SUMMARY")[0].value = baseConfig.CONFIG_SUMMARY ;
-            document.getElementsByName("IDX")[0].value = baseConfig.IDX ;
-
-            $("select[name=GUBN]").val(baseConfig.GUBN).prop("selected", true);
-            $("select[name=STATUS]").val(baseConfig.CONFIG_STATUS).prop("selected", true);
-
-        }
-    }
-
-    //모달 닫기
-    $('.modal-close').on('click', function(e){
-      e.preventDefault();
-      const modal = $(this).parents('.cui_dialog');
-      overlay.style.display = "none"; // 오버레이 숨기기
-      modal.fadeOut();
-      modal_init();
-    });
-
-    $('.modal-close-msg').on('click', function(e){
-      e.preventDefault();
-      const modal = $(this).parents('.cui_dialog');
-      modal.fadeOut();
-
-    });
-
-    function handleSubmit(event) {
-      event.preventDefault();
-
-      $("input[name=INFO_FLAG]").val(event.submitter.value);
-
-      if(event.submitter.value != "Del"){
-        var code = $("input[name=CONFIG_CODE]").val();
-        var value = $("input[name=CONFIG_VALUE]").val();
-
-         if(code == ""){
-             showAlert('warning', '설정키가 입력되지 않았습니다');
-             return;
-         }else if(value == ""){
-             showAlert('warning', '설정값이 입력되지 않았습니다');
-             return;
-         }else{
-             document.getElementById('baseConfigForm').submit();
-         }
-      }else{
-             document.getElementById('baseConfigForm').submit();
-      }
-
-  }
-
-
-
-
-
-</script>
 </html>
