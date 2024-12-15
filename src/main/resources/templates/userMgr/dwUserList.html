@@ -71,16 +71,18 @@
                             <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
                         </div>
                     </div>
-                    <div class="cui_toolbar">
-                        <div class="toolbar_content">
-                            <div class="toolbar_default"></div>
+                    <div class="cui_jqGrid_section">
+                        <div class="cui_jqGrid_head">
+                            <div class="jqGrid_label"> &nbsp;</div>
+                            <div class="jqGrid_aside">
+                                <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                                <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                            </div>
                         </div>
-                        <div class="toolbar_aside">
-                            <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
-                            <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span data-langsid="엑셀 다운로드"></span></button>
+                        <div class="cui_jqGrid_body" id="Grid">
+                            <div id="gridArea" gridYN=""></div>
                         </div>
                     </div>
-                    <div id="gridArea" gridYN=""></div>
             </div>
         </div>
     </div>

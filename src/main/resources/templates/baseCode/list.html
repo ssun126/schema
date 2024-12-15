@@ -36,7 +36,7 @@
                             <strong class="item_label" data-langsid="코드그룹"></strong>
                             <div class="item_content">
                                 <select id="codeGroup" name="codeGroup" class="cui_select_field" onchange="ListSearch();">
-                                    <option value="" data-langsid="선택" selected></option>
+                                    <option value="" selected></option>
                                     <option th:each="group : ${baseGroupList}"
                                             th:value="${group.BASE_CODE}"
                                             th:text="${group.BASE_NAME}">
@@ -60,16 +60,17 @@
                     </div>
                 </div>
             </form>
-            <div class="cui_toolbar">
-                <div class="toolbar_content">
-                    <div class="toolbar_default"></div>
+            <div class="cui_jqGrid_section">
+                <div class="cui_jqGrid_head">
+                    <div class="jqGrid_label"> &nbsp;</div>
+                    <div class="jqGrid_aside">
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                    </div>
                 </div>
-                <div class="toolbar_aside">
-                    <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                <div class="cui_jqGrid_body" id="Grid">
+                    <div id="gridArea" gridYN="" th:initData="${baseCodeList}"></div>
                 </div>
             </div>
-
-            <div id="gridArea" gridYN="" th:initData="${baseCodeList}"></div>
         </div>
     </div>
 </div>

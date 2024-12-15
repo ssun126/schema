@@ -48,16 +48,17 @@
                         </div>
                     </div>
                 </form>
-                <div class="cui_toolbar">
-                    <div class="toolbar_content">
-                        <div class="toolbar_default"></div>
+                <div class="cui_jqGrid_section">
+                    <div class="cui_jqGrid_head">
+                        <div class="jqGrid_label"> &nbsp;</div>
+                        <div class="jqGrid_aside">
+                            <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                        </div>
                     </div>
-                    <div class="toolbar_aside">
-                        <button type="button" class="cui_button secondary" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                    <div class="cui_jqGrid_body" id="Grid">
+                        <div id="gridArea" gridYN="" th:initData="${baseConfigList}"></div>
                     </div>
                 </div>
-
-                <div id="gridArea" gridYN="" th:initData="${baseConfigList}"></div>
             </div>
         </div>
     </div>
