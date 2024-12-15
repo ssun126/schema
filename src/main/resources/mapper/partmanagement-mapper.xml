@@ -27,6 +27,12 @@
         WHERE PM_IDX=#{idx}
     </update>
 
+    <update id="updateActive" parameterType="HashMap">
+        UPDATE SC_PART_MANAGEMENT_DATA
+        SET PM_ACTIVE_YN= #{status}
+        WHERE PM_IDX=#{idx}
+    </update>
+
     <select id="searchPartMgmt" parameterType="partManagement" resultType="partManagement">
 
         SELECT

@@ -282,6 +282,7 @@
                 PM_ACTIVE_YN : 'INACTIVE',
                 PM_APPROVAL_STATUS : $('input[name=PM_IDX]').val() == ''? '1' : $('input[name=PM_IDX]').val()
             };
+
             console.log("formData>>>>>>>>>"+JSON.stringify(PartMgmtDTO));
             $.ajax({
                 type: 'POST',
@@ -298,11 +299,7 @@
                     console.error('Form submission failed:', error);
                 }
             });
-
-
-
-
-   });
+        });
 
          // datepicker를 input 필드에 적용
          $('.datepicker').datepicker({
@@ -360,29 +357,37 @@
                          var row = '<tr>' +
                                      //(partmgmt.PM_APPROVAL_DATE === '' ? 삭제는 승인 요청 전까지만 가능
                                      (partmgmt.PM_REQUEST_APPROVAL_DATE == ' ' && parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) <= 2?
-                                        '<td><input type="checkbox" name=\'PM_IDX_CHECK\' value=\''+ partmgmt.PM_IDX +'\'></td>' :
-                                        '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
+                                        '<td><span><input type="checkbox" name=\'PM_IDX_CHECK\' value=\''+ partmgmt.PM_IDX +'\'></span></td>' :
+                                        '<td><span></span></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
                                         //'<td>' + partmgmt.PM_PART_CODE + '</td>' +
 
                                         (partmgmt.PM_REQUEST_APPROVAL_DATE != ' '  && parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) <= 2?
-                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'MODIFY\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>'  :
-                                        '<td><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'READ\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></td>' ) +  // company.COM_STATUS가 'N'이 아닌 경우에
+                                        '<td><span><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'MODIFY\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></span></td>'  :
+                                        '<td><span><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'READ\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></span></td>' ) +  // company.COM_STATUS가 'N'이 아닌 경우에
 
                                         //'<td><a href="javascript:void(0);" onclick="modal_open(\'PartCode\', \'second\', \'/user/getPartCodeData\', \''+ partmgmt.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
 
-                                        '<td><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></td>' +
+                                        '<td><span  id="modifyData_'+partmgmt.PM_IDX+'"><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></span>'
 
-                                        '<td>' + partmgmt.PM_PART_PLANT_CODE + '</td>' +
-                                        '<td>' + partmgmt.PM_PART_COUNTRY + '</td>' +
-                                        '<td>' + partmgmt.PM_REG_USER + '</td>' +
-                                        '<td>' + partmgmt.PM_ACTIVE_YN + '</td>' +
-                                        '<td>' + partmgmt.PM_APPROVAL_STATUS +
-                                        ' <input type=\'hidden\' name=\'PM_APPROVAL_STATUS_VAL\' value=\''+partmgmt.PM_APPROVAL_STATUS_VAL+'\' >'+
+                                        +(parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) >3 ? '<span style="display:none;" id="changeData_'+partmgmt.PM_IDX+'"><button onclick="goModify('+ partmgmt.PM_IDX +')" >' + partmgmt.PM_PART_NAME + '</button></span>'
+                                                                                    : '' )
+
+                                        +'</td>' +
+
+                                        '<td><span>' + partmgmt.PM_PART_PLANT_CODE + '</span></td>' +
+                                        '<td><span>' + partmgmt.PM_PART_COUNTRY + '</span></td>' +
+                                        '<td><span>' + partmgmt.PM_REG_USER + '</span></td>' +
+                                        '<td ><span id="modifyActive_'+partmgmt.PM_IDX+'">' + partmgmt.PM_ACTIVE_YN + '</span>'
+                                        +(parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) >3 ? '<span style="display:none;" id="changeActive_'+partmgmt.PM_IDX+'"><select onchange="activeChange('+partmgmt.PM_IDX+',this.value)"><option value="ACTIVE">ACTIVE</option><option value="INACTIVE">INACTIVE</option></select></span>'
+                                                                                        : '')
+                                        +'</td>' +
+                                        '<td><span>' + partmgmt.PM_APPROVAL_STATUS +
+                                        ' </span><input type=\'hidden\' name=\'PM_APPROVAL_STATUS_VAL\' value=\''+partmgmt.PM_APPROVAL_STATUS_VAL+'\' >'+
                                         ' <input type=\'hidden\' name=\'PM_REQUEST_APPROVAL_DATE\' value=\''+partmgmt.PM_REQUEST_APPROVAL_DATE+'\' >'+
                                         '</td>' +
-                                        '<td>' + partmgmt.PM_APPROVAL_DATE + '</td>' +
-                                        (parseInt(partmgmt.PM_APPROVAL_STATUS) >3 ?
-                                        '<td><button id=\'' + partmgmt.PM_IDX + '\'>수정</button></td>' : '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
+                                        '<td><span>' + partmgmt.PM_APPROVAL_DATE + '</span></td>' +
+                                        (parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) >3 ?
+                                        '<td><button onclick=\'Modify_PartMgmt(' + partmgmt.PM_IDX + ',"'+partmgmt.PM_ACTIVE_YN+'")\'>수정</button></td>' : '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
                                       '</tr>';
                         tableBody.append(row);  // 테이블에 새 행 추가
                     });
@@ -393,34 +398,76 @@
                 }
             });
         });
+
         // 업체코드 검색
         $('#getPartCode').on('click', function() {
-<!--            var param = {-->
-<!--                    pageNum: 1,      // 기본값으로 첫 페이지-->
-<!--                    amount: 10       // 한 페이지에 표시할 항목 수-->
-<!--                };-->
+
             modal_open('PartCode', 'second', '/user/partMgmt/PartCodeList', '') //모달창 오픈
         });
     });
+    //documtne ready end
 
-       //수정 버튼 클릭 후
-            // 링크 클릭 시 콘텐츠를 로드
-        $(document).on("click", ".load-page", function(e) {
-            e.preventDefault();
+    //수정 버튼 클릭 후
+    function Modify_PartMgmt(idx,active){
 
-            const idx = $(this).data("code");
-            var status = parseInt($(this).closest("tr").find("input[name=PM_APPROVAL_STATUS_VAL]").val());
-            const url = "/user/partMgmt/goDetail?PM_IDX="+idx;
+        if($("#modifyData_"+idx).css("display") != "none"){
 
-            if(status>2){
-                url = "/user/partMgmt/goReadDetail?PM_IDX="+idx;
+            $("#modifyData_"+idx).css("display","none");
+            $("#modifyActive_"+idx).css("display","none");
+
+            $("#changeData_"+idx).css("display","block");
+            $("#changeActive_"+idx+" select").val(active);
+            $("#changeActive_"+idx).css("display","block");
+        }
+    }
+
+    function activeChange(idx, seletval){
+        //var status =$(this).val();
+
+        $.ajax({
+            url : '/user/partMgmt/updateActive',
+            type : 'GET',
+            data : {
+                PM_ACTIVE_YN : seletval,
+                PM_IDX : idx
+            },
+            success : function(response){
+                showAlert('success', '수정되었습니다');
+            },
+            error : function(xhr,status,error) {
+                console.error("error : " + error)
             }
-
-            history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-            //loadContent(url);
-            window.location.href=url;
-            //goMenu(url);
         });
+    }
+
+    function goModify(idx){
+        if($("#changeActive_"+idx+" select").val() == "ACTIVE"){
+            showAlert('warning', '상태를 INACTIVE 로 변경 후 수정이 가능합니다');
+            return;
+        }else{
+            var url = "/user/partMgmt/goDetail?PM_IDX="+idx;
+            window.location.href=url;
+        }
+
+    }
+
+    // 링크 클릭 시 콘텐츠를 로드
+    $(document).on("click", ".load-page", function(e) {
+        e.preventDefault();
+
+        const idx = $(this).data("code");
+        var status = parseInt($(this).closest("tr").find("input[name=PM_APPROVAL_STATUS_VAL]").val());
+        var url = "/user/partMgmt/goDetail?PM_IDX="+idx;
+
+        if(status>2){
+            url = "/user/partMgmt/goReadDetail?PM_IDX="+idx;
+        }
+
+        history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
+        //loadContent(url);
+        window.location.href=url;
+        //goMenu(url);
+    });
 
 
     //삭제
@@ -439,7 +486,6 @@
                     count++;
                 }
             }
-
         });
 
 
@@ -608,6 +654,8 @@
         $('#modalPartPlant').val(value);
         $('#modalPartCountry').val(country);
     }
+
+
 
 </script>
 </body>
