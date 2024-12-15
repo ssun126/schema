@@ -52,4 +52,8 @@ public class PartMgmtService {
     public void updateApprovalStatus(String idx, String status){
          partMgmtRepository.updateApprovalStatus(idx,status);
     }
+
+    public void updateActive(String status, int idx){
+        partMgmtRepository.updateActive(status,idx);
+    }
 }

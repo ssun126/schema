@@ -89,7 +89,7 @@ public class PartDetailMSDSController {
         //신규파일 업로드 후 경로 가져오기if(msdsDTO.getFILE_STATUS().equals("Del")) {
         ////            partDetailService.deleteFileData(msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_PATH());
         ////        }
-        //if(!msdsDTO.getMSDS_REG_DATE().equals("") || !msdsDTO.getMSDS_LANG().equals("") || !msdsDTO.getMSDS_APPROVAL_NUM().equals("") || !mdsdFile.isEmpty() ){
+        //
         if(!mdsdFile.isEmpty()){
             String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),mdsdFile);
             String etc_filename = mdsdFile.getOriginalFilename();
@@ -98,6 +98,9 @@ public class PartDetailMSDSController {
             msdsDTO.setMSDS_FILE_PATH(etc_filepath);
 
         }
+
+
+
         partDetailService.saveMsdsData(msdsDTO);
         //}
 
@@ -136,6 +139,7 @@ public class PartDetailMSDSController {
 
         }
         partDetailService.saveHalogenData(halgDTO);
+
         if(etcDTO != null){
             //etc
             String ETC_IDX = etcDTO.getETC_IDX();

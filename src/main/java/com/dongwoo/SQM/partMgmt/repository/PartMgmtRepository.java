@@ -1,10 +1,8 @@
 package com.dongwoo.SQM.partMgmt.repository;
 
 import com.dongwoo.SQM.partMgmt.dto.*;
-import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
-import jakarta.mail.Part;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -37,6 +35,7 @@ public class PartMgmtRepository {
         return sql.insert("partManagement.save",partMgmtDTO);
     }
 
+
     public int updatePartMgmt (PartMgmtDTO partMgmtDTO) { return  sql.update("partManagement.updatePartMgmt",partMgmtDTO);}
 
     public int deletePartMgmt(String idx){return sql.delete("partManagement.deletePartMgmt",idx);}
@@ -58,6 +57,14 @@ public class PartMgmtRepository {
         map.put("idx",idx);
         map.put("status",status);
         sql.update("partManagement.updateApprovalStatus",map);
+    }
+
+    public void updateActive(String status,int idx ){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("status",status);
+        map.put("idx",idx);
+
+        sql.update("partManagement.updateActive",map);
     }
 
     //detailpage
