@@ -26,7 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LabourItemController {
     private final LabourItemService labourItemService;
-    private final com.dongwoo.SQM.siteMgr.service.BaseConfigService BaseConfigService;
 
     @GetMapping("/admin/siteMgr/labourItem")
     public String findAll(Model model){

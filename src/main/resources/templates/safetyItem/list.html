@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content" xmlns="">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div class="cui_app">
+    <div class="cui_container" data-module="">
+        <div class="cui_content">
+            <div class="cui_main">
+                <div class="cui_head">
+                    <div class="head_content">
+                        <h2 class="cui_title"><span data-langsid="Audit 안전보건"></span></h2>
+                    </div>
+                </div>
+                <div class="cui_body">
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:120px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span data-langsid="양식 다운로드"></span></th>
+                            <td>
+                                <form id="sendForm" action="/safetyItem/upload" method="post" enctype="multipart/form-data" onsubmit="return sendSubmit($(this));">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <div class="cui_attachments" style="width:500px;">
+                                                <input type="file" name="file" id="fileInfo" class="cui_file_field" reqcheck="reqcheck" data-messages="파일을 작성후 첨부해주세요." messages="">
+                                            </div>
+                                            <button type="button" class="cui_button" onclick="sampleDownLoad();"><span>SAMPLE</span></button>
+                                            <button type="button" class="cui_button primary" onclick="sendSubmit($('#sendForm'));"><span data-langsid="저장"></span></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="cui_jqGrid_section">
+                        <div class="cui_jqGrid_head">
+                            <div class="jqGrid_label"> &nbsp;</div>
+                            <div class="jqGrid_aside">
+                            </div>
+                        </div>
+                        <div class="cui_jqGrid_body" id="Grid">
+                            <div id="gridArea" gridYN="" th:initData="${safetyItemList}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var sendSubmit = function (obj) {
+        if (Common.Validate(obj) == true) {
+            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    Common.Loading.Show();
+                    obj.submit();
+                }
+            });
+        }
+    }
+
+    var sampleDownLoad = function () {
+        alert("샘플파일 서버에 올린 후 다운로드 경로만 넣어줘야함.");
+        //location.href = "";
+    }
+
+    var SheetDataConvert = function (data) {
+        var dataJson = JSON.parse(data);
+        return dataJson;
+    }
+
+    $(function () {
+        var heightMinus = 300;
+
+        var data = SheetDataConvert($("#gridArea").attr("initData"));
+
+        var obj = {
+            bubble: false,
+            numberCell: { show: false, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 2 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: true,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+        };
+        obj.colModel = [
+            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PROVISION", sortable: true, editor: false, editable: false },
+            { title: "No.", width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_ID", sortable: true, editor: false, editable: false },
+            { data_langsid: "항목", title: siteLang.getLang("항목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false },
+            { data_langsid: "판정 기준", title: siteLang.getLang("판정 기준"), width: 600, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: true, editor: false, editable: false },
+            { data_langsid: "배점 기준", title: siteLang.getLang("배점 기준"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: true, editor: false, editable: false },
+            { data_langsid: "분류1", title: siteLang.getLang("분류1"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "DIVISION1", sortable: true, editor: false, editable: false },
+            { data_langsid: "분류2", title: siteLang.getLang("분류2"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DIVISION2", sortable: true, editor: false, editable: false }
+        ];
+        obj.dataModel = { data: data };
+        $("#gridArea").pqGrid(obj);
+        $("#gridArea").attr("gridYN", "Y");
+
+        $(window).resize(function () {
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
+        });
+    });
+</script>
+</body>
+</html>

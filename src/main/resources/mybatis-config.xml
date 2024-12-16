@@ -24,7 +24,7 @@
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.UserMgrParamDTO" alias="userMgrParam"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO" alias="baseCode"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.LabourItemDTO" alias="labourItem"></typeAlias>
-        <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SafetyItemDTO" alias="safeItem"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SafetyItemDTO" alias="safetyItem"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.QualityItemDTO" alias="qualityItem"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SvhcListDTO" alias="svhcList"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.DeclarationDTO" alias="Declaration"></typeAlias>
