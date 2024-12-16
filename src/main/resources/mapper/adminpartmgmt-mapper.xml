@@ -48,4 +48,32 @@
             <![CDATA[ AND (PM_REG_DATE  <= #{PM_EDATE})]]>
         </if>
     </select>
+
+
+    <select id ="getPartMSDSExpList" parameterType="hashMap" resultType="java.util.HashMap">
+        SELECT
+            msds.MSDS_IDX
+            , pc.PART_CODE
+            , pc.PART_NAME
+            , cc.COM_CODE
+            , cc.COM_NAME
+            , TO_CHAR(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        FROM
+            SC_PART_MGMT_DETAIL_MSDS msds
+            LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON msds.PM_IDX  = pm.PM_IDX
+            LEFT OUTER JOIN SC_PART_CODE pc ON pm.PM_PART_CODE  = pc.PART_CODE
+            LEFT OUTER JOIN SC_COMPANY_CODE cc ON pc.COM_CODE  = cc.COM_CODE
+        WHERE 1 = 1
+        <if test="EXP_DATE != null and EXP_DATE != ''">
+            <![CDATA[
+                AND TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (cc.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+    </select>
 </mapper>
