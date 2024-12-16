@@ -11,10 +11,21 @@
     <link rel="stylesheet" type="text/css" href="../../../css/style.css" >
     <link rel="stylesheet" type="text/css" href="../../../css/schema.css" >
 
+    <link rel="stylesheet" type="text/css" href="../../../plugin/loading/iosOverlay.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/sweetalert/sweetalert2.css" >
+
     <script type="text/javascript" src="../../../plugin/jquery/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
     <script type="text/javascript" src="../../../js/app.js"></script>
+
+    <script type="text/javascript" src="../../../plugin/loading/iosOverlay.js"></script>
+    <script type="text/javascript" src="../../../plugin/loading/spin.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/core.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/sweetalert2.min.js"></script>
+
+    <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
+    <script type="text/javascript" src="../../../js/pages/main.js"></script>
     <title>회원가입</title>
     <!-- [시작] 퍼블본용 style. 개발 반영되면 안됨 -->
     <style>
@@ -121,7 +132,8 @@
                                 <tr>
                                     <td><p name="COM_APP_DATE" id="COM_APP_DATE"> <span th:text="${memberDTO.COM_APP_DATE}"></span> </p></td>
                                     <td><p name="COM_OK_DATE" id="COM_OK_DATE"> <span th:text="${memberDTO.COM_OK_DATE}"></span> </p></td>
-                                    <td><p name="COM_MANAGE_STATUS" id="COM_MANAGE_STATUS"> <span th:text="${memberDTO.COM_MANAGE_STATUS}"></span> </p></td>
+                                    <td><p name="COM_MANAGE_STATUS" id="COM_MANAGE_STATUS">
+                                        <span th:data-langsid="${memberDTO.COM_MANAGE_STATUS}"></span> </p></td>
 
                                     <!-- 값 제출용 숨겨진 input -->
                                     <input type="hidden" id="comCode" th:value="${memberDTO.COM_CODE}" />
@@ -134,8 +146,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center" >
                                             <div class="item_content">
-                                                <button type="button" class="cui_button primary" onclick="findfile()" th:if="${memberDTO.COM_OK_DATE == ''}"><span>첨부</span></button>
-                                                <button type="button" class="cui_button secondary"  onclick ="downloadFile()"><span>보기</span></button>
+                                                <button type="button" class="cui_button primary" onclick="findfile()" th:if="${memberDTO.COM_OK_DATE == ''}"><span data-langsid="첨부"></span></button>
+                                                <button type="button" class="cui_button secondary"  onclick ="downloadFile()"><span data-langsid="보기"></span></button>
                                             </div>
                                         </div>
                                     </td>
@@ -155,11 +167,11 @@
                             <div class="item_content">
                                 <button type="submit" name="request" id="request" class="cui_button primary">
                                     <!-- 검토중 또는 반려일 때 버튼 텍스트 -->
-                                    <span th:if="${memberDTO.COM_MANAGE_STATUS == '검토중' || memberDTO.COM_MANAGE_STATUS == '반려'}" th:text="'수정요청'"></span>
+                                    <span th:if="${memberDTO.COM_MANAGE_STATUS == '검토중' || memberDTO.COM_MANAGE_STATUS == '반려'}" th:data-langsid="'수정요청'"></span>
 
                                     <!-- COM_OK_DATE 값에 따라 버튼 텍스트 -->
-                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE != ''}" th:text="'ID추가 요청'"></span>
-                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE == ''}" th:text="'승인요청'"></span>
+                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE != ''}" th:data-langsid="'ID추가 요청'"></span>
+                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE == ''}" th:data-langsid="'승인요청'"></span>
                                 </button>
                             </div>
                         </div>
@@ -193,7 +205,8 @@
                         <div class="main_label" data-langsid="양식업로드"></div>
                     </div>
                     <div class="dialog_toolbar">
-                        <button class="cui_button icon endpoint" data-cui-icon="xmark" onclick ="sevefileClose()"><span>Close</span></button>
+<!--                        <button class="cui_button icon endpoint" data-cui-icon="xmark" onclick ="sevefileClose()"><span>Close</span></button>-->
+                        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
                     </div>
                 </div>
                 <div class="dialog_body">
@@ -243,18 +256,18 @@
 </body>
 <script>
 
-    const goMenu = (menuPage) => {
+   const goMenu = (menuPage) => {
        location.href = menuPage;
    }
 
   window.onload = function() {
-   var messageElement = document.getElementById('messageContent');
+       var messageElement = document.getElementById('messageContent');
        if (messageElement && messageElement.innerText.trim() !== "") {
-           overlay.style.display = "block";
-           document.getElementById('dialog').style.display = 'block';
-
-           const button = document.getElementById('request');
-           button.style.display = 'none';
+           Common.Msg(siteLang.getLang(messageElement.innerText.trim()), {
+                                okback : function () {
+                                   redirectToLogin();
+                                }
+             });
        }
   }
 
@@ -269,8 +282,8 @@
 
        const comManageStatus  =  document.getElementById("hiddenCOM_MANAGE_STATUS").value ;
 
-        if (comManageStatus !== "승인" && (!fileName || fileName.trim() === "")) {
-           showAlert('warning', '첨부된 파일이 없습니다.');
+        if (comManageStatus !== siteLang.getLang("승인") && (!fileName || fileName.trim() === "")) {
+           Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
            return;
         }
 
@@ -283,28 +296,8 @@
     $("#" + id).fadeIn();
   }
 
-  //모달 닫기
-  $('.modal-close').on('click', function(e){
-    e.preventDefault();
-    const modal = $(this).parents('.cui_dialog');
-    modal.fadeOut();
-    overlay.style.display = "none";
-
-    // 닫을때
-    redirectToLogin();
-  });
-
-    //모달 닫기w
-  $('.modal-closeW').on('click', function(e){
-    e.preventDefault();
-    const modal = $(this).parents('.cui_dialog');
-    modal.fadeOut();
-    overlay.style.display = "none";
-  });
-
-
   function redirectToLogin() {
-      window.location.href = "/login"; // 로그인 페이지로 이동
+      window.location.href = "/login";
   }
 
   function downSamplefile() {
@@ -313,8 +306,7 @@
 
   //파일 찾기
   function findfile() {
-      overlay.style.display = "block";
-      $("#dialog2").fadeIn();
+        Common.Dialog({ obj : $("#dialog2"), blockClose : false });
   }
 
 
@@ -323,8 +315,7 @@
 
        const input = document.getElementById('findfile');
        if (input.files.length == 0) {
-           //alert('선택된 파일 없음');
-           showAlert('warning', '첨부된 파일이 없습니다.');
+           Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
            return;
        }
 
@@ -343,14 +334,13 @@
            throw new Error('Network response was not ok.');
        })
        .then(data => {
-           //console.log("파일 업로드 성공:", data);
-           showAlert('success', '파일 업로드 성공');
-           $("#dialog2").fadeOut() ;
+           Common.Msg(siteLang.getLang("파일 업로드 성공"));
+           $("#dialog2").data("Hide")();
        })
        .catch(error => {
            console.error("파일 업로드 실패:", error);
-           showAlert('warning', '파일 업로드 실패! 관리자에게 문의하세요');
-           $("#dialog2").fadeOut() ;
+           Common.Msg(siteLang.getLang("파일 업로드 실패! 관리자에게 문의하세요"));
+           $("#dialog2").data("Hide")();
        });
   }
 
@@ -364,8 +354,7 @@
        var fileName = hiddenInput.value;
 
        if(fileName == ""){
-           //alert('첨부된 파일이 없습니다.') ;
-           showAlert('warning', '첨부된 파일이 없습니다.');
+           Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
            return;
        }
 
@@ -379,31 +368,23 @@
            if (!response.ok) {
                throw new Error('Network response was not ok');
            }
-           return response.blob(); // 파일을 Blob으로 변환
+           return response.blob();
        })
        .then(blob => {
            // Blob URL 생성
            const url = window.URL.createObjectURL(blob);
            const a = document.createElement('a');
            a.href = url;
-           a.download = fileName; // 다운로드할 파일 이름
-           document.body.appendChild(a); // 앵커 요소 추가
-           a.click(); // 다운로드 시작
-           a.remove(); // 앵커 요소 제거
-           window.URL.revokeObjectURL(url); // Blob URL 해제
+           a.download = fileName;
+           document.body.appendChild(a);
+           a.click();
+           a.remove();
+           window.URL.revokeObjectURL(url);
        })
        .catch(error => {
            console.error('파일 다운로드 실패:', error);
        });
    }
-
-
-  //모달 파일 저장 닫기
-  function sevefileClose() {
-      overlay.style.display = "none";
-      $("#dialog2").fadeOut();
-  }
-
 
   //파일 업로드후
   function setFileName() {
@@ -422,23 +403,11 @@
    }
 
 
-    function showAlert(type, message) {
-        var alertDiv = document.querySelector('#alertTypeimg');
-        alertDiv.setAttribute('data-type', type);  // 'success' 또는 'warning' 설정
-        document.getElementById('messageContentW').innerText = message;  // 메시지 설정
-        modal('dialogW');
-    }
-
-
-  // 이메일 입력값을 가져오고,
-  // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
-  // 사용 가능 여부를 이메일 입력창 아래에 표시
+  // 이메일
       const emailCheck = () => {
           const email = document.getElementById("USER_EMAIL").value;
           const checkResult = document.getElementById("check-result");
-          console.log("입력한 이메일", email);
           $.ajax({
-              // 요청방식: post, url: "email-check", 데이터: 이메일
               type: "post",
               url: "/member/email-check",
               data: {

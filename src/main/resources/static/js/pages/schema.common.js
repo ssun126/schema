@@ -1059,6 +1059,24 @@ Common.Load = function (Obj) {
             }
         });
     });
+
+    //Obj.find('.item_content.date').not("[dateMode]").datepicker(Common.DatepickerSet).on("show", Common.DatepickerShow).on("hide", Common.DatepickerHide);
+    Obj.find('input[datePickerControl]').each(function () {
+        var thisObj = $(this);
+        thisObj.datepicker({
+            dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
+        });
+        var nextObj = thisObj.next();
+        if (nextObj && nextObj.attr("data-cui-icon") && nextObj.attr("data-cui-icon") == "calendar") {
+            nextObj.bind("click", function () {
+                if (thisObj.datepicker("widget").is(":visible")) {
+                    thisObj.datepicker("hide"); // datepicker 숨기기
+                } else {
+                    thisObj.datepicker("show"); // datepicker 보이기
+                }
+            });
+        }
+    });
 }
 
 //현재 날짜시간 포함 string 리턴
