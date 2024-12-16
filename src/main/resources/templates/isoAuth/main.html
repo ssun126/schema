@@ -147,25 +147,26 @@
                         var value = reversedAuthCodeMap[key];  // value 추출
                         var existingDataItem = existingData[key] || {};
 
-                        var row = '<tr>' +
+                        var row = $('<tr>' +
                                     '<td>' + value + '</td>' +
                                     '<td>' + key + '</td>' +
                                     '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="AUTH_DATE" value="' + (existingDataItem.authDate || '') + '"></td>' +
                                     '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="EXP_DATE" value="' + (existingDataItem.expDate || '') + '"></td>' +
                                     '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="REG_INPUT_DATE" value="' + (existingDataItem.regInputDate || '') + '"></td>' +
                                     '<td><div class="cui_attachments">' +
-                                            '<input type="file" class="cui_file_field" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">' +
+                                            '<input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'none' : '') + ';">' +
                                             '<div class="cui_items_wrap" data-direction="left">' +
                                                 '<div class="item_label" data-cui-icon="paperclip"><a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(existingDataItem.fileName) + '" download><span>' + (existingDataItem.fileName || '') + '</span></a></div>' +
                                                 '<div class="item_content">' +
+                                                    '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile(\''+existingDataItem.fileName+'\')"><span >다운로드</span></button>' +
                                                     '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>' +
                                                 '<div>' +
                                             '</div>' +
                                         '</div>' +
                                     '</td>' +
                                     '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE" value="' + (existingDataItem.state || '') + '">' + (existingDataItem.state || '') + '</td>' +
-                                '</tr>';
-
+                                '</tr>');
+                        Common.Load(row);
                         tableBody.append(row);
                     }
                 }
@@ -205,7 +206,7 @@
     // '추가' 버튼 클릭 시 테이블에 행 추가
     $('#addRowBtn').on('click', function() {
         // 새로운 tr 행 생성
-        var row = '<tr>' +
+        var row = $('<tr>' +
                     '<td><input type="checkbox" class="delete-checkbox">기타</td>' +  // 첫 번째 td - key 입력 필드
                     '<td><input type="text" class="cui_text_field" name="AUTH_CODE"></td>' +  // 두 번째 td - value 입력 필드
                     '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +  // 날짜 필드
@@ -220,9 +221,8 @@
                         '</div>' +
                     '</td>' +
                     '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE">신규</td>' +  // 상태
-                  '</tr>';
-
-        // 테이블의 tbody에 새로운 행 추가
+                  '</tr>');
+        Common.Load(row);
         $('#isoAuthItemTable tbody').append(row);
 
         // 새로 추가된 input 필드들에 대해 datepicker 초기화
@@ -337,6 +337,19 @@
                 showAlert('warning','데이터 저장에 실패했습니다.');
             }
         });
+    }
+
+     function downloadFile(fileName) {
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
     }
 
     setTimeout(function() {

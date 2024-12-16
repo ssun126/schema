@@ -174,6 +174,10 @@ public class MemberRepository {
     public List<UserInfoCompanyUserDTO> findByCompanyUserAll(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
         return sql.selectList("Member.findByCompanyUserAll", userInfoCompanyUserDTO ); }
 
+    //공동업무자 idx로 가져오기
+    public UserInfoCompanyUserDTO findByCompanyUserComUserIdx(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return sql.selectOne("Member.findByCompanyUserComUserIdx", userInfoCompanyUserDTO ); }
+
     //최초가입 여부 (마스터 코드 등록여부) "COM_CODE" 로 검색
     public MemberDTO findByComPanyCode(String COM_CODE) { return sql.selectOne("Member.findByCompanyCode", COM_CODE); }
 

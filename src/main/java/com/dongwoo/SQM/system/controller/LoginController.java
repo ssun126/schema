@@ -339,7 +339,17 @@ public class LoginController {
             // login 성공
             log.info("login======"+user.getUSER_NAME());
             log.info("comUserIdx======"+comUserIdx);
+
+            //공동 작업자 생성후 COM_USER_IDX 가져오기. where.   밴더 코드 : COM_CODE  AND  이름 USER_NAME :MainUSER_NAME
+            UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+            parmaDTO.setCOM_CODE(user.getCOM_CODE()); //위에서 만들어진 사용자 IDX
+            parmaDTO.setCOM_USER_IDX(Integer.parseInt(comUserIdx));
+
+            UserInfoCompanyUserDTO userInfoCompanyUserDTO = memberService.findByCompanyUserComUserIdx(parmaDTO);
+            String comUserName = userInfoCompanyUserDTO.getUSER_NAME();
+
             user.setCOM_USER_IDX(comUserIdx);
+            user.setUSER_NAME(comUserName);
             log.info("user======"+user);
             for (GrantedAuthority authority : auth.getAuthorities()) {
                 log.info(authority.getAuthority());

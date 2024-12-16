@@ -84,6 +84,11 @@ public class MemberService {
         return memberRepository.findByCompanyUserAll(userInfoCompanyUserDTO);
     }
 
+    // 공동 사용자 전체 com_code
+    public UserInfoCompanyUserDTO findByCompanyUserComUserIdx(UserInfoCompanyUserDTO userInfoCompanyUserDTO) {
+        return memberRepository.findByCompanyUserComUserIdx(userInfoCompanyUserDTO);
+    }
+
     //My page 정보조회(동우 사용자)
     public UserMgrDTO findByMemberId(String loginId) {
         return memberRepository.findUserInfoDataById(loginId);

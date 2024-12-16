@@ -109,6 +109,11 @@
         select * from SC_USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE}
     </select>
 
+    <!-- SC_USER_INFO_COMPANY_USER 가입된정보 공동 작업자  가져오기 -->
+    <select id="findByCompanyUserComUserIdx" parameterType="userinfocom" resultType="userinfocom">
+        select * from SC_USER_INFO_COMPANY_USER where COM_CODE=#{COM_CODE} and COM_USER_IDX = #{COM_USER_IDX}
+    </select>
+
     <!--공동사용자 정보 사용처 1.업체 업체 정보  , 2.관리자-업체목록(업체 상세)-->
     <select id="findByMemberInfoAll" parameterType="userinfocom" resultType="userinfocom">
         SELECT
