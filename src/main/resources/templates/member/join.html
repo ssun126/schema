@@ -11,11 +11,22 @@
     <link rel="stylesheet" type="text/css" href="../../../css/style.css" >
     <link rel="stylesheet" type="text/css" href="../../../css/schema.css" >
 
+    <link rel="stylesheet" type="text/css" href="../../../plugin/loading/iosOverlay.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/sweetalert/sweetalert2.css" >
+
     <script type="text/javascript" src="../../../plugin/jquery/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
     <script type="text/javascript" src="../../../js/app.js"></script>
+
+    <script type="text/javascript" src="../../../plugin/loading/iosOverlay.js"></script>
+    <script type="text/javascript" src="../../../plugin/loading/spin.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/core.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/sweetalert2.min.js"></script>
+
     <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
+    <script type="text/javascript" src="../../../js/pages/main.js"></script>
+
     <title data-langsid="회원가입"></title>
 </head>
 <body>
@@ -120,11 +131,11 @@
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <select class="cui_select_field" id = "searchCustomerType">
-                                                    <option value="VendorNum">Vendor 번호</option>
-                                                    <option value="BusinessNum">사업자등록 번호</option>
+                                                    <option value="VendorNum" data-langsid="Vendor 번호"></option>
+                                                    <option value="BusinessNum" data-langsid="사업자등록 번호"></option>
                                                 </select>
                                                 <input name ="COM_CODE" autocomplete="off" class="cui_text_field" type="text"  id = "searchCustomer">
-                                                <button type="button" class="cui_button icon" data-cui-icon="search" onclick ="vendorCheck()"><span>검색</span></button>
+                                                <button type="button" class="cui_button icon" data-cui-icon="search" onclick ="vendorCheck()"><span data-langsid="검색"></span></button>
                                             </div>
                                         </div>
                                     </td>
@@ -167,17 +178,17 @@
                             </table>
                             <div class="cui_alert alert_basic" data-type="info" role="alert" id="firstCompany">
                                 <div class="alert_message">
-                                    <p>최초등록 업체입니다.</p>
+                                    <p data-langsid="최초등록 업체입니다."></p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="info" role="alert" id="registeredCompany">
                                 <div class="alert_message">
-                                    <p>기등록 업체입니다.</p>
+                                    <p data-langsid="기등록 업체입니다."></p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="warning" role="alert" id="noCompanyCode">
                                 <div class="alert_message">
-                                    <p>업체코드 내역이 없어 가입이 불가합니다.</p>
+                                    <p data-langsid="업체코드 내역이 없어 가입이 불가합니다."></p>
                                 </div>
                             </div>
                             <div class="cui_alert alert_basic" data-type="info" role="alert" id="errCompanyCode">
@@ -207,18 +218,18 @@
                                 </thead>
                                 <tbody id="tableBody">
                                 <tr>
-                                    <td><input type="text" class="cui_text_field" name="USER_NAME" data-langsid="이름" placeholder=""  onblur="setUserSelectReset()"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_POSITION" onblur="setUserSelectReset()"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_DEPT"  onblur="setUserSelectReset()"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" data-langsid="이메일" placeholder="" id="USER_EMAIL"  onblur="setUserSelectReset()"></td>
-                                    <td><input type="text" class="cui_text_field" name="USER_PHONE" data-langsid="전화번호" placeholder=""  onblur="setUserSelectReset()"></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_NAME" data-langsid="이름" placeholder=""  onblur="setUserSelectReset()" reqcheck="reqcheck" data-messages="성명을 입력해 주세요" messages=""></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_POSITION" data-langsid="직위" onblur="setUserSelectReset()" reqcheck="reqcheck" data-messages="직위를 입력해 주세요" messages=""></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_DEPT"  data-langsid="부서" onblur="setUserSelectReset()" reqcheck="reqcheck" data-messages="부서명을 입력해 주세요" messages=""></td>
+                                    <td><input type="email" class="cui_text_field" name="USER_EMAIL" data-langsid="이메일" placeholder="" id="USER_EMAIL"  onblur="setUserSelectReset()" reqcheck="reqcheck" data-messages="Email를 입력해 주세요" messages=""></td>
+                                    <td><input type="text" class="cui_text_field" name="USER_PHONE" data-langsid="전화번호" placeholder=""  onblur="setUserSelectReset()" reqcheck="reqcheck" data-messages="연락처를 입력해 주세요" messages=""></td>
                                     <td></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </fieldset>
 
-                        <fieldset>
+                        <fieldset id="userInfoPWFieldset">
                             <legend><span>ID/PW</span></legend>
                             <table class="cui_table">
                                 <colgroup>
@@ -235,6 +246,7 @@
                                             <div class="item_content">
                                                 <input class="cui_text_field" type="text" name = "USER_ID" id ="memberID" >
                                                 <button type="button" class="cui_button icon" data-cui-icon="search" id="btnIdCheck"  onclick ="memberIDCheck()"><span>중복검사</span></button>
+                                                <input type="hidden" name="ID_CHK" id="ID_CHK">
                                             </div>
                                         </div>
                                     </td>
@@ -243,7 +255,7 @@
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <select class="cui_select_field wide" name ="USERSELECT" id="userSelect" >
-                                                    <option value="0">담당자 목록</option>
+                                                    <option value="0" data-langsid="담당자 목록"></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -254,7 +266,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="password" autocomplete="off"  name ="USER_PWD" id="UserPass" placeholder="비밀번호" onblur="passConfirm()">
+                                                <input class="cui_text_field" type="password" autocomplete="off"  name ="USER_PWD" id="UserPass"  onkeyup="passConfirm()" reqcheck="reqcheck" data-messages="비밀번호를 입력해 주세요." data-langsid="비밀번호" messages="" >
                                             </div>
                                         </div>
                                     </td>
@@ -262,7 +274,8 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="password" autocomplete="off" id="UserPassRe" onkeyup="passConfirm()" data-langsid="비밀번호 확인" placeholder="" onblur="passConfirm()">
+                                                <input class="cui_text_field" type="password" autocomplete="off" id="UserPassRe" onkeyup="passConfirm()" reqcheck="reqcheck" data-messages="비밀번호를 확인해 주세요." data-langsid="비밀번호 확인"  messages="">
+                                                <input type="hidden" name="PW_CHK" id="PW_CHK" >
                                             </div>
                                         </div>
                                     </td>
@@ -418,7 +431,6 @@
         location.href = menuPage;
     }
 
-
     $(document).ready(function() {
 
          hideCompanyStatusInfo();
@@ -427,32 +439,31 @@
          $('#joinBasicStep1').hide();
 
          $('#addRowButton').on('click', function() {
-            // 공동 업무자 정보 생성
             const newRow = `
                 <tr>
-                    <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름"  onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_POSITION" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_DEPT" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일"  onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호"  onclick="setUserSelectReset()"></td>
-                    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
+                    <td><input type="text" class="cui_text_field" id="user_name" name="USER_NAME" placeholder="이름"  onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="성명을 입력해 주세요" messages=""></td>
+                    <td><input type="text" class="cui_text_field" id="user_position" name="USER_POSITION"  placeholder="직위" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="직위를 입력해 주세요" messages=""></td>
+                    <td><input type="text" class="cui_text_field" id="user_dept" name="USER_DEPT"  placeholder="부서명" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="부서명을 입력해 주세요" messages=""></td>
+                    <td><input type="email" class="cui_text_field" id="user_email" name="USER_EMAIL" placeholder="이메일"  onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="Email를 입력해 주세요" messages=""></td>
+                    <td><input type="text" class="cui_text_field" id="user_phone" name="USER_PHONE" placeholder="전화번호"  onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="연락처를 입력해 주세요" messages=""></td>
+                    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span data-langsid="삭제"></span></button></td>
                 </tr>
             `;
 
             $('#tableBody').append(newRow);
             setUserSelectReset();
+            siteLang.showLangs();
         });
 
         // 공동 업무자 정보 삭제
         $(document).on('click', '#delRowButton', function() {
             $(this).closest('tr').remove();
-            setUserSelectReset() //담당자 목록 컨트롤 바인딩 초기화
+            setUserSelectReset() ;
         });
 
-        // 아이디 입력창 정보 가져오기
         let elInputUSER_NAME = document.querySelector('#memberID');
 
-        //ID /PASS 유효성 //
+        //ID /PASS 유효성
         elInputUSER_NAME.onkeyup = function (event) {
 
         if (event.key === 'Enter' || event.keyCode === 13) {
@@ -463,48 +474,44 @@
          var wrongColor = "#E40087" ;
 
           IdValidatorMsg.style.color = wrongColor;
+          $('#ID_CHK').val("");
 
           // 값을 입력한 경우
           if (elInputUSER_NAME.value.length !== 0) {
             // 영어 또는 숫자 외의 값을 입력했을 경우
             if(onlyNumberAndEnglish(elInputUSER_NAME.value) === false) {
                 $('#IdVAL').show();
-                IdValidatorMsg.innerHTML = "영어 또는 숫자만 가능합니다.";
+                IdValidatorMsg.innerHTML = siteLang.getLang("영어 또는 숫자만 가능합니다.") ;
             }
             // 글자 수가 4~12글자가 아닐 경우
             else if(idLength(elInputUSER_NAME.value) === false) {
                 $('#IdVAL').show();
-                IdValidatorMsg.innerHTML = "아이디는 6~12글자이어야 합니다.";
+                IdValidatorMsg.innerHTML =  siteLang.getLang("아이디는 6~12글자이어야 합니다.") ;
             }
             // 조건을 모두 만족할 경우
             else if(idLength(elInputUSER_NAME.value) || onlyNumberAndEnglish(elInputUSER_NAME.value)) {
 
                $('#IdVAL').show();
                IdValidatorMsg.style.color = correctColor;
-               IdValidatorMsg.innerHTML = "사용할 수 있는 아이디입니다.[중복 체크를 해 주세요]";
+               IdValidatorMsg.innerHTML = siteLang.getLang("사용할 수 있는 아이디입니다.[중복 체크를 해 주세요]") ;
+               $('#ID_CHK').val("ready");
             }
           }
           // 값을 입력하지 않은 경우 (지웠을 때)
           else {
-                //$('#IdVAL').hide();
-                 $('#IdVAL').show();
-                IdValidatorMsg.innerHTML = "아이디는 6~12글자이어야 합니다.";
+               $('#IdVAL').show();
+               IdValidatorMsg.innerHTML = siteLang.getLang("아이디는 6~12글자이어야 합니다.") ;
           }
         }
     });
 
 
     function setUserSelect(users) {
-
         var userSelect = document.getElementById('userSelect');
-
         users.forEach(function(user) {
-
             var option = document.createElement('option');
-            //option.value = user.email;
-            option.value = user.name;        // 이름을 value 값으로 설정  //추후 동명이인 처리시 고민해보자
-            option.textContent = user.name;  // 이름을 표시
-
+            option.value = user.name;
+            option.textContent = user.name;
             userSelect.appendChild(option);
         });
     }
@@ -512,8 +519,15 @@
     //담당자 리셋
     function setUserSelectReset() {
 
-       $("#userSelect option").remove();
-       $("#userSelect").append("<option value='0'>담당자 목록</option>");
+<!--       $("#userSelect option").remove();-->
+<!--       $("#userSelect").append("<option value='0'>담당자 목록</option>");-->
+
+        $("#userSelect option").each(function() {
+            if ($(this).val() !== '0') {
+                $(this).remove();
+            }
+        });
+
 
        var userList = extractData() ;
        setUserSelect(userList);
@@ -544,6 +558,8 @@
 
     //밴더 사업자 검색후 표기 초기화
     function hideCompanyStatusInfo () {
+      $('#ID_CHK').val("");
+      $('#PW_CHK').val("");
       $('#firstCompany').hide();
       $('#tr_id_pw_add_reason').hide();
       $('#registeredCompany').hide();
@@ -568,11 +584,9 @@
       if (!searchCustomer) {
          $('#searchCustomer').focus();
          if(searchType == "VendorNum"){
-             //alert("Vendor 번호를 입력해주세요.");
-              showAlert('warning', 'Vendor 번호를 입력해주세요.');
+              Common.Msg(siteLang.getLang("Vendor 번호를 입력해주세요."));
          } else{
-             //alert("사업자등록번호를 입력해주세요.");
-              showAlert('warning', '사업자등록번호를 입력해주세요.');
+              Common.Msg(siteLang.getLang("사업자등록번호를 입력해주세요."));
          }
         return;
       }
@@ -593,20 +607,20 @@
           },
           success: function(res) {
 
-              if (res.status == "ok") {
-               //기등록 업체입니다.(추가 ID 작업)
+              if (res.status == "exgist") {
+               //기등록
                $('#registeredCompany').show();
                $('#tr_id_pw_add_reason').show();
                $('#joinBasicStep1').show();
 
-                bindCompanyInfo(res);                      //정보 바인딩. ★
-                bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
+                bindCompanyInfo(res);
+                bindMemberGoalList(res.memberGoalList);
                 unbindCompanyUserInfo();
                 document.getElementById("ID_ADD_TYPE").value = "1" ;
                 setFieldsReadOnly(false);
 
-              } else if (res.status == "not") {
-                //IF 코드 없음.
+              } else if (res.status == "notcpcode") {
+                //cp 코드 없음.
                 $('#noCompanyCode').show();
                 $('#joinBasicStep1').hide();
 
@@ -616,29 +630,33 @@
                 document.getElementById("COM_NATION").value = "";
                 unbindCompanyUserInfo();
 
-              } else if (res.status == "no") {
+              } else if (res.status == "new") {
                 //신규.
                 $('#firstCompany').show();
                 $('#joinBasicStep1').show();
-                bindCompanyInfo(res);                       //정보 바인딩. ★
+                bindCompanyInfo(res);
                 bindCompanyUserList(res.companyUserList);
-                bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
+                bindMemberGoalList(res.memberGoalList);
                 unbindCompanyUserInfo();
                 setFieldsReadOnly(false);
 
               }else {
                 //가입 진행중.
                 $('#errCompanyCode').show();
-                $('#joinBasicStep1').show();        //기존 신청 정보 수정 가능하게.
-                bindCompanyInfo(res);                      //정보 바인딩. ★
+                $('#joinBasicStep1').show();
+                bindCompanyInfo(res);
                 bindCompanyUserInfo(res);
-                bindMemberGoalList(res.memberGoalList);    //접속목적 바인딩. ★
+                bindMemberGoalList(res.memberGoalList);
 
                 if(res.companyUserList != "undefined"){
                     bindCompanyUserList(res.companyUserList);
                 }
                 setFieldsReadOnly(true);
-                errCompanyCodeMsg.innerHTML = "["+ res.status + "] 중인 정보가 있습니다. 관리자에게 문의하세요" ;
+
+                var statusM = siteLang.getLang(res.status);
+                var statusMsg = siteLang.getLang("중인 정보가 있습니다. 관리자에게 문의하세요") ;
+                errCompanyCodeMsg.innerHTML = "["+ statusM + "] " + statusMsg ;
+
               }
           },
           error: function(err) {
@@ -650,16 +668,16 @@
     //가입신청 된거 있을때 공동 업무자 정보 바인딩
     function bindCompanyUserList(companyUserList) {
        const tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = ''; // 기존 행 초기화
+        tableBody.innerHTML = '';
 
         if (companyUserList === undefined || companyUserList.length === 0) {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><input type="text" class="cui_text_field" name="USER_NAME" placeholder="이름" onclick="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_POSITION" placeholder="직위" onclick="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_DEPT" placeholder="부서명" onclick="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" onclick="setUserSelectReset()"></td>
-                <td><input type="text" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" onclick="setUserSelectReset()"></td>
+                <td><input type="text" class="cui_text_field"  id="user_name" name="USER_NAME" placeholder="이름" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="성명을 입력해 주세요" messages=""></td>
+                <td><input type="text" class="cui_text_field"  id="user_position" name="USER_POSITION" placeholder="직위" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="직위를 입력해 주세요" messages=""></td>
+                <td><input type="text" class="cui_text_field"  id="user_dept" name="USER_DEPT" placeholder="부서명" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="부서명을 입력해 주세요" messages=""></td>
+                <td><input type="email" class="cui_text_field" id="user_email" name="USER_EMAIL" placeholder="이메일" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="Email를 입력해 주세요" messages=""></td>
+                <td><input type="text" class="cui_text_field"  id="user_phone" name="USER_PHONE" placeholder="전화번호" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="연락처를 입력해 주세요" messages=""></td>
                 <td></td>
             `;
             tableBody.appendChild(row);
@@ -668,16 +686,17 @@
             companyUserList.forEach((item, index) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><input type="text" class="cui_text_field" name="USER_NAME" value="${item.USER_NAME}" placeholder="이름" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_POSITION" value="${item.USER_POSITION}" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_DEPT" value="${item.USER_DEPT}" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_EMAIL" value="${item.USER_EMAIL}" placeholder="이메일" onclick="setUserSelectReset()"></td>
-                    <td><input type="text" class="cui_text_field" name="USER_PHONE" value="${item.USER_PHONE}" placeholder="전화번호" onclick="setUserSelectReset()"></td>
-                    <td>${index === 0 ? '' : '<button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button>'}</td>
+                    <td><input type="text" class="cui_text_field" id="user_name" name="USER_NAME" value="${item.USER_NAME}" placeholder="이름" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="성명을 입력해 주세요" messages=""></td>
+                    <td><input type="text" class="cui_text_field" id="user_position" name="USER_POSITION" value="${item.USER_POSITION}" placeholder="직위" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="직위를 입력해 주세요" messages=""></td>
+                    <td><input type="text" class="cui_text_field" id="user_dept" name="USER_DEPT" value="${item.USER_DEPT}" placeholder="부서명" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="부서명을 입력해 주세요" messages=""></td>
+                    <td><input type="email" class="cui_text_field" id="user_email" name="USER_EMAIL" value="${item.USER_EMAIL}" placeholder="이메일" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="Email를 입력해 주세요" messages=""></td>
+                    <td><input type="text" class="cui_text_field" id="user_phone" name="USER_PHONE" value="${item.USER_PHONE}" placeholder="전화번호" onclick="setUserSelectReset()" reqcheck="reqcheck" data-messages="연락처를 입력해 주세요" messages=""></td>
+                    <td>${index === 0 ? '' : '<button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span data-langsid="삭제"></span></button>'}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
+        siteLang.showLangs();
     }
 
 
@@ -686,11 +705,11 @@
     function bindCompanyInfo(companyInfo) {
 
         if (companyInfo) {
-            document.getElementById("COM_NAME").value = companyInfo.COM_NAME ;   //귀사정보
+            document.getElementById("COM_NAME").value = companyInfo.COM_NAME ;
 
             // (D:제조사, L:물류사)
             var  selectedOption = companyInfo.VENDOR_WORK_KIND ;
-            if (selectedOption === "D") {  //(D:제조사, L:물류사)
+            if (selectedOption === "D") {
               document.getElementById('Manufacturer').checked = true;
               document.getElementById('Logistics').checked = false;
             } else if (selectedOption === "L") {
@@ -701,14 +720,14 @@
               document.getElementById('Logistics').checked = false;
               document.getElementById('Manufacturer').checked = false;
             }
-            document.getElementById("COM_NATION").value =  companyInfo.COM_NATION;  //국가
-            document.getElementById("COMPANY_NAME").value =  companyInfo.COMPANY_NAME;  //회사명
-            document.getElementById("FACTORY_NAME").value =  companyInfo.FACTORY_NAME; //제조 공장명
-            document.getElementById("BUS_NUMBER").value =  companyInfo.BUS_NUMBER;  //사업자등록번호
-            document.getElementById("COM_ADDRESS").value =  companyInfo.COM_ADDRESS;   //회사주소
-            document.getElementById("COM_CEO_NAME").value =  companyInfo.COM_CEO_NAME;   //CEO 성명 (영문)
-            document.getElementById("COM_CEO_PHONE").value =  companyInfo.COM_CEO_PHONE; //CEO 연락처 (영문)
-            document.getElementById("COM_CEO_EMAIL").value =  companyInfo.COM_CEO_EMAIL; //CEO e-mail (영문)
+            document.getElementById("COM_NATION").value =  companyInfo.COM_NATION;
+            document.getElementById("COMPANY_NAME").value =  companyInfo.COMPANY_NAME;
+            document.getElementById("FACTORY_NAME").value =  companyInfo.FACTORY_NAME;
+            document.getElementById("BUS_NUMBER").value =  companyInfo.BUS_NUMBER;
+            document.getElementById("COM_ADDRESS").value =  companyInfo.COM_ADDRESS;
+            document.getElementById("COM_CEO_NAME").value =  companyInfo.COM_CEO_NAME;
+            document.getElementById("COM_CEO_PHONE").value =  companyInfo.COM_CEO_PHONE;
+            document.getElementById("COM_CEO_EMAIL").value =  companyInfo.COM_CEO_EMAIL;
         }
     }
 
@@ -717,14 +736,20 @@
 
         if (companyInfo) {
             //ID
-            $("#userSelect option").remove();
-            $("#userSelect").append("<option value='0'>담당자 목록</option>");
+            //$("#userSelect option").remove();
+            //$("#userSelect").append("<option value='0'></option>");
+
+            $("#userSelect option").each(function() {
+                if ($(this).val() !== '0') {
+                    $(this).remove();
+                }
+            });
 
             document.getElementById("memberID").value =  companyInfo.USER_ID;
             //document.getElementById("userSelect").value =  companyInfo.USER_NAME;
             var select = document.getElementById("userSelect");
             var option = document.createElement("option");
-            option.value =companyInfo.USER_NAME;  //메인 업무자 셋팅.
+            option.value =companyInfo.USER_NAME;
             option.text = companyInfo.USER_NAME;
             select.appendChild(option);
             option.selected = true;
@@ -740,23 +765,19 @@
 
             document.getElementById("ID_PW_ADD_REASON").value =  companyInfo.ID_PW_ADD_REASON;
             document.getElementById("ID_ADD_TYPE").value =  companyInfo.ID_ADD_TYPE;
-
             const idAddType = companyInfo.ID_ADD_TYPE;
-
             if(idAddType == "1") { // 0 :신규 사용자., 1:추가 사용자
                 $('#tr_id_pw_add_reason').show();
             }
 
             //유효성
             $('#IdVAL').show();
-            $('#selectOwner').hide(); //담당자선택 메세지
-
+            $('#selectOwner').hide();
 
             IdValidatorMsg.style.color = "#18AD72";
-            IdValidatorMsg.innerHTML = "사용할 수 있는 아이디입니다.";
+            IdValidatorMsg.innerHTML =  siteLang.getLang("사용할 수 있는 아이디입니다.") ;
+            $('#ID_CHK').val("OK");
             passConfirm();
-            //document.querySelector('#memberID').onkeyup(event); //그대로 넘겨야됨.
-
         }
     }
 
@@ -805,23 +826,17 @@
 
 
     // member ID 체크
-    //01 .memberID 키에
-    // IdValidatorMsg.innerHTML = "사용할 수 있는 아이디입니다"; 이거 일때 체크 걸자. 안되면 가입도 안된다.
-    // 버튼 클릭시 memberIDCheck() 중복검사.
-
     const memberIDCheck = () => {
 
     const searchID = document.getElementById("memberID").value;
-
     const message = document.getElementById('IdValidatorMsg').innerHTML;
 
-    if(message != "사용할 수 있는 아이디입니다.[중복 체크를 해 주세요]"){
-        //alert('중복 체크 완료!')
+    if($('#ID_CHK').val() != "ready" ){
         return;
     }
 
       $.ajax({
-          // 요청방식: post, url: "vendor-check", 데이터:  member ID 중복체크
+
           type: "post",
           url:  "/member/id-check",
           data: {
@@ -829,14 +844,16 @@
           },
           success: function(res) {
 
-              hideMemberInfo();// 정보 숨기기.
+              hideMemberInfo();
               $('#IdVAL').show();
 
               if (res == "ok") {
-                document.getElementById('IdValidatorMsg').innerHTML = "사용할 수 있는 아이디입니다."
+                document.getElementById('IdValidatorMsg').innerHTML = siteLang.getLang("사용할 수 있는 아이디입니다.") ;
+                $('#ID_CHK').val("OK");
               } else {
                IdValidatorMsg.style.color = "#E40087";
-               document.getElementById('IdValidatorMsg').innerHTML = "동일한 아이디가 존재합니다."
+               document.getElementById('IdValidatorMsg').innerHTML = siteLang.getLang("동일한 아이디가 존재합니다.") ;
+               $('#ID_CHK').val("");
               }
           },
           error: function(err) {
@@ -845,30 +862,24 @@
       });
     }
 
-    // 이메일 입력값을 가져오고,
-    // 입력값을 서버로 전송하고 똑같은 이메일이 있는지 체크한 후
-    // 사용 가능 여부를 이메일 입력창 아래에 표시
+    // 이메일
     const emailCheck = () => {
       const email = document.getElementById("USER_EMAIL").value;
       const checkResult = document.getElementById("check-result");
-      console.log("입력한 이메일", email);
       $.ajax({
-          // 요청방식: post, url: "email-check", 데이터: 이메일
           type: "post",
           url: "/member/email-check",
           data: {
               "USER_EMAIL": email
           },
           success: function(res) {
-              console.log("요청성공", res);
+
               if (res == "ok") {
-                  console.log("사용가능한 이메일");
                   checkResult.style.color = "green";
-                  checkResult.innerHTML = "사용가능한 이메일";
+                  checkResult.innerHTML = siteLang.getLang("사용가능한 이메일") ;
               } else {
-                  console.log("이미 사용중인 이메일");
                   checkResult.style.color = "red";
-                  checkResult.innerHTML = "이미 사용중인 이메일";
+                  checkResult.innerHTML = siteLang.getLang("이미 사용중인 이메일") ;
               }
           },
           error: function(err) {
@@ -892,9 +903,9 @@
     document.getElementById('userSelect').addEventListener('change', function() {
         const selectedValue = this.value;
         if (selectedValue == "0") {
-            $('#selectOwner').show()
+            $('#selectOwner').show();
         } else {
-         $('#selectOwner').hide()
+         $('#selectOwner').hide();
         }
     });
 
@@ -902,7 +913,7 @@
 
         var fieldset = document.getElementById('userInfoFieldset');
 
-        var inputs = fieldset.querySelectorAll('input[type="text"]');
+        var inputs = fieldset.querySelectorAll('input[type="text"],input[type="email"]');
         var buttons = fieldset.querySelectorAll('button[type="button"]');
 
         inputs.forEach(function(input) {
@@ -937,15 +948,11 @@
     function idLength(value) {
       return value.length >= 6 && value.length <= 12
     }
-    //6글자 이상 또는 12글자 이하인 경우 true, 아니면 false를 리턴한다.
-
 
     //2-2. 아이디 : 영어 또는 숫자만 가능
     function onlyNumberAndEnglish(str) {
       return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(str);
     }
-    //영어 또는 숫자가 들어간 경우 true, 아니면 false를 리턴한다.
-    //test() : 문자열에 일치하는 부분이 있는지 확인한다. true 또는 false를 반환
 
     //2-3.Pass 유효성  , 비교
 	function passConfirm() {
@@ -960,29 +967,36 @@
 
         if (regex.test(UserPass.value)) {
             confirmMsg.style.color = correctColor;
-            //confirmMsg.innerHTML =  "비밀번호가 유효합니다.";
+            //confirmMsg.innerHTML =  siteLang.getLang("비밀번호가 유효합니다.") ;
 
             if (UserPass.value === UserPassRe.value) {
                 confirmMsg.style.color = correctColor;
-                confirmMsg.innerHTML = "비밀번호가 일치합니다.";
+                confirmMsg.innerHTML = siteLang.getLang("비밀번호가 일치합니다.") ;
+                $('#PW_CHK').val("OK");
             } else {
                 confirmMsg.style.color = wrongColor;
-                confirmMsg.innerHTML = "비밀번호가 일치하지 않습니다.";
+                confirmMsg.innerHTML = siteLang.getLang("비밀번호가 일치하지 않습니다.") ;
+                $('#PW_CHK').val("");
             }
 
         } else {
             confirmMsg.style.color = wrongColor;
-            confirmMsg.innerHTML = "비밀번호는 6자리 이상의 숫자와 영문자로만 구성되어야 합니다.";
+            confirmMsg.innerHTML = siteLang.getLang("비밀번호는 6자리 이상의 숫자와 영문자로만 구성되어야 합니다.") ;
+            $('#PW_CHK').val("");
         }
     }
 
     //submit 전 체크
     function chk_form() {
 
+        //공동사용자
+        if (Common.Validate($("#userInfoFieldset")) != true) {
+          return;
+        }
+
         const message = document.getElementById('IdValidatorMsg').innerHTML;
-        if(message != "사용할 수 있는 아이디입니다."){
-<!--            alert("아이디를 확인해 주십시오.");-->
-            showAlert('warning', '아이디를 확인해 주십시오.');
+        if($('#ID_CHK').val() != "OK"){
+            Common.Msg(siteLang.getLang("아이디를 확인해 주십시오."));
             $('#memberID').focus();
             return;
         }
@@ -990,41 +1004,38 @@
         const selectedValue = document.getElementById('userSelect').value;
         if (selectedValue == "0") {
             $('#selectOwner').focus();
-<!--            alert("담당자를 선택해 주세요.");-->
-            showAlert('warning', '담당자를 선택해 주세요.');
+             Common.Msg(siteLang.getLang("담당자를 선택해 주세요."));
             return;
         }
 
         if (selectedValue == "" ) {
             $('#selectOwner').focus();
-<!--            alert("공동 업무자 정보를 확인해주세요. 기본 1인은 필수 입니다.");-->
-            showAlert('warning', '공동 업무자 정보를 확인해주세요. 기본 1인은 필수 입니다.');
+            Common.Msg(siteLang.getLang("공동 업무자 정보를 확인해주세요. 기본 1인은 필수 입니다."));
 
             return;
         }
 
-        const confirmMsg = document.getElementById('confirmMsg').innerHTML;
-        if(confirmMsg != "비밀번호가 일치합니다."){
+        if (Common.Validate($("#userInfoPWFieldset")) != true) {
+          return;
+        }
+
+        if($('#PW_CHK').val() != "OK"){
             $('#UserPass').focus();
-<!--            alert("비밀번호를 확인해 주십시오.");-->
-            showAlert('warning', '비밀번호를 확인해 주십시오.');
+            Common.Msg(siteLang.getLang("비밀번호를 확인해 주십시오."));
             return;
         }
 
         //기등록 업체 일때... 아이디 추가 일때만 체크
         const reason = document.getElementById('ID_PW_ADD_REASON').value;
         if ($('#registeredCompany').is(':visible')) {
-
             if (reason == "") {
                 $('#ID_PW_ADD_REASON').focus();
-<!--                alert("ID/PW 추가사유를 입력해 주세요.");-->
-                showAlert('warning', 'ID/PW 추가사유를 입력해 주세요.');
+                Common.Msg(siteLang.getLang("ID/PW 추가사유를 입력해 주세요."));
                 return;
             }
         }
 
-
-        // 접속목적
+        //접속목적
         const selectedGoals = [];
         $('#divGoal input[type="checkbox"]').each(function() {
             const isChecked = $(this).is(':checked');
@@ -1035,7 +1046,6 @@
             });
         });
 
-        // JSON 데이터 저장
         const jsonData = JSON.stringify(selectedGoals);
         $('#checkboxDataJson').val(jsonData);
 

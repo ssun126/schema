@@ -10,11 +10,21 @@
     <link rel="stylesheet" type="text/css" href="../../../plugin/jqGrid/ui.jqGrid.css" >
     <link rel="stylesheet" type="text/css" href="../../../css/style.css" >
     <link rel="stylesheet" type="text/css" href="../../../css/schema.css?v=20241122" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/loading/iosOverlay.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/sweetalert/sweetalert2.css" >
+
     <script type="text/javascript" src="../../../plugin/jquery/jquery-3.7.1.min.js"></script>
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js"></script>
     <script type="text/javascript" src="../../../js/app.js"></script>
+
+    <script type="text/javascript" src="../../../plugin/loading/iosOverlay.js"></script>
+    <script type="text/javascript" src="../../../plugin/loading/spin.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/core.js"></script>
+    <script type="text/javascript" src="../../../plugin/sweetalert/sweetalert2.min.js"></script>
+
     <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
+    <script type="text/javascript" src="../../../js/pages/main.js"></script>
     <title>회원가입</title>
 </head>
 <body>
@@ -526,7 +536,7 @@
             if (checkedValue === 'agree') {
                 window.location.href = "/member/join";
             } else {
-                showAlert('warning', siteLang.getLang('약관에 동의해 주세요.'));
+                 Common.Msg(siteLang.getLang("약관에 동의해 주세요."));
             }
         });
     });
