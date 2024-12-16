@@ -497,9 +497,9 @@ public class MemberController {
                 System.out.println("승인된 USER_STATUS= 2 갯수: " + approveCount);
 
                 if(approveCount > 0) {
-                    checkResult = "ok";  //기가입 업체.
+                    checkResult = "exgist";  //기가입 업체.
                 }else {
-                    checkResult = "no"; //신규.
+                    checkResult = "new"; //신규.
                 }
 
             }else {
@@ -545,7 +545,7 @@ public class MemberController {
             }
 
         }else {
-            checkResult = "not" ; //업체코드 내역이 없어 가입이 불가합니다.
+            checkResult = "notcpcode" ; //업체코드 내역이 없어 가입이 불가합니다.
         }
 
         response.put("status", checkResult);

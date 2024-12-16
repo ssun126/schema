@@ -29,7 +29,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">Warranty</strong>
                             <div class="item_content">
-                                <select class="cui_select_field wide" id="comManageStatus" name="comManageStatus">
+                                <select class="cui_select_field wide" id="comManageStatus" name="comManageStatus" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option value="1">Waiting</option>
                                     <option value="2">Approved</option>
@@ -40,7 +40,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업부"></strong>
                             <div class="item_content">
-                                <select id="deptCode" name="deptCode" class="cui_select_field wide">
+                                <select id="deptCode" name="deptCode" class="cui_select_field wide" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option th:each="dept : ${deptList}"
                                             th:value="${dept.BASE_CODE}"
@@ -52,7 +52,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="신청구분"></strong>
                             <div class="item_content">
-                                <select id="idAddType" name="idAddType" class="cui_select_field" >
+                                <select id="idAddType" name="idAddType" class="cui_select_field" onchange="ListSearch();">
                                     <option value=""></option>
                                     <option value="0" data-langsid="신규등록"></option>
                                     <option value="1" data-langsid="ID 추가"></option>
@@ -62,9 +62,8 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="처리상태"></strong>
                             <div class="item_content">
-                                <select id="userStatus" name="userStatus" class="cui_select_field" >
+                                <select id="userStatus" name="userStatus" class="cui_select_field" onchange="ListSearch();">
                                     <option value=""></option>
-<!--                                    <option value="0">대기</option>-->
                                     <option value="1" data-langsid="검토중"></option>
                                     <option value="2" data-langsid="승인"></option>
                                     <option value="3" data-langsid="반려"></option>
@@ -74,7 +73,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업자번호"></strong>
                             <div class="item_content">
-                                <input id="busNumber" name="busNumber" class="cui_text_field" type="text">
+                                <input id="busNumber" name="busNumber" class="cui_text_field" type="text" search="searchBtn">
                             </div>
                         </div>
 
