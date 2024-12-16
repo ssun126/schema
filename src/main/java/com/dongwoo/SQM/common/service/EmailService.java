@@ -11,6 +11,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+
 @Slf4j
 @Service
 public class EmailService {
@@ -21,15 +23,20 @@ public class EmailService {
     private String fromEmail; //설정에 발송 메일 정보 가져오기
 
     // 간단한 텍스트 이메일 발송
-    public void sendSimpleEmail(String to, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);  // 발신자 이메일
-        message.setTo(to);                       // 수신자 이메일
+    public void sendSimpleEmail(String from, String toMail, String subject, String text) throws MessagingException, UnsupportedEncodingException {
+        // MimeMessage 객체를 생성
+        MimeMessage mimeMessage = emailSender.createMimeMessage();
+
+        // MimeMessageHelper로 이메일 내용 설정
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true);
+        message.setFrom(from, "메일발송 담당자");  // 발신자 이메일, 발송자 명
+        //message.setFrom(fromEmail);  // 발신자 이메일
+        message.setTo(toMail);                       // 수신자 이메일
         message.setSubject(subject);             // 이메일 제목
         message.setText(text);                   // 이메일 본문
         try {
             log.info("sendEmail test:::::::::::::::::::::::::::::::전송>>>>>>"+message);
-            emailSender.send(message);
+            emailSender.send(mimeMessage);
         } catch (MailSendException e) {
             // 예외 처리 로직
             System.out.println("Mail send failed: " + e.getMessage());
