@@ -1,12 +1,15 @@
 package com.dongwoo.SQM.config;
 
 
+import com.dongwoo.SQM.config.security.FormAuthenticationDetailSource;
 import com.dongwoo.SQM.config.security.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,7 +36,9 @@ import java.util.Arrays;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    private final AuthenticationDetailsSource authenticationDetailsSource;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ObjectPostProcessor<Object> objectPostProcessor;
     private final AuthenticationFailureHandler customFailureHandler;
 
     @Bean
@@ -51,7 +56,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for stateless APIs
                 .headers(headers ->
                             headers.xssProtection(
@@ -79,6 +83,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/auth/login")
+                        .authenticationDetailsSource(authenticationDetailsSource)
                         .failureForwardUrl("/loginError")
                         .failureHandler(customFailureHandler)
                         .successHandler(new LoginSuccessHandler("/main"))
@@ -97,7 +102,6 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1) // 추가 로그인 차단
                         .maxSessionsPreventsLogin(false));
-
         return http.build();
     }
 

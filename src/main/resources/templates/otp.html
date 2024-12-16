@@ -78,10 +78,11 @@
                 ReqInfo.AddParameter("USER_NAME", user_name);
                 ReqInfo.AddParameter("otpNum", otpNum);
 
-                Common.Ajax("/otpOk", ReqInfo, function (response) {
-                    if (response == "OK") {
+                Common.Ajax("/otpOk", ReqInfo, function (response, textStatus, xhr) {
+                    if (response.substring(0, 2) == "OK") {
                         Common.Loading.Show();
                         $(".login_form_filed").attr("otpok", "Y");
+                        $(".login_form_filed input[name='comUserIdx']").val(response.substring(3, response.length));
                         $(".login_form_filed").submit();
                         objDia.data("Hide")();
                     } else {

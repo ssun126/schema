@@ -2,6 +2,7 @@ package com.dongwoo.SQM.system.controller;
 
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.common.util.JWTSecretKeyUtils;
+import com.dongwoo.SQM.config.security.FormWebAuthenticationDetails;
 import com.dongwoo.SQM.system.dto.LoginDTO;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
@@ -54,7 +55,9 @@ public class LoginController {
     @PostMapping("/auth/login")
     public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model, Authentication authentication) {
         boolean isSuccess = false;
-        log.info("PostMapping:::::::::::::::"+loginDTO);
+        FormWebAuthenticationDetails details = ( FormWebAuthenticationDetails ) authentication.getDetails();
+        String comUserIdx = details.getComUserIdx();
+        log.info("comUserIdx======"+comUserIdx);
 
         LoginDTO loginResult = loginService.login(loginDTO);
         if (loginResult != null) {
@@ -206,7 +209,7 @@ public class LoginController {
 
             if (storedOtp != null && storedOtp.equals(otpNum)) {
                 log.info("OTP 인증 성공!! === " + true);
-                return ResponseEntity.ok("OK");
+                return ResponseEntity.ok("OK|"+comUserIdx);
             } else {
                 log.info("OTP 인증 실패!! === " + false);
                 return ResponseEntity.ok("인증번호를 다시 확인해주세요.");
@@ -313,7 +316,10 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(@ModelAttribute LoginDTO loginDTO, HttpSession session) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        log.info("authentication3======"+auth);
+
+        FormWebAuthenticationDetails details = ( FormWebAuthenticationDetails ) auth.getDetails();
+        String comUserIdx = details.getComUserIdx();
+        log.info("comUserIdx======"+comUserIdx);
         // login 세션 삭제
         String sessionId = (String) session.getAttribute("loginId");
         session.removeAttribute(sessionId);
@@ -324,12 +330,17 @@ public class LoginController {
     @GetMapping("/main")
     public String goMain(@AuthenticationPrincipal UserCustom user) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        FormWebAuthenticationDetails details = ( FormWebAuthenticationDetails ) auth.getDetails();
+        String comUserIdx = details.getComUserIdx();
         log.info("authentication4======"+auth);
-        log.info("user======"+user);
 
         if(auth.isAuthenticated()){
             // login 성공
             log.info("login======"+user.getUSER_NAME());
+            log.info("comUserIdx======"+comUserIdx);
+            user.setCOM_USER_IDX(comUserIdx);
+            log.info("user======"+user);
             for (GrantedAuthority authority : auth.getAuthorities()) {
                 log.info(authority.getAuthority());
             }

@@ -40,6 +40,7 @@ public class AccountService  implements UserDetailsService {
         log.info("username======="+username);
         LoginDTO loginDTO = userRepository.findByLoginId(username);
         log.info("loginDTO======="+loginDTO);
+
         // 조회가 되지않는 고객은 에러발생.
         if(loginDTO == null){
             throw new UsernameNotFoundException("패스워드가 틀리거나 해당 사용자를 찾을 수 없습니다.:"+username);
@@ -52,6 +53,7 @@ public class AccountService  implements UserDetailsService {
                 , enabled, accountNonExpired, credentialsNonExpired, accountNonLocked
                 , authorities(loginDTO)
                 , loginDTO.getUSER_idx()
+                , loginDTO.getCOM_USER_IDX()
                 , loginDTO.getUSER_GUBN()
                 , loginDTO.getUSER_STATUS()
                 , loginDTO.getCOM_CODE()
@@ -61,6 +63,7 @@ public class AccountService  implements UserDetailsService {
 
         return userCustom;
     }
+
 
     private static Collection<? extends GrantedAuthority> authorities(LoginDTO loginDTO){
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
