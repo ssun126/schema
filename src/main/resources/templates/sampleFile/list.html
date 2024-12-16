@@ -5,7 +5,6 @@
       layout:fragment="Content" xmlns="">
 <head>
     <meta charset="UTF-8">
-    <title>기초설정</title>
 <style>
     .cui_tab {
     &[data-wrap=wrap] {
@@ -85,6 +84,7 @@
     }
 }
 
+    .cui_attachments { width:100%; };
 </style>
 </head>
 <body>
@@ -94,31 +94,21 @@
             <div class="cui_main version_kor">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title"><span>SAMPLE 파일</span></h2>
+                        <h2 class="cui_title"><span data-langsid="SAMPLE 파일"></span></h2>
                     </div>
                 </div>
-<!--                <div>-->
-<!--                    <input type="hidden" th:value="${Language}" id="selectLang"/>-->
-<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'KOR'? 'cui_button primary' : 'cui_button' " onclick="getFileList('KOR');"><span>국문</span></button>-->
-<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'ENG'? 'cui_button primary' : 'cui_button' " onclick="getFileList('ENG');"><span>영문</span></button>-->
-<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'JPN'? 'cui_button primary' : 'cui_button' " onclick="getFileList('JPN');"><span>일문</span></button>-->
-<!--                    <button type="button" name="ChangeLang" th:class="${Language} == 'CHN'? 'cui_button primary' : 'cui_button' " onclick="getFileList('CHN');"><span>중문</span></button>-->
-
-
-
-<!--                </div>-->
                 <div class="cui_tab">
                     <div class="tab_list">
                         <ul>
                             <li th:attr="aria-selected = ${Language} == 'KOR'? 'true' : '' ">
-                                <button type="button" name="ChangeLang" onclick="getFileList('KOR');" class="tab_button"><span>국문</span></button>
+                                <button type="button" name="ChangeLang" onclick="getFileList('KOR');" class="tab_button">&nbsp;&nbsp;<span>KOR</span>&nbsp;&nbsp;</button>
                             </li>
                             <li th:attr="aria-selected = ${Language} == 'ENG'? 'true' : '' " >
-                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('ENG');"><span>영문</span></button></li>
+                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('ENG');">&nbsp;&nbsp;<span>ENG</span>&nbsp;&nbsp;</button></li>
                             <li th:attr="aria-selected = ${Language} == 'JPN'? 'true' : '' " >
-                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('JPN');" ><span>일문</span></button></li>
+                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('JPN');" >&nbsp;&nbsp;<span>JPN</span>&nbsp;&nbsp;</button></li>
                             <li th:attr="aria-selected = ${Language} == 'CHN'? 'true' : '' " >
-                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('CHN');" ><span>중문</span></button></li>
+                                <button type="button" class="tab_button" name="ChangeLang" onclick="getFileList('CHN');" >&nbsp;&nbsp;<span>CHN</span>&nbsp;&nbsp;</button></li>
                         </ul>
                     </div>
 
@@ -128,13 +118,13 @@
                     <form action="/admin/siteMgmt/upload" method="post" enctype="multipart/form-data">
                         <table class="cui_table">
                             <colgroup>
-                                <col style="width:180px">
+                                <col style="width:250px">
                                 <col style="width:100px">
                                 <col>
                             </colgroup>
                             <tbody>
                             <tr>
-                                <th><span>워런티 협약 양식</span></th>
+                                <th><span data-langsid="워런티 협약 양식"></span></th>
                                 <td colspan="2">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
@@ -147,10 +137,8 @@
                                                 <div class="cui_items_wrap file_wrap" data-direction="left">
                                                     <div class="item_label" data-cui-icon="paperclip"><span id="WARANTY_1"></span></div>
                                                     <div class="item_content">
-                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                                                th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=WARANTY)}"><span>다운로드</span></button>
-<!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=WARANTY)}"><span data-langsid="다운로드"></span></button>
+                                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark"><span data-langsid="삭제"></span></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -161,23 +149,21 @@
                             </tr>
 
                             <tr>
-                                <th ><span>Audit 안전보건</br>(서면/방문)</span></th>
+                                <th ><span data-langsid="Audit 안전보건 (서면/방문)"></span></th>
                                 <td colspan="2">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
                                             <div class="cui_attachments">
                                                 <input type="file" class="cui_file_field" name="files">
-                                                <input type="hidden" class="cui_file_field" name="FILE_STATUS">
+                                                <input type="hidden" name="FILE_STATUS">
                                                 <input type="hidden" name="FILE_CASE" value="SAFTY"/>
                                                 <input type="hidden" name="FILE_GUBN" value=""/>
                                                 <input type="hidden" name="FILE_NUM" value="1"/>
                                                 <div class="cui_items_wrap file_wrap" data-direction="left">
                                                     <div class="item_label" data-cui-icon="paperclip"><span id="SAFTY_1"></span></div>
                                                     <div class="item_content">
-                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                                                th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=SAFTY)}"><span>다운로드</span></button>
-<!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=SAFTY)}"><span data-langsid="다운로드"></span></button>
+                                                        <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark"><span data-langsid="삭제"></span></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -187,7 +173,7 @@
                                 </td>
                             </tr>
                             <tr th:each="korPlantList, rowStat : ${korPlantListArray}" class="plant_row">
-                                <th  th:if="${rowStat.index==0}"  th:rowspan="${#arrays.length(korPlantListArray)}"><span>Audit 품질관리</br>(서면/방문)</span></th>
+                                <th  th:if="${rowStat.index==0}"  th:rowspan="${#arrays.length(korPlantListArray)}"><span data-langsid="Audit 품질관리 (서면/방문)"></span></th>
 <!--                                <td  th:unless="${rowStat.index==0}" th:rowspan="${korPlantList.size()}"></td>-->
                                 <td ><span th:text="${korPlantList.BASE_CODE}"></span></td>
                                 <td>
@@ -196,7 +182,7 @@
                                             <div class="item_content">
                                                 <div class="cui_attachments">
                                                     <input type="file" class="cui_file_field" name="files">
-                                                    <input type="hidden" class="cui_file_field" name="FILE_STATUS">
+                                                    <input type="hidden" name="FILE_STATUS">
                                                     <input type="hidden" name="FILE_CASE" value="PLANT"/>
                                                     <input type="hidden" name="FILE_GUBN" th:value="${korPlantList.BASE_CODE}"/>
                                                     <input type="hidden" name="FILE_NUM" value="1"/>
@@ -205,12 +191,11 @@
                                                             <span th:id="'PLANT_'+${korPlantList.BASE_CODE}+'_1'"></span>
                                                         </div>
                                                         <div class="item_content">
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download"
                                                                     th:href="@{/admin/siteMgmt/download(baseCode=${korPlantList.BASE_CODE},fileNum=1,sLang=${Language},GUBN=PLANT)}">
-                                                                <span>다운로드</span>
+                                                                <span data-langsid="다운로드"></span>
                                                             </button>
-<!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -220,7 +205,7 @@
                                             <div class="item_content">
                                                 <div class="cui_attachments">
                                                     <input type="file" class="cui_file_field" name="files">
-                                                    <input type="hidden" class="cui_file_field" name="FILE_STATUS">
+                                                    <input type="hidden" name="FILE_STATUS">
                                                     <input type="hidden" name="FILE_CASE" value="PLANT"/>
                                                     <input type="hidden" name="FILE_GUBN"  th:value="${korPlantList.BASE_CODE}"/>
                                                     <input type="hidden" name="FILE_NUM" value="2"/>
@@ -229,12 +214,11 @@
                                                             <span th:id="'PLANT_'+${korPlantList.BASE_CODE}+'_2'"></span>
                                                         </div>
                                                         <div class="item_content">
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download"
                                                                     th:href="@{/admin/siteMgmt/download(baseCode=${korPlantList.BASE_CODE},fileNum=2,sLang=${Language},GUBN=PLANT)}">
-                                                                <span>다운로드</span>
+                                                                <span data-langsid="다운로드">다운로드</span>
                                                             </button>
-                                                            <!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark"><span data-langsid="삭제"></span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -245,25 +229,24 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th rowspan="2"><span>Audit 광물</span></th>
-                                <td ><span>분쟁광물</span></td>
+                                <th rowspan="2"><span data-langsid="Audit 광물"></span></th>
+                                <td ><span data-langsid="분쟁광물"></span></td>
                                 <td>
                                     <div class="cui_items_wrap" data-direction="column">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <div class="cui_attachments">
                                                     <input type="file" class="cui_file_field" name="files">
-                                                    <input type="hidden" class="cui_file_field" name="FILE_STATUS">
+                                                    <input type="hidden" name="FILE_STATUS">
                                                     <input type="hidden" name="FILE_CASE" value="CMRT"/>
                                                     <input type="hidden" name="FILE_GUBN" value=""/>
                                                     <input type="hidden" name="FILE_NUM" value="1"/>
                                                     <div class="cui_items_wrap file_wrap" data-direction="left">
                                                         <div class="item_label" data-cui-icon="paperclip"><span id="CMRT_1"></span></div>
                                                         <div class="item_content">
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                                                    th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=CMRT)}"><span>다운로드</span></button>
-<!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download"
+                                                                    th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=CMRT)}"><span data-langsid="다운로드"></span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark"><span data-langsid="삭제"></span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -274,24 +257,23 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td ><span>책임광물</span></td>
+                                <td ><span data-langsid="책임광물"></span></td>
                                 <td>
                                     <div class="cui_items_wrap" data-direction="column">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <div class="cui_attachments">
                                                     <input type="file" class="cui_file_field" name="files">
-                                                    <input type="hidden" class="cui_file_field" name="FILE_STATUS">
+                                                    <input type="hidden" name="FILE_STATUS">
                                                     <input type="hidden" name="FILE_CASE" value="EMRT"/>
                                                     <input type="hidden" name="FILE_GUBN" value=""/>
                                                     <input type="hidden" name="FILE_NUM" value="1"/>
                                                     <div class="cui_items_wrap file_wrap" data-direction="left">
                                                         <div class="item_label" data-cui-icon="paperclip"><span id="EMRT_1"></span></div>
                                                         <div class="item_content">
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                                                    th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=EMRT)}"><span>다운로드</span></button>
-<!--                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download"
+                                                                    th:href="@{/admin/siteMgmt/download(baseCode=,fileNum=1,sLang=${Language},GUBN=EMRT)}"><span data-langsid="다운로드"></span></button>
+                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" ><span data-langsid="삭제"></span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -304,12 +286,12 @@
 
                             </tbody>
                         </table>
-                        <div class="cui_items_wrap" data-direction="right">
+                        <div class="cui_items_wrap" data-direction="right" style="margin-top:20px;">
                             <div class="item_content">
-                                <button type="submit" name="FILE_LANG" value="KOR" id="submit_KOR" class="cui_button primary" th:style="${Language} == 'KOR'? '' : 'display:none' " ><span>저장1</span></button>
-                                <button type="submit" name="FILE_LANG" value="ENG" id="submit_ENG" class="cui_button primary" th:style="${Language} == 'ENG'? '' : 'display:none' "><span>저장2</span></button>
-                                <button type="submit" name="FILE_LANG" value="JPN" id="submit_JPN" class="cui_button primary" th:style="${Language} == 'JPN'? '' : 'display:none' "><span>저장3</span></button>
-                                <button type="submit" name="FILE_LANG" value="CHN" id="submit_CHN" class="cui_button primary" th:style="${Language} == 'CHN'? '' : 'display:none' "><span>저장4</span></button>
+                                <button type="submit" name="FILE_LANG" value="KOR" id="submit_KOR" class="cui_button primary" th:style="${Language} == 'KOR'? '' : 'display:none' " ><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" value="ENG" id="submit_ENG" class="cui_button primary" th:style="${Language} == 'ENG'? '' : 'display:none' "><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" value="JPN" id="submit_JPN" class="cui_button primary" th:style="${Language} == 'JPN'? '' : 'display:none' "><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" value="CHN" id="submit_CHN" class="cui_button primary" th:style="${Language} == 'CHN'? '' : 'display:none' "><span data-langsid="저장"></span></button>
                             </div>
                         </div>
 
