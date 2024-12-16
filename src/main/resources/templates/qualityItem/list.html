@@ -13,7 +13,7 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title"><span data-langsid="Audit 노동환경"></span></h2>
+                        <h2 class="cui_title"><span data-langsid="Audit 안전보건"></span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
@@ -26,7 +26,7 @@
                         <tr>
                             <th><span data-langsid="양식 다운로드"></span></th>
                             <td>
-                                <form id="sendForm" action="/labourItem/upload" method="post" enctype="multipart/form-data" onsubmit="return sendSubmit($(this));">
+                                <form id="sendForm" action="/qualityItem/upload" method="post" enctype="multipart/form-data" onsubmit="return sendSubmit($(this));">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
                                             <div class="cui_attachments" style="width:500px;">
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="cui_jqGrid_body" id="Grid">
-                            <div id="gridArea" gridYN="" th:initData="${labourItemList}"></div>
+                            <div id="gridArea" gridYN="" th:initData="${qualityItemList}"></div>
                         </div>
                     </div>
                 </div>
@@ -133,12 +133,9 @@
             }
         };
         obj.colModel = [
-            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PROVISION", sortable: true, editor: false, editable: false },
-            { title: "No.", width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_ID", sortable: true, editor: false, editable: false },
-            { data_langsid: "항목", title: siteLang.getLang("항목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false, },
-            { data_langsid: "내용", title: siteLang.getLang("내용"), width: 600, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_DESC", sortable: true, editor: false, editable: false },
-            { data_langsid: "편성 기준", title: siteLang.getLang("편성 기준"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: true, editor: false, editable: false,formatter:newlineFmatter },
-            { data_langsid: "점수 배점", title: siteLang.getLang("점수 배점"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: true, editor: false, editable: false,formatter:newlineFmatter }
+            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "MAIN_ITEM", sortable: true, editor: false, editable: false },
+            { title: "No.", width: 90, halign: "center", align: "right", dataType: "string", dataIndx: "AUDIT_NO", sortable: true, editor: false, editable: false },
+            { title: "Check List", width: 600, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);
@@ -149,11 +146,6 @@
             $("#gridArea").pqGrid("refreshView");
         });
     });
-
-<!--    function  newlineFmatter (cellvalue, options)-->
-<!--    {-->
-<!--        return cellvalue.replaceAll("\n","<br>");-->
-<!--    }-->
 </script>
 </body>
 </html>
