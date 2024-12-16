@@ -3,15 +3,10 @@ package com.dongwoo.SQM.auditMgmt.controller;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditSearchResult;
-import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
-import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
-import com.dongwoo.SQM.auditMgmt.service.IsoAuthService;
-import com.dongwoo.SQM.auditMgmt.service.LabourHRService;
-import com.dongwoo.SQM.auditMgmt.service.SafetyHealthService;
+import com.dongwoo.SQM.auditMgmt.service.*;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.common.service.FileStorageService;
-import com.dongwoo.SQM.config.security.UserCustom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,17 +15,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -45,6 +36,8 @@ public class AuditMgmtRestController {
     private SafetyHealthService safetyHealthService;
     @Autowired
     private AuditCommonService auditCommonService;
+    @Autowired
+    private ConflictMineralsService conflictMineralsService;
 
     @Value("${Upload.path.attach}")
     private String uploadPath;
@@ -175,15 +168,33 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendAuthData")
-    public String sendLabourAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
+    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
         try {
-            auditCommonService.saveAuthData(data, type, fileNames);
+            auditCommonService.saveCommonAuthData(data, type, fileNames);
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {
             return "데이터 저장에 실패했습니다: " + e.getMessage();
         }
     }
+
+    /**
+     * 분쟁광물 제출
+     * @param fileNames
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/sendConflictAuthData")
+    public String sendConflictAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
+        try {
+            conflictMineralsService.saveAuthData(data, type, fileNames);
+
+            return "데이터가 성공적으로 저장되었습니다.";
+        } catch (Exception e) {
+            return "데이터 저장에 실패했습니다: " + e.getMessage();
+        }
+    }
+
 
     //파일명 인코딩
     private String encodeFileName(String filename) throws UnsupportedEncodingException {

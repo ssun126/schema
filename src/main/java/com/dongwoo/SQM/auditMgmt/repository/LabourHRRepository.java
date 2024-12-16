@@ -18,7 +18,9 @@ public class LabourHRRepository {
     public int insertFileInfo(LabourHRDTO labourHRDTO) {
         return sql.insert("Labour.insertFile", labourHRDTO);
     }
-
+    public LabourHRDTO getCompanyAuth(Map<String, Object> params) {
+        return sql.selectOne("Labour.getCompanyAuth", params);
+    }
     //업체별-Auth type별 첨부 파일 조회
     public LabourHRDTO getCompanyAuthFile(Map<String, Object> params) {
         return sql.selectOne("Labour.getCompanyAuthFile", params);

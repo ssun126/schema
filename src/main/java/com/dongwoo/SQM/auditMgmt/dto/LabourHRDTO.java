@@ -9,6 +9,8 @@ public class LabourHRDTO {
     private String AUTH_SEQ;
     @JsonProperty("COM_CODE")
     private String COM_CODE;
+    @JsonProperty("COM_NAME")
+    private String COM_NAME;
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
     @JsonProperty("APPROVE_STATE")

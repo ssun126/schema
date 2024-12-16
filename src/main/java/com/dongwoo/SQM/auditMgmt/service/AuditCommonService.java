@@ -1,11 +1,7 @@
 package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
-import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
-import com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
-import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
-import com.dongwoo.SQM.auditMgmt.repository.SafetyHealthRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +23,12 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AuditCommonService {
-    private final SafetyHealthRepository safetyHealthRepository;
     private final AuditMgmtRepository auditMgmtRepository;
 
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
-    public void saveAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
+    public void saveCommonAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         //List<SafetyHealthDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<SafetyHealthDTO>>() {});

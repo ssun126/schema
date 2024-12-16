@@ -2,9 +2,11 @@ package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO;
+import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.ConflictMineralsRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,7 @@ public class ConflictMineralsService {
     public void saveAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        //List<ConflictMineralsDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<ConflictMineralsDTO>>() {});
+        List<ConflictMineralsDTO> conflictMinerals = objectMapper.readValue(tableData, new TypeReference<List<ConflictMineralsDTO>>() {});
 
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
@@ -61,7 +63,9 @@ public class ConflictMineralsService {
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
         log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
 
+        // 파일이 존재하면 처리
         if (fileNames != null && fileNames.length > 0 && authMgmtDTO.getAUTH_SEQ() != null) {
+
             // 각 파일을 저장하고 경로를 DTO에 추가
             for(int i = 0; i < fileNames.length; i++) {
                 String filePath = saveFile(fileNames[i]);
@@ -71,17 +75,36 @@ public class ConflictMineralsService {
                 String fileName = path.getFileName().toString();  // 경로에서 파일명만 추출
 
                 log.info("원본 파일명: " + fileNames[i].getOriginalFilename());
-                ConflictMineralsDTO dto = new ConflictMineralsDTO();
-                dto.setCOM_CODE(comCode);
-                dto.setCONFLICT_TYPE(type); // EMRT or CMRT
-                dto.setFILE_NAME(fileName);  // 파일명 추가
-                dto.setFILE_PATH(filePath);  // 파일 경로 추가
-                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());  // 파일 경로 추가
-                log.info("dto: " + dto);
-                int rtCnt = conflictMineralsRepository.insertFileInfo(dto);  // insert
-                log.info("파일저장 Count: " + rtCnt);
+                for (ConflictMineralsDTO dto : conflictMinerals) {
+                    if (dto.getFILE_NAME().equals(fileNames[i].getOriginalFilename())) {
+                        dto.setFILE_NAME(fileName);  // 파일명 추가
+                        dto.setFILE_PATH(filePath);  // 파일 경로 추가
+                    }
+                }
             }
         }
+
+        //인증서 데이터 저장
+//        for (ConflictMineralsDTO dto : conflictMinerals) {
+//            dto.setCOM_CODE(comCode);
+//
+//            if(dto.getFILE_NAME()== null) { //파일 업로드를 하지 않으면 입력 항목 저장됨.
+//                Map<String, Object> params = new HashMap<>();
+//                params.put("AUTH_CODE", dto.getAUTH_CODE());
+//                params.put("COM_CODE", comCode);
+//                IsoAuthItemDTO ItemDTO = conflictMineralsRepository.findByIsoAuthItem(params);
+//                log.info(ItemDTO.getITEM_STATE());
+//                log.info(dto.getITEM_STATE());
+//                if (ItemDTO.getAUTH_CODE() != null) {
+//                    log.info(dto.getITEM_STATE());
+//                    if(ItemDTO != dto) {
+//                        conflictMineralsRepository.updateItem(dto);  // updateItem
+//                    }
+//                } else {
+//                    conflictMineralsRepository.insertItem(dto);  // insert
+//                }
+//            }
+//        }
         log.info("회사별 Audit 데이터 저장 완료");
 
     }

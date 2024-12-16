@@ -95,11 +95,11 @@ public class LabourHRService {
     }
 
     //업체별 정보
-    public AuditMgmtDTO getCompanyAuth(String type, String code) {
+    public LabourHRDTO getCompanyAuth(String type, String code) {
         Map<String, Object> params = new HashMap<>();
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
-        return auditMgmtRepository.getCompanyAuth(params);
+        return labourHRRepository.getCompanyAuth(params);
     }
 
     //업체별 인증 파일 정보

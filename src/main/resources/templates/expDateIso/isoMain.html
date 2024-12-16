@@ -97,7 +97,7 @@
 <script>
     var sendMail = function () {
         $.ajax({
-            url: '/sendEmail?to=recipient@example.com&subject=Test&text=Hello+World!',
+            url: '/sendEmail?fromMail=recipient@example.com&to=recipient@example.com&subject=Test&text=Hello+World!',
             type: 'GET',
             success: function(response) {
                  Common.Msg(response);

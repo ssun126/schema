@@ -27,10 +27,15 @@ public class LabourHRController {
     }
 
     @GetMapping("/admin/auditMgmt/labourHRDetail")
-    public String labourHRDetail(Model model, @RequestParam("COM_CODE") String com_code) {
+    public String labourHRDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
+        log.info("aaaaaaaa"+COM_CODE);
         // 회사의 노동환경 상태 정보를 가져옵니다.
-        AuditMgmtDTO companyAuth = labourHRService.getCompanyAuth("LABOUR", com_code);
-        model.addAttribute("companyAuth", companyAuth);
+        //LabourHRDTO companyAuth = labourHRService.getCompanyAuth("LABOUR", COM_CODE);
+        //model.addAttribute("companyAuth", companyAuth);
+
+        LabourHRDTO companyAuthFile = labourHRService.getCompanyAuthFile("LABOUR", COM_CODE);
+        model.addAttribute("companyAuthFile", companyAuthFile);
+        log.info("bbbbbbbbbbbbbbb"+companyAuthFile);
 
         return "labourHR/detail";
     }

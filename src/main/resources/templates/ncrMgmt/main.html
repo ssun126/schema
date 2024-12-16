@@ -352,44 +352,50 @@
 </div>
 
 <script>
-    var goDetail = function () {
-        Common.Dialog({ obj : $("#PopupncrMgmt"), blockClose : true });
-    }
+    $(document).ready(function () {
+       // datepicker 초기화
+       $("#datepicker").datepicker({
+           dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
+       });
+   });
+   var goDetail = function () {
+       Common.Dialog({ obj : $("#PopupncrMgmt"), blockClose : true });
+   }
 
-    $(document).ready(function() {
+   $(document).ready(function() {
 
-    });
- // 파일 선택 시 삭제 버튼 표시
-    function toggleDeleteButton(input) {
-        const deleteButton = input.closest('td').querySelector('.cui_button');
-        const fileLabel = input.closest('td').querySelector('.item_label span');
-        const fileLabelDiv = input.closest('td').querySelector('.item_label');
+   });
+// 파일 선택 시 삭제 버튼 표시
+   function toggleDeleteButton(input) {
+       const deleteButton = input.closest('td').querySelector('.cui_button');
+       const fileLabel = input.closest('td').querySelector('.item_label span');
+       const fileLabelDiv = input.closest('td').querySelector('.item_label');
 
-        if (input.files && input.files.length > 0) {
-            var fileName = input.files[0].name;  // Get the file name
-            fileLabel.textContent = fileName;    // Update the file name
-            fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
-            deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
-        } else {
-            fileLabel.textContent = '';
-            fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
-            deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
-        }
-    }
+       if (input.files && input.files.length > 0) {
+           var fileName = input.files[0].name;  // Get the file name
+           fileLabel.textContent = fileName;    // Update the file name
+           fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
+           deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
+       } else {
+           fileLabel.textContent = '';
+           fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
+           deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
+       }
+   }
 
-    // 파일 삭제
-    function clearFile(button) {
-        const fileInput = button.closest('td').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
-        const fileLabel = button.closest('td').querySelector('.item_label span');
-        const fileLabelDiv = button.closest('td').querySelector('.item_label');
+   // 파일 삭제
+   function clearFile(button) {
+       const fileInput = button.closest('td').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
+       const fileLabel = button.closest('td').querySelector('.item_label span');
+       const fileLabelDiv = button.closest('td').querySelector('.item_label');
 
-        // 파일 입력 초기화
-        fileInput.value = "";
-        fileLabel.textContent = '';
-        // 삭제 버튼 숨기기
-        button.style.display = 'none';
-        fileLabelDiv.style.display = 'none';
-    }
+       // 파일 입력 초기화
+       fileInput.value = "";
+       fileLabel.textContent = '';
+       // 삭제 버튼 숨기기
+       button.style.display = 'none';
+       fileLabelDiv.style.display = 'none';
+   }
 </script>
 </body>
 </html>

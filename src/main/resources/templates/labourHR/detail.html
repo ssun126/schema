@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="kr" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
 <body>
 <div class="cui_content">
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span th:text="${companyAuth.COM_NAME}"></span></h2>
+                <h2 class="cui_title"><span th:text="${companyAuthFile.COM_NAME}"></span></h2>
             </div>
             <div class="head_aside">
-                <p>(제출:<span>2024.01.01</span>)</p>
+                <p><span id="authState"></span></p>
             </div>
         </div>
         <div class="cui_body">
@@ -194,7 +196,32 @@
     $(document).ready(function() {
         $('#resultField').hide();
         $('#rejectReason').hide();
+
+        $('#authState').text('');
+        loadInfo();
     });
+
+
+
+    //입력 파일 출력
+    function loadInfo(){
+        var dataSize = [[${companyAuthFile != null ? 1 : 0}]];
+        if (dataSize > 0) {
+            var state = '[[${companyAuthFile.APPROVE_STATE != null ? companyAuthFile.APPROVE_STATE : ''}]]';
+            if (state !== '') {
+                var fileName = '[[${companyAuthFile.FILE_NAME}]]';
+                $('#downFileName').text(fileName);
+                $('#deleteButton').css("display", "block");
+
+                var approvedDate = '[[${companyAuthFile.APPROVE_DATE}]]';
+                if (state === 'SEND') {
+                    $('#authState').text('[제출:' +approvedDate+']');
+                    $('.resultField').show();
+                    $('#sendAuth').hide();
+                }
+            }
+        }
+    }
 </script>
 </body>
 </html>
