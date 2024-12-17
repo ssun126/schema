@@ -55,7 +55,7 @@
                 <div class="jqGrid_label"> &nbsp;</div>
                 <div class="jqGrid_aside">
                     <button type="button" class="cui_button endpoint" data-cui-icon="upload"
-                            onclick="sendMsdsExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
+                            onclick="sendExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
                 </div>
             </div>
             <div class="cui_jqGrid_body" id="Grid">
@@ -65,7 +65,7 @@
     </div>
 </div>
 <script>
-    var sendMsdsExpAlert = function () {
+    var sendExpAlert = function () {
         var sel_idxs = "";
         var sel_idxs_count = 0;
         var grid = $("#gridArea").pqGrid("instance");
