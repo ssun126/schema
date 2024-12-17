@@ -108,4 +108,5 @@ public class LabourHRService {
         params.put("COM_CODE", code);
         return labourHRRepository.getCompanyAuthFile(params);
     }
+
 }

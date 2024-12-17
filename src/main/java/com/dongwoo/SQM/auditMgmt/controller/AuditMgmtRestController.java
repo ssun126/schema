@@ -7,6 +7,9 @@ import com.dongwoo.SQM.auditMgmt.service.*;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.common.service.FileStorageService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,14 +18,18 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -62,8 +69,6 @@ public class AuditMgmtRestController {
         return new AuditSearchResult(isoAuthList, pageMaker);
     }
 
-
-
     /**
      * ISO 인증서 정보 리스트
      * @param criteria
@@ -78,13 +83,7 @@ public class AuditMgmtRestController {
         return companyIsoAuthList;
     }
 
-    // admin -만료일 - 업체별 ISO 인증서 정보
-    @GetMapping("/searchIsoExpDate")
-    public List<IsoAuthItemDTO> searchExpDateIsoAuth(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("expDate") String expDate,  Criteria criteria) {
-        // 검색 조건에 맞는 결과를 반환
-        List<IsoAuthItemDTO> isoAuthList = isoAuthService.getExpDateList(code,name,expDate,criteria);
-        return isoAuthList;
-    }
+
 
     //IsoAuth 정보 가져오기
     @GetMapping("/getIsoAuthData")
@@ -195,7 +194,6 @@ public class AuditMgmtRestController {
         }
     }
 
-
     //파일명 인코딩
     private String encodeFileName(String filename) throws UnsupportedEncodingException {
         // Encode filename in UTF-8
@@ -204,5 +202,7 @@ public class AuditMgmtRestController {
         // Ensure that non-ASCII characters are correctly encoded
         return encodedFilename;
     }
+
+
 
 }

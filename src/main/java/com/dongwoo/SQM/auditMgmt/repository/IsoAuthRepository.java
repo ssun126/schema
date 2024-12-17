@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class IsoAuthRepository {
     }
 
     //검색된 인증서 리스트 조회
-    public List<IsoAuthItemDTO> getExpDateList(Map<String, Object> params) {
+    public List<HashMap> getExpDateList(Map<String, Object> params) {
         return sql.selectList("IsoAuthItem.getExpDateList", params);
     }
 

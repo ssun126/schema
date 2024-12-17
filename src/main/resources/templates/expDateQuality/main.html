@@ -52,7 +52,7 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button primary" onclick="expDateSave($('#formExp'));"><span
+                    <button type="button" class="cui_button primary" onclick="expDateMsdsSave($('#formExp'));"><span
                             data-langsid="저장"></span></button>
                 </div>
             </div>
@@ -109,7 +109,7 @@
                 <div class="jqGrid_label"> &nbsp;</div>
                 <div class="jqGrid_aside">
                     <button type="button" class="cui_button endpoint" data-cui-icon="upload"
-                            onclick="sendExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
+                            onclick="sendMsdsExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
                 </div>
             </div>
             <div class="cui_jqGrid_body" id="Grid">
@@ -119,7 +119,7 @@
     </div>
 </div>
 <script>
-    var sendExpAlert = function () {
+    var sendMsdsExpAlert = function () {
         var sel_idxs = "";
         var sel_idxs_count = 0;
         var grid = $("#gridArea").pqGrid("instance");
@@ -155,7 +155,7 @@
         }
     }
 
-    var expDateSave = function (obj) {
+    var expDateMsdsSave = function (obj) {
         if (Common.Validate(obj)) {
             Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                 mode : "confrim"

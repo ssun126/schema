@@ -377,7 +377,7 @@
     </select>
 
     <select id="getApiList" parameterType="map" resultType="hashMap">
-        select FACTORY_ID, VENDOR_ID AS COM_CODE, NAME AS COM_NAME from VENDOR
+        select DISTINCT VENDOR_ID AS COM_CODE, NAME AS COM_NAME from VENDOR
         WHERE 1=1
         <if test="COM_CODE != '' ">
             and VENDOR_ID = #{COM_CODE}

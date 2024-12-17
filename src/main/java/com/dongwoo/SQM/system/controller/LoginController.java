@@ -350,8 +350,9 @@ public class LoginController {
                     parmaDTO.setCOM_USER_IDX(comUserIdx);
                     if(comUserIdx != 0) {
                         UserInfoCompanyUserDTO userInfoCompanyUserDTO = memberService.findByCompanyUserComUserIdx(parmaDTO);
-                        String comUserName = userInfoCompanyUserDTO.getUSER_NAME();
-                        if(!userInfoCompanyUserDTO.getUSER_NAME().isEmpty()) {
+
+                        if(userInfoCompanyUserDTO != null) {
+                            String comUserName = userInfoCompanyUserDTO.getUSER_NAME();
                             user.setCOM_USER_IDX(comUserIdx);
                             user.setUSER_NAME(comUserName);
                         }

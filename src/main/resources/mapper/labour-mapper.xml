@@ -21,9 +21,4 @@
         WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
     </select>
 
-    <select id="getAuditItemsAll" resultType="labour">
-        SELECT *
-        FROM SC_AUDIT_LABOUR_ITEM ALI
-    </select>
-
 </mapper>
