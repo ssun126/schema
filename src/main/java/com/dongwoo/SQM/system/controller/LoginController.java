@@ -85,7 +85,7 @@ public class LoginController {
             log.info("authentication======"+authentication);
 
             // 권한 가져오기
-            model.addAttribute("role", "admin");
+            model.addAttribute("role", "ROLE_ADMIN");
             model.addAttribute("isSuccess", isSuccess);
             model.addAttribute("loginError", "");
             return "main";
@@ -343,7 +343,7 @@ public class LoginController {
 
             log.info("user======"+user);
             for (GrantedAuthority authority : auth.getAuthorities()) {
-                if(!authority.getAuthority().equals("ADMIN")){
+                if(!authority.getAuthority().equals("ROLE_ADMIN")){
                     //공동 작업자  COM_USER_IDX 가져오기
                     UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
                     parmaDTO.setCOM_CODE(user.getCOM_CODE()); //위에서 만들어진 사용자 IDX
