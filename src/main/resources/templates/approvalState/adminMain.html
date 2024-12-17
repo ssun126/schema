@@ -19,6 +19,18 @@
                     <div class="cui_search">
                         <div class="search_list cui_grid_wrap ">
                             <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" data-langsid="업체코드"></strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="sComCode" name="sComCode" th:value="${sComCode}" search="searchBtn" />
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <strong class="item_label" data-langsid="업체명"></strong>
+                                <div class="item_content">
+                                    <input class="cui_text_field" type="text" id="sComName" name="sComName" th:value="${sComName}" search="searchBtn" />
+                                </div>
+                            </div>
+                            <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="자재코드"></strong>
                                 <div class="item_content">
                                     <input class="cui_text_field" type="text" id="sPartCode" name="sPartCode" th:value="${sPartCode}" search="searchBtn" />
@@ -212,24 +224,20 @@
 
             $(window).resize(function () {
                 $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
-                    $("#gridArea").pqGrid("refreshView");
-                });
+                $("#gridArea").pqGrid("refreshView");
             });
+        });
 
-            var downloadExcel = function () {
-                var grid = $("#gridArea").pqGrid("instance");
-                var colModel = grid.getColModel();
-                colModel[0].hidden = true;
+        var downloadExcel = function () {
+            var grid = $("#gridArea").pqGrid("instance");
 
-                grid.exportData({
+            grid.exportData({
                 url: "/common/exportData",
                 format: "xlsx",
                 zip: false,
-                filename: "PART_MANAGEMENT_" + Common.GetTodayTimeString(),
+                filename: "DW_PART_MANAGEMENT_" + Common.GetTodayTimeString(),
                 render: true
             });
-
-            colModel[0].hidden = false;
         }
     </script>
 </body>

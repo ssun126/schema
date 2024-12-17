@@ -3,660 +3,257 @@
       xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
-<style>
-    #PartCode {
-        z-index: 1050; /* 두 번째 모달은 첫 번째보다 높은 z-index */
-        top: 60%;
-        left: 70%;
-        transform: translate(-60%, -70%);
-    }
-    .cui_items_wrap>.item_label{
-        width: 100px;
-    }
-</style>
 <body>
 <div class="cui_content">
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>업체코드</span></h2>
+                <h2 class="cui_title"><span data-langsid="자재관리"></span></h2>
             </div>
         </div>
         <div class="cui_body">
-            <form id="searchForm" method="get">
+            <form id="searchForm" method="get" onsubmit="return false;">
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap ">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">자재코드</strong>
+                            <strong class="item_label" data-langsid="자재코드"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searhPartCode" placeholder="업체코드를 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="sPartCode" name="sPartCode" th:value="${sPartCode}" search="searchBtn" />
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">자재명</strong>
+                            <strong class="item_label" data-langsid="자재명"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchPartName" placeholder="업체명을 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="sPartName" name="sPartName" th:value="${sPartName}" search="searchBtn" />
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">신청인ID</strong>
+                            <strong class="item_label" data-langsid="신청인ID"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchRegUser" placeholder="업체명을 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="sRegUser" name="sRegUser" th:value="${sRegUser}" search="searchBtn" />
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">사용여부</strong>
+                            <strong class="item_label" data-langsid="사용여부"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchUseYN">
-                                    <option value="" selected >전체</option>
-                                    <option value="active" >active</option>
-                                    <option value="inactive">inactive</option>
+                                <select class="cui_select_field" id="sUseYN" name="sUseYN" onchange="ListSearch();">
+                                    <option value=""></option>
+                                    <option value="ACTIVE" th:selected="${sUseYN}=='ACTIVE'">ACTIVE</option>
+                                    <option value="INACTIVE" th:selected="${sUseYN}=='INACTIVE'">INACTIVE</option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">취급PLANT</strong>
+                            <strong class="item_label" data-langsid="취급PLANT"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchPlant">
-                                    <option value="" selected >전체</option>
-                                    <option th:each="searchPlantList : ${searchPlantList}" th:value="${searchPlantList.BASE_CODE}"
-                                            th:text="${searchPlantList.BASE_VALUE}"></option>
-
+                                <select class="cui_select_field" id="sPlant" name="sPlant" onchange="ListSearch();">
+                                    <option value=""></option>
+                                    <option th:each="searchPlantList : ${searchPlantList}" th:value="${searchPlantList.BASE_CODE}" th:text="${searchPlantList.BASE_VALUE}" th:selected="${searchPlantList.BASE_CODE}==${sPlant}"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">승인현황</strong>
+                            <strong class="item_label" data-langsid="승인현황"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchApproval">
-                                    <option value=""  > 전체</option>
-                                    <option value="1" >신규</option>
-                                    <option value="2" >작성중</option>
-                                    <option value="3" >검토중</option>
-                                    <option value="4" >승인</option>
-                                    <option value="5" >반려</option>
-                                    <option value="6" >자료보완</option>
+                                <select class="cui_select_field" id="sApproval" name="sApproval" onchange="ListSearch();">
+                                    <option value=""></option>
+                                    <option value="0" data-langsid="신규" th:selected="${sApproval}=='0'"></option>
+                                    <option value="1" data-langsid="작성중" th:selected="${sApproval}=='1'"></option>
+                                    <option value="2" data-langsid="검토중" th:selected="${sApproval}=='2'"></option>
+                                    <option value="3" data-langsid="승인" th:selected="${sApproval}=='3'"></option>
+                                    <option value="4" data-langsid="반려" th:selected="${sApproval}=='4'"></option>
+                                    <option value="5" data-langsid="자료보완" th:selected="${sApproval}=='5'"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">승인일자</strong>
+                            <strong class="item_label" data-langsid="승인일자"></strong>
                             <div class="item_content" data-role="calendar-picker">
-                                <input type="text" class="cui_text_field datepicker" id="searchStartDate">
-                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="startDate"><span>날자 선택</span></button>
+                                <input type="text" class="cui_text_field datepicker" id="sStartDate" name="sStartDate" datePickerControl="" th:value="${sStartDate}">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                             </div>
-                            ~
+                            <div class="item_content" style="width:10px;padding-top:5px;">~</div>
                             <div class="item_content" data-role="calendar-picker">
-                                <input type="text" class="cui_text_field datepicker" id="searchEndDate">
-                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="endDate"><span>날자 선택</span></button>
+                                <input type="text" class="cui_text_field datepicker" id="sEndDate" name="sEndDate" datePickerControl="" th:value="${sEndDate}">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                             </div>
                         </div>
-
                     </div>
                     <div class="search_action">
-                        <button type="button" class="cui_button primary search_btn" id="searchBtn"><span>검색</span></button>
+                        <button type="button" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();"><span data-langsid="검색"></span></button>
                     </div>
                 </div>
             </form>
-            <div class="cui_toolbar">
-                <div class="toolbar_content">
-                    <div class="toolbar_default"></div>
+            <div class="cui_jqGrid_section">
+                <div class="cui_jqGrid_head">
+                    <div class="jqGrid_label"> &nbsp;</div>
+                    <div class="jqGrid_aside">
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick=""><span data-langsid="삭제"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                    </div>
                 </div>
-                <div class="toolbar_aside">
-                    <button type="button" class="cui_button secondary" onclick="modal_open('PartMgmt','add', '', '')"><span>추가</span></button>
-                    <button type="button" class="cui_button secondary" onclick="delPart()"><span>삭제</span></button>
-                    <button type="button" class="cui_button secondary" onclick="downloadExcel()"><span>엑셀다운로드</span></button>
+                <div class="cui_jqGrid_body" id="Grid">
+                    <div id="gridArea" gridYN="" th:initData="${partMgmtListStr}"></div>
                 </div>
-            </div>
-
-            <table class="cui_table center" id="partMgmtTable">
-                <colgroup>
-                    <col style="width:50px;">
-                    <col style="width:130px;">
-                    <col>
-                    <col style="width:130px;">
-                    <col style="width:80px;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th><span>선택</span></th>
-                    <th><span>자재코드</span></th>
-                    <th><span>자재명칭</span></th>
-                    <th><span>취급Plant</span></th>
-                    <th><span>국가</span></th>
-                    <th><span>신청ID</span></th>
-                    <th><span>사용여부</span></th>
-                    <th><span>승인현황</span></th>
-                    <th><span>승인일자</span></th>
-                    <th><span>수정</span></th>
-                </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-            <div id="pagination" class="pagination" style="text-align: center"></div>
-            <div class="table-wrapper">
-            </div>
-        </div>
-    </div>
-</div>
-<div class="cui_dialog" style="width:400px;display:none;" id="PartMgmt">
-    <div class="dialog_container">
-        <div class="dialog_head">
-            <div class="dialog_title">
-                <div class="main_label"><span id="modalTitle">신규추가</span></div>
-            </div>
-            <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('PartMgmt')"><span>Close</span></button>
-            </div>
-        </div>
-        <div class="dialog_body">
-            <div class="body_root">
-                <form class="cui_form_section" data-legend="true" name="formPartMgmt">
-                    <fieldset>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">자재 코드</strong>
-                            <div class="item_content">
-                                <input type="hidden" name="PM_IDX"/>
-                                <input id="modalPartCode" name="PM_PART_CODE" class="cui_text_field fixdata">
-                                <button type="button" class="cui_button icon" data-cui-icon="search" id="getPartCode"><span>검색</span></button>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">자재판매국가</strong>
-                            <div class="item_content">
-                                <input id="modalPartCountry" name="PM_PART_COUNTRY" class="cui_text_field fixdata">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">자재명칭</strong>
-                            <div class="item_content">
-                                <input id="modalPartName" name="PM_PART_NAME" class="cui_text_field fixdata">
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">성상</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field wide" id="modalPartQulity" name="PM_QUALITY">
-                                    <option value="LIQUID">액체</option>
-                                    <option value="SOLID">고체</option>
-                                    <option value="GAS">기체</option>
-                                </select>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">혼합/단일</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field wide" id="modalPartStatus" name="PM_STATUS">
-                                    <option value="MIX">혼합</option>
-                                    <option value="SINGLE">단일</option>
-                                </select>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">Chemical 여부</strong>
-                            <div class="item_content">
-                                <select class="cui_select_field wide" id="modalPartChemical" name="PM_CHEMICAL_YN">
-                                    <option value="Y">Y</option>
-                                    <option value="N">N</option>
-                                </select>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">취급 PLANT</strong>
-                            <div class="item_content">
-                                <input id="modalPartPlant" name="PM_PART_PLANT_CODE" class="cui_text_field fixdata">
-                            </div>
-                        </label>
-
-                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-                            <div class="item_content">
-                                <button type="submit" id="PartCodeMgmtAdd" class="cui_button primary"><span>저장</span></button>
-                                <button type="button" id="PartCodeMgmtPop" class="cui_button secondary" onClick="modal_close('PartMgmt')"><span>닫기</span></button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="cui_dialog" style="width:450px;display:none;" id="PartCode">
-    <div class="dialog_container">
-        <div class="dialog_head">
-            <div class="dialog_title">
-                <div class="main_label"><span>자재코드 선택</span></div>
-            </div>
-            <div class="dialog_toolbar">
-                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('PartCode')"><span>Close</span></button>
-            </div>
-        </div>
-        <div class="dialog_body">
-            <div class="body_root">
-                <form class="cui_form_section" data-legend="true" id="formPartCode">
-                    <table class="cui_table center" id="partCodeTable">
-                        <colgroup>
-                            <col style="width:90px;">
-                            <col>
-                            <col>
-                            <col>
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>자재코드</span></th>
-                            <th><span>자재명</span></th>
-                            <th><span>PLANT</span></th>
-                            <th><span>국가</span></th>
-                            <th><span>선택</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
-                </form>
             </div>
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        $('#searchBtn').click();
-          //업체 정보 추가
-        $("form[name='formPartMgmt']").on('submit', function(e) {
-            e.preventDefault(); // 폼의 기본 제출 이벤트를 막음
-
-            // 폼 데이터를 직렬화하여 가져오기
-            // 최초 자재 관리 등록 시 INACTIVE (승인 : ACTIVE, 반려 : INACTIVE)
-            var PartMgmtDTO = {
-                PM_IDX : $('input[name=PM_IDX]').val() == '' ? 0:$('input[name=PM_IDX]').val(),
-                PM_PART_CODE: $('#modalPartCode').val(),
-                PM_PART_PLANT_CODE: $('#modalPartPlant').val(),
-                PM_PART_COUNTRY: $('#modalPartCountry').val(),
-                PM_QUALITY: $('select[name=PM_QUALITY]').val(),
-                PM_STATUS: $('select[name=PM_STATUS]').val(),
-                PM_CHEMICAL_YN: $('select[name=PM_CHEMICAL_YN]').val(),
-                PM_ACTIVE_YN : 'INACTIVE',
-                PM_APPROVAL_STATUS : $('input[name=PM_IDX]').val() == ''? '1' : $('input[name=PM_IDX]').val()
-            };
-
-            console.log("formData>>>>>>>>>"+JSON.stringify(PartMgmtDTO));
-            $.ajax({
-                type: 'POST',
-                url: '/user/partMgmt/setPartMgmtData',  //'/admin/companyInfo/company/save',    //
-                contentType: 'application/json',
-                data: JSON.stringify(PartMgmtDTO),
-                success: function(response) {
-                    console.log('Form successfully submitted!', response);
-                    // 성공적으로 제출 후
-                    modal_close('PartMgmt'); //모달 닫기
-                    $('#searchBtn').click(); //리스트 새로 로드
-                },
-                error: function(xhr, status, error) {
-                    console.error('Form submission failed:', error);
-                }
-            });
-        });
-
-         // datepicker를 input 필드에 적용
-         $('.datepicker').datepicker({
-             dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
-             showOn: "focus"
-         });
-
-         // 버튼 클릭 시 input 필드의 datepicker 열기
-         $('[data-cui-icon="calendar"]').on('click', function() {
-             var targetId = $(this).attr('id'); // 클릭된 요소의 id 가져오기
-             console.log(targetId + " was clicked");
-
-             // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
-             if (targetId === "startDate") {
-                $('#searchStartDate').datepicker('show'); // 첫 번째 datepicker 열기
-             } else if (targetId === "endDate") {
-                $('#searchEndDate').datepicker('show'); // 두 번째 datepicker 열기
-             }
-         });
-
-        // 검색 버튼 클릭 시
-        $('#searchBtn').on('click', function() {
-            var code = $('#searhPartCode').val();  // 자재코드
-            var name = $('#searchPartName').val();  // 자재명
-            var reguser = $('#searchRegUser').val();  // 등록자
-            var useyn = $('#searchUseYN').val();  // 사용유무
-            var plant = $('#searchPlant').val();  // plant
-            var approval = $('#searchApproval').val();  // 승인현황
-            var sdate = $('#searchStartDate').val();  // 시작날짜
-            var edate = $('#searchEndDate').val();  // 끝날짜
-
-
-            $.ajax({
-                url: '/user/partMgmt/searchPartMgmt',  // 서버의 검색 API URL
-                type: 'GET',
-                data: {
-                    code    :code     ,      // 업체명
-                    name    :name     ,      // 업체 코드
-                    reguser :reguser ,            // 국가
-                    useyn   :useyn   ,          // 기본값으로 첫 페이지
-                    plant   :plant   ,          // 한 페이지에 표시할 항목 수
-                    approval:approval,
-                    sdate   :sdate   ,
-                    edate   :edate
-
-                },
-                success: function(response) {
-                    // 테이블에 결과 채우기
-                    var tableBody = $('#partMgmtTable tbody');
-                    tableBody.empty();  // 기존 내용 비우기
-
-                    // 검색된 결과를 테이블에 추가
-                    //response.resultList.forEach(function(partmgmt) {
-                    response.forEach(function(partmgmt) {
-                         var row = '<tr>' +
-                                     //(partmgmt.PM_APPROVAL_DATE === '' ? 삭제는 승인 요청 전까지만 가능
-                                     (partmgmt.PM_REQUEST_APPROVAL_DATE == ' ' && parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) <= 2?
-                                        '<td><span><input type="checkbox" name=\'PM_IDX_CHECK\' value=\''+ partmgmt.PM_IDX +'\'></span></td>' :
-                                        '<td><span></span></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
-                                        //'<td>' + partmgmt.PM_PART_CODE + '</td>' +
-
-                                        (partmgmt.PM_REQUEST_APPROVAL_DATE != ' '  && parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) <= 2?
-                                        '<td><span><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'MODIFY\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></span></td>'  :
-                                        '<td><span><a href="javascript:void(0);" onclick="modal_open(\'PartMgmt\', \'READ\', \'/user/partMgmt/getPartMgmtData\', \''+ partmgmt.PM_IDX + '\')">'  + partmgmt.PM_PART_CODE + '</a></span></td>' ) +  // company.COM_STATUS가 'N'이 아닌 경우에
-
-                                        //'<td><a href="javascript:void(0);" onclick="modal_open(\'PartCode\', \'second\', \'/user/getPartCodeData\', \''+ partmgmt.COM_CODE + '\')">' + company.COM_NAME + '</a></td>' +
-
-                                        '<td><span  id="modifyData_'+partmgmt.PM_IDX+'"><a href="javascript:void(0);" class="load-page" data-code="'+ partmgmt.PM_IDX +'" >' + partmgmt.PM_PART_NAME + '</a></span>'
-
-                                        +(parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) >3 ? '<span style="display:none;" id="changeData_'+partmgmt.PM_IDX+'"><button onclick="goModify('+ partmgmt.PM_IDX +')" >' + partmgmt.PM_PART_NAME + '</button></span>'
-                                                                                    : '' )
-
-                                        +'</td>' +
-
-                                        '<td><span>' + partmgmt.PM_PART_PLANT_CODE + '</span></td>' +
-                                        '<td><span>' + partmgmt.PM_PART_COUNTRY + '</span></td>' +
-                                        '<td><span>' + partmgmt.PM_REG_USER + '</span></td>' +
-                                        '<td ><span id="modifyActive_'+partmgmt.PM_IDX+'">' + partmgmt.PM_ACTIVE_YN + '</span>'
-                                        +(parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) >3 ? '<span style="display:none;" id="changeActive_'+partmgmt.PM_IDX+'"><select onchange="activeChange('+partmgmt.PM_IDX+',this.value)"><option value="ACTIVE">ACTIVE</option><option value="INACTIVE">INACTIVE</option></select></span>'
-                                                                                        : '')
-                                        +'</td>' +
-                                        '<td><span>' + partmgmt.PM_APPROVAL_STATUS +
-                                        ' </span><input type=\'hidden\' name=\'PM_APPROVAL_STATUS_VAL\' value=\''+partmgmt.PM_APPROVAL_STATUS_VAL+'\' >'+
-                                        ' <input type=\'hidden\' name=\'PM_REQUEST_APPROVAL_DATE\' value=\''+partmgmt.PM_REQUEST_APPROVAL_DATE+'\' >'+
-                                        '</td>' +
-                                        '<td><span>' + partmgmt.PM_APPROVAL_DATE + '</span></td>' +
-                                        (parseInt(partmgmt.PM_APPROVAL_STATUS_VAL) >3 ?
-                                        '<td><button onclick=\'Modify_PartMgmt(' + partmgmt.PM_IDX + ',"'+partmgmt.PM_ACTIVE_YN+'")\'>수정</button></td>' : '<td></td>') +  // company.COM_STATUS가 'N'이 아닌 경우에
-                                      '</tr>';
-                        tableBody.append(row);  // 테이블에 새 행 추가
-                    });
-
-                },
-                error: function() {
-                    alert("검색 결과를 가져오는 데 실패했습니다.");
-                }
-            });
-        });
-
-        // 업체코드 검색
-        $('#getPartCode').on('click', function() {
-
-            modal_open('PartCode', 'second', '/user/partMgmt/PartCodeList', '') //모달창 오픈
-        });
-    });
-    //documtne ready end
-
-    //수정 버튼 클릭 후
-    function Modify_PartMgmt(idx,active){
-
-        if($("#modifyData_"+idx).css("display") != "none"){
-
-            $("#modifyData_"+idx).css("display","none");
-            $("#modifyActive_"+idx).css("display","none");
-
-            $("#changeData_"+idx).css("display","block");
-            $("#changeActive_"+idx+" select").val(active);
-            $("#changeActive_"+idx).css("display","block");
-        }
+    var addOpen = function () {
+        Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "New" } });
     }
 
-    function activeChange(idx, seletval){
-        //var status =$(this).val();
+    var SheetDataConvert = function (data) {
+        var dataJson = JSON.parse(data);
 
-        $.ajax({
-            url : '/user/partMgmt/updateActive',
-            type : 'GET',
-            data : {
-                PM_ACTIVE_YN : seletval,
-                PM_IDX : idx
-            },
-            success : function(response){
-                showAlert('success', '수정되었습니다');
-            },
-            error : function(xhr,status,error) {
-                console.error("error : " + error)
+        for (var i = 0; i < dataJson.length; i++) {
+            dataJson[i].CHECK_YN = false;
+            if (dataJson[i].PM_APPROVAL_STATUS == "0") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = "";
+            } else if (dataJson[i].PM_APPROVAL_STATUS == "1") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("작성중");
+            } else if (dataJson[i].PM_APPROVAL_STATUS == "2") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("검토중");
+            } else if (dataJson[i].PM_APPROVAL_STATUS == "3") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("승인");
+            } else if (dataJson[i].PM_APPROVAL_STATUS == "4") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("반려");
+            } else if (dataJson[i].PM_APPROVAL_STATUS == "5") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("자료보완");
             }
+        }
+
+        return dataJson;
+    }
+
+    var ListSearch = function () {
+        var url = location.pathname;
+
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter($("#searchForm"));
+        Common.Ajax(url, ReqInfo, function (data) {
+            var dataJson = SheetDataConvert(data);
+
+            $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+            $("#gridArea").pqGrid("refreshView");
         });
     }
 
-    function goModify(idx){
-        if($("#changeActive_"+idx+" select").val() == "ACTIVE"){
-            showAlert('warning', '상태를 INACTIVE 로 변경 후 수정이 가능합니다');
-            return;
-        }else{
-            var url = "/user/partMgmt/goDetail?PM_IDX="+idx;
-            window.location.href=url;
-        }
+    $(function () {
+        var heightMinus = 330;
 
-    }
+        var data = SheetDataConvert($("#gridArea").attr("initData"));
 
-    // 링크 클릭 시 콘텐츠를 로드
-    $(document).on("click", ".load-page", function(e) {
-        e.preventDefault();
-
-        const idx = $(this).data("code");
-        var status = parseInt($(this).closest("tr").find("input[name=PM_APPROVAL_STATUS_VAL]").val());
-        var url = "/user/partMgmt/goDetail?PM_IDX="+idx;
-
-        if(status>2){
-            url = "/user/partMgmt/goReadDetail?PM_IDX="+idx;
-        }
-
-        history.pushState(null, null, url);  // 브라우저 히스토리 업데이트
-        //loadContent(url);
-        window.location.href=url;
-        //goMenu(url);
-    });
-
-
-    //삭제
-    function delPart(){
-        var selectValues = [];
-        var count = 0;
-
-        //$('input:checkbox[name=PM_IDX_CHECK]').find('input:checked').each(function(){
-        $('input:checkbox[name=PM_IDX_CHECK]').each(function(){
-            if($(this).is(":checked")==true){
-                var value = $(this).val();
-                var apprDate = $(this).closest("tr").find('input[name="PM_REQUEST_APPROVAL_DATE"]').val();
-                if(apprDate == ' '){
-                    selectValues.push(value);
-                }else{
-                    count++;
-                }
+        var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 2 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: true,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowInit: function () {
+            return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+                var data = ui.rowData;
+                // Common.MoveUrl("/admin/partMgmt/goReadDetail?PM_IDX=" + data.PM_IDX);
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
             }
-        });
-
-
-        if(count>0){
-            showAlert('warning', '삭제할 수 없는 데이터가 있습니다');
-            return;
-        }else{
-            if(selectValues.length == 0){
-                showAlert('warning', '삭제할 데이터가 없습니다');
-            return;
-            }else{
-
-                var app_num = selectValues.join(',');
-                $.ajax({
-                    url : '/user/partMgmt/deletePartMgmt',
-                    type : 'GET',
-                    data : {
-                        ARR_PM_IDX : app_num
-                    },
-                    success : function(response){
-                        showAlert('success', '삭제되었습니다');
-                        $('#searchBtn').click();
-                    },
-                    error : function(xhr,status,error) {
-                        console.error("error : " + error)
+        };
+        obj.colModel = [
+            {
+                dataIndx: "CHECK_YN", width: 50, halign: "center", align: "center", resizable: true,
+                title: "",
+                type: 'checkBoxSelection', sortable: false, editor: true, editable: true,
+                dataType: 'bool',
+                cb: {
+                    all: false,
+                    header: false
+                }, render: function (ui) {
+                    var data = ui.rowData;
+                    if (ui.cellData == undefined) {
+                        return { text: "" };
+                    } else {
+                        if(data.PM_REQUEST_APPROVAL_DATE == "" && Common.Convert.Int(data.PM_APPROVAL_STATUS) <= 2){
+                            return { text: "" };
+                        }else{
+                            return;
+                        }
                     }
-                });
-            }
+                }
+            },
+            { data_langsid: "자재코드", title: siteLang.getLang("자재코드"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_CODE", sortable: false, editor: false, editable: false },
+            { data_langsid: "자재명칭", title: siteLang.getLang("자재명칭"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: false, editor: false, editable: false },
+            { data_langsid: "취급", title: siteLang.getLang("취급"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_PLANT_CODE", sortable: false, editor: false, editable: false },
+            { data_langsid: "국가", title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: false, editor: false, editable: false },
+            { data_langsid: "신청 ID", title: siteLang.getLang("신청 ID"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_REG_USER_ID", sortable: false, editor: false, editable: false },
+            { data_langsid: "사용여부", title: siteLang.getLang("사용여부"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_ACTIVE_YN", sortable: false, editor: false, editable: false },
+            { data_langsid: "승인현황", title: siteLang.getLang("승인현황"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_APPROVAL_STATUS_NAME", sortable: false, editor: false, editable: false },
+            { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_APPROVAL_DATE", sortable: false, editor: false, editable: false },
+            { hidden : true, dataType: "string", dataIndx: "PM_APPROVAL_STATUS", editor: false, editable: false },
+            { hidden : true, dataType: "string", dataIndx: "PM_IDX", editor: false, editable: false }
+        ];
+        obj.dataModel = { data: data };
+        $("#gridArea").pqGrid(obj);
+        $("#gridArea").attr("gridYN", "Y");
 
-        }
-    }
-
-
-    //모달 초기화
-    function modal_init(id,flag){
-        if(flag=="MODIFY"){
-           $(".fixdata").attr("readonly",true);
-           $("#modalPartQulity").attr("disabled", false);
-           $("#modalPartStatus").attr("disabled", false);
-           $("#modalPartChemical").attr("disabled", false);
-           //버튼 바꾸기
-            $("#getPartCode").css("display","none");
-            $("#PartCodeMgmtAdd").css("display","block");
-
-        }else if(flag=="READ"){
-            $(".fixdata").attr("readonly",true);
-            $("#modalPartQulity").attr("disabled", true);
-            $("#modalPartStatus").attr("disabled", true);
-            $("#modalPartChemical").attr("disabled", true);
-
-            $("#modalPartQulity").attr("disabled", true);
-            $("#modalPartStatus").attr("disabled", true);
-            $("#modalPartChemical").attr("disabled", true);
-
-           //버튼 바꾸기
-            $("#getPartCode").css("display","none");
-            $("#PartCodeMgmtAdd").css("display","none");
-        }else{
-            //초기화
-
-            $(".fixdata").attr("readonly",false);
-            $("#modalPartQulity").attr("disabled", false);
-            $("#modalPartStatus").attr("disabled", false);
-            $("#modalPartChemical").attr("disabled", false);
-
-            document.getElementsByName("PM_IDX")[0].value = "";
-            document.getElementsByName("PM_PART_CODE")[0].value = "";
-            document.getElementsByName("PM_PART_COUNTRY")[0].value = "";
-            document.getElementsByName("PM_PART_NAME")[0].value = "";
-            document.getElementsByName("PM_PART_PLANT_CODE")[0].value = "";
-
-            $("select[name=PM_QUALITY] option:eq(0)").prop("selected", true);
-            $("select[name=PM_STATUS] option:eq(0)").prop("selected", true);
-            $("select[name=PM_CHEMICAL_YN] option:eq(0)").prop("selected", true);
-
-            //버튼 바꾸기
-            $("#getPartCode").css("display","block");
-            $("#PartCodeMgmtAdd").css("display","block");
-        }
-    }
-
-
-    function bindModalData(status, parMgmt){
-        if(parMgmt != null){
-
-            document.getElementsByName("PM_IDX")[0].value = parMgmt.PM_IDX;
-            document.getElementsByName("PM_PART_CODE")[0].value = parMgmt.PM_PART_CODE;
-            document.getElementsByName("PM_PART_COUNTRY")[0].value = parMgmt.PM_PART_COUNTRY;
-            document.getElementsByName("PM_PART_NAME")[0].value = parMgmt.PM_PART_NAME;
-            document.getElementsByName("PM_PART_PLANT_CODE")[0].value = parMgmt.PM_PART_PLANT_CODE;
-
-            $("select[name=PM_QUALITY]").val(parMgmt.PM_QUALITY).prop("selected", true);
-            $("select[name=PM_STATUS]").val(parMgmt.PM_STATUS).prop("selected", true);
-            $("select[name=PM_CHEMICAL_YN] ").val(parMgmt.PM_CHEMICAL_YN).prop("selected", true);
-
-        }
-    }
-
-
-    //엑셀 다운로드
-    function downloadExcel() {
-        // 버튼 클릭 시 서버에서 엑셀 파일을 다운로드하도록 요청
-
-
-        var code = $('#searhPartCode').val();  // 자재코드
-         var name = $('#searchPartName').val();  // 자재명
-         var reguser = $('#searchRegUser').val();  // 등록자
-         var useyn = $('#searchUseYN').val();  // 사용유무
-         var plant = $('#searchPlant').val();  // plant
-         var approval = $('#searchApproval').val();  // 승인현황
-         var sdate = $('#searchStartDate').val();  // 시작날짜
-         var edate = $('#searchEndDate').val();  // 끝날짜
-
-
-<!--         $.ajax({-->
-<!--             url: '/user/partMgmt/downloadExcel',  // 서버의 검색 API URL-->
-<!--             type: 'GET',-->
-<!--             data: {-->
-<!--                 code    :code     ,      // 업체명-->
-<!--                 name    :name     ,      // 업체 코드-->
-<!--                 reguser :reguser ,            // 국가-->
-<!--                 useyn   :useyn   ,          // 기본값으로 첫 페이지-->
-<!--                 plant   :plant   ,          // 한 페이지에 표시할 항목 수-->
-<!--                 approval:approval,-->
-<!--                 sdate   :sdate   ,-->
-<!--                 edate   :edate-->
-
-<!--             }-->
-<!--         });-->
-
-         window.location.href = '/user/partMgmt/downloadExcel?code='+code+'&name='+name
-                                +'&reguser='+reguser+'&useyn='+useyn+'&plant='+plant
-                                +'&approval='+approval+'&sdate='+sdate+'&edate='+edate;  // 서버 엔드포인트로 이동
-
-
-
-
-    }
-
-
-
-    //두번째 모달 응답 정보 - Ajax로 받아온 데이터 바인딩
-    function bindModalData2(status, data) {
-        // 테이블에 결과 채우기
-        var tableBody = $('#partCodeTable tbody');
-        tableBody.empty();  // 기존 내용 비우기
-
-        // 검색된 결과를 테이블에 추가
-        data.forEach(function(ptcode) {
-        //PART_CODE,PART_COUNTRY,PART_NAME,bc.BASE_CODE
-            var row = '<tr>' +
-                            '<td>' + ptcode.PART_CODE + '</td>' +
-                            '<td>' + ptcode.PART_NAME + '</a></td>' +
-                            '<td>' + ptcode.BASE_CODE + '</td>' +
-                            '<td>' + ptcode.PART_COUNTRY + '</td>' +
-                            '<td><button type="button" class="cui_button secondary" onClick="setPartCd(\''+ptcode.PART_CODE+ '\', \''+ptcode.PART_NAME+ '\', \''+ptcode.BASE_CODE+ '\', \''+ptcode.PART_COUNTRY+ '\')">선택</button></td>' +
-                          '</tr>';
-            tableBody.append(row);  // 테이블에 새 행 추가
+        $(window).resize(function () {
+        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
         });
+    });
+
+    var downloadExcel = function () {
+        var grid = $("#gridArea").pqGrid("instance");
+        var colModel = grid.getColModel();
+        colModel[0].hidden = true;
+
+        grid.exportData({
+            url: "/common/exportData",
+            format: "xlsx",
+            zip: false,
+            filename: "PART_MANAGEMENT_" + Common.GetTodayTimeString(),
+            render: true
+        });
+
+        colModel[0].hidden = false;
     }
-    //선택된 업체코드, 업체명 셋팅
-    function setPartCd(code, name,value,country){
-        modal_close('PartCode');
-        $('#modalPartCode').val(code);
-        $('#modalPartName').val(name);
-        $('#modalPartPlant').val(value);
-        $('#modalPartCountry').val(country);
-    }
-
-
-
 </script>
 </body>
 </html>

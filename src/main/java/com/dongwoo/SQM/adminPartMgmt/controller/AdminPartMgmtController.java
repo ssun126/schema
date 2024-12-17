@@ -48,6 +48,8 @@ public class AdminPartMgmtController {
         try {
             ObjectMapper mapper = new ObjectMapper();
 
+            String sComCode = GetParam(request, "sComCode", "");
+            String sComName = GetParam(request, "sComName", "");
             String sPartCode = GetParam(request, "sPartCode", "");
             String sPartName = GetParam(request, "sPartName", "");
             String sRegUser = GetParam(request, "sRegUser", "");
@@ -57,6 +59,8 @@ public class AdminPartMgmtController {
             String sStartDate = GetParam(request, "sStartDate", "");
             String sEndDate = GetParam(request, "sEndDate", "");
 
+            model.addAttribute("sComCode", sComCode);
+            model.addAttribute("sComName", sComName);
             model.addAttribute("sPartCode", sPartCode);
             model.addAttribute("sPartName", sPartName);
             model.addAttribute("sRegUser", sRegUser);
@@ -67,6 +71,8 @@ public class AdminPartMgmtController {
             model.addAttribute("sEndDate", sEndDate);
 
             AdminPartMgmtDTO parmDTO = new AdminPartMgmtDTO();
+            parmDTO.setCOM_CODE(sComCode);
+            parmDTO.setCOM_NAME(sComName);
             parmDTO.setPM_PART_CODE(sPartCode);
             parmDTO.setPART_NAME(sPartName);
             parmDTO.setSEARCH_REG_USER(sRegUser);
