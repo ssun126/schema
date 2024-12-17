@@ -89,7 +89,7 @@
                     <div class="jqGrid_label"> &nbsp;</div>
                     <div class="jqGrid_aside">
                         <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
-                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="alert('준비중');'"><span data-langsid="삭제"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delpart();"><span data-langsid="삭제"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
@@ -182,12 +182,36 @@
             selectChange: function (event, ui) {
             },
             rowClick: function (event, ui) {
+
             },
             cellClick: function (event, ui) {
+                var data = ui.rowData;
+                if(ui.dataIndx =="PM_PART_CODE"){
+                    if(data.PM_APPROVAL_STATUS  < 2){
+                        Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
+                    }else{
+                        //읽기페이지 수정해야함
+                        Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Read", PM_IDX : data.PM_IDX } });
+                    }
+
+                } else if(ui.dataIndx =="PART_NAME"){
+                    //Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
+                    if(data.PM_APPROVAL_STATUS  < 2 || (data.PM_APPROVAL_STATUS  >3 && data.PM_ACTIVE_YN == "INACTIVE") ){
+                        //승인현황이 신규, 작성중, 반려, 자료보완일때 수정페이지
+                        //단 승인(4) 일때는 Active를 Inactive 로 바꾼 후 수정 가능(우째할지는..)
+                        Common.MoveUrl("/user/partMgmt/goDetail?PM_IDX=" + data.PM_IDX);
+                    }else{
+                        //검토중 승인 시 읽기페이지
+                        Common.MoveUrl("/user/partMgmt/goReadDetail?PM_IDX=" + data.PM_IDX);
+                    }
+                }
+
+
+
             },
             rowDblClick: function (event, ui) {
-                var data = ui.rowData;
-                Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
+                //var data = ui.rowData;
+                //Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
             },
             rowSelect: function (event, ui) {
             },
@@ -218,7 +242,7 @@
                     }
                 }
             },
-            { data_langsid: "자재코드", title: siteLang.getLang("자재코드"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_CODE", sortable: false, editor: false, editable: false },
+            { data_langsid: "자재코드", title: siteLang.getLang("자재코드"),  width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "자재명칭", title: siteLang.getLang("자재명칭"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: false, editor: false, editable: false },
             { data_langsid: "취급 Plant", title: siteLang.getLang("취급 Plant"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_PLANT_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "국가", title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: false, editor: false, editable: false },
@@ -254,6 +278,45 @@
 
         colModel[0].hidden = false;
     }
+
+    var delpart = function () {
+        var selectValues = [];
+        var grid = $("#gridArea").pqGrid("instance");
+
+        Common.Msg(siteLang.getLang("삭제 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                Common.Loading.Show();
+                for (j = 0; j < grid.pdata.length; j++) {
+                    if (grid.pdata[j]["CHECK_YN"] == true) {
+                        selectValues.push(grid.pdata[j]["PM_IDX"]);
+                    }
+                }
+
+                if(selectValues.length<=0){
+                    Common.Msg(siteLang.getLang("삭제할 데이터를 선택하세요."));
+                    Common.Loading.Hide();
+                    return;
+                }else{
+
+                    var app_num = selectValues.join(',');
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.AddParameter("ARR_PM_IDX", app_num);
+                    setTimeout(function () {
+                        Common.Ajax("/user/partMgmt/deletePartMgmt", ReqInfo, function (response) {
+                            if (response == "OK") {
+                                Common.Msg(siteLang.getLang("삭제되었습니다."));
+                                ListSearch();
+                            }
+                        });
+                    }, 10);
+                }
+                Common.Loading.Hide();
+            }
+        });
+    }
+
+
 </script>
 </body>
 </html>

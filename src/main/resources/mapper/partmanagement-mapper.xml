@@ -51,8 +51,8 @@
             , pmd.PM_APPROVAL_STATUS
             , NVL(TO_CHAR(pmd.PM_APPROVAL_DATE, 'YYYY-MM-DD'),'') as PM_APPROVAL_DATE
             , pmd.PM_MODIFY_USER
-            , ui2.USER_NAME as PM_MODIFY_USER_NAME
-            , ui2.USER_ID as PM_MODIFY_USER_ID
+            --, ui2.USER_NAME as PM_MODIFY_USER_NAME
+            --, ui2.USER_ID as PM_MODIFY_USER_ID
             , NVL(TO_CHAR(pmd.PM_REQUEST_APPROVAL_DATE, 'YYYY-MM-DD'),'') as PM_REQUEST_APPROVAL_DATE
             , NVL(TO_CHAR(pmd.PM_MODIFY_DATE, 'YYYY-MM-DD'),'') as PM_MODIFY_DATE
             , pc.COM_CODE
@@ -61,7 +61,7 @@
         FROM SC_PART_MANAGEMENT_DATA pmd
             LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE AND pmd.PM_PART_PLANT_CODE  = pc.PLANT_CODE
             LEFT OUTER JOIN SC_USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_IDX
-            LEFT OUTER JOIN SC_USER_INFO ui2  ON pmd.PM_MODIFY_USER  = ui.USER_IDX
+            --LEFT OUTER JOIN SC_USER_INFO ui2  ON pmd.PM_MODIFY_USER  = ui.USER_IDX
             LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pc.COM_CODE
         WHERE pc.COM_CODE = #{COM_CODE}
         <if test="COM_NAME != null and COM_NAME != ''">
@@ -124,8 +124,8 @@
             , pmd.PM_APPROVAL_STATUS
             , NVL(TO_CHAR(pmd.PM_APPROVAL_DATE, 'YYYY-MM-DD'),'') as PM_APPROVAL_DATE
             , pmd.PM_MODIFY_USER
-            , ui2.USER_NAME as PM_MODIFY_USER_NAME
-            , ui2.USER_ID as PM_MODIFY_USER_ID
+            --, ui2.USER_NAME as PM_MODIFY_USER_NAME
+            --, ui2.USER_ID as PM_MODIFY_USER_ID
             , NVL(TO_CHAR(pmd.PM_REQUEST_APPROVAL_DATE, 'YYYY-MM-DD'),'') as PM_REQUEST_APPROVAL_DATE
             , NVL(TO_CHAR(pmd.PM_MODIFY_DATE, 'YYYY-MM-DD'),'') as PM_MODIFY_DATE
             , pc.COM_CODE
@@ -134,7 +134,7 @@
         FROM SC_PART_MANAGEMENT_DATA pmd
             LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE AND pmd.PM_PART_PLANT_CODE  = pc.PLANT_CODE
             LEFT OUTER JOIN SC_USER_INFO ui  ON pmd.PM_REG_USER  = ui.USER_IDX
-            LEFT OUTER JOIN SC_USER_INFO ui2  ON pmd.PM_MODIFY_USER  = ui.USER_IDX
+            --LEFT OUTER JOIN SC_USER_INFO ui2  ON pmd.PM_MODIFY_USER  = ui.USER_IDX
             LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pc.COM_CODE
         WHERE pmd.PM_IDX = #{PM_IDX}
     </select>
@@ -242,7 +242,7 @@
     <select id="getPartData" parameterType="String" resultType="partManagement">
         SELECT
             PART_CODE as PM_PART_CODE
-            , PART_NAME as PM_PART_NAME
+            , PART_NAME
             , PM_APPROVAL_STATUS AS PM_APPROVAL_STATUS
             , spmd.PM_ACTIVE_YN
         FROM

@@ -1,38 +1,24 @@
 package com.dongwoo.SQM.partMgmt.controller;
 
-import com.dongwoo.SQM.adminPartMgmt.dto.AdminPartMgmtDTO;
-import com.dongwoo.SQM.board.dto.Criteria;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartDetailService;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
-import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.boot.Banner;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
@@ -348,16 +334,16 @@ public class PartMgmtController {
         }
     }
 
-    @GetMapping("/deletePartMgmt")
-    public ResponseEntity<?> deletePartMgmt(@RequestParam("ARR_PM_IDX") String arrIdx){
-        int delResult = partMgmtService.deletePartMgmt(arrIdx);
-        //int delResult =0;
-
-        if(delResult > 0) {
-            return ResponseEntity.ok("Form submitted successfully!");
-        }else{
-            return ResponseEntity.ok("Form submitted fail!");
+    @PostMapping("/deletePartMgmt")
+    //public ResponseEntity<?> deletePartMgmt(@RequestParam("ARR_PM_IDX") String arrIdx){
+    public ResponseEntity<?> deletePartMgmt(HttpServletRequest request, HttpSession session){
+        try{
+            String arrPmIdx = GetParam(request, "ARR_PM_IDX", "");
+            int delResult = partMgmtService.deletePartMgmt(arrPmIdx);
+        }catch (Exception e){
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
         }
+        return ResponseEntity.ok("OK");
     }
 
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
