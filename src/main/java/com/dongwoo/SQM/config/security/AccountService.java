@@ -67,9 +67,9 @@ public class AccountService  implements UserDetailsService {
 
     private static Collection<? extends GrantedAuthority> authorities(LoginDTO loginDTO){
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        // DB에 저장한 USER_ROLE 이 0이면 ADMIN 권한, 아니면 ROLE_USER 로 준다.
+        // DB에 저장한 USER_ROLE 이 0이면 ROLE_ADMIN 권한, 아니면 ROLE_USER 로 준다.
         if(loginDTO.getUSER_GUBN().equals("0")){
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }else{
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }

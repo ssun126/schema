@@ -8,10 +8,10 @@
             <a href="#" onclick="goMenu('/main')"><span class="blind">동우화인캠</span></a>
         </h1>
         <nav class="cui_gnb" role="navigation" th:each="auth : ${#authentication.authorities}">
-            <ul class="nav-item sec" th:each="page, index : ${auth.authority == 'ADMIN'? T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userMenuList}">
+            <ul class="nav-item sec" th:each="page, index : ${auth.authority == 'ROLE_ADMIN'? T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userMenuList}">
                 <li th:each="subMenu, subIndex : ${page}" >
                     <a href="#" class="load-container" th:attr="data-url=${subMenu.PAGE_URL}"><span th:text="${subMenu.PAGE_NM}"></span></a>
-                    <ul class="menu-sub-nav" th:each="page : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
+                    <ul class="menu-sub-nav" th:each="page : ${auth.authority == 'ROLE_ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminSubMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userSubMenuList}">
                         <li th:each="subPage : ${page}" th:if="${subPage != null and subMenu.GNB_IDX == subPage.GNB_IDX }">
                             <a href="#" class="load-container" th:attr="data-url=${subPage.PAGE_URL}"><span th:text="${subPage.PAGE_NM}">menu1</span></a>
                         </li>

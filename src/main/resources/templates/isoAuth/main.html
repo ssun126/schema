@@ -96,12 +96,11 @@
                     'ISO50001': 'ENERGY',
                     '녹색기업': '기타'
                 };
-
-                 var existingData = {};
+                let itemState = "SAVE";
+                var existingData = {};
 
                  //저장 데이터가 있는 경우
                 if (response && response.length > 0) {
-                    let itemState = "SAVE";
                     let itemReason = "";
                     var preExistingData = {};
 
@@ -154,11 +153,11 @@
                                     '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="EXP_DATE" value="' + (existingDataItem.expDate || '') + '"></td>' +
                                     '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="REG_INPUT_DATE" value="' + (existingDataItem.regInputDate || '') + '"></td>' +
                                     '<td><div class="cui_attachments">' +
-                                            '<input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'none' : '') + ';">' +
-                                            '<div class="cui_items_wrap" data-direction="left">' +
+                                            '<div class="file_control"><input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)"></div>' +
+                                            '<div class="cui_items_wrap  file_wrap" data-direction="left">' +
                                                 '<div class="item_label" data-cui-icon="paperclip"><a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(existingDataItem.fileName) + '" download><span>' + (existingDataItem.fileName || '') + '</span></a></div>' +
                                                 '<div class="item_content">' +
-                                                    '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile(\''+existingDataItem.fileName+'\')"><span >다운로드</span></button>' +
+                                                    '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile(\''+existingDataItem.fileName+'\')" style="display: none;"><span >다운로드</span></button>' +
                                                     '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>' +
                                                 '<div>' +
                                             '</div>' +
@@ -178,12 +177,22 @@
                 $('#isoAuthItemTable tbody tr').each(function() {
                     var fileName = $(this).find('.item_label span').text();  // Get the file name from the .item_label span
                     var deleteButton = $(this).find('.delete-button');  // Find the delete button in the row
+                    var downloadButton = $(this).find('.delete-download-button');  // Find the download-button in the row
                     // If the file name exists, show the delete button
+
+
                     if (fileName) {
-                        deleteButton.show();  // Alternatively: deleteButton.css('display', 'inline-block');
                         $(this).find('.item_label').show();
+                        if(itemState == "SEND" || itemState == "APPROVED"){
+                            deleteButton.hide();
+                            $('.file_control').hide();
+                        }else{
+                            deleteButton.show();
+                            downloadButton.show();
+                        }
                     } else {
-                        deleteButton.hide();  // Alternatively: deleteButton.css('display', 'none');
+                        deleteButton.hide();
+                        downloadButton.hide();  // Alternatively:
                         $(this).find('.item_label').hide();
                     }
                 });

@@ -60,7 +60,7 @@
                 </div>
             </div>
             <form class="cui_border_section resultField" data-legend="true">
-                <div class="cui_section">
+                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>제조소 공통 정보</span></div>
                     </div>
@@ -82,9 +82,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><span></span></td>
-                            <td><span></span></td>
+                        <tr th:each="data : ${auditItems}" th:if="${data != null and data.PROVISION == '노동환경' }">
+                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
+                            <td><span th:text="${data.AUDIT_DESC}"></span></td>
                             <td><span></span></td>
                             <td><span></span></td>
                             <td><span></span></td>
@@ -113,10 +113,15 @@
                             <th><span>평가점수</span></th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody th:if="${#lists.isEmpty(auditItems)}">
                         <tr>
-                            <td><span></span></td>
-                            <td><span></span></td>
+                            <td colspan="5">등록된 자재정보가 없습니다.</td>
+                        </tr>
+                        </tbody>
+                        <tbody th:unless="${#lists.isEmpty(auditItems)}">
+                        <tr th:each="data : ${auditItems}">
+                            <td><span th:text="${data.PROVISION}"></span></td>
+                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
                             <td><span></span></td>
                             <td><span></span></td>
                             <td><span></span></td>
@@ -145,10 +150,10 @@
                             <th><span>평가점수</span></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td><span></span></td>
-                            <td><span></span></td>
+                        <tbody th:unless="${#lists.isEmpty(auditItems)}">
+                        <tr th:each="data : ${auditItems}">
+                            <td><span th:text="${data.PROVISION}"></span></td>
+                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
                             <td><span></span></td>
                             <td><span></span></td>
                             <td><span></span></td>

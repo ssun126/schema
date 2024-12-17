@@ -1,8 +1,7 @@
 package com.dongwoo.SQM.auditMgmt.repository;
 
-import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
-import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
-import com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO;
+import com.dongwoo.SQM.auditMgmt.dto.*;
+import com.dongwoo.SQM.siteMgr.dto.SafetyItemDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;

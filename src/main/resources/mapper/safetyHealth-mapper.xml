@@ -7,5 +7,8 @@
         INSERT INTO SC_AUTH_FILE(COM_CODE, AUTH_TYPE, FILE_NAME, FILE_PATH, AUTH_SEQ)
         VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ})
     </insert>
-
+    <select id="getAuditItemsAll" resultType="safetyHealth">
+        SELECT *
+        FROM SC_AUDIT_SAFETY_ITEM ASI
+    </select>
 </mapper>
