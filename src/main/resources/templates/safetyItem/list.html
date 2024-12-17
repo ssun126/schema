@@ -77,6 +77,10 @@
 
     var SheetDataConvert = function (data) {
         var dataJson = JSON.parse(data);
+        for(var i = 0; i < dataJson.length; i++){
+            if(dataJson[i].AUDIT_CRITERIA != null) dataJson[i].AUDIT_CRITERIA = dataJson[i].AUDIT_CRITERIA.replaceAll("\n","<br>");
+            if(dataJson[i].POINT_CRITERIA != null) dataJson[i].POINT_CRITERIA = dataJson[i].POINT_CRITERIA.replaceAll("\n","<br>")
+        }
         return dataJson;
     }
 
