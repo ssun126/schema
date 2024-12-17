@@ -97,6 +97,13 @@
         </if>
     </select>
 
+    <select id ="getPartSvhcExpList" parameterType="hashMap" resultType="java.util.HashMap">
+        SELECT  TO_CHAR(SEND_DATE , 'YYYY-MM-DD HH24:MI:SS') as SEND_DATE , sui.USER_NAME , SEND_BODY
+        FROM SC_MESSAGE_LOG sml
+        INNER JOIN SC_USER_INFO sui ON sml.REG_DW_USER_IDX = sui.USER_IDX
+        WHERE MES_KIND ='SVHC'
+    </select>
+
     <select id ="getPartDeclExpList" parameterType="hashMap" resultType="java.util.HashMap">
         SELECT
         spmdd.DECL_IDX
@@ -152,4 +159,6 @@
             AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
         </if>
     </select>
+
+
 </mapper>

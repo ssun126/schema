@@ -33,4 +33,8 @@ public class AdminPartMgmtService {
     public List<HashMap> getPartEtcExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH) {
         return adminPartMgmtRepository.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME,EXP_MONTH);
     }
+
+    public List<HashMap> getPartSvhcExpList(){
+        return adminPartMgmtRepository.getPartSvhcExpList();
+    }
 }

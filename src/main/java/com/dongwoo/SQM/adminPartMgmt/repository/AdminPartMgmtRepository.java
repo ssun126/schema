@@ -49,4 +49,8 @@ public class AdminPartMgmtRepository {
         return sql.selectList("adminPartMgmt.getPartEtcExpList",data);
     }
 
+    public List<HashMap> getPartSvhcExpList() {
+        return sql.selectList("adminPartMgmt.getPartSvhcExpList");
+    }
+
 }

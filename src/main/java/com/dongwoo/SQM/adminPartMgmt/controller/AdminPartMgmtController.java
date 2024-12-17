@@ -8,18 +8,22 @@ import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.service.MemberService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -230,6 +234,37 @@ public class AdminPartMgmtController {
         ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "SVHC");
         model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
 
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<HashMap> partSvhdList = adminPartMgmtService.getPartSvhcExpList();
+            String partSvhcListStr = mapper.writeValueAsString(partSvhdList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partSvhcListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+            model.addAttribute("partSvhcLogList",partSvhcListStr);
+        } catch (JsonProcessingException e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
         return "expDateSvhc/main";
     }
 
@@ -251,14 +286,16 @@ public class AdminPartMgmtController {
     }
 
     @PostMapping("/admin/partMgmt/sendSvhcExpAlert")
-    public ResponseEntity<?> sendSvhcExpAlert(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<?> sendSvhcExpAlert(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
         try {
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
 
-            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String loginId = user.getUsername();
-            UserMgrDTO memberDTO = memberService.findByMemberId(loginId); //동우 사용자
-
-            //expirationDateService.sendExpAlert("F", 2, "SVHC", 0, EXP_BODY, memberDTO.getUSER_IDX());
+            //(CODE1, CODE2, CODE3, MES_KIND,GUBN,KIND,SEND_TYPE ,SEND_FROM ,SEND_TO, SEND_TITLE , SEND_BODY , SEND_DATE ,REG_DW_USER_IDX , REG_COM_USER_IDX  )
+            //VALUES ('F',2,(SELECT COUNT(*) FROM  SC_MESSAGE_LOG WHERE CODE1 ='F' AND CODE2 =2 )+1,'SVHC','Part 갱신','Part Mana','Email','Schema','공급사', 'SVHC 확인서 갱신','test',sysdate,0,0)
+            log.info("test111111=="+EXP_BODY);
+            log.info(", user.getUSER_IDX()========="+user.getUSER_IDX());
+            log.info(", user.getCOM_USER_IDX()========="+user.getCOM_USER_IDX());
+            expirationDateService.sendExpAlert("F", 2, "SVHC","Part 갱신","Part Mana","Email","Schema","공급사", "SVHC 확인서 갱신", EXP_BODY, user.getUSER_IDX(),user.getCOM_USER_IDX());
         } catch (Exception e) {
             return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
         }

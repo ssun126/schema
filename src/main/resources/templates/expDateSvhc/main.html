@@ -41,7 +41,7 @@
           </div>
           <div class="toolbar_aside">
             <button type="button" class="cui_button primary" onclick="expBodySvhcSave($('#formExpSvhc'));"><span>저장</span></button>
-            <button type="button" class="cui_button primary" onclick="sendSvhcExpAlert();"><span>갱신요청 발송</span></button>
+            <button type="button" class="cui_button primary" onclick="sendSvhcExpAlert($('#formExpSvhc'));"><span>갱신요청 발송</span></button>
           </div>
         </div>
     </form>
@@ -81,9 +81,6 @@
     <div class="cui_jqGrid_section">
       <div class="cui_jqGrid_head">
         <div class="jqGrid_label"> &nbsp;</div>
-        <div class="jqGrid_aside">
-          <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="sendMsdsExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
-        </div>
       </div>
       <div class="cui_jqGrid_body" id="Grid">
         <div id="gridArea" gridYN="" th:initData="${partSvhcLogList}"></div>
@@ -113,7 +110,7 @@
         }
     }
 
-    var sendSvhcExpAlert = function () {
+    var sendSvhcExpAlert = function (obj) {
         Common.Msg(siteLang.getLang("요청 하시겠습니까?"), {
                 mode : "confrim"
                 , okback : function () {
@@ -213,9 +210,9 @@
         };
         obj.colModel = [
 
-            { data_langsid: "발송일자", title: siteLang.getLang("발송일자"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-            { data_langsid: "발송자", title: siteLang.getLang("발송자"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-            { data_langsid: "요청사항", title: siteLang.getLang("요청사항"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "PART_CODE", sortable: true, editor: false, editable: false }
+            { data_langsid: "발송일자", title: siteLang.getLang("발송일자"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: true, editor: false, editable: false },
+            { data_langsid: "발송자", title: siteLang.getLang("발송자"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+            { data_langsid: "요청사항", title: siteLang.getLang("요청사항"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_BODY", sortable: true, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);
