@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,5 +24,4 @@ public class LabourHRRepository {
     public LabourHRDTO getCompanyAuthFile(Map<String, Object> params) {
         return sql.selectOne("Labour.getCompanyAuthFile", params);
     }
-
 }

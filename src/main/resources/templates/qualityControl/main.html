@@ -208,10 +208,10 @@
                             <th><span>평가점수</span></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
+                        <tbody th:unless="${#lists.isEmpty(auditItems)}">
+                        <tr th:each="data : ${auditItems}">
+                            <td><span th:text="${data.MAIN_ITEM}"></span></td>
+                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
                             <td><input type="text" class="cui_text_field"></td>
                             <td><input type="text" class="cui_text_field"></td>
                         </tr>
@@ -323,7 +323,7 @@
 </html>
 <script>
     $(document).ready(function () {
-        $("#auditPWay").text("대면");
+        $("#auditPWay").text("셀프");
         console.log($("#auditPWay").text());
         if($("#auditPWay").text() === "셀프"){
             $("#fs_text").hide(); //파일첨부가 초기값이므로

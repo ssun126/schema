@@ -103,12 +103,9 @@
         from SC_ISO_AUTH_COMPANY_ITEM
     </select>
 
-    <select id="getExpDateList" parameterType="map" resultType="isoAuthItem">
-        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_INPUT_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH
-        FROM
-        (
+    <select id="getExpDateList" parameterType="hashMap" resultType="java.util.HashMap">
         SELECT /*+ INDEX_DESC(SC_ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-            ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE,
+            ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_CODE, TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE,
             TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE, TO_CHAR(ACI.REG_INPUT_DATE, 'YYYY.MM.DD') AS REG_INPUT_DATE, TO_CHAR(ACI.UP_DATE, 'YYYY.MM.DD') AS UP_DATE,
             ITEM_STATE, FILE_NAME, FILE_PATH
         FROM SC_ISO_AUTH_COMPANY_ITEM ACI
@@ -122,13 +119,8 @@
             AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
         </if>
         <if test="EXP_DATE != null and EXP_DATE != ''">
-            AND TO_CHAR(ACI.EXP_DATE, 'YYYY.MM') = #{EXP_DATE}
+            AND TO_CHAR(ACI.EXP_DATE, 'YYYY.MM') = TO_CHAR(TO_DATE(#{EXP_DATE}), 'YYYY.MM')
         </if>
-        <if test="criteria != null and criteria != ''">
-            <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>
-        </if>
-        )
-        WHERE RN > ((#{criteria.pageNum}-1) * #{criteria.amount})
     </select>
 
     <update id="updateStatus" parameterType="isoAuthItem">

@@ -10,8 +10,4 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequiredArgsConstructor
 public class ExpDateSafetyController {
-    @GetMapping("/admin/auditMgmt/expDateSafety")
-    public String isoAuthMain(Model model) {
-        return "expDateSafety/main";
-    }
 }

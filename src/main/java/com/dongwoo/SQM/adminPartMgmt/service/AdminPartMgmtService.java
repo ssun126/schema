@@ -22,15 +22,27 @@ public class AdminPartMgmtService {
     }
 
 
-    public List<HashMap> getPartMSDSExpList(String EXP_DATE, String COM_CODE, String COM_NAME) {
-        return adminPartMgmtRepository.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME);
+    public List<HashMap> getPartMSDSExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH) {
+        return adminPartMgmtRepository.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME,EXP_MONTH);
     }
 
-    public List<HashMap> getPartDeclExpList(String EXP_DATE, String COM_CODE, String COM_NAME) {
-        return adminPartMgmtRepository.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME);
+    public List<HashMap> getPartDeclExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH) {
+        return adminPartMgmtRepository.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME,EXP_MONTH);
     }
 
-    public List<HashMap> getPartEtcExpList(String EXP_DATE, String COM_CODE, String COM_NAME) {
-        return adminPartMgmtRepository.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME);
+    public List<HashMap> getPartEtcExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH) {
+        return adminPartMgmtRepository.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME,EXP_MONTH);
+    }
+
+    public List<HashMap> getPartSvhcExpList(){
+        return adminPartMgmtRepository.getPartSvhcExpList();
+    }
+
+    public List<HashMap> getPartSccsExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH) {
+        return adminPartMgmtRepository.getPartSccsExpList(EXP_DATE, COM_CODE, COM_NAME,EXP_MONTH);
+    }
+
+    public List<HashMap> getPartIngredExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH) {
+        return adminPartMgmtRepository.getPartIngredExpList(EXP_DATE, COM_CODE, COM_NAME,EXP_MONTH);
     }
 }

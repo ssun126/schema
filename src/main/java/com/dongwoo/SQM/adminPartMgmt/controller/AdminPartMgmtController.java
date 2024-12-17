@@ -8,18 +8,22 @@ import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.service.MemberService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -138,7 +142,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partMSDSList = adminPartMgmtService.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partMSDSList = adminPartMgmtService.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partMSDSListStr = mapper.writeValueAsString(partMSDSList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -188,6 +192,7 @@ public class AdminPartMgmtController {
 
         return ResponseEntity.ok("OK");
     }
+
     /*******************************************************************************************************************************************/
 
     /******************************************************************************************************************************************/
@@ -235,6 +240,37 @@ public class AdminPartMgmtController {
         ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "SVHC");
         model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
 
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<HashMap> partSvhdList = adminPartMgmtService.getPartSvhcExpList();
+            String partSvhcListStr = mapper.writeValueAsString(partSvhdList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partSvhcListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+            model.addAttribute("partSvhcLogList",partSvhcListStr);
+        } catch (JsonProcessingException e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
         return "expDateSvhc/main";
     }
 
@@ -256,14 +292,16 @@ public class AdminPartMgmtController {
     }
 
     @PostMapping("/admin/partMgmt/sendSvhcExpAlert")
-    public ResponseEntity<?> sendSvhcExpAlert(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<?> sendSvhcExpAlert(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
         try {
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
 
-            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String loginId = user.getUsername();
-            UserMgrDTO memberDTO = memberService.findByMemberId(loginId); //동우 사용자
-
-            //expirationDateService.sendExpAlert("F", 2, "SVHC", 0, EXP_BODY, memberDTO.getUSER_IDX());
+            //(CODE1, CODE2, CODE3, MES_KIND,GUBN,KIND,SEND_TYPE ,SEND_FROM ,SEND_TO, SEND_TITLE , SEND_BODY , SEND_DATE ,REG_DW_USER_IDX , REG_COM_USER_IDX  )
+            //VALUES ('F',2,(SELECT COUNT(*) FROM  SC_MESSAGE_LOG WHERE CODE1 ='F' AND CODE2 =2 )+1,'SVHC','Part 갱신','Part Mana','Email','Schema','공급사', 'SVHC 확인서 갱신','test',sysdate,0,0)
+            log.info("test111111=="+EXP_BODY);
+            log.info(", user.getUSER_IDX()========="+user.getUSER_IDX());
+            log.info(", user.getCOM_USER_IDX()========="+user.getCOM_USER_IDX());
+            expirationDateService.sendExpAlert("F", 2, "SVHC","Part 갱신","Part Mana","Email","Schema","공급사", "SVHC 확인서 갱신", EXP_BODY, user.getUSER_IDX(),user.getCOM_USER_IDX());
         } catch (Exception e) {
             return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
         }
@@ -293,7 +331,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partDeclList = adminPartMgmtService.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partDeclList = adminPartMgmtService.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partDeclListStr = mapper.writeValueAsString(partDeclList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -366,7 +404,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partEtcList = adminPartMgmtService.getPartEtcExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partEtcList = adminPartMgmtService.getPartEtcExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partEtcListStr = mapper.writeValueAsString(partEtcList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -417,6 +455,151 @@ public class AdminPartMgmtController {
         return ResponseEntity.ok("OK");
     }
     /*******************************************************************************************************************************************/
+
+
+    /*******************************************************************************************************************************************/
+    /**
+     * 만료일 관리 SCCS
+     */
+    @RequestMapping("/admin/partMgmt/expDateSccs")
+    public String expDateSccsList(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
+        ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "SCCS");
+        model.addAttribute("EXP_MONTH",expirationDatDTO.getEXP_MONTH());
+        model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            String EXP_DATE = GetParam(request, "EXP_DATE", "");
+            String COM_CODE = GetParam(request, "COM_CODE", "");
+            String COM_NAME = GetParam(request, "COM_NAME", "");
+
+            model.addAttribute("EXP_DATE",EXP_DATE);
+            model.addAttribute("COM_CODE",COM_CODE);
+            model.addAttribute("COM_NAME",COM_NAME);
+
+            List<HashMap> partSccsList = adminPartMgmtService.getPartSccsExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
+            String partSccsListStr = mapper.writeValueAsString(partSccsList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partSccsListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partSccsList",partSccsListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
+        return "expDateSccs/main";
+    }
+
+    @PostMapping("/admin/partMgmt/expDateSccsSave")
+    public ResponseEntity<?> expDateSccsSave(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
+        try {
+            int EXP_MONTH = Integer.parseInt(GetParam(request, "EXP_MONTH", "0"));
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
+
+            expirationDateService.setExpiration("F", 2, "SCCS", EXP_MONTH, EXP_BODY, user.getUSER_IDX());
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
+        }
+
+        return ResponseEntity.ok("OK");
+    }
+
+    /*******************************************************************************************************************************************/
+
+
+    /*******************************************************************************************************************************************/
+    /**
+     * 만료일 관리 성분분석 Igredient
+     */
+    @RequestMapping("/admin/partMgmt/expDateIngred")
+    public String expDateIngredList(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
+        ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "Ingredient");
+        model.addAttribute("EXP_MONTH",expirationDatDTO.getEXP_MONTH());
+        model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            String EXP_DATE = GetParam(request, "EXP_DATE", "");
+            String COM_CODE = GetParam(request, "COM_CODE", "");
+            String COM_NAME = GetParam(request, "COM_NAME", "");
+
+            model.addAttribute("EXP_DATE",EXP_DATE);
+            model.addAttribute("COM_CODE",COM_CODE);
+            model.addAttribute("COM_NAME",COM_NAME);
+
+            List<HashMap> partIngredList = adminPartMgmtService.getPartIngredExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
+            String partIngredListStr = mapper.writeValueAsString(partIngredList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partIngredListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partIngredList",partIngredListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
+        return "expDateIngred/main";
+    }
+
+    @PostMapping("/admin/partMgmt/expDateIngredSave")
+    public ResponseEntity<?> expDateIngredSave(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
+        try {
+            int EXP_MONTH = Integer.parseInt(GetParam(request, "EXP_MONTH", "0"));
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
+
+            expirationDateService.setExpiration("F", 2, "Ingredient", EXP_MONTH, EXP_BODY, user.getUSER_IDX());
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
+        }
+
+        return ResponseEntity.ok("OK");
+    }
+
+    /*******************************************************************************************************************************************/
+
+
+
 
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
         String ParamValue = request.getParameter(pName);

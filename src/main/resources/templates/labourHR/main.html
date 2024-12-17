@@ -33,7 +33,7 @@
                             <th><span>파일 첨부</span></th>
                             <td id="attachmentsContainer">
                                 <div class="cui_attachments">
-                                    <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                    <div class="file_control"><input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;"></div>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="downFileName"></span></div>
                                         <div class="item_content">
@@ -60,57 +60,23 @@
                 </div>
             </div>
             <form class="cui_border_section resultField" data-legend="true">
-                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}">
-                    <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>제조소 공통 정보</span></div>
+                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}" th:each="data, iterStat : ${auditItems}">
+                    <div class="cui_bullet_title" th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
+                        <div class="bullet_title_label"><span th:text="${data.PROVISION}"></span></div>
                     </div>
-                    <table class="cui_table center">
+                    <table class="cui_table" th:style="'border-top: ' +(${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION} ? '' : 'none')">
                         <colgroup>
                             <col style="width:200px;">
                             <col>
+                            <col style="width:350px;">
                             <col style="width:200px;">
-                            <col style="width:300px;">
-                            <col style="width:80px;">
                         </colgroup>
-                        <thead>
+                        <thead th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
                         <tr>
                             <th><span>항목</span></th>
                             <th><span>내용</span></th>
-                            <th><span>답변</span></th>
                             <th><span>답변 가이던스</span></th>
-                            <th><span>평가점수</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="data : ${auditItems}" th:if="${data != null and data.PROVISION == '노동환경' }">
-                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
-                            <td><span th:text="${data.AUDIT_DESC}"></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="cui_section">
-                    <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>노동환경</span></div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:200px;">
-                            <col>
-                            <col style="width:200px;">
-                            <col style="width:300px;">
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가점수</span></th>
+                            <th><span>평가 기준</span></th>
                         </tr>
                         </thead>
                         <tbody th:if="${#lists.isEmpty(auditItems)}">
@@ -118,45 +84,12 @@
                             <td colspan="5">등록된 자재정보가 없습니다.</td>
                         </tr>
                         </tbody>
-                        <tbody th:unless="${#lists.isEmpty(auditItems)}">
-                        <tr th:each="data : ${auditItems}">
-                            <td><span th:text="${data.PROVISION}"></span></td>
-                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="cui_section">
-                    <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>윤리경영</span></div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:200px;">
-                            <col>
-                            <col style="width:200px;">
-                            <col style="width:300px;">
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
+                        <tbody>
                         <tr>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가점수</span></th>
-                        </tr>
-                        </thead>
-                        <tbody th:unless="${#lists.isEmpty(auditItems)}">
-                        <tr th:each="data : ${auditItems}">
-                            <td><span th:text="${data.PROVISION}"></span></td>
                             <td><span th:text="${data.AUDIT_ITEM}"></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
+                            <td><span th:text="${data.AUDIT_DESC}"></span></td>
+                            <td><span th:utext="${data.AUDIT_CRITERIA}"></span></td>
+                            <td><span th:utext="${data.POINT_CRITERIA}"></span></td>
                         </tr>
                         </tbody>
                     </table>
@@ -196,6 +129,8 @@
                     $('#authState').text('[제출:' +approvedDate+']');
                     $('.resultField').show();
                     $('#sendAuth').hide();
+                    $('.file_control').hide();
+                    $('#deleteButton').css("display", "none");
                 }
             }
         }

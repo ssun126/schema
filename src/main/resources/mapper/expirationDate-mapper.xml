@@ -40,4 +40,12 @@
             AND CODE2 = #{CODE2}
             AND EXP_KIND = #{EXP_KIND}
     </update>
+
+    <insert id="sendExpAlert" parameterType="hashMap">
+        INSERT INTO SC_MESSAGE_LOG
+        VALUES (#{CODE1}
+                ,#{CODE2}
+                ,(SELECT COUNT(*) FROM  SC_MESSAGE_LOG WHERE CODE1 =#{CODE1} AND CODE2 =#{CODE2} )+1
+                ,#{MES_KIND},#{GUBN},#{KIND},#{SEND_TYPE},#{SEND_FROM},#{SEND_TO}, #{SEND_TITLE},#{SEND_BODY},sysdate,#{REG_DW_USER_IDX},#{REG_COM_USER_IDX})
+    </insert>
 </mapper>
