@@ -89,7 +89,7 @@
                     <div class="jqGrid_label"> &nbsp;</div>
                     <div class="jqGrid_aside">
                         <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
-                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick=""><span data-langsid="삭제"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="alert('준비중');'"><span data-langsid="삭제"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
             },
             rowDblClick: function (event, ui) {
                 var data = ui.rowData;
-                // Common.MoveUrl("/admin/partMgmt/goReadDetail?PM_IDX=" + data.PM_IDX);
+                Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
             },
             rowSelect: function (event, ui) {
             },
@@ -220,7 +220,7 @@
             },
             { data_langsid: "자재코드", title: siteLang.getLang("자재코드"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "자재명칭", title: siteLang.getLang("자재명칭"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: false, editor: false, editable: false },
-            { data_langsid: "취급", title: siteLang.getLang("취급"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_PLANT_CODE", sortable: false, editor: false, editable: false },
+            { data_langsid: "취급 Plant", title: siteLang.getLang("취급 Plant"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_PLANT_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "국가", title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: false, editor: false, editable: false },
             { data_langsid: "신청 ID", title: siteLang.getLang("신청 ID"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_REG_USER_ID", sortable: false, editor: false, editable: false },
             { data_langsid: "사용여부", title: siteLang.getLang("사용여부"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_ACTIVE_YN", sortable: false, editor: false, editable: false },

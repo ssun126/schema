@@ -139,6 +139,31 @@
         WHERE pmd.PM_IDX = #{PM_IDX}
     </select>
 
+    <select id="searchPartCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+            pc.PART_CODE
+            , pc.PART_NAME
+            , pc.PLANT_CODE
+            , scc.COM_CODE
+            , scc.COM_NAME
+            , scc.COM_NATION
+        FROM SC_PART_CODE pc
+            LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pc.COM_CODE
+        WHERE
+            scc.COM_CODE = #{COM_CODE}
+            AND pc.PART_STATUS = 'Y'
+        <if test="PART_CODE != null and PART_CODE != ''">
+            <![CDATA[
+                AND (pc.PART_CODE LIKE CONCAT(CONCAT('%',  #{PART_CODE}), '%'))
+            ]]>
+        </if>
+        <if test="PART_NAME != null and PART_NAME != ''">
+            <![CDATA[
+                AND (pc.PART_NAME LIKE CONCAT(CONCAT('%',  #{PART_NAME}), '%'))
+            ]]>
+        </if>
+    </select>
+
     <select id="partCodeList" resultType="HashMap">
         SELECT PART_CODE,COM_NATION AS  PART_COUNTRY,PART_NAME,bc.BASE_CODE
         FROM SC_PART_CODE pc
@@ -148,13 +173,38 @@
     </select>
 
     <insert id="save" parameterType="partManagement">
-        INSERT INTO SC_PART_MANAGEMENT_DATA(PM_IDX,PM_PART_CODE,PM_PART_PLANT_CODE,PM_PART_COUNTRY,PM_QUALITY,PM_STATUS,PM_CHEMICAL_YN,PM_REG_DATE,PM_REG_USER,PM_COM_CODE,PM_APPROVAL_STATUS,PM_ACTIVE_YN)
-        VALUES (SEQ_PM_IDX.NEXTVAL,#{PM_PART_CODE},#{PM_PART_PLANT_CODE},#{PM_PART_COUNTRY},#{PM_QUALITY},#{PM_STATUS},#{PM_CHEMICAL_YN},sysdate,#{PM_REG_USER_IDX},#{PM_COM_CODE},#{PM_APPROVAL_STATUS},#{PM_ACTIVE_YN})
+        INSERT INTO SC_PART_MANAGEMENT_DATA (
+            PM_IDX
+            , PM_PART_CODE
+            , PM_PART_PLANT_CODE
+            , PM_QUALITY
+            , PM_STATUS
+            , PM_CHEMICAL_YN
+            , PM_ACTIVE_YN
+            , PM_REG_DATE
+            , PM_REG_USER
+            , PM_APPROVAL_STATUS
+        )
+        VALUES (
+            SEQ_PM_IDX.NEXTVAL
+            , #{PM_PART_CODE}
+            , #{PM_PART_PLANT_CODE}
+            , #{PM_QUALITY}
+            , #{PM_STATUS}
+            , #{PM_CHEMICAL_YN}
+            , #{PM_ACTIVE_YN}
+            , sysdate
+            , #{PM_REG_USER}
+            , #{PM_APPROVAL_STATUS}
+        )
     </insert>
 
     <update id="updatePartMgmt" parameterType="partManagement">
-        UPDATE SC_PART_MANAGEMENT_DATA
-        SET PM_QUALITY=#{PM_QUALITY},PM_STATUS=#{PM_STATUS},PM_CHEMICAL_YN=#{PM_CHEMICAL_YN},PM_MODIFY_USER=#{PM_MODIFY_USER}
+        UPDATE SC_PART_MANAGEMENT_DATA SET
+            PM_QUALITY = #{PM_QUALITY}
+            , PM_STATUS = #{PM_STATUS}
+            , PM_CHEMICAL_YN = #{PM_CHEMICAL_YN}
+            , PM_MODIFY_USER = #{PM_MODIFY_USER}
         WHERE PM_IDX = #{PM_IDX}
     </update>
 

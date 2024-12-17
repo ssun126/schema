@@ -1,4 +1,4 @@
-<div class="cui_dialog" style="width:400px;display:none;" id="PartMgmt" xmlns:th="http://www.w3.org/1999/xhtml">
+<div class="cui_dialog" style="width:400px;display:none;" id="diaMatRegPopup" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
@@ -10,26 +10,27 @@
         </div>
         <div class="dialog_body">
             <div class="body_root">
-                <form class="cui_form_section" data-legend="true" name="formPartMgmt">
+                <form class="cui_form_section" data-legend="true" name="formPartMgmt" onsubmit="return false;">
                     <fieldset>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong style="width:100px;" class="item_label" data-langsid="자재 코드"></strong>
                             <div class="item_content">
+                                <input type="hidden" name="mode" th:value="${mode}" />
                                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}" />
                                 <input name="PM_PART_CODE" class="cui_text_field fixdata" th:value="${PM_PART_CODE}" readonly>
-                                <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
-                            </div>
-                        </label>
-                        <label class="cui_items_wrap" data-direction="left">
-                            <strong style="width:100px;" class="item_label" data-langsid="자재판매국가"></strong>
-                            <div class="item_content">
-                                <input class="cui_text_field fixdata" th:value="${COM_NATION}" readonly>
+                                <button type="button" class="cui_button icon" data-cui-icon="search" th:style="${mode == 'New' ? 'display:block' : 'display:none'}" onclick="SelectPartCodeOpen();"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong style="width:100px;" class="item_label" data-langsid="자재명칭"></strong>
                             <div class="item_content">
-                                <input id="modalPartName" class="cui_text_field fixdata" th:value="${PART_NAME}" readonly>
+                                <input name="PART_NAME" class="cui_text_field fixdata" th:value="${PART_NAME}" readonly>
+                            </div>
+                        </label>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong style="width:100px;" class="item_label" data-langsid="자재판매국가"></strong>
+                            <div class="item_content">
+                                <input name="COM_NATION" class="cui_text_field fixdata" th:value="${COM_NATION}" readonly>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
@@ -69,7 +70,7 @@
 
                         <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                             <div class="item_content">
-                                <button type="submit" id="PartCodeMgmtAdd" class="cui_button primary"><span data-langsid="저장"></span></button>
+                                <button type="button" id="PartCodeMgmtAdd" class="cui_button primary" onclick="SelectPartCodeSave();"><span data-langsid="저장"></span></button>
                                 <button type="button" id="PartCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
                             </div>
                         </div>
@@ -78,4 +79,47 @@
             </div>
         </div>
     </div>
+    <script>
+        var SelectPartCodeOpen = function () {
+            var diaObj = $("#diaMatRegPopup");
+
+            Common.Dialog({ url : "/user/partMgmt/searchPartCode", closeFn : function (obj) {
+                var PART_CODE = obj.find("input[name=diaSelPART_CODE]").val();
+                var PART_NAME = obj.find("input[name=diaSelPART_NAME]").val();
+                var PLANT_CODE = obj.find("input[name=diaSelPLANT_CODE]").val();
+                var COM_NATION = obj.find("input[name=diaSelCOM_NATION]").val();
+
+                diaObj.find("input[name=PM_PART_CODE]").val(PART_CODE);
+                diaObj.find("input[name=PART_NAME]").val(PART_NAME);
+                diaObj.find("input[name=PM_PART_PLANT_CODE]").val(PLANT_CODE);
+                diaObj.find("input[name=COM_NATION]").val(COM_NATION);
+            }});
+        }
+
+        var SelectPartCodeSave = function () {
+            var diaObj = $("#diaMatRegPopup");
+
+            if (Common.Validate(diaObj) == true) {
+                Common.Msg(siteLang.getLang("추가 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        Common.Loading.Show();
+
+                        setTimeout(function () {
+                            var ReqInfo = new Common.RequestInfo();
+                            ReqInfo.AddParameter(diaObj);
+
+                            Common.Ajax("/user/partMgmt/setPartMgmtData", ReqInfo, function (response) {
+                               if (response == "OK") {
+                                    diaObj.data("Hide")();
+                                    ListSearch();
+                                    Common.Loading.Hide();
+                               }
+                            });
+                        }, 10);
+                    }
+                });
+            }
+        }
+    </script>
 </div>

@@ -33,6 +33,15 @@ public class PartMgmtRepository {
         return sql.selectOne("partManagement.getPartMgmt",PM_IDX);
     }
 
+    public List<HashMap> searchPartCodeList(String COM_CODE, String code, String Name){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("COM_CODE",COM_CODE);
+        data.put("PART_CODE",code);
+        data.put("PART_NAME",Name);
+
+        return sql.selectList("partManagement.searchPartCodeList", data);
+    }
+
     public List<HashMap> getpartCodeList(){ return sql.selectList("partManagement.partCodeList");}
 
     public int save(PartMgmtDTO partMgmtDTO){

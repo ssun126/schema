@@ -34,6 +34,10 @@ public class PartMgmtService {
         return partMgmtRepository.getPartMgmt(PM_IDX);
     }
 
+    public List<HashMap> searchPartCodeList(String COM_CODE, String code, String Name){
+        return partMgmtRepository.searchPartCodeList(COM_CODE, code, Name);
+    }
+
     public PartMgmtDTO getPartMgmtData(String idx) {
         return partMgmtRepository.getPartMgmtData(idx);
     }

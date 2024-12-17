@@ -176,6 +176,75 @@ public class PartMgmtController {
         return "partMgmtList/popup";
     }
 
+    @PostMapping("/searchPartCode")
+    public String searchPartCode(Model model, HttpServletRequest request, HttpServletResponse response){
+        return "partMgmtList/searchPartCode";
+    }
+
+    @PostMapping("/searchPartCodeList")
+    public ResponseEntity<?> searchPartCodeList(HttpServletRequest request, HttpServletResponse response) {
+        try{
+            String code = GetParam(request, "diaSearchPartCode", "");
+            String name = GetParam(request, "diaSearchPartName", "");
+
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            List<HashMap>  searchPartCodeList = partMgmtService.searchPartCodeList(user.getCOM_CODE(), code, name);
+
+            return ResponseEntity.ok().body(searchPartCodeList);
+        }catch(Exception e){
+            return ResponseEntity.ok().body("|||[ERROR]|||" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/setPartMgmtData")
+    public ResponseEntity<?> insertData(HttpServletRequest request, HttpServletResponse response) {
+        try{
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            String mode = GetParam(request, "mode", "");
+            int PM_IDX = Integer.parseInt(GetParam(request,"PM_IDX", "0"));
+            String PM_PART_CODE = GetParam(request, "PM_PART_CODE", "");
+            String PART_NAME = GetParam(request, "PART_NAME", "");
+            String COM_NATION = GetParam(request, "COM_NATION", "");
+            String PM_QUALITY = GetParam(request, "PM_QUALITY", "");
+            String PM_STATUS = GetParam(request, "PM_STATUS", "");
+            String PM_CHEMICAL_YN = GetParam(request, "PM_CHEMICAL_YN", "");
+            String PM_PART_PLANT_CODE = GetParam(request, "PM_PART_PLANT_CODE", "");
+
+            PartMgmtDTO partMgmtDTO = new PartMgmtDTO();
+
+            partMgmtDTO.setPM_IDX(PM_IDX);
+            partMgmtDTO.setPM_QUALITY(PM_QUALITY);
+            partMgmtDTO.setPM_STATUS(PM_STATUS);
+            partMgmtDTO.setPM_CHEMICAL_YN(PM_CHEMICAL_YN);
+
+            int resultCnt = 0;
+            if(partMgmtDTO.getPM_IDX() == 0){
+                partMgmtDTO.setPM_PART_CODE(PM_PART_CODE);
+                partMgmtDTO.setPM_PART_PLANT_CODE(PM_PART_PLANT_CODE);
+                partMgmtDTO.setPM_APPROVAL_STATUS("0");
+                partMgmtDTO.setPM_ACTIVE_YN("INACTIVE");
+                partMgmtDTO.setPM_REG_USER(user.getUSER_IDX());
+
+                //insert
+                resultCnt = partMgmtService.save(partMgmtDTO);
+            }else{
+                partMgmtDTO.setPM_MODIFY_USER(user.getUSER_IDX());
+                //update
+                resultCnt = partMgmtService.updatePartMgmt(partMgmtDTO);
+            }
+
+            // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
+            if(resultCnt > 0){
+                return ResponseEntity.ok("OK");
+            }else{
+                return ResponseEntity.ok().body("|||[ERROR]|||");
+            }
+        }catch(Exception e){
+            return ResponseEntity.ok().body("|||[ERROR]|||" + e.getMessage());
+        }
+    }
+
     @GetMapping("/goReadDetail")
     public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model){
 
@@ -266,34 +335,6 @@ public class PartMgmtController {
         }
 
     }
-
-    @PostMapping("/setPartMgmtData")
-    public ResponseEntity<?> insertData(@RequestBody PartMgmtDTO partMgmtDTO
-                                        , @AuthenticationPrincipal UserCustom user) {
-        log.info("PartMgmtDTO??????????????????"+partMgmtDTO);
-
-        //partMgmtDTO.setPM_REG_USER_IDX(user.getUSER_IDX());
-        //partMgmtDTO.setPM_COM_CODE(user.getCOM_CODE());
-
-        int resultCnt = 0;
-
-        if(partMgmtDTO.getPM_IDX() == 0){
-            //insert
-            resultCnt = partMgmtService.save(partMgmtDTO);
-        }else{
-            //update
-            resultCnt = partMgmtService.updatePartMgmt(partMgmtDTO);
-        }
-
-        // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
-        if(resultCnt > 0){
-            return ResponseEntity.ok("Form submitted successfully!");
-        }else{
-            return ResponseEntity.ok("Form submitted fail!");
-        }
-
-    }
-
 
     ///getPartMgmtData
     @GetMapping("/getPartMgmtData")

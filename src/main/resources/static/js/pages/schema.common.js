@@ -1145,7 +1145,7 @@ Common.Dialog = function (info) {
                 overlayObj.remove();
             }});
             obj.fadeOut({
-                complete : function () {
+                start : function () {
                     if (typeof closeFn == "function") {
                         closeFn(obj);
                     }
