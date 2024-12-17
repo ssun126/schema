@@ -22,6 +22,7 @@ import java.util.List;
 public class QualityControlController {
     @Autowired
     private AuditCommonService auditCommonService;
+    @Autowired
     private QualityItemService qualityItemService;
 
     @GetMapping("/admin/auditMgmt/qualityControl")

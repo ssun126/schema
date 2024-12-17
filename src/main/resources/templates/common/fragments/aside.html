@@ -21,7 +21,7 @@
                             <a href="#" class="nav_item load-content" th:if="${#lists.size(T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList) > 0  and subMenu.PAGE_IDX != T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList[0][0].GNB_IDX}" th:attr="data-url=${subMenu.PAGE_URL}, aria-selected=${currentUrl.contains(subMenu.PAGE_URL)? 'true' : 'false'}">
                                 <span class="nav_label" th:text="${subMenu.PAGE_NM}"></span>
                             </a>
-                            <ul th:each="thirdPage : ${auth.authority == 'ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userThirdMenuList}">
+                            <ul th:each="thirdPage : ${auth.authority == 'ROLE_ADMIN'?T(com.dongwoo.SQM.common.dto.MenuStaticValue).adminThirdMenuList:T(com.dongwoo.SQM.common.dto.MenuStaticValue).userThirdMenuList}">
                                 <li th:each="thirdMenu : ${thirdPage}"  th:if="${thirdMenu != null and subMenu.PAGE_IDX == thirdMenu.GNB_IDX }">
                                     <a href="#" class="nav_item load-content" th:attr="data-url=${thirdMenu.PAGE_URL}, aria-selected=${currentUrl.contains(thirdMenu.PAGE_URL)? 'true' : 'false'}"><span class="nav_label" th:text="${thirdMenu.PAGE_NM}"></span></a>
                                 </li>
