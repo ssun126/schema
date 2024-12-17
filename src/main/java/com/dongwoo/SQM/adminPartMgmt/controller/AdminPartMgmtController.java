@@ -132,7 +132,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partMSDSList = adminPartMgmtService.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partMSDSList = adminPartMgmtService.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partMSDSListStr = mapper.writeValueAsString(partMSDSList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -182,6 +182,7 @@ public class AdminPartMgmtController {
 
         return ResponseEntity.ok("OK");
     }
+
     /*******************************************************************************************************************************************/
 
     /******************************************************************************************************************************************/
@@ -287,7 +288,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partDeclList = adminPartMgmtService.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partDeclList = adminPartMgmtService.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partDeclListStr = mapper.writeValueAsString(partDeclList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -360,7 +361,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partEtcList = adminPartMgmtService.getPartEtcExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partEtcList = adminPartMgmtService.getPartEtcExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partEtcListStr = mapper.writeValueAsString(partEtcList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {

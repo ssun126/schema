@@ -12,7 +12,7 @@
 <div class="cui_main">
     <div class="cui_head">
         <div class="head_content">
-            <h2 class="cui_title"><span data-langsid="만료일 설정"></span></h2>
+            <h2 class="cui_title"><span data-langsid="갱신요청"></span></h2>
         </div>
     </div>
     <div class="cui_body">
@@ -24,7 +24,7 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th><span data-langsid="만료일"></span></th>
+                    <th><span data-langsid="만료일(개월수)"></span></th>
                     <td>
                         <div class="cui_items_wrap" data-direction="left">
                             <div class="item_content" style="width:200px;">
@@ -112,21 +112,30 @@
     var sendEtcExpAlert = function () {
         var sel_idxs = "";
         var sel_idxs_count = 0;
-        var grid = $("#gridArea").pqGrid("instance");
-        for (j = 0; j < grid.pdata.length; j++) {
-            if (grid.pdata[j]["CHECK_YN"] == true) {
-                if (sel_idxs == "") sel_idxs += ",";
-                sel_idxs += grid.pdata[j]["Etc_IDX"];
-                sel_idxs_count++;
-            }
-        }
+        Common.Msg(siteLang.getLang("갱신요청 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
 
-        if (sel_idxs_count == 0) {
-            Common.Msg(siteLang.getLang("갱신할 데이터를 선택하세요."));
-            return;
-        }
+                        var grid = $("#gridArea").pqGrid("instance");
+                        for (j = 0; j < grid.pdata.length; j++) {
+                            if (grid.pdata[j]["CHECK_YN"] == true) {
+                                sel_idxs += grid.pdata[j]["Etc_IDX"];
+                                if (sel_idxs == "" && j != grid.pdata.length-1 ) sel_idxs += ",";
+                                sel_idxs_count++;
+                            }
+                        }
+                        Common.Loading.Show();
 
-        Common.Msg(sel_idxs_count + "건 발송 되었습니다.");
+                        if (sel_idxs_count == 0) {
+                            Common.Msg(siteLang.getLang("갱신할 데이터를 선택하세요."));
+                            Common.Loading.Hide();
+                            return;
+                        }
+                        Common.Loading.Hide();
+                        Common.Msg(sel_idxs_count + "건 발송 되었습니다.");
+                    }
+        });
+
     }
 
     var expDateEtcSave = function (obj) {
@@ -142,6 +151,7 @@
                         Common.Ajax("/admin/partMgmt/expDateEtcSave", ReqInfo, function (response) {
                             if (response == "OK") {
                                 Common.Msg(siteLang.getLang("저장되었습니다."));
+                                ListSearch();
                             }
                             Common.Loading.Hide();
                         });

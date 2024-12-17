@@ -76,7 +76,8 @@
             , pc.PART_NAME
             , cc.COM_CODE
             , cc.COM_NAME
-            , TO_CHAR(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+            --, TO_CHAR(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+            ,TO_CHAR( ADD_MONTHS(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
             SC_PART_MGMT_DETAIL_MSDS msds
             LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON msds.PM_IDX  = pm.PM_IDX
@@ -85,7 +86,7 @@
         WHERE 1 = 1
         <if test="EXP_DATE != null and EXP_DATE != ''">
             <![CDATA[
-                AND TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+                AND ADD_MONTHS(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD'),#{EXP_MONTH}) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
             ]]>
         </if>
         <if test="COM_CODE != null and COM_CODE != ''">
@@ -103,7 +104,8 @@
         , pc.PART_NAME
         , cc.COM_CODE
         , cc.COM_NAME
-        , TO_CHAR(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        --, TO_CHAR(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        ,TO_CHAR( ADD_MONTHS(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
         SC_PART_MGMT_DECLARATION_DATA spmdd
         LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON spmdd.PM_IDX  = pm.PM_IDX
@@ -112,7 +114,7 @@
         WHERE 1 = 1
         <if test="EXP_DATE != null and EXP_DATE != ''">
             <![CDATA[
-                AND TO_DATE(spmdd.CONFIRM_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+                AND ADD_MONTHS(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
             ]]>
         </if>
         <if test="COM_CODE != null and COM_CODE != ''">
@@ -130,7 +132,8 @@
         , pc.PART_NAME
         , cc.COM_CODE
         , cc.COM_NAME
-        , TO_CHAR(TO_DATE(spmde.ETC_CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        --, TO_CHAR(TO_DATE(spmde.ETC_CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        ,TO_CHAR( ADD_MONTHS(TO_DATE(spmde.ETC_CONFIRM_DATE  , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
         SC_PART_MGMT_DETAIL_ETC spmde
         LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON spmde.PM_IDX  = pm.PM_IDX
@@ -139,7 +142,7 @@
         WHERE 1 = 1
         <if test="EXP_DATE != null and EXP_DATE != ''">
             <![CDATA[
-                AND TO_DATE(spmde.ETC_CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+                AND  ADD_MONTHS(TO_DATE(spmde.ETC_CONFIRM_DATE  , 'YYYY-MM-DD'), #{EXP_MONTH}) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
             ]]>
         </if>
         <if test="COM_CODE != null and COM_CODE != ''">
