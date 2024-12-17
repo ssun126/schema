@@ -1,7 +1,6 @@
 package com.dongwoo.SQM.adminPartMgmt.repository;
 
 import com.dongwoo.SQM.adminPartMgmt.dto.AdminPartMgmtDTO;
-import com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -27,6 +26,24 @@ public class AdminPartMgmtRepository {
         data.put("COM_NAME",COM_NAME);
 
         return sql.selectList("adminPartMgmt.getPartMSDSExpList",data);
+    }
+
+    public List<HashMap> getPartDeclExpList(String EXP_DATE, String COM_CODE, String COM_NAME){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("EXP_DATE",EXP_DATE);
+        data.put("COM_CODE",COM_CODE);
+        data.put("COM_NAME",COM_NAME);
+
+        return sql.selectList("adminPartMgmt.getPartDeclExpList",data);
+    }
+
+    public List<HashMap> getPartEtcExpList(String EXP_DATE, String COM_CODE, String COM_NAME){
+        HashMap<String,Object> data = new HashMap<>();
+        data.put("EXP_DATE",EXP_DATE);
+        data.put("COM_CODE",COM_CODE);
+        data.put("COM_NAME",COM_NAME);
+
+        return sql.selectList("adminPartMgmt.getPartEtcExpList",data);
     }
 
 }

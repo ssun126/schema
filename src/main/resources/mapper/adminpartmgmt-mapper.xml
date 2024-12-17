@@ -95,4 +95,58 @@
             AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
         </if>
     </select>
+
+    <select id ="getPartDeclExpList" parameterType="hashMap" resultType="java.util.HashMap">
+        SELECT
+        spmdd.DECL_IDX
+        , pc.PART_CODE
+        , pc.PART_NAME
+        , cc.COM_CODE
+        , cc.COM_NAME
+        , TO_CHAR(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        FROM
+        SC_PART_MGMT_DECLARATION_DATA spmdd
+        LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON spmdd.PM_IDX  = pm.PM_IDX
+        LEFT OUTER JOIN SC_PART_CODE pc ON pm.PM_PART_CODE  = pc.PART_CODE
+        LEFT OUTER JOIN SC_COMPANY_CODE cc ON pc.COM_CODE  = cc.COM_CODE
+        WHERE 1 = 1
+        <if test="EXP_DATE != null and EXP_DATE != ''">
+            <![CDATA[
+                AND TO_DATE(spmdd.CONFIRM_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (cc.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+    </select>
+
+    <select id ="getPartEtcExpList" parameterType="hashMap" resultType="java.util.HashMap">
+        SELECT
+        spmde.ETC_IDX
+        , pc.PART_CODE
+        , pc.PART_NAME
+        , cc.COM_CODE
+        , cc.COM_NAME
+        , TO_CHAR(TO_DATE(spmde.ETC_CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+        FROM
+        SC_PART_MGMT_DETAIL_ETC spmde
+        LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON spmde.PM_IDX  = pm.PM_IDX
+        LEFT OUTER JOIN SC_PART_CODE pc ON pm.PM_PART_CODE  = pc.PART_CODE
+        LEFT OUTER JOIN SC_COMPANY_CODE cc ON pc.COM_CODE  = cc.COM_CODE
+        WHERE 1 = 1
+        <if test="EXP_DATE != null and EXP_DATE != ''">
+            <![CDATA[
+                AND TO_DATE(spmde.ETC_CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (cc.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+    </select>
 </mapper>

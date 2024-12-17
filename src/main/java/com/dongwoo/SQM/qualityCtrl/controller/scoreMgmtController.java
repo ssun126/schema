@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class scoreMgmtController {
     @GetMapping("/admin/qualityCtrl/scoreMgmt")
-    public String isoAuthMain(Model model) {
+    public String getAdminMain(Model model) {
+        return "scoreMgmt/main";
+    }
+
+    @GetMapping("/user/qualityCtrl/scoreMgmt")
+    public String getMain(Model model) {
         return "scoreMgmt/main";
     }
 }

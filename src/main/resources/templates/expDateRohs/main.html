@@ -16,28 +16,51 @@
             </div>
         </div>
         <div class="cui_body">
-            <form id="searchForm" method="get">
+            <form id="formRohsExp" onsubmit="return false">
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap ">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">만료일</strong>
+                            <strong class="item_label">Rohs 만료일</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="txtExpDate" placeholder="만료일 숫자입력."/>
+                                <input class="cui_text_field" type="text" name="EXP_ROSH" NumberKey=""   placeholder="" th:value="${RoHS_EXP_MONTH}" data-langsid="Rohs 만료일 숫자입력." reqcheck="reqcheck" data-messages="Rohs 만료일을 입력해주세요." />
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" style="width: 130px;">Halogen 만료일</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="txtExpDate1" placeholder="Halogen 만료일 숫자입력."/>
+                                <input class="cui_text_field" type="text" name="EXP_HALG" NumberKey=""  placeholder="" th:value="${Halogen_EXP_MONTH}" data-langsid="Halogen 만료일 숫자입력." data-messages="Halogen 만료일을 입력해주세요."/>
                             </div>
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>저장</span></button>
+                        <button type="submit" class="cui_button primary search_btn" onclick="expDateRohsSave($('#formRohsExp'))"><span>저장</span></button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+<script>
+    var expDateRohsSave = function (obj) {
+            if (Common.Validate(obj)) {
+                Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        var ReqInfo = new Common.RequestInfo();
+                        ReqInfo.AddParameter(obj);
+
+                        Common.Loading.Show();
+                        setTimeout(function () {
+                            Common.Ajax("/admin/partMgmt/expDateRohsSave", ReqInfo, function (response) {
+                                if (response == "OK") {
+                                    Common.Msg(siteLang.getLang("저장되었습니다."));
+                                }
+                                Common.Loading.Hide();
+                            });
+                        }, 10);
+                    }
+                });
+            }
+        }
+</script>
 </body>
 </html>

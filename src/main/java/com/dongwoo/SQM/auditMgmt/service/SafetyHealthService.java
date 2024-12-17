@@ -1,13 +1,11 @@
 package com.dongwoo.SQM.auditMgmt.service;
 
-import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
-import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
-import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
-import com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO;
+import com.dongwoo.SQM.auditMgmt.dto.*;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
 import com.dongwoo.SQM.auditMgmt.repository.SafetyHealthRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.dongwoo.SQM.siteMgr.dto.SafetyItemDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +33,7 @@ public class SafetyHealthService {
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
-    public void saveAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException{
+    public void saveAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         //List<SafetyHealthDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<SafetyHealthDTO>>() {});
@@ -51,23 +49,23 @@ public class SafetyHealthService {
         authDTO.setAPPROVE_STATE("SEND"); //제출
         authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
         authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-        log.info("authDTO::::::::::"+authDTO);
+        log.info("authDTO::::::::::" + authDTO);
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
-        if(comCnt > 0) {
+        if (comCnt > 0) {
             int rsltCnt = auditMgmtRepository.updateAuth(authDTO);  // updateItem
-            log.info("update rsltCnt::::::::::"+rsltCnt);
-        }else{
+            log.info("update rsltCnt::::::::::" + rsltCnt);
+        } else {
             int rsltCnt = auditMgmtRepository.insertAuth(authDTO); //저장
-            log.info("insert rsltCnt::::::::::"+rsltCnt);
+            log.info("insert rsltCnt::::::::::" + rsltCnt);
         }
 
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
-        log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
+        log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::" + authMgmtDTO.getAUTH_SEQ());
 
         if (fileNames != null && fileNames.length > 0 && authMgmtDTO.getAUTH_SEQ() != null) {
             // 각 파일을 저장하고 경로를 DTO에 추가
-            for(int i = 0; i < fileNames.length; i++) {
+            for (int i = 0; i < fileNames.length; i++) {
                 String filePath = saveFile(fileNames[i]);
 
                 // Paths 클래스를 사용하여 파일명 추출
@@ -97,8 +95,8 @@ public class SafetyHealthService {
 
         // 저장할 파일의 경로 설정 (파일 이름에 타임스탬프를 추가하여 중복 방지)
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        File destinationFile  = new File(uploadPath  + File.separator +  fileName);
-        file.transferTo(destinationFile );  // 파일 저장
+        File destinationFile = new File(uploadPath + File.separator + fileName);
+        file.transferTo(destinationFile);  // 파일 저장
 
         return destinationFile.getAbsolutePath();  // 저장된 파일 경로 반환
     }
@@ -110,4 +108,5 @@ public class SafetyHealthService {
         params.put("COM_CODE", code);
         return auditMgmtRepository.getCompanyAuth(params);
     }
+
 }

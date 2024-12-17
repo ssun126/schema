@@ -77,7 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/auth/login", "/member/**", "/multiLanguage/getLocalStorage").permitAll()
                         .requestMatchers(HttpMethod.POST, "/sendIsoAuthData", "/multiLanguage/saveMultiLanguage", "/findDW", "/findCompanyID", "/findCompanyPW", "/otp", "/otpSend", "/otpOk" , "/idpwCheck").permitAll()  // Allow POST without authentication
                         // 관리자 권한만 가능
-                        //.requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

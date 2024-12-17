@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class changeMgmtController {
     @GetMapping("/admin/qualityCtrl/changeMgmt")
-    public String GetChangeMgmtList(Model model) {
+    public String getAdminChangeMgmtList(Model model) {
+        return "changeMgmt/adminMain";
+    }
+
+    @GetMapping("/user/qualityCtrl/changeMgmt")
+    public String getChangeMgmtList(Model model) {
         return "changeMgmt/main";
     }
 }

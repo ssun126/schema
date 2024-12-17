@@ -32,12 +32,10 @@
                                     <div class="item_content">
                                         <div class="cui_attachments">
                                             <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
-                                                </div>
+                                                <div class="item_label" data-cui-icon="paperclip"><span id="downFileName"></span></div>
                                                 <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span>
-                                                    </button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" id="downloadButton" onclick="downloadFile()"><span>다운로드</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" id="deleteButton" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -55,19 +53,21 @@
                 </div>
             </div>
             <form class="cui_border_section" data-legend="true">
-                <div class="cui_section">
-                    <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>제조소 공통 정보</span></div>
+                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}" th:each="data, iterStat : ${auditItems}">
+                    <div class="cui_bullet_title" th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
+                        <div class="bullet_title_label">
+                            <span id="mainItem" th:text="${data.PROVISION}"></span>
+                        </div>
                     </div>
-                    <table class="cui_table center">
+                    <table class="cui_table">
                         <colgroup>
-                            <col style="width:200px;">
+                            <col style="width:100px;">
                             <col>
                             <col style="width:200px;">
                             <col style="width:300px;">
                             <col style="width:80px;">
                         </colgroup>
-                        <thead>
+                        <thead th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
                         <tr>
                             <th><span>항목</span></th>
                             <th><span>내용</span></th>
@@ -78,74 +78,10 @@
                         </thead>
                         <tbody>
                         <tr>
+                            <td><span th:text="${data.AUDIT_ITEM}"></span></td>
+                            <td><span th:text="${data.AUDIT_DESC}"></span></td>
                             <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="cui_section">
-                    <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>노동환경</span></div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:200px;">
-                            <col>
-                            <col style="width:200px;">
-                            <col style="width:300px;">
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가점수</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="cui_section">
-                    <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>윤리경영</span></div>
-                    </div>
-                    <table class="cui_table center">
-                        <colgroup>
-                            <col style="width:200px;">
-                            <col>
-                            <col style="width:200px;">
-                            <col style="width:300px;">
-                            <col style="width:80px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가점수</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
-                            <td><input type="text" class="cui_text_field"></td>
+                            <td><span th:text="${data.AUDIT_CRITERIA}"></span></td>
                             <td><input type="text" class="cui_text_field"></td>
                         </tr>
                         </tbody>
@@ -199,9 +135,19 @@
 
         $('#authState').text('');
         loadInfo();
+
+
+
     });
 
-
+    const tableRows = document.querySelectorAll('.cui_table tr');
+    if (tableRows.length > 1) {
+        for (let i = 1; i < tableRows.length; i++) {
+            tableRows[i].
+            tableRows[i
+    style.borderTop = 'none'; // 첫 번째 tr 제외하고 border-top 제거
+        }
+    }
 
     //입력 파일 출력
     function loadInfo(){
