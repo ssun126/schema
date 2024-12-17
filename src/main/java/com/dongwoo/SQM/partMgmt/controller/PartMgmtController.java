@@ -152,7 +152,7 @@ public class PartMgmtController {
             } else {
                 try {
                     PrintWriter printer = response.getWriter();
-                    printer.print("|||[ERROR]|||기초설정 정보가 존재하지 않습니다.");
+                    printer.print("|||[ERROR]|||자재 정보가 존재하지 않습니다.");
                     printer.close();
                 } catch (Exception e2) {
                 }
