@@ -172,12 +172,11 @@ public class IsoAuthService {
     }
 
     //업체별 ISO 인증서 만료일 정보 리스트
-    public List<IsoAuthItemDTO> getExpDateList(String code, String name, String expDate, Criteria criteria) {
+    public List<HashMap> getExpDateList(String code, String name, String expDate) {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_CODE", code);
         params.put("COM_NAME", name);
         params.put("EXP_DATE", expDate);
-        params.put("criteria", criteria);
         return isoAuthRepository.getExpDateList(params);
     }
     public int getTotal() {

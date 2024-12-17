@@ -4,120 +4,258 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <div class="cui_main">
-  <div class="cui_head">
-    <div class="head_content">
-      <h2 class="cui_title"><span>분쟁/책임 광물</span></h2>
+<div class="cui_main">
+    <div class="cui_head">
+        <div class="head_content">
+            <h2 class="cui_title"><span data-langsid="만료일 설정"></span></h2>
+        </div>
     </div>
-  </div>
-  <div class="cui_body">
-    <form class="cui_form_field" data-legend="true">
-      <fieldset>
-        <legend><span>갱신요청</span></legend>
-        <table class="cui_table">
-          <colgroup>
-            <col style="width:154px;">
-            <col>
-          </colgroup>
-          <tbody>
-          <tr>
-            <th><span>요청사항</span></th>
-            <td>
-              <div class="cui_items_wrap" data-direction="left">
-                <div class="item_content">
-                  <textarea class="cui_text_field" rows="10"></textarea>
+    <div class="cui_body">
+        <form id="formExp" class="cui_form_field" data-legend="true" onsubmit="return false">
+            <table class="cui_table">
+                <colgroup>
+                    <col style="width:154px;">
+                    <col>
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th><span data-langsid="요청사항"></span></th>
+                    <td>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <div class="item_content">
+                                <textarea class="cui_text_field" name="EXP_BODY" rows="10" th:text="${EXP_BODY}"
+                                          reqcheck="reqcheck" data-messages="요청사항을 입력해주세요." messages=""></textarea>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="cui_toolbar" style="margin-top:10px;">
+                <div class="toolbar_content">
+                    <div class="toolbar_default"></div>
                 </div>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <div class="cui_toolbar">
-          <div class="toolbar_content">
-            <div class="toolbar_default"></div>
-          </div>
-          <div class="toolbar_aside">
-            <button type="button" class="cui_button primary"><span>저장</span></button>
-            <button type="button" class="cui_button primary"><span>갱신요청 발송</span></button>
-          </div>
-        </div>
-      </fieldset>
-    </form>
+                <div class="toolbar_aside">
+                    <button type="button" class="cui_button primary" onclick="expDateSave($('#formExp'));"><span
+                            data-langsid="저장"></span></button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <form class="cui_form_field" data-legend="true">
-      <fieldset>
-        <legend><span>발송 이력</span></legend>
-        <table class="cui_table" id="expDateQaulityTable">
-          <colgroup>
-            <col style="width:180px;">
-            <col style="width:100px;">
-            <col>
-          </colgroup>
-          <thead>
-          <tr>
-            <th><span>발송일자</span></th>
-            <th><span>발송자</span></th>
-            <th><span>요청사항</span></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td class="center">2024-01-01 00:00:00</td>
-            <td class="center">홍길동</td>
-            <td>요청사항 내용입니다</td>
-          </tr>
-          </tbody>
-        </table>
-        <div id="pagination" class="pagination" style="text-align: center"></div>
-        <div class="table-wrapper">
+    <div class="cui_head">
+        <div class="head_content">
+            <h2 class="cui_title"><span data-langsid="갱신요청"></span></h2>
         </div>
-      </fieldset>
-    </form>
-  </div>
+    </div>
+    <div class="cui_body">
+        <form id="searchArea" method="get" onsubmit="return false;">
+            <div class="cui_search">
+                <div class="search_list cui_grid_wrap ">
+                    <div class="cui_items_wrap" data-direction="left">
+                        <strong class="item_label" data-langsid="업체코드"></strong>
+                        <div class="item_content">
+                            <input class="cui_text_field" type="text" id="COM_CODE" name="COM_CODE" search="searchBtn"
+                                   th:value="${COM_CODE}"/>
+                        </div>
+                    </div>
+                    <div class="cui_items_wrap" data-direction="left">
+                        <strong class="item_label" data-langsid="업체명"></strong>
+                        <div class="item_content">
+                            <input class="cui_text_field" type="text" id="COM_NAME" name="COM_NAME" search="searchBtn"
+                                   th:value="${COM_NAME}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="search_action">
+                    <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();">
+                        <span data-langsid="검색"></span></button>
+                </div>
+            </div>
+        </form>
+
+        <div class="cui_jqGrid_section">
+            <div class="cui_jqGrid_head">
+                <div class="jqGrid_label"> &nbsp;</div>
+                <div class="jqGrid_aside">
+                    <button type="button" class="cui_button endpoint" data-cui-icon="upload"
+                            onclick="sendExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
+                </div>
+            </div>
+            <div class="cui_jqGrid_body" id="Grid">
+                <div id="gridArea" gridYN="" th:initData="${auditList}"></div>
+            </div>
+        </div>
+    </div>
 </div>
+<script>
+    var sendExpAlert = function () {
+        var sel_idxs = "";
+        var sel_idxs_count = 0;
+        var grid = $("#gridArea").pqGrid("instance");
+        for (j = 0; j < grid.pdata.length; j++) {
+            if (grid.pdata[j]["CHECK_YN"] == true) {
+                if (sel_idxs == "") sel_idxs += ",";
+                sel_idxs += grid.pdata[j]["MSDS_IDX"];
+                sel_idxs_count++;
+            }
+        }
+
+        if (sel_idxs_count == 0) {
+            Common.Msg(siteLang.getLang("갱신 요청 데이터를 선택하세요."));
+            return;
+        }else{
+            Common.Msg(siteLang.getLang("발송 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.AddParameter(obj);
+
+                    Common.Loading.Show();
+                    setTimeout(function () {
+                        Common.Ajax("/sendEmail?fromMail=recipient@example.com&to=recipient@example.com&subject=Test&text=Hello+World!", ReqInfo, function (response) {
+                            if (response == "OK") {
+                                Common.Msg(sel_idxs_count + "건 발송 되었습니다.");
+                            }
+                            Common.Loading.Hide();
+                        });
+                    }, 10);
+                }
+            });
+        }
+    }
+
+    var expDateSave = function (obj) {
+        if (Common.Validate(obj)) {
+            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.AddParameter(obj);
+
+                    Common.Loading.Show();
+                    setTimeout(function () {
+                        Common.Ajax("/admin/auditMgmt/expDateConflictSave", ReqInfo, function (response) {
+                            if (response == "OK") {
+                                Common.Msg(siteLang.getLang("저장되었습니다."));
+                            }
+                            Common.Loading.Hide();
+                        });
+                    }, 10);
+                }
+            });
+        }
+    }
+
+    var SheetDataConvert = function (data) {
+        var dataJson = JSON.parse(data);
+
+        for (var i = 0; i < dataJson.length; i++) {
+            dataJson[i].CHECK_YN = false;
+        }
+
+        return dataJson;
+    }
+
+    var ListSearch = function () {
+        var url = location.pathname;
+        console.log(url);
+
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter($("#searchArea"));
+
+        Common.Ajax(url, ReqInfo, function (data) {
+            var dataJson = SheetDataConvert(data);
+
+            $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+            $("#gridArea").pqGrid("refreshView");
+        });
+    }
+
+    $(function () {
+        var heightMinus = 650;
+
+        var data = SheetDataConvert($("#gridArea").attr("initData"));
+
+        var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 2 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: false,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+        };
+        obj.colModel = [
+            {
+                dataIndx: "CHECK_YN", width: 50, halign: "center", align: "center", resizable: true,
+                type: 'checkBoxSelection', sortable: false, editor: true, editable: true,
+                dataType: 'bool',
+                cb: {
+                    all: false,
+                    header: true
+                }
+            },
+            { data_langsid: "승인상태", title: siteLang.getLang("승인상태"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_STATE", sortable: true, editor: false, editable: false },
+            { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 200, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+            { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 300, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+            { data_langsid: "점수", title: siteLang.getLang("점수"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
+            { data_langsid: "제출일", title: siteLang.getLang("제출일"), width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "SEND_DATE", sortable: true, editor: false, editable: false },
+            { data_langsid: "승인일", title: siteLang.getLang("승인일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
+            { hidden : true, dataType: "string", dataIndx: "AUTH_SEQ", editor: false, editable: false }
+        ];
+        obj.dataModel = { data: data };
+        $("#gridArea").pqGrid(obj);
+        $("#gridArea").attr("gridYN", "Y");
+
+        $(window).resize(function () {
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
+        });
+    });
+</script>
 </body>
 </html>
-<script>
-  // 페이지네이션 처리 함수 (updatePagination)
-  function updatePagination(pageMaker) {
-      var paginationHtml = '';
-      var currentPage = pageMaker.criteria.pageNum;
-      var startPage = pageMaker.startPage;
-      var endPage = pageMaker.endPage;
-      var totalPages = pageMaker.totalPages;
-
-      // 이전 페이지 버튼
-      if (currentPage > 1) {
-          paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
-      }
-
-      // 페이지 번호
-      for (var i = startPage; i <= endPage; i++) {
-          if (i === currentPage) {
-              paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-          } else {
-              paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-          }
-      }
-
-      // 다음 페이지 버튼
-      if (currentPage < totalPages) {
-          paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-      }
-
-      // 페이지네이션 HTML 업데이트
-      $('#pagination').html(paginationHtml);
-
-      // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-      $('.page, .prev, .next').on('click', function(event) {
-          event.preventDefault();
-          var pageNum = $(this).data('page');
-          searchCompanies(pageNum);
-      });
-  }
-</script>

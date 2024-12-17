@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,5 +46,10 @@ public class AuditMgmtRepository {
     //업체별-Auth type별 첨부 파일 조회
     public List<AuditMgmtDTO> getCompanyAuthFile(Map<String, Object> params) {
         return sql.selectList("AuditMgmt.getCompanyAuthFile", params);
+    }
+
+    //업체별 만료일 조회
+    public List<HashMap> getExpDateList(Map<String, Object> params) {
+        return sql.selectList("AuditMgmt.getExpDateList", params);
     }
 }

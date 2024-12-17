@@ -18,20 +18,20 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체코드"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" name="searchCode" search="searchBtn" data-langsid="업체코드를 입력해주세요" placeholder=""/>
+                                <input class="cui_text_field" type="text" id="searchCode" name="searchCode" search="searchBtn" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" name="searchName" search="searchBtn" data-langsid="업체명을 입력해주세요" placeholder=""/>
+                                <input class="cui_text_field" type="text" id="searchName" name="searchName" search="searchBtn" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="사업본부"></strong>
                             <div class="item_content">
                                 <select id="searchDept" name="searchDept" class="cui_select_field" onchange="ListSearch();">
-                                    <option value="" data-langsid="선택" selected></option>
+                                    <option value="" selected></option>
                                     <option th:each="dept : ${deptList}"
                                             th:value="${dept.BASE_CODE}"
                                             th:text="${dept.BASE_NAME}">
@@ -85,14 +85,14 @@
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체 코드"></strong>
                             <div class="item_content">
-                                <input type="text" id="COM_CODE" name="COM_CODE" class="cui_text_field fixdata" reqcheck="reqcheck" data-messages="업체 코드를 입력하세요." messages="">
+                                <input type="text" id="COM_CODE" name="COM_CODE" class="cui_text_field fixdata" reqcheck="reqcheck" messages="">
                                 <button type="button" id="iconSearch" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input type="text" id="COM_NAME" name="COM_NAME" class="cui_text_field fixdata" disabled="disabled" reqcheck="reqcheck" data-messages="업체명을 입력하세요." messages="">
+                                <input type="text" id="COM_NAME" name="COM_NAME" class="cui_text_field fixdata" disabled="disabled" reqcheck="reqcheck" messages="">
                             </div>
                         </label>
                         <label class="cui_items_wrap" data-direction="left">

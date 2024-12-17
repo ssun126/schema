@@ -103,7 +103,6 @@
                     var data = ui.rowData;
                     $("#CpCodeMgmt").find("input[name=COM_CODE]").val(data.COM_CODE);
                     $("#CpCodeMgmt").find("input[name=COM_NAME]").val(data.COM_NAME);
-                    $("#CpCodeMgmt").find("input[name=FACTORY_ID]").val(data.FACTORY_ID);
                     $("#CpCode").data("Hide")();
                 },
                 rowSelect: function (event, ui) {
@@ -116,7 +115,6 @@
             obj.colModel = [
                 { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
                 { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "공장코드", title: siteLang.getLang("공장코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_ID", sortable: true, editor: false, editable: false }
             ];
             obj.dataModel = { data: data };
             $("#gridArea_CpCode").pqGrid(obj);

@@ -111,4 +111,13 @@ public class AuditCommonService {
         params.put("COM_CODE", code);
         return auditMgmtRepository.getCompanyAuthFile(params);
     }
+
+    //업체별 만료일 정보 리스트
+    public List<HashMap> getExpDateList(String code, String name, String type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_CODE", code);
+        params.put("COM_NAME", name);
+        params.put("AUTH_TYPE", type);
+        return auditMgmtRepository.getExpDateList(params);
+    }
 }

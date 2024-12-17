@@ -23,6 +23,7 @@
             ,PM_PART_PLANT_CODE
             ,PM_APPROVAL_STATUS
             ,PM_APPROVAL_DATE
+            ,cm.COM_CODE
             ,cm.TANTALUM_YN
             ,cm.TUNGSTEN_YN
             ,cm.TIN_YN
@@ -31,10 +32,10 @@
             ,cm.MICA_YN
             ,cm.INSPECTION_DATE
         FROM SC_PART_MANAGEMENT_DATA pmd
-        LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE
-        LEFT OUTER JOIN  SC_CONFLICT_MINERAL cm ON cm.COM_CODE  = pmd.PM_COM_CODE
+        LEFT OUTER JOIN  SC_PART_CODE pc ON pmd.PM_PART_CODE  = pc.PART_CODE and pmd.PM_PART_PLANT_CODE = pc.PLANT_CODE
+        LEFT OUTER JOIN  SC_CONFLICT_MINERAL cm ON pc.COM_CODE = cm.COM_CODE
         WHERE 1 =1
-        AND pmd.PM_COM_CODE = #{COM_CODE}
+        AND pc.COM_CODE = #{COM_CODE}
     </select>
 
 </mapper>

@@ -56,10 +56,10 @@
                 <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}" th:each="data, iterStat : ${auditItems}">
                     <div class="cui_bullet_title" th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
                         <div class="bullet_title_label">
-                            <span id="mainItem" th:text="${data.PROVISION}"></span>
+                            <span th:text="${data.PROVISION}"></span>
                         </div>
                     </div>
-                    <table class="cui_table">
+                    <table class="cui_table" th:style="'border-top: ' +(${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION} ? '' : 'none')">
                         <colgroup>
                             <col style="width:100px;">
                             <col>
@@ -135,19 +135,7 @@
 
         $('#authState').text('');
         loadInfo();
-
-
-
     });
-
-    const tableRows = document.querySelectorAll('.cui_table tr');
-    if (tableRows.length > 1) {
-        for (let i = 1; i < tableRows.length; i++) {
-            tableRows[i].
-            tableRows[i
-    style.borderTop = 'none'; // 첫 번째 tr 제외하고 border-top 제거
-        }
-    }
 
     //입력 파일 출력
     function loadInfo(){
@@ -162,11 +150,28 @@
                 var approvedDate = '[[${companyAuthFile.APPROVE_DATE}]]';
                 if (state === 'SEND') {
                     $('#authState').text('[제출:' +approvedDate+']');
+                    $('#deleteButton').css("display", "none");
                     $('.resultField').show();
                     $('#sendAuth').hide();
                 }
             }
         }
+    }
+
+    //파일다운로드
+    function downloadFile() {
+        var fileName = '[[${companyAuthFile.FILE_NAME}]]';
+        var url = "/auditMgmt/getIsoAuthFileDown?filename=" + encodeURIComponent(fileName);
+
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;  // Optionally set the download filename if needed
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
     }
 </script>
 </body>

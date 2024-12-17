@@ -35,4 +35,19 @@
         INNER JOIN SC_AUTH_FILE AF ON AF.COM_CODE = ACI.COM_CODE AND AF.AUTH_TYPE = ACI.AUTH_TYPE
         WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
     </select>
+
+    <select id="getExpDateList" parameterType="hashMap" resultType="java.util.HashMap">
+        SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUTH_SEQ, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE, TO_CHAR(SEND_DATE, 'YYYY.MM.DD') AS SEND_DATE, POINT
+        FROM SC_AUTH_COMPANY_INFO ACI
+        INNER JOIN SC_COMPANY_CODE CC
+        ON CC.COM_CODE = ACI.COM_CODE
+        WHERE 1 =1
+        AND AUTH_TYPE = #{AUTH_TYPE}
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+    </select>
 </mapper>
