@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.partMgmt.controller;
 
+import com.dongwoo.SQM.adminPartMgmt.dto.AdminPartMgmtDTO;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.dongwoo.SQM.config.security.UserCustom;
@@ -7,6 +8,11 @@ import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartDetailService;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.system.service.MemberService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,12 +26,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,22 +45,135 @@ import java.util.Map;
 public class PartMgmtController {
     private final PartMgmtService partMgmtService;
     private final PartDetailService partDetailService;
+    private final MemberService memberService;
 
     //메인 리스트 화면
-    @GetMapping("/matReg")
-    public String initPartMgmt(Model model) {
-
-        //바인딩 리스트
-        //검색 basecode 취급플랜트
+    @RequestMapping("/matReg")
+    public String initPartMgmt(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
         List<HashMap> searchPlantList = partMgmtService.getPlantList();
-        //검색 basecode 승인현황
-        //List<HashMap> searhApprovalStatus = partMgmtService.getApprovalStatus();
-
         model.addAttribute("searchPlantList",searchPlantList);
-        //model.addAttribute("searhApprovalStatus", searhApprovalStatus);
+
+        try {
+            BaseCodeDTO baseCodeDTO = new BaseCodeDTO();
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            String sPartCode = GetParam(request, "sPartCode", "");
+            String sPartName = GetParam(request, "sPartName", "");
+            String sRegUser = GetParam(request, "sRegUser", "");
+            String sUseYN = GetParam(request, "sUseYN", "");
+            String sPlant = GetParam(request, "sPlant", "");
+            String sApproval = GetParam(request, "sApproval", "");
+            String sStartDate = GetParam(request, "sStartDate", "");
+            String sEndDate = GetParam(request, "sEndDate", "");
+
+            model.addAttribute("sPartCode", sPartCode);
+            model.addAttribute("sPartName", sPartName);
+            model.addAttribute("sRegUser", sRegUser);
+            model.addAttribute("sUseYN", sUseYN);
+            model.addAttribute("sPlant", sPlant);
+            model.addAttribute("sApproval", sApproval);
+            model.addAttribute("sStartDate", sStartDate);
+            model.addAttribute("sEndDate", sEndDate);
+
+            PartMgmtDTO parmDTO = new PartMgmtDTO();
+            parmDTO.setCOM_CODE(user.getCOM_CODE());
+            parmDTO.setPM_PART_CODE(sPartCode);
+            parmDTO.setPART_NAME(sPartName);
+            parmDTO.setSEARCH_REG_USER(sRegUser);
+            parmDTO.setPM_PART_PLANT_CODE(sPlant);
+            parmDTO.setPM_ACTIVE_YN(sUseYN);
+            parmDTO.setPM_APPROVAL_STATUS(sApproval);
+            parmDTO.setSEARCH_PM_SDATE(sStartDate);
+            parmDTO.setSEARCH_PM_EDATE(sEndDate);
+
+            List<PartMgmtDTO> partMgmtDTOList = partMgmtService.searchPartMgmt(parmDTO);
+            String partMgmtListStr = mapper.writeValueAsString(partMgmtDTOList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partMgmtListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partMgmtListStr",partMgmtListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
 
         return "partMgmtList/main";
 
+    }
+
+    @PostMapping("/matRegPopup")
+    public String matRegPopup(Model model, HttpServletRequest request, HttpServletResponse response){
+        String mode = request.getParameter("mode");
+        model.addAttribute("mode",mode);
+
+        String TITLE = "";
+        int PM_IDX = 0;
+        String PM_PART_CODE = "";
+        String PART_NAME = "";
+        String PM_PART_PLANT_CODE = "";
+        String PM_QUALITY = "";
+        String PM_STATUS = "";
+        String PM_CHEMICAL_YN = "";
+        String COM_NATION = "";
+
+        if (mode.equals("Edit")) {
+            TITLE = "수정";
+            PM_IDX = Integer.parseInt(GetParam(request,"PM_IDX", "0"));
+            PartMgmtDTO partMgmtDTO = partMgmtService.getPartMgmt(PM_IDX);
+            if (partMgmtDTO != null) {
+                PM_PART_CODE = partMgmtDTO.getPM_PART_CODE();
+                PART_NAME = partMgmtDTO.getPART_NAME();
+                PM_PART_PLANT_CODE = partMgmtDTO.getPM_PART_PLANT_CODE();
+                PM_QUALITY = partMgmtDTO.getPM_QUALITY();
+                PM_STATUS = partMgmtDTO.getPM_STATUS();
+                PM_CHEMICAL_YN = partMgmtDTO.getPM_CHEMICAL_YN();
+                COM_NATION = partMgmtDTO.getCOM_NATION();
+            } else {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||기초설정 정보가 존재하지 않습니다.");
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            }
+        } else {
+            TITLE = "신규추가";
+        }
+
+        model.addAttribute("TITLE",TITLE);
+        model.addAttribute("PM_IDX",PM_IDX);
+        model.addAttribute("PM_PART_CODE",PM_PART_CODE);
+        model.addAttribute("PART_NAME",PART_NAME);
+        model.addAttribute("PM_PART_PLANT_CODE",PM_PART_PLANT_CODE);
+        model.addAttribute("PM_QUALITY",PM_QUALITY);
+        model.addAttribute("PM_STATUS",PM_STATUS);
+        model.addAttribute("PM_CHEMICAL_YN",PM_CHEMICAL_YN);
+        model.addAttribute("COM_NATION",COM_NATION);
+
+        return "partMgmtList/popup";
     }
 
     @GetMapping("/goReadDetail")
@@ -131,34 +252,6 @@ public class PartMgmtController {
         partMgmtService.updateActive(status,pmidx);
     }
 
-    @GetMapping("/searchPartMgmt")
-    public ResponseEntity<?>  searchPartMgmt(@RequestParam("code") String code, @RequestParam("name") String name,@RequestParam("reguser") String reguser,
-                                            @RequestParam("useyn") String useyn,@RequestParam("plant") String plant,@RequestParam("approval") String approval,
-                                            @RequestParam("sdate") String sdate,@RequestParam("edate") String edate){
-        //ist<PartMgmtDTO> partMgmtDTOList = PartMgmtService.searchPartMgmt(code,name,reguser,useyn,plant,approval,sdate,edate);
-        try{
-            PartMgmtDTO parmDTO = new PartMgmtDTO();
-            parmDTO.setPM_PART_CODE(code);
-            parmDTO.setPM_PART_NAME(name);
-            parmDTO.setREG_USER(reguser);
-            parmDTO.setPM_PLANT(plant);
-            parmDTO.setPM_ACTIVE_YN(useyn);
-            parmDTO.setPM_APPROVAL_STATUS(approval);
-            parmDTO.setPM_SDATE(sdate);
-            parmDTO.setPM_EDATE(edate);
-
-            List<PartMgmtDTO> partMgmtDTOList = partMgmtService.searchPartMgmt(parmDTO);
-            log.info("dataaaaaaaa??????????????"+partMgmtDTOList);
-            return ResponseEntity.ok(partMgmtDTOList);
-
-        } catch (Exception e) {
-            System.out.println("검색 에러!!!: " + e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"error\": \"서버 오류 발생\"}");
-        }
-    }
-
-
     //자재코드 리스트
     @GetMapping("/PartCodeList")
     public ResponseEntity<?> partCodeList(){
@@ -179,8 +272,8 @@ public class PartMgmtController {
                                         , @AuthenticationPrincipal UserCustom user) {
         log.info("PartMgmtDTO??????????????????"+partMgmtDTO);
 
-        partMgmtDTO.setPM_REG_USER_IDX(user.getUSER_IDX());
-        partMgmtDTO.setPM_COM_CODE(user.getCOM_CODE());
+        //partMgmtDTO.setPM_REG_USER_IDX(user.getUSER_IDX());
+        //partMgmtDTO.setPM_COM_CODE(user.getCOM_CODE());
 
         int resultCnt = 0;
 
@@ -226,72 +319,13 @@ public class PartMgmtController {
         }
     }
 
+    private String GetParam(HttpServletRequest request, String pName, String pDefault) {
+        String ParamValue = request.getParameter(pName);
 
+        if (ParamValue == null || ParamValue.isEmpty()) {
+            ParamValue = pDefault;
+        };
 
-    // 엑셀 파일을 다운로드하는 엔드포인트
-    @GetMapping("/downloadExcel")
-    public ResponseEntity<byte[]> downloadExcel(@RequestParam("code") String code, @RequestParam("name") String name,@RequestParam("reguser") String reguser,
-                                                @RequestParam("useyn") String useyn,@RequestParam("plant") String plant,@RequestParam("approval") String approval,
-                                                @RequestParam("sdate") String sdate,@RequestParam("edate") String edate) throws IOException {
-
-        PartMgmtDTO parmDTO = new PartMgmtDTO();
-        parmDTO.setPM_PART_CODE(code);
-        parmDTO.setPM_PART_NAME(name);
-        parmDTO.setREG_USER(reguser);
-        parmDTO.setPM_PLANT(plant);
-        parmDTO.setPM_ACTIVE_YN(useyn);
-        parmDTO.setPM_APPROVAL_STATUS(approval);
-        parmDTO.setPM_SDATE(sdate);
-        parmDTO.setPM_EDATE(edate);
-
-        List<PartMgmtDTO> partMgmtDTOList = partMgmtService.searchPartMgmt(parmDTO);
-
-        //List<PartMgmtDTO> companyInfoList = companyInfoService.getList(criteria);
-
-        // 엑셀 워크북과 시트 생성
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("PartCode Info");
-
-        // 헤더 생성
-        Row headerRow = sheet.createRow(0);
-        String[] header = {"자재코드", "자재명칭", "취급plant", "국가", "신청ID","사용여부","승인현황","승인일자"};
-        for (int i = 0; i < header.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(header[i]);
-        }
-
-        // 데이터 삽입
-        int rowNum = 1;
-        for (PartMgmtDTO partDTO : partMgmtDTOList) {
-            Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(partDTO.getPM_PART_CODE());
-            row.createCell(1).setCellValue(partDTO.getPM_PART_NAME());
-            row.createCell(2).setCellValue(partDTO.getPM_PLANT());
-            row.createCell(3).setCellValue(partDTO.getPM_COUNTRY());
-            row.createCell(4).setCellValue(partDTO.getPM_REG_USER());
-            row.createCell(5).setCellValue(partDTO.getPM_ACTIVE_YN());
-            row.createCell(6).setCellValue(partDTO.getPM_APPROVAL_STATUS());
-            row.createCell(7).setCellValue(partDTO.getPM_MODIFY_USER());
-        }
-
-        // 엑셀 파일을 바이트 배열로 변환
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        workbook.write(byteArrayOutputStream);
-        workbook.close();
-
-        byte[] excelFile = byteArrayOutputStream.toByteArray();
-
-        // ResponseEntity로 파일 전송
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=Part_Management_info.xlsx");
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(excelFile);
+        return ParamValue;
     }
-
-
-
-
-
 }

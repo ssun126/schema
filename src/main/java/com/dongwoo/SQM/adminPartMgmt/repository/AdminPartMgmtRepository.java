@@ -19,31 +19,38 @@ public class AdminPartMgmtRepository {
         return sql.selectList("adminPartMgmt.searchAdminPartMgmt",partMgmtDTO);
     }
 
-    public List<HashMap> getPartMSDSExpList(String EXP_DATE, String COM_CODE, String COM_NAME){
+    public List<HashMap> getPartMSDSExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH){
         HashMap<String,Object> data = new HashMap<>();
         data.put("EXP_DATE",EXP_DATE);
         data.put("COM_CODE",COM_CODE);
         data.put("COM_NAME",COM_NAME);
+        data.put("EXP_MONTH",EXP_MONTH);
 
         return sql.selectList("adminPartMgmt.getPartMSDSExpList",data);
     }
 
-    public List<HashMap> getPartDeclExpList(String EXP_DATE, String COM_CODE, String COM_NAME){
+    public List<HashMap> getPartDeclExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH){
         HashMap<String,Object> data = new HashMap<>();
         data.put("EXP_DATE",EXP_DATE);
         data.put("COM_CODE",COM_CODE);
         data.put("COM_NAME",COM_NAME);
+        data.put("EXP_MONTH",EXP_MONTH);
 
         return sql.selectList("adminPartMgmt.getPartDeclExpList",data);
     }
 
-    public List<HashMap> getPartEtcExpList(String EXP_DATE, String COM_CODE, String COM_NAME){
+    public List<HashMap> getPartEtcExpList(String EXP_DATE, String COM_CODE, String COM_NAME, int EXP_MONTH){
         HashMap<String,Object> data = new HashMap<>();
         data.put("EXP_DATE",EXP_DATE);
         data.put("COM_CODE",COM_CODE);
         data.put("COM_NAME",COM_NAME);
+        data.put("EXP_MONTH",EXP_MONTH);
 
         return sql.selectList("adminPartMgmt.getPartEtcExpList",data);
+    }
+
+    public List<HashMap> getPartSvhcExpList() {
+        return sql.selectList("adminPartMgmt.getPartSvhcExpList");
     }
 
 }

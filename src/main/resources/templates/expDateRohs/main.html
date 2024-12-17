@@ -17,25 +17,43 @@
         </div>
         <div class="cui_body">
             <form id="formRohsExp" onsubmit="return false">
-                <div class="cui_search">
-                    <div class="search_list cui_grid_wrap ">
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">Rohs 만료일</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" name="EXP_ROSH" NumberKey=""   placeholder="" th:value="${RoHS_EXP_MONTH}" data-langsid="Rohs 만료일 숫자입력." reqcheck="reqcheck" data-messages="Rohs 만료일을 입력해주세요." />
+                <table class="cui_table">
+                    <colgroup>
+                        <col style="width:154px;">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th><span data-langsid="Rohs 만료일"></span></th>
+                        <td>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <div class="item_content" style="width:200px;">
+                                    <input class="cui_text_field" type="text" name="EXP_ROSH" NumberKey="" data-langsid="Rohs 만료일 숫자입력." placeholder="" th:value="${RoHS_EXP_MONTH}" reqcheck="reqcheck" data-messages="Rohs 만료일을 입력해주세요." messages="" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label" style="width: 130px;">Halogen 만료일</strong>
-                            <div class="item_content">
-                                <input class="cui_text_field" type="text" name="EXP_HALG" NumberKey=""  placeholder="" th:value="${Halogen_EXP_MONTH}" data-langsid="Halogen 만료일 숫자입력." data-messages="Halogen 만료일을 입력해주세요."/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><span data-langsid="Halogen 만료일"></span></th>
+                        <td>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <div class="item_content"  style="width:200px;">
+                                    <input class="cui_text_field" type="text" name="EXP_HALG" NumberKey=""  placeholder="" th:value="${Halogen_EXP_MONTH}" data-langsid="Halogen 만료일 숫자입력." data-messages="Halogen 만료일을 입력해주세요."/>
+                                </div>
                             </div>
-                        </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="cui_toolbar" style="margin-top:10px;">
+                    <div class="toolbar_content">
+                        <div class="toolbar_default"></div>
                     </div>
-                    <div class="search_action">
+                    <div class="toolbar_aside">
                         <button type="submit" class="cui_button primary search_btn" onclick="expDateRohsSave($('#formRohsExp'))"><span>저장</span></button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>

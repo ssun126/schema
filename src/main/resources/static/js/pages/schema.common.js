@@ -1060,7 +1060,6 @@ Common.Load = function (Obj) {
         });
     });
 
-    //Obj.find('.item_content.date').not("[dateMode]").datepicker(Common.DatepickerSet).on("show", Common.DatepickerShow).on("hide", Common.DatepickerHide);
     Obj.find('input[datePickerControl]').each(function () {
         var thisObj = $(this);
         thisObj.datepicker({

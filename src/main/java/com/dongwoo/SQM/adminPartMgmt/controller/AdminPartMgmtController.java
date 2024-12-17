@@ -8,18 +8,22 @@ import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.system.service.MemberService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -36,48 +40,80 @@ public class AdminPartMgmtController {
     private final ExpirationDataService expirationDateService;
     private final MemberService memberService;
 
-    @GetMapping("/admin/partMgmt/approvalState")
-    public String PartMgmtList(Model model) {
-        //바인딩 리스트
-        //검색 basecode 취급플랜트
+    @RequestMapping("/admin/partMgmt/approvalState")
+    public String PartMgmtList(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
         List<HashMap> searchPlantList = partMgmtService.getPlantList();
-        //검색 basecode 승인현황
-        //List<HashMap> searhApprovalStatus = partMgmtService.getApprovalStatus();
-
         model.addAttribute("searchPlantList",searchPlantList);
-        //model.addAttribute("searhApprovalStatus", searhApprovalStatus);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            String sComCode = GetParam(request, "sComCode", "");
+            String sComName = GetParam(request, "sComName", "");
+            String sPartCode = GetParam(request, "sPartCode", "");
+            String sPartName = GetParam(request, "sPartName", "");
+            String sRegUser = GetParam(request, "sRegUser", "");
+            String sUseYN = GetParam(request, "sUseYN", "");
+            String sPlant = GetParam(request, "sPlant", "");
+            String sApproval = GetParam(request, "sApproval", "");
+            String sStartDate = GetParam(request, "sStartDate", "");
+            String sEndDate = GetParam(request, "sEndDate", "");
+
+            model.addAttribute("sComCode", sComCode);
+            model.addAttribute("sComName", sComName);
+            model.addAttribute("sPartCode", sPartCode);
+            model.addAttribute("sPartName", sPartName);
+            model.addAttribute("sRegUser", sRegUser);
+            model.addAttribute("sUseYN", sUseYN);
+            model.addAttribute("sPlant", sPlant);
+            model.addAttribute("sApproval", sApproval);
+            model.addAttribute("sStartDate", sStartDate);
+            model.addAttribute("sEndDate", sEndDate);
+
+            AdminPartMgmtDTO parmDTO = new AdminPartMgmtDTO();
+            parmDTO.setCOM_CODE(sComCode);
+            parmDTO.setCOM_NAME(sComName);
+            parmDTO.setPM_PART_CODE(sPartCode);
+            parmDTO.setPART_NAME(sPartName);
+            parmDTO.setSEARCH_REG_USER(sRegUser);
+            parmDTO.setPM_PART_PLANT_CODE(sPlant);
+            parmDTO.setPM_ACTIVE_YN(sUseYN);
+            parmDTO.setPM_APPROVAL_STATUS(sApproval);
+            parmDTO.setSEARCH_PM_SDATE(sStartDate);
+            parmDTO.setSEARCH_PM_EDATE(sEndDate);
+
+            List<AdminPartMgmtDTO> partMgmtDTOList = adminPartMgmtService.searchAdminPartMgmt(parmDTO);
+            String partMgmtListStr = mapper.writeValueAsString(partMgmtDTOList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partMgmtListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partMgmtListStr",partMgmtListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
 
         return "approvalState/adminMain";
     }
-
-    @GetMapping("/admin/partMgmt/searchAdminPartMgmt")
-    public ResponseEntity<?> searchAdminPartMgmt(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("reguser") String reguser,
-                                            @RequestParam("useyn") String useyn, @RequestParam("plant") String plant, @RequestParam("approval") String approval,
-                                            @RequestParam("sdate") String sdate, @RequestParam("edate") String edate){
-        //ist<PartMgmtDTO> partMgmtDTOList = PartMgmtService.searchPartMgmt(code,name,reguser,useyn,plant,approval,sdate,edate);
-        try{
-            AdminPartMgmtDTO parmDTO = new AdminPartMgmtDTO();
-            parmDTO.setPM_PART_CODE(code);
-            parmDTO.setPM_PART_NAME(name);
-            parmDTO.setREG_USER(reguser);
-            parmDTO.setPM_PLANT(plant);
-            parmDTO.setPM_ACTIVE_YN(useyn);
-            parmDTO.setPM_APPROVAL_STATUS(approval);
-            parmDTO.setPM_SDATE(sdate);
-            parmDTO.setPM_EDATE(edate);
-
-            List<AdminPartMgmtDTO> partMgmtDTOList = adminPartMgmtService.searchAdminPartMgmt(parmDTO);
-            log.info("dataaaaaaaa??????????????"+partMgmtDTOList);
-            return ResponseEntity.ok(partMgmtDTOList);
-
-        } catch (Exception e) {
-            System.out.println("검색 에러!!!: " + e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"error\": \"서버 오류 발생\"}");
-        }
-    }
-
-
 
     @GetMapping("/admin/partMgmt/approvalStateDetail")
     public String PartMgmtDetail(Model model) {
@@ -106,7 +142,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partMSDSList = adminPartMgmtService.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partMSDSList = adminPartMgmtService.getPartMSDSExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partMSDSListStr = mapper.writeValueAsString(partMSDSList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -156,6 +192,7 @@ public class AdminPartMgmtController {
 
         return ResponseEntity.ok("OK");
     }
+
     /*******************************************************************************************************************************************/
 
     /******************************************************************************************************************************************/
@@ -203,6 +240,37 @@ public class AdminPartMgmtController {
         ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "SVHC");
         model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
 
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<HashMap> partSvhdList = adminPartMgmtService.getPartSvhcExpList();
+            String partSvhcListStr = mapper.writeValueAsString(partSvhdList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partSvhcListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+            model.addAttribute("partSvhcLogList",partSvhcListStr);
+        } catch (JsonProcessingException e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
         return "expDateSvhc/main";
     }
 
@@ -224,14 +292,16 @@ public class AdminPartMgmtController {
     }
 
     @PostMapping("/admin/partMgmt/sendSvhcExpAlert")
-    public ResponseEntity<?> sendSvhcExpAlert(HttpServletRequest request, HttpSession session) {
+    public ResponseEntity<?> sendSvhcExpAlert(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
         try {
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
 
-            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String loginId = user.getUsername();
-            UserMgrDTO memberDTO = memberService.findByMemberId(loginId); //동우 사용자
-
-            //expirationDateService.sendExpAlert("F", 2, "SVHC", 0, EXP_BODY, memberDTO.getUSER_IDX());
+            //(CODE1, CODE2, CODE3, MES_KIND,GUBN,KIND,SEND_TYPE ,SEND_FROM ,SEND_TO, SEND_TITLE , SEND_BODY , SEND_DATE ,REG_DW_USER_IDX , REG_COM_USER_IDX  )
+            //VALUES ('F',2,(SELECT COUNT(*) FROM  SC_MESSAGE_LOG WHERE CODE1 ='F' AND CODE2 =2 )+1,'SVHC','Part 갱신','Part Mana','Email','Schema','공급사', 'SVHC 확인서 갱신','test',sysdate,0,0)
+            log.info("test111111=="+EXP_BODY);
+            log.info(", user.getUSER_IDX()========="+user.getUSER_IDX());
+            log.info(", user.getCOM_USER_IDX()========="+user.getCOM_USER_IDX());
+            expirationDateService.sendExpAlert("F", 2, "SVHC","Part 갱신","Part Mana","Email","Schema","공급사", "SVHC 확인서 갱신", EXP_BODY, user.getUSER_IDX(),user.getCOM_USER_IDX());
         } catch (Exception e) {
             return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
         }
@@ -261,7 +331,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partDeclList = adminPartMgmtService.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partDeclList = adminPartMgmtService.getPartDeclExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partDeclListStr = mapper.writeValueAsString(partDeclList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -334,7 +404,7 @@ public class AdminPartMgmtController {
             model.addAttribute("COM_CODE",COM_CODE);
             model.addAttribute("COM_NAME",COM_NAME);
 
-            List<HashMap> partEtcList = adminPartMgmtService.getPartEtcExpList(EXP_DATE, COM_CODE, COM_NAME);
+            List<HashMap> partEtcList = adminPartMgmtService.getPartEtcExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
             String partEtcListStr = mapper.writeValueAsString(partEtcList);
 
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
