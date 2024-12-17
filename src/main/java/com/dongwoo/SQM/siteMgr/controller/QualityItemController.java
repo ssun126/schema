@@ -57,12 +57,12 @@ public class QualityItemController {
             XSSFRow row = worksheet.getRow(i);
 
             String MAIN_ITEM = formatter.formatCellValue((row.getCell(0)));
-            String AUDIT_NO = formatter.formatCellValue((row.getCell(1)));
+            String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
             String AUDIT_ITEM = formatter.formatCellValue((row.getCell(2)));
 
 
             qualityItemDTO.setMAIN_ITEM(MAIN_ITEM);
-            qualityItemDTO.setAUDIT_NO(Integer.parseInt(AUDIT_NO));
+            qualityItemDTO.setAUDIT_ID(Integer.parseInt(AUDIT_ID));
             qualityItemDTO.setAUDIT_ITEM(AUDIT_ITEM);
 
 

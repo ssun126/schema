@@ -32,7 +32,7 @@ public class QualityItemService {
         log.info("test11111111111111111111111");
 
         try{
-            String sql  = "INSERT INTO SC_AUDIT_QUALITY_ITEM(MAIN_ITEM,AUDIT_NO,AUDIT_ITEM) VALUES (?,?,?) ";
+            String sql  = "INSERT INTO SC_AUDIT_QUALITY_ITEM(MAIN_ITEM,AUDIT_ID,AUDIT_ITEM) VALUES (?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
             conn = DriverManager.getConnection("jdbc:oracle:thin:@175.126.38.80:1521/ORCL","c##NSQM","12345");
             conn.setAutoCommit(false);
@@ -45,7 +45,7 @@ public class QualityItemService {
                 count++;
 
                 pstmt.setString(1,dto.getMAIN_ITEM());
-                pstmt.setInt(2,dto.getAUDIT_NO());
+                pstmt.setInt(2,dto.getAUDIT_ID());
                 pstmt.setString(3,dto.getAUDIT_ITEM());
 
                 log.info("test2-2");

@@ -7,8 +7,8 @@ import lombok.Data;
 public class QualityItemDTO {
     @JsonProperty("MAIN_ITEM")
     private String MAIN_ITEM;
-    @JsonProperty("AUDIT_NO")
-    private int AUDIT_NO;
+    @JsonProperty("AUDIT_ID")
+    private int AUDIT_ID;
     @JsonProperty("AUDIT_ITEM")
     private String AUDIT_ITEM;
 }
