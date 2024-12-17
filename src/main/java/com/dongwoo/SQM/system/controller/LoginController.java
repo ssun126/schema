@@ -56,7 +56,7 @@ public class LoginController {
     public String login(@ModelAttribute LoginDTO loginDTO, HttpSession session, Model model, Authentication authentication) {
         boolean isSuccess = false;
         FormWebAuthenticationDetails details = ( FormWebAuthenticationDetails ) authentication.getDetails();
-        String comUserIdx = details.getComUserIdx();
+        int comUserIdx = details.getComUserIdx();
         log.info("comUserIdx======"+comUserIdx);
 
         LoginDTO loginResult = loginService.login(loginDTO);
@@ -318,7 +318,7 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         FormWebAuthenticationDetails details = ( FormWebAuthenticationDetails ) auth.getDetails();
-        String comUserIdx = details.getComUserIdx();
+        int comUserIdx = details.getComUserIdx();
         log.info("comUserIdx======"+comUserIdx);
         // login 세션 삭제
         String sessionId = (String) session.getAttribute("loginId");
@@ -332,7 +332,7 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         FormWebAuthenticationDetails details = ( FormWebAuthenticationDetails ) auth.getDetails();
-        String comUserIdx = details.getComUserIdx();
+        int comUserIdx = details.getComUserIdx();
         log.info("authentication4======"+auth);
 
         if(auth.isAuthenticated()){
@@ -347,8 +347,8 @@ public class LoginController {
                     //공동 작업자  COM_USER_IDX 가져오기
                     UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
                     parmaDTO.setCOM_CODE(user.getCOM_CODE()); //위에서 만들어진 사용자 IDX
-                    parmaDTO.setCOM_USER_IDX(Integer.parseInt(comUserIdx));
-                    if(!comUserIdx.isEmpty()) {
+                    parmaDTO.setCOM_USER_IDX(comUserIdx);
+                    if(comUserIdx != 0) {
                         UserInfoCompanyUserDTO userInfoCompanyUserDTO = memberService.findByCompanyUserComUserIdx(parmaDTO);
                         String comUserName = userInfoCompanyUserDTO.getUSER_NAME();
                         if(!userInfoCompanyUserDTO.getUSER_NAME().isEmpty()) {

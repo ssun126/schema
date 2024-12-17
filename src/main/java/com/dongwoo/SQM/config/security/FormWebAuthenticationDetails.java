@@ -7,11 +7,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 public class FormWebAuthenticationDetails extends WebAuthenticationDetails {
     @Getter
-    private String comUserIdx;
+    private int comUserIdx;
 
     public FormWebAuthenticationDetails(HttpServletRequest request) {
         super(request);
-        comUserIdx =  request.getParameter("comUserIdx");
+        comUserIdx =  Integer.parseInt(request.getParameter("comUserIdx"));
     }
 
 }
