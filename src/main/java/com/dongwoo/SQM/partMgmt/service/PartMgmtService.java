@@ -29,6 +29,11 @@ public class PartMgmtService {
         return partMgmtRepository.searchPartMgmt(parmDTO);
     }
 
+    public PartMgmtDTO getPartMgmt(int PM_IDX) {
+
+        return partMgmtRepository.getPartMgmt(PM_IDX);
+    }
+
     public PartMgmtDTO getPartMgmtData(String idx) {
         return partMgmtRepository.getPartMgmtData(idx);
     }

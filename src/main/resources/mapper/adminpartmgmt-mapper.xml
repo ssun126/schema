@@ -32,6 +32,16 @@
             LEFT OUTER JOIN SC_USER_INFO ui2  ON pmd.PM_MODIFY_USER  = ui.USER_IDX
             LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pc.COM_CODE
         WHERE 1 =1
+        <if test="COM_CODE != null and COM_CODE != ''">
+            <![CDATA[
+                AND (pc.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+            ]]>
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            <![CDATA[
+                AND (scc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+            ]]>
+        </if>
         <if test="PM_PART_CODE != null and PM_PART_CODE != ''">
             <![CDATA[
                 AND (pmd.PM_PART_CODE LIKE CONCAT(CONCAT('%',  #{PM_PART_CODE}), '%'))
