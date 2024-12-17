@@ -38,48 +38,74 @@ public class AdminPartMgmtController {
     private final ExpirationDataService expirationDateService;
     private final MemberService memberService;
 
-    @GetMapping("/admin/partMgmt/approvalState")
-    public String PartMgmtList(Model model) {
-        //바인딩 리스트
-        //검색 basecode 취급플랜트
+    @RequestMapping("/admin/partMgmt/approvalState")
+    public String PartMgmtList(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
         List<HashMap> searchPlantList = partMgmtService.getPlantList();
-        //검색 basecode 승인현황
-        //List<HashMap> searhApprovalStatus = partMgmtService.getApprovalStatus();
-
         model.addAttribute("searchPlantList",searchPlantList);
-        //model.addAttribute("searhApprovalStatus", searhApprovalStatus);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            String sPartCode = GetParam(request, "sPartCode", "");
+            String sPartName = GetParam(request, "sPartName", "");
+            String sRegUser = GetParam(request, "sRegUser", "");
+            String sUseYN = GetParam(request, "sUseYN", "");
+            String sPlant = GetParam(request, "sPlant", "");
+            String sApproval = GetParam(request, "sApproval", "");
+            String sStartDate = GetParam(request, "sStartDate", "");
+            String sEndDate = GetParam(request, "sEndDate", "");
+
+            model.addAttribute("sPartCode", sPartCode);
+            model.addAttribute("sPartName", sPartName);
+            model.addAttribute("sRegUser", sRegUser);
+            model.addAttribute("sUseYN", sUseYN);
+            model.addAttribute("sPlant", sPlant);
+            model.addAttribute("sApproval", sApproval);
+            model.addAttribute("sStartDate", sStartDate);
+            model.addAttribute("sEndDate", sEndDate);
+
+            AdminPartMgmtDTO parmDTO = new AdminPartMgmtDTO();
+            parmDTO.setPM_PART_CODE(sPartCode);
+            parmDTO.setPART_NAME(sPartName);
+            parmDTO.setSEARCH_REG_USER(sRegUser);
+            parmDTO.setPM_PART_PLANT_CODE(sPlant);
+            parmDTO.setPM_ACTIVE_YN(sUseYN);
+            parmDTO.setPM_APPROVAL_STATUS(sApproval);
+            parmDTO.setSEARCH_PM_SDATE(sStartDate);
+            parmDTO.setSEARCH_PM_EDATE(sEndDate);
+
+            List<AdminPartMgmtDTO> partMgmtDTOList = adminPartMgmtService.searchAdminPartMgmt(parmDTO);
+            String partMgmtListStr = mapper.writeValueAsString(partMgmtDTOList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partMgmtListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partMgmtListStr",partMgmtListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
 
         return "approvalState/adminMain";
     }
-
-    @GetMapping("/admin/partMgmt/searchAdminPartMgmt")
-    public ResponseEntity<?> searchAdminPartMgmt(@RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("reguser") String reguser,
-                                            @RequestParam("useyn") String useyn, @RequestParam("plant") String plant, @RequestParam("approval") String approval,
-                                            @RequestParam("sdate") String sdate, @RequestParam("edate") String edate){
-        //ist<PartMgmtDTO> partMgmtDTOList = PartMgmtService.searchPartMgmt(code,name,reguser,useyn,plant,approval,sdate,edate);
-        try{
-            AdminPartMgmtDTO parmDTO = new AdminPartMgmtDTO();
-            parmDTO.setPM_PART_CODE(code);
-            parmDTO.setPM_PART_NAME(name);
-            parmDTO.setREG_USER(reguser);
-            parmDTO.setPM_PLANT(plant);
-            parmDTO.setPM_ACTIVE_YN(useyn);
-            parmDTO.setPM_APPROVAL_STATUS(approval);
-            parmDTO.setPM_SDATE(sdate);
-            parmDTO.setPM_EDATE(edate);
-
-            List<AdminPartMgmtDTO> partMgmtDTOList = adminPartMgmtService.searchAdminPartMgmt(parmDTO);
-            log.info("dataaaaaaaa??????????????"+partMgmtDTOList);
-            return ResponseEntity.ok(partMgmtDTOList);
-
-        } catch (Exception e) {
-            System.out.println("검색 에러!!!: " + e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"error\": \"서버 오류 발생\"}");
-        }
-    }
-
-
 
     @GetMapping("/admin/partMgmt/approvalStateDetail")
     public String PartMgmtDetail(Model model) {

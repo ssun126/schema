@@ -39,7 +39,7 @@ public class PartMgmtController {
     private final PartDetailService partDetailService;
 
     //메인 리스트 화면
-    @GetMapping("/matReg")
+    @RequestMapping("/matReg")
     public String initPartMgmt(Model model) {
 
         //바인딩 리스트
