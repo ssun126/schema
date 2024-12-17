@@ -456,6 +456,151 @@ public class AdminPartMgmtController {
     }
     /*******************************************************************************************************************************************/
 
+
+    /*******************************************************************************************************************************************/
+    /**
+     * 만료일 관리 SCCS
+     */
+    @RequestMapping("/admin/partMgmt/expDateSccs")
+    public String expDateSccsList(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
+        ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "SCCS");
+        model.addAttribute("EXP_MONTH",expirationDatDTO.getEXP_MONTH());
+        model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            String EXP_DATE = GetParam(request, "EXP_DATE", "");
+            String COM_CODE = GetParam(request, "COM_CODE", "");
+            String COM_NAME = GetParam(request, "COM_NAME", "");
+
+            model.addAttribute("EXP_DATE",EXP_DATE);
+            model.addAttribute("COM_CODE",COM_CODE);
+            model.addAttribute("COM_NAME",COM_NAME);
+
+            List<HashMap> partSccsList = adminPartMgmtService.getPartSccsExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
+            String partSccsListStr = mapper.writeValueAsString(partSccsList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partSccsListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partSccsList",partSccsListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
+        return "expDateSccs/main";
+    }
+
+    @PostMapping("/admin/partMgmt/expDateSccsSave")
+    public ResponseEntity<?> expDateSccsSave(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
+        try {
+            int EXP_MONTH = Integer.parseInt(GetParam(request, "EXP_MONTH", "0"));
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
+
+            expirationDateService.setExpiration("F", 2, "SCCS", EXP_MONTH, EXP_BODY, user.getUSER_IDX());
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
+        }
+
+        return ResponseEntity.ok("OK");
+    }
+
+    /*******************************************************************************************************************************************/
+
+
+    /*******************************************************************************************************************************************/
+    /**
+     * 만료일 관리 성분분석 Igredient
+     */
+    @RequestMapping("/admin/partMgmt/expDateIngred")
+    public String expDateIngredList(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
+        ExpirationDateDTO expirationDatDTO = expirationDateService.getExpiration("F", 2, "Ingredient");
+        model.addAttribute("EXP_MONTH",expirationDatDTO.getEXP_MONTH());
+        model.addAttribute("EXP_BODY",expirationDatDTO.getEXP_BODY());
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            String EXP_DATE = GetParam(request, "EXP_DATE", "");
+            String COM_CODE = GetParam(request, "COM_CODE", "");
+            String COM_NAME = GetParam(request, "COM_NAME", "");
+
+            model.addAttribute("EXP_DATE",EXP_DATE);
+            model.addAttribute("COM_CODE",COM_CODE);
+            model.addAttribute("COM_NAME",COM_NAME);
+
+            List<HashMap> partIngredList = adminPartMgmtService.getPartIngredExpList(EXP_DATE, COM_CODE, COM_NAME,expirationDatDTO.getEXP_MONTH());
+            String partIngredListStr = mapper.writeValueAsString(partIngredList);
+
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print(partIngredListStr);
+                    printer.close();
+                } catch (Exception ignored) {
+                }
+
+                return "blank";
+            }
+
+            model.addAttribute("partIngredList",partIngredListStr);
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                return  "redirect:/main";
+            }
+        }
+
+        return "expDateIngred/main";
+    }
+
+    @PostMapping("/admin/partMgmt/expDateIngredSave")
+    public ResponseEntity<?> expDateIngredSave(HttpServletRequest request, HttpSession session,@AuthenticationPrincipal UserCustom user) {
+        try {
+            int EXP_MONTH = Integer.parseInt(GetParam(request, "EXP_MONTH", "0"));
+            String EXP_BODY = GetParam(request, "EXP_BODY", "");
+
+            expirationDateService.setExpiration("F", 2, "Ingredient", EXP_MONTH, EXP_BODY, user.getUSER_IDX());
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
+        }
+
+        return ResponseEntity.ok("OK");
+    }
+
+    /*******************************************************************************************************************************************/
+
+
+
+
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
         String ParamValue = request.getParameter(pName);
 

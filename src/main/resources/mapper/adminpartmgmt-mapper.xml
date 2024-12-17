@@ -170,5 +170,60 @@
         </if>
     </select>
 
+    <select id ="getPartSccsExpList" parameterType="hashMap" resultType="java.util.HashMap">
+        SELECT
+        spmds.SCCS_IDX
+        , pc.PART_CODE
+        , pc.PART_NAME
+        , cc.COM_CODE
+        , cc.COM_NAME
+        ,TO_CHAR( ADD_MONTHS(TO_DATE(spmds.SCCS_CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
+        FROM
+        SC_PART_MGMT_DETAIL_SCCS spmds
+        LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON spmds.PM_IDX  = pm.PM_IDX
+        LEFT OUTER JOIN SC_PART_CODE pc ON pm.PM_PART_CODE  = pc.PART_CODE
+        LEFT OUTER JOIN SC_COMPANY_CODE cc ON pc.COM_CODE  = cc.COM_CODE
+        WHERE 1 = 1
+        <if test="EXP_DATE != null and EXP_DATE != ''">
+            <![CDATA[
+                AND ADD_MONTHS(TO_DATE(spmds.SCCS_CONFIRM_DATE , 'YYYY-MM-DD'),#{EXP_MONTH}) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (cc.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+    </select>
+
+    <select id ="getPartIngredExpList" parameterType="hashMap" resultType="java.util.HashMap">
+
+        SELECT
+        spmdi.INGRED_IDX
+        , pc.PART_CODE
+        , pc.PART_NAME
+        , cc.COM_CODE
+        , cc.COM_NAME
+        ,TO_CHAR( ADD_MONTHS(TO_DATE(spmdi.INGRED_CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
+        FROM
+        SC_PART_MGMT_DETAIL_INGRED spmdi
+        LEFT OUTER JOIN SC_PART_MANAGEMENT_DATA pm ON spmdi.PM_IDX  = pm.PM_IDX
+        LEFT OUTER JOIN SC_PART_CODE pc ON pm.PM_PART_CODE  = pc.PART_CODE
+        LEFT OUTER JOIN SC_COMPANY_CODE cc ON pc.COM_CODE  = cc.COM_CODE
+        WHERE 1 = 1
+        <if test="EXP_DATE != null and EXP_DATE != ''">
+            <![CDATA[
+                AND ADD_MONTHS(TO_DATE(spmdi.INGRED_CONFIRM_DATE , 'YYYY-MM-DD'),#{EXP_MONTH}) <= TO_DATE(#{EXP_DATE}, 'YYYY-MM-DD')
+            ]]>
+        </if>
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (cc.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (cc.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+    </select>
+
 
 </mapper>

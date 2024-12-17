@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span data-langsid="만료일 설정"></span></h2>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form id="formExp" class="cui_form_field" data-legend="true" onsubmit="return false">
+                <table class="cui_table">
+                    <colgroup>
+                        <col style="width:154px;">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th><span data-langsid="만료일(개월수)"></span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content" style="width:200px;">
+                                        <input class="cui_text_field" type="text" name="EXP_MONTH" NumberKey="" data-langsid="개월수 입력 (숫자만)" placeholder="" th:value="${EXP_MONTH}" reqcheck="reqcheck" data-messages="만료일을 입력해주세요." messages="" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span data-langsid="요청사항"></span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <textarea class="cui_text_field" name="EXP_BODY" rows="10" th:text="${EXP_BODY}" reqcheck="reqcheck" data-messages="요청사항을 입력해주세요." messages=""></textarea>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cui_toolbar" style="margin-top:10px;">
+                    <div class="toolbar_content">
+                        <div class="toolbar_default"></div>
+                    </div>
+                    <div class="toolbar_aside">
+                        <button type="button" class="cui_button primary" onclick="expDateSccsSave($('#formExp'));"><span data-langsid="저장"></span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="cui_head" >
+            <div class="head_content">
+                <h2 class="cui_title"><span data-langsid="자재별 갱신"></span></h2>
+            </div>
+        </div>
+        <div class="cui_body">
+            <form id="searchArea" method="get" onsubmit="return false;">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap ">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="만료일"></strong>
+                            <div class="item_content">
+                                <div class="cui_items_wrap">
+                                    <div class="item_content" data-role="calendar-picker">
+                                        <input type="text" id="EXP_DATE" name="EXP_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${EXP_DATE}">
+                                        <button type="button" class="cui_button icon endpoint cui_calendar_ico" data-cui-icon="calendar"><span data-langsid="달력 선택"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="업체코드"></strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="COM_CODE" name="COM_CODE" search="searchBtn" th:value="${COM_CODE}" />
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="업체명"></strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="COM_NAME" name="COM_NAME" search="searchBtn" th:value="${COM_NAME}" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search_action">
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();"><span data-langsid="검색"></span></button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="cui_jqGrid_section">
+                <div class="cui_jqGrid_head">
+                    <div class="jqGrid_label"> &nbsp;</div>
+                    <div class="jqGrid_aside">
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="sendSccsExpAlert();"><span data-langsid="갱신요청 발송"></span></button>
+                    </div>
+                </div>
+                <div class="cui_jqGrid_body" id="Grid">
+                    <div id="gridArea" gridYN="" th:initData="${partSccsList}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var sendSccsExpAlert = function () {
+            var sel_idxs = "";
+            var sel_idxs_count = 0;
+            Common.Msg(siteLang.getLang("갱신요청 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        var grid = $("#gridArea").pqGrid("instance");
+                        for (j = 0; j < grid.pdata.length; j++) {
+                            if (grid.pdata[j]["CHECK_YN"] == true) {
+                                sel_idxs += grid.pdata[j]["SCCS_IDX"];
+                                //if (sel_idxs != "") sel_idxs += ",";
+                                if (sel_idxs != "" && j != grid.pdata.length-1 ) sel_idxs += ",";
+                                sel_idxs_count++;
+                            }
+                        }
+                        Common.Loading.Show();
+
+                        if (sel_idxs_count == 0) {
+                            Common.Msg(siteLang.getLang("갱신할 데이터를 선택하세요."));
+                            Common.Loading.Hide();
+                            return;
+                        }
+                        Common.Loading.Hide();
+                        Common.Msg(sel_idxs_count + "건 발송 되었습니다.");
+
+
+                    }
+            });
+
+        }
+
+        var expDateSccsSave = function (obj) {
+            if (Common.Validate(obj)) {
+                Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        var ReqInfo = new Common.RequestInfo();
+                        ReqInfo.AddParameter(obj);
+
+                        Common.Loading.Show();
+                        setTimeout(function () {
+                            Common.Ajax("/admin/partMgmt/expDateSccsSave", ReqInfo, function (response) {
+                                if (response == "OK") {
+                                    Common.Msg(siteLang.getLang("저장되었습니다."));
+                                    ListSearch();
+                                }
+                                Common.Loading.Hide();
+                            });
+                        }, 10);
+                    }
+                });
+            }
+        }
+
+        var SheetDataConvert = function (data) {
+            var dataJson = JSON.parse(data);
+
+            for (var i = 0; i < dataJson.length; i++) {
+                dataJson[i].CHECK_YN = false;
+            }
+
+            return dataJson;
+        }
+
+        var ListSearch = function () {
+            var url = location.pathname;
+
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#searchArea"));
+
+            Common.Ajax(url, ReqInfo, function (data) {
+                var dataJson = SheetDataConvert(data);
+
+                $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea").pqGrid("refreshView");
+            });
+        }
+
+        $(function () {
+            var heightMinus = 650;
+
+            var data = SheetDataConvert($("#gridArea").attr("initData"));
+
+            var obj = {
+                bubble: false,
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+                editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+                editModel: { clicksToEdit: 2 },
+                selectionModel: { type: 'cell', mode: 'block' },
+                height: $(window).height() - heightMinus,
+                title: "",
+                sortable: false,
+                resizable: true,
+                menuIcon: true,
+                scrollModel: { autoFit: false },
+                hoverMode: 'row',
+                rowHtHead: 30,
+                //rowHt:30,
+                roundCorners: false,
+                rowBorders: true,
+                showBottom: false,
+                showHeader: true,
+                showTitle: true,
+                showTop: false, //excel 버튼 보이기
+                showToolbar: false,
+                stripeRows: false,
+                virtualY: true,
+                hwrap: false,
+                wrap: false,
+                autoAddRow: false,
+                freezeCols:0,
+                autoRow: false,
+                autoRowHead: false,
+                rowInit: function () {
+                    return { style: 'font-size:12px;' };
+                },
+                selectChange: function (event, ui) {
+                },
+                rowClick: function (event, ui) {
+                },
+                cellClick: function (event, ui) {
+                },
+                rowDblClick: function (event, ui) {
+                },
+                rowSelect: function (event, ui) {
+                },
+                open: function () {
+                },
+                headerCellClick: function (event, ui) {
+                }
+            };
+            obj.colModel = [
+                {
+                    dataIndx: "CHECK_YN", width: 50, halign: "center", align: "center", resizable: true,
+                    type: 'checkBoxSelection', sortable: false, editor: true, editable: true,
+                    dataType: 'bool',
+                    cb: {
+                        all: false,
+                        header: true
+                    }
+                },
+                { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+                { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 200, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "자재코드", title: siteLang.getLang("자재코드"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PART_CODE", sortable: true, editor: false, editable: false },
+                { data_langsid: "자재명", title: siteLang.getLang("자재명"), width: 300, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "만료일", title: siteLang.getLang("만료일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "EXP_DATE", sortable: true, editor: false, editable: false },
+                { hidden : true, dataType: "string", dataIndx: "SCCS_IDX", editor: false, editable: false }
+            ];
+            obj.dataModel = { data: data };
+            $("#gridArea").pqGrid(obj);
+            $("#gridArea").attr("gridYN", "Y");
+
+            $(window).resize(function () {
+                $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+                $("#gridArea").pqGrid("refreshView");
+            });
+        });
+    </script>
+</body>
+</html>
