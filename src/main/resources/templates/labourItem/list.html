@@ -137,8 +137,8 @@
             { title: "No.", width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_ID", sortable: true, editor: false, editable: false },
             { data_langsid: "항목", title: siteLang.getLang("항목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false, },
             { data_langsid: "내용", title: siteLang.getLang("내용"), width: 600, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_DESC", sortable: true, editor: false, editable: false },
-            { data_langsid: "편성 기준", title: siteLang.getLang("편성 기준"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: true, editor: false, editable: false,formatter:newlineFmatter },
-            { data_langsid: "점수 배점", title: siteLang.getLang("점수 배점"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: true, editor: false, editable: false,formatter:newlineFmatter }
+            { data_langsid: "편성 기준", title: siteLang.getLang("편성 기준"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: true, editor: false, editable: false },
+            { data_langsid: "점수 배점", title: siteLang.getLang("점수 배점"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: true, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);
