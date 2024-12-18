@@ -9,10 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,118 +37,166 @@ public class QnaController {
     private final BoardService boardService;
     @Value("${Upload.path.attach}")
     private String uploadPath;
-    /**
-     * Q&A 리스트
-     * @param criteria
-     * @param model
-     * @return
-     */
+
+
+
+    //Q&A 리스트
     @GetMapping("/admin/board/qna")
     public String list(Criteria criteria, Model model) {
-        /*log.info("criteria============================================="+criteria);
-        List<BoardDTO> boardDTOList = boardService.getList(criteria);
-        model.addAttribute("boardList", boardDTOList);
-        model.addAttribute("pageMaker", new PageDTO(boardService.getTotal(), 10, criteria));
-        log.info("boardDTOList = " + boardDTOList);*/
-        return "board/adminList";
+
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_gubun = user.getUSER_GUBUN();
+        model.addAttribute("userGubun", user_gubun);
+
+        return "board/QnAList";
+    }
+    //Q&A 리스트_user
+    @GetMapping("/user/board/qna")
+    public String list_user(Criteria criteria, Model model) {
+
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String user_gubun = user.getUSER_GUBUN();
+        model.addAttribute("userGubun", user_gubun);
+
+        return "board/QnAList";
     }
 
-    /**
-     * q&A 상세
-     * @param id
-     * @param model
-     * @return
-     */
+    //q&A 상세
     @GetMapping("/admin/board/qna/{id}")
     public String findById(@PathVariable("id") int id, Model model) {
-        // 조회수 처리.
         boardService.updateHits(id);
-        // 상세내용 가져옴
         BoardDTO boardDTO = boardService.findById(id);
+
+        if(boardDTO.getFILE_NAME() != null) {
+            String filename = removeUuidFromFileName(boardDTO.getFILE_NAME());
+            boardDTO.setFILE_SHOTNAME(filename);
+        }
+
         model.addAttribute("board", boardDTO);
 
-        return "board/Detail";
+        return "board/QnADetail";
     }
+    //q&A 상세 _user
+    @GetMapping("/user/board/qna/{id}")
+    public String findById_user(@PathVariable("id") int id, Model model) {
+        boardService.updateHits(id);
+        BoardDTO boardDTO = boardService.findById(id);
 
-    @GetMapping("/admin/board/download/{filename}")
-    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {
-        try {
-            log.info("filename???????"+filename);
-            // 파일 경로 설정
-            File file = new File(uploadPath +  filename);
-            if (!file.exists()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            // 파일 리소스 생성
-            FileSystemResource resource = new FileSystemResource(file);
-
-            // 응답 헤더 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
-
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(resource);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        if(boardDTO.getFILE_NAME() != null) {
+            String filename = removeUuidFromFileName(boardDTO.getFILE_NAME());
+            boardDTO.setFILE_SHOTNAME(filename);
         }
+
+        model.addAttribute("board", boardDTO);
+
+        return "board/QnADetail";
     }
 
-    /**
-     * Q&A 등록 화면
-     * @return
-     */
+    //수정 조회 관리자
+    @GetMapping("/admin/board/adminUpdate/{id}")
+    public String update(@PathVariable("id") int id, Model model) {
+        BoardDTO boardDTO = boardService.findById(id);
+
+        if(boardDTO.getFILE_NAME() != null) {
+            String filename = removeUuidFromFileName(boardDTO.getFILE_NAME());
+            boardDTO.setFILE_SHOTNAME(filename);
+        }
+
+        model.addAttribute("board", boardDTO);
+
+        return "/board/adminUpdate";
+    }
+
+    private String removeUuidFromFileName(String fileName) {
+        if (fileName != null && fileName.contains("_")) {
+            String[] parts = fileName.split("_", 2);
+            return parts[1];
+        }
+        return fileName;
+    }
+
+
+    // 파일 다운로드 처리
+    @GetMapping("/admin/board/download")
+    public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName) {
+
+
+        File file = new File(uploadPath +"\\"+  fileName);
+
+        if (!file.exists()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Resource resource = new FileSystemResource(file);
+        HttpHeaders headers = new HttpHeaders();
+
+        try {
+            // 파일 이름을 UTF-8로 인코딩
+            String encodedFileName = URLEncoder.encode( removeUuidFromFileName(fileName), "UTF-8");
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
+
+
+     // Q&A 등록 화면
     @GetMapping("/admin/board/qna/save")
     public String save() {
         return "/board/adminSave";
     }
 
-    /**
-     * Q&A 등록 처리
-     * @param boardDTO
-     * @param file
-     * @return
-     * @throws IOException
-     */
+
+     //Q&A 등록,수정 처리
     @PostMapping("/admin/board/qna/save")
     public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file,@AuthenticationPrincipal UserCustom user) throws IOException {
         log.info("boardDTO = " + boardDTO);
-        // 파일 업로드 처리 시작
-        UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
+        log.info("user.getUSER_IDX() ============= " + user.getUSER_IDX());
 
-        String directory = uploadPath;
-        String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
+        boardDTO.setBOARD_TYPE("QNA");
+        BoardDTO getBoardDTO = boardService.findById(boardDTO.getBOARD_IDX());
 
-        File saveFile = new File(directory, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
+        if (!file.isEmpty()) {
+            try {
+                UUID uuid = UUID.randomUUID();
+                String fileName = uuid + "_" + file.getOriginalFilename();
 
-        file.transferTo(saveFile);
+                File saveFile = new File(uploadPath + File.separator + fileName);
+                file.transferTo(saveFile);
 
-        boardDTO.setFILE_NAME(fileName);
-        boardDTO.setFILE_PATH(directory+fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
-        // 파일 업로드 처리 끝
-        boardService.save(boardDTO);
+                boardDTO.setFILE_NAME(fileName);  //파일명
+                boardDTO.setFILE_PATH(saveFile.getAbsolutePath()); //경로
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(getBoardDTO == null) {
+            boardDTO.setINPUT_USER_ID(user.getUsername());
+            boardService.save(boardDTO);
+        }else {
+            //수정
+            boardDTO.setMODIFY_USER_ID(user.getUsername());
+            boardService.update(boardDTO);
+        }
+
         return "redirect:/admin/board/qna";
     }
 
-    @GetMapping("/admin/board/qna/update/{id}")
-    public String update(@PathVariable("id") int id, Model model) {
-        BoardDTO boardDTO = boardService.findById(id);
-        model.addAttribute("board", boardDTO);
-        return "/board/adminUpdate";
-    }
 
-    @PostMapping("/admin/board/qna/update/{id}")
-    public String update(BoardDTO boardDTO, Model model) {
-        boardService.update(boardDTO);
-        BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
-        model.addAttribute("board", dto);
-        return "/board/adminDetail";
-    }
 
+
+
+    //삭제 ok
     @GetMapping("/admin/board/qna/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         boardService.delete(id);
-        return "redirect:/board/list";
+        return "redirect:/admin/board/qna";
     }
+
+
 }

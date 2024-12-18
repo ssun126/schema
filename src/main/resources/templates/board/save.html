@@ -11,30 +11,96 @@
                 <h2 class="cui_title"><span>Q&A 등록</span></h2>
             </div>
         </div>
+
         <div class="cui_body">
-            <form id="fileUploadForm" action="/admin/board/qna/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
-                제목: <input type="text" name="BOARD_TITLE"><br>
-                작성자: <input type="text" name="INPUT_USER_ID"><br>
-                비밀번호: <input type="text" name="BOARD_PASS"><br>
-                내용: <textarea name="BOARD_DESC" cols="30" rows="10"></textarea>
-                일반파일: <input type="file" name="file">
-                <button type="submit">저장</button>
-            </form>
-            <div class="cui_dialog" style="width:420px;display:none;">
-                <div class="dialog_container">
-                    <div class="dialog_body">
-                        <div class="body_root">
-                            <div class="cui_alert alert_modal" data-type="success" role="alert">저장 되었습니다.</div>
-                            <div class="cui_items_wrap" data-direction="center">
+
+            <div class="cui_section">
+                <table class="cui_table">
+                    <tbody>
+                    <tr>
+                        <th><span>제목</span></th>
+                        <td>
+                            <div class="cui_items_wrap">
                                 <div class="item_content">
-                                    <button type="button" class="cui_button primary modal-close"><span>확인</span></button>
+                                    <input type="text" class="cui_text_field" placeholder="제목을 작성해 주세요.">
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><span>첨부파일</span></th>
+                        <td>
+                            <div class="cui_attachments">
+                                <input type="file" class="cui_file_field">
+                            </div>
+
+<!--                            <div class="cui_attachments">-->
+<!--                                <input type="file" class="cui_file_field">-->
+<!--                                <div class="cui_items_wrap" data-direction="left">-->
+<!--                                    <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span></div>-->
+<!--                                    <div class="item_content">-->
+<!--                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>-->
+<!--                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
+<!--                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <button type="button" class="cui_button"><span>삭제</span></button>-->
+<!--                            </div>-->
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="cui_section">
+                <!-- 에디터 영역 -->
+                에디터 영역
+            </div>
+
+
+            <div class="cui_items_wrap" data-direction="right">
+                <div class="item_content">
+                    <button type="button" class="cui_button primary"><span>저장</span></button>
+                    <button type="button" class="cui_button"><span>취소</span></button>
                 </div>
             </div>
         </div>
+
+
+
+<!--        기존-->
+<!--        <div class="cui_body">-->
+<!--            <form id="fileUploadForm" action="/admin/board/qna/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">-->
+<!--                제목: <input type="text" name="BOARD_TITLE"><br>-->
+<!--                작성자: <input type="text" name="INPUT_USER_ID"><br>-->
+<!--                비밀번호: <input type="text" name="BOARD_PASS"><br>-->
+<!--                내용: <textarea name="BOARD_DESC" cols="30" rows="10"></textarea>-->
+<!--                일반파일: <input type="file" name="file">-->
+<!--                <button type="submit">저장</button>-->
+<!--            </form>-->
+<!--            <div class="cui_dialog" style="width:420px;display:none;">-->
+<!--                <div class="dialog_container">-->
+<!--                    <div class="dialog_body">-->
+<!--                        <div class="body_root">-->
+<!--                            <div class="cui_alert alert_modal" data-type="success" role="alert">저장 되었습니다.</div>-->
+<!--                            <div class="cui_items_wrap" data-direction="center">-->
+<!--                                <div class="item_content">-->
+<!--                                    <button type="button" class="cui_button primary modal-close"><span>확인</span></button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+    <!--        기존-->
+
+
+
+
     </div>
 </div>
     <script>

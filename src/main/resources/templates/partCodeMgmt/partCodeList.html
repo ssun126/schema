@@ -430,6 +430,18 @@ $(function () {
 
    var data = [];
 
+
+  var RowColorChg = function (ui) {
+        var data = ui.rowData;
+        var partStatus = data.PART_STATUS;
+
+        if (partStatus == "D") {
+            return { style: "background-color:green" } ;
+        } else if (partStatus == "R") {
+            return { style: "background-color:orange" } ;
+        }
+    }
+
    var obj = {
        bubble: false,
        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
@@ -492,20 +504,30 @@ $(function () {
                all: false,
                header: false
            }, render: function (ui) {
-               if (ui.cellData == undefined) {
-                   return { text: "" };
-               } else {
-                   return;
-               }
+
+<!--               if (ui.cellData == undefined) {-->
+<!--                   return { text: "" };-->
+<!--               } else {-->
+<!--                   return;-->
+<!--               }-->
+                var data = ui.rowData;
+                var partStatus = data.PART_STATUS;
+
+                if (partStatus == "D") {
+                    return { style: "background-color:green" } ;
+                } else if (partStatus == "R") {
+                    return { style: "background-color:orange" } ;
+                }
+
            }
        },
-       {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "PART_CODE", sortable: true, editor: false, editable: false },
-       {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: true, editor: false, editable: false },
-       {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-       {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-       {                         title: "Plant"                  , width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PLANT_CODE", sortable: true, editor: false, editable: false },
-       {  data_langsid :"국가" , title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: true, editor: false, editable: false },
-       {  data_langsid :"사업본부" , title: siteLang.getLang("사업본부"), width: 300, halign: "center", align: "center", dataType: "string", dataIndx: "BASE_CODE", sortable: true, editor: false, editable: false },
+       {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "PART_CODE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {                         title: "Plant"                  , width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PLANT_CODE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"국가" , title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"사업본부" , title: siteLang.getLang("사업본부"), width: 300, halign: "center", align: "center", dataType: "string", dataIndx: "BASE_CODE", sortable: true, editor: false, editable: false ,render: RowColorChg },
         {
                 data_langsid: "구분",
                 title: siteLang.getLang("구분"),
@@ -522,11 +544,12 @@ $(function () {
 
                     if (partStatus == "D") {
                         //return siteLang.getLang("신청") ;
-                        return { style: "background-color:red", text : siteLang.getLang("신청") } ;
+                        return { style: "background-color:green", text : siteLang.getLang("신청") } ;
                     } else if (partStatus == "Y") {
                         return siteLang.getLang("사용");
                     } else if (partStatus == "R") {
-                        return siteLang.getLang("반려") ;
+                        //return siteLang.getLang("반려") ;
+                        return { style: "background-color:orange", text : siteLang.getLang("반려") } ;
                     } else {
                         return "";
                     }

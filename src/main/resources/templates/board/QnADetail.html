@@ -16,9 +16,9 @@
             <div class="cui_toolbar">
                 <div class="toolbar_content">
                     <div class="toolbar_default">
-                        <button type="button" class="cui_button secondary" onclick="listReq()"><span>목록</span></button>
-                        <button type="button" class="cui_button" onclick="updateReq()"><span>수정</span></button>
-                        <button type="button" class="cui_button" onclick="deleteReq()"><span>삭제</span></button>
+                        <button type="button" class="cui_button secondary" onclick="listReq()"><span data-langsid="목록"></span></button>
+                        <button type="button" class="cui_button" onclick="updateReq()"><span data-langsid="수정"></span></button>
+                        <button type="button" class="cui_button" onclick="deleteReq()"><span data-langsid="삭제"></span></button>
                     </div>
                 </div>
                 <div class="toolbar_aside"></div>
@@ -33,17 +33,17 @@
                     </colgroup>
                     <tbody>
                     <tr>
-                        <th class="center"><span>제목</span></th>
+                        <th class="center"><span data-langsid="제목"></span></th>
                         <td><span th:text="${board.BOARD_TITLE}"></span></td>
 
-                        <th class="center"><span>조회수</span></th>
+                        <th class="center"><span data-langsid="조회수"></span></th>
                         <td><span th:text="${board.BOARD_HITS}"></span></td>
                     </tr>
                     <tr>
-                        <th class="center"><span>작성자</span></th>
+                        <th class="center"><span data-langsid="작성자"></span></th>
                         <td><span th:text="${board.INPUT_USER_ID}"></span></td>
 
-                        <th class="center"><span>등록일</span></th>
+                        <th class="center"><span data-langsid="등록일"></span></th>
                         <td><span th:text="${board.INPUT_DATE}"></span></td>
                     </tr>
                     </tbody>
@@ -60,15 +60,17 @@
 
                 <div class="cui_attachments_head">
                     <div class="attachments_title">
-                        <div class="attachments_label"><span >첨부파일</span></div>
+                        <div class="attachments_label"><span data-langsid="첨부파일"></span></div>
                     </div>
                 </div>
 
                 <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${board.FILE_NAME}"></span></div>
+                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${board.FILE_SHOTNAME}"></span></div>
+                    <input type="hidden" name ="FILE_NAME" id="FILE_NAME"  th:value="${board.FILE_NAME}" >
+                    <input type="hidden" name ="FILE_SHOTNAME" id="FILE_SHOTNAME"  th:value="${board.FILE_SHOTNAME}" >
                     <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile()"><span data-langsid="다운로드"></span></button>
+
                     </div>
                 </div>
 
@@ -76,50 +78,6 @@
 
 
         </div>
-
-
-
-
-
-
-        <!--        -->
-        <!--        <div class="cui_body">-->
-        <!--            <table>-->
-        <!--                <tr>-->
-        <!--                    <th>id</th>-->
-        <!--                    <td th:text="${board.BOARD_IDX}"></td>-->
-        <!--                </tr>-->
-        <!--                <tr>-->
-        <!--                    <th>title</th>-->
-        <!--                    <td th:text="${board.BOARD_TITLE}"></td>-->
-        <!--                </tr>-->
-        <!--                <tr>-->
-        <!--                    <th>writer</th>-->
-        <!--                    <td th:text="${board.INPUT_USER_ID}"></td>-->
-        <!--                </tr>-->
-        <!--                <tr>-->
-        <!--                    <th>date</th>-->
-        <!--                    <td th:text="${board.INPUT_DATE}"></td>-->
-        <!--                </tr>-->
-        <!--                <tr>-->
-        <!--                    <th>hits</th>-->
-        <!--                    <td th:text="${board.BOARD_HITS}"></td>-->
-        <!--                </tr>-->
-        <!--                <tr>-->
-        <!--                    <th>contents</th>-->
-        <!--                    <td th:text="${board.BOARD_DESC}"></td>-->
-        <!--                </tr>-->
-        <!--                <tr th:if="${board.FILE_NAME != null}">-->
-        <!--                    <th>attach</th>-->
-        <!--                    <td><a th:href="@{/user/board/download/{filename}(filename=${board.FILE_NAME})}"><span th:text="${board.FILE_NAME}"></span>다운로드</a></td>-->
-        <!--                </tr>-->
-        <!--            </table>-->
-        <!--            <button onclick="listReq()">목록</button>-->
-        <!--            <button onclick="updateReq()">수정</button>-->
-        <!--            <button onclick="deleteReq()">삭제</button>-->
-        <!--        </div>-->
-        <!--   -->
-        <!--   -->
 
     </div>
 </div>
@@ -141,7 +99,7 @@
 
     //관리자 수정
     const updateReq = () => {
-        location.href = `/admin/board/qna/update/[[${board.BOARD_IDX}]]`;
+        location.href = `/admin/board/adminUpdate/[[${board.BOARD_IDX}]]`;
     }
 
 <!--    //수정-->
@@ -168,6 +126,52 @@
 <!--        location.href = `/user/board/delete/[[${board.BOARD_IDX}]]`;-->
 <!--    }-->
 
+
+
+
+     // 파일 다운로드
+   function downloadFile() {
+
+       const hiddenInput = document.getElementById('FILE_NAME');
+
+       const downName = document.getElementById('FILE_SHOTNAME');
+
+
+       var fileName = hiddenInput.value;
+       var savefileName = downName.value;
+
+       if(fileName == ""){
+           Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
+           return;
+       }
+
+       fetch(`/admin/board/download?fileName=${encodeURIComponent(fileName)}`, {
+           method: 'GET',
+           headers: {
+               'Accept': 'application/octet-stream'
+           }
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response.blob();
+       })
+       .then(blob => {
+           // Blob URL 생성
+           const url = window.URL.createObjectURL(blob);
+           const a = document.createElement('a');
+           a.href = url;
+           a.download = savefileName;
+           document.body.appendChild(a);
+           a.click();
+           a.remove();
+           window.URL.revokeObjectURL(url);
+       })
+       .catch(error => {
+           console.error('파일 다운로드 실패:', error);
+       });
+   }
 
 </script>
 </html>

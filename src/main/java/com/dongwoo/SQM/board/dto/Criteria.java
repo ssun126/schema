@@ -11,6 +11,8 @@ public class Criteria {
     private int pageNum;
     private int amount;
     private String type;
+    private String boardType;
+    private String searchType;
     private String keyword;
 
     public Criteria() {
