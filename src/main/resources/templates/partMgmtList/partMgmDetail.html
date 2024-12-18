@@ -60,6 +60,7 @@
             </div>
             <form class="cui_form_section" data-legend="true" id="frmDetail" action="/user/partMgmt/goSvhc" method="post"  enctype="multipart/form-data" onsubmit="return frmDetailSubmit();">
                 <input type="hidden" name="PM_IDX"/>
+                <input type="hidden" name="SaveMode" value="" />
                 <fieldset id="msdsFieldset">
                     <legend><span>MSDS</span></legend>
 
@@ -300,6 +301,7 @@
         Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
             mode : "confrim"
             , okback : function () {
+                $("#frmDetail").find("input[name=SaveMode]").val("Save");
                 $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
                 $("#frmDetail").submit();
             }
@@ -310,6 +312,7 @@
         Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
             mode : "confrim"
             , okback : function () {
+                $("#frmDetail").find("input[name=SaveMode]").val("Next");
                 $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
                 $("#frmDetail").submit();
             }
