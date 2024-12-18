@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .cui_step ol li {
+            width: 180px !important;
+        }
+
+        .head_content{
+            border-bottom : var(--border-primary) 1px solid;
+            align-items : center;
+            justify-content : space-between;
+        }
+
+        .head-title{
+            justify-content : space-between;
+            padding :  0px 25px 15px 25px;
+        }
+
+        .cui_step{
+            margin : 20px 0px 30px 0px;
+        }
+
+        .cui_file_field{
+            display:flex;
+        }
+        .cui_table{
+            vertical-align: middle;
+        }
+
+        .cui_attachments{
+            display:block;
+        }
+    </style>
+</head>
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head head_title">
+            <div class="head_content" style="padding:0px 10px 10px 10px;">
+                <h3><span data-langsid="자재코드"></span> : <span th:text="${PM_PART_CODE}"></span></h3>
+                <h3><span data-langsid="자재명"></span> : <span th:text="${PART_NAME}"></span></h3>
+                <h3><span data-langsid="승인현황"></span> : <span th:text="${PM_APPROVAL_STATUS}"></span></h3>
+                <h3><span data-langsid="사용여부"></span> : <span th:text="${PM_ACTIVE_YN}"></span></h3>
+            </div>
+
+        </div>
+        <div class="cui_body">
+            <div class="cui_step">
+                <ol>
+                    <li class="active"><span>MSDS / RoHSⅡ / Halogen</span></li>
+                    <li><span>SVHC</span></li>
+                    <li><span>Declaration Letter</span></li>
+                    <li><span data-langsid="SCCS / 성분명세서 / 기타"></span></li>
+                </ol>
+            </div>
+            <form class="cui_form_section" data-legend="true" id="frmDetail" action="/user/partMgmt/goSvhc" method="post"  enctype="multipart/form-data" onsubmit="return frmDetailSubmit();">
+                <input type="hidden" name="PM_IDX"/>
+                <fieldset id="msdsFieldset">
+                    <legend><span>MSDS</span></legend>
+
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:150px;">
+                            <col style="width:200px;">
+                            <col >
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="작성일"></span></th>
+                            <th><span data-langsid="언어"></span></th>
+                            <th><span data-langsid="승인번호"></span></th>
+                            <th><span data-langsid="첨부"></span></th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        <tr>
+                            <td>
+                                <div class="item_content" data-role="calendar-picker">
+                                    <input type="hidden" name="MSDS_IDX">
+                                    <input type="text" class="cui_text_field datepicker" name="MSDS_REG_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="날짜를 입력해주세요." messages="">
+                                </div>
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="MSDS_LANG" reqcheck="reqcheck" data-messages="언어를 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM" reqcheck="reqcheck" data-messages="승인번호 입력해주세요." messages=""></td>
+                            <td>
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="MSDS_FILE" >
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" >
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <fieldset id="rohsFieldset">
+                    <legend><span data-langsid="RoHS 분석서/보증서"></span></legend>
+
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span>CD</span></th>
+                            <th><span>HG</span></th>
+                            <th><span>PB</span></th>
+                            <th><span>CR6</span></th>
+                            <th><span>PBBS</span></th>
+                            <th><span>PBDES</span></th>
+                            <th><span>DEHP</span></th>
+                            <th><span>BBP</span></th>
+                            <th><span>DBP</span></th>
+                            <th><span>DIBP</span></th>
+                            <th><span data-langsid="첨부파일"></span></th>
+
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody2">
+                        <tr>
+                            <td>
+                                <input type="hidden" name="ROHS_IDX">
+                                <input type="text" class="cui_text_field datepicker" name="ROHS_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="">
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_CD" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_HG" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PB" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_CR6" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PBBS" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_PBDES" reqcheck="reqcheck" ></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DEHP" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_BBP" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DBP" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="ROHS_DIBP" reqcheck="reqcheck"></td>
+                            <td>
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="ROHS_FILE">
+                                    <input type="hidden" name="FILE_STATUS">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" ></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="halogenFieldset">
+                    <legend><span data-langsid="Halogen 분석서/보증서"></span></legend>
+
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span>Cl</span></th>
+                            <th><span>Br</span></th>
+                            <th><span>Cl+Br</span></th>
+                            <th><span>F</span></th>
+                            <th><span>I</span></th>
+                            <th><span data-langsid="첨부파일"></span></th>
+
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody3">
+                        <tr>
+                            <td>
+                                <input type="hidden" name="HALOGEN_IDX">
+                                <input type="text" class="cui_text_field datepicker" name="HALOGEN_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="">
+                            </td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_CL" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_BR" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_CLBR" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_F" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" name="HALOGEN_I" reqcheck="reqcheck"></td>
+                            <td>
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="HALOGEN_FILE">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="etcFieldset">
+                    <legend><span data-langsid="기타 분석서/보증서 (Antimony, Cobalt 등)"></span></legend>
+                    <input type="hidden" id="etcCount" name="etcCount" value="0">
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col>
+                            <col style="width:90px;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="분석항목"></span></th>
+                            <th><span data-langsid="분석결과"></span></th>
+                            <th><span data-langsid="첨부"></span></th>
+                            <th><button type="button" class="cui_button secondary" id="addRowButton" ><span data-langsid="추가"></span></button></th>
+                        </tr>
+                        </thead>
+                        <tbody id="etcBodyArea">
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <div class="cui_items_wrap" data-direction="right" >
+                    <div class="item_content">
+                        <input type="hidden"  name="INFO_FLAG" >
+                        <button type="button" class="cui_button primary" onclick="frmDetailSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="다음"></span></button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("#addRowButton").bind("click", function () {
+        var etcCount = Common.Convert.Int($("#etcCount").val());
+        etcCount++;
+
+        const newRow = $('<tr>'
+                     + '    <td><input type="hidden" name="ETC_IDX" ><input type="text" class="cui_text_field datepicker" name="ETC_CONFIRM_DATE' + etcCount + '"  datePickerControl=""></td>'
+                     + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY' + etcCount + '" ></td>'
+                     + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT' + etcCount + '"  ></td>'
+                     + '                <td>'
+                     + '                    <div class="cui_attachments" style="display:flex;">'
+                     + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '">'
+                     + '                    </div>'
+                     + '                </td>'
+                     + '    <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button></td>'
+                     + '</tr>');
+        Common.Load(newRow);
+
+        newRow.find("button[data-cui-icon=trash]").bind("click", function () {
+            $(this).parent().parent().remove();
+        });
+
+        $('#etcBodyArea').append(newRow);
+        $("#etcCount").val(etcCount);
+    });
+
+    var frmDetailSubmit = function () {
+        var frmObj = $("#frmDetail");
+        return Common.Validate(frmObj);
+    }
+
+    var frmDetailSave = function () {
+        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                $("#frmDetail").submit();
+            }
+        });
+    }
+
+    var frmDetailNext = function () {
+        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                $("#frmDetail").submit();
+            }
+        });
+       }
+</script>
+</body>
+</html>

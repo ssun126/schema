@@ -187,14 +187,9 @@
             cellClick: function (event, ui) {
                 var data = ui.rowData;
                 if(ui.dataIndx =="PM_PART_CODE"){
-                    if(data.PM_APPROVAL_STATUS  < 2){
-                        Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
-                    }else{
-                        //읽기페이지 수정해야함
-                        Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Read", PM_IDX : data.PM_IDX } });
-                    }
-
+                    Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
                 } else if(ui.dataIndx =="PART_NAME"){
+                    /*
                     //Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
                     if(data.PM_APPROVAL_STATUS  < 2 || (data.PM_APPROVAL_STATUS  >3 && data.PM_ACTIVE_YN == "INACTIVE") ){
                         //승인현황이 신규, 작성중, 반려, 자료보완일때 수정페이지
@@ -204,10 +199,10 @@
                         //검토중 승인 시 읽기페이지
                         Common.MoveUrl("/user/partMgmt/goReadDetail?PM_IDX=" + data.PM_IDX);
                     }
+                    */
+
+                    Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX);
                 }
-
-
-
             },
             rowDblClick: function (event, ui) {
                 //var data = ui.rowData;
@@ -283,35 +278,36 @@
         var selectValues = [];
         var grid = $("#gridArea").pqGrid("instance");
 
+        for (j = 0; j < grid.pdata.length; j++) {
+            if (grid.pdata[j]["CHECK_YN"] == true) {
+                selectValues.push(grid.pdata[j]["PM_IDX"]);
+            }
+        }
+
+        if(selectValues.length<=0){
+            Common.Msg(siteLang.getLang("삭제할 데이터를 선택하세요."));
+            Common.Loading.Hide();
+            return;
+        }
+
         Common.Msg(siteLang.getLang("삭제 하시겠습니까?"), {
             mode : "confrim"
             , okback : function () {
                 Common.Loading.Show();
-                for (j = 0; j < grid.pdata.length; j++) {
-                    if (grid.pdata[j]["CHECK_YN"] == true) {
-                        selectValues.push(grid.pdata[j]["PM_IDX"]);
-                    }
-                }
 
-                if(selectValues.length<=0){
-                    Common.Msg(siteLang.getLang("삭제할 데이터를 선택하세요."));
-                    Common.Loading.Hide();
-                    return;
-                }else{
+                var app_num = selectValues.join(',');
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.AddParameter("ARR_PM_IDX", app_num);
 
-                    var app_num = selectValues.join(',');
-                    var ReqInfo = new Common.RequestInfo();
-                    ReqInfo.AddParameter("ARR_PM_IDX", app_num);
-                    setTimeout(function () {
-                        Common.Ajax("/user/partMgmt/deletePartMgmt", ReqInfo, function (response) {
-                            if (response == "OK") {
-                                Common.Msg(siteLang.getLang("삭제되었습니다."));
-                                ListSearch();
-                            }
-                        });
-                    }, 10);
-                }
-                Common.Loading.Hide();
+                setTimeout(function () {
+                    Common.Ajax("/user/partMgmt/deletePartMgmt", ReqInfo, function (response) {
+                        if (response == "OK") {
+                            ListSearch();
+                        }
+
+                        Common.Loading.Hide();
+                    });
+                }, 10);
             }
         });
     }

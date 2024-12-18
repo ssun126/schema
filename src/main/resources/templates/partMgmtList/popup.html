@@ -100,7 +100,12 @@
             var diaObj = $("#diaMatRegPopup");
 
             if (Common.Validate(diaObj) == true) {
-                Common.Msg(siteLang.getLang("추가 하시겠습니까?"), {
+                var showMsg = siteLang.getLang("추가 하시겠습니까?");
+                if (diaObj.find("input[name=mode]").val() == "Edit") {
+                    showMsg = siteLang.getLang("수정 하시겠습니까?");
+                }
+
+                Common.Msg(showMsg, {
                     mode : "confrim"
                     , okback : function () {
                         Common.Loading.Show();

@@ -5,7 +5,6 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <style>
         .cui_step ol li {
             width: 180px !important;
@@ -42,15 +41,11 @@
 <div class="cui_content">
     <div class="cui_main">
         <div class="cui_head head_title">
-            <div class="head_content">
-<!--                <h3><span>자재코드 : DATA</span></h3>-->
-<!--                <h3><span>자재명 : 테스트</span></h3>-->
-<!--                <h3><span>승인현황 : 승인</span></h3>-->
-<!--                <h3><span>사용여부 : Active</span></h3>-->
-                <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
-                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
-                <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
-                <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
+            <div class="head_content" style="padding:0px 10px 10px 10px;">
+                <h3><span data-langsid="자재코드"></span> : <span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+                <h3><span data-langsid="자재명"></span> : <span th:text="${partMgmtDTO.PART_NAME}"></span></h3>
+                <h3><span data-langsid="승인현황"></span> : <span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}"></span></h3>
+                <h3><span data-langsid="사용여부"></span> : <span th:text="${partMgmtDTO.PM_ACTIVE_YN}"></span></h3>
             </div>
 
         </div>
@@ -60,7 +55,7 @@
                     <li class="active"><span>MSDS / RoHSⅡ / Halogen</span></li>
                     <li><span>SVHC</span></li>
                     <li><span>Declaration Letter</span></li>
-                    <li><span>SCCS / 성분명세서 / 기타</span></li>
+                    <li><span data-langsid="SCCS / 성분명세서 / 기타"></span></li>
                 </ol>
             </div>
             <form class="cui_form_section" data-legend="true" id="frmDetail" action="/user/partMgmt/goSvhc" method="post"  enctype="multipart/form-data">
@@ -70,17 +65,17 @@
 
                     <table class="cui_table center">
                         <colgroup>
+                            <col style="width:110px;">
                             <col style="width:150px;">
-                            <col >
-                            <col >
+                            <col style="width:200px;">
                             <col >
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>작성일</span></th>
-                            <th><span>언어</span></th>
-                            <th><span>승인번호</span></th>
-                            <th><span>첨부</span></th>
+                            <th><span data-langsid="작성일"></span></th>
+                            <th><span data-langsid="언어"></span></th>
+                            <th><span data-langsid="승인번호"></span></th>
+                            <th><span data-langsid="첨부"></span></th>
                         </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -94,13 +89,13 @@
                             <td><input type="text" class="cui_text_field" name="MSDS_LANG" th:value="${msdsDTO.MSDS_LANG}" reqcheck="reqcheck"></td>
                             <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM" th:value="${msdsDTO.MSDS_APPROVAL_NUM}" reqcheck="reqcheck"></td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="MSDS_FILE" >
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"  th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}" ></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span>다운로드</span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -113,26 +108,26 @@
                 </fieldset>
 
                 <fieldset id="rohsFieldset">
-                    <legend><span>RoHS 분석서/보증서</span></legend>
+                    <legend><span data-langsid="RoHS 분석서/보증서"></span></legend>
 
                     <table class="cui_table center">
                         <colgroup>
-                            <col style="width:130px">
+                            <col style="width:110px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
                             <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col>
-                            <col style="width:250px">
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>확인일자</span></th>
+                            <th><span data-langsid="확인일자"></span></th>
                             <th><span>CD</span></th>
                             <th><span>HG</span></th>
                             <th><span>PB</span></th>
@@ -143,7 +138,7 @@
                             <th><span>BBP</span></th>
                             <th><span>DBP</span></th>
                             <th><span>DIBP</span></th>
-                            <th><span>첨부파일</span></th>
+                            <th><span data-langsid="첨부파일"></span></th>
 
                         </tr>
                         </thead>
@@ -164,16 +159,16 @@
                             <td><input type="text" class="cui_text_field" name="ROHS_DBP"   th:value="${rohsDTO.ROHS_DBP}"   reqcheck="reqcheck"></td>
                             <td><input type="text" class="cui_text_field" name="ROHS_DIBP"  th:value="${rohsDTO.ROHS_DIBP}"  reqcheck="reqcheck"></td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="ROHS_FILE">
                                     <input type="hidden" name="FILE_STATUS">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                            ><span>다운로드</span></button>
+                                            ><span data-langsid="다운로드"></span></button>
                                             <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -184,18 +179,27 @@
                     </table>
                 </fieldset>
                 <fieldset id="halogenFieldset">
-                    <legend><span>Halogen 분석서/보증서</span></legend>
+                    <legend><span data-langsid="Halogen 분석서/보증서"></span></legend>
 
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col>
+                        </colgroup>
                         <thead>
                         <tr>
-                            <th><span>확인일자</span></th>
+                            <th><span data-langsid="확인일자"></span></th>
                             <th><span>Cl</span></th>
                             <th><span>Br</span></th>
                             <th><span>Cl+Br</span></th>
                             <th><span>F</span></th>
                             <th><span>I</span></th>
-                            <th><span>첨부파일</span></th>
+                            <th><span data-langsid="첨부파일"></span></th>
 
                         </tr>
                         </thead>
@@ -211,15 +215,15 @@
                             <td><input type="text" class="cui_text_field" name="HALOGEN_F"    th:value="${halGDTO.HALOGEN_F}"    reqcheck="reqcheck"></td>
                             <td><input type="text" class="cui_text_field" name="HALOGEN_I"    th:value="${halGDTO.HALOGEN_I}"    reqcheck="reqcheck"></td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                            ><span>다운로드</span></button>
+                                            ><span data-langsid="다운로드"></span></button>
                                             <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -229,16 +233,23 @@
                     </table>
                 </fieldset>
                 <fieldset id="etcFieldset">
-                    <legend><span>기타 분석서/보증서 (Antimony, Cobalt 등)</span></legend>
+                    <legend><span data-langsid="기타 분석서/보증서 (Antimony, Cobalt 등)"></span></legend>
 
                     <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:90px;">
+                            <col style="width:90px;">
+                            <col>
+                            <col style="width:90px;">
+                        </colgroup>
                         <thead>
                         <tr>
-                            <th><span>확인일자</span></th>
-                            <th><span>분석항목</span></th>
-                            <th><span>분석결과</span></th>
-                            <th><span>첨부</span></th>
-                            <th><button type="button" class="cui_button secondary" id="addRowButton" ><span>추가</span></button></th>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="분석항목"></span></th>
+                            <th><span data-langsid="분석결과"></span></th>
+                            <th><span data-langsid="첨부"></span></th>
+                            <th><button type="button" class="cui_button secondary" id="addRowButton" ><span data-langsid="추가"></span></button></th>
                         </tr>
                         </thead>
                         <tbody id="tableBody4">
@@ -250,21 +261,21 @@
                             <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY"  th:value="${etcDTO.ETC_ANALYSE_ENTRY}" ></td>
                             <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT"  th:value="${etcDTO.ETC_ANALYSE_RESULT}" ></td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field " name="ETC_FILE">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${etcDTO.ETC_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span name="ETC_FILE_NAME"  th:value="${etcDTO.ETC_FILE_NAME}"   th:text="${etcDTO.ETC_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
-                                            ><span>다운로드</span></button>
+                                            ><span data-langsid="다운로드"></span></button>
                                             <!--                                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="search_square" data-tooltip-title="미리보기"><span>미리보기</span></button>-->
-                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
 
                             </td>
-                            <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
+                            <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span data-langsid="삭제"></span></button></td>
                         </tr>
                         </tbody>
                     </table>
@@ -274,8 +285,8 @@
 
                     <div class="item_content">
                         <input type="hidden"  name="INFO_FLAG" >
-                        <a href="#" onclick="return chk_form('save')" class="cui_button primary"><span>저장</span></a>
-                        <a href="#" onclick="return chk_form('next')" class="cui_button primary"><span>다음</span></a>
+                        <a href="#" onclick="return chk_form('save')" class="cui_button primary"><span data-langsid="저장"></span></a>
+                        <a href="#" onclick="return chk_form('next')" class="cui_button primary"><span data-langsid="다음"></span></a>
                     </div>
                 </div>
 
@@ -293,24 +304,25 @@
         $('#addRowButton').on('click', function() {
             //생성
 
-            const newRow = '<tr>'
+            const newRow = $('<tr>'
                          + '    <td><input type="hidden" name="ETC_IDX" ><input type="text" class="cui_text_field datepicker" name="ETC_CONFIRM_DATE"  ></td>'
                          + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY" ></td>'
                          + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT"  ></td>'
                          + '                <td>'
-                         + '                    <input type="file" class="cui_file_field" name="ETC_FILE">'
-                         + '                    <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">'
-                         + '                        <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>'
-                         + '                        <div class="item_content">'
-                         + '                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span>다운로드</span></button>'
-                         + '                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>'
+                         + '                    <div class="cui_attachments" style="display:flex;">'
+                         + '                        <input type="file" class="cui_file_field" name="ETC_FILE">'
+                         + '                        <div class="cui_items_wrap file_wrap" data-direction="left" style="display:none;">'
+                         + '                            <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>'
+                         + '                            <div class="item_content">'
+                         + '                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span>다운로드</span></button>'
+                         + '                                <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>'
+                         + '                            </div>'
                          + '                        </div>'
                          + '                    </div>'
                          + '                </td>'
                          + '    <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>'
-                         + '</tr>'
-
-
+                         + '</tr>');
+            Common.Load(newRow);
             $('#tableBody4').append(newRow);
 
         });

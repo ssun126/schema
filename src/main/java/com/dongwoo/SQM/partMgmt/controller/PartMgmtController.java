@@ -40,7 +40,6 @@ public class PartMgmtController {
         model.addAttribute("searchPlantList",searchPlantList);
 
         try {
-            BaseCodeDTO baseCodeDTO = new BaseCodeDTO();
             UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             ObjectMapper mapper = new ObjectMapper();
@@ -229,6 +228,41 @@ public class PartMgmtController {
         }catch(Exception e){
             return ResponseEntity.ok().body("|||[ERROR]|||" + e.getMessage());
         }
+    }
+
+    @RequestMapping("/partMgmDetail")
+    public String partMgmDetail(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
+        try {
+            model.addAttribute("PM_PART_CODE","");
+            model.addAttribute("PART_NAME","");
+            model.addAttribute("PM_APPROVAL_STATUS","");
+            model.addAttribute("PM_ACTIVE_YN","");
+
+        } catch (Exception e) {
+            if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                return "blank";
+            } else {
+                try {
+                    PrintWriter printer = response.getWriter();
+                    printer.print("|||[ERROR]|||" + e.getMessage());
+                    printer.close();
+                } catch (Exception e2) {
+                }
+
+                //return  "redirect:/main";
+                return "blank";
+            }
+        }
+
+        return "partMgmtList/partMgmDetail";
+
     }
 
     @GetMapping("/goReadDetail")
