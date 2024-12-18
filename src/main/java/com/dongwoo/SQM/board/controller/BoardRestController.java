@@ -32,7 +32,7 @@ public class BoardRestController {
     @GetMapping("/boardList/pageMaker")
     public PageDTO getBoardListPage(Criteria criteria) {
         // pageMaker 객체를 생성하고 반환
-        int total = boardService.getTotal();  // 전체 데이터 개수
+        int total = boardService.getTotal(criteria);  // 전체 데이터 개수
         PageDTO pageMaker = new PageDTO(total, 10, criteria);  // 10은 한 페이지당 보여줄 항목 수
         log.info("pageMaker>>>>>>>>>>"+pageMaker);
         return pageMaker;

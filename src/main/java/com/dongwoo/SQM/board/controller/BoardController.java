@@ -32,37 +32,32 @@ import java.util.UUID;
 public class BoardController {
     private final BoardService boardService;
 
-    /**
-     * Q&A 리스트
-     * @param criteria
-     * @param model
-     * @return
-     */
-    @GetMapping("/user/board/qna")
-    public String list(Criteria criteria, Model model) {
-        List<BoardDTO> boardDTOList = boardService.getList(criteria);
-        model.addAttribute("boardList", boardDTOList);
-        model.addAttribute("pageMaker", new PageDTO(boardService.getTotal(), 10, criteria));
-        log.info("boardDTOList = " + boardDTOList);
-        return "board/list";
-    }
 
-    /**
-     * q&A 상세
-     * @param id
-     * @param model
-     * @return
-     */
-    @GetMapping("/user/board/qna/{id}")
-    public String findById(@PathVariable("id") int id, Model model) {
-        // 조회수 처리.
-        boardService.updateHits(id);
-        // 상세내용 가져옴
-        BoardDTO boardDTO = boardService.findById(id);
-        model.addAttribute("board", boardDTO);
+    // * Q&A 리스트
+//    @GetMapping("/user/board/qna")
+//    public String list(Criteria criteria, Model model) {
+//        List<BoardDTO> boardDTOList = boardService.getList(criteria);
+//        model.addAttribute("boardList", boardDTOList);
+//
+//        int total = boardService.getTotal(criteria);
+//        model.addAttribute("pageMaker", new PageDTO(total, 10, criteria));
+//        //log.info("boardDTOList = " + boardDTOList);
+//        return "board/list";
+//    }
 
-        return "board/detail";
-    }
+
+     //* q&A 상세
+
+//    @GetMapping("/user/board/qna/{id}")
+//    public String findById(@PathVariable("id") int id, Model model) {
+//        // 조회수 처리.
+//        boardService.updateHits(id);
+//        // 상세내용 가져옴
+//        BoardDTO boardDTO = boardService.findById(id);
+//        model.addAttribute("board", boardDTO);
+//
+//        return "board/detail";
+//    }
 
     @GetMapping("/user/board/download/{filename}")
     public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {

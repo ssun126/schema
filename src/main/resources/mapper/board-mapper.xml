@@ -3,48 +3,92 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="Board">
-    <insert id="save" parameterType="board">
-        INSERT INTO BOARD_INFO(BOARD_TITLE, BOARD_TYPE, INPUT_USER_ID, BOARD_PASS, BOARD_DESC, INPUT_DATE, FILE_NAME, FILE_PATH)
-        values(#{BOARD_TITLE}, 'QNA', #{INPUT_USER_ID}, #{BOARD_PASS}, #{BOARD_DESC}, sysdate, #{FILE_NAME}, #{FILE_PATH})
-    </insert>
-    <select id="findAll" resultType="board">
-        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_HITS, FILE_NAME, FILE_PATH
-        from BOARD_INFO order by BOARD_IDX DESC
+
+    <select id="getList"  parameterType="Criteria" resultType="board">
+
+            SELECT BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS ,FILE_PATH
+            FROM SC_BOARD_INFO
+            WHERE 1=1
+            <if test="keyword != null ">
+                <if test="searchType == 1 ">
+                    AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchType == 2 ">
+                    AND BOARD_DESC LIKE '%' || #{keyword} || '%'
+                </if>
+                <if test="searchType == 3 ">
+                    AND INPUT_USER_ID LIKE '%' || #{keyword} || '%'
+                </if>
+            </if>
+            ORDER BY BOARD_IDX DESC
+            OFFSET (#{pageNum} - 1) * #{amount} ROWS FETCH NEXT #{amount} ROWS ONLY
+
     </select>
+
+
+    <select id="getTotal"  parameterType="Criteria" resultType="int">
+        select count(*) CNT
+        from SC_BOARD_INFO
+        WHERE 1=1
+        <if test="keyword != null ">
+            <if test="searchType == 1 ">
+                AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
+            </if>
+            <if test="searchType == 2 ">
+                AND BOARD_DESC LIKE '%' || #{keyword} || '%'
+            </if>
+            <if test="searchType == 3 ">
+                AND INPUT_USER_ID LIKE '%' || #{keyword} || '%'
+            </if>
+        </if>
+    </select>
+
+
+    <insert id="save" parameterType="board">
+        INSERT INTO SC_BOARD_INFO(BOARD_TITLE, BOARD_TYPE, INPUT_USER_ID, BOARD_PASS, BOARD_DESC, INPUT_DATE, FILE_NAME, FILE_PATH)
+        values(#{BOARD_TITLE}, #{BOARD_TYPE}, #{INPUT_USER_ID}, #{BOARD_PASS}, #{BOARD_DESC}, sysdate, #{FILE_NAME}, #{FILE_PATH})
+    </insert>
+
+    <update id="update" parameterType="board">
+        update SC_BOARD_INFO set
+            BOARD_TITLE =#{BOARD_TITLE},
+            BOARD_DESC =#{BOARD_DESC} ,
+        <if test="BOARD_PASS != '' ">
+            BOARD_PASS =#{BOARD_PASS}  ,
+        </if>
+        <if test="FIXED_YN != '' ">
+            FIXED_YN =#{FIXED_YN} ,
+        </if>
+        <if test="FILE_PATH != null and FILE_PATH != ''">
+            FILE_NAME =#{FILE_NAME} ,
+            FILE_PATH =#{FILE_PATH} ,
+        </if>
+            MODIFY_USER_ID =#{MODIFY_USER_ID},
+            MODIFY_DATE = sysdate
+        where BOARD_IDX=#{BOARD_IDX}
+    </update>
+
+
     <update id="updateHits" parameterType="int">
-        update BOARD_INFO set BOARD_HITS=BOARD_HITS+1 where BOARD_IDX=#{id}
+        update SC_BOARD_INFO set BOARD_HITS=BOARD_HITS+1 where BOARD_IDX=#{id}
     </update>
     <select id="findById" parameterType="int" resultType="board">
-        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_DESC, BOARD_HITS, BOARD_PASS, INPUT_DATE, FILE_NAME
-        from BOARD_INFO where BOARD_IDX=#{id}
+        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_DESC, BOARD_HITS, BOARD_PASS, INPUT_DATE, FILE_NAME ,FILE_PATH
+        from SC_BOARD_INFO where BOARD_IDX=#{id}
     </select>
-    <update id="update">
-        update BOARD_INFO set BOARD_TITLE=#{BOARD_TITLE}, BOARD_DESC=#{BOARD_DESC} where BOARD_IDX=#{BOARD_IDX}
-    </update>
+
     <update id="updateFile">
-        update BOARD_INFO set FILE_NAME=#{FILE_NAME} ,FILE_PATH=#{FILE_PATH} where BOARD_IDX=#{BOARD_IDX}
+        update SC_BOARD_INFO set FILE_NAME=#{FILE_NAME} ,FILE_PATH=#{FILE_PATH} where BOARD_IDX=#{BOARD_IDX}
     </update>
-    <select id="getList" resultType="board">
-        <![CDATA[
-        SELECT RN, BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS
-        FROM
-        (
-            /*알리아스를 붙인 컬럼에 WHERE절에서 접근할 때에는 FROM 절에 작성된 테이블의 컬럼과 동일한 이름으로만 사용이 가능하다.*/
-            SELECT /*+ INDEX_DESC(BOARD_INFO PK_BOARD) */
-            ROWNUM RN, BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS
-            FROM BOARD_INFO
-            WHERE ROWNUM <= #{pageNum} * #{amount}
-        )
-           WHERE RN > (#{pageNum}-1) * #{amount}
-        ]]>
+    <select id="findAll" resultType="board">
+        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_HITS, FILE_NAME, FILE_PATH
+        from SC_BOARD_INFO order by BOARD_IDX DESC
     </select>
-    <select id="getTotal" resultType="int">
-        select count(*) CNT
-        from BOARD_INFO
-    </select>
-<!--    <delete id="delete" parameterType="Long">-->
-<!--        delete from BOARD_INFO where BOARD_IDX=#{id}-->
-<!--    </delete>-->
+
+    <delete id="delete" parameterType="int" >
+        delete from SC_BOARD_INFO where BOARD_IDX=#{id}
+    </delete>
+
 <!--    <insert id="saveFile" parameterType="boardFile">-->
 <!--        insert into BOARD_FILE(ORG_FILE_NAME, FILE_NAME, BOARD_IDX, USE_YN, INPUT_DATE-->
 <!--        values (#{ORG_FILE_NAME}, #{FILE_NAME}, #{BOARD_IDX}, 'Y', sysdate)-->

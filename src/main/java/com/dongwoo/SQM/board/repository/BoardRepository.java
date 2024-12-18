@@ -50,7 +50,7 @@ public class BoardRepository {
         return sql.selectList("Board.getList", criteria);
     }
 
-    public int getTotal(){
-        return sql.selectOne("Board.getTotal");
+    public int getTotal(Criteria criteria){
+        return sql.selectOne("Board.getTotal" , criteria);
     }
 }

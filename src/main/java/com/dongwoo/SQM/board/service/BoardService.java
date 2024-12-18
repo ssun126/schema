@@ -46,8 +46,8 @@ public class BoardService {
         return boardRepository.getList(cri);
     }
 
-    public int getTotal() {
-        return boardRepository.getTotal();
+    public int getTotal(Criteria cri) {
+        return boardRepository.getTotal(cri);
     }
 
 }
