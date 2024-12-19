@@ -174,13 +174,7 @@ public class MemberController {
         }
         memberDTO.setCOM_OK_DATE(dateStr);  // 워런티 협약상태 승일일 또는 반려일
         //워런티
-        String sComManageStatus = switch (comPanyDTO.getCOM_MANAGE_STATUS()) {
-            case "1" -> "검토중";
-            case "2" -> "승인";
-            case "3" -> "반려";
-            default -> "대기"; //"0"
-        };
-        memberDTO.setCOM_MANAGE_STATUS(sComManageStatus);  // 워런티~~!!! 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
+        memberDTO.setCOM_MANAGE_STATUS(comPanyDTO.getCOM_MANAGE_STATUS());  // 워런티~~!!! 관리상태 (0:대기, 1:검토중, 2:승인, 3:반려)
 
 
         memberDTO.setCOM_FILE_NAME(comPanyDTO.getCOM_FILE_NAME());  // 워런티 파일 이름
@@ -365,6 +359,7 @@ public class MemberController {
             //ID 추가 상태는 워런티! 건들면 안됨!
             memberService.updateCpCodeCPUser(comPanyCodeDTO);
         }else {
+            comPanyCodeDTO.setCOM_APP_DATE(null) ;//반려일 제거!
             memberService.updateCompanyCode(comPanyCodeDTO);
         }
 

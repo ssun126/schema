@@ -209,6 +209,7 @@
             ,UP_DATE =sysdate
             ,UP_DW_USER_IDX =#{UP_DW_USER_IDX}
             ,COM_APP_DATE = sysdate
+            ,COM_OK_DATE = null
             ,COM_MANAGE_STATUS =#{COM_MANAGE_STATUS}
         where COM_CODE=#{COM_CODE}
     </update>

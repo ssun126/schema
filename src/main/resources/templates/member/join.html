@@ -245,7 +245,7 @@
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <input class="cui_text_field" type="text" name = "USER_ID" id ="memberID" >
-                                                <button type="button" class="cui_button icon" data-cui-icon="search" id="btnIdCheck"  onclick ="memberIDCheck()"><span>중복검사</span></button>
+                                                <button type="button" class="cui_button icon" data-cui-icon="search" id="btnIdCheck"  onclick ="memberIDCheck()"><span data-langsid="중복검사"></span></button>
                                                 <input type="hidden" name="ID_CHK" id="ID_CHK">
                                             </div>
                                         </div>
@@ -519,15 +519,11 @@
     //담당자 리셋
     function setUserSelectReset() {
 
-<!--       $("#userSelect option").remove();-->
-<!--       $("#userSelect").append("<option value='0'>담당자 목록</option>");-->
-
         $("#userSelect option").each(function() {
             if ($(this).val() !== '0') {
                 $(this).remove();
             }
         });
-
 
        var userList = extractData() ;
        setUserSelect(userList);
@@ -988,6 +984,14 @@
 
     //submit 전 체크
     function chk_form() {
+
+        const checkedValue = $('input[name="VENDOR_WORK_KIND"]:checked').val();
+        var radios = document.getElementsByName('VENDOR_WORK_KIND');
+        if (checkedValue == undefined) {
+            Common.Msg(siteLang.getLang("Vendor 업종 형태를 선택해 주세요."));
+            radios[0].focus();
+            return;
+        }
 
         //공동사용자
         if (Common.Validate($("#userInfoFieldset")) != true) {

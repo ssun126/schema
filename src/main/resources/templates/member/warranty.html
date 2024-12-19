@@ -123,7 +123,13 @@
                                 <thead>
                                 <tr>
                                     <th><span data-langsid="제출일"></span></th>
-                                    <th><span data-langsid="승인일"></span></th>
+                                    <th>
+                                        <span th:switch="${memberDTO.COM_MANAGE_STATUS}">
+                                            <span th:case="'2'" data-langsid="승인일"></span>
+                                            <span th:case="'3'" data-langsid="반려일"></span>
+                                            <span th:case="*" data-langsid="승인일"></span>  <!-- default case -->
+                                        </span>
+                                    </th>
                                     <th><span data-langsid="관리상태"></span></th>
                                     <th><span data-langsid="양식첨부"></span></th>
                                 </tr>
@@ -133,20 +139,22 @@
                                     <td><p name="COM_APP_DATE" id="COM_APP_DATE"> <span th:text="${memberDTO.COM_APP_DATE}"></span> </p></td>
                                     <td><p name="COM_OK_DATE" id="COM_OK_DATE"> <span th:text="${memberDTO.COM_OK_DATE}"></span> </p></td>
                                     <td><p name="COM_MANAGE_STATUS" id="COM_MANAGE_STATUS">
-                                        <span th:data-langsid="${memberDTO.COM_MANAGE_STATUS}"></span> </p></td>
+                                        <span th:switch="${memberDTO.COM_MANAGE_STATUS}">
+                                            <span th:case="'1'" data-langsid="검토중"></span>
+                                            <span th:case="'2'" data-langsid="승인"></span>
+                                            <span th:case="'3'" data-langsid="반려"></span>
+                                        </span>
 
-                                    <!-- 값 제출용 숨겨진 input -->
+                                    </p></td>
+
                                     <input type="hidden" id="comCode" th:value="${memberDTO.COM_CODE}" />
-                                    <input type="hidden" name="COM_APP_DATE" id="hiddenCOM_APP_DATE">
-                                    <input type="hidden" name="COM_OK_DATE" id="hiddenCOM_OK_DATE">
-                                    <input type="hidden" name="COM_MANAGE_STATUS" id="hiddenCOM_MANAGE_STATUS">
                                     <input type="hidden" name ="COM_FILE_PATH" id="COM_FILE_PATH" >
                                     <input type="hidden" name ="COM_FILE_NAME" id="COM_FILE_NAME"  th:value="${memberDTO.COM_FILE_NAME}" >
 
                                     <td>
                                         <div class="cui_items_wrap" data-direction="center" >
                                             <div class="item_content">
-                                                <button type="button" class="cui_button primary" onclick="findfile()" th:if="${memberDTO.COM_OK_DATE == ''}"><span data-langsid="첨부"></span></button>
+                                                <button type="button" class="cui_button primary" onclick="findfile()" th:if="${memberDTO.COM_MANAGE_STATUS != '2'}"><span data-langsid="첨부"></span></button>
                                                 <button type="button" class="cui_button secondary"  onclick ="downloadFile()"><span data-langsid="보기"></span></button>
                                             </div>
                                         </div>
@@ -156,22 +164,34 @@
                             </table>
                         </fieldset>
                         <br>
+
                         <div th:if="${memberDTO.USER_STATUS == '3'}">
-                            <div class="cui_bullet_title"><span data-langsid="반려 사유"></span></div>
-                            <div class="cui_border_box">
-                                <p name="RETURN_REASON" id="RETURN_REASON"><span th:text="${memberDTO.RETURN_REASON}"></span> </p>
-                            </div>
+                            <fieldset>
+                                <legend><span data-langsid="반려 사유"></span></legend>
+                                <div class="cui_border_box">
+                                    <table class="cui_table left">
+                                        <tr>
+                                            <td>
+                                                <p name="RETURN_REASON" id="RETURN_REASON"><span th:text="${memberDTO.RETURN_REASON}"></span> </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </fieldset>
                         </div>
+
                         <br>
                         <div class="cui_items_wrap" data-direction="right" >
                             <div class="item_content">
                                 <button type="submit" name="request" id="request" class="cui_button primary">
-                                    <!-- 검토중 또는 반려일 때 버튼 텍스트 -->
-                                    <span th:if="${memberDTO.COM_MANAGE_STATUS == '검토중' || memberDTO.COM_MANAGE_STATUS == '반려'}" th:data-langsid="'수정요청'"></span>
 
-                                    <!-- COM_OK_DATE 값에 따라 버튼 텍스트 -->
-                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE != ''}" th:data-langsid="'ID추가 요청'"></span>
-                                    <span th:if="${memberDTO.COM_MANAGE_STATUS != '검토중' && memberDTO.COM_MANAGE_STATUS != '반려' && memberDTO.COM_OK_DATE == ''}" th:data-langsid="'승인요청'"></span>
+                                    <span th:switch="${memberDTO.COM_MANAGE_STATUS}">
+                                            <span th:case="'1'" data-langsid="수정요청"></span>
+                                            <span th:case="'2'" data-langsid="ID추가 요청"></span>
+                                            <span th:case="'3'" data-langsid="수정요청"></span>
+                                            <span th:case="*" data-langsid="승인요청"></span>  <!-- default case -->
+                                    </span>
+
                                 </button>
                             </div>
                         </div>
@@ -205,7 +225,6 @@
                         <div class="main_label" data-langsid="양식업로드"></div>
                     </div>
                     <div class="dialog_toolbar">
-<!--                        <button class="cui_button icon endpoint" data-cui-icon="xmark" onclick ="sevefileClose()"><span>Close</span></button>-->
                         <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
                     </div>
                 </div>
@@ -233,22 +252,6 @@
             </div>
         </div>
 
-        <!--==alert==-->
-        <div class="cui_dialog" style="width:420px;display:none" id="dialogW">
-            <div class="dialog_container">
-                <div class="dialog_body">
-                    <div class="body_root">
-                        <div class="cui_alert alert_modal alert_basic" data-type="success" role="alert" id="alertTypeimg"> <p id="messageContentW" ></p> </div>
-                        <div class="cui_items_wrap" data-direction="center">
-                            <div class="item_content">
-                                <button type="button" class="cui_button primary modal-closeW" onClick="modal('cui_dialog')"><span data-langsid="확인"></span></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--==alert==-->
         <div id="overlay" class="overlay"></div>
 
     </div>
@@ -273,20 +276,12 @@
 
   function handleSubmit(event) {
       event.preventDefault();
-      document.getElementById("hiddenCOM_APP_DATE").value = document.getElementById("COM_APP_DATE").textContent;
-      document.getElementById("hiddenCOM_OK_DATE").value = document.getElementById("COM_OK_DATE").textContent;
-      document.getElementById("hiddenCOM_MANAGE_STATUS").value = document.getElementById("COM_MANAGE_STATUS").textContent;
-
-       const hiddenInput = document.getElementById('COM_FILE_NAME');
-       var fileName = hiddenInput.value;
-
-       const comManageStatus  =  document.getElementById("hiddenCOM_MANAGE_STATUS").value ;
-
-        if (comManageStatus !== siteLang.getLang("승인") && (!fileName || fileName.trim() === "")) {
+        var fileName = document.getElementById('COM_FILE_NAME').value;
+        const comManageStatus = '[[${COM_MANAGE_STATUS}]]';
+        if (comManageStatus !== '2' && (!fileName || fileName.trim() === "")) {
            Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
            return;
         }
-
        document.getElementById('approvalForm').submit();
   }
 
@@ -301,6 +296,7 @@
   }
 
   function downSamplefile() {
+     //언어 선택에 따라 버전별로
      alert("양식파일 등록후 다운로드.");
   }
 
@@ -402,33 +398,5 @@
        }
    }
 
-
-  // 이메일
-      const emailCheck = () => {
-          const email = document.getElementById("USER_EMAIL").value;
-          const checkResult = document.getElementById("check-result");
-          $.ajax({
-              type: "post",
-              url: "/member/email-check",
-              data: {
-                  "USER_EMAIL": email
-              },
-              success: function(res) {
-                  console.log("요청성공", res);
-                  if (res == "ok") {
-                      console.log("사용가능한 이메일");
-                      checkResult.style.color = "green";
-                      checkResult.innerHTML = "사용가능한 이메일";
-                  } else {
-                      console.log("이미 사용중인 이메일");
-                      checkResult.style.color = "red";
-                      checkResult.innerHTML = "이미 사용중인 이메일";
-                  }
-              },
-              error: function(err) {
-                  console.log("에러발생", err);
-              }
-          });
-      }
 </script>
 </html>
