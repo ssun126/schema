@@ -13,7 +13,7 @@
                 </div>
                 <div class="cui_body">
                     <form id="updateForm"  class="cui_form_section">
-                        <fieldset>
+                        <fieldset id="companyInfoFieldset">
                             <legend><span data-langsid="업체 기본정보"></span></legend>
                             <table class="cui_table">
                                 <colgroup>
@@ -76,7 +76,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" name = "COMPANY_NAME" id="COMPANY_NAME" th:value="${member.COMPANY_NAME}">
+                                                <input class="cui_text_field" type="text" name = "COMPANY_NAME" id="COMPANY_NAME" th:value="${member.COMPANY_NAME}" reqcheck="reqcheck" data-messages="회사명을 입력해 주세요." data-langsid="회사명" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -84,7 +84,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" name = "FACTORY_NAME" id="FACTORY_NAME" th:value="${member.FACTORY_NAME}">
+                                                <input class="cui_text_field" type="text" name = "FACTORY_NAME" id="FACTORY_NAME" th:value="${member.FACTORY_NAME}" reqcheck="reqcheck" data-messages="제조공장명을 입력해 주세요." data-langsid="제조 공장명" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -94,7 +94,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text"  name = "BUS_NUMBER" id="BUS_NUMBER" th:value="${member.BUS_NUMBER}">
+                                                <input class="cui_text_field" type="text"  name = "BUS_NUMBER" id="BUS_NUMBER" th:value="${member.BUS_NUMBER}" reqcheck="reqcheck" data-messages="사업자등록번호를 입력해 주세요." data-langsid="사업자등록번호" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -102,7 +102,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text"  name = "COM_ADDRESS" id="COM_ADDRESS" th:value="${member.COM_ADDRESS}">
+                                                <input class="cui_text_field" type="text"  name = "COM_ADDRESS" id="COM_ADDRESS" th:value="${member.COM_ADDRESS}" reqcheck="reqcheck" data-messages="회사주소를 입력해 주세요." data-langsid="회사주소" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -112,7 +112,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text"  name = "COM_CEO_NAME" id="COM_CEO_NAME" th:value="${member.COM_CEO_NAME}">
+                                                <input class="cui_text_field" type="text"  name = "COM_CEO_NAME" id="COM_CEO_NAME" th:value="${member.COM_CEO_NAME}" reqcheck="reqcheck" data-messages="CEO 성명을 입력해 주세요." data-langsid="CEO 성명" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -120,7 +120,7 @@
                                     <td>
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" type="text" name = "COM_CEO_PHONE" id="COM_CEO_PHONE" th:value="${member.COM_CEO_PHONE}">
+                                                <input class="cui_text_field" type="text" name = "COM_CEO_PHONE" id="COM_CEO_PHONE" th:value="${member.COM_CEO_PHONE}" reqcheck="reqcheck" data-messages="CEO 연락처를 입력해 주세요." data-langsid="CEO 연락처" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -130,7 +130,7 @@
                                     <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
-                                                <input class="cui_text_field" name ="COM_CEO_EMAIL" id ="COM_CEO_EMAIL" th:value="${member.COM_CEO_EMAIL}">
+                                                <input class="cui_text_field" type="email"  name ="COM_CEO_EMAIL" id ="COM_CEO_EMAIL" th:value="${member.COM_CEO_EMAIL}" reqcheck="reqcheck" data-messages="CEO E-mail를 입력해 주세요." data-langsid="CEO E-mail" messages="">
                                             </div>
                                         </div>
                                     </td>
@@ -146,7 +146,7 @@
                         </div>
                     </form>
                     <form class="cui_form_section" data-legend="true">
-                        <fieldset>
+                        <fieldset id="userInfoFieldset">
                             <legend><span data-langsid="공동 업무자 정보"></span></legend>
                             <table class="cui_table center">
                                 <thead>
@@ -162,20 +162,20 @@
                                 </thead>
                                 <tbody id="tableBody">
                                 <tr class="collaborator-row" th:each=" user : ${companyUserList}">
-                                    <td><span th:text="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
+                                    <td><span th:data-langsid="${user.MAIN_USER_YN == 'Y' ? '메인 담당자' : '공동 업무자'}"></span>
                                         <input type="hidden"  name="MAIN_USER_YN"  class="cui_text_field" th:value="${user.MAIN_USER_YN}">
                                         <input type="hidden"  name="MAIN_USER_IDX"  class="cui_text_field" th:value="${user.USER_IDX}">
 
                                     </td>
 
                                     <td>
-                                        <input type="text" name="USER_NAME" class="cui_text_field" th:value="${user.USER_NAME}">
+                                        <input type="text" name="USER_NAME" class="cui_text_field" th:value="${user.USER_NAME}" reqcheck="reqcheck" data-messages="성명을 입력해 주세요" messages="">
                                         <input type="hidden"  name="COM_USER_IDX"  class="cui_text_field" th:value="${user.COM_USER_IDX}">
                                     </td>
-                                    <td><input type="text" name="USER_POSITION" class="cui_text_field" th:value="${user.USER_POSITION}"></td>
-                                    <td><input type="text" name="USER_DEPT" class="cui_text_field" th:value="${user.USER_DEPT}"></td>
-                                    <td><input type="text" name="USER_EMAIL" class="cui_text_field" th:value="${user.USER_EMAIL}"></td>
-                                    <td><input type="text" name="USER_PHONE" class="cui_text_field" th:value="${user.USER_PHONE}"></td>
+                                    <td><input type="text" name="USER_POSITION" class="cui_text_field" th:value="${user.USER_POSITION}" reqcheck="reqcheck" data-messages="직위을 입력해 주세요" messages=""></td>
+                                    <td><input type="text" name="USER_DEPT" class="cui_text_field" th:value="${user.USER_DEPT}" reqcheck="reqcheck" data-messages="부서명을 입력해 주세요" messages=""></td>
+                                    <td><input type="email" name="USER_EMAIL" class="cui_text_field" th:value="${user.USER_EMAIL}" reqcheck="reqcheck" data-messages="Email를 입력해 주세요" messages=""></td>
+                                    <td><input type="text" name="USER_PHONE" class="cui_text_field" th:value="${user.USER_PHONE}" reqcheck="reqcheck" data-messages="연락처를 입력해 주세요" messages=""></td>
                                     <td>
                                         <button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton" th:if="${user.MAIN_USER_YN != 'Y'}">
                                             <span data-langsid="삭제"></span>
@@ -440,17 +440,18 @@
            // 공동 업무자 정보 생성
            const newRow = `
                <tr class="collaborator-row">
-                   <td><span>공동 업무자</span></td>
-                   <td><input type="text" name="USER_NAME" class="cui_text_field" name="USER_NAME" placeholder="이름"></td>
-                   <td><input type="text" name="USER_POSITION" class="cui_text_field" name="USER_POSITION"></td>
-                   <td><input type="text" name="USER_DEPT" class="cui_text_field" name="USER_DEPT"></td>
-                   <td><input type="text" name="USER_EMAIL" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" ></td>
-                   <td><input type="text" name="USER_PHONE" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" ></td>
-                   <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span>삭제</span></button></td>
+                   <td><span data-langsid="공동 업무자"></span></td>
+                   <td><input type="text" name="USER_NAME" class="cui_text_field" name="USER_NAME" placeholder="이름" reqcheck="reqcheck" data-messages="성명을 입력해 주세요" messages=""></td>
+                   <td><input type="text" name="USER_POSITION" class="cui_text_field" name="USER_POSITION" reqcheck="reqcheck" data-messages="직위를 입력해 주세요" messages=""></td>
+                   <td><input type="text" name="USER_DEPT" class="cui_text_field" name="USER_DEPT" reqcheck="reqcheck" data-messages="부서명를 입력해 주세요" messages=""></td>
+                   <td><input type="email" name="USER_EMAIL" class="cui_text_field" name="USER_EMAIL" placeholder="이메일" reqcheck="reqcheck" data-messages="Email를 입력해 주세요" messages="" ></td>
+                   <td><input type="text" name="USER_PHONE" class="cui_text_field" name="USER_PHONE" placeholder="전화번호" reqcheck="reqcheck" data-messages="전화번호를 입력해 주세요" messages=""></td>
+                   <td><button type="button" class="cui_button icon" data-cui-icon="trash" id="delRowButton"><span data-langsid="삭제"></span></button></td>
                </tr>
            `;
 
            $('#tableBody').append(newRow);
+           siteLang.showLangs();
        });
 
        // 공동 업무자 정보 삭제
@@ -463,6 +464,9 @@
 
  function saveCpBase() {
 
+    if (Common.Validate($("#companyInfoFieldset")) != true) {
+      return;
+    }
     const formData = $('#updateForm').serialize();
 
      $.ajax({
@@ -480,6 +484,11 @@
   }
 
  function updateCpUser() {
+
+    //공동사용자
+    if (Common.Validate($("#userInfoFieldset")) != true) {
+      return;
+    }
 
      const comCode = document.getElementById("COM_CODE").value;
 
