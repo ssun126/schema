@@ -6,6 +6,7 @@ import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -80,6 +81,7 @@ public class IsoAuthService {
                 String fileName = path.getFileName().toString();  // 경로에서 파일명만 추출
 
                 log.info("원본 파일명: " + fileNames[i].getOriginalFilename());
+                log.info("DATA : " + isoAuthItems);
                 for (IsoAuthItemDTO dto : isoAuthItems) {
                     if (dto.getFILE_NAME().equals(fileNames[i].getOriginalFilename())) {
                         dto.setFILE_NAME(fileName);  // 파일명 추가
@@ -101,14 +103,13 @@ public class IsoAuthService {
                 params.put("AUTH_CODE", dto.getAUTH_CODE());
                 params.put("COM_CODE", comCode);
                 IsoAuthItemDTO ItemDTO = isoAuthRepository.findByIsoAuthItem(params);
-                log.info(ItemDTO.getITEM_STATE());
-                log.info(dto.getITEM_STATE());
-                if (ItemDTO.getAUTH_CODE() != null) {
+                if(ItemDTO != null){
+                    log.info(ItemDTO.getITEM_STATE());
                     log.info(dto.getITEM_STATE());
                     if(ItemDTO != dto) {
                         isoAuthRepository.updateItem(dto);  // updateItem
                     }
-                } else {
+                }else {
                     isoAuthRepository.insertItem(dto);  // insert
                 }
             }
@@ -164,11 +165,8 @@ public class IsoAuthService {
     }
 
     //업체별 ISO 인증서 정보 리스트
-    public List<IsoAuthItemDTO> getList(Criteria criteria, String code) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("COM_CODE", code);
-        params.put("criteria", criteria);
-        return isoAuthRepository.getList(params);
+    public List<IsoAuthItemDTO> getList(String code) {
+        return isoAuthRepository.getList(code);
     }
 
     //업체별 ISO 인증서 만료일 정보 리스트
@@ -224,5 +222,6 @@ public class IsoAuthService {
         //saveAuthResult(com_code, state); //인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
         return isoAuthRepository.updateStatus(isoAuthItemDTO);
     }
+
 
 }

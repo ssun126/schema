@@ -37,8 +37,8 @@ public class IsoAuthRepository {
     }
 
     //전체 인증서 리스트 조회
-    public List<IsoAuthItemDTO> getList(Map<String, Object> params) {
-        return sql.selectList("IsoAuthItem.getList", params);
+    public List<IsoAuthItemDTO> getList(String code) {
+        return sql.selectList("IsoAuthItem.getList", code);
     }
 
     //검색된 인증서 리스트 조회

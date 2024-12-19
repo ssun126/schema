@@ -15,7 +15,7 @@
             <div class="cui_section">
                 <div class="cui_bullet_title" style="justify-content: space-between;align-items: center;">
                     <div class="bullet_title_label"><span data-langsid="인증서 관리(배점 4점)"></span></div>
-                    <div class="button_section" style="display: flex;gap: 10px;">
+                    <div class="button_section" style="display: flex;gap: 10px;" id="topButton">
                         <button type="button" class="cui_button secondary" id="addRowBtn"><span data-langsid="추가"></span></button>
                         <button type="button" class="cui_button secondary" id="delRowBtn" onclick="delCompany()"><span data-langsid="삭제"></span>
                         </button>
@@ -26,12 +26,12 @@
                     <fieldset>
                         <table class="cui_table center" id="isoAuthItemTable">
                             <colgroup>
-                                <col style="width:200px;">
+                                <col style="width:120px;">
                                 <col>
                                 <col style="width:120px;">
                                 <col style="width:120px;">
                                 <col style="width:120px;">
-                                <col style="width:350px;">
+                                <col style="width:500px;">
                                 <col style="width:90px;">
                             </colgroup>
                             <thead>
@@ -46,19 +46,42 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <tr th:unless="${#lists.isEmpty(companyIsoAuth)}" th:each="data : ${companyIsoAuth}">
+                                <td><span th:text="${data.AUTH_TYPE}"></span></td>
+                                <td><span th:text="${data.AUTH_CODE}"></span></td>
+                                <td><input type="text" name="AUTH_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${data.AUTH_DATE}"></td>
+                                <td><input type="text" name="EXP_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${data.EXP_DATE}"></td>
+                                <td><input type="text" name="REG_INPUT_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${data.REG_INPUT_DATE}"></td>
+                                <td>
+                                    <div class="cui_attachments" th:if="${data.ITEM_STATE != 'APPROVED'}">
+                                        <input type="file" name="file" id="${data.AUTH_CODE}" class="cui_file_field">
+                                    </div>
+                                    <div class="cui_attachments" th:if="${data.FILE_NAME != null and data.ITEM_STATE != ''}">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_label" data-cui-icon="paperclip"><span th:text="${data.FILE_NAME}"></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span >다운로드</span></button>
+                                                <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span>삭제</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><input type="hidden" class="cui_text_field" name="ITEM_STATE" th:value="${data.ITEM_STATE}"><span th:text="${data.ITEM_STATE}"></span></td>
+                            </tr>
                             </tbody>
                         </table>
                     </fieldset>
-                    <div class="cui_items_wrap" data-direction="right">
+                    <div class="cui_items_wrap" data-direction="right" id="footButton">
                         <div class="item_content">
                             <button type="button" class="cui_button primary" id="submitIsoAuth"><span data-langsid="저장"></span></button>
                             <button type="button" class="cui_button primary" id="sendIsoAuth"><span data-langsid="제출"></span></button>
                         </div>
                     </div>
-                    <fieldset id="rejectArea" style="display:none;">
+                    <fieldset id="rejectArea" style="display:none">
                         <legend><span data-langsid="반려사유"></span></legend>
                         <div>
-                            <textarea class="cui_text_field" rows="2" style="width:100%;" id="rejectReason"></textarea>
+                            <textarea class="cui_text_field" rows="5" style="width:100%;" id="rejectReason">
+                            </textarea>
                         </div>
                     </fieldset>
                 </form>
@@ -66,141 +89,42 @@
         </div>
     </div>
 </div>
-
-
-<script>
+<script th:inline="javascript">
     $(document).ready(function() {
-        loadPage();
+        //loadPage();
     });
 
-    // 페이지 로드 함수
-    function loadPage() {
-        const code = `[[${#authentication.principal.COM_CODE}]]`; //세션의 회사코드
+    var companyIsoAuth = /*[[${companyIsoAuth}]]*/ [];
+    // REJECT 상태인 항목에서 REASON 값만 추출하여 줄바꿈 없이 하나의 문자열로 결합
+    var rejectReasons = companyIsoAuth
+        .filter(function(data) {
+            return data.ITEM_STATE === 'REJECT';  // ITEM_STATE가 'REJECT'인 항목만 필터링
+        })
+        .map(function(data) {
+            return data.AUTH_CODE + ":"+ data.REASON;  // REASON 값만 추출
+        })
+        .join('\n');  // 빈 문자열로 결합하여 줄바꿈 넣어 하나의 문자열로 생성
+    // 결합된 REASON 값을 textarea에 출력
+    document.getElementById('rejectReason').value = rejectReasons;
 
-       // 페이지가 로드되면 서버에서 데이터를 가져옴
-        $.ajax({
-            url: '/auditMgmt/isoAuthItemList',  // 서버의 API URL
-            type: 'GET',
-            data: { pageNum: 1, amount: 30, COM_CODE: code },
-            success: function(response) {
-                var tableBody = $('#isoAuthItemTable tbody');
-                tableBody.empty(); // 기존 내용 비우기
+    var allApproved = companyIsoAuth.every(function(data) {
+        return data.ITEM_STATE === 'APPROVED';  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
+    });
+    var notApproved = companyIsoAuth.some(function(data) {
+        return data.ITEM_STATE === 'REJECT';
+    });
+    var sendSubmit= companyIsoAuth.some(function(data) {
+        return data.ITEM_STATE === 'SEND';
+    });
 
-                var reversedAuthCodeMap = {
-                    'ISO9001': '품질관리',
-                    'IATF16949': '품질관리',
-                    'ISO14001': '환경',
-                    'ISO45001': '안전보건',
-                    'KOSHA MS': '안전보건',
-                    'QC080000': 'HSPM',
-                    'ISO50001': 'ENERGY',
-                    '녹색기업': '기타'
-                };
-                let itemState = "SAVE";
-                var existingData = {};
-
-                 //저장 데이터가 있는 경우
-                if (response && response.length > 0) {
-                    let itemReason = "";
-                    var preExistingData = {};
-
-                    existingData = response.reduce(function(acc, item) {
-                        acc[item.AUTH_CODE] = {
-                            authDate: item.AUTH_DATE || '',
-                            expDate: item.EXP_DATE || '',
-                            regInputDate: item.REG_INPUT_DATE || '',
-                            fileName: item.FILE_NAME || '',
-                            filePath: item.FILE_PATH || '',
-                            state: item.ITEM_STATE || '',
-                            reason: item.REASON || ''
-                        };
-                        if(item.ITEM_STATE == 'REJECT'){
-                            itemState = "REJECT";
-                            itemReason += item.REASON || '';
-                        }else if(itemState != "REJECT"){
-                            itemState = item.ITEM_STATE;
-                        }
-                        return acc;
-                    }, {});
-
-                    //상태가 제출이나 승인일때는 제출 버튼 안보이도록
-                    if(itemState == "SEND" || itemState == "APPROVED"){
-                        $('#submitIsoAuth').css('display', 'none'); //저장
-                        $('#sendIsoAuth').css('display', 'none');//제출
-                        $('#addRowBtn').css('display', 'none');
-                        $('#delRowBtn').css('display', 'none');
-                    }
-
-                    //상태가 반려일때는 반려 사유가 보이도록
-                    if(itemState === 'REJECT'){
-                        $('#rejectArea').css('display', 'block');
-                        $('#rejectReason').val(itemReason);
-                        $('#submitIsoAuth').css('display', 'none'); //저장말고 제출만 되게
-                        $('#addRowBtn').css('display', 'none');
-                        $('#delRowBtn').css('display', 'none');
-                    }
-                }
-
-                for (var key in reversedAuthCodeMap) {
-                    if (reversedAuthCodeMap.hasOwnProperty(key)) {
-                        var value = reversedAuthCodeMap[key];  // value 추출
-                        var existingDataItem = existingData[key] || {};
-
-                        var row = $('<tr>' +
-                                    '<td>' + value + '</td>' +
-                                    '<td>' + key + '</td>' +
-                                    '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="AUTH_DATE" value="' + (existingDataItem.authDate || '') + '"></td>' +
-                                    '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="EXP_DATE" value="' + (existingDataItem.expDate || '') + '"></td>' +
-                                    '<td><input type="text" class="cui_text_field datepicker" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' name="REG_INPUT_DATE" value="' + (existingDataItem.regInputDate || '') + '"></td>' +
-                                    '<td><div class="cui_attachments">' +
-                                            '<div class="file_control"><input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)"></div>' +
-                                            '<div class="cui_items_wrap  file_wrap" data-direction="left">' +
-                                                '<div class="item_label" data-cui-icon="paperclip"><a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(existingDataItem.fileName) + '" download><span>' + (existingDataItem.fileName || '') + '</span></a></div>' +
-                                                '<div class="item_content">' +
-                                                    '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile(\''+existingDataItem.fileName+'\')" style="display: none;"><span >다운로드</span></button>' +
-                                                    '<button type="button" ' + (existingDataItem.state === 'SEND'||existingDataItem.state === 'APPROVED' ? 'disabled' : '') + ' class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>' +
-                                                '<div>' +
-                                            '</div>' +
-                                        '</div>' +
-                                    '</td>' +
-                                    '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE" value="' + (existingDataItem.state || '') + '">' + (existingDataItem.state || '') + '</td>' +
-                                '</tr>');
-                        Common.Load(row);
-                        tableBody.append(row);
-                    }
-                }
-                // 새로 추가된 input 요소에 대해 datepicker 초기화
-                $(".datepicker").datepicker({
-                    dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
-                });
-                //첨부파일 display
-                $('#isoAuthItemTable tbody tr').each(function() {
-                    var fileName = $(this).find('.item_label span').text();  // Get the file name from the .item_label span
-                    var deleteButton = $(this).find('.delete-button');  // Find the delete button in the row
-                    var downloadButton = $(this).find('.delete-download-button');  // Find the download-button in the row
-                    // If the file name exists, show the delete button
-
-
-                    if (fileName) {
-                        $(this).find('.item_label').show();
-                        if(itemState == "SEND" || itemState == "APPROVED"){
-                            deleteButton.hide();
-                            $('.file_control').hide();
-                        }else{
-                            deleteButton.show();
-                            downloadButton.show();
-                        }
-                    } else {
-                        deleteButton.hide();
-                        downloadButton.hide();  // Alternatively:
-                        $(this).find('.item_label').hide();
-                    }
-                });
-            },
-            error: function() {
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            }
-        });  // $.ajax 호출 끝
+    if (notApproved) { //반려가 있는 경우
+        document.getElementById('topButton').style.display = 'none';
+        document.getElementById('submitIsoAuth').style.display = 'none';
+        document.getElementById('rejectArea').style.display = 'block';
+    }
+    if (sendSubmit || allApproved) { //모두 승인이 되면 전체 버튼 숨기기
+        document.getElementById('footButton').style.display = 'none';
+        document.getElementById('topButton').style.display = 'none';
     }
 
     // 저장 버튼,제출 버튼 클릭 시 데이터 저장
@@ -222,14 +146,14 @@
                     '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +  // 날짜 필드
                     '<td><input type="text" class="cui_text_field datepicker" name="REG_INPUT_DATE"></td>' +  // 날짜 필드
                     '<td><div class="cui_attachments">' +
-                            '<input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">' +
+                            '<input type="file" class="cui_file_field" name="file">' +
                             '<div class="cui_items_wrap" data-direction="left">' +
                                 '<div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>' +
                                 '<div class="item_content"><button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button><div>' +
                             '</div>' +
                         '</div>' +
                     '</td>' +
-                    '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE">신규</td>' +  // 상태
+                    '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE"></td>' +  // 상태
                   '</tr>');
         Common.Load(row);
         $('#isoAuthItemTable tbody').append(row);
@@ -251,35 +175,19 @@
         });
     });
 
-    // 파일 선택 시 삭제 버튼 표시
-    function toggleDeleteButton(input) {
-        const deleteButton = input.closest('td').querySelector('.cui_button');
-        const fileLabel = input.closest('td').querySelector('.item_label span');
-        const fileLabelDiv = input.closest('td').querySelector('.item_label');
-
-        if (input.files && input.files.length > 0) {
-            var fileName = input.files[0].name;  // Get the file name
-            fileLabel.textContent = fileName;    // Update the file name
-            fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
-            deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
-        } else {
-            fileLabel.textContent = '';
-            fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
-            deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
-        }
-    }
-
     // 파일 삭제
     function clearFile(button) {
         const fileInput = button.closest('td').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
         const fileLabel = button.closest('td').querySelector('.item_label span');
         const fileLabelDiv = button.closest('td').querySelector('.item_label');
+        const downButton = button.closest('td').querySelector('.download-button');
 
         // 파일 입력 초기화
         fileInput.value = "";
         fileLabel.textContent = '';
         // 삭제 버튼 숨기기
         button.style.display = 'none';
+        downButton.style.display = 'none';
         fileLabelDiv.style.display = 'none';
     }
 
@@ -295,16 +203,18 @@
             row['AUTH_DATE'] = $(this).find('input[name="AUTH_DATE"]').val();
             row['EXP_DATE'] = $(this).find('input[name="EXP_DATE"]').val();
             row['REG_INPUT_DATE'] = $(this).find('input[name="REG_INPUT_DATE"]').val();
-
-            var fileInput = $(this).find('input[type="file"]')[0];
-            if (fileInput && fileInput.files.length > 0) {
-                row['FILE_NAME'] = fileInput.files[0].name;
-            }
-            if(row['FILE_NAME'] == undefined){
-                row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(0).text();
-            }
             //APPROVED, SEND 상태인 항목은 제외
-            if($(this).find('input[name="ITEM_STATE"]').val() != 'SEND' && $(this).find('input[name="ITEM_STATE"]').val() != 'APPROVED'){
+            if($(this).find('input[name="ITEM_STATE"]').val() == 'REJECT' || $(this).find('input[name="ITEM_STATE"]').val() == 'SAVE' || $(this).find('input[name="ITEM_STATE"]').val() == null){
+                var fileInput = $(this).find('input[type="file"]')[0];
+                if (fileInput && fileInput.files.length > 0) {
+                    row['FILE_NAME'] = fileInput.files[0].name;
+                }
+
+                if(row['FILE_NAME'] == undefined){
+                    row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
+                }
+
+                console.log("insert data"+row['FILE_NAME']);
                 tableData.push(row);
             }
         });
@@ -339,8 +249,6 @@
                 if(response.ok){
                     showAlert('success','데이터가 성공적으로 저장되었습니다.');
                 }
-                //리스트 새로 로드
-                loadPage(1);
             },
             error: function(xhr, status, error) {
                 showAlert('warning','데이터 저장에 실패했습니다.');

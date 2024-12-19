@@ -84,19 +84,42 @@
         </if>
     </select>
 
-    <select id="getList" parameterType="map" resultType="isoAuthItem">
-        <![CDATA[
-        SELECT RN, COM_CODE, AUTH_TYPE, AUTH_CODE, TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE, TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE,
-            TO_CHAR(REG_INPUT_DATE, 'YYYY.MM.DD') AS REG_INPUT_DATE, TO_CHAR(UP_DATE, 'YYYY.MM.DD') AS UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH,REASON
+    <select id="getList" parameterType="String" resultType="isoAuthItem">
+        SELECT
+            COM_CODE,
+            AUTH_TYPE,
+            AUTH_CODE,
+            TO_CHAR(AUTH_DATE, 'YYYY.MM.DD') AS AUTH_DATE,
+            TO_CHAR(EXP_DATE, 'YYYY.MM.DD') AS EXP_DATE,
+            TO_CHAR(REG_INPUT_DATE, 'YYYY.MM.DD') AS REG_INPUT_DATE,
+            TO_CHAR(UP_DATE, 'YYYY.MM.DD') AS UP_DATE,
+            ITEM_STATE,
+            FILE_NAME,
+            FILE_PATH,
+            REASON
         FROM
-        (
-            SELECT /*+ INDEX_DESC(SC_ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-                ROWNUM RN, COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_INPUT_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH,REASON
-            FROM SC_ISO_AUTH_COMPANY_ITEM
-            WHERE COM_CODE = #{COM_CODE}
-        )
-        ]]>
+            (
+            SELECT
+                /*+ INDEX_DESC(SC_ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
+                IACI.COM_CODE,
+                BC.BASE_VALUE AS AUTH_TYPE,
+                BC.BASE_NAME AS AUTH_CODE,
+                IACI.AUTH_DATE,
+                IACI.EXP_DATE,
+                IACI.REG_INPUT_DATE,
+                IACI.UP_DATE,
+                IACI.ITEM_STATE,
+                IACI.FILE_NAME,
+                IACI.FILE_PATH,
+                IACI.REASON
+            FROM (SELECT * FROM SC_base_code WHERE GROUP_CODE != BASE_CODE AND BASE_STATUS ='Y' AND GROUP_CODE ='IsoAuthCode')  BC
+            LEFT OUTER JOIN	SC_ISO_AUTH_COMPANY_ITEM IACI
+            ON BC.BASE_NAME = IACI.AUTH_CODE
+            AND IACI.COM_CODE = #{COM_CODE} ORDER BY BC.BASE_SORT ASC
+            )
     </select>
+
+
 
     <select id="getTotal" resultType="int">
         select count(*) CNT

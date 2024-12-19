@@ -72,6 +72,7 @@
             <div class="body_root">
                 <form class="cui_form_field" data-legend="true" id="formReason">
                     <input type="hidden" name="authCode">
+                    <input type="hidden" name="COM_CODE">
                     <div class="cui_items_wrap" data-direction="center" >
                         <div class="item_content" style="padding: 10px;">
                             <label for="inputReason"></label><textarea class="cui_text_field" rows="2" style="width:100%;" id="inputReason"></textarea>
@@ -172,7 +173,9 @@
 
     // 반려 버튼 클릭시 반려사유 입력
     function rejectIsoAuth(key){
+        const comCode = `[[${companyAuth.COM_CODE}]]`;
         $('input[name="authCode"]').val(key);
+        $('input[name="COM_CODE"]').val(comCode);
         modal_open('Reason', 'add', '', '') //모달창 오픈
     }
 
@@ -189,6 +192,7 @@
             success: function(response) {
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
                 //상태만 변경
+                $(this).closest('div[name="stateField"]').text(state);
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
@@ -206,9 +210,10 @@
             type: 'POST',
             data: { reason: '', state: state, com_code: comCode, auth_code: authCode },
             success: function(response) {
+                //상태에 승인 상태표시
+                $(this).closest('div[name="stateField"]').text(state);
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                //상태에 승인 상태 저장
-                 $(this).closest('div[name="stateField"]').text('승인');
+                loadPage(1);
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
