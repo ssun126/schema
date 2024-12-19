@@ -72,12 +72,12 @@
                                 <div class="item_content">
                                     <select class="cui_select_field" id="sApproval" name="sApproval" onchange="ListSearch();">
                                         <option value=""></option>
-                                        <option value="0" data-langsid="신규" th:selected="${sApproval}=='0'"></option>
-                                        <option value="1" data-langsid="작성중" th:selected="${sApproval}=='1'"></option>
-                                        <option value="2" data-langsid="검토중" th:selected="${sApproval}=='2'"></option>
-                                        <option value="3" data-langsid="승인" th:selected="${sApproval}=='3'"></option>
-                                        <option value="4" data-langsid="반려" th:selected="${sApproval}=='4'"></option>
-                                        <option value="5" data-langsid="자료보완" th:selected="${sApproval}=='5'"></option>
+                                        <option value="1" data-langsid="신규" th:selected="${sApproval}=='1'"></option>
+                                        <option value="2" data-langsid="작성중" th:selected="${sApproval}=='2'"></option>
+                                        <option value="3" data-langsid="검토중" th:selected="${sApproval}=='3'"></option>
+                                        <option value="4" data-langsid="승인" th:selected="${sApproval}=='4'"></option>
+                                        <option value="5" data-langsid="반려" th:selected="${sApproval}=='5'"></option>
+                                        <option value="6" data-langsid="자료보완" th:selected="${sApproval}=='6'"></option>
                                     </select>
                                 </div>
                             </div>
@@ -118,17 +118,17 @@
             var dataJson = JSON.parse(data);
 
             for (var i = 0; i < dataJson.length; i++) {
-                if (dataJson[i].PM_APPROVAL_STATUS == "0") {
+                if (dataJson[i].PM_APPROVAL_STATUS == "1") {
                     dataJson[i].PM_APPROVAL_STATUS_NAME = "";
-                } else if (dataJson[i].PM_APPROVAL_STATUS == "1") {
-                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("작성중");
                 } else if (dataJson[i].PM_APPROVAL_STATUS == "2") {
-                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("검토중");
+                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("작성중");
                 } else if (dataJson[i].PM_APPROVAL_STATUS == "3") {
-                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("승인");
+                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("검토중");
                 } else if (dataJson[i].PM_APPROVAL_STATUS == "4") {
-                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("반려");
+                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("승인");
                 } else if (dataJson[i].PM_APPROVAL_STATUS == "5") {
+                    dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("반려");
+                } else if (dataJson[i].PM_APPROVAL_STATUS == "6") {
                     dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("자료보완");
                 }
             }

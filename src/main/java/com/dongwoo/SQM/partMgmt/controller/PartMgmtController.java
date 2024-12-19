@@ -207,7 +207,7 @@ public class PartMgmtController {
             if(partMgmtDTO.getPM_IDX() == 0){
                 partMgmtDTO.setPM_PART_CODE(PM_PART_CODE);
                 partMgmtDTO.setPM_PART_PLANT_CODE(PM_PART_PLANT_CODE);
-                partMgmtDTO.setPM_APPROVAL_STATUS("0");
+                partMgmtDTO.setPM_APPROVAL_STATUS("1");
                 partMgmtDTO.setPM_ACTIVE_YN("INACTIVE");
                 partMgmtDTO.setPM_REG_USER(user.getUSER_IDX());
 

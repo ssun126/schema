@@ -57,12 +57,12 @@
                             <div class="item_content">
                                 <select class="cui_select_field" id="sApproval" name="sApproval" onchange="ListSearch();">
                                     <option value=""></option>
-                                    <option value="0" data-langsid="신규" th:selected="${sApproval}=='0'"></option>
-                                    <option value="1" data-langsid="작성중" th:selected="${sApproval}=='1'"></option>
-                                    <option value="2" data-langsid="검토중" th:selected="${sApproval}=='2'"></option>
-                                    <option value="3" data-langsid="승인" th:selected="${sApproval}=='3'"></option>
-                                    <option value="4" data-langsid="반려" th:selected="${sApproval}=='4'"></option>
-                                    <option value="5" data-langsid="자료보완" th:selected="${sApproval}=='5'"></option>
+                                    <option value="1" data-langsid="신규" th:selected="${sApproval}=='1'"></option>
+                                    <option value="2" data-langsid="작성중" th:selected="${sApproval}=='2'"></option>
+                                    <option value="3" data-langsid="검토중" th:selected="${sApproval}=='3'"></option>
+                                    <option value="4" data-langsid="승인" th:selected="${sApproval}=='4'"></option>
+                                    <option value="5" data-langsid="반려" th:selected="${sApproval}=='5'"></option>
+                                    <option value="6" data-langsid="자료보완" th:selected="${sApproval}=='6'"></option>
                                 </select>
                             </div>
                         </div>
@@ -110,17 +110,17 @@
 
         for (var i = 0; i < dataJson.length; i++) {
             dataJson[i].CHECK_YN = false;
-            if (dataJson[i].PM_APPROVAL_STATUS == "0") {
+            if (dataJson[i].PM_APPROVAL_STATUS == "1") {
                 dataJson[i].PM_APPROVAL_STATUS_NAME = "";
-            } else if (dataJson[i].PM_APPROVAL_STATUS == "1") {
-                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("작성중");
             } else if (dataJson[i].PM_APPROVAL_STATUS == "2") {
-                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("검토중");
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("작성중");
             } else if (dataJson[i].PM_APPROVAL_STATUS == "3") {
-                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("승인");
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("검토중");
             } else if (dataJson[i].PM_APPROVAL_STATUS == "4") {
-                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("반려");
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("승인");
             } else if (dataJson[i].PM_APPROVAL_STATUS == "5") {
+                dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("반려");
+            } else if (dataJson[i].PM_APPROVAL_STATUS == "6") {
                 dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("자료보완");
             }
         }
@@ -143,6 +143,7 @@
 
     $(function () {
         var heightMinus = 330;
+        var PM_ACTIVE_YN_SELECT_ITEMS = ['ACTIVE', 'INACTIVE'];
 
         var data = SheetDataConvert($("#gridArea").attr("initData"));
 
@@ -150,7 +151,7 @@
             bubble: false,
             numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-            editModel: { clicksToEdit: 2 },
+            editModel: { clicksToEdit: 1 },
             selectionModel: { type: 'cell', mode: 'block' },
             height: $(window).height() - heightMinus,
             title: "",
@@ -229,10 +230,13 @@
                     if (ui.cellData == undefined) {
                         return { text: "" };
                     } else {
-                        if(data.PM_REQUEST_APPROVAL_DATE == "" && Common.Convert.Int(data.PM_APPROVAL_STATUS) <= 2){
-                            return { text: "" };
-                        }else{
-                            return;
+                        if (data.PM_APPROVAL_DATE == "" || data.PM_APPROVAL_DATE == null || data.PM_REQUEST_APPROVAL_DATE == "" || data.PM_REQUEST_APPROVAL_DATE == null) {
+                            if(Common.Convert.Int(data.PM_APPROVAL_STATUS) <= 2){
+                                return; // 보임
+                            }
+                            return { text: "" };    // 안보임
+                        } else {
+                            return { text: "" };    // 안보임
                         }
                     }
                 }
@@ -242,9 +246,25 @@
             { data_langsid: "취급 Plant", title: siteLang.getLang("취급 Plant"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_PLANT_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "국가", title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: false, editor: false, editable: false },
             { data_langsid: "신청 ID", title: siteLang.getLang("신청 ID"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_REG_USER_ID", sortable: false, editor: false, editable: false },
-            { data_langsid: "사용여부", title: siteLang.getLang("사용여부"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_ACTIVE_YN", sortable: false, editor: false, editable: false },
+            { data_langsid: "사용여부", title: siteLang.getLang("사용여부"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_ACTIVE_YN", sortable: false
+                , editor: {
+                    type: "select",
+                    options: PM_ACTIVE_YN_SELECT_ITEMS
+                }
+                , editable: true
+            },
             { data_langsid: "승인현황", title: siteLang.getLang("승인현황"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_APPROVAL_STATUS_NAME", sortable: false, editor: false, editable: false },
             { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_APPROVAL_DATE", sortable: false, editor: false, editable: false },
+            { data_langsid: "수정", title: siteLang.getLang("수정"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "EDIT_BTN", sortable: false, editor: false, editable: false,
+                render : function (ui) {
+                    var data = ui.rowData;
+
+                    if(Common.Convert.Int(data.PM_APPROVAL_STATUS) >= 3){
+                        return { text : "<button class='cui_button' style='min-width:45px;margin:0px;height:18px;'>Edit</button>", style: "padding:0px;" };
+                    }
+                    return;
+                }
+            },
             { hidden : true, dataType: "string", dataIndx: "PM_APPROVAL_STATUS", editor: false, editable: false },
             { hidden : true, dataType: "string", dataIndx: "PM_IDX", editor: false, editable: false }
         ];
