@@ -25,6 +25,8 @@ public class AuditMgmtDTO {
     private String FILE_NAME;
     @JsonProperty("FILE_PATH")
     private String FILE_PATH;
+    @JsonProperty("FILE_TYPE")
+    private String FILE_TYPE;
     @JsonProperty("POINT")
     private int POINT;
 }

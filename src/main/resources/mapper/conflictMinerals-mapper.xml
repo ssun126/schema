@@ -4,8 +4,8 @@
 
 <mapper namespace="ConflictMinerals">
     <insert id="insertFile" parameterType="conflict">
-        INSERT INTO SC_AUTH_FILE(COM_CODE, AUTH_TYPE, FILE_NAME, FILE_PATH, AUTH_SEQ)
-        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ})
+        INSERT INTO SC_AUTH_FILE (COM_CODE, AUTH_TYPE, FILE_NAME, FILE_PATH, AUTH_SEQ, FILE_TYPE)
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ}, #{FILE_TYPE})
     </insert>
 
     <select id="getCompanyAuthFile" parameterType="map" resultType="conflict">

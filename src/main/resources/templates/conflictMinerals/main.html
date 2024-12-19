@@ -36,8 +36,8 @@
                     <tr>
                         <th><span>분쟁광물(CMRT)</span></th>
                         <td>
-                            <div class="cui_attachments">
-                                <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                            <div class="cui_attachments" th:if="${#lists.isEmpty(companyAuthFile)}">
+                                <input type="file" class="cui_file_field" name="file" id="CMRT">
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
                                     <div class="item_content">
@@ -46,13 +46,21 @@
                                 </div>
                                 <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드</span></button>
                             </div>
+                            <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'CMRT' }">
+                                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span>></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <tr>
                         <th><span>책임광물(EMRT)</span></th>
                         <td>
-                            <div class="cui_attachments">
-                                <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                            <div class="cui_attachments" th:if="${#lists.isEmpty(companyAuthFile)}">
+                                <input type="file" class="cui_file_field" name="file" id="EMRT">
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
                                     <div class="item_content">
@@ -60,6 +68,14 @@
                                     </div>
                                 </div>
                                 <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드</span></button>
+                            </div>
+                            <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'EMRT'}">
+                                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -236,6 +252,13 @@
         $("#datepicker").datepicker({
             dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
         });
+
+        const code = `[[${companyAuth.COM_CODE}]]`;
+        const state = `[[${companyAuth.APPROVE_STATE}]]`;
+
+        if(state != "" ){
+            console.log(state);
+        }
     });
 
     //샘플다운로드
@@ -254,10 +277,11 @@
 
             // 파일이 선택되었으면 파일 이름 저장
             if (fileInput && fileInput.files.length > 0) {
-                row['FILE_NAME'] = fileInput.files[0].name;
+                var file = fileInput.files[0];
+                row['FILE_NAME'] = file.name;
+                row['FILE_TYPE'] = fileInput.id; // CMRT/EMRT 구분 값
 
                 // 파일에 대한 유효성 검증
-                var file = fileInput.files[0];
                 if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
                     formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
                 } else {
@@ -265,13 +289,14 @@
                     console.log("파일 검증 실패: " + file.name);
                 }
             }
+            tableData.push(row);
         });
 
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
-        formData.append('type', 'CONFLICT');  // flag가 SAFETY / QUALITY
+        formData.append('type', 'CONFLICT');
 
          $.ajax({
-            url: '/auditMgmt/sendAuthData',
+            url: '/auditMgmt/sendConflictAuthData',
             type: 'POST',
             data: formData,
             processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
@@ -285,6 +310,18 @@
         });
     });
 
+    function downloadFile(fileName) {
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
+    }
 
     //수정버튼 클릭시 수정 가능 모드로 변환
     function modify(event,target){

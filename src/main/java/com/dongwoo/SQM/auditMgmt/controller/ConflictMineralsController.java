@@ -44,16 +44,16 @@ public class ConflictMineralsController {
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
         // 업체의 인증정보 가져오기 - 인증상태/인증일
-        //AuditMgmtDTO companyAuth = conflictMineralsService.getCompanyAuth("CONFLICT", comCode);
-        //model.addAttribute("companyAuth", companyAuth);
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("CONFLICT", comCode);
+        model.addAttribute("companyAuth", companyAuth);
 
         //분쟁광물정보 가져오기
         List<ConflictMineralsDTO> conflictData = conflictMineralsService.getConflictData("CONFLICT", comCode);
         model.addAttribute("conflictData", conflictData);
 
         //첨부 파일 가져오기
-        //List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("CONFLICT", comCode);
-        //model.addAttribute("companyAuthFile", companyAuthFile);
+        List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("CONFLICT", comCode);
+        model.addAttribute("companyAuthFile", companyAuthFile);
 
         return "conflictMinerals/main";
     }

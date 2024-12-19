@@ -75,10 +75,19 @@ public class ConflictMineralsService {
                 String fileName = path.getFileName().toString();  // 경로에서 파일명만 추출
 
                 log.info("원본 파일명: " + fileNames[i].getOriginalFilename());
+                log.info("data: " + conflictMinerals);
                 for (ConflictMineralsDTO dto : conflictMinerals) {
+                    log.info("파일명: " + dto.getFILE_NAME());
                     if (dto.getFILE_NAME().equals(fileNames[i].getOriginalFilename())) {
+                        dto.setCOM_CODE(comCode);
+                        dto.setAUTH_TYPE("CONFLICT");
+                        dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
                         dto.setFILE_NAME(fileName);  // 파일명 추가
                         dto.setFILE_PATH(filePath);  // 파일 경로 추가
+
+                        log.info("dto: " + dto+"////dto: " + dto.getFILE_TYPE());
+                        int rtCnt = conflictMineralsRepository.insertFileInfo(dto);  // insert file
+                        log.info("파일저장 Count: " + rtCnt);
                     }
                 }
             }

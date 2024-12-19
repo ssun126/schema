@@ -78,7 +78,7 @@ public class AuditMgmtRestController {
     @ResponseBody
     public List<IsoAuthItemDTO> getIsoAuthList(Criteria criteria, @RequestParam("COM_CODE") String com_code) {
         // 선택 회사의 ISO 인증서 리스트를 가져옵니다
-        List<IsoAuthItemDTO> companyIsoAuthList = isoAuthService.getList(criteria, com_code);
+        List<IsoAuthItemDTO> companyIsoAuthList = isoAuthService.getList(com_code);
 
         return companyIsoAuthList;
     }

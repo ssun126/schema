@@ -36,12 +36,14 @@ public class ConflictMineralsDTO {
     private String INSPECTION_DATE; //조사일자
 
     //CMRT/EMRT 파일
-    @JsonProperty("CONFLICT_TYPE")
-    private String CONFLICT_TYPE; //CMRT/EMRT 구분
+    @JsonProperty("FILE_TYPE")
+    private String FILE_TYPE; //CMRT/EMRT 구분
     @JsonProperty("FILE_NAME")
     private String FILE_NAME;
     @JsonProperty("FILE_PATH")
     private String FILE_PATH;
     @JsonProperty("AUTH_SEQ")
     private String AUTH_SEQ;
+    @JsonProperty("AUTH_TYPE")
+    private String AUTH_TYPE;
 }

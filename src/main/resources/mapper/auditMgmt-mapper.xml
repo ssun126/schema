@@ -29,8 +29,23 @@
         VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ})
     </insert>
 
+    <select id="getCompanyAuth" parameterType="map" resultType="authMgmt">
+        SELECT
+            CC.COM_CODE,
+            CC.COM_NAME,
+            ACI.AUTH_TYPE,
+            ACI.APPROVE_STATE,
+            ACI.APPROVE_DATE,
+            ACI.SEND_DATE,
+            ACI.POINT
+        FROM SC_COMPANY_CODE CC
+        LEFT OUTER JOIN SC_AUTH_COMPANY_INFO ACI ON
+        CC.COM_CODE = ACI.COM_CODE AND ACI.AUTH_TYPE = #{AUTH_TYPE}
+        WHERE CC.COM_CODE = #{COM_CODE}
+    </select>
+
     <select id="getCompanyAuthFile" parameterType="map" resultType="authMgmt">
-        SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH
+        SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH, AF.FILE_TYPE
         FROM SC_AUTH_COMPANY_INFO ACI
         INNER JOIN SC_AUTH_FILE AF ON AF.COM_CODE = ACI.COM_CODE AND AF.AUTH_TYPE = ACI.AUTH_TYPE
         WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
