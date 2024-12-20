@@ -4,15 +4,14 @@ import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartDetailService;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -71,9 +70,9 @@ public class PartDetailMSDSController {
                              , @ModelAttribute partDetailRohsDTO rohsDTO
                              , @ModelAttribute partDetailHalGDTO halgDTO
                              , @ModelAttribute partDetailEtcDTO etcDTO
-                             , @RequestParam("MSDS_FILE") MultipartFile mdsdFile
-                             , @RequestParam("ROHS_FILE") MultipartFile rohsFile
-                             , @RequestParam("HALOGEN_FILE") MultipartFile halgFile
+                             , @RequestParam(value="MSDS_FILE",required = false) MultipartFile mdsdFile
+                             , @RequestParam(value="ROHS_FILE",required = false) MultipartFile rohsFile
+                             , @RequestParam(value="HALOGEN_FILE",required = false) MultipartFile halgFile
                              , @RequestParam(value="ETC_FILE",required = false) MultipartFile[] etcFile
                              , @AuthenticationPrincipal UserCustom user
                              , Model model){
@@ -90,18 +89,18 @@ public class PartDetailMSDSController {
         ////            partDetailService.deleteFileData(msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_PATH());
         ////        }
         //
-        if(!mdsdFile.isEmpty()){
-            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),mdsdFile);
-            String etc_filename = mdsdFile.getOriginalFilename();
-
-            msdsDTO.setMSDS_FILE_NAME(etc_filename);
-            msdsDTO.setMSDS_FILE_PATH(etc_filepath);
-
-        }
-
-
-
-        partDetailService.saveMsdsData(msdsDTO);
+//        if(!mdsdFile.isEmpty()){
+//            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),mdsdFile);
+//            String etc_filename = mdsdFile.getOriginalFilename();
+//
+//            msdsDTO.setMSDS_FILE_NAME(etc_filename);
+//            msdsDTO.setMSDS_FILE_PATH(etc_filepath);
+//
+//        }
+//
+//
+//
+//        partDetailService.saveMsdsData(msdsDTO);
         //}
 
 //        !rohsDTO.getROHS_CONFIRM_DATE().equals("") || !rohsDTO.getROHS_CONFIRM_DATE().equals("")|| !rohsFile.isEmpty()
@@ -111,36 +110,36 @@ public class PartDetailMSDSController {
 //        msdsDTO.setMSDS_FILE_PATH(msdsFilePath);
 
         //rohs
-        if(rohsDTO.getFILE_STATUS().equals("Del")) {
-            partDetailService.deleteFileData(rohsDTO.getROHS_FILE_NAME(),rohsDTO.getROHS_FILE_PATH());
-        }
-        //신규파일 업로드 후 경로 가져오기
-        if(!rohsFile.isEmpty()){
-            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),rohsFile);
-            String etc_filename = rohsFile.getOriginalFilename();
-
-            rohsDTO.setROHS_FILE_NAME(etc_filename);
-            rohsDTO.setROHS_FILE_PATH(etc_filepath);
-        }
-        partDetailService.saveRohsData(rohsDTO);
+//        if(rohsDTO.getFILE_STATUS().equals("Del")) {
+//            partDetailService.deleteFileData(rohsDTO.getROHS_FILE_NAME(),rohsDTO.getROHS_FILE_PATH());
+//        }
+//        //신규파일 업로드 후 경로 가져오기
+//        if(!rohsFile.isEmpty()){
+//            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),rohsFile);
+//            String etc_filename = rohsFile.getOriginalFilename();
+//
+//            rohsDTO.setROHS_FILE_NAME(etc_filename);
+//            rohsDTO.setROHS_FILE_PATH(etc_filepath);
+//        }
+//        partDetailService.saveRohsData(rohsDTO);
 
 
         //halogen
-        if(halgDTO.getFILE_STATUS().equals("Del")) {
-            partDetailService.deleteFileData(halgDTO.getHALOGEN_FILE_NAME(),halgDTO.getHALOGEN_FILE_PATH());
-        }
-        //신규파일 업로드 후 경로 가져오기
-        if(!halgFile.isEmpty()){
-            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),halgFile);
-            String etc_filename = halgFile.getOriginalFilename();
+//        if(halgDTO.getFILE_STATUS().equals("Del")) {
+//            partDetailService.deleteFileData(halgDTO.getHALOGEN_FILE_NAME(),halgDTO.getHALOGEN_FILE_PATH());
+//        }
+//        //신규파일 업로드 후 경로 가져오기
+//        if(!halgFile.isEmpty()){
+//            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),halgFile);
+//            String etc_filename = halgFile.getOriginalFilename();
+//
+//            halgDTO.setHALOGEN_FILE_NAME(etc_filename);
+//            halgDTO.setHALOGEN_FILE_PATH(etc_filepath);
+//
+//        }
+//        partDetailService.saveHalogenData(halgDTO);
 
-            halgDTO.setHALOGEN_FILE_NAME(etc_filename);
-            halgDTO.setHALOGEN_FILE_PATH(etc_filepath);
-
-        }
-        partDetailService.saveHalogenData(halgDTO);
-
-        if(etcDTO != null){
+        if(etcDTO.getETC_CONFIRM_DATE() != null ){
             //etc
             String ETC_IDX = etcDTO.getETC_IDX();
             String PM_IDX = etcDTO.getPM_IDX();
@@ -185,13 +184,13 @@ public class PartDetailMSDSController {
                     MultipartFile files = etcFile[i];
 
 
-                    partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
+                    //partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
                 }
             }
-        }else{
-            //데이터없음 - 삭제
-            partDetailService.deleteEtcData(pm_idx);
-        }
+            }else{
+                //데이터없음 - 삭제
+                //partDetailService.deleteEtcData(pm_idx);
+            }
 
 
 
@@ -207,54 +206,55 @@ public class PartDetailMSDSController {
 //        }
 
         //뭐든 pm_mgmt 작성중으로 변경
-        partMgmtService.updateApprovalStatus(pm_idx,"2");
+        //partMgmtService.updateApprovalStatus(pm_idx,"2");
 
 
         if(msdsDTO.getINFO_FLAG().equals("save")){
-//            model.addAttribute("PM_IDX",pm_idx);
-//
-//            PartMgmtDTO partMgmtDTO = partDetailService.getPartData(pm_idx);
-//            if(partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
-//            model.addAttribute("partMgmtDTO",partMgmtDTO);
-//            log.info("partMgmtDTO=============================" + partMgmtDTO);
-//
-//            //데이터가 있다면 들고와서 뿌려줌
-//            //MSDS
-//            partDetailMsdsDTO msdsDTO2 = partDetailService.getMsdsData(pm_idx);
-//            if(msdsDTO2 == null) msdsDTO2 = new partDetailMsdsDTO();
-//            model.addAttribute("msdsDTO",msdsDTO2);
-//            log.info("msdsDTO=============================" + msdsDTO2);
-//            //ROHS
-//            partDetailRohsDTO rohsDTO2 = partDetailService.getRohsData(pm_idx);
-//            if(rohsDTO2 == null) rohsDTO2 = new partDetailRohsDTO();
-//            model.addAttribute("rohsDTO",rohsDTO2);
-//            log.info("rohsDTO=============================" + rohsDTO2);
-//            //HALOGEN
-//            partDetailHalGDTO halGDTO2 = partDetailService.getHalgData(pm_idx);
-//            if(halGDTO2 == null) halGDTO2 = new partDetailHalGDTO();
-//            model.addAttribute("halGDTO",halGDTO2);
-//            log.info("halGDTO=============================" + 2);
-//            //ETC
-//            List<partDetailEtcDTO> etcListDTO2 =partDetailService.getEtcData(pm_idx);
-//            if(etcListDTO2 == null) {
-//                partDetailEtcDTO etcDTO2 = new partDetailEtcDTO();
-//                etcListDTO2.add(etcDTO2);
-//            }
-//            model.addAttribute("etcListDTO",etcListDTO2);
-//            log.info("etcListDTO=============================" + etcListDTO2);
-//
-//            return "partMgmtList/detail";
+            model.addAttribute("PM_IDX",pm_idx);
+
+            PartMgmtDTO partMgmtDTO = partDetailService.getPartData(pm_idx);
+            if(partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
+            model.addAttribute("partMgmtDTO",partMgmtDTO);
+            log.info("partMgmtDTO=============================" + partMgmtDTO);
+
+            //데이터가 있다면 들고와서 뿌려줌
+            //MSDS
+            partDetailMsdsDTO msdsDTO2 = partDetailService.getMsdsData(pm_idx);
+            if(msdsDTO2 == null) msdsDTO2 = new partDetailMsdsDTO();
+            model.addAttribute("msdsDTO",msdsDTO2);
+            log.info("msdsDTO=============================" + msdsDTO2);
+            //ROHS
+            partDetailRohsDTO rohsDTO2 = partDetailService.getRohsData(pm_idx);
+            if(rohsDTO2 == null) rohsDTO2 = new partDetailRohsDTO();
+            model.addAttribute("rohsDTO",rohsDTO2);
+            log.info("rohsDTO=============================" + rohsDTO2);
+            //HALOGEN
+            partDetailHalGDTO halGDTO2 = partDetailService.getHalgData(pm_idx);
+            if(halGDTO2 == null) halGDTO2 = new partDetailHalGDTO();
+            model.addAttribute("halGDTO",halGDTO2);
+            log.info("halGDTO=============================" + 2);
+            //ETC
+            List<partDetailEtcDTO> etcListDTO2 =partDetailService.getEtcData(pm_idx);
+            if(etcListDTO2 == null) {
+                partDetailEtcDTO etcDTO2 = new partDetailEtcDTO();
+                etcListDTO2.add(etcDTO2);
+            }
+            model.addAttribute("etcListDTO",etcListDTO2);
+            log.info("etcListDTO=============================" + etcListDTO2);
+
+            return "partMgmtList/detail";
 
             //목록
-
-            List<HashMap> searchPlantList = partMgmtService.getPlantList();
-            //검색 basecode 승인현황
-            //List<HashMap> searhApprovalStatus = partMgmtService.getApprovalStatus();
-
-            model.addAttribute("searchPlantList",searchPlantList);
-            //model.addAttribute("searhApprovalStatus", searhApprovalStatus);
-
-            return "partMgmtList/main";
+//
+//            List<HashMap> searchPlantList = partMgmtService.getPlantList();
+//            //검색 basecode 승인현황
+//            //List<HashMap> searhApprovalStatus = partMgmtService.getApprovalStatus();
+//
+//            model.addAttribute("searchPlantList",searchPlantList);
+//            //model.addAttribute("searhApprovalStatus", searhApprovalStatus);
+//
+//            //return "partMgmtList/main";
+//            return "partMgmtList/partMgmDetail";
 
         }else{
             model.addAttribute("PM_IDX",pm_idx);
@@ -299,15 +299,15 @@ public class PartDetailMSDSController {
         ////            partDetailService.deleteFileData(msdsDTO.getMSDS_FILE_NAME(),msdsDTO.getMSDS_FILE_PATH());
         ////        }
         //if(!msdsDTO.getMSDS_REG_DATE().equals("") || !msdsDTO.getMSDS_LANG().equals("") || !msdsDTO.getMSDS_APPROVAL_NUM().equals("") || !mdsdFile.isEmpty() ){
-        if(!mdsdFile.isEmpty()){
-            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),mdsdFile);
-            String etc_filename = mdsdFile.getOriginalFilename();
-
-            msdsDTO.setMSDS_FILE_NAME(etc_filename);
-            msdsDTO.setMSDS_FILE_PATH(etc_filepath);
-
-        }
-        partDetailService.saveMsdsData(msdsDTO);
+//        if(!mdsdFile.isEmpty()){
+//            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),mdsdFile);
+//            String etc_filename = mdsdFile.getOriginalFilename();
+//
+//            msdsDTO.setMSDS_FILE_NAME(etc_filename);
+//            msdsDTO.setMSDS_FILE_PATH(etc_filepath);
+//
+//        }
+//        partDetailService.saveMsdsData(msdsDTO);
         //}
 
 //        !rohsDTO.getROHS_CONFIRM_DATE().equals("") || !rohsDTO.getROHS_CONFIRM_DATE().equals("")|| !rohsFile.isEmpty()
@@ -317,34 +317,34 @@ public class PartDetailMSDSController {
 //        msdsDTO.setMSDS_FILE_PATH(msdsFilePath);
 
         //rohs
-        if(rohsDTO.getFILE_STATUS().equals("Del")) {
-            partDetailService.deleteFileData(rohsDTO.getROHS_FILE_NAME(),rohsDTO.getROHS_FILE_PATH());
-        }
-        //신규파일 업로드 후 경로 가져오기
-        if(!rohsFile.isEmpty()){
-            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),rohsFile);
-            String etc_filename = rohsFile.getOriginalFilename();
-
-            rohsDTO.setROHS_FILE_NAME(etc_filename);
-            rohsDTO.setROHS_FILE_PATH(etc_filepath);
-        }
-        partDetailService.saveRohsData(rohsDTO);
+//        if(rohsDTO.getFILE_STATUS().equals("Del")) {
+//            partDetailService.deleteFileData(rohsDTO.getROHS_FILE_NAME(),rohsDTO.getROHS_FILE_PATH());
+//        }
+//        //신규파일 업로드 후 경로 가져오기
+//        if(!rohsFile.isEmpty()){
+//            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),rohsFile);
+//            String etc_filename = rohsFile.getOriginalFilename();
+//
+//            rohsDTO.setROHS_FILE_NAME(etc_filename);
+//            rohsDTO.setROHS_FILE_PATH(etc_filepath);
+//        }
+//        partDetailService.saveRohsData(rohsDTO);
 
 
         //halogen
-        if(halgDTO.getFILE_STATUS().equals("Del")) {
-            partDetailService.deleteFileData(halgDTO.getHALOGEN_FILE_NAME(),halgDTO.getHALOGEN_FILE_PATH());
-        }
-        //신규파일 업로드 후 경로 가져오기
-        if(!halgFile.isEmpty()){
-            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),halgFile);
-            String etc_filename = halgFile.getOriginalFilename();
-
-            halgDTO.setHALOGEN_FILE_NAME(etc_filename);
-            halgDTO.setHALOGEN_FILE_PATH(etc_filepath);
-
-        }
-        partDetailService.saveHalogenData(halgDTO);
+//        if(halgDTO.getFILE_STATUS().equals("Del")) {
+//            partDetailService.deleteFileData(halgDTO.getHALOGEN_FILE_NAME(),halgDTO.getHALOGEN_FILE_PATH());
+//        }
+//        //신규파일 업로드 후 경로 가져오기
+//        if(!halgFile.isEmpty()){
+//            String etc_filepath = partDetailService.uploadFileData(msdsDTO.getMSDS_PART_CODE(),halgFile);
+//            String etc_filename = halgFile.getOriginalFilename();
+//
+//            halgDTO.setHALOGEN_FILE_NAME(etc_filename);
+//            halgDTO.setHALOGEN_FILE_PATH(etc_filepath);
+//
+//        }
+//        partDetailService.saveHalogenData(halgDTO);
 
         //etc
         String ETC_IDX = etcDTO.getETC_IDX();
@@ -390,7 +390,7 @@ public class PartDetailMSDSController {
                 MultipartFile files = etcFile[i];
 
 
-                partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
+                //partDetailService.saveEtcData(newetcdto,files,user.getCOM_CODE());
             }
         }
 

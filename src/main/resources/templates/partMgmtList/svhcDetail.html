@@ -45,7 +45,7 @@
 <!--                <h3><span>승인현황 : 승인</span></h3>-->
 <!--                <h3><span>사용여부 : Active</span></h3>-->
                 <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
-                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PM_PART_NAME}">자재명</span></h3>
+                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
                 <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
                 <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
             </div>
@@ -120,7 +120,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <div class="cui_attachments">
+                                        <div class="cui_attachments" style="display:flex;">
                                             <input type="file" class="cui_file_field" name="SVHC_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${svhcDTO.FILE_NAME == '' ? 'display:none;' : '' }">
@@ -179,23 +179,23 @@
 <script>
     $(document).ready(function(){
         // datepicker를 input 필드에 적용
-        $('.datepicker').datepicker({
-            dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정
-            showOn: "focus",
-        });
+<!--        $('.datepicker').datepicker({-->
+<!--            dateFormat: 'yy.mm.dd',  // 날짜 포맷을 'YYYY.MM.DD'로 설정-->
+<!--            showOn: "focus",-->
+<!--        });-->
 
-        // 버튼 클릭 시 input 필드의 datepicker 열기
-        $('[data-cui-icon="calendar"]').on('click', function() {
-            var targetId = $(this).attr('id'); // 클릭된 요소의 id 가져오기
-            console.log(targetId + " was clicked");
+<!--        // 버튼 클릭 시 input 필드의 datepicker 열기-->
+<!--        $('[data-cui-icon="calendar"]').on('click', function() {-->
+<!--            var targetId = $(this).attr('id'); // 클릭된 요소의 id 가져오기-->
+<!--            console.log(targetId + " was clicked");-->
 
-            // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글
-            if (targetId === "startDate") {
-               $('#searchStartDate').datepicker('show'); // 첫 번째 datepicker 열기
-            } else if (targetId === "endDate") {
-               $('#searchEndDate').datepicker('show'); // 두 번째 datepicker 열기
-            }
-        });
+<!--            // datepicker가 보이면 숨기고, 숨겨져 있으면 보이도록 토글-->
+<!--            if (targetId === "startDate") {-->
+<!--               $('#searchStartDate').datepicker('show'); // 첫 번째 datepicker 열기-->
+<!--            } else if (targetId === "endDate") {-->
+<!--               $('#searchEndDate').datepicker('show'); // 두 번째 datepicker 열기-->
+<!--            }-->
+<!--        });-->
 
         $("input[name='DATA_GUBUN']").change(function(){
 		    // 직접입력

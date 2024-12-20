@@ -323,7 +323,7 @@
         VALUES (SEQ_ETC_IDX.NEXTVAL,#{PM_IDX},#{ETC_CONFIRM_DATE},#{ETC_ANALYSE_ENTRY},#{ETC_ANALYSE_RESULT},#{ETC_FILE_NAME},#{ETC_FILE_PATH})
     </insert>
 
-    <delete id="deleteEtcData" parameterType="String">
+    <delete id="deleteEtcData" parameterType="int">
         DELETE SC_PART_MGMT_DETAIL_ETC
         WHERE PM_IDX = #{idx}
     </delete>

@@ -65,7 +65,7 @@ public class PartMgmtRepository {
         return sql.selectOne("partManagement.getPartMgmtData",idx);
     }
 
-    public void updateApprovalStatus(String idx, String status){
+    public void updateApprovalStatus(int idx, String status){
         HashMap<String,Object> map = new HashMap<>();
         map.put("idx",idx);
         map.put("status",status);
@@ -89,24 +89,22 @@ public class PartMgmtRepository {
     public partDetailHalGDTO getHalgData(String idx) {return sql.selectOne("partManagement.getPartDetailHalgData",idx);}
     public List<partDetailEtcDTO> getEtcData(String idx) {return sql.selectList("partManagement.getPartDetailEtcData",idx);}
 
+    //public int saveMsdsData(partDetailMsdsDTO msdsDTO){ return sql.insert("partManagement.msdsSave",msdsDTO);}
+    //public int updateMsdsData(partDetailMsdsDTO msdsDTO){ return sql.update("partManagement.msdsUpdate",msdsDTO);}
 
+    //신규msds 저장로직
+    public int insertMsdsData(partDetailMsdsDTO msdsDTO){ return sql.insert("partManagement.msdsSave",msdsDTO);}
     public int updateMsdsData(partDetailMsdsDTO msdsDTO){ return sql.update("partManagement.msdsUpdate",msdsDTO);}
 
+    public int insertRohsData(partDetailRohsDTO rohsDTO){ return sql.insert("partManagement.rohsSave",rohsDTO);}
     public int updateRohsData(partDetailRohsDTO rohsDTO){ return sql.update("partManagement.rohsUpdate",rohsDTO);}
 
     public int updateHalogenData (partDetailHalGDTO halgDTO){ return sql.update("partManagement.halgUpdate",halgDTO);}
-
-    public int updateEtcData (partDetailEtcDTO etcDTO){ return sql.update("partManagement.etcUpdate",etcDTO);}
-
-    public int saveMsdsData(partDetailMsdsDTO msdsDTO){ return sql.insert("partManagement.msdsSave",msdsDTO);}
-
-    public int saveRohsData(partDetailRohsDTO rohsDTO){ return sql.insert("partManagement.rohsSave",rohsDTO);}
-
     public int saveHalogenData(partDetailHalGDTO halgDTO){ return sql.insert("partManagement.halgSave",halgDTO);}
 
-    public int saveEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.etcSave",etcDTO);}
-
-    public int deleteEtcData(String idx){ return sql.delete("partManagement.deleteEtcData",idx);}
+    public int insertEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.etcSave",etcDTO);}
+    public int updateEtcData (partDetailEtcDTO etcDTO){ return sql.update("partManagement.etcUpdate",etcDTO);}
+    public int deleteEtcData(int idx){ return sql.delete("partManagement.deleteEtcData",idx);}
 
 
     //svhc

@@ -47,7 +47,7 @@
 <!--                <h3><span>승인현황 : 승인</span></h3>-->
 <!--                <h3><span>사용여부 : Active</span></h3>-->
                 <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
-                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PM_PART_NAME}">자재명</span></h3>
+                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
                 <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
                 <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
             </div>
@@ -90,7 +90,7 @@
                             </td>
                             <td><input type="text" class="cui_text_field" name="SCCS_CHAR"  th:value="${sccsDTO.SCCS_CHAR}" ></td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="SCCS_FILE"  reqcheck="reqcheck">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${sccsDTO.SCCS_FILE_NAME == '' ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="SCCS_FILE_NAME"  th:value="${sccsDTO.SCCS_FILE_NAME}" th:text="${sccsDTO.SCCS_FILE_NAME}" ></span></div>
@@ -130,7 +130,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="INGRED_FILE"  reqcheck="reqcheck">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${ingredDTO.INGRED_FILE_NAME == '' ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="INGRED_FILE_NAME" th:value="${ingredDTO.INGRED_FILE_NAME}" th:text="${ingredDTO.INGRED_FILE_NAME}"></span></div>
@@ -160,7 +160,7 @@
                             <col style="width:120px">
                             <col style="width:120px">
                             <col>
-                            <col>
+                            <col  style="width:120px">
                         </colgroup>
                         <thead>
                         <tr>
@@ -182,7 +182,7 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="cui_attachments">
+                                <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="GUARANT_FILE">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${guarantDTO.GUARANT_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="GUARANT_FILE_NAME" th:value="${guarantDTO.GUARANT_FILE_NAME}" th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
@@ -199,6 +199,7 @@
                         </tbody>
                     </table>
                 </div>
+                <div><br /><br /><br /></div>
                 <div class="cui_border_section">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>보증 내역의 재확인</span></div>
