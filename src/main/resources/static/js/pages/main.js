@@ -57,7 +57,13 @@ const main = {
 		}else{
 			$(".main-errormsg").html(msg);
 		}
-	}
+	},
+    loginSuccess: function(UserData) {
+        sessionStorage.setItem("USER", JSON.stringify(UserData.UserData));
+        sessionStorage.setItem("LANGUAGE", UserData.UserData.LANGUAGE);
+        sessionStorage.setItem("USERVENDOR", JSON.stringify(UserData.UserVendor));
+        sessionStorage.setItem("authorization", JSON.stringify({token_type:"Bearer", access_token:UserData.Token}));
+    }
 }
 
 // 로컬스토리지에서 MULTI_LANGUAGE_DATA 가져오기

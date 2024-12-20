@@ -35,11 +35,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework:spring-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-json'  // Jackson 관련 의존성 추가
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.springframework.session:spring-session-core'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation 'com.navercorp.lucy:lucy-xss-servlet:2.0.1'
+	implementation 'org.apache.commons:commons-lang3:3.17.0'
+
 	/* thymeleaf */
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'

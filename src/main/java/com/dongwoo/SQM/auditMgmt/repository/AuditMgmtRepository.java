@@ -52,4 +52,8 @@ public class AuditMgmtRepository {
     public List<HashMap> getExpDateList(Map<String, Object> params) {
         return sql.selectList("AuditMgmt.getExpDateList", params);
     }
+
+    public Map<String, String> getUserInfo(Map<String, Object> parameterMap) {
+        return sql.selectOne("AuditMgmt.getUserInfo", parameterMap);
+    }
 }

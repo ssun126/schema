@@ -9,12 +9,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class GlobalCommonHandler {
@@ -41,6 +43,13 @@ public class GlobalCommonHandler {
         String errorMessage;
         errorMessage = "타입에 맞지 않습니다. 확인하세요.";
         return errorMessage;
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ModelAndView handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ModelAndView modelAndView = new ModelAndView("error");  // error.html을 반환
+        modelAndView.addObject("error", ex.getMessage());
+        return modelAndView;
     }
 
 

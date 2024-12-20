@@ -65,4 +65,11 @@
             AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
         </if>
     </select>
+
+    <select id='getUserInfo' resultType="java.util.LinkedHashMap">
+        SELECT
+        *
+        FROM SYS_USER
+        WHERE USER_ID = #{USERID}
+    </select>
 </mapper>

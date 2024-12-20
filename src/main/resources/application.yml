@@ -84,4 +84,7 @@ Upload:
     audit: "D:/SCHEMA/STORAGE/AUDIT"
     warranty: "D:/SCHEMA/STORAGE/WARRANTY"
 
+restfull:
+  povis:
+    url: "https://5a4b004f-ba1d-4cdf-8eb4-ca4a1b8c4b54.mock.pstmn.io"
 

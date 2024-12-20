@@ -28,6 +28,7 @@ public class AuditCommonService {
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
+
     public void saveCommonAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
@@ -120,4 +121,13 @@ public class AuditCommonService {
         params.put("AUTH_TYPE", type);
         return auditMgmtRepository.getExpDateList(params);
     }
+
+    public  Map<String, String> getUserInfo(String code, String name, String type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_CODE", code);
+        params.put("COM_NAME", name);
+        params.put("AUTH_TYPE", type);
+        return auditMgmtRepository.getUserInfo(params);
+    }
+
 }

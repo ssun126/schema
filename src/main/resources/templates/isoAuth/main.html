@@ -53,7 +53,7 @@
                                 <td><input type="text" name="EXP_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${data.EXP_DATE}"></td>
                                 <td><input type="text" name="REG_INPUT_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${data.REG_INPUT_DATE}"></td>
                                 <td>
-                                    <div class="cui_attachments" th:if="${data.ITEM_STATE != 'APPROVED'}">
+                                    <div class="cui_attachments" th:if="${data.ITEM_STATE != 'APPROVED' && data.ITEM_STATE != 'SEND'}">
                                         <input type="file" name="file" id="${data.AUTH_CODE}" class="cui_file_field">
                                     </div>
                                     <div class="cui_attachments" th:if="${data.FILE_NAME != null and data.ITEM_STATE != ''}">
@@ -91,7 +91,23 @@
 </div>
 <script th:inline="javascript">
     $(document).ready(function() {
-        //loadPage();
+        //파일 타입 체크
+        $('input[type="file"]').on('change', function(event) {
+            const files = event.target.files; // 선택된 모든 파일
+            let isValid = true;
+
+            // 각 파일에 대해 validation 체크
+            $.each(files, function(index, file) {
+                if (file && !validation(file)) {
+                    // 잘못된 파일인 경우
+                    event.target.value = '';  // input 초기화
+                    clearFile($(event.target).closest('.cui_attachments').find('#deleteButton'));
+                    console.log('잘못된 파일: ', file.name);
+                    isValid = false;
+                    return false;  // 잘못된 파일이 있으면 반복문을 종료
+                }
+            });
+        });
     });
 
     var companyIsoAuth = /*[[${companyIsoAuth}]]*/ [];
@@ -177,18 +193,21 @@
 
     // 파일 삭제
     function clearFile(button) {
-        const fileInput = button.closest('td').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
-        const fileLabel = button.closest('td').querySelector('.item_label span');
-        const fileLabelDiv = button.closest('td').querySelector('.item_label');
-        const downButton = button.closest('td').querySelector('.download-button');
+        const $button = $(button);
+        const $td = $button.closest('td');
+
+        const $fileInput = $td.find('input[type="file"]');
+        const $fileLabel = $td.find('.item_label span');
+        const $fileLabelDiv = $td.find('.item_label');
+        const $downButton = $td.find('.download-button');
 
         // 파일 입력 초기화
-        fileInput.value = "";
-        fileLabel.textContent = '';
+        $fileInput.val('');
+        $fileLabel.text('');
         // 삭제 버튼 숨기기
-        button.style.display = 'none';
-        downButton.style.display = 'none';
-        fileLabelDiv.style.display = 'none';
+        $button.hide();
+        $downButton.hide();
+        $fileLabelDiv.hide();
     }
 
     // 저장/제출
@@ -268,24 +287,6 @@
         // 링크 클릭 이벤트를 트리거하여 다운로드 실행
         link.click();
     }
-
-    setTimeout(function() {
-        const fileInput = document.querySelector('input[type="file"]');
-        if (fileInput) {
-            fileInput.addEventListener('change', function(event) {
-                const files = event.target.files;  // 선택된 모든 파일
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    if (file && !validation(file)) {
-                        event.target.value = '';  // 잘못된 파일 선택시 input 초기화
-                        clearFile(fileInput.closest('.cui_attachments').querySelector('.cui_button'));
-                        console.log('잘못된 파일: ', file.name);
-                        break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
-                    }
-                }
-            });
-        }
-    }, 100);  // 100ms 후에 실행
 
 
 </script>

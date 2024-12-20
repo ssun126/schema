@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -44,5 +45,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
+    @Bean(name = "ajaxMainView")
+    public MappingJackson2JsonView ajaxMainView() {
+        return new MappingJackson2JsonView();
+    }
 
 }
