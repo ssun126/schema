@@ -53,31 +53,6 @@
         </div>
     </div>
     <div class="cui_body">
-        <form id="searchArea" method="get" onsubmit="return false;">
-            <div class="cui_search">
-                <div class="search_list cui_grid_wrap ">
-                    <div class="cui_items_wrap" data-direction="left">
-                        <strong class="item_label" data-langsid="업체코드"></strong>
-                        <div class="item_content">
-                            <input class="cui_text_field" type="text" id="COM_CODE" name="COM_CODE" search="searchBtn"
-                                   th:value="${COM_CODE}"/>
-                        </div>
-                    </div>
-                    <div class="cui_items_wrap" data-direction="left">
-                        <strong class="item_label" data-langsid="업체명"></strong>
-                        <div class="item_content">
-                            <input class="cui_text_field" type="text" id="COM_NAME" name="COM_NAME" search="searchBtn"
-                                   th:value="${COM_NAME}"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="search_action">
-                    <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();">
-                        <span data-langsid="검색"></span></button>
-                </div>
-            </div>
-        </form>
-
         <div class="cui_jqGrid_section">
             <div class="cui_jqGrid_head">
                 <div class="jqGrid_label"> &nbsp;</div>
