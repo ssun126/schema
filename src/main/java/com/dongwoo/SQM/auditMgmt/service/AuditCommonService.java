@@ -1,8 +1,10 @@
 package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,37 +31,40 @@ public class AuditCommonService {
     private String uploadPath;
 
 
-    public void saveCommonAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
+    public void saveCommonAuthData(String tableData, String type, int total, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        //List<SafetyHealthDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<SafetyHealthDTO>>() {});
+        List<AuditItemPointDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<AuditItemPointDTO>>() {});
 
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
         int loginIdx = user.getUSER_IDX();
+        int comUserIdx = user.getCOM_USER_IDX();
 
         //회사별 Audit 데이터 저장
         AuditMgmtDTO authDTO = new AuditMgmtDTO();
         authDTO.setCOM_CODE(comCode);
-        authDTO.setAUTH_TYPE(type);
+        authDTO.setAUTH_TYPE(type); //SAFETY / QUALITY
         authDTO.setAPPROVE_STATE("SEND"); //제출
         authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
         authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
+        authDTO.setPOINT(total);  // 점수
         log.info("authDTO::::::::::"+authDTO);
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
         if(comCnt > 0) {
             int rsltCnt = auditMgmtRepository.updateAuth(authDTO);  // updateItem
-            log.info("update rsltCnt::::::::::"+rsltCnt);
         }else{
             int rsltCnt = auditMgmtRepository.insertAuth(authDTO); //저장
-            log.info("insert rsltCnt::::::::::"+rsltCnt);
         }
 
+        // AUTH_SEQ 가져오기
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
         log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
+        log.info(" total:::::::::"+  total);
 
-        if (fileNames != null && fileNames.length > 0 && authMgmtDTO.getAUTH_SEQ() != null) {
+        // 파일이 있는 경우 파일 정보 저장
+        if (fileNames != null && fileNames.length > 0) {
             // 각 파일을 저장하고 경로를 DTO에 추가
             for(int i = 0; i < fileNames.length; i++) {
                 String filePath = saveFile(fileNames[i]);
@@ -71,7 +76,7 @@ public class AuditCommonService {
                 log.info("원본 파일명: " + fileNames[i].getOriginalFilename());
                 AuditMgmtDTO dto = new AuditMgmtDTO();
                 dto.setCOM_CODE(comCode);
-                dto.setAUTH_TYPE(type);
+                dto.setAUTH_TYPE(type); // SAFETY / QUALITY
                 dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
                 dto.setFILE_NAME(fileName);  // 파일명 추가
                 dto.setFILE_PATH(filePath);  // 파일 경로 추가
@@ -79,6 +84,32 @@ public class AuditCommonService {
                 int rtCnt = auditMgmtRepository.insertFileInfo(dto);  // insert
                 log.info("파일저장 Count: " + rtCnt);
             }
+        }else{
+
+            log.info("authItems::::: " + authItems);
+            //인증서 데이터 저장
+            for (AuditItemPointDTO dto : authItems) {
+                dto.setCOM_CODE(comCode);
+                dto.setAUTH_TYPE(type); // SAFETY / QUALITY
+                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ()); //제출 또는 저장
+                dto.setREG_COM_USER_IDX(comUserIdx); //업무자 IDX
+
+               /* Map<String, Object> params = new HashMap<>();
+                params.put("AUTH_CODE", dto.getAUTH_CODE());
+                params.put("COM_CODE", comCode);
+                IsoAuthItemDTO ItemDTO = isoAuthRepository.findByIsoAuthItem(params);*/
+                /*if(ItemDTO != null){
+                    log.info(ItemDTO.getITEM_STATE());
+                    log.info(dto.getITEM_STATE());
+                    if(ItemDTO != dto) {
+                        isoAuthRepository.updateItem(dto);  // updateItem
+                    }
+                }else {*/
+                int rtCnt = auditMgmtRepository.insertItemPoint(dto);  // insert
+                log.info("데이터 저장 Count: " + rtCnt);
+                //}
+            }
+
         }
         log.info("회사별 Audit 데이터 저장 완료");
 

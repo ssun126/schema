@@ -22,13 +22,13 @@
                     <legend><span>인증서 관리(배점 4점)</span></legend>
                     <table class="cui_table center" id="isoAuthItemTable">
                         <colgroup>
-                            <col style="width:150px;">
-                            <col style="width:200px;">
-                            <col style="width:140px;">
-                            <col style="width:140px;">
-                            <col style="width:140px;">
                             <col style="width:120px;">
-                            <col style="width:180px;">
+                            <col style="width:150px;">
+                            <col style="width:120px;">
+                            <col style="width:120px;">
+                            <col style="width:120px;">
+                            <col style="width:300px;">
+                            <col style="width:100px;">
                             <col style="width:120px;">
                         </colgroup>
                         <thead>
@@ -44,6 +44,26 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <tr th:unless="${#lists.isEmpty(companyIsoAuth)}" th:each="data : ${companyIsoAuth}">
+                            <td><span th:text="${data.AUTH_TYPE}"></span></td>
+                            <td><span th:text="${data.AUTH_CODE}"></span></td>
+                            <td><span th:text="${data.AUTH_DATE}"></span></td>
+                            <td><span th:text="${data.EXP_DATE}"></span></td>
+                            <td><span th:text="${data.REG_INPUT_DATE}"></span></td>
+                            <td>
+                                <div class="cui_attachments">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${data.FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span >다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span>삭제</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span th:text="${data.ITEM_STATE}"></span></td>
+                            <td><span th:text="${data.UP_DATE}"></span></td>
+                        </tr>
                         </tbody>
                     </table>
                 </fieldset>
@@ -92,7 +112,7 @@
 
 <script>
     $(document).ready(function() {
-        loadPage(1);
+       // loadPage(1);
         // 페이지 로드 함수
         function loadPage(pageNum) {
             const code = `[[${companyAuth.COM_CODE}]]`;
@@ -170,6 +190,19 @@
             });  // $.ajax 호출 끝
         }
     });
+
+    function downloadFile(fileName) {
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
+    }
 
     // 반려 버튼 클릭시 반려사유 입력
     function rejectIsoAuth(key){

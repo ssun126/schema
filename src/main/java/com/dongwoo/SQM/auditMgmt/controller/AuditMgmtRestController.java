@@ -160,6 +160,8 @@ public class AuditMgmtRestController {
         }
     }
 
+
+
     /**
      * 안전보건/환경, 품질관리 제출
      * @param fileNames
@@ -167,9 +169,9 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendAuthData")
-    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
+    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam("total") int total, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
         try {
-            auditCommonService.saveCommonAuthData(data, type, fileNames);
+            auditCommonService.saveCommonAuthData(data, type, total, fileNames);
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {

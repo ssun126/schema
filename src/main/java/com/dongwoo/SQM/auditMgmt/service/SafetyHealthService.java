@@ -63,7 +63,7 @@ public class SafetyHealthService {
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
         log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::" + authMgmtDTO.getAUTH_SEQ());
 
-        if (fileNames != null && fileNames.length > 0 && authMgmtDTO.getAUTH_SEQ() != null) {
+        if (fileNames != null && fileNames.length > 0 && authMgmtDTO.getAUTH_SEQ()  > 0) {
             // 각 파일을 저장하고 경로를 DTO에 추가
             for (int i = 0; i < fileNames.length; i++) {
                 String filePath = saveFile(fileNames[i]);

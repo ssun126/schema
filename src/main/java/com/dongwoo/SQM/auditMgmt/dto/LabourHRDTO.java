@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class LabourHRDTO {
     @JsonProperty("AUTH_SEQ")
-    private String AUTH_SEQ;
+    private int AUTH_SEQ;
     @JsonProperty("COM_CODE")
     private String COM_CODE;
     @JsonProperty("COM_NAME")

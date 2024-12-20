@@ -53,36 +53,36 @@
                 </div>
             </div>
             <form class="cui_border_section" data-legend="true">
-                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}" th:each="data, iterStat : ${auditItems}">
-                    <div class="cui_bullet_title" th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
+                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}">
+                    <div class="cui_bullet_title">
                         <div class="bullet_title_label">
-                            <span th:text="${data.PROVISION}"></span>
+                            <span>평가 문항</span>
                         </div>
                     </div>
-                    <table class="cui_table" th:style="'border-top: ' +(${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION} ? '' : 'none')">
+                    <table class="cui_table">
                         <colgroup>
-                            <col style="width:100px;">
+                            <col style="width:120px;">
                             <col>
-                            <col style="width:200px;">
                             <col style="width:300px;">
-                            <col style="width:80px;">
+                            <col style="width:200px;">
+                            <col style="width:100px;">
                         </colgroup>
-                        <thead th:if="${iterStat.index == 0 or data.PROVISION != auditItems[iterStat.index-1].PROVISION}">
+                        <thead>
                         <tr>
                             <th><span>항목</span></th>
                             <th><span>내용</span></th>
-                            <th><span>답변</span></th>
                             <th><span>답변 가이던스</span></th>
                             <th><span>평가점수</span></th>
+                            <th><span>답변</span></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                        <tr th:each="data, iterStat : ${auditItems}">
                             <td><span th:text="${data.AUDIT_ITEM}"></span></td>
                             <td><span th:text="${data.AUDIT_DESC}"></span></td>
-                            <td><input type="text" class="cui_text_field"></td>
                             <td><span th:text="${data.AUDIT_CRITERIA}"></span></td>
-                            <td><input type="text" class="cui_text_field"></td>
+                            <td><span></span></td>
+                            <td><span></span></td>
                         </tr>
                         </tbody>
                     </table>

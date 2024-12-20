@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.repository;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
 import com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO;
@@ -30,9 +31,14 @@ public class AuditMgmtRepository {
     public int insertAuth(AuditMgmtDTO auditMgmtDTO) {
         return sql.insert("AuditMgmt.insertAuth", auditMgmtDTO);
     }
-    //업체별-Auth type별 정보 insert
+    //업체별-Auth type별 정보 update
     public int updateAuth(AuditMgmtDTO auditMgmtDTO) {
         return sql.update("AuditMgmt.updateAuth", auditMgmtDTO);
+    }
+
+    //업체별-Auth type별 평가항목 insert
+    public int insertItemPoint(AuditItemPointDTO auditItemPoint) {
+        return sql.insert("AuditMgmt.insertItemPoint", auditItemPoint);
     }
 
     public AuditMgmtDTO getCompanyAuth(Map<String, Object> params) {

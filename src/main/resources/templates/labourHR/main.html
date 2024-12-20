@@ -43,7 +43,7 @@
                         </tbody>
                     </table>
                 </fieldset>
-                <fieldset class="self" id="fs_file">
+                <fieldset id="fs_file">
                     <div class="cui_items_wrap" data-direction="right">
                         <div class="item_content">
                             <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드</span></button>
@@ -81,13 +81,13 @@
                         </tbody>
                     </table>
                 </fieldset>
-                <fieldset class="self" id="fs_text">
-                    <div class="cui_items_wrap resultField" data-direction="right">
+                <fieldset id="fs_text">
+                    <div class="cui_items_wrap" data-direction="right">
                         <div class="item_content">
                             <span>평가점수 0 ~ 10 점</span>
                         </div>
                     </div>
-                    <form class="cui_border_section resultField" data-legend="true">
+                    <form class="cui_border_section" data-legend="true">
                         <div class="cui_section">
                             <div class="cui_bullet_title">
                                 <div class="bullet_title_label"><span>평가 항목</span></div>
@@ -117,7 +117,7 @@
                                 </thead>
                                 <tbody th:if="${#lists.isEmpty(auditItems)}">
                                 <tr>
-                                    <td colspan="7">등록된 자재정보가 없습니다.</td>
+                                    <td colspan="8">등록된 자재정보가 없습니다.</td>
                                 </tr>
                                 </tbody>
                                 <tbody>
@@ -141,15 +141,17 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <div class="cui_section" id="rejectReason">
-                            <div class="cui_bullet_title">
-                                <div class="bullet_title_label"><span>반려사유</span></div>
-                            </div>
-                            <div>
-                                <textarea class="cui_border_section" rows="3" style="width:100%"></textarea>
-                            </div>
-                        </div>
                     </form>
+                </fieldset>
+                <fieldset class="resultField">
+                    <div class="cui_section" id="rejectReason">
+                        <div class="cui_bullet_title">
+                            <div class="bullet_title_label"><span>반려사유</span></div>
+                        </div>
+                        <div>
+                            <textarea class="cui_border_section" rows="3" style="width:100%"></textarea>
+                        </div>
+                    </div>
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
@@ -169,8 +171,8 @@
         $("#fs_text").hide(); //파일첨부가 초기값이므로
         loadInfo();
 
+        // 평가기준에 맞게 Select box 표시 >> 선택된 값의 Total 점수 표시
         var totalScore = 0;
-
         $('#itemTable tbody tr').each(function(index, row) {
             // 첫 번째 행은 헤더이므로 건너뜁니다.
             //if (index === 0) return;
@@ -270,32 +272,65 @@
 
     // 제출 버튼 클릭 시 데이터 저장
     $("#sendAuth").click(function() {
-        const fileInput = document.querySelector('input[type="file"]');
         const formData = new FormData();
-        if (fileInput && fileInput.files.length > 0) {
-            // 파일에 대한 유효성 검증
-            var file = fileInput.files[0];
-            if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
-                formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
 
-                 $.ajax({
-                    url: '/auditMgmt/sendLabourAuthData',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
-                    contentType: false,  // 기본 contentType을 사용하지 않음
-                    success: function(response) {
-                        showAlert('success',response);
-                    },
-                    error: function(xhr, status, error) {
-                        showAlert('warning','데이터 저장에 실패했습니다.');
-                    }
-                });
-            } else {
-                showAlert('warning','파일 검증 실패했습니다.');
-                console.log("파일 검증 실패: " + file.name);
+        var chkValue = $("input:radio[name=checkbox1]:checked").val();
+        if(chkValue == "file"){
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files.length > 0) {
+                // 파일에 대한 유효성 검증
+                var file = fileInput.files[0];
+                if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
+                    formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
+                } else {
+                    return false;
+                    showAlert('warning','파일 검증 실패했습니다.');
+                    console.log("파일 검증 실패: " + file.name);
+                }
             }
+        }else{
+            var tableData = [];
+
+            $("#itemTable tbody tr").each(function() {
+                var row = {};
+                var fileCnt = {};
+                row['AUTH_TYPE'] = $(this).find('td').eq(0).text();
+                row['AUTH_CODE'] = $(this).find('td').eq(1).text() == ''?$(this).find('input[name="AUTH_CODE"]').val():$(this).find('td').eq(1).text();
+                row['AUTH_DATE'] = $(this).find('input[name="AUTH_DATE"]').val();
+                row['EXP_DATE'] = $(this).find('input[name="EXP_DATE"]').val();
+                row['REG_INPUT_DATE'] = $(this).find('input[name="REG_INPUT_DATE"]').val();
+                //APPROVED, SEND 상태인 항목은 제외
+                if($(this).find('input[name="ITEM_STATE"]').val() == 'REJECT' || $(this).find('input[name="ITEM_STATE"]').val() == 'SAVE' || $(this).find('input[name="ITEM_STATE"]').val() == null){
+                    var fileInput = $(this).find('input[type="file"]')[0];
+                    if (fileInput && fileInput.files.length > 0) {
+                        row['FILE_NAME'] = fileInput.files[0].name;
+                    }
+
+                    if(row['FILE_NAME'] == undefined){
+                        row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
+                    }
+
+                    console.log("insert data"+row['FILE_NAME']);
+                    tableData.push(row);
+                }
+            });
         }
+
+        formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
+
+        $.ajax({
+            url: '/auditMgmt/sendLabourAuthData',
+            type: 'POST',
+            data: formData,
+            processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
+            contentType: false,  // 기본 contentType을 사용하지 않음
+            success: function(response) {
+                showAlert('success',response);
+            },
+            error: function(xhr, status, error) {
+                showAlert('warning','데이터 저장에 실패했습니다.');
+            }
+        });
     });
 
 

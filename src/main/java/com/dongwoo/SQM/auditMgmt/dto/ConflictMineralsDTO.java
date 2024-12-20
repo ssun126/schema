@@ -43,7 +43,7 @@ public class ConflictMineralsDTO {
     @JsonProperty("FILE_PATH")
     private String FILE_PATH;
     @JsonProperty("AUTH_SEQ")
-    private String AUTH_SEQ;
+    private int AUTH_SEQ;
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
 }

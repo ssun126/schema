@@ -63,7 +63,7 @@ public class LabourHRService {
         LabourHRDTO dto = new LabourHRDTO();
         log.info("fileNames.length??????"+fileNames);
         // 파일이 존재하면 처리
-        if (fileNames != null && authMgmtDTO.getAUTH_SEQ() != null) {
+        if (fileNames != null && authMgmtDTO != null) {
 
             String filePath = saveFile(fileNames);
 

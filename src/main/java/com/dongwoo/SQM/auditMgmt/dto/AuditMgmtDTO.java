@@ -12,7 +12,7 @@ public class AuditMgmtDTO {
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
     @JsonProperty("AUTH_SEQ")
-    private String AUTH_SEQ;
+    private int AUTH_SEQ;
     @JsonProperty("APPROVE_STATE")
     private String APPROVE_STATE;
     @JsonProperty("APPROVE_DATE")
