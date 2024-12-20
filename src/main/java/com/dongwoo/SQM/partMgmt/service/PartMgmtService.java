@@ -1,8 +1,7 @@
 package com.dongwoo.SQM.partMgmt.service;
 
-import com.dongwoo.SQM.partMgmt.dto.PartMgmtDTO;
+import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.repository.PartMgmtRepository;
-import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,11 +57,54 @@ public class PartMgmtService {
         return flag;
     }
 
-    public void updateApprovalStatus(String idx, String status){
+    public void updateApprovalStatus(int idx, String status){
          partMgmtRepository.updateApprovalStatus(idx,status);
     }
 
     public void updateActive(String status, int idx){
         partMgmtRepository.updateActive(status,idx);
     }
+
+
+    /*********************************************************************************************************************
+    ** Detail v페이지
+    ** Msds / Rohs / Halogen 페이지 **
+    *********************************************************************************************************************/
+    //msds 데이터 로직
+    public int insertMsdsData(partDetailMsdsDTO msdsDTO){
+        return partMgmtRepository.insertMsdsData(msdsDTO);
+    }
+    public int updateMsdsData(partDetailMsdsDTO msdsDTO){
+        return partMgmtRepository.updateMsdsData(msdsDTO);
+    }
+
+    //rohs 데이터 로직
+
+    public int insertRohsData(partDetailRohsDTO rohsDTO){
+        return partMgmtRepository.insertRohsData(rohsDTO);
+    }
+    public int updateRohsData(partDetailRohsDTO rohsDTO) {
+        return partMgmtRepository.updateRohsData(rohsDTO);
+    }
+
+    //halg 데이터 로직
+    public int insertHalogenData(partDetailHalGDTO halGDTO){
+        return partMgmtRepository.saveHalogenData(halGDTO);
+    }
+    public int updateHalogenData(partDetailHalGDTO halGDTO){
+        return partMgmtRepository.updateHalogenData(halGDTO);
+    }
+
+    //etc 데이터 로직
+    public int insertEtcData(partDetailEtcDTO etcDTO){
+        return partMgmtRepository.insertEtcData(etcDTO);
+    }
+    public int deleteEtcData(int ETC_IDX){
+        return partMgmtRepository.deleteEtcData(ETC_IDX);
+    }
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** svhc 페이지 **
+     *********************************************************************************************************************/
 }

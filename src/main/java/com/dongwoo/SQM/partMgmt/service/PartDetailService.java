@@ -59,7 +59,7 @@ public class PartDetailService {
             String fileName = fileInfo.getOriginalFilename();
             Path path = Paths.get("./uploads"+sUrl+fileName);
             Files.createDirectories((path.getParent()));
-            fileInfo.transferTo((path));
+            fileInfo.transferTo(path);
             //sampleFileDTOList.add(sampleFileDTO);
 
             filePath ="./uploads"+sUrl;
@@ -91,58 +91,61 @@ public class PartDetailService {
     public List<partDetailEtcDTO> getEtcData(String idx) {
         return partMgmtRepository.getEtcData(idx);
     }
+//
+//    public void saveMsdsData(partDetailMsdsDTO msdsDTO){
+//
+//        if(msdsDTO.getMSDS_IDX().equals("")){
+//            partMgmtRepository.saveMsdsData(msdsDTO);
+//        }else{
+//            partMgmtRepository.updateMsdsData(msdsDTO);
+//        }
+//    }
 
-    public void saveMsdsData(partDetailMsdsDTO msdsDTO){
 
-        if(msdsDTO.getMSDS_IDX().equals("")){
-            partMgmtRepository.saveMsdsData(msdsDTO);
-        }else{
-            partMgmtRepository.updateMsdsData(msdsDTO);
-        }
-    }
 
-    public void saveRohsData(partDetailRohsDTO rohsDTO){
-        if(rohsDTO.getROHS_IDX().equals("")){
-            partMgmtRepository.saveRohsData(rohsDTO);
-        }else{
-            partMgmtRepository.updateRohsData(rohsDTO);
-        }
 
-    }
+//    public void saveRohsData(partDetailRohsDTO rohsDTO){
+//        if(rohsDTO.getROHS_IDX().equals("")){
+//            partMgmtRepository.saveRohsData(rohsDTO);
+//        }else{
+//            partMgmtRepository.updateRohsData(rohsDTO);
+//        }
+//
+//    }
 
-    public void saveHalogenData(partDetailHalGDTO halGDTO){
-        if(halGDTO.getHALOGEN_IDX().equals("")){
-            partMgmtRepository.saveHalogenData(halGDTO);
-        }else{
-            partMgmtRepository.updateHalogenData(halGDTO);
-        }
+//    public void saveHalogenData(partDetailHalGDTO halGDTO){
+//        if(halGDTO.getHALOGEN_IDX().equals("")){
+//            partMgmtRepository.saveHalogenData(halGDTO);
+//        }else{
+//            partMgmtRepository.updateHalogenData(halGDTO);
+//        }
+//
+//    }
 
-    }
-
-    public void saveEtcData(partDetailEtcDTO etcDTO,MultipartFile files,String comCode){
-        if(etcDTO.getETC_IDX().equals("")){
-            partMgmtRepository.saveEtcData(etcDTO);
-        }else{
-            //수정
-            if(!files.isEmpty()){
-                //기존파일 삭제
-                deleteFileData_Idx(etcDTO.getETC_IDX());
-                //String etc_filepath = uploadFileData(msdsDTO.getMSDS_PART_CODE(),files);
-                String etc_filepath = uploadFileData(comCode,files);
-                String etc_filename = files.getOriginalFilename();
-
-                etcDTO.setETC_FILE_NAME(etc_filename);
-                etcDTO.setETC_FILE_PATH(etc_filepath);
-
-            }
-            partMgmtRepository.updateEtcData(etcDTO);
-        }
-
-    }
-
-    public void deleteEtcData(String idx){
-        partMgmtRepository.deleteEtcData(idx);
-    }
+//    public void saveEtcData(partDetailEtcDTO etcDTO,MultipartFile files,String comCode){
+//        if(etcDTO.getETC_IDX().equals("")){
+//            partMgmtRepository.saveEtcData(etcDTO);
+//        }else{
+//            //수정
+//            if(!files.isEmpty()){
+//                //기존파일 삭제
+//                deleteFileData_Idx(etcDTO.getETC_IDX());
+//                //String etc_filepath = uploadFileData(msdsDTO.getMSDS_PART_CODE(),files);
+//                String etc_filepath = uploadFileData(comCode,files);
+//                String etc_filename = files.getOriginalFilename();
+//
+//                etcDTO.setETC_FILE_NAME(etc_filename);
+//                etcDTO.setETC_FILE_PATH(etc_filepath);
+//
+//            }
+//            partMgmtRepository.updateEtcData(etcDTO);
+//        }
+//
+//    }
+//
+//    public void deleteEtcData(String idx){
+//        partMgmtRepository.deleteEtcData(idx);
+//    }
 
     //svhc
     public List<SvhcListDTO> getSvhcData(){

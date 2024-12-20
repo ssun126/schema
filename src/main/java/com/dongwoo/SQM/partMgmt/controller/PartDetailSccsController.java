@@ -84,7 +84,7 @@ public class PartDetailSccsController {
 
         //승인요청 pm_idx 상태 바꿈
         if(flag.equals("next")){
-            partMgmtService.updateApprovalStatus(pm_idx,"3");
+            //partMgmtService.updateApprovalStatus(pm_idx,"3");
         }
 
 

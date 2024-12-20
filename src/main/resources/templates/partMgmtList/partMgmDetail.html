@@ -42,10 +42,10 @@
     <div class="cui_main">
         <div class="cui_head head_title">
             <div class="head_content" style="padding:0px 10px 10px 10px;">
-                <h3><span data-langsid="자재코드"></span> : <span th:text="${PM_PART_CODE}"></span></h3>
-                <h3><span data-langsid="자재명"></span> : <span th:text="${PART_NAME}"></span></h3>
-                <h3><span data-langsid="승인현황"></span> : <span th:text="${PM_APPROVAL_STATUS}"></span></h3>
-                <h3><span data-langsid="사용여부"></span> : <span th:text="${PM_ACTIVE_YN}"></span></h3>
+                <h3><span data-langsid="자재코드"></span> : <span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+                <h3><span data-langsid="자재명"></span> : <span th:text="${partMgmtDTO.PART_NAME}"></span></h3>
+                <h3><span data-langsid="승인현황"></span> : <span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}"></span></h3>
+                <h3><span data-langsid="사용여부"></span> : <span th:text="${partMgmtDTO.PM_ACTIVE_YN}"></span></h3>
             </div>
 
         </div>
@@ -58,9 +58,10 @@
                     <li><span data-langsid="SCCS / 성분명세서 / 기타"></span></li>
                 </ol>
             </div>
-            <form class="cui_form_section" data-legend="true" id="frmDetail" action="/user/partMgmt/goSvhc" method="post"  enctype="multipart/form-data" onsubmit="return frmDetailSubmit();">
-                <input type="hidden" name="PM_IDX"/>
-                <input type="hidden" name="SaveMode" value="" />
+            <form class="cui_form_section" data-legend="true" id="frmDetail"  enctype="multipart/form-data" onsubmit="return false;">
+                <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
+                <input type="hidden" name="SaveMode" value=""/>
+                <input type="hidden" name="PM_PART_CODE" th:value="${partMgmtDTO.PM_PART_CODE}"/>
                 <fieldset id="msdsFieldset">
                     <legend><span>MSDS</span></legend>
 
@@ -83,12 +84,12 @@
                         <tr>
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
-                                    <input type="hidden" name="MSDS_IDX">
-                                    <input type="text" class="cui_text_field datepicker" name="MSDS_REG_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="날짜를 입력해주세요." messages="">
+                                    <input type="hidden" name="MSDS_IDX" th:value="${msdsDTO.MSDS_IDX}">
+                                    <input type="text" class="cui_text_field datepicker" th:value="${msdsDTO.MSDS_REG_DATE}"  name="MSDS_REG_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="날짜를 입력해주세요." messages="">
                                 </div>
                             </td>
-                            <td><input type="text" class="cui_text_field" name="MSDS_LANG" reqcheck="reqcheck" data-messages="언어를 입력해주세요." messages=""></td>
-                            <td><input type="text" class="cui_text_field" name="MSDS_APPROVAL_NUM" reqcheck="reqcheck" data-messages="승인번호 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${msdsDTO.MSDS_LANG}" name="MSDS_LANG" reqcheck="reqcheck" data-messages="언어를 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${msdsDTO.MSDS_APPROVAL_NUM}"  name="MSDS_APPROVAL_NUM" reqcheck="reqcheck" data-messages="승인번호 입력해주세요." messages=""></td>
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="MSDS_FILE" >
@@ -146,19 +147,19 @@
                         <tbody id="tableBody2">
                         <tr>
                             <td>
-                                <input type="hidden" name="ROHS_IDX">
-                                <input type="text" class="cui_text_field datepicker" name="ROHS_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="">
+                                <input type="hidden" name="ROHS_IDX" th:value="${rohsDTO.ROHS_IDX}" >
+                                <input type="text" class="cui_text_field datepicker" th:value="${rohsDTO.ROHS_CONFIRM_DATE}" name="ROHS_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="" data-messages="Rohs 확인날짜 입력해주세요." messages="">
                             </td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_CD" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_HG" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_PB" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_CR6" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_PBBS" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_PBDES" reqcheck="reqcheck" ></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_DEHP" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_BBP" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_DBP" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="ROHS_DIBP" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_CD}"  name="ROHS_CD" reqcheck="reqcheck" data-messages="Rohs CD 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_HG}"  name="ROHS_HG" reqcheck="reqcheck" data-messages="Rohs HG 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PB}"  name="ROHS_PB" reqcheck="reqcheck" data-messages="Rohs PB 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_CR6}"  name="ROHS_CR6" reqcheck="reqcheck" data-messages="Rohs CR6 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PBBS}"  name="ROHS_PBBS" reqcheck="reqcheck" data-messages="Rohs PBBS 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PBDES}"  name="ROHS_PBDES" reqcheck="reqcheck" data-messages="Rohs PBDES 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_DEHP}"  name="ROHS_DEHP" reqcheck="reqcheck" data-messages="Rohs DEHP 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_BBP}"  name="ROHS_BBP" reqcheck="reqcheck" data-messages="Rohs BBP 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_DBP}"  name="ROHS_DBP" reqcheck="reqcheck" data-messages="Rohs DBP 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_DIBP}"  name="ROHS_DIBP" reqcheck="reqcheck" data-messages="Rohs DIBP 입력해주세요." messages=""></td>
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="ROHS_FILE">
@@ -205,14 +206,14 @@
                         <tbody id="tableBody3">
                         <tr>
                             <td>
-                                <input type="hidden" name="HALOGEN_IDX">
-                                <input type="text" class="cui_text_field datepicker" name="HALOGEN_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="">
+                                <input type="hidden" name="HALOGEN_IDX" th:value="${halGDTO.HALOGEN_IDX}">
+                                <input type="text" class="cui_text_field datepicker" th:value="${halGDTO.HALOGEN_CONFIRM_DATE}"  name="HALOGEN_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="" data-messages="Halogen 확인날짜 입력해주세요." messages="">
                             </td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_CL" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_BR" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_CLBR" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_F" reqcheck="reqcheck"></td>
-                            <td><input type="text" class="cui_text_field" name="HALOGEN_I" reqcheck="reqcheck"></td>
+                            <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_CL}" name="HALOGEN_CL" reqcheck="reqcheck" data-messages="Halogen CL 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_BR}" name="HALOGEN_BR" reqcheck="reqcheck" data-messages="Halogen BR 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_CLBR}" name="HALOGEN_CLBR" reqcheck="reqcheck" data-messages="Halogen CLBR 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_F}" name="HALOGEN_F" reqcheck="reqcheck" data-messages="Halogen F 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_I}" name="HALOGEN_I" reqcheck="reqcheck" data-messages="Halogen I 입력해주세요." messages=""></td>
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
@@ -231,7 +232,7 @@
                 </fieldset>
                 <fieldset id="etcFieldset">
                     <legend><span data-langsid="기타 분석서/보증서 (Antimony, Cobalt 등)"></span></legend>
-                    <input type="hidden" id="etcCount" name="etcCount" value="0">
+                    <input type="hidden" id="etcCount" name="etcCount" value="0"  th:value="${ETC_COUNT}">
                     <table class="cui_table center">
                         <colgroup>
                             <col style="width:110px;">
@@ -250,6 +251,22 @@
                         </tr>
                         </thead>
                         <tbody id="etcBodyArea">
+                            <tr th:each="etcDTO,etcStat : ${etcListDTO}">
+                                <td><input type="hidden" th:name="'ETC_IDX'+${etcStat.count}" th:value="${etcDTO.ETC_IDX}" >
+                                    <input type="text" class="cui_text_field datepicker"  th:value="${etcDTO.ETC_CONFIRM_DATE}" th:name="'ETC_CONFIRM_DATE'+${etcStat.count}"  datePickerControl="" ></td>
+                                <td><input type="text" class="cui_text_field" th:value="${etcDTO.ETC_ANALYSE_ENTRY}" th:name="'ETC_ANALYSE_ENTRY'+${etcStat.count}"  ></td>
+                                <td><input type="text" class="cui_text_field"  th:value="${etcDTO.ETC_ANALYSE_RESULT}" th:name="'ETC_ANALYSE_RESULT'+${etcStat.count}" >
+                                    <input type="hidden" class="cui_text_field" th:name="'ETC_FLAG'+${etcStat.count}"></td>
+                                <td>
+                                    <div class="cui_attachments" style="display:flex;">
+                                        <input type="file" class="cui_file_field" name="ETC_FILE">
+                                    </div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>
+                                    </div>
+                                </td>
+                                <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span data-langsid="삭제"></span></button></td>
+                            </tr>
                         </tbody>
                     </table>
                 </fieldset>
@@ -272,12 +289,14 @@
         etcCount++;
 
         const newRow = $('<tr>'
-                     + '    <td><input type="hidden" name="ETC_IDX" ><input type="text" class="cui_text_field datepicker" name="ETC_CONFIRM_DATE' + etcCount + '"  datePickerControl=""></td>'
+                     + '    <td><input type="hidden" name="ETC_IDX' + etcCount + '"" ><input type="text" class="cui_text_field datepicker" name="ETC_CONFIRM_DATE' + etcCount + '"  datePickerControl="" ></td>'
                      + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_ENTRY' + etcCount + '" ></td>'
-                     + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT' + etcCount + '"  ></td>'
+                     + '                <td><input type="text" class="cui_text_field" name="ETC_ANALYSE_RESULT' + etcCount + '"  >'
+                     +'                     <input type="hidden" class="cui_text_field" name="ETC_FLAG' + etcCount + '"  ></td>'
                      + '                <td>'
                      + '                    <div class="cui_attachments" style="display:flex;">'
-                     + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '">'
+<!--                     + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '">'-->
+                     + '                        <input type="file" class="cui_file_field" name="ETC_FILE">'
                      + '                    </div>'
                      + '                </td>'
                      + '    <td><button type="button" class="cui_button icon" data-cui-icon="trash"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button></td>'
@@ -286,6 +305,9 @@
 
         newRow.find("button[data-cui-icon=trash]").bind("click", function () {
             $(this).parent().parent().remove();
+<!--            var row = $(this).parent().parent();-->
+<!--            row.css("display","none");-->
+<!--            row.find("input[name^=ETC_FLAG]").val('DEL');-->
         });
 
         $('#etcBodyArea').append(newRow);
@@ -293,19 +315,74 @@
     });
 
     var frmDetailSubmit = function () {
+        //e.preventDefault();
+
         var frmObj = $("#frmDetail");
-        return Common.Validate(frmObj);
+        var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+        //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.formData  = new FormData();
+        ReqInfo.AddParameter(frmObj);
+        Common.Ajax("/user/partMgmt/goMsdsSave", ReqInfo, function (response) {
+                if (response == "OK") {
+                    if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                        Common.Msg(siteLang.getLang("저장되었습니다."));
+                        location.reload();
+                    }
+                }else {
+                    Common.MoveUrl("/user/partMgmt/goSvhcDetail?PM_IDX=" + response.split('|||')[1]);
+                }
+            });
+
+        //ReqInfo.formData
+        //return Common.Validate(frmObj);
+
     }
 
     var frmDetailSave = function () {
-        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
-            mode : "confrim"
-            , okback : function () {
-                $("#frmDetail").find("input[name=SaveMode]").val("Save");
-                $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
-                $("#frmDetail").submit();
+        //데이터가 아무것도 없을 때는 저장할 수 없음
+        var flag = false;
+
+        $("input[reqcheck=reqcheck]").each(function(){
+            if($(this).val() != ''){
+                flag = true;
+                return;
             }
         });
+
+        //etc
+        $("input[type=text][name^=ETC_]").each(function(){
+            if($(this).val() != ''){
+                flag = true;
+                return;
+            }
+        });
+
+        //이전의 값이 읎을때
+        if(!flag){
+            $("input[type=file]").each(function(){
+                if($(this).val() != ''){
+                    flag = true;
+                    return;
+                }
+            });
+        }
+
+        if(flag){
+            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    $("#frmDetail").find("input[name=SaveMode]").val("Save");
+                    $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                    //$("#frmDetail").submit();
+                    frmDetailSubmit();
+                }
+            });
+        }else{
+            Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
+            return;
+        }
+
     }
 
     var frmDetailNext = function () {
@@ -314,7 +391,8 @@
             , okback : function () {
                 $("#frmDetail").find("input[name=SaveMode]").val("Next");
                 $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                $("#frmDetail").submit();
+                //$("#frmDetail").submit();
+                frmDetailSubmit();
             }
         });
        }
