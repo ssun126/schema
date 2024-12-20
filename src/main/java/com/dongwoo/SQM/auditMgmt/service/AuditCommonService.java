@@ -63,56 +63,46 @@ public class AuditCommonService {
         log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
         log.info(" total:::::::::"+  total);
 
-        // 파일이 있는 경우 파일 정보 저장
-        if (fileNames != null && fileNames.length > 0) {
-            // 각 파일을 저장하고 경로를 DTO에 추가
-            for(int i = 0; i < fileNames.length; i++) {
-                String filePath = saveFile(fileNames[i]);
+        try {
+            // 파일이 있는 경우 파일 정보 저장
+            if (fileNames != null && fileNames.length > 0) {
+                // 각 파일을 저장하고 경로를 DTO에 추가
+                for (int i = 0; i < fileNames.length; i++) {
+                    String filePath = saveFile(fileNames[i]);
 
-                // Paths 클래스를 사용하여 파일명 추출
-                Path path = Paths.get(filePath);
-                String fileName = path.getFileName().toString();  // 경로에서 파일명만 추출
+                    // Paths 클래스를 사용하여 파일명 추출
+                    Path path = Paths.get(filePath);
+                    String fileName = path.getFileName().toString();  // 경로에서 파일명만 추출
 
-                log.info("원본 파일명: " + fileNames[i].getOriginalFilename());
-                AuditMgmtDTO dto = new AuditMgmtDTO();
-                dto.setCOM_CODE(comCode);
-                dto.setAUTH_TYPE(type); // SAFETY / QUALITY
-                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
-                dto.setFILE_NAME(fileName);  // 파일명 추가
-                dto.setFILE_PATH(filePath);  // 파일 경로 추가
-                log.info("dto: " + dto);
-                int rtCnt = auditMgmtRepository.insertFileInfo(dto);  // insert
-                log.info("파일저장 Count: " + rtCnt);
+                    log.info("원본 파일명: " + fileNames[i].getOriginalFilename());
+                    AuditMgmtDTO dto = new AuditMgmtDTO();
+                    dto.setCOM_CODE(comCode);
+                    dto.setAUTH_TYPE(type); // SAFETY / QUALITY
+                    dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
+                    dto.setFILE_NAME(fileName);  // 파일명 추가
+                    dto.setFILE_PATH(filePath);  // 파일 경로 추가
+                    log.info("dto: " + dto);
+                    int rtCnt = auditMgmtRepository.insertFileInfo(dto);  // insert
+                    log.info("파일저장 Count: " + rtCnt);
+                }
+            } else {
+
+                log.info("authItems::::: " + authItems);
+                //인증서 데이터 저장
+                for (AuditItemPointDTO dto : authItems) {
+                    dto.setCOM_CODE(comCode);
+                    dto.setAUTH_TYPE(type); // SAFETY / QUALITY
+                    dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ()); //제출 또는 저장
+                    dto.setREG_COM_USER_IDX(comUserIdx); //업무자 IDX
+                    log.info("insert dto::::: " + dto);
+                    int rtCnt = auditMgmtRepository.insertItemPoint(dto);  // insert
+                    log.info("데이터 저장 Count: " + rtCnt);
+                }
             }
-        }else{
-
-            log.info("authItems::::: " + authItems);
-            //인증서 데이터 저장
-            for (AuditItemPointDTO dto : authItems) {
-                dto.setCOM_CODE(comCode);
-                dto.setAUTH_TYPE(type); // SAFETY / QUALITY
-                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ()); //제출 또는 저장
-                dto.setREG_COM_USER_IDX(comUserIdx); //업무자 IDX
-
-               /* Map<String, Object> params = new HashMap<>();
-                params.put("AUTH_CODE", dto.getAUTH_CODE());
-                params.put("COM_CODE", comCode);
-                IsoAuthItemDTO ItemDTO = isoAuthRepository.findByIsoAuthItem(params);*/
-                /*if(ItemDTO != null){
-                    log.info(ItemDTO.getITEM_STATE());
-                    log.info(dto.getITEM_STATE());
-                    if(ItemDTO != dto) {
-                        isoAuthRepository.updateItem(dto);  // updateItem
-                    }
-                }else {*/
-                int rtCnt = auditMgmtRepository.insertItemPoint(dto);  // insert
-                log.info("데이터 저장 Count: " + rtCnt);
-                //}
-            }
-
+            log.info("회사별 Audit 데이터 저장 완료");
+        }catch (Exception e){
+            log.info("Error"+e.getMessage());
         }
-        log.info("회사별 Audit 데이터 저장 완료");
-
     }
 
     public String saveFile(MultipartFile file) throws IOException {

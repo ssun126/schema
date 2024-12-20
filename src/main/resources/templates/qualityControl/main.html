@@ -232,7 +232,7 @@
                             <td style="text-align: center;"></td>
                             <td style="text-align: right;"></td>
                             <td>
-                                <input type="text" name="comment" class="cui_text_field">
+                                <input type="text" name="COMMENT" class="cui_text_field">
                                 <input type="hidden" name="AUDIT_ID" th:value="${data.AUDIT_ID}">
                             </td>
                         </tr>
@@ -495,7 +495,7 @@
                 var row = {};
                 var fileCnt = {};
                 row['POINT'] = $(this).find('td').eq(5).text();
-                row['COMMENT'] = $(this).find('input[name="COMMENT"]').val();
+                row['COMMENT'] = $(this).find('input[name="COMMENT"]').val() || '';
                 row['AUDIT_ID'] = $(this).find('input[name="AUDIT_ID"]').val();
 
                 console.log("insert data"+row['AUDIT_ID']);
@@ -504,6 +504,7 @@
         }
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
         formData.append('type', 'QUALITY');  // flag가 SAFETY / QUALITY
+        formData.append('total', 100);  // total 점수 $('#totalPoint').val();
 
          $.ajax({
             url: '/auditMgmt/sendAuthData',

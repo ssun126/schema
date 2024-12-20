@@ -16,9 +16,9 @@ public class AuditItemPointDTO {
     @JsonProperty("POINT")
     private int POINT;
     @JsonProperty("COMMENT")
-    private int COMMENT;
+    private String COMMENT;
     @JsonProperty("REG_COM_USER_IDX")
     private int REG_COM_USER_IDX;
     @JsonProperty("REG_DATE")
-    private int REG_DATE;
+    private String REG_DATE;
 }
