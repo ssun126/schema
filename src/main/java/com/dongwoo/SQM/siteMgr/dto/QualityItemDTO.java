@@ -5,10 +5,18 @@ import lombok.Data;
 
 @Data
 public class QualityItemDTO {
-    @JsonProperty("MAIN_ITEM")
-    private String MAIN_ITEM;
+    @JsonProperty("PROVISION")
+    private String PROVISION;
     @JsonProperty("AUDIT_ID")
-    private int AUDIT_ID;
+    private String AUDIT_ID;
     @JsonProperty("AUDIT_ITEM")
     private String AUDIT_ITEM;
+    @JsonProperty("AUDIT_CRITERIA")
+    private String AUDIT_CRITERIA;
+    @JsonProperty("POINT_CRITERIA")
+    private String POINT_CRITERIA;
+    @JsonProperty("DIVISION1")
+    private String DIVISION1;
+    @JsonProperty("DIVISION2")
+    private String DIVISION2;
 }

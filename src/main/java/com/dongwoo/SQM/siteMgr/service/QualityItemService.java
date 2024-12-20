@@ -44,10 +44,13 @@ public class QualityItemService {
                 log.info("test2-1");
                 count++;
 
-                pstmt.setString(1,dto.getMAIN_ITEM());
-                pstmt.setInt(2,dto.getAUDIT_ID());
+                pstmt.setString(1,dto.getPROVISION());
+                pstmt.setString(2,dto.getAUDIT_ID());
                 pstmt.setString(3,dto.getAUDIT_ITEM());
-
+                pstmt.setString(4,dto.getAUDIT_CRITERIA());
+                pstmt.setString(5,dto.getPOINT_CRITERIA());
+                pstmt.setString(6,dto.getDIVISION1());
+                pstmt.setString(7,dto.getDIVISION2());
                 log.info("test2-2");
                 pstmt.addBatch();
                 pstmt.clearParameters();

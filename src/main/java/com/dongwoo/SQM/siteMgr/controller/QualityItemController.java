@@ -56,14 +56,21 @@ public class QualityItemController {
             DataFormatter formatter = new DataFormatter();
             XSSFRow row = worksheet.getRow(i);
 
-            String MAIN_ITEM = formatter.formatCellValue((row.getCell(0)));
+            String PROVISION = formatter.formatCellValue((row.getCell(0)));
             String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
             String AUDIT_ITEM = formatter.formatCellValue((row.getCell(2)));
+            String AUDIT_CRITERIA = formatter.formatCellValue((row.getCell(3)));
+            String POINT_CRITERIA = formatter.formatCellValue((row.getCell(4)));
+            String DIVISION1 = formatter.formatCellValue((row.getCell(5)));
+            String DIVISION2= formatter.formatCellValue((row.getCell(6)));
 
-
-            qualityItemDTO.setMAIN_ITEM(MAIN_ITEM);
-            qualityItemDTO.setAUDIT_ID(Integer.parseInt(AUDIT_ID));
+            qualityItemDTO.setPROVISION(PROVISION);
+            qualityItemDTO.setAUDIT_ID(AUDIT_ID);
             qualityItemDTO.setAUDIT_ITEM(AUDIT_ITEM);
+            qualityItemDTO.setAUDIT_CRITERIA(AUDIT_CRITERIA);
+            qualityItemDTO.setPOINT_CRITERIA(POINT_CRITERIA);
+            qualityItemDTO.setDIVISION1(DIVISION1);
+            qualityItemDTO.setDIVISION2(DIVISION2);
 
 
             qualityItemDTOList.add(qualityItemDTO);
