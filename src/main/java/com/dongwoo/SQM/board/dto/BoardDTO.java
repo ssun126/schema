@@ -38,6 +38,23 @@ public class BoardDTO {
     private String FILE_SHOTNAME; // 파일 이름 이름만.
     @JsonProperty("FILE_PATH")
     private String FILE_PATH; // 파일이 저장된 경로
+    @JsonProperty("ANSWER")
+    private String ANSWER;
+    @JsonProperty("BOARD_STATUS")
+    private String BOARD_STATUS;
+
+    @JsonProperty("ANSWER_ID")
+    private String ANSWER_ID;
+    @JsonProperty("ANSWER_DATE")
+    private String ANSWER_DATE;
+    @JsonProperty("ANSWER_FILE_NAME")
+    private String ANSWER_FILE_NAME; // 답변 파일 이름 full
+    @JsonProperty("ANSWER_FILE_SHOTNAME")
+    private String ANSWER_FILE_SHOTNAME; // 답변 파일 이름 이름만.
+    @JsonProperty("ANSWER_FILE_PATH")
+    private String ANSWER_FILE_PATH; // 담변 파일이 저장된 경로
+
+
 
     @JsonProperty("keyword")
     private String keyword;

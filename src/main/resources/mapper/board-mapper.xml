@@ -6,9 +6,11 @@
 
     <select id="getList"  parameterType="Criteria" resultType="board">
 
-            SELECT BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS ,FILE_PATH
+            SELECT BOARD_IDX, BOARD_TITLE, BOARD_DESC, INPUT_USER_ID, INPUT_DATE, BOARD_HITS ,FILE_PATH ,BOARD_STATUS
             FROM SC_BOARD_INFO
             WHERE 1=1
+            AND USE_YN = 'Y'
+            AND BOARD_TYPE =#{boardType}
             <if test="keyword != null ">
                 <if test="searchType == 1 ">
                     AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
@@ -30,6 +32,8 @@
         select count(*) CNT
         from SC_BOARD_INFO
         WHERE 1=1
+        AND USE_YN = 'Y'
+        AND BOARD_TYPE =#{boardType}
         <if test="keyword != null ">
             <if test="searchType == 1 ">
                 AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
@@ -45,8 +49,8 @@
 
 
     <insert id="save" parameterType="board">
-        INSERT INTO SC_BOARD_INFO(BOARD_TITLE, BOARD_TYPE, INPUT_USER_ID, BOARD_PASS, BOARD_DESC, INPUT_DATE, FILE_NAME, FILE_PATH)
-        values(#{BOARD_TITLE}, #{BOARD_TYPE}, #{INPUT_USER_ID}, #{BOARD_PASS}, #{BOARD_DESC}, sysdate, #{FILE_NAME}, #{FILE_PATH})
+        INSERT INTO SC_BOARD_INFO(BOARD_TITLE, BOARD_TYPE, INPUT_USER_ID, BOARD_PASS, BOARD_DESC, INPUT_DATE, FILE_NAME, FILE_PATH ,BOARD_STATUS ,USE_YN)
+        values(#{BOARD_TITLE}, #{BOARD_TYPE}, #{INPUT_USER_ID}, #{BOARD_PASS}, #{BOARD_DESC}, sysdate, #{FILE_NAME}, #{FILE_PATH} ,'1' ,'Y')
     </insert>
 
     <update id="update" parameterType="board">
@@ -63,8 +67,29 @@
             FILE_NAME =#{FILE_NAME} ,
             FILE_PATH =#{FILE_PATH} ,
         </if>
+        <if test="FILE_NAME == null ">
+            FILE_NAME =null ,
+            FILE_PATH =null ,
+        </if>
             MODIFY_USER_ID =#{MODIFY_USER_ID},
             MODIFY_DATE = sysdate
+        where BOARD_IDX=#{BOARD_IDX}
+    </update>
+
+    <update id="updateAnswer" parameterType="board">
+        update SC_BOARD_INFO set
+            ANSWER =#{ANSWER} ,
+            BOARD_STATUS ='2' ,
+        <if test="ANSWER_FILE_PATH != null and ANSWER_FILE_PATH != ''">
+            ANSWER_FILE_NAME =#{ANSWER_FILE_NAME} ,
+            ANSWER_FILE_PATH =#{ANSWER_FILE_PATH} ,
+        </if>
+        <if test="ANSWER_FILE_NAME == null ">
+            ANSWER_FILE_NAME =null ,
+            ANSWER_FILE_PATH =null ,
+        </if>
+        ANSWER_ID =#{ANSWER_ID},
+        ANSWER_DATE = sysdate
         where BOARD_IDX=#{BOARD_IDX}
     </update>
 
@@ -73,27 +98,31 @@
         update SC_BOARD_INFO set BOARD_HITS=BOARD_HITS+1 where BOARD_IDX=#{id}
     </update>
     <select id="findById" parameterType="int" resultType="board">
-        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_DESC, BOARD_HITS, BOARD_PASS, INPUT_DATE, FILE_NAME ,FILE_PATH
+        select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_DESC, BOARD_HITS, BOARD_PASS
+        , INPUT_DATE, FILE_NAME ,FILE_PATH ,BOARD_STATUS
+        ,ANSWER ,ANSWER ,ANSWER_DATE,ANSWER_ID,ANSWER_FILE_NAME,ANSWER_FILE_PATH
         from SC_BOARD_INFO where BOARD_IDX=#{id}
     </select>
 
     <update id="updateFile">
         update SC_BOARD_INFO set FILE_NAME=#{FILE_NAME} ,FILE_PATH=#{FILE_PATH} where BOARD_IDX=#{BOARD_IDX}
     </update>
+
     <select id="findAll" resultType="board">
         select BOARD_IDX, BOARD_TITLE, INPUT_USER_ID, INPUT_DATE, BOARD_HITS, FILE_NAME, FILE_PATH
         from SC_BOARD_INFO order by BOARD_IDX DESC
     </select>
 
+
+    <update id="deleteUpdate" parameterType="int" >
+        UPDATE SC_BOARD_INFO
+        SET USE_YN = 'N'
+            where BOARD_IDX=#{id}
+    </update>
+
     <delete id="delete" parameterType="int" >
         delete from SC_BOARD_INFO where BOARD_IDX=#{id}
     </delete>
 
-<!--    <insert id="saveFile" parameterType="boardFile">-->
-<!--        insert into BOARD_FILE(ORG_FILE_NAME, FILE_NAME, BOARD_IDX, USE_YN, INPUT_DATE-->
-<!--        values (#{ORG_FILE_NAME}, #{FILE_NAME}, #{BOARD_IDX}, 'Y', sysdate)-->
-<!--    </insert>-->
-<!--    <select id="findFile" parameterType="Long" resultType="boardFile">-->
-<!--        select * from BOARD_FILE where BOARD_IDX = #{id}-->
-<!--    </select>-->
+
 </mapper>

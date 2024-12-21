@@ -51,16 +51,13 @@
                 <div class="toolbar_content">
                     <div class="toolbar_default"></div>
                 </div>
-                <button type="button" class="cui_button" onclick="location.href='/admin/board/qna/save'" th:if="${userGubun == '0'}"><span data-langsid="작성"></span></button>
-                <button type="button" class="cui_button" onclick="location.href='/user/board/qna/save'" th:if="${userGubun == '1'}"><span data-langsid="작성"></span></button>
+                <button type="button" class="cui_button" onclick="location.href='/admin/board/notice/save'" th:if="${userGubun == '0'}"><span data-langsid="작성"></span></button>
             </div>
-
 
             <table class="cui_table cui_post_table" id="boardTable">
                 <colgroup>
                     <col style="width:110px;">
                     <col>
-                    <col style="width:110px;">
                     <col style="width:120px;">
                     <col style="width:150px;">
                     <col style="width:110px;">
@@ -69,7 +66,7 @@
                 <tr class="tHead">
                     <th data-langsid="번호"></th>
                     <th data-langsid="제목"></th>
-                    <th data-langsid="상태"></th>
+
                     <th data-langsid="작성자"></th>
                     <th data-langsid="등록일"></th>
                     <th data-langsid="조회수"></th>
@@ -172,8 +169,7 @@
                     response.forEach(function(board) {
                         var row = '<tr>' +
                                         '<td class="center">' + board.BOARD_IDX + '</td>' +
-                                        '<div class="cui_subject"><td><a href="/'+url+'/board/qna/' + board.BOARD_IDX + '" class="full-clickable">' + board.BOARD_TITLE + '</a></td></div>' +
-                                        '<td class="center">' + (board.BOARD_STATUS === '1' ? '등록' : (board.BOARD_STATUS === '2' ? '답변완료' : '')) +  '</td>' +
+                                        '<div class="cui_subject"><td><a href="/'+url+'/board/notice/' + board.BOARD_IDX + '" class="full-clickable">' + board.BOARD_TITLE + '</a></td></div>' +
                                         '<td class="center">' + board.INPUT_USER_ID + '</td>' +
                                         '<td class="center">' + board.INPUT_DATE + '</td>' +
                                         '<td class="center">' + board.BOARD_HITS + '</td>' +

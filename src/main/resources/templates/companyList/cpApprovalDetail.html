@@ -349,7 +349,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span id="popTitle">반려</span></div>
+                <div class="main_label"><span id="popTitle" data-langsid="반려"></span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
@@ -436,9 +436,7 @@
             },
             error: function(err) {
               console.log("에러발생", err);
-               //showAlert('warning',err);
                Common.Msg(err)  ;
-               //Common.Loading.Hide();
             }
         });
    }
@@ -464,7 +462,7 @@
        let comCode = document.getElementById('COM_CODE').value ;
 
        if(fileName == ""){
-           showAlert('warning', '첨부된 파일이 없습니다.');
+           Common.Msg('첨부된 파일이 없습니다.')  ;
            return;
        }
 
@@ -492,7 +490,6 @@
        })
        .catch(error => {
            console.error('파일 다운로드 실패:', error);
-           //showAlert('warning', '파일 다운로드 실패.');
            Common.Msg('파일 다운로드 실패.')
        });
    }

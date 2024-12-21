@@ -17,6 +17,13 @@ public class BoardService {
     public void save(BoardDTO boardDTO) {
         boardRepository.save(boardDTO);
     }
+    public void update(BoardDTO boardDTO) {
+        boardRepository.update(boardDTO);
+    }
+
+    public void updateAnswer(BoardDTO boardDTO) {
+        boardRepository.updateAnswer(boardDTO);
+    }
 
     public List<BoardDTO> findAll() {
         return boardRepository.findAll();
@@ -30,9 +37,7 @@ public class BoardService {
         return boardRepository.findById(id);
     }
 
-    public void update(BoardDTO boardDTO) {
-        boardRepository.update(boardDTO);
-    }
+
 
     public void delete(int id) {
         boardRepository.delete(id);

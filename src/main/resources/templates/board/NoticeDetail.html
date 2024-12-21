@@ -33,7 +33,7 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>Q&A</span></h2>
+                <h2 class="cui_title"><span>Notice</span></h2>
             </div>
         </div>
 
@@ -88,13 +88,8 @@
 
             <div class="cui_items_wrap" data-direction="right" style="top-margin:10px;">
                 <div class="item_content">
-
-                       <button type="button" class="cui_button primary" onClick="qnaAnswerOpen()" th:if="${userGubun == '0'}"><span data-langsid="답변"></span></button>
-
-
                         <button type="button" class="cui_button primary" onclick="updateReq()" th:if="${userid == board.INPUT_USER_ID }" ><span data-langsid="수정"></span></button>
                         <button type="button" class="cui_button primary" onclick="deleteReq()" th:if="${userid == board.INPUT_USER_ID }"><span data-langsid="삭제"></span></button>
-
                         <button type="button" class="cui_button secondary" onclick="goList()"><span data-langsid="목록"></span></button>
                 </div>
             </div>
@@ -165,7 +160,7 @@
 
         <div class="dialog_body">
             <div class="body_root">
-                <form id="qnaAnswerForm" action="/admin/board/qna/answer"  method="POST"  class="cui_form_section" data-legend="true">
+                <form id="noticeAnswerForm" action="/admin/board/notice/answer"  method="POST"  class="cui_form_section" data-legend="true">
                     <fieldset>
                         <input type="hidden" name ="BOARD_IDX"  th:value="${board.BOARD_IDX}" >
                         <label class="cui_items_wrap" data-direction="left">
@@ -197,7 +192,7 @@
 
                         <div class="cui_items_wrap" data-direction="center">
                             <div class="item_content">
-                                <button type="button" class="cui_button primary" th:onClick="qnaAnswer()"><span data-langsid="저장"></span></button>
+                                <button type="button" class="cui_button primary" th:onClick="noticeAnswer()"><span data-langsid="저장"></span></button>
                                 <button type="button" id="dialogUserUpdatePop" class="cui_button secondary" dialogBtn="close"><span data-langsid="취소"></span></button>
                             </div>
                         </div>
@@ -214,14 +209,14 @@
 
 <th:block th:if="${userGubun == '0'}">
     <script type="text/javascript">
-        const regUrl = '/admin/board/qna/answer'
-        const goListUrl = '/admin/board/qna'
+        const regUrl = '/admin/board/notice/answer'
+        const goListUrl = '/admin/board/notice'
         const downloadUrl = '/admin/board/download'
-        const deleteUrl = '/admin/board/qna/delete'
-        const updateUrl = '/admin/board/QnAUpdate'
+        const deleteUrl = '/admin/board/notice/delete'
+        const updateUrl = '/admin/board/noticeUpdate'
 
 
-    var qnaAnswerOpen = function () {
+    var noticeAnswerOpen = function () {
         getAnswerData();
         Common.Dialog({ obj : $("#dialogUserUpdate"), blockClose : false });
     }
@@ -264,7 +259,7 @@
 
 
 
-    function qnaAnswer() {
+    function noticeAnswer() {
 
          const fileInput = document.querySelector('input[type="file"]');
           var file = fileInput.files[0];
@@ -281,15 +276,15 @@
             Common.Msg(siteLang.getLang("답변 하시겠습니까?"), {
                     mode : "confrim"
                     , okback : function () {
-                      regQnaAnswer();
+                      regnoticeAnswer();
                     }
             });
         }
     }
 
-      const regQnaAnswer = () => {
+      const regnoticeAnswer = () => {
 
-         var formData = new FormData($('#qnaAnswerForm')[0]);
+         var formData = new FormData($('#noticeAnswerForm')[0]);
 
          $.ajax({
              url: regUrl,
@@ -336,10 +331,10 @@
 
 <th:block th:if="${userGubun == '1'}">
     <script type="text/javascript">
-        const goListUrl = '/user/board/qna'
+        const goListUrl = '/user/board/notice'
         const downloadUrl = '/user/board/download'
-        const updateUrl = '/user/board/QnAUpdate'
-        const deleteUrl = '/user/board/qna/delete'
+        const updateUrl = '/user/board/noticeUpdate'
+        const deleteUrl = '/user/board/notice/delete'
     </script>
 </th:block>
 
@@ -359,13 +354,13 @@
                  mode : "confrim"
                  , okback : function () {
                      setTimeout(function () {
-                          deleteQna();
+                          deletenotice();
                      }, 10);
                  }
         });
      }
 
-   const deleteQna = () => {
+   const deletenotice = () => {
           $.ajax({
               url: deleteUrl + "/[[${board.BOARD_IDX}]]",
               type: 'POST',
