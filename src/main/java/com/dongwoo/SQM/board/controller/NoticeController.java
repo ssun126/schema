@@ -93,7 +93,7 @@ public class NoticeController {
      */
     @GetMapping("/admin/board/notice/save")
     public String save() {
-        return "/board/adminSave";
+        return "/board/QnASave";
     }
 
     /**

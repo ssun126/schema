@@ -59,86 +59,82 @@ public class BoardController {
 //        return "board/detail";
 //    }
 
-    @GetMapping("/user/board/download/{filename}")
-    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {
-        try {
-            // 파일 경로 설정
-            File file = new File("D:/devp/" +  filename);
-            if (!file.exists()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-
-            // 파일 리소스 생성
-            FileSystemResource resource = new FileSystemResource(file);
-
-            // 응답 헤더 설정
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
-
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(resource);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+//    @GetMapping("/user/board/download/{filename}")
+//    public ResponseEntity<FileSystemResource> downloadFile(@PathVariable String filename) {
+//        try {
+//            // 파일 경로 설정
+//            File file = new File("D:/devp/" +  filename);
+//            if (!file.exists()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//            }
+//
+//            // 파일 리소스 생성
+//            FileSystemResource resource = new FileSystemResource(file);
+//
+//            // 응답 헤더 설정
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+//
+//            return ResponseEntity.ok()
+//                    .headers(headers)
+//                    .body(resource);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
 
     /**
      * Q&A 등록 화면
      * @return
      */
-    @GetMapping("/user/board/qna/save")
-    public String save() {
-        return "/board/save";
-    }
+//    @GetMapping("/user/board/qna/save")
+//    public String save() {
+//        return "/board/save";
+//    }
 
     /**
      * Q&A 등록 처리
-     * @param boardDTO
-     * @param file
-     * @return
-     * @throws IOException
      */
-    @PostMapping("/user/board/qna/save")
-    public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
-        log.info("boardDTO = " + boardDTO);
-        // 파일 업로드 처리 시작
-        UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
+//    @PostMapping("/user/board/qna/save")
+//    public String save(BoardDTO boardDTO, @RequestParam("file") MultipartFile file) throws IOException {
+//        log.info("boardDTO = " + boardDTO);
+//        // 파일 업로드 처리 시작
+//        UUID uuid = UUID.randomUUID(); // 랜덤으로 식별자를 생성
+//
+//        String directory = "D:/devp/";
+//        String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
+//
+//        File saveFile = new File(directory, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
+//
+//        file.transferTo(saveFile);
+//
+//        boardDTO.setFILE_NAME(fileName);
+//        boardDTO.setFILE_PATH(directory+fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
+//        // 파일 업로드 처리 끝
+//
+//        boardService.save(boardDTO);
+//        return "redirect:/user/board/qna/list";
+//    }
 
-        String directory = "D:/devp/";
-        String fileName = uuid + "_" + file.getOriginalFilename(); // UUID와 파일이름을 포함된 파일 이름으로 저장
+//    @GetMapping("/user/board/qna/update/{id}")
+//    public String update(@PathVariable("id") int id, Model model) {
+//        BoardDTO boardDTO = boardService.findById(id);
+//        model.addAttribute("board", boardDTO);
+//        return "/board/update";
+//    }
+//
+//    @PostMapping("/user/board/qna/update/{id}")
+//    public String update(BoardDTO boardDTO, Model model) {
+//        boardService.update(boardDTO);
+//        BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
+//        model.addAttribute("board", dto);
+//        return "/board/detail";
+//    }
 
-        File saveFile = new File(directory, URLEncoder.encode(fileName, StandardCharsets.UTF_8)); // projectPath는 위에서 작성한 경로, name은 전달받을 이름
-
-        file.transferTo(saveFile);
-
-        boardDTO.setFILE_NAME(fileName);
-        boardDTO.setFILE_PATH(directory+fileName); // static 아래부분의 파일 경로로만으로도 접근이 가능
-        // 파일 업로드 처리 끝
-
-        boardService.save(boardDTO);
-        return "redirect:/user/board/qna/list";
-    }
-
-    @GetMapping("/user/board/qna/update/{id}")
-    public String update(@PathVariable("id") int id, Model model) {
-        BoardDTO boardDTO = boardService.findById(id);
-        model.addAttribute("board", boardDTO);
-        return "/board/update";
-    }
-
-    @PostMapping("/user/board/qna/update/{id}")
-    public String update(BoardDTO boardDTO, Model model) {
-        boardService.update(boardDTO);
-        BoardDTO dto = boardService.findById(boardDTO.getBOARD_IDX());
-        model.addAttribute("board", dto);
-        return "/board/detail";
-    }
-
-    @GetMapping("/user/board/qna/delete/{id}")
-    public String delete(@PathVariable("id") int id) {
-        boardService.delete(id);
-        return "redirect:/board/list";
-    }
+//    @GetMapping("/user/board/qna/delete/{id}")
+//    public String delete(@PathVariable("id") int id) {
+//        boardService.delete(id);
+//        return "redirect:/board/list";
+//    }
 }

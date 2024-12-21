@@ -17,6 +17,13 @@ public class BoardRepository {
     public void save(BoardDTO boardDTO) {
         sql.insert("Board.save", boardDTO);
     }
+    public void update(BoardDTO boardDTO) {
+        sql.update("Board.update", boardDTO);
+    }
+
+    public void updateAnswer(BoardDTO boardDTO) {
+        sql.update("Board.updateAnswer", boardDTO);
+    }
 
     public List<BoardDTO> findAll() {
         return sql.selectList("Board.findAll");
@@ -30,12 +37,8 @@ public class BoardRepository {
         return sql.selectOne("Board.findById", id);
     }
 
-    public void update(BoardDTO boardDTO) {
-        sql.update("Board.update", boardDTO);
-    }
-
     public void delete(int id) {
-        sql.delete("Board.delete", id);
+        sql.update("Board.deleteUpdate", id);
     }
 
     public void saveFile(BoardFileDTO boardFileDTO) {

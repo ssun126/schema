@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span data-langsid="Q&A 등록"></span></h2>
+            </div>
+        </div>
+
+        <div class="cui_body">
+            <form id="boardForm" action="/admin/board/qna/save" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); qnaSave();">
+                <div class="cui_section">
+                    <table class="cui_table">
+                        <tbody>
+                        <tr>
+                            <th><span data-langsid="제목"></span></th>
+                            <td>
+                                <div class="cui_items_wrap">
+                                    <div class="item_content">
+                                        <input type="text" name="BOARD_TITLE" class="cui_text_field" style="width: 500px;" placeholder="제목을 작성해 주세요." reqcheck="reqcheck"  data-messages="제목을 작성해 주세요." messages="" >
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+<!--                        <tr>-->
+<!--                            <th><span data-langsid="비밀번호"></span></th>-->
+<!--                            <td>-->
+<!--                                <div class="cui_items_wrap">-->
+<!--                                    <div class="item_content">-->
+<!--                                        <input type="text" name="BOARD_PASS" class="cui_text_field">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <th><span data-langsid="첨부파일"></span></th>
+                            <td>
+                                <div class="cui_attachments">
+                                    <input type="file"  id="file1" name="file" class="cui_file_field">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="cui_section">
+                    <textarea  class="cui_text_field" type="text" name="BOARD_DESC" cols="30" rows="25" placeholder="본문을 작성해 주세요." reqcheck="reqcheck"  data-messages="본문을 작성해 주세요." messages=""></textarea>
+                </div>
+
+                <br>
+                <div class="cui_items_wrap" data-direction="right" style="top-margin:10px;">
+                    <div class="item_content">
+                        <button type="submit"  class="cui_button primary"><span data-langsid="저장"></span></button>
+                        <button type="button" class="cui_button secondary" onClick="goList()" ><span data-langsid="취소"></span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>
+
+
+<th:block th:if="${userGubun == '0'}">
+    <script type="text/javascript">
+        const regUrl = '/admin/board/qna/save'
+        const goListUrl = '/admin/board/qna'
+    </script>
+</th:block>
+
+<th:block th:if="${userGubun == '1'}">
+    <script type="text/javascript">
+
+        const regUrl = '/user/board/qna/save'
+        const goListUrl = '/user/board/qna'
+    </script>
+</th:block>
+
+
+
+    <script>
+
+        function goList() {
+           goMenu(goListUrl);
+       }
+
+       function qnaSave() {
+
+           if (Common.Validate($("#boardForm")) != true) {
+             return;
+           }
+             const fileInput = document.querySelector('input[type="file"]');
+             var file = fileInput.files[0];
+
+<!--             if(!validation(file)){-->
+<!--                Common.Msg(siteLang.getLang("파일 검증 실패했습니다."));-->
+<!--                return;-->
+<!--             }-->
+
+           const maxFileSize = 10 * 1024 * 1024;
+          if (file) {
+           if (file.size > maxFileSize) {
+                Common.Msg(siteLang.getLang("최대 파일 용량 10MB를 초과할 수 없습니다."));
+                return;
+           }
+          }
+
+           Common.Msg(siteLang.getLang("등록 하시겠습니까?"), {
+               mode : "confrim"
+               , okback : function () {
+                  // Common.Loading.Show();
+                   setTimeout(function () {
+                        regQna();
+                   }, 10);
+               }
+           });
+       }
+
+         const regQna = () => {
+
+             var formData = new FormData($('#boardForm')[0]);
+
+             $.ajax({
+                 url: regUrl,
+                 type: 'POST',
+                 data: formData,
+                 contentType: false,
+                 processData: false,
+                 success: function(response) {
+
+                    //Common.Loading.Hide();
+                     if (response.status === 'success') {
+                        Common.Msg(siteLang.getLang(response.message), {
+                            okback : function () {
+                                goList();
+                            }
+                         });
+                    } else {
+                        Common.Msg(siteLang.getLang(response.message));
+                    }
+
+                 },
+                 error: function(xhr) {
+                     //Common.Loading.Hide();
+                     alert(xhr.responseText);
+                 }
+             });
+         }
+    </script>
+
+</html>
