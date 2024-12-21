@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .cui_step ol li {
+            width: 180px !important;
+        }
+
+        .head_content{
+            border-bottom : var(--border-primary) 1px solid;
+            align-items : center;
+            justify-content : space-between;
+        }
+
+        .head-title{
+            justify-content : space-between;
+            padding :  0px 25px 15px 25px;
+        }
+
+        .cui_step{
+            margin : 20px 0px 30px 0px;
+        }
+
+        .cui_file_field{
+            display:flex;
+        }
+
+        .cui_attachments{
+            display:block;
+        }
+    </style>
+</head>
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head head_title">
+            <div class="head_content">
+                <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+                <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
+                <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
+                <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
+            </div>
+        </div>
+        <div class="cui_body">
+            <div class="cui_step">
+                <ol>
+                    <li ><span>MSDS / RoHSⅡ / Halogen</span></li>
+                    <li class="active"><span>SVHC</span></li>
+                    <li><span>Declaration Letter</span></li>
+                    <li><span>SCCS / 성분명세서 / 기타</span></li>
+                </ol>
+            </div>
+            <form class="cui_form_section" data-legend="true" id="frmDetail" enctype="multipart/form-data" onsubmit="return false;">
+                <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
+                <input type="hidden" name="SaveMode" value=""/>
+                <input type="hidden" name="PM_PART_CODE" th:value="${partMgmtDTO.PM_PART_CODE}"/>
+                <fieldset id="msdsFieldset">
+                    <legend><span>SVHC</span></legend>
+
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                            <col  style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>제출구분</span></th>
+                            <td colspan="3">
+                                <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
+                                    <input type="hidden" name="SVHC_IDX" th:value="${svhcDTO.SVHC_IDX}">
+                                    <div class="item_content">
+                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="ATTACH" id="Attach" th:checked="${svhcDTO.DATA_GUBUN eq 'ATTACH'}"><i></i><span>파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="WRITE" id="Write"  th:checked="${svhcDTO.DATA_GUBUN eq 'WRITE'}"><i></i><span>직접입력</span></label>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>확인일자</span></th>
+                            <td>
+                                <div class="cui_items_wrap">
+                                    <div class="item_content" data-role="calendar-picker">
+                                        <input type="text" class="cui_text_field datepicker" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
+                                    </div>
+                                </div>
+                            </td>
+                            <th><span>보증항목</span></th>
+                            <td>
+                                <div class="cui_items_wrap">
+                                    <div class="item_content" data-role="calendar-picker">
+                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${svhcDTO.WARRANTY_ITEM}" reqcheck="reqcheck">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <fieldset id="svhcFileFieldset">
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>파일첨부</span></th>
+                            <td>
+                                <div class="cui_items_wrap" data-direction="left">
+                                    <div class="item_content">
+                                        <div class="cui_attachments" style="display:flex;">
+                                            <input type="file" class="cui_file_field" name="SVHC_FILE">
+                                            <input type="hidden" name="FILE_STATUS">
+                                            <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${svhcDTO.FILE_NAME == '' ? 'display:none;' : '' }">
+                                                <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${svhcDTO.FILE_NAME}" th:value="${svhcDTO.FILE_NAME}"></span></div>
+                                                <div class="item_content">
+                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <fieldset id="svhcDataFieldset" style="display:none;">
+                    <input type="hidden" name="APPLICABLE_NO" th:value="${svhcDTO.APPLICABLE_NO}">
+                    <div class="cui_jqGrid_section">
+                        <div class="cui_jqGrid_head">
+                            <div class="jqGrid_label"> &nbsp;</div>
+                        </div>
+                        <div class="cui_jqGrid_body" id="Grid">
+                            <div id="gridArea" gridYN="" th:initData="${partSvhcList}"></div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="cui_items_wrap" data-direction="right" >
+                    <div class="item_content">
+                        <input type="hidden"  name="INFO_FLAG" >
+                        <button type="button" class="cui_button primary" onclick="frmDetailSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="다음"></span></button>
+                    </div>
+                </div>
+
+
+            </form>
+
+            <div><br /></div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function(){
+        $("input[name=DATA_GUBUN]").bind("change", function(){
+        // 직접입력
+		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+		        $('#svhcFileFieldset').hide();
+		    	$('#svhcDataFieldset').show();
+		    	//초기화
+		    	$("input[name=SVHC_FILE]").val('');
+		    	ListLoad();
+
+		    }
+		    // 첨부파일
+		    else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
+		        $('#svhcFileFieldset').show();
+		    	$('#svhcDataFieldset').hide();
+		    	//초기화
+		    	$("input[name=APPLICABLE_NO]").val('');
+		    	//$("#gridArea").empty();
+		    	$("#gridArea").pqGrid("refreshView");
+		    }
+    });
+
+        //처음 로드 시 기존 저장된 데이터 있는지 확인
+        if($("input[name=SVHC_IDX]").val() != ''){
+            //저장된 데이터 로드됨
+            //제출 구분이 직접입력일때만 데이터 바꿔줌
+            if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+                //$('input:radio[name="DATA_GUBUN"]:input[value="WRITE"]').prop('checked',true);
+                $('#svhcFileFieldset').hide();
+		    	$('#svhcDataFieldset').show();
+		    	//getSvhcData();
+
+            }
+
+
+        }else{
+            //신규 제출구분 파일첨부 기본
+            $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
+        }
+    });
+
+
+
+
+
+    var SheetDataConvert = function (data) {
+        var dataJson = JSON.parse(data);
+
+        return dataJson;
+    }
+
+    var ListLoad = function () {
+        //var url = "/user/partMgmt/getSvhcListData";
+        var url =  location.pathname;
+
+        Common.Ajax(url, null , function (data) {
+            var dataJson = SheetDataConvert(data);
+
+            $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+            $("#gridArea").pqGrid("refreshView");
+        });
+    }
+
+    $(function () {
+        var heightMinus = 650;
+        var SVHC_YN_SELECT_ITEMS = ['Y', 'N'];
+
+
+        var data = SheetDataConvert($("#gridArea").attr("initData"));
+
+        var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 1 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: false,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+                var rowData = ui.rowData;
+                var selNo = [];
+                $("#gridArea").pqGrid("getData").forEach(function(data){
+                    if(data.SVHC_YN === 'Y') selNo.push(data.SVHC_NUM);
+                });
+
+                var strSelNo = selNo.join(",");
+
+                $("input[name=APPLICABLE_NO]").val(strSelNo);
+
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+        };
+        obj.colModel = [
+
+            {  title: "No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
+            { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
+            { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
+            { title: "EU No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
+            { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true
+                , editor: {
+                    type : "select",
+                    options : SVHC_YN_SELECT_ITEMS,
+                    defaultValue : 'N'
+                }
+                , editable: true
+                , render : function (ui){
+                //SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
+                    var data = ui.rowData;
+                    var appVal = $("input[name=APPLICABLE_NO]").val();
+                    var ArrData = appVal.split(',');
+                    var flag = false;
+                    for(var i=0; i<ArrData.length; i++){
+                        if(data.SVHC_NUM === ArrData[i]) flag = true;
+                    }
+
+                    if(flag) return 'Y';
+                    else return 'N';
+                }
+            }
+
+        ];
+        obj.dataModel = { data: data };
+        $("#gridArea").pqGrid(obj);
+        $("#gridArea").attr("gridYN", "Y");
+
+        $(window).resize(function () {
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
+        });
+
+        //select 변경 시
+<!--        $("#gridArea").on("cellEdit", function (event, ui) {-->
+<!--            -->
+<!--        });-->
+    });
+
+    var frmDetailSubmit = function () {
+            //e.preventDefault();
+
+            var frmObj = $("#frmDetail");
+            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.formData  = new FormData();
+            ReqInfo.AddParameter(frmObj);
+            Common.Ajax("/user/partMgmt/goSvhcSave", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                            Common.Msg(siteLang.getLang("저장되었습니다."));
+                            location.reload();
+                        }
+                    }else {
+                        Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" + response.split('|||')[1]);
+                    }
+                });
+
+            //ReqInfo.formData
+            //return Common.Validate(frmObj);
+
+        }
+
+        var frmDetailSave = function () {
+            //데이터가 아무것도 없을 때는 저장할 수 없음
+            var flag = false;
+
+            $("input[reqcheck=reqcheck]").each(function(){
+                if($(this).val() != ''){
+                    flag = true;
+                    return;
+                }
+            });
+
+            //이전의 값이 읎을때
+            if(!flag){
+                $("input[type=file]").each(function(){
+                    if($(this).val() != ''){
+                        flag = true;
+                        return;
+                    }
+                });
+            }
+
+            if(flag){
+                Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        $("#frmDetail").find("input[name=SaveMode]").val("Save");
+                        $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                        //$("#frmDetail").submit();
+                        frmDetailSubmit();
+                    }
+                });
+            }else{
+                Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
+                return;
+            }
+
+        }
+
+        var frmDetailNext = function () {
+            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    $("#frmDetail").find("input[name=SaveMode]").val("Next");
+                    $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                    //$("#frmDetail").submit();
+                    frmDetailSubmit();
+                }
+            });
+        }
+
+
+</script>
+</html>

@@ -84,6 +84,11 @@ public class PartMgmtRepository {
     public PartMgmtDTO getPartData(String idx) { return sql.selectOne("partManagement.getPartData",idx);}
 
 
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** MSDS / HALGEN / ROHS/ 기타 페이지 **
+     *********************************************************************************************************************/
+
     public partDetailMsdsDTO getMsdsData(String idx) {return sql.selectOne("partManagement.getPartDetailMsdsData",idx);}
     public partDetailRohsDTO getRohsData(String idx) {return sql.selectOne("partManagement.getPartDetailRohsData",idx);}
     public partDetailHalGDTO getHalgData(String idx) {return sql.selectOne("partManagement.getPartDetailHalgData",idx);}
@@ -102,52 +107,75 @@ public class PartMgmtRepository {
     public int updateHalogenData (partDetailHalGDTO halgDTO){ return sql.update("partManagement.halgUpdate",halgDTO);}
     public int saveHalogenData(partDetailHalGDTO halgDTO){ return sql.insert("partManagement.halgSave",halgDTO);}
 
-    public int insertEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.etcSave",etcDTO);}
-    public int updateEtcData (partDetailEtcDTO etcDTO){ return sql.update("partManagement.etcUpdate",etcDTO);}
+    public int insertEtcData(partDetailEtcDTO etcDTO){ return sql.insert("partManagement.insertEtcData",etcDTO);}
+    public int updateEtcData (partDetailEtcDTO etcDTO){ return sql.update("partManagement.updateEtcData",etcDTO);}
     public int deleteEtcData(int idx){ return sql.delete("partManagement.deleteEtcData",idx);}
 
 
-    //svhc
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** SVHC 페이지 **
+     *********************************************************************************************************************/
+    public int insertSvhcData(PartDetailSvhcDTO svhcDTO){ return sql.insert("partManagement.svhcSave",svhcDTO);}
+    public int updateSvhcData(PartDetailSvhcDTO svhcDTO){ return sql.update("partManagement.svhcUpdate",svhcDTO);}
+
+
     public List<SvhcListDTO> getSvhcData(){return sql.selectList("partManagement.getSvhcList");}
 
     public PartDetailSvhcDTO getDetailSvhcData(String idx){
         return sql.selectOne("partManagement.getDetailSvhcData",idx);
     }
 
-    public  int saveDetailSvhcData(PartDetailSvhcDTO svhcDTO) {return sql.insert("partManagement.svhcSave", svhcDTO);}
-    public int updateDetailSvhcData(PartDetailSvhcDTO svhcDTO) {return sql.update("partManagement.svhcUpdate",svhcDTO);}
+//    public  int saveDetailSvhcData(PartDetailSvhcDTO svhcDTO) {return sql.insert("partManagement.svhcSave", svhcDTO);}
+//    public int updateDetailSvhcData(PartDetailSvhcDTO svhcDTO) {return sql.update("partManagement.svhcUpdate",svhcDTO);}
 
-    //declaration
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** DECLARATION LETTER 페이지 **
+     *********************************************************************************************************************/
     public List<DeclarationDTO> getDeclarData(){return sql.selectList("partManagement.getDeclarList");}
 
-    public  partDetailDeclarDTO getDetailDeclarData (String idx){
+    public  partDetailDeclarDTO getDetailDeclData (String idx){
         return sql.selectOne("partManagement.getDetailDeclarData",idx);
     }
 
-    public  int saveDetailDeclarData(partDetailDeclarDTO declarDTO) {return sql.insert("partManagement.declarSave", declarDTO);}
-    public int updateDetailDeclarData(partDetailDeclarDTO declarDTO) {return sql.update("partManagement.declarUpdate",declarDTO);}
+    public  int insertDeclData(partDetailDeclarDTO declarDTO) {return sql.insert("partManagement.declarSave", declarDTO);}
+    public int updateDeclData(partDetailDeclarDTO declarDTO) {return sql.update("partManagement.declarUpdate",declarDTO);}
 
+
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** SCCS / 성분명세서 / 기타보증 페이지 **
+     *********************************************************************************************************************/
     //sccs
     public  partDetailSccsDTO getSccsData (String idx){
         return sql.selectOne("partManagement.getSccsData",idx);
     }
 
-    public int saveSccsData(partDetailSccsDTO sccsDTO){ return sql.insert("partManagement.sccsSave",sccsDTO);}
+    public int insertSccsData(partDetailSccsDTO sccsDTO){ return sql.insert("partManagement.sccsSave",sccsDTO);}
     public int updateSccsData(partDetailSccsDTO sccsDTO){ return sql.update("partManagement.sccsUpdate",sccsDTO);}
 
     //ingred
     public  partDetailIngredDTO getIngredData (String idx){
         return sql.selectOne("partManagement.getIngredData",idx);
     }
-    public int saveIngredData(partDetailIngredDTO ingredDTO){ return sql.insert("partManagement.ingredSave",ingredDTO);}
+    public int insertIngredData(partDetailIngredDTO ingredDTO){ return sql.insert("partManagement.ingredSave",ingredDTO);}
     public int updateIngredData(partDetailIngredDTO ingredDTO){ return sql.update("partManagement.ingredUpdate",ingredDTO);}
 
     //guarant
     public  List<partDetailGuarantDTO> getGuarantData (String idx){
         return sql.selectList("partManagement.getGuarantData",idx);
     }
-    public int saveGuarantData(partDetailGuarantDTO guarantDTO){ return sql.insert("partManagement.guarantSave",guarantDTO);}
+    public int insertGuarantData(partDetailGuarantDTO guarantDTO){ return sql.insert("partManagement.guarantSave",guarantDTO);}
     public int updateGuarantData(partDetailGuarantDTO guarantDTO){ return sql.update("partManagement.guarantUpdate",guarantDTO);}
+    public int deleteGuarantData(int idx){ return sql.delete("partManagement.deleteguarantData",idx);}
+
+
+
+
 
     public int updateApprovalStatus(String idx){ return sql.update("partManagement.updateApprovalStatus",idx);}
 

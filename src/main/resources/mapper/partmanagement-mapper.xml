@@ -318,14 +318,22 @@
         VALUES (SEQ_HALOGEN_IDX.NEXTVAL,#{PM_IDX},#{HALOGEN_CONFIRM_DATE},#{HALOGEN_CL},#{HALOGEN_BR},#{HALOGEN_CLBR},#{HALOGEN_F},#{HALOGEN_I},#{HALOGEN_FILE_NAME},#{HALOGEN_FILE_PATH})
     </insert>
 
-    <insert id="etcSave" parameterType="partDetailEtc">
+    <insert id="insertEtcData" parameterType="partDetailEtc">
         INSERT INTO  SC_PART_MGMT_DETAIL_ETC(ETC_IDX,PM_IDX,ETC_CONFIRM_DATE,ETC_ANALYSE_ENTRY,ETC_ANALYSE_RESULT,ETC_FILE_NAME,ETC_FILE_PATH)
         VALUES (SEQ_ETC_IDX.NEXTVAL,#{PM_IDX},#{ETC_CONFIRM_DATE},#{ETC_ANALYSE_ENTRY},#{ETC_ANALYSE_RESULT},#{ETC_FILE_NAME},#{ETC_FILE_PATH})
     </insert>
 
+    <update id="updateEtcData" parameterType="partDetailEtc">
+        update SC_PART_MGMT_DETAIL_ETC
+        set ETC_CONFIRM_DATE =#{ETC_CONFIRM_DATE},ETC_ANALYSE_ENTRY = #{ETC_ANALYSE_ENTRY},ETC_ANALYSE_RESULT = #{ETC_ANALYSE_RESULT}
+            ,ETC_FILE_NAME=#{ETC_FILE_NAME},ETC_FILE_PATH=#{ETC_FILE_PATH}
+        where ETC_IDX = #{ETC_IDX}
+    </update>
+
+
     <delete id="deleteEtcData" parameterType="int">
         DELETE SC_PART_MGMT_DETAIL_ETC
-        WHERE PM_IDX = #{idx}
+        WHERE ETC_IDX = #{idx}
     </delete>
 
     <!--   SVHC   -->
@@ -355,7 +363,7 @@
     <!--   DECLARATION LETTER   -->
     <select id="getDeclarList" resultType="Declaration">
 
-        SELECT NVL(DECL_NUM,DECL_SUB_NUM) AS DECL_NUM ,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT ,NVL(DECL_CLASS, ' ') AS DECL_CLASS
+        SELECT NVL(DECL_NUM,' ') AS DECL_NUM ,NVL(DECL_SUB_NUM,' ') as DECL_SUB_NUM,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT ,NVL(DECL_CLASS, ' ') AS DECL_CLASS
         FROM SC_DECLARATION_DATA
 
     </select>
@@ -431,6 +439,11 @@
         SET GUARANT_TYPE = #{GUARANT_TYPE},GUARANT_CONFIRM_DATE = #{GUARANT_CONFIRM_DATE},GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
         WHERE GUARANT_IDX =#{GUARANT_IDX}
     </update>
+
+    <delete id="deleteGuarantData" parameterType="int">
+        DELETE SC_PART_MGMT_DETAIL_GUARANT
+        WHERE GUARANT_IDX = #{idx}
+    </delete>
 
 
 

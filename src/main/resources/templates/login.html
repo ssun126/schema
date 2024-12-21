@@ -19,11 +19,6 @@
     <script type="text/javascript" src="../../js/app.js"></script>
     <script type="text/javascript" src="../../js/pages/schema.common.js?v=20241122"></script>
     <title>Schema</title>
-    <style>
-        .swal2-modal .swal2-title {
-            font-size : 25px;
-        }
-    </style>
 </head>
 <body>
 <div class="cui_app">
@@ -219,39 +214,40 @@
 </div>
 </body>
 <script>
-    function loginFormCheck (obj) {
-        if (obj.attr("otpok") == "Y") {
-            return true;
-        }
-
+    function loginFormCheck (obj, otp) {
+        return true;
         if (Common.Validate(obj)) {
-            var rtnValue = false;
-            var ReqInfo = new Common.RequestInfo();
-            ReqInfo.AddParameter(obj);
+            if (otp == undefined) {
+                var rtnValue = false;
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.AddParameter(obj);
 
-            Common.Ajax("/idpwCheck", ReqInfo, function (response) {
-                if (response.substring(0, 2) == "OK") {
-                    if (response.substring(3, 4) == "0") {
-                        rtnValue = true;
-                        return;
+                Common.Ajax("/idpwCheck", ReqInfo, function (response) {
+                    if (response.substring(0, 2) == "OK") {
+                        if (response.substring(3, 4) == "0") {
+                            rtnValue = true;
+                            return;
+                        } else {
+                            var param = { username: obj.find("input[name=username]").val() };
+                            Common.Dialog({ url : "/otp", param : param });
+                            $("#errorMsg").remove();
+                        }
                     } else {
-                        var param = { username: obj.find("input[name=username]").val() };
-                        Common.Dialog({ url : "/otp", param : param });
-                        $("#errorMsg").remove();
+                        if ($("#errorMsg").length == 0) {
+                            var msgDiv = '<div id="errorMsg" class="cui_alert alert_basic" data-type="warning" role="alert" style="margin-top:10px;">';
+                            msgDiv += '<div class="alert_message">';
+                            msgDiv += '<p class="" data-langsid="' + response + '">' + siteLang.getLang(response) + '</p>';
+                            msgDiv += '</div>';
+                            msgDiv += '</div>';
+                            obj.after(msgDiv)
+                        }
                     }
-                } else {
-                    if ($("#errorMsg").length == 0) {
-                        var msgDiv = '<div id="errorMsg" class="cui_alert alert_basic" data-type="warning" role="alert" style="margin-top:10px;">';
-                        msgDiv += '<div class="alert_message">';
-                        msgDiv += '<p class="" data-langsid="' + response + '">' + siteLang.getLang(response) + '</p>';
-                        msgDiv += '</div>';
-                        msgDiv += '</div>';
-                        obj.after(msgDiv)
-                    }
-                }
-            });
+                });
 
-            return rtnValue;
+                return rtnValue;
+            } else {
+                return true;
+            }
         }
 
         return false;

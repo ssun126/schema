@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .cui_step ol li {
+            width: 180px !important;
+        }
+
+        .head_content{
+            border-bottom : var(--border-primary) 1px solid;
+            align-items : center;
+            justify-content : space-between;
+        }
+
+        .head-title{
+            justify-content : space-between;
+            padding :  0px 25px 15px 25px;
+        }
+
+        .cui_step{
+            margin : 20px 0px 30px 0px;
+        }
+
+        .cui_file_field{
+            display:flex;
+        }
+        .cui_table{
+            vertical-align: middle;
+        }
+
+        .cui_attachments{
+            display:block;
+        }
+    </style>
+</head>
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head head_title">
+            <div class="head_content" style="padding:0px 10px 10px 10px;">
+                <h3><span data-langsid="자재코드"></span> : <span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+                <h3><span data-langsid="자재명"></span> : <span th:text="${partMgmtDTO.PART_NAME}"></span></h3>
+                <h3><span data-langsid="승인현황"></span> : <span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}"></span></h3>
+                <h3><span data-langsid="사용여부"></span> : <span th:text="${partMgmtDTO.PM_ACTIVE_YN}"></span></h3>
+            </div>
+
+        </div>
+        <div class="cui_body">
+            <div class="cui_step">
+                <ol>
+                    <li class="active"><span>MSDS / RoHSⅡ / Halogen</span></li>
+                    <li><span>SVHC</span></li>
+                    <li><span>Declaration Letter</span></li>
+                    <li><span data-langsid="SCCS / 성분명세서 / 기타"></span></li>
+                </ol>
+            </div>
+            <form class="cui_form_section" data-legend="true" id="frmDetail"  enctype="multipart/form-data" onsubmit="return false;">
+                <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
+                <input type="hidden" name="SaveMode" value=""/>
+                <input type="hidden" name="PM_PART_CODE" th:value="${partMgmtDTO.PM_PART_CODE}"/>
+                <fieldset id="sccsFieldset">
+                    <legend><span>SCCS</span></legend>
+
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col style="width:150px;">
+                            <col >
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="구분자"></span></th>
+                            <th><span data-langsid="첨부"></span></th>
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        <tr>
+                            <td>
+                                <div class="item_content" data-role="calendar-picker">
+                                    <input type="hidden" name="SCCS_IDX" th:value="${sccsDTO.SCCS_IDX}">
+                                    <input type="text" class="cui_text_field datepicker" th:value="${sccsDTO.SCCS_CONFIRM_DATE}"  name="SCCS_CONFIRM_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="sccs 날짜를 입력해주세요." messages="">
+                                </div>
+                            </td>
+                            <td><input type="text" class="cui_text_field" th:value="${sccsDTO.SCCS_CHAR}" name="SCCS_CHAR" reqcheck="reqcheck" data-messages="sccs 구분자를 입력해주세요." messages=""></td>
+                            <td>
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="SCCS_FILE" >
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${sccsDTO.SCCS_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="SCCS_FILE_NAME" th:value="${sccsDTO.SCCS_FILE_NAME}" th:text="${sccsDTO.SCCS_FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <fieldset id="ingredFieldset">
+                    <legend><span data-langsid="성분명세서"></span></legend>
+
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:110px;">
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="100% 기준 구성성분 확인자료 첨부"></span></th>
+
+                        </tr>
+                        </thead>
+                        <tbody id="tableBody2">
+                        <tr>
+                            <td>
+                                <div class="item_content" data-role="calendar-picker">
+                                    <input type="hidden" name="INGRED_IDX"  th:value="${ingredDTO.INGRED_IDX}" >
+                                    <input type="text" class="cui_text_field datepicker" name="INGRED_CONFIRM_DATE"  th:value="${ingredDTO.INGRED_CONFIRM_DATE}"  datePickerControl=""  reqcheck="reqcheck" data-messages="성분명세서 날짜를 입력해주세요." messages="">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="INGRED_FILE" >
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${ingredDTO.INGRED_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="INGRED_FILE_NAME" th:value="${ingredDTO.INGRED_FILE_NAME}" th:text="${ingredDTO.INGRED_FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                            ><span>다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+                <fieldset id="guarFieldset">
+                    <legend><span data-langsid="기타 보증서류"></span></legend>
+                    <input type="hidden" id="guarantCount" name="guarantCount" value="0"  th:value="${GUARANT_COUNT}">
+                    <input type="hidden" id="GUR_DEL_IDX" name="GUR_DEL_IDX">
+
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:120px;">
+                            <col style="width:120px;">
+                            <col>
+                            <col style="width:90px;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th><span data-langsid="보증서 종류"></span></th>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="첨부"></span></th>
+                            <th><button type="button" class="cui_button secondary" id="addRowButton" ><span data-langsid="추가"></span></button></th>
+                        </tr>
+                        </thead>
+                        <tbody id="guarBodyArea">
+                        <tr th:each="guarantDTO,guarantStat : ${guarantListDTO}">
+                            <td><input type="hidden" th:name="'GUARANT_IDX'+${guarantStat.count}" th:value="${guarantDTO.GUARANT_IDX}" >
+                                <input type="text" class="cui_text_field datepicker"  th:value="${guarantDTO.GUARANT_TYPE}" th:name="'GUARANT_TYPE'+${guarantStat.count}" ></td>
+                            <td><input type="text" class="cui_text_field"  th:value="${guarantDTO.GUARANT_CONFIRM_DATE}" th:name="'GUARANT_CONFIRM_DATE'+${guarantStat.count}"  datePickerControl="" >
+                            <td>
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="GUARANT_FILE">
+                                </div>
+                                <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${guarantDTO.GUARANT_FILE_NAME == null ? 'display:none;' : '' }">
+                                    <div class="item_label" data-cui-icon="paperclip"><span id="GUARANT_FILE_NAME" th:value="${guarantDTO.GUARANT_FILE_NAME}" th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
+                                </div>
+                            </td>
+                            <td><button type="button" class="cui_button icon"  id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제"></span></button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <div class="cui_items_wrap" data-direction="right" >
+                    <div class="item_content">
+                        <input type="hidden"  name="INFO_FLAG" >
+                        <button type="button" class="cui_button primary" onclick="frmDetailSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="다음"></span></button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        $("#addRowButton").bind("click", function () {
+            var guarantCount = Common.Convert.Int($("#guarantCount").val());
+            guarantCount++;
+
+            const newRow = $('<tr>'
+                         + '    <td><input type="hidden" name="GUARANT_IDX' + guarantCount + '"" ><input type="text" class="cui_text_field datepicker" name="GUARANT_TYPE' + guarantCount + '" ></td>'
+                         + '                <td><input type="text" class="cui_text_field" name="GUARANT_CONFIRM_DATE' + guarantCount + '"  datePickerControl="" ></td>'
+                         + '                <td>'
+                         + '                    <div class="cui_attachments" style="display:flex;">'
+                         + '                        <input type="file" class="cui_file_field" name="GUARANT_FILE">'
+                         + '                    </div>'
+                         + '                </td>'
+                         + '    <td><button type="button" class="cui_button icon" id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button></td>'
+                         + '</tr>');
+            Common.Load(newRow);
+
+
+
+            $('#guarBodyArea').append(newRow);
+            $("#guarantCount").val(guarantCount);
+        });
+
+        $("#delRowButton").bind("click", function () {
+            var selIdx = $(this).closest('tr').find('input[name^=GUARANT_IDX]').val();
+            var arrDelIdx = $('input[name=GUR_DEL_IDX]').val();
+            if(selIdx != ''){
+                if(arrDelIdx != '') arrDelIdx += ',';
+                arrDelIdx += selIdx;
+            }
+            $('input[name=GUR_DEL_IDX]').val(arrDelIdx);
+            $(this).parent().parent().remove();
+        });
+
+        var frmDetailSubmit = function () {
+            //e.preventDefault();
+
+            var frmObj = $("#frmDetail");
+            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.formData  = new FormData();
+            ReqInfo.AddParameter(frmObj);
+            Common.Ajax("/user/partMgmt/goSccsSave", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                            Common.Msg(siteLang.getLang("저장되었습니다."));
+                            location.reload();
+                        }
+                    }else {
+                        Common.MoveUrl("/user/partMgmt/matReg");
+                    }
+                });
+
+            //ReqInfo.formData
+            //return Common.Validate(frmObj);
+
+        }
+
+        var frmDetailSave = function () {
+            //데이터가 아무것도 없을 때는 저장할 수 없음
+            var flag = false;
+
+            $("input[reqcheck=reqcheck]").each(function(){
+                if($(this).val() != ''){
+                    flag = true;
+                    return;
+                }
+            });
+
+            //GUARANT_
+            $("input[type=text][name^=GUARANT_]").each(function(){
+                if($(this).val() != ''){
+                    flag = true;
+                    return;
+                }
+            });
+
+            //이전의 값이 읎을때
+            if(!flag){
+                $("input[type=file]").each(function(){
+                    if($(this).val() != ''){
+                        flag = true;
+                        return;
+                    }
+                });
+            }
+
+            if(flag){
+                Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        $("#frmDetail").find("input[name=SaveMode]").val("Save");
+                        $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                        //$("#frmDetail").submit();
+                        frmDetailSubmit();
+                    }
+                });
+            }else{
+                Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
+                return;
+            }
+
+        }
+
+        var frmDetailNext = function () {
+            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    $("#frmDetail").find("input[name=SaveMode]").val("Next");
+                    $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                    //$("#frmDetail").submit();
+                    frmDetailSubmit();
+                }
+            });
+        }
+    </script>
+</div>
+</body>
+</html>
