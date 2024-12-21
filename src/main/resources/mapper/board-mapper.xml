@@ -10,6 +10,7 @@
             FROM SC_BOARD_INFO
             WHERE 1=1
             AND USE_YN = 'Y'
+            AND BOARD_TYPE =#{boardType}
             <if test="keyword != null ">
                 <if test="searchType == 1 ">
                     AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
@@ -32,6 +33,7 @@
         from SC_BOARD_INFO
         WHERE 1=1
         AND USE_YN = 'Y'
+        AND BOARD_TYPE =#{boardType}
         <if test="keyword != null ">
             <if test="searchType == 1 ">
                 AND BOARD_TITLE LIKE '%' || #{keyword} || '%'
@@ -122,11 +124,5 @@
         delete from SC_BOARD_INFO where BOARD_IDX=#{id}
     </delete>
 
-<!--    <insert id="saveFile" parameterType="boardFile">-->
-<!--        insert into BOARD_FILE(ORG_FILE_NAME, FILE_NAME, BOARD_IDX, USE_YN, INPUT_DATE-->
-<!--        values (#{ORG_FILE_NAME}, #{FILE_NAME}, #{BOARD_IDX}, 'Y', sysdate)-->
-<!--    </insert>-->
-<!--    <select id="findFile" parameterType="Long" resultType="boardFile">-->
-<!--        select * from BOARD_FILE where BOARD_IDX = #{id}-->
-<!--    </select>-->
+
 </mapper>

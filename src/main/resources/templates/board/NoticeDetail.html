@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+
+<style>
+
+    .cui_text_field:read-only {
+        cursor: default;
+        color: #413c3c;
+        border-color: var(--control-disabled-border)
+    }
+
+#pop_answer_file_shotname {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    font-size: inherit;
+}
+
+.item_label {
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 10px;
+}
+</style>
+
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span>Notice</span></h2>
+            </div>
+        </div>
+
+        <div class="cui_body">
+
+            <div class="cui_section">
+                <table class="cui_table">
+                    <colgroup>
+                        <col style="width:152px;">
+                        <col>
+                        <col style="width:152px;">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th class="center"><span data-langsid="제목"></span></th>
+                        <td><span th:text="${board.BOARD_TITLE}"></span></td>
+
+                        <th class="center"><span data-langsid="조회수"></span></th>
+                        <td><span th:text="${board.BOARD_HITS}"></span></td>
+                    </tr>
+                    <tr>
+                        <th class="center"><span data-langsid="작성자"></span></th>
+                        <td><span th:text="${board.INPUT_USER_ID}"></span></td>
+
+                        <th class="center"><span data-langsid="등록일"></span></th>
+                        <td><span th:text="${board.INPUT_DATE}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cui_section">
+                <textarea  class="cui_text_field" type="text" name="BOARD_DESC" cols="30" rows="20" readonly th:text="${board.BOARD_DESC}"></textarea>
+            </div>
+            <div class="cui_attachments list" th:if="${board.FILE_SHOTNAME != null && board.FILE_SHOTNAME.trim() != ''}">
+                <div class="cui_attachments_head">
+                    <div class="attachments_title">
+                        <div class="attachments_label"><span data-langsid="첨부파일"></span></div>
+                    </div>
+                </div>
+
+                <div class="cui_items_wrap" data-direction="left">
+                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${board.FILE_SHOTNAME}"></span></div>
+                    <input type="hidden" name ="FILE_NAME" id="FILE_NAME"  th:value="${board.FILE_NAME}" >
+                    <input type="hidden" name ="FILE_SHOTNAME" id="FILE_SHOTNAME"  th:value="${board.FILE_SHOTNAME}" >
+                    <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile(1)"><span data-langsid="다운로드"></span></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cui_items_wrap" data-direction="right" style="top-margin:10px;">
+                <div class="item_content">
+                        <button type="button" class="cui_button primary" onclick="updateReq()" th:if="${userid == board.INPUT_USER_ID }" ><span data-langsid="수정"></span></button>
+                        <button type="button" class="cui_button primary" onclick="deleteReq()" th:if="${userid == board.INPUT_USER_ID }"><span data-langsid="삭제"></span></button>
+                        <button type="button" class="cui_button secondary" onclick="goList()"><span data-langsid="목록"></span></button>
+                </div>
+            </div>
+
+            <!--답변-->
+            <div class="cui_section" th:if="${board.BOARD_STATUS == '2'}">
+                <div class="cui_bullet_title">
+                    <div class="bullet_title_label"><span data-langsid="답변"></span></div>
+                </div>
+
+                <div class="cui_section">
+                    <table class="cui_table">
+                        <colgroup>
+                            <col style="width:152px;">
+                            <col>
+                            <col style="width:152px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th class="center"><span data-langsid="답변일"></span></th>
+                            <td><span th:text="${board.ANSWER_DATE}"></span></td>
+                            <th class="center"><span data-langsid="답변자"></span></th>
+                            <td><span th:text="${board.ANSWER_ID}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="cui_section">
+                    <textarea class="cui_text_field" type="text" name="ANSWER" cols="30" rows="5" readonly th:text="${board.ANSWER}"></textarea>
+                </div>
+
+                <div class="cui_attachments list" th:if="${board.ANSWER_FILE_SHOTNAME != null && board.ANSWER_FILE_SHOTNAME.trim() != ''}">
+                    <div class="cui_attachments_head">
+                        <div class="attachments_title">
+                            <div class="attachments_label"><span data-langsid="첨부파일"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="cui_items_wrap" data-direction="left">
+                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${board.ANSWER_FILE_SHOTNAME}"></span></div>
+                        <input type="hidden" name ="ANSWER_FILE_NAME"  th:value="${board.ANSWER_FILE_NAME}" >
+                        <input type="hidden" name ="ANSWER_FILE_SHOTNAME"   th:value="${board.ANSWER_FILE_SHOTNAME}" >
+                        <div class="item_content">
+                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" onclick="downloadFile(2)"><span data-langsid="다운로드"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+
+
+<div class="cui_dialog" style="width:720px;display:none;" id="dialogUserUpdate">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span id="popTitle" data-langsid="답변"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
+            </div>
+        </div>
+
+        <div class="dialog_body">
+            <div class="body_root">
+                <form id="noticeAnswerForm" action="/admin/board/notice/answer"  method="POST"  class="cui_form_section" data-legend="true">
+                    <fieldset>
+                        <input type="hidden" name ="BOARD_IDX"  th:value="${board.BOARD_IDX}" >
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="내용"></strong>
+                            <div class="item_content">
+                                <textarea  style="height:180px;" class="cui_text_field" th:text="${board.ANSWER}" id="ANSWER" name="ANSWER" reqcheck="reqcheck" data-messages="내용을 입력하세요." messages=""></textarea>
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="첨부파일"></strong>
+
+                            <div class="cui_attachments">
+
+                                <input type="file"  id="ansfile" name="ansfile" class="cui_file_field">
+
+                                <div class="cui_items_wrap" data-direction="left" id="popAttachments">
+                                    <div class="item_label" data-cui-icon="paperclip"><span id="pop_answer_file_shotname"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" id="downloadButton" onclick="downloadFile()" ><span data-langsid="다운로드"></span></button>
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" id="deleteButton" onclick="clearFile(this)" ></button>
+                                    </div>
+                                    <input type="hidden" name ="ANSWER_FILE_NAME" id="ANSWER_FILE_NAME"  >
+                                    <input type="hidden" name ="ANSWER_FILE_SHOTNAME" id="ANSWER_FILE_SHOTNAME"  >
+                                </div>
+                            </div>
+
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center">
+                            <div class="item_content">
+                                <button type="button" class="cui_button primary" th:onClick="noticeAnswer()"><span data-langsid="저장"></span></button>
+                                <button type="button" id="dialogUserUpdatePop" class="cui_button secondary" dialogBtn="close"><span data-langsid="취소"></span></button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<th:block th:if="${userGubun == '0'}">
+    <script type="text/javascript">
+        const regUrl = '/admin/board/notice/answer'
+        const goListUrl = '/admin/board/notice'
+        const downloadUrl = '/admin/board/download'
+        const deleteUrl = '/admin/board/notice/delete'
+        const updateUrl = '/admin/board/noticeUpdate'
+
+
+    var noticeAnswerOpen = function () {
+        getAnswerData();
+        Common.Dialog({ obj : $("#dialogUserUpdate"), blockClose : false });
+    }
+
+
+     function getAnswerData() {
+
+      var board_idx =[[${board.BOARD_IDX}]];
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/board/answer"   ,
+            contentType: "application/json",
+            data: JSON.stringify({ "BOARD_IDX": board_idx }),
+            success: function(res) {
+
+                if (res) {
+
+                   $("#pop_answer_file_shotname").text(res.ANSWER_FILE_SHOTNAME);
+                   $('#ANSWER_FILE_NAME').val(res.ANSWER_FILE_NAME) ;
+                   $('#ANSWER_FILE_SHOTNAME').val(res.ANSWER_FILE_SHOTNAME) ;
+
+                    var show = res.ANSWER_FILE_SHOTNAME;
+
+                   if(!$('#ANSWER_FILE_NAME').val()){
+                    $('#popAttachments').hide();
+                   }else{
+                    $('#popAttachments').show();
+                   }
+
+                } else {
+                  Common.Msg(siteLang.getLang("조회실패"));
+                }
+            },
+            error: function(err) {
+                console.log("에러 발생", err);
+            }
+        });
+    }
+
+
+
+    function noticeAnswer() {
+
+         const fileInput = document.querySelector('input[type="file"]');
+          var file = fileInput.files[0];
+          const maxFileSize = 10 * 1024 * 1024;
+          if (file) {
+           if (file.size > maxFileSize) {
+                Common.Msg(siteLang.getLang("최대 파일 용량 10MB를 초과할 수 없습니다."));
+                return;
+           }
+          }
+
+         if (Common.Validate($("#dialogUserUpdate")) == true){
+
+            Common.Msg(siteLang.getLang("답변 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                      regnoticeAnswer();
+                    }
+            });
+        }
+    }
+
+      const regnoticeAnswer = () => {
+
+         var formData = new FormData($('#noticeAnswerForm')[0]);
+
+         $.ajax({
+             url: regUrl,
+             type: 'POST',
+             data: formData,
+             contentType: false,
+             processData: false,
+             success: function(response) {
+               if (response.status === 'success') {
+                    $("#dialogUserUpdate").data("Hide")();
+                    Common.Msg(siteLang.getLang(response.message), {
+                        okback : function () {
+                            location.reload();
+                        }
+                    });
+
+                } else {
+                    Common.Msg(siteLang.getLang(response.message));
+                }
+             },
+             error: function(xhr) {
+                 alert(xhr.responseText);
+             }
+         });
+     }
+
+    // 파일 삭제(답변)
+    function clearFile(button) {
+        const fileInput = button.closest('.cui_attachments').querySelector('input[type="file"]');
+        const fileLabel = button.closest('.cui_attachments').querySelector('.item_label span');
+
+        // 파일 입력 초기화
+        fileInput.value = "";
+        fileLabel.textContent = '';
+
+        $('#ANSWER_FILE_NAME').val("") ;
+        $('#ANSWER_FILE_SHOTNAME').val("") ;
+        $('#popAttachments').hide();
+
+    }
+
+    </script>
+</th:block>
+
+<th:block th:if="${userGubun == '1'}">
+    <script type="text/javascript">
+        const goListUrl = '/user/board/notice'
+        const downloadUrl = '/user/board/download'
+        const updateUrl = '/user/board/noticeUpdate'
+        const deleteUrl = '/user/board/notice/delete'
+    </script>
+</th:block>
+
+<script th:inline="javascript">
+
+
+    function goList() {
+       location.href = goListUrl;
+    }
+
+     const updateReq = () => {
+         location.href = updateUrl+`/[[${board.BOARD_IDX}]]`;
+     }
+
+     const deleteReq = () => {
+       Common.Msg(siteLang.getLang("삭제 하시겠습니까?"), {
+                 mode : "confrim"
+                 , okback : function () {
+                     setTimeout(function () {
+                          deletenotice();
+                     }, 10);
+                 }
+        });
+     }
+
+   const deletenotice = () => {
+          $.ajax({
+              url: deleteUrl + "/[[${board.BOARD_IDX}]]",
+              type: 'POST',
+              data: '',
+              contentType: false,
+              processData: false,
+              success: function(response) {
+                if (response.status === 'success') {
+
+                     Common.Msg(siteLang.getLang(response.message), {
+                         okback : function () {
+                             goList();
+                         }
+                     });
+
+                 } else {
+                     Common.Msg(siteLang.getLang(response.message));
+                 }
+              },
+              error: function(xhr) {
+                  alert(xhr.responseText);
+              }
+          });
+   }
+
+    function downloadFile(fileType) {
+
+        var hiddenInput ="";
+        var downName = "";
+
+        if(fileType == '1'){
+          hiddenInput = document.getElementById('FILE_NAME');
+          downName = document.getElementById('FILE_SHOTNAME');
+        }else{
+          hiddenInput = document.getElementById('ANSWER_FILE_NAME');
+          downName = document.getElementById('ANSWER_FILE_SHOTNAME');
+        }
+
+        var fileName = hiddenInput.value;
+        var savefileName = downName.value;
+
+        if(fileName == ""){
+            Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
+            return;
+        }
+
+        fetch(downloadUrl+`?fileName=${encodeURIComponent(fileName)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/octet-stream'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Blob URL 생성
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = savefileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('파일 다운로드 실패:', error);
+        });
+    }
+
+</script>
+</html>

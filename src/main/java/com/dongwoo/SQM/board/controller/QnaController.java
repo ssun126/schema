@@ -68,7 +68,8 @@ public class QnaController {
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String user_gubun = user.getUSER_GUBUN();
         model.addAttribute("userGubun", user_gubun);
-
+        model.addAttribute("Title", "Q&A");
+        model.addAttribute("BOARD_TYPE", "QNA");
         return "board/QnAList";
     }
     //Q&A 리스트_user
@@ -78,7 +79,8 @@ public class QnaController {
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String user_gubun = user.getUSER_GUBUN();
         model.addAttribute("userGubun", user_gubun);
-
+        model.addAttribute("Title", "Q&A");
+        model.addAttribute("BOARD_TYPE", "QNA");
         return "board/QnAList";
     }
 

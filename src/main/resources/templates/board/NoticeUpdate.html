@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/defaultLayout}"
+      layout:fragment="Content">
+<body>
+<div class="cui_content">
+    <div class="cui_main">
+        <div class="cui_head">
+            <div class="head_content">
+                <h2 class="cui_title"><span data-langsid="Notice 수정"></span></h2>
+            </div>
+        </div>
+
+        <div class="cui_body">
+            <form id="boardForm"  name="updateForm" action="/admin/board/notice/update" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); uploadFile();">
+                <div class="cui_section">
+                    <table class="cui_table">
+                        <tbody>
+                        <tr>
+                            <th><span data-langsid="제목"></span></th>
+                            <td>
+                                <div class="cui_items_wrap">
+                                    <div class="item_content">
+                                        <input type="hidden" name="BOARD_IDX" th:value="${board.BOARD_IDX}">
+                                        <input type="text" name="BOARD_TITLE" th:value="${board.BOARD_TITLE}" class="cui_text_field" style="width: 500px;" placeholder="제목을 작성해 주세요." reqcheck="reqcheck"  data-messages="제목을 작성해 주세요." messages="" >
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+<!--                        <tr>-->
+<!--                            <th><span data-langsid="비밀번호"></span></th>-->
+<!--                            <td>-->
+<!--                                <div class="cui_items_wrap">-->
+<!--                                    <div class="item_content">-->
+<!--                                        <input type="text"  id="board_pass" name="BOARD_PASS" class="cui_text_field">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <th><span data-langsid="첨부파일"></span></th>
+                            <td>
+                                <div class="cui_attachments">
+                                    <input type="file"  id="file1" name="file" class="cui_file_field">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${board.FILE_SHOTNAME}"></span></div>
+                                        <input type="hidden" name ="FILE_NAME" id="FILE_NAME"  th:value="${board.FILE_NAME}" >
+                                        <input type="hidden" name ="FILE_SHOTNAME" id="FILE_SHOTNAME"  th:value="${board.FILE_SHOTNAME}" >
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" id="downloadButton" onclick="downloadFile()" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" id="deleteButton" onclick="clearFile(this)"
+                                                    th:style="'display: ' + (${board.FILE_NAME != null && !board.FILE_NAME.isEmpty()} ? 'inline-block' : 'none')">
+                                                <span data-langsid="삭제"></span></button>
+                                        </div>
+                                    </div>
+<!--                                    <button type="button" class="cui_button"><span data-langsid="추가"></span></button>-->
+                                </div>
+
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="cui_section">
+                    <textarea name="BOARD_DESC" cols="30" rows="25" th:text="${board.BOARD_DESC}" placeholder="본문을 작성해 주세요." reqcheck="reqcheck"  data-messages="본문을 작성해 주세요." messages=""></textarea>
+                </div>
+
+                <br>
+                <div class="cui_items_wrap" data-direction="right">
+                    <div class="item_content">
+                        <button type="button"  class="cui_button primary" onclick="board_update()"><span data-langsid="수정"></span></button>
+                        <button type="button" class="cui_button secondary" onClick="goList()" ><span data-langsid="취소"></span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+</body>
+
+
+
+<th:block th:if="${userGubun == '0'}">
+    <script type="text/javascript">
+        const goListUrl = '/admin/board/notice'
+        const downloadUrl = '/admin/board/download'
+        const saveUrl = '/admin/board/notice/save'
+
+    </script>
+</th:block>
+
+<th:block th:if="${userGubun == '1'}">
+    <script type="text/javascript">
+        const goListUrl = '/user/board/notice'
+        const downloadUrl = '/user/board/download'
+        const saveUrl = '/user/board/notice/save'
+    </script>
+</th:block>
+
+
+
+<script th:inline="javascript">
+
+        const board_update = () => {
+
+          if (Common.Validate($("#boardForm")) != true) {
+              return;
+          }
+
+             const fileInput = document.querySelector('input[type="file"]');
+             var file = fileInput.files[0];
+
+<!--             if(!validation(file)){-->
+<!--                Common.Msg(siteLang.getLang("파일 검증 실패했습니다."));-->
+<!--                return;-->
+<!--             }-->
+
+            const maxFileSize = 10 * 1024 * 1024;
+          if (file) {
+           if (file.size > maxFileSize) {
+                Common.Msg(siteLang.getLang("최대 파일 용량 10MB를 초과할 수 없습니다."));
+                return;
+           }
+          }
+
+
+            Common.Msg(siteLang.getLang("수정 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    //Common.Loading.Show();
+                    setTimeout(function () {
+                         upnotice();
+                    }, 10);
+                }
+            });
+
+        }
+
+
+        function goList() {
+           location.href = goListUrl+`/[[${board.BOARD_IDX}]]`;
+        }
+
+        const upnotice = () => {
+           var formData = new FormData($('#boardForm')[0]);
+
+          $.ajax({
+              url: saveUrl,
+              type: 'POST',
+              data: formData,
+              contentType: false,
+              processData: false,
+              success: function(response) {
+
+                     if (response.status === 'success') {
+                        Common.Msg(siteLang.getLang(response.message), {
+                            okback : function () {
+                                goList();
+                            }
+                         });
+                    } else {
+                        Common.Msg(siteLang.getLang(response.message));
+                    }
+              },
+              error: function(xhr) {
+                  alert(xhr.responseText);
+              }
+          });
+        }
+
+
+    // 파일 삭제
+    function clearFile(button) {
+        const fileInput = button.closest('.cui_attachments').querySelector('input[type="file"]');
+        const fileLabel = button.closest('.cui_attachments').querySelector('.item_label span');
+        const fileLabelDiv = button.closest('.cui_attachments').querySelector('.item_label');
+
+        // 파일 입력 초기화
+        fileInput.value = "";
+        fileLabel.textContent = '';
+        // 삭제 버튼 숨기기
+        button.style.display = 'none';
+        fileLabelDiv.style.display = 'none';
+
+        //다운로드 버튼
+        $('#downloadButton').hide() ;
+
+        $('#FILE_NAME').val("") ;
+        $('#FILE_SHOTNAME').val("") ;
+
+    }
+
+      // 파일 다운로드
+   function downloadFile() {
+
+       const hiddenInput = document.getElementById('FILE_NAME');
+       const downName = document.getElementById('FILE_SHOTNAME');
+
+       var fileName = hiddenInput.value;
+       var savefileName = downName.value;
+
+       if(savefileName == ""){
+           Common.Msg(siteLang.getLang("첨부된 파일이 없습니다."));
+           return;
+       }
+
+       fetch( downloadUrl+`?fileName=${encodeURIComponent(fileName)}`, {
+           method: 'GET',
+           headers: {
+               'Accept': 'application/octet-stream'
+           }
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response.blob();
+       })
+       .then(blob => {
+           // Blob URL 생성
+           const url = window.URL.createObjectURL(blob);
+           const a = document.createElement('a');
+           a.href = url;
+           a.download = savefileName;
+           document.body.appendChild(a);
+           a.click();
+           a.remove();
+           window.URL.revokeObjectURL(url);
+       })
+       .catch(error => {
+           console.error('파일 다운로드 실패:', error);
+       });
+   }
+
+    </script>
+
+</html>
