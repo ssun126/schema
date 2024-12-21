@@ -986,7 +986,7 @@ public class PartMgmtController {
                 model.addAttribute("GUARANT_COUNT",guarantListDTO.size());
             }
 
-            model.addAttribute("guarantDTO",guarantListDTO);
+            model.addAttribute("guarantListDTO",guarantListDTO);
             log.info("guarantListDTO=============================" + guarantListDTO);
 
         } catch (Exception e) {
