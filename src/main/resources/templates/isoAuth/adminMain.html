@@ -41,7 +41,7 @@
                                     <option value="REJECT" data-langsid="반려"></option>
                                 </select>
                             </div>
-                            <input type="text" id="searchType" name="searchType" value="ISO"/>
+                            <input type="hidden" id="searchType" name="searchType" value="ISO"/>
                         </div>
                     </div>
                     <div class="search_action">
@@ -53,8 +53,6 @@
                 <div class="cui_jqGrid_head">
                     <div class="jqGrid_label"> &nbsp;</div>
                     <div class="jqGrid_aside">
-                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
-                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delCompany();"><span data-langsid="삭제"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
                     </div>
                 </div>
@@ -63,33 +61,6 @@
                 </div>
             </div>
 
-
-            <table class="cui_table center" id="companyTable">
-                <colgroup>
-                    <col style="width:100px;">
-                    <col style="width:130px;">
-                    <col>
-                    <col style="width:80px;">
-                    <col style="width:130px;">
-                    <col style="width:130px;">
-                </colgroup>
-                <thead>
-                <tr>
-                    <th><span>승인상태</span></th>
-                    <th><span>업체코드</span></th>
-                    <th><span>업체명</span></th>
-                    <th><span>점수</span></th>
-                    <th><span>제출일자</span></th>
-                    <th><span>승인일자</span></th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr><td colspan="6">검색 버튼을 눌러 조회하세요.</td></tr>
-                </tbody>
-            </table>
-            <div id="pagination" class="pagination" style="text-align: center"></div>
-            <div class="table-wrapper">
-            </div>
         </div>
     </div>
 </body>
@@ -197,24 +168,22 @@ $(document).ready(function() {
 function loadPage(cpcode) {
 
       const url = "/admin/auditMgmt/isoDetail?COM_CODE=" + cpcode  ;
-
-      sessionStorage.setItem('preSearch', cpcode);
-      const queryParams = {
-          cpMain_COM_CODE: document.getElementById('comCode').value,
-          cpMain_COM_NAME: document.getElementById('comName').value,
-          cpMain_DEPT_CODE: document.getElementById('deptCode').value,
-          cpMain_MINERAL: document.getElementById('mineral').value,
-          cpMain_COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
-          cpMain_COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
-          cpMain_COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
-      };
-
-      Object.keys(queryParams).forEach(key => {
-          sessionStorage.setItem(key, queryParams[key]);
-      });
-
-       location.href = url;
+      location.href = url;
 }
+var downloadExcel = function () {
+    var grid = $("#gridArea").pqGrid("instance");
+    var colModel = grid.getColModel();
+    colModel[0].hidden = true;
 
+    grid.exportData({
+        url: "/common/exportData",
+        format: "xlsx",
+        zip: false,
+        filename: "COMPANY_CODE_" + Common.GetTodayTimeString(),
+        render: true
+    });
+
+    colModel[0].hidden = false;
+}
 </script>
 </html>

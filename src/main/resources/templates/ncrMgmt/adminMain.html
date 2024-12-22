@@ -97,6 +97,19 @@
                     </div>
                 </div>
             </form>
+            <div class="cui_jqGrid_section">
+                <div class="cui_jqGrid_head">
+                    <div class="jqGrid_label"> &nbsp;</div>
+                    <div class="jqGrid_aside">
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delCompany();"><span data-langsid="삭제"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                    </div>
+                </div>
+                <div class="cui_jqGrid_body" id="Grid">
+                    <div id="gridArea" gridYN=""></div>
+                </div>
+            </div>
             <table class="cui_table center" id="companyTable">
                 <colgroup>
                     <col style="width:100px;">
@@ -378,64 +391,124 @@
 </body>
 </html>
 <script>
-    // 페이지네이션 처리 함수 (updatePagination)
-  function updatePagination(pageMaker) {
-      var paginationHtml = '';
-      var currentPage = pageMaker.criteria.pageNum;
-      var startPage = pageMaker.startPage;
-      var endPage = pageMaker.endPage;
-      var totalPages = pageMaker.totalPages;
+var ListSearch = function () {
+    var url = "/auditMgmt/searchAuditMgmt";
 
-      // 이전 페이지 버튼
-      if (currentPage > 1) {
-          paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
-      }
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter($("#searchArea"));
 
-      // 페이지 번호
-      for (var i = startPage; i <= endPage; i++) {
-          if (i === currentPage) {
-              paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-          } else {
-              paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-          }
-      }
+    Common.Ajax(url, ReqInfo, function (data) {
+        var dataJson = JSON.parse(data);
 
-      // 다음 페이지 버튼
-      if (currentPage < totalPages) {
-          paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-      }
+        $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+        $("#gridArea").pqGrid("refreshView");
+    });
+}
 
-      // 페이지네이션 HTML 업데이트
-      $('#pagination').html(paginationHtml);
+$(function () {
+    var heightMinus = 330;
+    var data = [];
 
-      // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-      $('.page, .prev, .next').on('click', function(event) {
-          event.preventDefault();
-          var pageNum = $(this).data('page');
-          searchCompanies(pageNum);
-      });
-  }
+    // APPROVE_STATE 매핑 객체 선언
+    var appTypeMap = {
+        'SEND': '제출',
+        'APPROVED': '승인',
+        'REJECT': '반려'
+    };
 
-    $(document).ready(function() {
-      $('#searchBtn').on('click', function(event){
-        event.preventDefault();  // 기본 폼 제출 동작 방지
+    var obj = {
+        bubble: false,
+        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+        editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+        editModel: { clicksToEdit: 2 },
+        selectionModel: { type: 'cell' },
+        height: $(window).height() - heightMinus,
+        title: "",
+        sortable: false,
+        resizable: true,
+        menuIcon: true,
+        scrollModel: { autoFit: false },
+        hoverMode: 'row',
+        rowHtHead: 30,
+        //rowHt:30,
+        roundCorners: true,
+        rowBorders: true,
+        showBottom: true,
+        showHeader: true,
+        showTitle: true,
+        showTop: false, //excel 버튼 보이기
+        showToolbar: false,
+        stripeRows: false,
+        autoAddRow: false,
+        freezeCols:0,
+        autoRow: false,
+        autoRowHead: false,
+        virtualY: true,
+        hwrap: false,
+        wrap: false,
+        rowInit: function () {
+            return { style: 'font-size:12px;' };
+        },
+        selectChange: function (event, ui) {
+        },
+        rowClick: function (event, ui) {
+        },
+        cellClick: function (event, ui) {
+        },
+        rowDblClick: function (event, ui) {
+            var data = ui.rowData;
+            const cpcode = data.COM_CODE ;
+            loadPage(cpcode) ;
+        },
+        rowSelect: function (event, ui) {
+        },
+        open: function () {
+        },
+        headerCellClick: function (event, ui) {
+        }
+    };
+    obj.colModel = [
+        { data_langsid: "승인상태", title: siteLang.getLang("승인상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "APPROVE_STATE", sortable: true, editor: false, editable: false },
+        { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+        { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+        { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
+        { data_langsid: "제출일자", title: siteLang.getLang("제출일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: true, editor: false, editable: false },
+        { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false }
+    ];
+    obj.dataModel = { data: data };
+    $("#gridArea").pqGrid(obj);
+    $("#gridArea").attr("gridYN", "Y");
 
-        var name = $('#searchName').val();  // 업체명
-        var code = $('#searchCode').val();  // 업체 코드
-        var state = $('#searchState').val();  // state
-
-        showAlert('warning','API 연동 후 조회 가능합니다');
-      });
+    $(window).resize(function () {
+        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+        $("#gridArea").pqGrid("refreshView");
     });
 
-    $('.modal-close').on('click', function(e){
-        e.preventDefault();
-        const modal = $(this).parents('.cui_dialog');
-        modal.fadeOut();
-        modal_init();
-      });
+});
 
-    $('.toggle_btn').on('click', function() {
-      $(this).addClass('primary').siblings().removeClass('primary');
+$(document).ready(function() {
+    ListSearch();
+});
+
+function loadPage(cpcode) {
+      const url = "/admin/auditMgmt/safetyHealthDetail?COM_CODE=" + cpcode  ;
+      location.href = url;
+}
+
+
+var downloadExcel = function () {
+    var grid = $("#gridArea").pqGrid("instance");
+    var colModel = grid.getColModel();
+    colModel[0].hidden = true;
+
+    grid.exportData({
+        url: "/common/exportData",
+        format: "xlsx",
+        zip: false,
+        filename: "COMPANY_CODE_" + Common.GetTodayTimeString(),
+        render: true
     });
+
+    colModel[0].hidden = false;
+}
 </script>

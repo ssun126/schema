@@ -61,7 +61,13 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><span th:text="${data.ITEM_STATE}"></span></td>
+                            <td class="stateField">
+                                <div style="padding:1px;" th:if="${data.ITEM_STATE == 'SEND'}">
+                                    <button type="button" class="cui_button first" style="height:98%" th:onclick="approveIsoAuth([[${companyAuth.AUTH_CODE}]])"><span>승인</span></button>
+                                    <button type="button" class="cui_button secondary" style="height:98%" th:onclick="rejectIsoAuth([[${data.AUTH_CODE}]])"><span>반려</span></button>
+                                </div>
+                                <div th:if="${data.ITEM_STATE != 'SEND'}"><span th:text="${data.ITEM_STATE}"></span></div>
+                            </td>
                             <td><span th:text="${data.UP_DATE}"></span></td>
                         </tr>
                         </tbody>
@@ -70,7 +76,7 @@
                 <fieldset id="rejectArea" style="display:none;">
                     <legend><span>반려사유</span></legend>
                     <div>
-                        <textarea class="cui_text_field" rows="3" style="width:100%;" id="rejectReason"></textarea>
+                        <textarea class="cui_text_field" rows="5" style="width:100%;" id="rejectReason"></textarea>
                     </div>
                 </fieldset>
             </form>
@@ -111,86 +117,6 @@
 </div>
 
 <script>
-    $(document).ready(function() {
-       // loadPage(1);
-        // 페이지 로드 함수
-        function loadPage(pageNum) {
-            const code = `[[${companyAuth.COM_CODE}]]`;
-
-           // 페이지가 로드되면 서버에서 데이터를 가져옴
-            $.ajax({
-                url: '/auditMgmt/isoAuthItemList',  // 서버의 API URL
-                type: 'GET',
-                data: { pageNum: pageNum, amount: 10, COM_CODE: code },
-                success: function(response) {
-                    var tableBody = $('#isoAuthItemTable tbody');
-                    tableBody.empty(); // 기존 내용 비우기
-
-                    // AUTH_CODE 매핑 객체 선언
-                    var authCodeMap = {
-                        'ISO9001': '품질관리',
-                        'IATF16949': '품질관리',
-                        'ISO14001': '환경',
-                        'ISO45001': '안전보건',
-                        'KOSHA MS': '안전보건',
-                        'QC080000': 'HSPM',
-                        'ISO50001': 'ENERGY',
-                        '녹색기업': '기타'
-                    };
-                    if (!response || response.length === 0) {
-                        var row = '<tr><td colspan="8">데이터가 없습니다.</td>></tr>';
-                        tableBody.append(row);  // 테이블에 새 행 추가
-                    }else{
-                        var existingData = response.reduce(function(acc, item) {
-                            acc[item.AUTH_CODE] = {
-                                authDate: item.AUTH_DATE || '',
-                                expDate: item.EXP_DATE || '',
-                                regInputDate: item.REG_INPUT_DATE || '',
-                                fileName: item.FILE_NAME || '',
-                                filePath: item.FILE_PATH || '',
-                                updateDate: item.UP_DATE || '',
-                                state: item.ITEM_STATE || ''
-                            };
-                            return acc;
-                        }, {});
-                        console.log(existingData);
-
-                        for (var key in authCodeMap) {
-                            if (authCodeMap.hasOwnProperty(key)) {
-                                var value = authCodeMap[key];  // value 추출
-                                var existingDataItem = existingData[key] || {};
-
-                                var row = '<tr>' +
-                                                '<td>' + value  + '</td>' +
-                                                '<td>' + key + '</td>' +
-                                                '<td>' + (existingDataItem.authDate || '') + '</td>' +
-                                                '<td>' + (existingDataItem.expDate || '') + '</td>' +
-                                                '<td>' + (existingDataItem.regInputDate || '') + '</td>' +
-                                                '<td>';
-                                                if (existingDataItem.fileName) {
-                                                    row += '<a href="/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(existingDataItem.fileName) + '" download>다운로드</a>';
-                                                }
-                                            row +='</td><td><div style="padding:1px;" name="stateField">';
-                                                 if (existingDataItem.state == 'SEND') {
-                                                    row +=  '<button type="button" class="cui_button first" onClick="approveIsoAuth(\'' + key + '\')"><span>승인</span></button> '+
-                                                            '<button type="button" class="cui_button secondary" onClick="rejectIsoAuth(\'' + key + '\')"><span>반려</span></button>';
-                                                 }else{
-                                                    row +=  (existingDataItem.state || '');
-                                                 }
-                                            row +='</div></td><td>' + (existingDataItem.updateDate || '')  + '</td>' +
-                                              '</tr>';
-                                tableBody.append(row);
-                            }
-                        }
-                    }
-                },
-                error: function() {
-                    showAlert('warning','정보를 가져오는 데 실패했습니다.');
-                }
-            });  // $.ajax 호출 끝
-        }
-    });
-
     function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
         var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
@@ -225,7 +151,7 @@
             success: function(response) {
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
                 //상태만 변경
-                $(this).closest('div[name="stateField"]').text(state);
+                $(this).closest('div[class="stateField"]').text(state);
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
@@ -244,7 +170,7 @@
             data: { reason: '', state: state, com_code: comCode, auth_code: authCode },
             success: function(response) {
                 //상태에 승인 상태표시
-                $(this).closest('div[name="stateField"]').text(state);
+                $(this).closest('div[class="stateField"]').text(state);
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
                 loadPage(1);
             },
