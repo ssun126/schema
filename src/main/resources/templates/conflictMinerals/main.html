@@ -22,6 +22,25 @@
         <form class="cui_form_section" data-legend="true">
             <fieldset>
                 <legend><span>조사 양식</span></legend>
+                <!--<table class="cui_table">
+                    <colgroup>
+                        <col style="width:200px;">
+                        <col>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th><span>제출 구분</span></th>
+                        <td>
+                            <div class="cui_items_wrap" data-direction="left">
+                                <div class="item_content">
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file" checked><i></i><span>파일첨부</span></label>
+                                    <label class="cui_checkbox"><input type="radio" name="checkbox1" value="text"><i></i><span>직접입력</span></label>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>-->
                 <div class="cui_alert alert_basic" data-type="info" role="alert">
                     <div class="alert_message">
                         <p>양식 첨부  (Self-Audit 갱신 시점 기준 3개월 이내 조사인 경우, 변경사항이 없으면 그대로 제출 가능)</p>
@@ -48,7 +67,7 @@
                             </div>
                             <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
                                 <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'CMRT' }">
-                                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span>></div>
+                                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
                                     <div class="item_content">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
                                     </div>

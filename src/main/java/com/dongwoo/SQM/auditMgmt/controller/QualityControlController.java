@@ -1,7 +1,9 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
+import com.dongwoo.SQM.auditMgmt.service.QualityControlService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.siteMgr.dto.QualityItemDTO;
 import com.dongwoo.SQM.siteMgr.service.QualityItemService;
@@ -24,6 +26,8 @@ public class QualityControlController {
     private AuditCommonService auditCommonService;
     @Autowired
     private QualityItemService qualityItemService;
+    @Autowired
+    private QualityControlService qualityControlService;
 
     @GetMapping("/admin/auditMgmt/qualityControl")
     public String GetList(Model model) {
@@ -47,8 +51,10 @@ public class QualityControlController {
         //업체의 품질관리 Audit 기본 정보를 보여준다.
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
-        List<QualityItemDTO> auditItems = qualityItemService.findAll();
-        model.addAttribute("auditItems", auditItems);
+
+        //저장된 데이터가 있는지 확인
+        List<AuditItemPointDTO> auditItemPoint = qualityControlService.getCompanyAuthItemPoint("QUALITY", comCode);
+        model.addAttribute("auditItemPoint", auditItemPoint);
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("QUALITY", comCode);
         model.addAttribute("companyAuthFile", companyAuthFile);

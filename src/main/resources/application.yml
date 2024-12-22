@@ -20,10 +20,7 @@ server:
 #    include-exception: true # 오류 응답에 exception의 내용을 포함할지 여부
 #    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
 
-# thymeleaf
-
-
-# database
+# thymeleaf / database
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver

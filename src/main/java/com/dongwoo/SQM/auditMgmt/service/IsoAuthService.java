@@ -144,13 +144,12 @@ public class IsoAuthService {
     }
 
     // ISO 인증 업체 리스트- 조건을 처리하는 검색 메서드
-    public List<AuditMgmtDTO> searchCompanies(String type, String code, String name, String state, Criteria criteria) {
+    public List<AuditMgmtDTO> searchCompanies(String type, String code, String name, String state) {
         Map<String, Object> params = new HashMap<>();
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         params.put("COM_NAME", name);
         params.put("COM_STATUS", state);
-        params.put("criteria", criteria);
         return isoAuthRepository.searchCompanies(params);
     }
 

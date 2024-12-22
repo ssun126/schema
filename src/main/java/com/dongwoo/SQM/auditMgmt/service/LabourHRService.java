@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.service;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
@@ -107,6 +108,14 @@ public class LabourHRService {
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return labourHRRepository.getCompanyAuthFile(params);
+    }
+
+    //업체별 평가항목/점수 정보
+    public List<AuditItemPointDTO> getCompanyAuthItemPoint(String type, String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return labourHRRepository.getCompanyAuthItemPoint(params);
     }
 
 }

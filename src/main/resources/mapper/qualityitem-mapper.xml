@@ -11,4 +11,12 @@
     <delete id="deletAll">
         DELETE SC_AUDIT_QUALITY_ITEM
     </delete>
+
+    <select id="getCompanyAuthItemPoint" parameterType="map" resultType="auditItemPoint">
+        SELECT AI.AUDIT_ID, AI.PROVISION, AI.AUDIT_ITEM, AI.AUDIT_CRITERIA, AI.POINT_CRITERIA,
+        AA.AUTH_TYPE, AA.POINT, AA.AUDIT_COMMENT
+        FROM SC_AUDIT_QUALITY_ITEM AI
+        LEFT OUTER JOIN  SC_AUDIT_ITEM_POINT AA
+        ON AA.AUDIT_ID= AI.AUDIT_ID AND AA.COM_CODE = #{COM_CODE} AND AA.AUTH_TYPE = 'QUALITY'
+    </select>
 </mapper>

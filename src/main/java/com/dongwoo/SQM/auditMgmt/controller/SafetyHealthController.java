@@ -1,7 +1,9 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
+import com.dongwoo.SQM.auditMgmt.service.SafetyHealthService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.siteMgr.dto.QualityItemDTO;
 import com.dongwoo.SQM.siteMgr.dto.SafetyItemDTO;
@@ -23,7 +25,7 @@ import java.util.List;
 public class SafetyHealthController {
     @Autowired
     private AuditCommonService auditCommonService;
-    private final SafetyItemService safetyItemService;
+    private final SafetyHealthService safetyHealthService;
 
     @GetMapping("/admin/auditMgmt/safetyHealth")
     public String GetAdminList(Model model) {
@@ -34,8 +36,8 @@ public class SafetyHealthController {
     public String labourHRDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
 
         // 회사의  심사항목 정보를 가져옵니다.
-        List<SafetyItemDTO> auditItems = safetyItemService.findAll();
-        model.addAttribute("auditItems", auditItems);
+        List<AuditItemPointDTO> auditItemPoint = safetyHealthService.getCompanyAuthItemPoint("SAFETY", COM_CODE);
+        model.addAttribute("auditItemPoint", auditItemPoint);
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("SAFETY", COM_CODE);
         model.addAttribute("companyAuthFile", companyAuthFile);
@@ -49,9 +51,9 @@ public class SafetyHealthController {
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
 
-        // 회사의  심사항목 정보를 가져옵니다.
-        List<SafetyItemDTO> auditItems = safetyItemService.findAll();
-        model.addAttribute("auditItems", auditItems);
+        //저장된 데이터가 있는지 확인
+        List<AuditItemPointDTO> auditItemPoint = safetyHealthService.getCompanyAuthItemPoint("SAFETY", comCode);
+        model.addAttribute("auditItemPoint", auditItemPoint);
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("SAFETY", comCode);
         model.addAttribute("companyAuthFile", companyAuthFile);

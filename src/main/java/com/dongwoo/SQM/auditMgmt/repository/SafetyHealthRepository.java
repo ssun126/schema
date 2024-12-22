@@ -14,9 +14,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SafetyHealthRepository {
     private final SqlSessionTemplate sql;
-
+    //파일 정보 저장
     public int insertFileInfo(SafetyHealthDTO safetyHealth) {
         return sql.insert("SafetyHealth.insertFile", safetyHealth);
+    }
+    //평가항목 점수 가져오기
+    public List<AuditItemPointDTO> getCompanyAuthItemPoint(Map<String, Object> params) {
+        return sql.selectList("SafetyHealth.getCompanyAuthItemPoint", params);
     }
 
 }

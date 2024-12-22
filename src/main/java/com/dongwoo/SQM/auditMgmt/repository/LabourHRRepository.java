@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.repository;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -23,5 +24,10 @@ public class LabourHRRepository {
     //업체별-Auth type별 첨부 파일 조회
     public LabourHRDTO getCompanyAuthFile(Map<String, Object> params) {
         return sql.selectOne("Labour.getCompanyAuthFile", params);
+    }
+
+    //평가항목 점수 가져오기
+    public List<AuditItemPointDTO> getCompanyAuthItemPoint(Map<String, Object> params) {
+        return sql.selectList("Labour.getCompanyAuthItemPoint", params);
     }
 }

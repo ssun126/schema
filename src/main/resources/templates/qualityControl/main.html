@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>품질관리관리</title>
+    <title>품질관리</title>
 </head>
 <body>
 <div class="cui_content">
@@ -223,16 +223,16 @@
                             <th><span>근거 자료</span></th>
                         </tr>
                         </thead>
-                        <tbody th:unless="${#lists.isEmpty(auditItems)}">
-                        <tr th:each="data : ${auditItems}">
+                        <tbody th:unless="${#lists.isEmpty(auditItemPoint)}">
+                        <tr th:each="data : ${auditItemPoint}">
                             <td><span th:text="${data.PROVISION}"></span></td>
                             <td><span th:text="${data.AUDIT_ITEM}"></span></td>
-                            <td><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
-                            <td><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
                             <td style="text-align: center;"></td>
-                            <td style="text-align: right;"></td>
+                            <td style="text-align: right;" th:text="${data.POINT}"></td>
                             <td>
-                                <input type="text" name="COMMENT" class="cui_text_field">
+                                <input type="text" name="AUDIT_COMMENT" class="cui_text_field"  th:value="${data.AUDIT_COMMENT}">
                                 <input type="hidden" name="AUDIT_ID" th:value="${data.AUDIT_ID}">
                             </td>
                         </tr>
@@ -426,22 +426,49 @@
 
             // 5번째 td에 select box 추가
             $cells.eq(4).append($selectBox);
+            // 6번째 td에 기존 점수가 있다면, 셀렉트 박스를 자동으로 설정
+            var existingScore = $cells.eq(5).text().trim();  // 6번째 td에서 기존 점수를 가져옴
+            var previousScore = 0;  // 기존 점수 저장용
+
+            if (existingScore) {
+                // 기존 점수와 일치하는 option을 셀렉트 박스에서 선택
+                $selectBox.find('option').each(function() {
+                    if ($(this).val() === existingScore) {
+                        $(this).prop('selected', true);  // 값이 일치하면 해당 option을 선택
+                        previousScore = parseFloat(existingScore);  // 기존 점수를 저장
+                        return false;  // 루프 종료
+                    }
+                });
+            }
+
+            // 6번째 td에 초기 점수 추가 (선택된 값에 따라 점수 추가)
+            if (previousScore) {
+                totalScore += previousScore;  // 기존 점수를 총점에 추가
+                $('#totalPoint').text(totalScore);
+            }
 
             // change 이벤트 핸들러 추가
             $selectBox.on('change', function(event) {
                 var selectedValue = $(event.target).val();  // 선택된 값
-                $cells.eq(5).text(selectedValue);  // 6번째 td에 점수필드에 선택된 값 추가
-                var score = parseFloat(selectedValue);// 숫자가 아닌 경우, 기본값 0으로 처리
+                var selectedScore = parseFloat(selectedValue);  // 숫자 값으로 변환
 
                 // 만약 점수가 NaN이면 0으로 처리
-                if (isNaN(score)) {
-                    score = 0;
+                if (isNaN(selectedScore)) {
+                    selectedScore = 0;
                 }
-                totalScore += score; // 합산
-                $('#totalPoint').text(totalScore);
+
+                // 6번째 td에 선택된 값(점수) 표시
+                $cells.eq(5).text(selectedScore);
+
+                // 기존 점수 빼고 새로운 점수 더하기
+                totalScore -= previousScore;  // 이전 점수 빼기
+                totalScore += selectedScore;  // 새 점수 더하기
+                $('#totalPoint').text(totalScore);  // 총점 갱신
+
+                // 이전 점수를 업데이트
+                previousScore = selectedScore;  // 새 점수로 업데이트
             });
         });
-
     });
 
     function downloadFile(fileName) {
@@ -495,7 +522,7 @@
                 var row = {};
                 var fileCnt = {};
                 row['POINT'] = $(this).find('td').eq(5).text();
-                row['COMMENT'] = $(this).find('input[name="COMMENT"]').val() || '';
+                row['AUDIT_COMMENT'] = $(this).find('input[name="AUDIT_COMMENT"]').val() || '';
                 row['AUDIT_ID'] = $(this).find('input[name="AUDIT_ID"]').val();
 
                 console.log("insert data"+row['AUDIT_ID']);

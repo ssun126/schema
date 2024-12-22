@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
 import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
@@ -57,8 +58,8 @@ public class LabourHRController {
         model.addAttribute("companyAuth", companyAuth);
 
         // 회사의 노동환경 심사항목 정보를 가져옵니다.
-        List<LabourItemDTO> auditItems = labourItemService.findAll();
-        model.addAttribute("auditItems", auditItems);
+        List<AuditItemPointDTO> auditItemPoint = labourHRService.getCompanyAuthItemPoint("QUALITY", comCode);
+        model.addAttribute("auditItemPoint", auditItemPoint);
 
         LabourHRDTO companyAuthFile = labourHRService.getCompanyAuthFile("LABOUR", comCode);
         model.addAttribute("companyAuthFile", companyAuthFile);

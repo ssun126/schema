@@ -32,6 +32,9 @@ public class ConflictMineralsController {
 
     @GetMapping("/admin/auditMgmt/conflictMineralsDetail")
     public String Detail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
+        // 회사의 ISO 상태 정보를 가져옵니다.
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("CONFLICT", COM_CODE);
+        model.addAttribute("companyAuth", companyAuth);
         //분쟁광물정보 가져오기
         List<ConflictMineralsDTO> conflictData = conflictMineralsService.getConflictData("CONFLICT", COM_CODE);
         model.addAttribute("conflictData", conflictData);

@@ -109,6 +109,14 @@ public class SafetyHealthService {
         return auditMgmtRepository.getCompanyAuth(params);
     }
 
+    //업체별 평가항목/점수 정보
+    public List<AuditItemPointDTO> getCompanyAuthItemPoint(String type, String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return safetyHealthRepository.getCompanyAuthItemPoint(params);
+    }
+
 
 
 }

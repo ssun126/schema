@@ -53,6 +53,10 @@ public class AuditMgmtRepository {
     public List<AuditMgmtDTO> getCompanyAuthFile(Map<String, Object> params) {
         return sql.selectList("AuditMgmt.getCompanyAuthFile", params);
     }
+    //업체별-Auth type별 평가항목 점수 조회
+    public List<AuditItemPointDTO> getCompanyAuthItemPoint(Map<String, Object> params) {
+        return sql.selectList("AuditMgmt.getCompanyAuthItemPoint", params);
+    }
 
     //업체별 만료일 조회
     public List<HashMap> getExpDateList(Map<String, Object> params) {

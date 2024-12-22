@@ -134,6 +134,14 @@ public class AuditCommonService {
         return auditMgmtRepository.getCompanyAuthFile(params);
     }
 
+    //업체별 평가항목 점수 정보
+    public List<AuditItemPointDTO> getCompanyAuthItemPoint(String type, String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return auditMgmtRepository.getCompanyAuthItemPoint(params);
+    }
+
     //업체별 만료일 정보 리스트
     public List<HashMap> getExpDateList(String code, String name, String type) {
         Map<String, Object> params = new HashMap<>();

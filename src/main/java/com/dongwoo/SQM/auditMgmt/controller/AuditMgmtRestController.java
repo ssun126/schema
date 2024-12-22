@@ -7,6 +7,7 @@ import com.dongwoo.SQM.auditMgmt.service.*;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.common.service.FileStorageService;
+import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,17 +57,16 @@ public class AuditMgmtRestController {
         this.fileStorageService = fileStorageService;
     }
     // admin -Audit 공통 검색어로 업체 정보 가져오기
-    @GetMapping("/searchAuditMgmt")
-    public AuditSearchResult searchCompanies(@RequestParam("type") String type, @RequestParam("code") String code, @RequestParam("name") String name, @RequestParam("state") String state, Criteria criteria) {
-        // 검색 조건에 맞는 결과를 반환
-        List<AuditMgmtDTO> isoAuthList = isoAuthService.searchCompanies(type, code, name, state, criteria);
+    @PostMapping("/searchAuditMgmt")
+    public List<AuditMgmtDTO> searchCompanies(HttpServletRequest req) {
+        String name = req.getParameter("searchName");
+        String code = req.getParameter("searchCode");
+        String state = req.getParameter("searchState");
+        String type = req.getParameter("searchType");
+        log.info("type??"+type);
 
-        // 페이지 네이게이션과 함께 반환
-        int total = isoAuthService.getTotalByKeyword(type,code,name,state);  // 검색 조건에 맞는 총 개수
-        PageDTO pageMaker = new PageDTO(total, 10, criteria);          // 페이지 DTO 생성
-
-        // 검색 결과와 페이지 네비게이터를 포함한 결과 객체 반환
-        return new AuditSearchResult(isoAuthList, pageMaker);
+        // 검색 결과와 페이지
+        return isoAuthService.searchCompanies(type, code, name, state);
     }
 
     /**
