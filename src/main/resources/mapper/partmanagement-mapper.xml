@@ -296,12 +296,6 @@
         WHERE HALOGEN_IDX =#{HALOGEN_IDX}
     </update>
     
-    <update id="etcUpdate" parameterType="partDetailEtc">
-        UPDATE SC_PART_MGMT_DETAIL_ETC
-        SET ETC_CONFIRM_DATE = #{ETC_CONFIRM_DATE},ETC_ANALYSE_ENTRY = #{ETC_ANALYSE_ENTRY},ETC_ANALYSE_RESULT = #{ETC_ANALYSE_RESULT}
-                ,ETC_FILE_NAME = #{ETC_FILE_NAME},ETC_FILE_PATH = #{ETC_FILE_PATH}
-        WHERE ETC_IDX =#{ETC_IDX}
-    </update>
 
     <insert id="msdsSave" parameterType="partDetailMsds">
         INSERT INTO SC_PART_MGMT_DETAIL_MSDS(MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH)
@@ -326,7 +320,11 @@
     <update id="updateEtcData" parameterType="partDetailEtc">
         update SC_PART_MGMT_DETAIL_ETC
         set ETC_CONFIRM_DATE =#{ETC_CONFIRM_DATE},ETC_ANALYSE_ENTRY = #{ETC_ANALYSE_ENTRY},ETC_ANALYSE_RESULT = #{ETC_ANALYSE_RESULT}
-            ,ETC_FILE_NAME=#{ETC_FILE_NAME},ETC_FILE_PATH=#{ETC_FILE_PATH}
+        <if test="ETC_FILE_NAME != null and ETC_FILE_NAME != ''">
+            <![CDATA[
+                ,ETC_FILE_NAME = #{ETC_FILE_NAME},ETC_FILE_PATH = #{ETC_FILE_PATH}
+            ]]>
+        </if>
         where ETC_IDX = #{ETC_IDX}
     </update>
 
@@ -436,14 +434,20 @@
 
     <update id="guarantUpdate" parameterType="partDetailGuarant">
         UPDATE SC_PART_MGMT_DETAIL_GUARANT
-        SET GUARANT_TYPE = #{GUARANT_TYPE},GUARANT_CONFIRM_DATE = #{GUARANT_CONFIRM_DATE},GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
+        SET GUARANT_TYPE = #{GUARANT_TYPE},GUARANT_CONFIRM_DATE = #{GUARANT_CONFIRM_DATE}
+        <if test="GUARANT_FILE_NAME != null and GUARANT_FILE_NAME != ''">
+            <![CDATA[
+                ,GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
+            ]]>
+        </if>
         WHERE GUARANT_IDX =#{GUARANT_IDX}
     </update>
 
-    <delete id="deleteGuarantData" parameterType="int">
+    <delete id="deleteguarantData" parameterType="int">
         DELETE SC_PART_MGMT_DETAIL_GUARANT
         WHERE GUARANT_IDX = #{idx}
     </delete>
+
 
 
 

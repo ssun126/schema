@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -569,7 +570,7 @@ public class PartMgmtController {
             }
 
 
-            List<partDetailEtcDTO> etcDTOList = new ArrayList<>();
+            //List<partDetailEtcDTO> etcDTOList = new ArrayList<>();
             for (int i = 0; i < EtcCount; i++) {
                 if(request.getParameter("ETC_IDX"+(i+1)) != null) {
                     partDetailEtcDTO etcDTO = new partDetailEtcDTO();
@@ -579,19 +580,16 @@ public class PartMgmtController {
                     etcDTO.setETC_ANALYSE_ENTRY(GetParam(request, "ETC_ANALYSE_ENTRY" + (i+1), ""));
                     etcDTO.setETC_ANALYSE_RESULT(GetParam(request, "ETC_ANALYSE_RESULT" + (i+1), ""));
 
-                    if(etcFile != null){
-                        if (!etcFile[i].isEmpty()) {
-                            MultipartFile files = etcFile[i];
+                    MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("ETC_FILE" + (i+1));
+
+                    if(files != null){
 
                             String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, files);
                             String etc_filename = files.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                             etcDTO.setETC_FILE_NAME(etc_filename);
                             etcDTO.setETC_FILE_PATH(etc_filepath);
 
-                        }
                     }
 
                     if(GetParam(request, "ETC_IDX" + (i+1), "").equals("")) {
@@ -1104,7 +1102,7 @@ public class PartMgmtController {
             }
 
 
-            List<partDetailGuarantDTO> guarantDTOList = new ArrayList<>();
+            //List<partDetailGuarantDTO> guarantDTOList = new ArrayList<>();
             for (int i = 0; i < guarantCount; i++) {
                 if(request.getParameter("GUARANT_IDX"+(i+1)) != null) {
                     partDetailGuarantDTO guarantDTO = new partDetailGuarantDTO();
@@ -1113,19 +1111,20 @@ public class PartMgmtController {
                     guarantDTO.setGUARANT_TYPE(GetParam(request, "GUARANT_TYPE" + (i+1), ""));
                     guarantDTO.setGUARANT_CONFIRM_DATE(GetParam(request, "GUARANT_CONFIRM_DATE" + (i+1), ""));
 
-                    if(guarantFile != null){
-                        if (!guarantFile[i].isEmpty()) {
-                            MultipartFile files = guarantFile[i];
+                    MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("GUARANT_FILE" + (i+1));
+
+                    if(files != null){
+//                    if(guarantFile != null){
+//                        if (!guarantFile[i].isEmpty()) {
+                            //MultipartFile files = guarantFile[i];
 
                             String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, files);
                             String etc_filename = files.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                             guarantDTO.setGUARANT_FILE_NAME(etc_filename);
                             guarantDTO.setGUARANT_FILE_PATH(etc_filepath);
 
-                        }
+                        //}
                     }
 
                     if(GetParam(request, "GUARANT_IDX" + (i+1), "").equals("")) {

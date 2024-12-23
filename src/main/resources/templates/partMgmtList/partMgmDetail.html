@@ -92,7 +92,7 @@
                             <td><input type="text" class="cui_text_field" th:value="${msdsDTO.MSDS_APPROVAL_NUM}"  name="MSDS_APPROVAL_NUM" reqcheck="reqcheck" data-messages="승인번호 입력해주세요." messages=""></td>
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
-                                    <input type="file" class="cui_file_field" name="MSDS_FILE" th:style="${msdsDTO.MSDS_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                    <input type="file" class="cui_file_field" name="MSDS_FILE" th:style="${msdsDTO.MSDS_FILE_NAME == null ? 'display:none;' : '' }" >
                                     <div class="cui_items_wrap file_wrap" data-direction="left" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span></div>
                                         <div class="item_content">
@@ -164,7 +164,7 @@
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="ROHS_FILE">
                                     <input type="hidden" name="FILE_STATUS">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == '' ? 'display:none;' : '' }">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
@@ -217,7 +217,7 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == '' ? 'display:none;' : '' }">
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
@@ -261,7 +261,7 @@
                                     <input type="hidden" class="cui_text_field" th:name="'ETC_FLAG'+${etcStat.count}"></td>
                                 <td>
                                     <div class="cui_attachments" style="display:flex;">
-                                        <input type="file" class="cui_file_field" name="ETC_FILE">
+                                        <input type="file" class="cui_file_field" th:name="'ETC_FILE'+${etcStat.count}">
 
                                         <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${etcDTO.ETC_FILE_NAME == '' ? 'display:none;' : '' }" >
                                             <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME" th:value="${etcDTO.ETC_FILE_NAME}" th:text="${etcDTO.ETC_FILE_NAME}"></span></div>
@@ -303,7 +303,7 @@
                          + '                <td>'
                          + '                    <div class="cui_attachments" style="display:flex;">'
     <!--                     + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '">'-->
-                         + '                        <input type="file" class="cui_file_field" name="ETC_FILE">'
+                         + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '" >'
                          + '                    </div>'
                          + '                </td>'
                          + '    <td><button type="button" class="cui_button icon" id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button></td>'

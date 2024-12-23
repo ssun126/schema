@@ -53,10 +53,10 @@
         <div class="cui_body">
             <div class="cui_step">
                 <ol>
-                    <li class="active"><span>MSDS / RoHSⅡ / Halogen</span></li>
+                    <li><span>MSDS / RoHSⅡ / Halogen</span></li>
                     <li><span>SVHC</span></li>
                     <li><span>Declaration Letter</span></li>
-                    <li><span data-langsid="SCCS / 성분명세서 / 기타"></span></li>
+                    <li  class="active"><span data-langsid="SCCS / 성분명세서 / 기타"></span></li>
                 </ol>
             </div>
             <form class="cui_form_section" data-legend="true" id="frmDetail"  enctype="multipart/form-data" onsubmit="return false;">
@@ -91,7 +91,7 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="SCCS_FILE" >
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${sccsDTO.SCCS_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${sccsDTO.SCCS_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="SCCS_FILE_NAME" th:value="${sccsDTO.SCCS_FILE_NAME}" th:text="${sccsDTO.SCCS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
@@ -133,7 +133,7 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="INGRED_FILE" >
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${ingredDTO.INGRED_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${ingredDTO.INGRED_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="INGRED_FILE_NAME" th:value="${ingredDTO.INGRED_FILE_NAME}" th:text="${ingredDTO.INGRED_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
@@ -175,7 +175,7 @@
                             <td><input type="text" class="cui_text_field"  th:value="${guarantDTO.GUARANT_CONFIRM_DATE}" th:name="'GUARANT_CONFIRM_DATE'+${guarantStat.count}"  datePickerControl="" >
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
-                                    <input type="file" class="cui_file_field" name="GUARANT_FILE">
+                                    <input type="file" class="cui_file_field"  th:name="'GUARANT_FILE'+${guarantStat.count}" >
 
                                 <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${guarantDTO.GUARANT_FILE_NAME == null ? 'display:none;' : '' }">
                                     <div class="item_label" data-cui-icon="paperclip"><span id="GUARANT_FILE_NAME" th:value="${guarantDTO.GUARANT_FILE_NAME}" th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
@@ -216,7 +216,7 @@
                          + '                <td><input type="text" class="cui_text_field" name="GUARANT_CONFIRM_DATE' + guarantCount + '"  datePickerControl="" ></td>'
                          + '                <td>'
                          + '                    <div class="cui_attachments" style="display:flex;">'
-                         + '                        <input type="file" class="cui_file_field" name="GUARANT_FILE">'
+                         + '                        <input type="file" class="cui_file_field" name="GUARANT_FILE' + guarantCount + '">'
                          + '                    </div>'
                          + '                </td>'
                          + '    <td><button type="button" class="cui_button icon" id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button></td>'
