@@ -1510,6 +1510,41 @@ Common.ChkEmail = function (str) {
     }
 }
 
+Common.EncParam = function(value) {
+    var val = value || {};
+
+    // 객체가 아닌 경우 그냥 URL-safe로 변환
+    if (typeof val === "string") {
+        return encodeURIComponent(val);
+    } else {
+        // 객체일 경우 JSON.stringify로 변환 후 URL-safe하게 인코딩
+        var jsonString = JSON.stringify(val);
+        return encodeURIComponent(jsonString);  // URL-safe하게 변환
+    }
+}
+
+Common.SelectBox = function(selectId, dataList, textName, valueName, defaultText = "") {
+    var $select = $(selectId); // 셀렉트 박스를 jQuery로 선택
+
+    // 셀렉트 박스를 초기화 (기존 옵션들 지우기)
+    $select.empty();
+
+    // 기본 선택 옵션 추가
+    $select.append('<option value="">' + defaultText + '</option>');
+
+    // dataList 배열을 순회하며 셀렉트 박스에 옵션 추가
+    $.each(dataList, function(index, item) {
+        var optionText = item[textName];  // 'name' 필드 값
+        var optionValue = item[valueName];  // 'code' 필드 값
+
+        // 셀렉트 박스에 <option> 추가
+        $select.append('<option value="' + optionValue + '">' + optionText + '</option>');
+    });
+
+    // 기본 선택 인덱스를 설정 (선택된 인덱스를 0으로 설정)
+    $select.prop('selectedIndex', 0);
+}
+
 $(document).ready(function () {
     Common.Load();
 });

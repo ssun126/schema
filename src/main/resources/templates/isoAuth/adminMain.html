@@ -73,6 +73,7 @@ var ListSearch = function () {
 
     Common.Ajax(url, ReqInfo, function (data) {
         var dataJson = JSON.parse(data);
+        console.log(dataJson);
 
         $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
         $("#gridArea").pqGrid("refreshView");

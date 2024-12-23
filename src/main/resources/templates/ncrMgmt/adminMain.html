@@ -5,7 +5,7 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-    <link rel='stylesheet' type='text/css' href='../../../css/jqwidgets/jqx.base.css'>
+<!--    <link rel='stylesheet' type='text/css' href='../../../css/jqwidgets/jqx.base.css'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="../../../js/jqwidgets/jqxcore.js"></script>
     <script type="text/javascript" src="../../../js/jqwidgets/jqxlistbox.js"></script>
@@ -17,11 +17,11 @@
     <script type="text/javascript" src="../../../js/jqwidgets/jqxdata.js"></script>
     <script type="text/javascript" src="../../../js/jqwidgets/jqxmenu.js"></script>
     <script type="text/javascript" src="../../../js/jqwidgets/jqxnotification.js"></script>
-   <!-- <script type="text/javascript" src="../../../js/dongwoo/common.js"></script>-->
+   &lt;!&ndash; <script type="text/javascript" src="../../../js/dongwoo/common.js"></script>&ndash;&gt;
     <script type="text/javascript" src="../../../js/dongwoo/mica.js"></script>
     <script type="text/javascript" src="../../../js/dongwoo/dongwoo.common.js"></script>
     <script type="text/javascript" src="../../../js/dongwoo/mica.common.js"></script>
-    <script type="text/javascript" src="../../../js/pages/audit_ncr.js"></script>
+    <script type="text/javascript" src="../../../js/pages/audit_ncr.js"></script>-->
     <title>NCR 관리</title>
 </head>
 <body>
@@ -35,18 +35,20 @@
         <div class="cui_body">
             <form id="searchForm" method="get">
                 <div class="cui_search">
-                    <div class="search_list cui_grid_wrap ">
+                    <div class="search_list cui_grid_wrap " id="searchArea">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체코드</strong>
+                            <strong class="item_label" data-langsid="업체코드"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="searchCode" name="searchCode" search="searchBtn" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체명</strong>
+                            <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                                <input class="cui_text_field" type="text" id="searchName" name="searchName" search="searchBtn" placeholder=""/>
                             </div>
+                            <input type="hidden" id="pFlag" name="pFlag"/>
+                            <input type="hidden" id="pGroupCd" name="pGroupCd" value="9999"/>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">지적구분</strong>
@@ -71,9 +73,9 @@
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">분류</strong>
+                            <strong class="item_label">Audit 구분</strong>
                             <div class="item_content">
-                                <select class="cui_select_field">
+                                <select class="cui_select_field" id="searchNcrAuditType">
                                     <option value="">품질</option>
                                     <option value="">환안</option>
                                 </select>
@@ -92,7 +94,7 @@
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span>
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch();"><span>검색</span>
                         </button>
                     </div>
                 </div>
@@ -101,9 +103,9 @@
                 <div class="cui_jqGrid_head">
                     <div class="jqGrid_label"> &nbsp;</div>
                     <div class="jqGrid_aside">
-                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
+                       <!-- <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delCompany();"><span data-langsid="삭제"></span></button>
-                        <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>-->
                     </div>
                 </div>
                 <div class="cui_jqGrid_body" id="Grid">
@@ -391,30 +393,51 @@
 </body>
 </html>
 <script>
-var ListSearch = function () {
-    var url = "/auditMgmt/searchAuditMgmt";
+var AuditTypeSearch = function () {
+    //Audit 구분
+    var typeUrl = "/api/audit/auditNcrMgmt/getCodeList";
 
     var ReqInfo = new Common.RequestInfo();
     ReqInfo.AddParameter($("#searchArea"));
 
+    Common.Ajax(typeUrl, ReqInfo, function (data) {
+        console.log(data);
+        var localData = data.dataList;
+        Common.SelectBox("#searchNcrAuditType", localData, 'name', 'code');
+    });
+}
+
+var ListSearch = function () {
+    var setData = {
+        "ncr_no": "",
+        "type": "",
+        "ncr_type": "",
+        "year": "2024",
+        "ncr_status": ""
+    };
+    var encodedData = Common.EncParam(setData);
+    var url = "/api/audit/auditNcrMgmt/list/"+ encodedData;
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter($("#searchArea"));
+
+    console.log(ReqInfo);
     Common.Ajax(url, ReqInfo, function (data) {
         var dataJson = JSON.parse(data);
+        var listStr = dataJson.LIST; // "LIST"에 해당하는 값이 JSON 형식의 문자열이므로 이를 추출
 
-        $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+        // 2. LIST 값을 다시 JSON 객체로 파싱
+        var list = JSON.parse(listStr); // 이제 LIST는 JavaScript 배열이 됩니다.
+        var listData = JSON.parse(list.LIST);
+
+        $("#gridArea").pqGrid("option", "dataModel.data", listData);
         $("#gridArea").pqGrid("refreshView");
-    });
+    }, {formMethod :"GET"}); //Get으로 보내도록 설정 추가
 }
 
 $(function () {
     var heightMinus = 330;
     var data = [];
-
-    // APPROVE_STATE 매핑 객체 선언
-    var appTypeMap = {
-        'SEND': '제출',
-        'APPROVED': '승인',
-        'REJECT': '반려'
-    };
 
     var obj = {
         bubble: false,
@@ -468,13 +491,18 @@ $(function () {
         }
     };
     obj.colModel = [
-        { data_langsid: "승인상태", title: siteLang.getLang("승인상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "APPROVE_STATE", sortable: true, editor: false, editable: false },
-        { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-        { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-        { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
-        { data_langsid: "제출일자", title: siteLang.getLang("제출일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: true, editor: false, editable: false },
-        { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false }
-    ];
+        { data_langsid: "NCR번호", title: siteLang.getLang("NCR번호"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_NcrNo", sortable: true, editor: false, editable: false },
+        { data_langsid: "진행상태", title: siteLang.getLang("진행상태"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "L_Progress", sortable: true, editor: false, editable: false },
+        { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "L_AuditPlanType", sortable: true, editor: false, editable: false },
+        { data_langsid: "지적구분", title: siteLang.getLang("지적구분"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrType", sortable: true, editor: false, editable: false },
+        { data_langsid: "제목", title: siteLang.getLang("제목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "L_Title", sortable: true, editor: false, editable: false },
+        { data_langsid: "NCR발행일", title: siteLang.getLang("NCR발행일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrPublishedDate", sortable: true, editor: false, editable: false },
+        { data_langsid: "Author", title: siteLang.getLang("Author"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "Auditor", sortable: true, editor: false, editable: false },
+        { data_langsid: "시정조치계획일", title: siteLang.getLang("시정조치계획일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionPlanDate", sortable: true, editor: false, editable: false },
+        { data_langsid: "시정조치등록일", title: siteLang.getLang("시정조치등록일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionMakeDate", sortable: true, editor: false, editable: false },
+        { data_langsid: "업체명", title: siteLang.getLang("업체명"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_Vendor", sortable: true, editor: false, editable: false },
+        { data_langsid: "완료일", title: siteLang.getLang("완료일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CompleteDate", sortable: true, editor: false, editable: false }
+      ];
     obj.dataModel = { data: data };
     $("#gridArea").pqGrid(obj);
     $("#gridArea").attr("gridYN", "Y");
@@ -487,6 +515,8 @@ $(function () {
 });
 
 $(document).ready(function() {
+
+    AuditTypeSearch();
     ListSearch();
 });
 

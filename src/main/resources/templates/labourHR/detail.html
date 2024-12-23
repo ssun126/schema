@@ -120,8 +120,8 @@
                 </div>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button primary" th:onclick="approveIsoAuth(`[[${companyAuth.AUTH_SEQ}]]`)"><span>승인</span></button>
-                        <button type="submit" class="cui_button primary" th:onclick="rejectIsoAuth(`[[${companyAuth.AUTH_SEQ}]]`)"><span>반려</span></button>
+                        <button type="submit" class="cui_button primary" th:onclick="approveIsoAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="rejectIsoAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
                     </div>
                 </div>
             </form>
@@ -146,7 +146,7 @@
                     <input type="hidden" name="COM_CODE">
                     <div class="cui_items_wrap" data-direction="center" >
                         <div class="item_content" style="padding: 10px;">
-                            <label for="inputReason"></label><textarea class="cui_text_field" rows="2" style="width:100%;" id="inputReason"></textarea>
+                            <label for="inputReason"></label><textarea class="cui_text_field" rows="5" style="width:100%;" id="inputReason"></textarea>
                         </div>
                     </div>
                     <div class="cui_items_wrap" data-direction="center">
@@ -208,54 +208,46 @@
 
     // 반려 버튼 클릭시 반려사유 입력
     function rejectIsoAuth(key){
-        console.log("key??"+key);
-        const comCode = `[[${companyAuth.COM_CODE}]]`;
+        Common.Dialog({ obj : $("#Reason"), blockClose : false });
         $('input[name="authCode"]').val(key);
-        $('input[name="COM_CODE"]').val(comCode);
-        Common.Dialog({ obj : $("#Reason"), blockClose : true });
-        //modal_open('Reason', 'add', '', '') //모달창 오픈
+        $('input[name="COM_CODE"]').val(`[[${companyAuth.COM_CODE}]]`);
+    }
+
+    // 공통 저장 처리
+    function updateIsoAuthData(state, reason, authSeq) {
+        const comCode = [[${companyAuth.COM_CODE}]];  // 회사 코드
+        const type = 'LABOUR';
+        $.ajax({
+            url: '/auditMgmt/setAuthData',  // 서버의 API URL
+            type: 'POST',
+            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type },
+            success: function(response) {
+                // 상태만 변경
+                $('div[name="stateField"]').text(state); // 상태 표시 업데이트
+                showAlert('success', '데이터가 성공적으로 저장되었습니다.');
+                if (state === 'APPROVED') {
+                    loadPage(1); // 승인 시 페이지 새로고침
+                }
+            },
+            error: function() {
+                showAlert('warning', '정보를 가져오는 데 실패했습니다.');
+            }
+        });  // $.ajax 호출 끝
     }
 
     // 반려 사유 저장
     $('#ReasonAdd').on('click', function() {
-        const comCode = `[[${companyAuth.COM_CODE}]]`;
-        const authCode =  $('input[name="authCode"]').val();
+        const authSeq = $('input[name="authCode"]').val();
         const inputReason = $('#inputReason').val();  // 반려사유
         const state = 'REJECT';
-        $.ajax({
-            url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
-            type: 'POST',
-            data: { reason: inputReason, state: state, com_code: comCode, auth_code: authCode },
-            success: function(response) {
-                showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                //상태만 변경
-                $(this).closest('div[name="stateField"]').text(state);
-            },
-            error: function() {
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            }
-        });  // $.ajax 호출 끝
+        updateIsoAuthData(state, inputReason, authSeq);
     });
 
-     // 승인 버튼 클릭시 승인 처리
+    // 승인 버튼 클릭시 승인 처리
     function approveIsoAuth(key) {
-        const comCode = `[[${companyAuth.COM_CODE}]]`;
-        const authCode = key;
+        const authSeq = key;
         const state = 'APPROVED';
-        $.ajax({
-            url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
-            type: 'POST',
-            data: { reason: '', state: state, com_code: comCode, auth_code: authCode },
-            success: function(response) {
-                //상태에 승인 상태표시
-                $(this).closest('div[name="stateField"]').text(state);
-                showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                loadPage(1);
-            },
-            error: function() {
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            }
-        });  // $.ajax 호출 끝
+        updateIsoAuthData(state, '', authSeq);  // 승인 시에는 이유를 비워둡니다.
     }
 </script>
 </body>
