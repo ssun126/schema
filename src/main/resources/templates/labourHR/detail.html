@@ -215,7 +215,7 @@
 
     // 공통 저장 처리
     function updateIsoAuthData(state, reason, authSeq) {
-        const comCode = [[${companyAuth.COM_CODE}]];  // 회사 코드
+        const comCode = `[[${companyAuth.COM_CODE}]]`;  // 회사 코드
         const type = 'LABOUR';
         $.ajax({
             url: '/auditMgmt/setAuthData',  // 서버의 API URL
