@@ -188,7 +188,7 @@
 		    	//$("#gridArea").empty();
 		    	$("#gridArea").pqGrid("refreshView");
 		    }
-    });
+        });
 
         //처음 로드 시 기존 저장된 데이터 있는지 확인
         if($("input[name=SVHC_IDX]").val() != ''){
@@ -305,8 +305,7 @@
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true
                 , editor: {
                     type : "select",
-                    options : SVHC_YN_SELECT_ITEMS,
-                    defaultValue : 'N'
+                    options : SVHC_YN_SELECT_ITEMS
                 }
                 , editable: true
                 , render : function (ui){

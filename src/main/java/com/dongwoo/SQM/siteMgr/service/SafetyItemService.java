@@ -35,7 +35,7 @@ public class SafetyItemService {
         try{
             String sql  = "INSERT INTO SC_AUDIT_SAFETY_ITEM(PROVISION,AUDIT_ID,AUDIT_ITEM, AUDIT_CRITERIA,POINT_CRITERIA,DIVISION1,DIVISION2) VALUES (?,?,?,?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@175.126.38.80:1521/ORCL","c##NSQM","12345");
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","c##NSQM","12345");
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
             log.info("test2222222222222");
