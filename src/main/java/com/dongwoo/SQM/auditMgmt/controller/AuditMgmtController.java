@@ -32,15 +32,16 @@ public class AuditMgmtController {
 //    @Resource(name="ajaxMainView")
 //    MappingJackson2JsonView ajaxMainView;
 //
-//    @Resource(name = "commonService")
-//    private CommonService commonService;
-//
+    @Resource(name = "commonService")
+    private CommonService commonService;
+
     @Value("${restfull.povis.url}")
     private String povisInterfaceURL;
 
     @PostMapping("/api/audit/auditNcrMgmt/getCodeList")
-    public ResponseEntity<Map<String, Object>> getCodeList(@RequestParam(value="param", required = false) String param) {
+    public ResponseEntity<Map<String, Object>> getCodeList(@RequestParam(value="param", required = false) String param, HttpServletRequest request) throws Exception {
         Map<String, Object> response = new HashMap<>();
+        Map<String, Object> reqParam = commonService.jsonDataMap(param);
         MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
         HttpHeaders headers = new HttpHeaders();
         ArrayList arrayList = new ArrayList();
@@ -48,21 +49,15 @@ public class AuditMgmtController {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
             bodyMap.add("fnc", "GetCodeList");
-            bodyMap.add("pFlag", "PARTNER_AUDIT_NCRSTA");
+            bodyMap.add("pFlag",  "PARTNER_AUDIT_TYPE");
             bodyMap.add("pGroupCd", "9999");
             bodyMap.add("USERID", "covision");
             bodyMap.add("SITEID", "DW01");
             RestTemplate restTemplate = new RestTemplate();
-            log.info("povisInterfaceURL============================>"+povisInterfaceURL);
-            log.info("requestEntity============================>"+requestEntity);
-            //ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
-
             try {
                 ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
-                System.out.println("Response: " + responseEn.getBody());
 
                 String jsonResponse = responseEn.getBody();
-                System.out.println("jsonResponse: " + jsonResponse);
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode rootNode = objectMapper.readTree(jsonResponse);
 
@@ -71,19 +66,10 @@ public class AuditMgmtController {
                 // Iterate over the dataList
                 if (dataList.isArray()) {
                     for (JsonNode item : dataList) {
-                        log.info("arrayList============================>"+item.toString());
                         arrayList.add(item);
                     }
                 }
 
-                /*JSONObject jo = new JSONObject();
-                jo.put("test", responseEn.getBody());
-                log.info("test============================>"+responseEn.getBody());
-                JSONArray jarry = jo.getJSONArray("test");
-
-                for(int i=0; i<jarry.toArray().length; i++){
-                    arrayList.add(jarry.toArray()[i]);
-                }*/
                 response.put("dataList", arrayList);
             } catch (HttpClientErrorException | HttpServerErrorException ex) {
                 System.out.println("HTTP Status: " + ex.getStatusCode());
@@ -94,7 +80,6 @@ public class AuditMgmtController {
 
         } catch (Exception e) {
             log.info("Exception/Start(auditNcrMgmt/getCodeList)============================>");
-            log.info("param============================>");
             log.info(bodyMap.toString());
             log.info("",e);
             log.info("Exception/End(auditNcrMgmt/getCodeList)==============================>");
@@ -103,7 +88,7 @@ public class AuditMgmtController {
     }
 
     /**
-     * AuditPlan getCodeList
+     * AuditPlan LIST
      *
      * @param param
      * @param request
@@ -111,60 +96,65 @@ public class AuditMgmtController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/api/audit/auditNcrMgmt/getCodeList__")
-    public ModelAndView getCodeList(@RequestParam("param")String param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        // JSON Return ModelAndView
-      /*  ModelAndView rtnMav = new ModelAndView(ajaxMainView);
+    @GetMapping("/api/audit/auditNcrMgmt/list/{param}")
+    public ResponseEntity<Map<String, Object>> auditNcrMgmt(@PathVariable("param") String param,
+                                     HttpServletRequest request, HttpServletResponse response) throws Exception {
+        log.info("???????????????????????????????????????"+param);
         // JSON Parameter Parsing
         Map<String, Object> reqParam = commonService.jsonDataMap(param);
         MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
+
+        Map<String, Object> responseData = new HashMap<>();
         HttpHeaders headers = new HttpHeaders();
         ArrayList arrayList = new ArrayList();
-
         try {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
-            Map<String, String> tokenInfo = (Map<String, String>) request.getAttribute("TOKEN_INFO");
-            bodyMap.add("fnc", "GetCodeList");
-            bodyMap.add("pFlag", reqParam.get("pFlag").toString());
-            bodyMap.add("pGroupCd", reqParam.get("pGroupCd").toString());
+            bodyMap.add("fnc", "JTAUDIV03");
+            bodyMap.add("ncr_no", changeNull(reqParam.get("ncr_no")));
+            bodyMap.add("type", changeNull(reqParam.get("type")));
+            bodyMap.add("partnerscd", changeNull(reqParam.get("partnerscd")));
+            bodyMap.add("partnersnm", changeNull(reqParam.get("partnersnm")));
+            bodyMap.add("ncr_type", changeNull(reqParam.get("ncr_type")));
+            bodyMap.add("year", changeNull(reqParam.get("year")));
+            bodyMap.add("ncr_status", changeNull(reqParam.get("ncr_status")));
+
             RestTemplate restTemplate = new RestTemplate();
+            log.info("requestEntity=====================================>"+requestEntity);
             ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
-            JSONObject jo = new JSONObject();
-            jo.put("test", responseEn.getBody());
-            JSONArray jarry = jo.getJSONArray("test");
-            int multiLanguage=0;
-            if("EN".equals(tokenInfo.get("USER_LANG"))){
-                multiLanguage=1;
-            }else if("JA".equals(tokenInfo.get("USER_LANG"))){
-                multiLanguage=2;
-            }else if("CN".equals(tokenInfo.get("USER_LANG"))){
-                multiLanguage=3;
-            }else {
-                multiLanguage=0;
-            }
-            for(int i=0; i<jarry.toArray().length; i++){
-                arrayList.add(jarry.toArray()[i]);
-                JSONObject test = (JSONObject) jarry.toArray()[i];
-                String[] tes = test.get("name").toString().split(";");
-                if(tes.length>multiLanguage){
-                    test.put("name", test.get("name").toString().split(";")[multiLanguage]);
-                }else{
-                    test.put("name", "");
-                }
-            }
-            rtnMav.addObject("dataList", arrayList);
+
+            log.info("responseEn=====================================>"+responseEn.getBody());
+            /*String list = responseEn.getBody();
+            if(list!=null){
+                //povis 결과 리스트 데이터 컬럼을 DP Portal 식으로 맞춤
+                list = list.replace("NCR_StatusNM", "L_Progress")
+                        .replace("NCR_No","L_NcrNo")
+                        .replace("TypeNM","L_AuditPlanType")
+                        .replace("NCR_TypeNM","L_NcrType")
+                        .replace("NCR_Subject","L_Title")
+                        .replace("NCR_Date","L_NcrPublishedDate")
+                        .replace("AuditorNM","Auditor")
+                        .replace("NCR_P_Plan_Date","L_CorrectiveActionPlanDate")
+                        .replace("NCR_R_Complete_Date","L_CorrectiveActionMakeDate")
+                        .replace("NCR_C_Confirm_Date","L_CompleteDate")
+                        .replace("NCR_L_AuditPlanType","L_NcrType") // 데이터 보정 처리
+
+                ;
+            }*/
+            responseData.put("LIST", responseEn.getBody());
         } catch (Exception e) {
-            log.info("Exception/Start(auditNcrMgmt/getCodeList)============================>");
+            log.info("Exception/Start(auditNcrMgmt/list)============================>");
             log.info("param============================>");
             log.info(bodyMap.toString());
             log.info("",e);
-            log.info("Exception/End(auditNcrMgmt/getCodeList)==============================>");
+            log.info("Exception/End(auditNcrMgmt/list)==============================>");
         }
 
-        return rtnMav;*/
-        ModelAndView modelAndView = new ModelAndView(new MappingJackson2JsonView());  // JSON 응답을 위한 뷰 설정
-        modelAndView.addObject("param", param);
-        return modelAndView;
+        return ResponseEntity.ok(responseData);  // JSON 응답 반환
+    }
+
+    public String changeNull(Object ob){
+        if(ob == null) return "";
+        return ob.toString();
     }
 }

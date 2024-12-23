@@ -24,7 +24,7 @@ public class AuditItemPointDTO {
     @JsonProperty("AUTH_SEQ")
     private int AUTH_SEQ;
     @JsonProperty("POINT")
-    private int POINT;
+    private double POINT;
     @JsonProperty("AUDIT_COMMENT")
     private String AUDIT_COMMENT;
     @JsonProperty("REG_COM_USER_IDX")

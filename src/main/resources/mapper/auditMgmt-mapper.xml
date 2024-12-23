@@ -16,9 +16,10 @@
 
     <update id="updateAuth" parameterType="authMgmt">
         UPDATE SC_AUTH_COMPANY_INFO
-        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}, REASON = #{REASON}
         WHERE COM_CODE = #{COM_CODE}
         AND AUTH_TYPE = #{AUTH_TYPE}
+        AND AUTH_SEQ = #{AUTH_SEQ}
     </update>
 
     <select id="selectAuth" parameterType="authMgmt" resultType="authMgmt">

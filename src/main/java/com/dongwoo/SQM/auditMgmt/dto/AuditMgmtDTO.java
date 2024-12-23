@@ -28,5 +28,7 @@ public class AuditMgmtDTO {
     @JsonProperty("FILE_TYPE")
     private String FILE_TYPE;
     @JsonProperty("POINT")
-    private int POINT;
+    private double POINT;
+    @JsonProperty("REASON")
+    private String REASON;
 }

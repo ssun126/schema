@@ -201,6 +201,7 @@ public class IsoAuthService {
         auditMgmtDTO.setCOM_CODE(com_code);
         auditMgmtDTO.setAUTH_TYPE("ISO");
         auditMgmtDTO.setAPPROVE_STATE(state);
+        //todo 전체 점수 저장 필요.
 
         return isoAuthRepository.saveAuthResult(auditMgmtDTO);
     }
@@ -212,13 +213,19 @@ public class IsoAuthService {
         isoAuthItemDTO.setAUTH_CODE(auth_code);
         isoAuthItemDTO.setITEM_STATE(state);
         isoAuthItemDTO.setREASON(reason);
-        isoAuthItemDTO.setPOINT(1); // 항목별 점수 고정됨. 조건 추가 필요
+        double  setPoint = 0;
+        if(auth_code.equals("ISO 9001") ||auth_code.equals("IATF 16949") ){
+            setPoint = 1;
+        }else{
+            setPoint = 0.5;
+        }
+        isoAuthItemDTO.setPOINT(setPoint); // 항목별 점수 고정됨. 조건 추가 필요
 
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int loginIdx = user.getUSER_IDX();
         isoAuthItemDTO.setUP_DW_USER_IDX(loginIdx);
 
-        //saveAuthResult(com_code, state); //인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
+        saveAuthResult(com_code, state); //인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
         return isoAuthRepository.updateStatus(isoAuthItemDTO);
     }
 
