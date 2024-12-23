@@ -87,7 +87,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field datepicker" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck">
+                                        <input type="text" class="cui_text_field" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -215,6 +215,22 @@
 
     var SheetDataConvert = function (data) {
         var dataJson = JSON.parse(data);
+        var appVal = $("input[name=APPLICABLE_NO]").val();
+        var ArrData = appVal.split(',');
+        var flag = false;
+
+        for(var i = 0; i < dataJson.length; i++){
+            for(var j=0; j<ArrData.length; j++){
+                if(dataJson[i].SVHC_NUM === ArrData[j]) flag = true;
+            }
+
+            if(flag){
+                dataJson[i].SVHC_YN='Y';
+            }else{
+                dataJson[i].SVHC_YN='N';
+            }
+
+        }
 
         return dataJson;
     }
@@ -272,15 +288,15 @@
                 return { style: 'font-size:12px;' };
             },
             selectChange: function (event, ui) {
-                var rowData = ui.rowData;
-                var selNo = [];
-                $("#gridArea").pqGrid("getData").forEach(function(data){
-                    if(data.SVHC_YN === 'Y') selNo.push(data.SVHC_NUM);
-                });
+<!--                var rowData = ui.rowData;-->
+<!--                var selNo = [];-->
+<!--                $("#gridArea").pqGrid("getData").forEach(function(data){-->
+<!--                    if(data.SVHC_YN === 'Y') selNo.push(data.SVHC_NUM);-->
+<!--                });-->
 
-                var strSelNo = selNo.join(",");
+<!--                var strSelNo = selNo.join(",");-->
 
-                $("input[name=APPLICABLE_NO]").val(strSelNo);
+<!--                $("input[name=APPLICABLE_NO]").val(strSelNo);-->
 
             },
             rowClick: function (event, ui) {
@@ -305,22 +321,23 @@
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true
                 , editor: {
                     type : "select",
-                    options : SVHC_YN_SELECT_ITEMS
+                    options:SVHC_YN_SELECT_ITEMS,
+                    defaultValue : 'N'
+
                 }
                 , editable: true
-                , render : function (ui){
-                //SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
-                    var data = ui.rowData;
-                    var appVal = $("input[name=APPLICABLE_NO]").val();
-                    var ArrData = appVal.split(',');
-                    var flag = false;
-                    for(var i=0; i<ArrData.length; i++){
-                        if(data.SVHC_NUM === ArrData[i]) flag = true;
-                    }
+<!--                , render : function (ui){-->
+<!--                //SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM-->
+<!--                    var data = ui.rowData;-->
+<!--                    var appVal = $("input[name=APPLICABLE_NO]").val();-->
+<!--                    var ArrData = appVal.split(',');-->
+<!--                    var flag = false;-->
+<!--                    for(var i=0; i<ArrData.length; i++){-->
+<!--                        if(data.SVHC_NUM === ArrData[i]) flag = true;-->
+<!--                    }-->
 
-                    if(flag) return 'Y';
-                    else return 'N';
-                }
+<!--                     //return flag ? 'Y' : 'N';-->
+<!--                }-->
             }
 
         ];
@@ -341,6 +358,7 @@
 
     var frmDetailSubmit = function () {
             //e.preventDefault();
+
 
             var frmObj = $("#frmDetail");
             var flag = $("#frmDetail").find("input[name=SaveMode]").val();
@@ -364,6 +382,19 @@
 
         }
 
+        var setApplicableNo = function(){
+            var idxs = "";
+            var grid = $("#gridArea").pqGrid("instance");
+            for (j = 0; j < grid.pdata.length; j++) {
+                if (grid.pdata[j]["SVHC_YN"] === 'Y') {
+                    if (idxs != "") idxs += ",";
+                    idxs += grid.pdata[j]["SVHC_NUM"];
+                }
+            }
+
+            $("input[name=APPLICABLE_NO]").val(idxs);
+        }
+
         var frmDetailSave = function () {
             //데이터가 아무것도 없을 때는 저장할 수 없음
             var flag = false;
@@ -375,22 +406,18 @@
                 }
             });
 
-            //이전의 값이 읎을때
-            if(!flag){
-                $("input[type=file]").each(function(){
-                    if($(this).val() != ''){
-                        flag = true;
-                        return;
-                    }
-                });
-            }
+
+
 
             if(flag){
                 Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                     mode : "confrim"
                     , okback : function () {
+                        //Y 데이터 삽입
+                        setApplicableNo();
+
                         $("#frmDetail").find("input[name=SaveMode]").val("Save");
-                        $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                        //$("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
                         //$("#frmDetail").submit();
                         frmDetailSubmit();
                     }
@@ -403,15 +430,32 @@
         }
 
         var frmDetailNext = function () {
-            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
-                mode : "confrim"
-                , okback : function () {
-                    $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                    $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                    //$("#frmDetail").submit();
-                    frmDetailSubmit();
-                }
-            });
+            //유효성체크
+            var frmObj = $("#frmDetail");
+            var isValid = true;
+            isValid = Common.Validate(frmObj);
+
+            //Y 데이터 삽입
+            setApplicableNo();
+
+            //무조건 y 하나 이상 있어야함
+            if($("input[name=APPLICABLE_NO]").val() === '' && $("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+                isValid=false;
+                $("input[name=APPLICABLE_NO]").val('');
+                Common.Msg(siteLang.getLang("해당되는 건이 없습니다."));
+                return;
+            }
+
+
+
+            if(isValid){
+                $("#frmDetail").find("input[name=SaveMode]").val("Next");
+                //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                //$("#frmDetail").submit();
+                frmDetailSubmit();
+            }
+
+
         }
 
 

@@ -464,19 +464,25 @@
 </html>
 <script>
   $(document).ready(function () {
-   show_contents(0);
+      show_contents(0);
 
-   //svhc
-   if($("#SVHC_DATA_GUBUN").val() == "WRITE"){
-     $(".svhc_attach").hide();
-     $(".svhc_write").show();
-   }
+      //svhc
+      if($("#SVHC_DATA_GUBUN").val() == "WRITE"){
+        $(".svhc_attach").hide();
+        $(".svhc_write").show();
+      }else{
+        $(".svhc_attach").show();
+        $(".svhc_write").hide();
+      }
 
-   //declar
-   if($("#DECL_DATA_GUBUN").val() == "WRITE"){
-     $(".decl_attach").hide();
-     $(".decl_write").show();
-   }
+      //declar
+      if($("#DECL_DATA_GUBUN").val() == "WRITE"){
+        $(".decl_attach").hide();
+        $(".decl_write").show();
+      }else{
+        $(".decl_attach").show();
+        $(".decl_write").hide();
+      }
 
  });
 
