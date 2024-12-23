@@ -216,6 +216,25 @@
     var SheetDataConvert = function (data) {
         var dataJson = JSON.parse(data);
 
+        var appVal = $("input[name=APPLICABLE_NO]").val();
+        var ArrData = appVal.split(',');
+
+
+        for(var i = 0; i < dataJson.length; i++){
+            var flag = false;
+            for(var j=0; j<ArrData.length; j++){
+                if(dataJson[i].DECL_NUM === ArrData[j]) flag= true;
+            }
+
+            if(flag){
+                dataJson[i].DECL_YN='Y';
+            }else{
+                if(dataJson[i].DECL_SUB_NUM == ' ' )  dataJson[i].DECL_YN= '';
+                else   dataJson[i].DECL_YN='N';
+            }
+
+        }
+
         return dataJson;
     }
 
@@ -272,15 +291,15 @@
                 return { style: 'font-size:12px;' };
             },
             selectChange: function (event, ui) {
-                var rowData = ui.rowData;
-                var selNo = [];
-                $("#gridArea").pqGrid("getData").forEach(function(data){
-                    if(data.DECL_YN === 'Y') selNo.push(data.DECL_NUM);
-                });
+<!--                var rowData = ui.rowData;-->
+<!--                var selNo = [];-->
+<!--                $("#gridArea").pqGrid("getData").forEach(function(data){-->
+<!--                    if(data.DECL_YN === 'Y') selNo.push(data.DECL_NUM);-->
+<!--                });-->
 
-                var strSelNo = selNo.join(",");
+<!--                var strSelNo = selNo.join(",");-->
 
-                $("input[name=APPLICABLE_NO]").val(strSelNo);
+<!--                $("input[name=APPLICABLE_NO]").val(strSelNo);-->
 
             },
             rowClick: function (event, ui) {
@@ -308,28 +327,28 @@
                     options : DECL_YN_SELECT_ITEMS,
                 }
                 , editable: true
-                , render : function (ui){
-                //DECL_NUM, DECL_CASNUM,DECL_WEIGHT,DECL_CLASS
-                    var data = ui.rowData;
-                    var appVal = $("input[name=APPLICABLE_NO]").val();
-                    var ArrData = appVal.split(',');
-                    var flag = false;
+<!--                , render : function (ui){-->
+<!--                //DECL_NUM, DECL_CASNUM,DECL_WEIGHT,DECL_CLASS-->
+<!--                    var data = ui.rowData;-->
+<!--                    var appVal = $("input[name=APPLICABLE_NO]").val();-->
+<!--                    var ArrData = appVal.split(',');-->
+<!--                    var flag = false;-->
 
-                    for(var i=0; i<ArrData.length; i++){
-                        if(data.DECL_NUM === ArrData[i]){
-                            flag = true;
-                         }
-                    }
+<!--                    for(var i=0; i<ArrData.length; i++){-->
+<!--                        if(data.DECL_NUM === ArrData[i]){-->
+<!--                            flag = true;-->
+<!--                         }-->
+<!--                    }-->
 
-                    if(flag){
-                        //값이 y 인 것
-                        return 'Y';
-                    }else{
-                        //값이 n 이거나  없음(대표n)
-                        if(data.DECL_SUB_NUM == ' ' ) return '';
-                        else return 'N';
-                    }
-                }
+<!--                    if(flag){-->
+<!--                        //값이 y 인 것-->
+<!--                        return 'Y';-->
+<!--                    }else{-->
+<!--                        //값이 n 이거나  없음(대표n)-->
+<!--                        if(data.DECL_SUB_NUM == ' ' ) return '';-->
+<!--                        else return 'N';-->
+<!--                    }-->
+<!--                }-->
             },
             { data_langsid: "함량", title: siteLang.getLang("함량"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: true, editor: false, editable: false },
             { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: true, editor: false, editable: false }
@@ -351,79 +370,93 @@
     });
 
     var frmDetailSubmit = function () {
-            //e.preventDefault();
+        //e.preventDefault();
+        setApplicableNo();
 
-            var frmObj = $("#frmDetail");
-            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
-            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
-            var ReqInfo = new Common.RequestInfo();
-            ReqInfo.formData  = new FormData();
-            ReqInfo.AddParameter(frmObj);
-            Common.Ajax("/user/partMgmt/goDeclSave", ReqInfo, function (response) {
-                    if (response == "OK") {
-                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
-                            Common.Msg(siteLang.getLang("저장되었습니다."));
-                            location.reload();
-                        }
-                    }else {
-                        Common.MoveUrl("/user/partMgmt/goSccsDetail?PM_IDX=" + response.split('|||')[1]);
+        var frmObj = $("#frmDetail");
+        var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+        //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.formData  = new FormData();
+        ReqInfo.AddParameter(frmObj);
+        Common.Ajax("/user/partMgmt/goDeclSave", ReqInfo, function (response) {
+                if (response == "OK") {
+                    if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                        Common.Msg(siteLang.getLang("저장되었습니다."));
+                        location.reload();
                     }
-                });
+                }else {
+                    Common.MoveUrl("/user/partMgmt/goSccsDetail?PM_IDX=" + response.split('|||')[1]);
+                }
+            });
 
-            //ReqInfo.formData
-            //return Common.Validate(frmObj);
+        //ReqInfo.formData
+        //return Common.Validate(frmObj);
 
+    }
+
+    var setApplicableNo = function(){
+        var idxs = "";
+        var grid = $("#gridArea").pqGrid("instance");
+        for (j = 0; j < grid.pdata.length; j++) {
+            if (grid.pdata[j]["DECL_YN"] === 'Y') {
+                if (idxs != "") idxs += ",";
+                idxs += grid.pdata[j]["DECL_NUM"];
+            }
         }
 
-        var frmDetailSave = function () {
-            //데이터가 아무것도 없을 때는 저장할 수 없음
-            var flag = false;
+        $("input[name=APPLICABLE_NO]").val(idxs);
+    }
 
-            $("input[reqcheck=reqcheck]").each(function(){
+    var frmDetailSave = function () {
+        //데이터가 아무것도 없을 때는 저장할 수 없음
+        var flag = false;
+
+        $("input[reqcheck=reqcheck]").each(function(){
+            if($(this).val() != ''){
+                flag = true;
+                return;
+            }
+        });
+
+        //이전의 값이 읎을때
+        if(!flag){
+            $("input[type=file]").each(function(){
                 if($(this).val() != ''){
                     flag = true;
                     return;
                 }
             });
-
-            //이전의 값이 읎을때
-            if(!flag){
-                $("input[type=file]").each(function(){
-                    if($(this).val() != ''){
-                        flag = true;
-                        return;
-                    }
-                });
-            }
-
-            if(flag){
-                Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
-                    mode : "confrim"
-                    , okback : function () {
-                        $("#frmDetail").find("input[name=SaveMode]").val("Save");
-                        $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
-                        //$("#frmDetail").submit();
-                        frmDetailSubmit();
-                    }
-                });
-            }else{
-                Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
-                return;
-            }
-
         }
 
-        var frmDetailNext = function () {
+        if(flag){
             Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                 mode : "confrim"
                 , okback : function () {
-                    $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                    $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                    $("#frmDetail").find("input[name=SaveMode]").val("Save");
+                    $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
                     //$("#frmDetail").submit();
                     frmDetailSubmit();
                 }
             });
+        }else{
+            Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
+            return;
         }
+
+    }
+
+    var frmDetailNext = function () {
+        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                $("#frmDetail").find("input[name=SaveMode]").val("Next");
+                $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                //$("#frmDetail").submit();
+                frmDetailSubmit();
+            }
+        });
+    }
 
 
 </script>

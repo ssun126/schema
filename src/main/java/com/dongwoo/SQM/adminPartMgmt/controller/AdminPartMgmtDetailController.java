@@ -2,6 +2,10 @@ package com.dongwoo.SQM.adminPartMgmt.controller;
 
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
+import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
+import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -9,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -58,11 +63,43 @@ public class AdminPartMgmtDetailController {
         model.addAttribute("svhcDTO",svhcDTO);
         log.info("svhcDTO=============================" + svhcDTO);
 
+
+        List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
+        partSvhcDTOList = partMgmtService.getSvhcData();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String partSvhcListStr = null;
+        try {
+            partSvhcListStr = mapper.writeValueAsString(partSvhcDTOList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        log.info("partSvhcDTOList=============================" + partSvhcDTOList);
+
+        model.addAttribute("partSvhcList",partSvhcListStr);
+
         //declar
 
         partDetailDeclarDTO  declarDTO = partMgmtService.getDetailDeclData(idx);
         if(declarDTO == null) declarDTO = new partDetailDeclarDTO();
         model.addAttribute("declarDTO",declarDTO);
+
+
+        List<DeclarationDTO> declDTOList = new ArrayList<>();
+
+        declDTOList = partMgmtService.getDeclData();
+
+        ObjectMapper mapper2 = new ObjectMapper();
+        String partDeclListStr = null;
+        try {
+            partDeclListStr = mapper2.writeValueAsString(declDTOList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        model.addAttribute("partDeclList",partDeclListStr);
+
 
         //sccs 성분 rlxk 들고가기
         partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(idx);

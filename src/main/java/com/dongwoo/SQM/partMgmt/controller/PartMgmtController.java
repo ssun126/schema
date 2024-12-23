@@ -236,7 +236,7 @@ public class PartMgmtController {
 
 
     @GetMapping("/goReadDetail")
-    public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model) {
+    public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model, @RequestHeader Map<String, String> header) {
 
         PartMgmtDTO partMgmtDTO = partMgmtService.getPartData(idx);
         if (partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
@@ -275,11 +275,41 @@ public class PartMgmtController {
         model.addAttribute("svhcDTO", svhcDTO);
         log.info("svhcDTO=============================" + svhcDTO);
 
-        //declar
+        List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
+        partSvhcDTOList = partMgmtService.getSvhcData();
 
+        ObjectMapper mapper = new ObjectMapper();
+        String partSvhcListStr = null;
+        try {
+            partSvhcListStr = mapper.writeValueAsString(partSvhcDTOList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        log.info("partSvhcDTOList=============================" + partSvhcDTOList);
+
+        model.addAttribute("partSvhcList",partSvhcListStr);
+
+
+        //declar
         partDetailDeclarDTO declarDTO = partMgmtService.getDetailDeclData(idx);
         if (declarDTO == null) declarDTO = new partDetailDeclarDTO();
         model.addAttribute("declarDTO", declarDTO);
+
+        List<DeclarationDTO> declDTOList = new ArrayList<>();
+
+        declDTOList = partMgmtService.getDeclData();
+
+        ObjectMapper mapper2 = new ObjectMapper();
+        String partDeclListStr = null;
+        try {
+            partDeclListStr = mapper2.writeValueAsString(declDTOList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        model.addAttribute("partDeclList",partDeclListStr);
+
 
         //sccs 성분 rlxk 들고가기
         partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(idx);
