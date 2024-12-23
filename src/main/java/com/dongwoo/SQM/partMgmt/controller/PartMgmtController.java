@@ -1035,7 +1035,7 @@ public class PartMgmtController {
 
         try {
 
-            //msds
+            //SCCS
 //        String saveMode = GetParam(request,"SaveMode","");
 //
             String SCCS_IDX = GetParam(request, "SCCS_IDX", "");
@@ -1047,8 +1047,6 @@ public class PartMgmtController {
                     String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, sccsFile);
                     String etc_filename = sccsFile.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                     sccsDTO.setSCCS_FILE_NAME(etc_filename);
                     sccsDTO.setSCCS_FILE_PATH(etc_filepath);
 
@@ -1065,18 +1063,16 @@ public class PartMgmtController {
             }
 
 
-            //Rohs
+            //Ingredent
             String INGRED_IDX = GetParam(request, "INGRED_IDX", "");
 
 
-            //ROHS file
+            //Ingredent file
             //if (!rohsFile.isEmpty()) {
             if (ingredFile != null) {
                 String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, ingredFile);
                 String etc_filename = ingredFile.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                 ingredGDTO.setINGRED_FILE_NAME(etc_filename);
                 ingredGDTO.setINGRED_FILE_PATH(etc_filepath);
 
@@ -1110,7 +1106,7 @@ public class PartMgmtController {
 
             List<partDetailGuarantDTO> guarantDTOList = new ArrayList<>();
             for (int i = 0; i < guarantCount; i++) {
-                if(request.getParameter("ETC_IDX"+(i+1)) != null) {
+                if(request.getParameter("GUARANT_IDX"+(i+1)) != null) {
                     partDetailGuarantDTO guarantDTO = new partDetailGuarantDTO();
                     guarantDTO.setGUARANT_IDX(GetParam(request, "GUARANT_IDX" + (i+1), ""));
                     guarantDTO.setPM_IDX(GetParam(request, "PM_IDX" , ""));

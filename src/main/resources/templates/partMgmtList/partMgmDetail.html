@@ -92,9 +92,9 @@
                             <td><input type="text" class="cui_text_field" th:value="${msdsDTO.MSDS_APPROVAL_NUM}"  name="MSDS_APPROVAL_NUM" reqcheck="reqcheck" data-messages="승인번호 입력해주세요." messages=""></td>
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
-                                    <input type="file" class="cui_file_field" name="MSDS_FILE" >
+                                    <input type="file" class="cui_file_field" name="MSDS_FILE" th:style="${msdsDTO.MSDS_FILE_NAME == '' ? 'display:none;' : '' }" >
                                     <div class="cui_items_wrap file_wrap" data-direction="left" >
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"></span></div>
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -164,8 +164,8 @@
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="ROHS_FILE">
                                     <input type="hidden" name="FILE_STATUS">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" ></span></div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == '' ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -217,8 +217,8 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME"></span></div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == '' ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -262,9 +262,15 @@
                                 <td>
                                     <div class="cui_attachments" style="display:flex;">
                                         <input type="file" class="cui_file_field" name="ETC_FILE">
-                                    </div>
-                                    <div class="cui_items_wrap file_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>
+
+                                        <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${etcDTO.ETC_FILE_NAME == '' ? 'display:none;' : '' }" >
+                                            <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME" th:value="${etcDTO.ETC_FILE_NAME}" th:text="${etcDTO.ETC_FILE_NAME}"></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                                ><span>다운로드</span></button>
+                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td><button type="button" class="cui_button icon"  id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제"></span></button></td>
