@@ -4,7 +4,7 @@
       layout:decorate="~{common/layouts/defaultLayout}"
       layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
   <style>
     .cui_step ol li {
         width: 180px !important;
@@ -21,11 +21,11 @@
 <div class="cui_content">
   <div class="cui_main">
     <div class="cui_head">
-      <div class="head_content">
-        <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
-        <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
-        <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
-        <h3><span>사용여부 : </span><span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
+      <div class="head_content" style="padding:0px 10px 10px 10px;">
+        <h3><span data-langsid="자재코드"></span> : <span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
+        <h3><span data-langsid="자재명"></span> : <span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
+        <h3><span data-langsid="승인현황"></span> : <span th:data-langsid="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
+        <h3><span data-langsid="사용여부"></span> : <span th:text="${partMgmtDTO.PM_ACTIVE_YN}">Active</span></h3>
       </div>
     </div>
     <div class="cui_body">
@@ -40,227 +40,231 @@
       <form class="cui_form_section" data-legend="true">
         <!-- Step 1 -->
         <div id="step1_contents">
-        <fieldset>
-          <legend><span>MSDS</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>작성일</span></th>
-              <th><span>언어</span></th>
-              <th><span>승인번호</span></th>
-              <th><span>첨부</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><span th:text="${msdsDTO.MSDS_REG_DATE}" ></span></td>
-              <td><span  th:text="${msdsDTO.MSDS_LANG}" ></span></td>
-              <td><span  th:text="${msdsDTO.MSDS_APPROVAL_NUM}" ></span></td>
-              <td>
-                <div class="cui_attachments">
-                  <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${msdsDTO.MSDS_FILE_NAME}">파일명.html</span></div>
-                    <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>RoHS Ⅱ</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>확인일자</span></th>
-              <th><span>Cd</span></th>
-              <th><span>Hg</span></th>
-              <th><span>Pb</span></th>
-              <th><span>Cr6+</span></th>
-              <th><span>PBBs</span></th>
-              <th><span>PBDEs</span></th>
-              <th><span>DEHP</span></th>
-              <th><span>BBP</span></th>
-              <th><span>DBP</span></th>
-              <th><span>DIBP</span></th>
-              <th><span>첨부</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><span th:text="${rohsDTO.ROHS_CONFIRM_DATE}"></span></td>
-              <td><span th:text="${rohsDTO.ROHS_CD}"   ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_HG}"   ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_PB}"   ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_CR6}"  ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_PBBS}" ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_PBDES}"></span></td>
-              <td><span th:text="${rohsDTO.ROHS_DEHP}" ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_BBP}"  ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_DBP}"  ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_DIBP}" ></span></td>
-              <td>
-                <div class="cui_attachments">
-                  <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${rohsDTO.ROHS_FILE_NAME}">파일명.html</span></div>
-                    <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>Halogen free</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>확인일자</span></th>
-              <th><span>Cl</span></th>
-              <th><span>Br</span></th>
-              <th><span>Cl+Br</span></th>
-              <th><span>F</span></th>
-              <th><span>I</span></th>
-              <th><span>첨부</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><span th:text="${halGDTO.HALOGEN_CONFIRM_DATE}"></span></td>
-              <td><span th:text="${halGDTO.HALOGEN_CL}"  ></span></td>
-              <td><span th:text="${halGDTO.HALOGEN_BR}"  ></span></td>
-              <td><span th:text="${halGDTO.HALOGEN_CLBR}"></span></td>
-              <td><span th:text="${halGDTO.HALOGEN_F}"   ></span></td>
-              <td><span th:text="${halGDTO.HALOGEN_I}"   ></span></td>
-              <td>
-                <div class="cui_attachments">
-                  <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span  th:text="${halGDTO.HALOGEN_FILE_NAME}">파일명.html</span></div>
-                    <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <legend><span>기타 분석서/보증서(Antimony,Cobalt 등)</span></legend>
-          <table class="cui_table center">
-            <thead>
-            <tr>
-              <th><span>확인일자</span></th>
-              <th><span>분석항목</span></th>
-              <th><span>분석결과</span></th>
-              <th><span>첨부</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="etcDTO : ${etcListDTO}">
-              <td><span th:text="${etcDTO.ETC_CONFIRM_DATE}"></span></td>
-              <td><span th:text="${etcDTO.ETC_ANALYSE_ENTRY}"></span></td>
-              <td><span th:text="${etcDTO.ETC_ANALYSE_RESULT}"></span></td>
-              <td>
-                <div class="cui_attachments">
-                  <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
-                    <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tbody>
-          </table>
-        </fieldset>
-        </div>
-        <!-- Step 2 -->
-        <div id="step2_contents">
-        <fieldset>
-          <table class="cui_table">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-              <col  style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>제출구분</span></th>
-              <td colspan="3">
-                <input type="hidden" id="SVHC_DATA_GUBUN" th:value="${svhcDTO.DATA_GUBUN}">
-                <span th:text="${svhcDTO.DATA_GUBUN == 'WRITE'? '직접입력' : '파일첨부'}"></span>
-              </td>
-            </tr>
-            <tr>
-              <th><span>확인일자</span></th>
-              <td>
-                <span th:text="${svhcDTO.CONFIRM_DATE}"></span>
-              </td>
-              <th><span>보증항목</span></th>
-              <td>
-                <input type="hidden" name="SVHC_APPLICABLE_NO" th:value="${svhcDTO.APPLICABLE_NO}">
-                <span th:text="${svhcDTO.WARRANTY_ITEM}"></span>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </fieldset>
-        <fieldset>
-          <!-- 제출구분 : 파일첨부 -->
-<!--          <div class="cui_toolbar">-->
-<!--            <div class="toolbar_content">-->
-<!--              <div class="toolbar_default"></div>-->
-<!--            </div>-->
-<!--            <div class="toolbar_aside">-->
-<!--              <button type="button" class="cui_button secondary"><span>양식 다운로드</span></button>-->
-<!--            </div>-->
-<!--          </div>-->
-          <table class="cui_table svhc_attach">
-            <colgroup>
-              <col style="width:154px;">
-              <col>
-            </colgroup>
-            <tbody>
-            <tr>
-              <th><span>파일첨부</span></th>
-              <td>
-                <div class="cui_items_wrap">
+          <fieldset>
+            <legend><span>MSDS</span></legend>
+            <table class="cui_table center">
+              <thead>
+              <tr>
+                <th><span>작성일</span></th>
+                <th><span>언어</span></th>
+                <th><span>승인번호</span></th>
+                <th><span>첨부</span></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><span th:text="${msdsDTO.MSDS_REG_DATE}" ></span></td>
+                <td><span  th:text="${msdsDTO.MSDS_LANG}" ></span></td>
+                <td><span  th:text="${msdsDTO.MSDS_APPROVAL_NUM}" ></span></td>
+                <td>
                   <div class="cui_attachments">
                     <div class="cui_items_wrap" data-direction="left">
-                      <div class="item_label" data-cui-icon="paperclip"><span th:text="${svhcDTO.FILE_NAME}" >파일명.html</span></div>
+                      <div class="item_label" data-cui-icon="paperclip"><span th:text="${msdsDTO.MSDS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
                         <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend><span>RoHS Ⅱ</span></legend>
+            <table class="cui_table center">
+              <thead>
+              <tr>
+                <th><span>확인일자</span></th>
+                <th><span>Cd</span></th>
+                <th><span>Hg</span></th>
+                <th><span>Pb</span></th>
+                <th><span>Cr6+</span></th>
+                <th><span>PBBs</span></th>
+                <th><span>PBDEs</span></th>
+                <th><span>DEHP</span></th>
+                <th><span>BBP</span></th>
+                <th><span>DBP</span></th>
+                <th><span>DIBP</span></th>
+                <th><span>첨부</span></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><span th:text="${rohsDTO.ROHS_CONFIRM_DATE}"></span></td>
+                <td><span th:text="${rohsDTO.ROHS_CD}"   ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_HG}"   ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_PB}"   ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_CR6}"  ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_PBBS}" ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_PBDES}"></span></td>
+                <td><span th:text="${rohsDTO.ROHS_DEHP}" ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_BBP}"  ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_DBP}"  ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_DIBP}" ></span></td>
+                <td>
+                  <div class="cui_attachments">
+                    <div class="cui_items_wrap" data-direction="left">
+                      <div class="item_label" data-cui-icon="paperclip"><span th:text="${rohsDTO.ROHS_FILE_NAME}">파일명.html</span></div>
+                      <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend><span>Halogen free</span></legend>
+            <table class="cui_table center">
+              <thead>
+              <tr>
+                <th><span>확인일자</span></th>
+                <th><span>Cl</span></th>
+                <th><span>Br</span></th>
+                <th><span>Cl+Br</span></th>
+                <th><span>F</span></th>
+                <th><span>I</span></th>
+                <th><span>첨부</span></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><span th:text="${halGDTO.HALOGEN_CONFIRM_DATE}"></span></td>
+                <td><span th:text="${halGDTO.HALOGEN_CL}"  ></span></td>
+                <td><span th:text="${halGDTO.HALOGEN_BR}"  ></span></td>
+                <td><span th:text="${halGDTO.HALOGEN_CLBR}"></span></td>
+                <td><span th:text="${halGDTO.HALOGEN_F}"   ></span></td>
+                <td><span th:text="${halGDTO.HALOGEN_I}"   ></span></td>
+                <td>
+                  <div class="cui_attachments">
+                    <div class="cui_items_wrap" data-direction="left">
+                      <div class="item_label" data-cui-icon="paperclip"><span  th:text="${halGDTO.HALOGEN_FILE_NAME}">파일명.html</span></div>
+                      <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset>
+            <legend><span>기타 분석서/보증서(Antimony,Cobalt 등)</span></legend>
+            <table class="cui_table center">
+              <thead>
+              <tr>
+                <th><span>확인일자</span></th>
+                <th><span>분석항목</span></th>
+                <th><span>분석결과</span></th>
+                <th><span>첨부</span></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="etcDTO : ${etcListDTO}">
+                <td><span th:text="${etcDTO.ETC_CONFIRM_DATE}"></span></td>
+                <td><span th:text="${etcDTO.ETC_ANALYSE_ENTRY}"></span></td>
+                <td><span th:text="${etcDTO.ETC_ANALYSE_RESULT}"></span></td>
+                <td>
+                  <div class="cui_attachments">
+                    <div class="cui_items_wrap" data-direction="left">
+                      <div class="item_label" data-cui-icon="paperclip"><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
+                      <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tbody>
+            </table>
+          </fieldset>
+        </div>
+        <!-- Step 2 -->
+        <div id="step2_contents">
+          <fieldset>
+            <table class="cui_table">
+              <colgroup>
+                <col style="width:154px;">
+                <col>
+                <col  style="width:154px;">
+                <col>
+              </colgroup>
+              <tbody>
+              <tr>
+                <th><span>제출구분</span></th>
+                <td colspan="3">
+                  <input type="hidden" id="SVHC_DATA_GUBUN" th:value="${svhcDTO.DATA_GUBUN}">
+                  <span th:text="${svhcDTO.DATA_GUBUN == 'WRITE'? '직접입력' : '파일첨부'}"></span>
+                </td>
+              </tr>
+              <tr>
+                <th><span>확인일자</span></th>
+                <td>
+                  <span th:text="${svhcDTO.CONFIRM_DATE}"></span>
+                </td>
+                <th><span>보증항목</span></th>
+                <td>
+                  <input type="hidden" name="SVHC_APPLICABLE_NO" th:value="${svhcDTO.APPLICABLE_NO}">
+                  <span th:text="${svhcDTO.WARRANTY_ITEM}"></span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </fieldset>
+          <fieldset class="svhc_attach">
+            <table class="cui_table ">
+              <colgroup>
+                <col style="width:154px;">
+                <col>
+              </colgroup>
+              <tbody>
+              <tr>
+                <th><span>파일첨부</span></th>
+                <td>
+                  <div class="cui_items_wrap">
+                    <div class="cui_attachments">
+                      <div class="cui_items_wrap" data-direction="left">
+                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${svhcDTO.FILE_NAME}" >파일명.html</span></div>
+                        <div class="item_content">
+                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </fieldset>
           <!-- 제출구분 : 직접입력 -->
-          <table class="cui_table center svhc_write">
-            <thead>
-            <tr>
-              <th><span>No.</span></th>
-              <th><span>물질명</span></th>
-              <th><span>CAS No.</span></th>
-              <th><span>EU No.</span></th>
-              <th><span>해당</span></th>
-            </tr>
-            </thead>
-            <tbody id ="svhcTableBody">
+          <fieldset class="svhc_write">
+            <!--          <table class="cui_table center svhc_write">-->
+            <!--              <thead>-->
+            <!--              <tr>-->
+            <!--                <th><span>No.</span></th>-->
+            <!--                <th><span>물질명</span></th>-->
+            <!--                <th><span>CAS No.</span></th>-->
+            <!--                <th><span>EU No.</span></th>-->
+            <!--                <th><span>해당</span></th>-->
+            <!--              </tr>-->
+            <!--              </thead>-->
+            <!--              <tbody id ="svhcTableBody">-->
+            <!--  -->
+            <!--              </tbody>-->
+            <!--            </table>-->
+            <div class="cui_jqGrid_section">
+              <div class="cui_jqGrid_head">
+                <div class="jqGrid_label"> &nbsp;</div>
+              </div>
+              <div class="cui_jqGrid_body" id="Grid">
+                <div id="gridArea_Svhc" gridYN="" th:initData="${partSvhcList}"></div>
+              </div>
+            </div>
 
-            </tbody>
-          </table>
+          </fieldset>
+
           <div>
             * 보증 내역의 재확인<br>
             -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>
@@ -269,10 +273,9 @@
               <span>전자 보증서 제출</span>
             </label>
           </div>
-        </fieldset>
         </div>
 
-<!--    dcelaration letter    -->
+        <!--    dcelaration letter    -->
         <div id="step3_contents">
           <fieldset>
             <table class="cui_table">
@@ -304,17 +307,17 @@
               </tbody>
             </table>
           </fieldset>
-          <fieldset>
+          <fieldset class="decl_attach">
             <!-- 제출구분 : 파일첨부 -->
-<!--            <div class="cui_toolbar">-->
-<!--              <div class="toolbar_content">-->
-<!--                <div class="toolbar_default"></div>-->
-<!--              </div>-->
-<!--              <div class="toolbar_aside">-->
-<!--                <button type="button" class="cui_button secondary"><span>양식 다운로드</span></button>-->
-<!--              </div>-->
-<!--            </div>-->
-            <table class="cui_table decl_attach">
+            <!--            <div class="cui_toolbar">-->
+            <!--              <div class="toolbar_content">-->
+            <!--                <div class="toolbar_default"></div>-->
+            <!--              </div>-->
+            <!--              <div class="toolbar_aside">-->
+            <!--                <button type="button" class="cui_button secondary"><span>양식 다운로드</span></button>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <table class="cui_table ">
               <colgroup>
                 <col style="width:154px;">
                 <col>
@@ -337,34 +340,31 @@
               </tr>
               </tbody>
             </table>
-            <!-- 제출구분 : 직접입력 -->
-            <table class="cui_table center decl_wrtie">
-              <thead>
-              <tr>
-                <th><span>No.</span></th>
-                <th><span>물질명</span></th>
-                <th><span>CAS No.</span></th>
-                <th><span>해당</span></th>
-                <th><span>함량</span></th>
-                <th><span>관리 Class</span></th>
-              </tr>
-              </thead>
-              <tbody id="declTableBody">
-
-              </tbody>
-            </table>
-            <div>
-              * 보증 내역의 재확인<br>
-              -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인
-              드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)<br>
-              <label class="cui_checkbox">
-                <input type="checkbox" name="checkbox1" disabled><i></i>
-                <span>전자 보증서 제출</span>
-              </label>
-            </div>
           </fieldset>
+          <!-- 제출구분 : 직접입력 -->
+          <fieldset class="decl_wrtie">
+            <div class="cui_jqGrid_section">
+              <div class="cui_jqGrid_head">
+                <div class="jqGrid_label"> &nbsp;</div>
+              </div>
+              <div class="cui_jqGrid_body" id="Grid2">
+                <div id="gridArea_Decl" gridYN="" th:initData="${partDeclList}"></div>
+              </div>
+            </div>
+
+          </fieldset>
+
+          <div>
+            * 보증 내역의 재확인<br>
+            -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인
+            드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)<br>
+            <label class="cui_checkbox">
+              <input type="checkbox" name="checkbox1" disabled><i></i>
+              <span>전자 보증서 제출</span>
+            </label>
+          </div>
         </div>
-<!--    sccs 페이지    -->
+        <!--    sccs 페이지    -->
         <div id="step4_contents">
           <fieldset>
             <legend><span>SCCS</span></legend>
@@ -464,194 +464,296 @@
 </html>
 <script>
   $(document).ready(function () {
-    show_contents(0);
+   show_contents(0);
 
-    //svhc
-    if($("#SVHC_DATA_GUBUN").val() == "WRITE"){
-      $(".svhc_attach").hide();
-      $(".svhc_write").show();
-      setSvhcData();
-    }
+   //svhc
+   if($("#SVHC_DATA_GUBUN").val() == "WRITE"){
+     $(".svhc_attach").hide();
+     $(".svhc_write").show();
+   }
 
-    //declar
-    if($("#DECL_DATA_GUBUN").val() == "WRITE"){
-      $(".decl_attach").hide();
-      $(".decl_write").show();
-      setDeclData();
-    }
+   //declar
+   if($("#DECL_DATA_GUBUN").val() == "WRITE"){
+     $(".decl_attach").hide();
+     $(".decl_write").show();
+   }
 
-  });
+ });
 
-  $(".btn_next").on('click', function () {
-      var active_node = $('.app_steps li.active').index() + 1;
-      $(".app_steps li").removeClass("active");
+ $(".btn_next").on('click', function () {
+     var active_node = $('.app_steps li.active').index() + 1;
+     $(".app_steps li").removeClass("active");
 
-      $(".app_steps li").each(function (i, elm) {
-        if($(elm).index() == active_node) {
-          $(elm).addClass("active");
-        }
-      });
+     $(".app_steps li").each(function (i, elm) {
+       if($(elm).index() == active_node) {
+         $(elm).addClass("active");
+       }
+     });
 
-      show_contents(active_node);
-  });
+     show_contents(active_node);
+ });
 
-  $('.btn_prev').on('click', function () {
-    var active_node = $('.app_steps li.active').index() - 1;
-    $(".app_steps li").removeClass("active");
+ $('.btn_prev').on('click', function () {
+   var active_node = $('.app_steps li.active').index() - 1;
+   $(".app_steps li").removeClass("active");
 
-    $(".app_steps li").each(function (i, elm) {
-      if($(elm).index() == active_node) {
-        $(elm).addClass("active");
-      }
-    });
+   $(".app_steps li").each(function (i, elm) {
+     if($(elm).index() == active_node) {
+       $(elm).addClass("active");
+     }
+   });
 
-    show_contents(active_node);
-  });
+   show_contents(active_node);
+ });
 
-  function show_contents(idx) {
-    switch(idx) {
-      case 0 :
-        $("#step1_contents").show();
-        $("#step2_contents").hide();
-        $("#step3_contents").hide();
-        $("#step4_contents").hide();
+ function show_contents(idx) {
+   switch(idx) {
+     case 0 :
+       $("#step1_contents").show();
+       $("#step2_contents").hide();
+       $("#step3_contents").hide();
+       $("#step4_contents").hide();
 
-        $('.btn_prev').hide();
-        $(".btn_next").show();
-      break;
-      case 1 :
-        $("#step1_contents").hide();
-        $("#step2_contents").show();
-        $("#step3_contents").hide();
-        $("#step4_contents").hide();
+       $('.btn_prev').hide();
+       $(".btn_next").show();
+     break;
+     case 1 :
+       $("#step1_contents").hide();
+       $("#step2_contents").show();
+       $("#step3_contents").hide();
+       $("#step4_contents").hide();
 
-        $('.btn_prev').show();
-        $(".btn_next").show();
-      break;
-      case 2 :
-        $("#step1_contents").hide();
-        $("#step2_contents").hide();
-        $("#step3_contents").show();
-        $("#step4_contents").hide();
+       //svhc
+        $("#gridArea_Svhc").pqGrid("refreshView");
 
-        $('.btn_prev').show();
-        $(".btn_next").show();
-      break;
-      case 3 :
-        $("#step1_contents").hide();
-        $("#step2_contents").hide();
-        $("#step3_contents").hide();
-        $("#step4_contents").show();
+       $('.btn_prev').show();
+       $(".btn_next").show();
+     break;
+     case 2 :
+       $("#step1_contents").hide();
+       $("#step2_contents").hide();
+       $("#step3_contents").show();
+       $("#step4_contents").hide();
 
-        $('.btn_prev').show();
-        $(".btn_next").hide();
-      break;
-    }
-  }
+       //svhc
+        $("#gridArea_Decl").pqGrid("refreshView");
 
-  function setSvhcData(){
-    $.ajax({
-            url : '/user/partMgmt/getSvhcListData',
-            type : 'GET',
-            success: function(response) {
-                bindSvhcData(response);
-            },
-            error : function(xhr,status,error){
-                console.log(xhr.responseText); // 에러 메시지 확인
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            },
-            complete : function(){
-                //기존 데이터 있을 시 바인딩
-                if($("input[name=SVHC_APPLICABLE_NO]").val() != ''){
-                    setSavedSvhc();
-                }
+       $('.btn_prev').show();
+       $(".btn_next").show();
+     break;
+     case 3 :
+       $("#step1_contents").hide();
+       $("#step2_contents").hide();
+       $("#step3_contents").hide();
+       $("#step4_contents").show();
 
-            }
-    });
-  }
+       $('.btn_prev').show();
+       $(".btn_next").hide();
+     break;
+   }
+ }
 
-  function bindSvhcData(response){
-        var tableBody = $('#svhcTableBody');
-        tableBody.empty();
+ /////////////////////////////////////////svhc bind
 
-        if(!response || response.length ===0 ){
-            var row = '<tr><td colspan="5"> 데이터가 없습니다 </td><tr>';
-            tableBody.append(row);
-        }else{
-            response.forEach(function(svhc) {
-                var row = '<tr>'+
-                                '<td>' + svhc.SVHC_NUM +'</td>'+
-                                '<td>' + svhc.SVHC_NAME +'</td>'+
-                                '<td>' + svhc.SVHC_CASNUM +'</td>'+
-                                '<td>' + svhc.SVHC_EUNUM +'</td>'+
-                                '<td id=svhc_'+ svhc.SVHC_NUM +'></td>'+
-                          '</tr>';
-                tableBody.append(row);
-            });
-        }
-    }
-
-    function setSavedSvhc(){
-        var Data = $("input[name=SVHC_APPLICABLE_NO]").val();
-        var ArrData = Data.split(',');
-
-        for(var i=0; i<ArrData.length; i++){
-            $("#svhc_"+ArrData[i]).text('Y');
-        }
-
-    }
-
-  function setDeclData(){
-    $.ajax({
-            url : '/user/partMgmt/getDeclarData',
-            type : 'GET',
-            success: function(response) {
-                bindDeclarData(response);
-            },
-            error : function(xhr,status,error){
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            },
-            complete : function(){
-                //기존 데이터 있을 시 바인딩
-                if($("input[name=DECL_APPLICABLE_NO]").val() != ''){
-                    setSavedDeclar();
-                }
-
-            }
-    });
-  }
+ $(function () {
+       var heightMinus = 650;
+       //var SVHC_YN_SELECT_ITEMS = ['Y', 'N'];
 
 
-  function bindDeclarData(response){
-        var tableBody = $('#declTableBody');
-        tableBody.empty();
+       var data = SheetDataConvert($("#gridArea_Svhc").attr("initData"));
 
-        if(!response || response.length ===0 ){
-            var row = '<tr><td colspan="6"> 데이터가 없습니다 </td><tr>';
-            tableBody.append(row);
-        }else{
-            response.forEach(function(declar) {
-                var row = '<tr>'+
-                                '<td>' + declar.DECL_NUM +'</td>'+
-                                '<td>' + declar.DECL_NAME +'</td>'+
-                                '<td>' + declar.DECL_CASNUM +'</td>'+
-                                '<td id=declar_'+ declar.DECL_NUM +'></td>' +
-                                '<td>' + declar.DECL_WEIGHT +'</td>'+
-                                '<td>' + declar.DECL_CLASS +'</td>'+
+       var obj = {
+           bubble: false,
+           numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+           editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+           editModel: { clicksToEdit: 1 },
+           selectionModel: { type: 'cell', mode: 'block' },
+           height: $(window).height() - heightMinus,
+           title: "",
+           sortable: false,
+           resizable: true,
+           menuIcon: true,
+           scrollModel: { autoFit: false },
+           hoverMode: 'row',
+           rowHtHead: 30,
+           //rowHt:30,
+           roundCorners: false,
+           rowBorders: true,
+           showBottom: false,
+           showHeader: true,
+           showTitle: true,
+           showTop: false, //excel 버튼 보이기
+           showToolbar: false,
+           stripeRows: false,
+           virtualY: true,
+           hwrap: false,
+           wrap: false,
+           autoAddRow: false,
+           freezeCols:0,
+           autoRow: false,
+           autoRowHead: false,
+           rowInit: function () {
+               return { style: 'font-size:12px;' };
+           },
+           selectChange: function (event, ui) {
+           },
+           rowClick: function (event, ui) {
+           },
+           cellClick: function (event, ui) {
+           },
+           rowDblClick: function (event, ui) {
+           },
+           rowSelect: function (event, ui) {
+           },
+           open: function () {
+           },
+           headerCellClick: function (event, ui) {
+           }
+       };
+       obj.colModel = [
 
-                          '</tr>';
-                tableBody.append(row);
-            });
-        }
-    }
+           {  title: "No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
+           { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
+           { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
+           { title: "EU No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
+           { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true
+               , editor: false
+               , editable: false
+               , render : function (ui){
+               //SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
+                   var data = ui.rowData;
+                   var appVal = $("input[name=SVHC_APPLICABLE_NO]").val();
+                   var ArrData = appVal.split(',');
+                   var flag = false;
+                   for(var i=0; i<ArrData.length; i++){
+                       if(data.SVHC_NUM === ArrData[i]) flag = true;
+                   }
 
-  function setSavedDeclar(){
-        var Data = $("input[name=DECL_APPLICABLE_NO]").val();
-        var ArrData = Data.split(',');
+                   if(flag) return 'Y';
+                   else return 'N';
+               }
+           }
 
-        for(var i=0; i<ArrData.length; i++){
-            $("#declar_"+ArrData[i]).text('Y');
-        }
+       ];
+       obj.dataModel = { data: data };
+       $("#gridArea_Svhc").pqGrid(obj);
+       $("#gridArea_Svhc").attr("gridYN", "Y");
 
-    }
+       $(window).resize(function () {
+           $("#gridArea_Svhc").pqGrid("option", "height", $(window).height() - heightMinus);
+           $("#gridArea_Svhc").pqGrid("refreshView");
+       });
+
+   });
+
+
+ /////////////////////////////////////////////decl bind
+ $(function () {
+       var heightMinus = 650;
+       var DECL_YN_SELECT_ITEMS = ['','Y', 'N'];
+
+
+       var data = SheetDataConvert($("#gridArea_Decl").attr("initData"));
+
+       var obj = {
+           bubble: false,
+           numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+           editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+           editModel: { clicksToEdit: 1 },
+           selectionModel: { type: 'cell', mode: 'block' },
+           height: $(window).height() - heightMinus,
+           title: "",
+           sortable: false,
+           resizable: true,
+           menuIcon: true,
+           scrollModel: { autoFit: false },
+           hoverMode: 'row',
+           rowHtHead: 30,
+           //rowHt:30,
+           roundCorners: false,
+           rowBorders: true,
+           showBottom: false,
+           showHeader: true,
+           showTitle: true,
+           showTop: false, //excel 버튼 보이기
+           showToolbar: false,
+           stripeRows: false,
+           virtualY: true,
+           hwrap: false,
+           wrap: false,
+           autoAddRow: false,
+           freezeCols:0,
+           autoRow: false,
+           autoRowHead: false,
+           rowInit: function () {
+               return { style: 'font-size:12px;' };
+           },
+           selectChange: function (event, ui) {
+           },
+           rowClick: function (event, ui) {
+           },
+           cellClick: function (event, ui) {
+           },
+           rowDblClick: function (event, ui) {
+           },
+           rowSelect: function (event, ui) {
+           },
+           open: function () {
+           },
+           headerCellClick: function (event, ui) {
+           }
+       };
+       obj.colModel = [
+
+           {  title: "No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NUM", sortable: true, editor: false, editable: false },
+           {  title: "Sub No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: true, editor: false, editable: false },
+           { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NAME", sortable: true, editor: false, editable: false },
+           { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: true, editor: false, editable: false },
+           { data_langsid: "해당", title: siteLang.getLang("해당"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_YN", sortable: true
+               , editor: false
+               , editable: false
+               , render : function (ui){
+               //DECL_NUM, DECL_CASNUM,DECL_WEIGHT,DECL_CLASS
+                   var data = ui.rowData;
+                   var appVal = $("input[name=DECL_APPLICABLE_NO]").val();
+                   var ArrData = appVal.split(',');
+                   var flag = false;
+
+                   for(var i=0; i<ArrData.length; i++){
+                       if(data.DECL_NUM === ArrData[i]){
+                           flag = true;
+                        }
+                   }
+
+                   if(flag){
+                       //값이 y 인 것
+                       return 'Y';
+                   }else{
+                       //값이 n 이거나  없음(대표n)
+                       if(data.DECL_SUB_NUM == ' ' ) return '';
+                       else return 'N';
+                   }
+               }
+           },
+           { data_langsid: "함량", title: siteLang.getLang("함량"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: true, editor: false, editable: false },
+           { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: true, editor: false, editable: false }
+
+       ];
+       obj.dataModel = { data: data };
+       $("#gridArea_Decl").pqGrid(obj);
+       $("#gridArea_Decl").attr("gridYN", "Y");
+
+<!--       $(window).resize(function () {-->
+<!--           $("#gridArea_Decl").pqGrid("option", "height", $(window).height() - heightMinus);-->
+<!--           $("#gridArea_Decl").pqGrid("refreshView");-->
+<!--       });-->
+
+   });
+
+ var SheetDataConvert = function (data) {
+       var dataJson = JSON.parse(data);
+
+       return dataJson;
+   }
+
 </script>
