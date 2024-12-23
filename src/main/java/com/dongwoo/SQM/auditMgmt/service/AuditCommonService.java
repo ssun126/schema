@@ -152,6 +152,10 @@ public class AuditCommonService {
         return auditMgmtRepository.getExpDateList(params);
     }
 
+    public  Map<String, String> getUserInfoMap(Map<String,Object> parameterMap) {
+        return auditMgmtRepository.getUserInfo(parameterMap);
+    }
+
     public  Map<String, String> getUserInfo(String code, String name, String type) {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_CODE", code);

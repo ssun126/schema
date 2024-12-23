@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="otherRestfullCommonMapper">
+	<select id='getVendorList' resultType="java.util.LinkedHashMap">
+		SELECT
+			FACTORY_ID
+			,VENDOR_ID
+			,NAME
+			,ADDRESS
+			,IF_DATETIME
+			,IF_SYSTEM
+		FROM VENDOR
+		WHERE
+		1=1
+		<if test="searchFactoryId != null and searchFactoryId != ''">
+			AND FACTORY_ID = #{searchFactoryId, jdbcType=VARCHAR}
+		</if>
+		<if test="searchVendorId != null and searchVendorId != ''">
+			AND VENDOR_ID = #{searchVendorId, jdbcType=VARCHAR}
+		</if>
+		<if test="searchVendorName != null and searchVendorName != ''">
+			AND NAME LIKE '%'||#{searchVendorName, jdbcType=VARCHAR}||'%'
+		</if>
+		UNION
+		SELECT
+			FACTORY_ID
+			,VENDOR_ID
+			,NAME
+			,ADDRESS
+			,IF_DATETIME
+			,IF_SYSTEM
+		FROM VENDOR_MANUAL
+		WHERE
+		1=1
+		<if test="searchFactoryId != null and searchFactoryId != ''">
+			AND FACTORY_ID = #{searchFactoryId, jdbcType=VARCHAR}
+		</if>
+		<if test="searchVendorId != null and searchVendorId != ''">
+			AND VENDOR_ID = #{searchVendorId, jdbcType=VARCHAR}
+		</if>
+		<if test="searchVendorName != null and searchVendorName != ''">
+			AND NAME LIKE '%'||#{searchVendorName, jdbcType=VARCHAR}||'%'
+		</if>
+	</select>
+	<select id='getUserList' resultType="java.util.LinkedHashMap">
+		SELECT
+		    USER_VENDOR.USER_ID,
+		    USER_VENDOR.VENDOR_ID,
+		    SYS_USER.USER_NAME,
+		    SYS_USER.EMAIL_ADDRESS
+		FROM USER_VENDOR
+		LEFT OUTER JOIN SYS_USER
+		ON USER_VENDOR.USER_ID = SYS_USER.USER_ID
+		WHERE
+		1=1
+		<if test="searchVendorId != null and searchFactoryId != ''">
+			AND USER_VENDOR.VENDOR_ID =#{searchVendorId}
+		</if>
+	</select>
+</mapper>

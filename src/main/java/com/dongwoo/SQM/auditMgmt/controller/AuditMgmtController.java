@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
+import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
 import com.dongwoo.SQM.common.service.CommonService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,8 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -20,7 +23,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +33,11 @@ import java.util.Map;
 @Controller
 @RequiredArgsConstructor
 public class AuditMgmtController {
-    //ajax json 관련 뷰 참조변수.
-//    @Resource(name="ajaxMainView")
-//    MappingJackson2JsonView ajaxMainView;
-//
     @Resource(name = "commonService")
     private CommonService commonService;
+
+    @Resource(name = "auditCommonService")
+    private AuditCommonService auditCommonService;
 
     @Value("${restfull.povis.url}")
     private String povisInterfaceURL;
@@ -55,7 +59,9 @@ public class AuditMgmtController {
             bodyMap.add("SITEID", "DW01");
             RestTemplate restTemplate = new RestTemplate();
             try {
+                log.info("requestEntity=====================================>"+requestEntity);
                 ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
+                log.info("responseEn=====================================>"+responseEn.getBody());
 
                 String jsonResponse = responseEn.getBody();
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -99,7 +105,6 @@ public class AuditMgmtController {
     @GetMapping("/api/audit/auditNcrMgmt/list/{param}")
     public ResponseEntity<Map<String, Object>> auditNcrMgmt(@PathVariable("param") String param,
                                      HttpServletRequest request, HttpServletResponse response) throws Exception {
-        log.info("???????????????????????????????????????"+param);
         // JSON Parameter Parsing
         Map<String, Object> reqParam = commonService.jsonDataMap(param);
         MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
@@ -122,7 +127,6 @@ public class AuditMgmtController {
             RestTemplate restTemplate = new RestTemplate();
             log.info("requestEntity=====================================>"+requestEntity);
             ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
-
             log.info("responseEn=====================================>"+responseEn.getBody());
             /*String list = responseEn.getBody();
             if(list!=null){
@@ -152,6 +156,156 @@ public class AuditMgmtController {
 
         return ResponseEntity.ok(responseData);  // JSON 응답 반환
     }
+
+
+
+
+
+    /**
+     * PCN getPcnInfo
+     *
+     * @param param
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/getAuditNcrInfo")
+    public ResponseEntity<Map<String, Object>> getAuditNcrInfo(
+            @RequestBody String param,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws Exception {
+        Map<String, Object> responseData = new HashMap<>();
+        // JSON Parameter Parsing
+        Map<String, Object> reqParam = commonService.jsonDataMap(param);
+        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
+        ArrayList arrayList = new ArrayList();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            Charset utf8 = Charset.forName("UTF-8");
+
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            headers.setAcceptCharset(Arrays.asList(Charset.forName("UTF-8")));
+            HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+            bodyMap.add("fnc", "JTAUDIM03");
+            bodyMap.add("ncr_seq", reqParam.get("ncr_seq"));
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+            ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
+            responseData.put("auditNcrInfo",JSONValue.parse(responseEn.getBody()));
+
+        } catch (Exception e) {
+            log.info("Exception/Start(auditNcrMgmt/getAuditNcrInfo)============================>");
+            log.info("param============================>");
+            log.info(bodyMap.toString());
+            log.info("",e);
+            log.info("Exception/End(auditNcrMgmt/getAuditNcrInfo)==============================>");
+        }
+
+        return ResponseEntity.ok(responseData);
+    }
+
+    /**
+     * PCN getPcnInfo
+     *
+     * @param param
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+
+    @RequestMapping(value="/auditNcrMgmt/getAuditNcrInfoTab", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> getAuditNcrInfoTab(
+            @RequestBody String param,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws Exception {
+        Map<String, Object> responseData = new HashMap<>();
+        // JSON Parameter Parsing
+        Map<String, Object> reqParam = commonService.jsonDataMap(param);
+        try {
+
+            responseData = (Map<String, Object>) getTabInfoInnerFn(reqParam.get("ncr_seq"),reqParam.get("dif"),reqParam);
+
+        } catch (Exception e) {
+            log.info("Exception/Start(auditNcrMgmt/getAuditNcrInfoTab)============================>");
+            log.info("",e);
+            log.info("Exception/End(auditNcrMgmt/getAuditNcrInfoTab)==============================>");
+        }
+
+        return ResponseEntity.ok(responseData);
+    }
+
+    public ResponseEntity<Map<String, Object>> getTabInfoInnerFn(Object ncrSeq, Object dif, Map<String,Object> reqParam){
+        Map<String, Object> responseData = new HashMap<>();
+        // JSON Parameter Parsing
+        MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
+        ArrayList arrayList = new ArrayList();
+        try {
+
+            Map<String,String>userInfo = auditCommonService.getUserInfoMap(reqParam);
+            responseData.put("userInfo", userInfo);
+
+            HttpHeaders headers = new HttpHeaders();
+            Charset utf8 = Charset.forName("UTF-8");
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            headers.setAcceptCharset(Arrays.asList(Charset.forName("UTF-8")));
+            HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+
+
+            requestEntity = new HttpEntity<>(bodyMap, headers);
+            bodyMap.add("fnc", "JTAUDIM03_PLAN");
+            bodyMap.add("dif", dif);
+            bodyMap.add("typ", "L");
+            bodyMap.add("ncr_seq", ncrSeq);
+            restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+            ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
+
+            responseData.put("auditNcrInfoPlan", JSONValue.parse(responseEn.getBody()) );
+
+            bodyMap = new LinkedMultiValueMap<String, Object>();
+            requestEntity = new HttpEntity<>(bodyMap, headers);
+            bodyMap.add("fnc", "JTAUDIM03_RESULT");
+            bodyMap.add("dif", dif);
+            bodyMap.add("typ", "L");
+            bodyMap.add("ncr_seq", ncrSeq);
+            restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters()
+                    .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+            responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
+            responseData.put("auditNcrInfoResult", JSONValue.parse(responseEn.getBody()) );
+
+            bodyMap = new LinkedMultiValueMap<String, Object>();
+            bodyMap.add("fnc", "JTAUDIM03_RESULT_ATTACH");
+            bodyMap.add("flag", "L");
+            bodyMap.add("dif", dif);
+            bodyMap.add("ncr_seq", ncrSeq);
+            requestEntity = new HttpEntity<>(bodyMap, headers);
+            responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
+
+            JSONValue.parse(responseEn.getBody());
+            responseData.put("auditNcrInfoResultFile", JSONValue.parse(responseEn.getBody()) );
+
+        } catch (Exception e) {
+            log.info("Exception/Start(getTabInfoInnerFn)============================>");
+            log.info("param============================>");
+            log.info(bodyMap.toString());
+            log.info("",e);
+            log.info("Exception/End(getTabInfoInnerFn)==============================>");
+        }
+
+        return ResponseEntity.ok(responseData);
+    }
+    
 
     public String changeNull(Object ob){
         if(ob == null) return "";
