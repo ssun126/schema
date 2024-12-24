@@ -13,9 +13,9 @@
     <link rel="stylesheet" type="text/css" href="../../../plugin/jqueryUi/jquery-ui.css?v=20241122" >
     <link rel="stylesheet" type="text/css" href="../../../css/style.css?v=20241122" >
     <link rel="stylesheet" type="text/css" href="../../../css/schema.css?v=20241122" >
-    <link rel="stylesheet" type="text/css" href="../../../plugin/pqgrid/pqgrid.min.css" >
-    <link rel="stylesheet" type="text/css" href="../../../plugin/pqgrid/pqgrid.ui.min.css" >
-    <!--<link rel="stylesheet" type="text/css" href="../../../plugin/pqgrid/themes/Office/pqgrid.css" >-->
+    <link rel="stylesheet" type="text/css" href="../../../plugin/paramquery-pro/pqgrid.min.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/paramquery-pro/pqgrid.ui.min.css" >
+    <link rel="stylesheet" type="text/css" href="../../../plugin/paramquery-pro/themes/gray/pqgrid.css" >
     <link rel="stylesheet" type="text/css" href="../../../plugin/loading/iosOverlay.css" >
     <link rel="stylesheet" type="text/css" href="../../../plugin/sweetalert/sweetalert2.css" >
     <link rel='stylesheet' type='text/css' href='../../../css/jqwidgets/jqx.base.css'>
@@ -23,8 +23,10 @@
     <script type="text/javascript" src="../../../plugin/jquery/jquery-3.7.1.min.js?v=20241122"></script>
     <script type="text/javascript" src="../../../plugin/jqueryUi/jquery-ui.js?v=20241122"></script>
     <script type="text/javascript" src="../../../plugin/jqGrid/jquery.jqGrid.js?v=20241122"></script>
-    <script type="text/javascript" src="../../../plugin/pqgrid/pqgrid.min.js"></script>
-    <script type="text/javascript" src="../../../plugin/pqgrid/jsZip-2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/paramquery-pro/pqgrid.min.js"></script>
+    <script type="text/javascript" src="../../../plugin/paramquery-pro/localize/pq-localize-en.js"></script>
+    <script type="text/javascript" src="../../../plugin/paramquery-pro/jsZip-2.5.0/jszip.min.js"></script>
+    <script type="text/javascript" src="../../../js/FileSaver.js"></script>
     <script type="text/javascript" src="../../../plugin/loading/iosOverlay.js"></script>
     <script type="text/javascript" src="../../../plugin/loading/spin.min.js"></script>
     <script type="text/javascript" src="../../../plugin/sweetalert/core.js"></script>
@@ -33,6 +35,7 @@
     <script type="text/javascript" src="../../../js/pages/schema.common.js?v=20241122"></script>
     <title>SCHEMA</title>
     <style>
+        /*
         tr.pq-grid-oddRow > td.pq-state-select, tr.pq-grid-oddRow.pq-state-select, tr.pq-grid-oddRow > .pq-grid-cell-hover, tr.pq-grid-oddRow.pq-grid-row-hover, td.pq-state-select-hover {
             background:#f8f9de;color:#333;
         };
@@ -47,6 +50,29 @@
         .pq-state-select.ui-state-highlight {
             background: #f8f9de;
             color:#333;
+        }
+        */
+
+        div.pq-theme {
+          color: #333;
+          border-color: #b5b5b5 !important;
+          background: transparent;
+        }
+
+        .pq-body-outer .pq-grid-number-cell,
+        .pq-summary-outer .pq-grid-number-cell {
+          background: transparent;
+        }
+
+        .pq-summary-outer .pq-grid-number-cell {
+          background: transparent;
+        }
+
+        .pq-cont-lt,
+        .pq-cont-tr,
+        .pq-body-outer .pq-cont-left {
+          border-color: transparent;
+          border-right: 1px;
         }
 
         .swal2-modal .swal2-title {

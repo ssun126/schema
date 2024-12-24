@@ -17,15 +17,6 @@
                         </div>
                     </div>
                     <div class="cui_body">
-                        <div class="cui_toolbar">
-                            <div class="toolbar_content">
-                                <div class="toolbar_default"></div>
-                            </div>
-                            <div class="toolbar_aside" style="display:none;">
-                                <button type="button" class="cui_button secondary"><span data-langsid="추가"></span></button>
-                                <button type="button" class="cui_button secondary"><span data-langsid="삭제"></span></button>
-                            </div>
-                        </div>
                         <table class="cui_table">
                             <colgroup>
                                 <col style="width:120px;">
@@ -94,13 +85,13 @@
         }
 
         $(function () {
-            var heightMinus = 300;
+            var heightMinus = 260;
 
             var data = SheetDataConvert($("#gridArea").attr("initData"));
 
             var obj = {
                 bubble: false,
-                numberCell: { show: false, resizable: true, title: "", width: 35, minWidth: 35 },
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
                 editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
                 editModel: { clicksToEdit: 2 },
                 selectionModel: { type: 'cell', mode: 'block' },
@@ -108,26 +99,23 @@
                 title: "",
                 sortable: false,
                 resizable: true,
-                menuIcon: true,
+                menuIcon: false,
                 scrollModel: { autoFit: false },
                 hoverMode: 'row',
-                rowHtHead: 30,
-                //rowHt:30,
                 roundCorners: false,
                 rowBorders: true,
-                showBottom: true,
+                showBottom: false,
                 showHeader: true,
                 showTitle: true,
-                showTop: false, //excel 버튼 보이기
-                showToolbar: false,
+                showTop: false,
+                showToolbar: true,
                 stripeRows: false,
-                virtualY: true,
-                hwrap: false,
-                wrap: false,
+                wrap: true,
                 autoAddRow: false,
                 freezeCols:0,
-                autoRow: false,
+                autoRow: true,
                 autoRowHead: false,
+                rowHt:25,
                 rowInit: function () {
                     return { style: 'font-size:12px;' };
                 },

@@ -526,38 +526,37 @@
 
 
 $(function () {
-    var heightMinus = 330;
+    var heightMinus = 252;
 
     var data = [];
 
     var obj = {
         bubble: false,
-        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
         editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
         editModel: { clicksToEdit: 2 },
         selectionModel: { type: 'cell', mode: 'block' },
-        height: $(window).height() - heightMinus,
+        height: $(window).height() - heightMinus - $(".cui_search").height(),
         title: "",
         sortable: false,
         resizable: true,
-        menuIcon: true,
+        menuIcon: false,
         scrollModel: { autoFit: false },
         hoverMode: 'row',
-        rowHtHead: 30,
-        //rowHt:30,
         roundCorners: false,
         rowBorders: true,
-        showBottom: true,
+        showBottom: false,
         showHeader: true,
         showTitle: true,
-        showTop: false, //excel 버튼 보이기
-        showToolbar: false,
+        showTop: false,
+        showToolbar: true,
         stripeRows: false,
         wrap: false,
         autoAddRow: false,
         freezeCols:0,
         autoRow: false,
         autoRowHead: false,
+        rowHt:25,
         rowInit: function () {
             return { style: 'font-size:12px;' };
         },
@@ -586,7 +585,7 @@ $(function () {
         { data_langsid: "아이디", title: siteLang.getLang("아이디"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "user_ID", sortable: true, editor: false, editable: false },
         { data_langsid: "이름", title: siteLang.getLang("이름"), width: 200, halign: "center", align: "left", dataType: "string", dataIndx: "user_NAME", sortable: true, editor: false, editable: false },
         { data_langsid: "사업부", title: siteLang.getLang("사업부"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "dept_CODE", sortable: true, editor: false, editable: false },
-        { data_langsid: "이메일", title: siteLang.getLang("이메일"), width: 250, halign: "center", align: "center", dataType: "string", dataIndx: "email", sortable: true, editor: false, editable: false },
+        { data_langsid: "이메일", title: siteLang.getLang("이메일"), width: 250, halign: "center", align: "left", dataType: "string", dataIndx: "email", sortable: true, editor: false, editable: false },
         { data_langsid: "구분", title: siteLang.getLang("구분"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "user_STATUS", sortable: true, editor: false, editable: false },
         { data_langsid: "등록일", title: siteLang.getLang("등록일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "reg_DATE", sortable: true, editor: false, editable: false }
     ];
@@ -595,7 +594,7 @@ $(function () {
     $("#gridArea").attr("gridYN", "Y");
 
     $(window).resize(function () {
-            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus - $(".cui_search").height());
             $("#gridArea").pqGrid("refreshView");
     });
            ListSearch();
