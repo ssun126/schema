@@ -188,7 +188,7 @@
 		    	//$("#gridArea").empty();
 		    	$("#gridArea").pqGrid("refreshView");
 		    }
-    });
+        });
 
         //처음 로드 시 기존 저장된 데이터 있는지 확인
         if($("input[name=DECL_IDX]").val() != ''){
@@ -198,18 +198,12 @@
                 //$('input:radio[name="DATA_GUBUN"]:input[value="WRITE"]').prop('checked',true);
                 $('#declFileFieldset').hide();
 		    	$('#declDataFieldset').show();
-		    	//getSvhcData();
-
             }
-
-
         }else{
             //신규 제출구분 파일첨부 기본
             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
         }
     });
-
-
 
 
 
@@ -291,15 +285,36 @@
                 return { style: 'font-size:12px;' };
             },
             selectChange: function (event, ui) {
-<!--                var rowData = ui.rowData;-->
-<!--                var selNo = [];-->
-<!--                $("#gridArea").pqGrid("getData").forEach(function(data){-->
-<!--                    if(data.DECL_YN === 'Y') selNo.push(data.DECL_NUM);-->
-<!--                });-->
+                var rowData = ui.rowData;
+                var grid = $("#gridArea").pqGrid("instance");
+                if(rowData.DECL_NUM !== ' ' && rowData.DECL_SUB_NUM === ' '){
+                    //대표 번호의 값이 변경 되었을 때
+                    if(rowData.DECL_YN === 'N'){
+                        //
+                        for(var j = 0; j<grid.pdata.length; j++){
+                            if(grid.pdata[j].DECL_SUB_NUM.indexOf(rowData.DECL_NUM+"-") >0){
+                                grid.pdata[j].DECL_YN='N';
+                            }
+                        }
+                    }
+                }else{
+                    //subnum 변경
+                    var declNo = rowData.DECL_SUB_NO.split('-')[0];
+                    var declNoval = '';
+                    var subval = rowData.DECL_YN;
+                    var grid = $("#gridArea").pqGrid("instance");
+                    for(var j = 0; j<grid.pdata.length; j++){
+                            if(grid.pdata[j].DECL_NUM === declNo){
+                                declNoval = grid.pdata[j].DECL_YN;
+                            }
+                    }
 
-<!--                var strSelNo = selNo.join(",");-->
+                    if(declNoval === 'N' && subval ==='Y'){
+                        rowData.DECL_YN = 'N';
+                        Common.Msg(siteLang.getLang("상위 No.가 N 경우 하위 SBU NO.는 Y일 수 없습니다."));
+                    }
 
-<!--                $("input[name=APPLICABLE_NO]").val(strSelNo);-->
+                }
 
             },
             rowClick: function (event, ui) {
@@ -447,15 +462,26 @@
     }
 
     var frmDetailNext = function () {
-        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
-            mode : "confrim"
-            , okback : function () {
-                $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                //$("#frmDetail").submit();
-                frmDetailSubmit();
-            }
-        });
+        //유효성체크
+        var frmObj = $("#frmDetail");
+        var isValid = true;
+        isValid = Common.Validate(frmObj);
+
+        //Y 데이터 삽입
+        setApplicableNo();
+
+        //대표no의 yn값이 없으면 안됨
+
+        //Y 일때는 하위 내용이 하나라도 Y가 있어야함
+
+        if(isValid){
+            $("#frmDetail").find("input[name=SaveMode]").val("Next");
+            //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+            //$("#frmDetail").submit();
+            frmDetailSubmit();
+        }
+
+
     }
 
 

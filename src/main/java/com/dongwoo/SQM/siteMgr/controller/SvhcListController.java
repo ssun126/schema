@@ -2,29 +2,22 @@ package com.dongwoo.SQM.siteMgr.controller;
 
 import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
-import com.dongwoo.SQM.siteMgr.service.BaseConfigService;
 import com.dongwoo.SQM.siteMgr.service.SvhcListService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.boot.Banner;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +53,8 @@ public class SvhcListController {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
         List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
-        for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+        //for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+        for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
             SvhcListDTO svhcListDTO = new SvhcListDTO();
 
             DataFormatter formatter = new DataFormatter();
@@ -68,8 +62,9 @@ public class SvhcListController {
 
             String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
             String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
-            String SVHC_CASNUM = formatter.formatCellValue((row.getCell(2)));
-            String SVHC_EUNUM = formatter.formatCellValue((row.getCell(3)));
+
+            String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
+            String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
 
             svhcListDTO.setSVHC_NUM(SVHC_NUM);
             svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));

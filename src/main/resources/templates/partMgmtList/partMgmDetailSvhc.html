@@ -121,6 +121,7 @@
                                         <div class="cui_attachments" style="display:flex;">
                                             <input type="file" class="cui_file_field" name="SVHC_FILE">
                                             <input type="hidden" name="FILE_STATUS">
+                                            <button type="button" class="cui_button primary" onclick="setSvhcExcelData();"><span data-langsid="적용"></span></button>
                                             <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${svhcDTO.FILE_NAME == '' ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${svhcDTO.FILE_NAME}" th:value="${svhcDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
@@ -136,6 +137,15 @@
 
                         </tbody>
                     </table>
+
+                    <div class="cui_jqGrid_section">
+                        <div class="cui_jqGrid_head">
+                            <div class="jqGrid_label"> &nbsp;</div>
+                        </div>
+                        <div class="cui_jqGrid_body" id="Grid_write">
+                            <div id="gridArea_write" gridYN="" ></div>
+                        </div>
+                    </div>
                 </fieldset>
 
                 <fieldset id="svhcDataFieldset" style="display:none;">
@@ -149,6 +159,15 @@
                         </div>
                     </div>
                 </fieldset>
+
+                <div   th:style="${partMgmtDTO.PM_APPROVAL_DATE == '' ? 'display:none;' : '' }">
+                    * 보증 내역의 재확인<br>
+                    -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>
+                    <label class="cui_checkbox">
+                        <input type="checkbox" name="checkbox1" ><i></i>
+                        <span>전자 보증서 제출</span>
+                    </label>
+                </div>
 
                 <div class="cui_items_wrap" data-direction="right" >
                     <div class="item_content">
@@ -209,17 +228,36 @@
         }
     });
 
+    var setSvhcExcelData = function (){
+        var frmObj = $("#frmDetail");
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.formData  = new FormData();
+        ReqInfo.AddParameter(frmObj);
 
+        Common.Loading.Show();
 
+        Common.Ajax("/user/partMgmt/setSvhcExcelData", ReqInfo, function (data) {
+<!--            var dataJson = SheetDataConvert(data);-->
+
+<!--            $("#gridArea_write").pqGrid("option", "dataModel.data", data);-->
+<!--            $("#gridArea_write").pqGrid("refreshView");-->
+            Common.Loading.Hide();
+            loadWriteGrid(data);
+
+        });
+
+    }
 
 
     var SheetDataConvert = function (data) {
         var dataJson = JSON.parse(data);
         var appVal = $("input[name=APPLICABLE_NO]").val();
         var ArrData = appVal.split(',');
-        var flag = false;
+
 
         for(var i = 0; i < dataJson.length; i++){
+            var flag = false;
+
             for(var j=0; j<ArrData.length; j++){
                 if(dataJson[i].SVHC_NUM === ArrData[j]) flag = true;
             }
@@ -244,6 +282,7 @@
 
             $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
             $("#gridArea").pqGrid("refreshView");
+
         });
     }
 
@@ -350,11 +389,83 @@
             $("#gridArea").pqGrid("refreshView");
         });
 
-        //select 변경 시
-<!--        $("#gridArea").on("cellEdit", function (event, ui) {-->
-<!--            -->
-<!--        });-->
+
     });
+
+    //write
+    var loadWriteGrid = function (excelData) {
+        var heightMinus = 650;
+
+        var data = SheetDataConvert(excelData);
+
+        var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 1 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: false,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+        };
+        obj.colModel = [
+
+            {  title: "No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
+            { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
+            { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
+            { title: "EU No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
+            { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true, editor: false, editable: false }
+
+        ];
+        obj.dataModel = { data: data };
+        $("#gridArea_write").pqGrid(obj);
+        $("#gridArea_write").attr("gridYN", "Y");
+
+        $(window).resize(function () {
+            $("#gridArea_write").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea_write").pqGrid("refreshView");
+        });
+
+
+    }
 
     var frmDetailSubmit = function () {
             //e.preventDefault();
@@ -446,15 +557,12 @@
                 return;
             }
 
-
-
             if(isValid){
                 $("#frmDetail").find("input[name=SaveMode]").val("Next");
                 //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
                 //$("#frmDetail").submit();
                 frmDetailSubmit();
             }
-
 
         }
 

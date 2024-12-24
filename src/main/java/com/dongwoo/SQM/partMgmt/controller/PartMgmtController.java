@@ -3,6 +3,7 @@ package com.dongwoo.SQM.partMgmt.controller;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.system.service.MemberService;
@@ -13,6 +14,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +40,7 @@ import java.util.Map;
 public class PartMgmtController {
     private final PartMgmtService partMgmtService;
     private final MemberService memberService;
+    private final com.dongwoo.SQM.siteMgr.service.BaseConfigService BaseConfigService;
 
     //메인 리스트 화면
     @RequestMapping("/matReg")
@@ -676,7 +682,12 @@ public class PartMgmtController {
             List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
             if(svhcDTO == null) {
                 svhcDTO = new PartDetailSvhcDTO();
+
+                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
+                svhcDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
+
+
 
 //            if(svhcDTO.getDATA_GUBUN().equals("WRITE")){
 //                partSvhcDTOList = partMgmtService.getSvhcData();
@@ -727,6 +738,53 @@ public class PartMgmtController {
 
         return "partMgmtList/partMgmDetailSvhc";
 
+
+    }
+
+    @RequestMapping("setSvhcExcelData")
+    public String setSvhcExcelData(HttpServletRequest request, HttpServletResponse response){
+        String partSvhcListStr = null;
+        try{
+            MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("SVHC_FILE");
+            XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
+
+            for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
+                SvhcListDTO svhcListDTO = new SvhcListDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                XSSFRow row = worksheet.getRow(i);
+
+                String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
+                String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
+
+                String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
+                String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
+                String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
+
+                svhcListDTO.setSVHC_NUM(SVHC_NUM);
+                svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
+                svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
+                svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
+                svhcListDTO.setSVHC_YN(SVHC_YN);
+
+                svhcListDTOList.add(svhcListDTO);
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            partSvhcListStr = mapper.writeValueAsString(svhcListDTOList);
+
+            PrintWriter printer = response.getWriter();
+            printer.print(partSvhcListStr);
+            printer.close();
+
+
+            } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "blank";
 
     }
 
@@ -837,6 +895,9 @@ public class PartMgmtController {
             List<DeclarationDTO> declDTOList = new ArrayList<>();
             if(declDTO == null) {
                 declDTO = new partDetailDeclarDTO();
+
+                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("DECLARATIONREV");
+                declDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
             model.addAttribute("declDTO",declDTO);
             log.info("svhcDTO=============================" + declDTO);
@@ -933,17 +994,15 @@ public class PartMgmtController {
 
         try {
 
-            //msds
             String DECL_IDX = GetParam(request, "DECL_IDX", "");
 
-            //msds file
             if(declFile != null){
                 if (!declFile.isEmpty()) {
-                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, declFile);
-                    String etc_filename = declFile.getOriginalFilename();
+                    String decl_filepath = partMgmtService.uploadFileData(PM_PART_CODE, declFile);
+                    String decl_filename = declFile.getOriginalFilename();
 
-                    declDTO.setFILE_NAME(etc_filename);
-                    declDTO.setFILE_PATH(etc_filepath);
+                    declDTO.setFILE_NAME(decl_filename);
+                    declDTO.setFILE_PATH(decl_filepath);
 
                 }
             }
