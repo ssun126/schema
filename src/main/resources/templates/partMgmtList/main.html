@@ -149,37 +149,30 @@
 
         var obj = {
             bubble: false,
-            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-            editModel: { clicksToEdit: 1 },
+            editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
             height: $(window).height() - heightMinus,
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
             roundCorners: false,
             rowBorders: true,
-            showBottom: true,
+            showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
-            virtualY: true,
-            hwrap: false,
             wrap: false,
             autoAddRow: false,
             freezeCols:0,
             autoRow: false,
             autoRowHead: false,
-            rowInit: function () {
-            return { style: 'font-size:12px;' };
-            },
             selectChange: function (event, ui) {
             },
             rowClick: function (event, ui) {
@@ -241,7 +234,7 @@
                     }
                 }
             },
-            { data_langsid: "자재코드", title: siteLang.getLang("자재코드"),  width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_CODE", sortable: false, editor: false, editable: false },
+            { data_langsid: "자재코드", title: siteLang.getLang("자재코드"),  width: 120, align: "center", dataType: "string", dataIndx: "PM_PART_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "자재명칭", title: siteLang.getLang("자재명칭"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "PART_NAME", sortable: false, editor: false, editable: false },
             { data_langsid: "취급 Plant", title: siteLang.getLang("취급 Plant"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_PART_PLANT_CODE", sortable: false, editor: false, editable: false },
             { data_langsid: "국가", title: siteLang.getLang("국가"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "COM_NATION", sortable: false, editor: false, editable: false },

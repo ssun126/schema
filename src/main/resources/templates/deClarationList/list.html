@@ -18,15 +18,6 @@
                         </div>
                     </div>
                     <div class="cui_body">
-                        <div class="cui_toolbar">
-                            <div class="toolbar_content">
-                                <div class="toolbar_default"></div>
-                            </div>
-                            <div class="toolbar_aside" style="display:none;">
-                                <button type="button" class="cui_button secondary"><span data-langsid="추가"></span></button>
-                                <button type="button" class="cui_button secondary"><span data-langsid="삭제"></span></button>
-                            </div>
-                        </div>
                         <table class="cui_table">
                             <colgroup>
                                 <col style="width:120px;">
@@ -95,13 +86,13 @@
         }
 
         $(function () {
-            var heightMinus = 300;
+            var heightMinus = 260;
 
             var data = SheetDataConvert($("#gridArea").attr("initData"));
 
             var obj = {
                 bubble: false,
-                numberCell: { show: false, resizable: true, title: "", width: 35, minWidth: 35 },
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
                 editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
                 editModel: { clicksToEdit: 2 },
                 selectionModel: { type: 'cell', mode: 'block' },
@@ -109,26 +100,23 @@
                 title: "",
                 sortable: false,
                 resizable: true,
-                menuIcon: true,
+                menuIcon: false,
                 scrollModel: { autoFit: false },
                 hoverMode: 'row',
-                rowHtHead: 30,
-                //rowHt:30,
                 roundCorners: false,
                 rowBorders: true,
-                showBottom: true,
+                showBottom: false,
                 showHeader: true,
                 showTitle: true,
-                showTop: false, //excel 버튼 보이기
-                showToolbar: false,
+                showTop: false,
+                showToolbar: true,
                 stripeRows: false,
-                virtualY: true,
-                hwrap: true,
                 wrap: true,
                 autoAddRow: false,
                 freezeCols:0,
                 autoRow: true,
                 autoRowHead: false,
+                rowHt:25,
                 rowInit: function () {
                     return { style: 'font-size:12px;' };
                 },
@@ -148,13 +136,13 @@
                 }
             };
             obj.colModel = [
-                { title: "NO", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NUM", sortable: true, editor: false, editable: false },
-                { title: "Sub No", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: true, editor: false, editable: false },
-                { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 600, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_NAME", sortable: true, editor: false, editable: false },
-                { title: "CAS No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: true, editor: false, editable: false },
-                { title: "regulatory value", width: 170, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: true, editor: false, editable: false },
-                { title: "Class", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: true, editor: false, editable: false },
-                { title: "Regulatory grounds", width: 170, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_GROUND", sortable: true, editor: false, editable: false }
+                { title: "NO", width: 50, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_NUM", sortable: true, editor: false, editable: false },
+                { title: "Sub No", width: 70, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: true, editor: false, editable: false },
+                { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_NAME", sortable: true, editor: false, editable: false },
+                { title: "CAS No.", width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: true, editor: false, editable: false },
+                { title: "regulatory value", width: 160, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: true, editor: false, editable: false },
+                { title: "Class", width: 75, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: true, editor: false, editable: false },
+                { title: "Regulatory grounds", width: 160, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_GROUND", sortable: true, editor: false, editable: false }
             ];
             obj.dataModel = { data: data };
             $("#gridArea").pqGrid(obj);
