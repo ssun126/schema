@@ -2,7 +2,6 @@ package com.dongwoo.SQM.siteMgr.controller;
 
 import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
-import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.siteMgr.service.DeclarationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +52,19 @@ public class DeclarationController {
 
         List<DeclarationDTO> declarationDTOList = new ArrayList<>();
 
-        for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+        for(int i = 4; i<worksheet.getPhysicalNumberOfRows(); i++){
             DeclarationDTO declarationDTO = new DeclarationDTO();
 
             DataFormatter formatter = new DataFormatter();
             XSSFRow row = worksheet.getRow(i);
 
-            String DECL_NUM = formatter.formatCellValue(row.getCell(0));
-            String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(1));
-            String DECL_NAME = formatter.formatCellValue(row.getCell(2));
-            String DECL_CASNUM = formatter.formatCellValue(row.getCell(3));
-            String DECL_WEIGHT = formatter.formatCellValue(row.getCell(4));
-            String DECL_CLASS = formatter.formatCellValue(row.getCell(5));
-            String DECL_GROUND = formatter.formatCellValue(row.getCell(6));
+            String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+            String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+            String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+            String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+            String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+            String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+            String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
 
 
             log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);

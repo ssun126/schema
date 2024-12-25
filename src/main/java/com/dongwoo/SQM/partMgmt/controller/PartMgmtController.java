@@ -949,6 +949,60 @@ public class PartMgmtController {
 
     }
 
+    @RequestMapping("setDeclExcelData")
+    public String setDeclExcelData(HttpServletRequest request, HttpServletResponse response){
+        String partDeclListStr = null;
+        try{
+            MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("DECL_FILE");
+            XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            List<DeclarationDTO> declarationDTOList = new ArrayList<>();
+
+            for(int i = 4; i<worksheet.getPhysicalNumberOfRows(); i++){
+                DeclarationDTO declarationDTO = new DeclarationDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                XSSFRow row = worksheet.getRow(i);
+
+                String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+                String DECL_YN = formatter.formatCellValue(row.getCell(8));
+
+                log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                declarationDTO.setDECL_NUM(DECL_NUM);
+                declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                declarationDTO.setDECL_NAME(DECL_NAME);
+                declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                declarationDTO.setDECL_CLASS(DECL_CLASS);
+                declarationDTO.setDECL_GROUND(DECL_GROUND);
+                declarationDTO.setDECL_YN(DECL_YN);
+
+                declarationDTOList.add(declarationDTO);
+
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            partDeclListStr = mapper.writeValueAsString(declarationDTOList);
+
+            PrintWriter printer = response.getWriter();
+            printer.print(partDeclListStr);
+            printer.close();
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "blank";
+
+    }
+
     @RequestMapping("/getDeclListData")
     public String  getDeclData(  HttpServletResponse response,  @RequestHeader Map<String, String> header ){
         String partDeclListStr = null;
