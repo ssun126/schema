@@ -480,7 +480,7 @@ $(function () {
         },
         rowDblClick: function (event, ui) {
             var data = ui.rowData;
-            const cpcode = data.COM_CODE ;
+            const cpcode = data.PartnersCD ;
             loadPage(cpcode) ;
         },
         rowSelect: function (event, ui) {
@@ -500,7 +500,7 @@ $(function () {
         { data_langsid: "Author", title: siteLang.getLang("Author"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "Auditor", sortable: true, editor: false, editable: false },
         { data_langsid: "시정조치계획일", title: siteLang.getLang("시정조치계획일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionPlanDate", sortable: true, editor: false, editable: false },
         { data_langsid: "시정조치등록일", title: siteLang.getLang("시정조치등록일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionMakeDate", sortable: true, editor: false, editable: false },
-        { data_langsid: "업체명", title: siteLang.getLang("업체명"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_Vendor", sortable: true, editor: false, editable: false },
+        { data_langsid: "업체명", title: siteLang.getLang("업체명"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PartnersCD", sortable: true, editor: false, editable: false },
         { data_langsid: "완료일", title: siteLang.getLang("완료일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CompleteDate", sortable: true, editor: false, editable: false }
       ];
     obj.dataModel = { data: data };

@@ -38,8 +38,8 @@ public class LabourHRController {
         model.addAttribute("companyAuth", companyAuth);
 
         // 회사의 노동환경 심사항목 정보를 가져옵니다.
-        List<LabourItemDTO> auditItems = labourItemService.findAll();
-        model.addAttribute("auditItems", auditItems);
+        List<AuditItemPointDTO> auditItemPoint = labourHRService.getCompanyAuthItemPoint("LABOUR", COM_CODE);
+        model.addAttribute("auditItemPoint", auditItemPoint);
 
         LabourHRDTO companyAuthFile = labourHRService.getCompanyAuthFile("LABOUR", COM_CODE);
         model.addAttribute("companyAuthFile", companyAuthFile);
@@ -58,7 +58,7 @@ public class LabourHRController {
         model.addAttribute("companyAuth", companyAuth);
 
         // 회사의 노동환경 심사항목 정보를 가져옵니다.
-        List<AuditItemPointDTO> auditItemPoint = labourHRService.getCompanyAuthItemPoint("QUALITY", comCode);
+        List<AuditItemPointDTO> auditItemPoint = labourHRService.getCompanyAuthItemPoint("LABOUR", comCode);
         model.addAttribute("auditItemPoint", auditItemPoint);
 
         LabourHRDTO companyAuthFile = labourHRService.getCompanyAuthFile("LABOUR", comCode);

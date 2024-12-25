@@ -59,7 +59,7 @@
     </select>
 
     <select id="getCompanyAuthItemPoint" parameterType="map" resultType="auditItemPoint">
-        SELECT COM_CODE, AUDIT_ID, AUTH_TYPE, POINT, AUDIT_COMMENT, AUTH_SEQ, REG_COM_USER_IDX, REG_DATE
+        SELECT COM_CODE, AUDIT_ID, AUTH_TYPE, TO_NUMBER(AA.POINT, '999999.0') AS POINT, AUDIT_COMMENT, AUTH_SEQ, REG_COM_USER_IDX, REG_DATE
         FROM SC_AUDIT_ITEM_POINT
         WHERE COM_CODE = #{COM_CODE} AND AUTH_TYPE = #{AUTH_TYPE}
     </select>
