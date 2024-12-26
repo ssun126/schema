@@ -196,6 +196,7 @@
 		    	$('#declDataFieldset').show();
 		    	//초기화
 		    	$("input[name=DECL_FILE]").val('');
+		    	$(".cui_attachments .cui_text_field").val('');
 		    	ListLoad();
 
 		    }
@@ -655,10 +656,10 @@
         //대표no의 yn값이 없으면 안됨
         var returnVal =setApplicableNo('attach');
         if(returnVal === 'NoneVal'){
-            flag = false;
+            isValid = false;
             message= '첨부내용에 Y로 해당되는 내용이 없습니다';
         }else if(returnVal !== 'true'){
-            flag = false;
+            isValid = false;
             message= returnVal+' 에 내용이 없습니다';
         }
         //Y 일때는 하위 내용이 하나라도 Y가 있어야함
@@ -668,6 +669,8 @@
             //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
             //$("#frmDetail").submit();
             frmDetailSubmit();
+        }else{
+            Common.Msg(siteLang.getLang(message));
         }
 
 
