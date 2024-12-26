@@ -30,11 +30,19 @@ public class PartCodeService {
         return partCodeRepository.partCodeList(partCodeDTO);
     }
 
+    //pop
     public List<HashMap> getMaterialList(String code, String name) {
         Map<String, Object> params = new HashMap<>();
         params.put("MAT_ID", code);
         params.put("MAT_NAME", name);
         return partCodeRepository.getMaterialList(params);
+    }
+
+    public List<HashMap> getCompanyList(String code, String name) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("MAT_ID", code);
+        params.put("MAT_NAME", name);
+        return partCodeRepository.getCompanyList(params);
     }
 
     public List<CompanyInfoDTO> getCompanyInfoList(Criteria cri) {

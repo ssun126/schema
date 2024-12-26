@@ -75,6 +75,22 @@ public class PartCodeController {
         return partCodeService.getMaterialList(code,name);
     }
 
+    //자재 등록  - 업체 목록검색 LIST
+    @PostMapping("/admin/companyInfo/cpCodeList")
+    public String cpCodeMgmtApi2(Criteria criteria, Model model) {
+
+        return "partCodeMgmt/apiCpCodeList";
+    }
+
+    @PostMapping("/admin/companyInfo/getCompanyList")
+    @ResponseBody
+    public List<HashMap> companyApiList(HttpServletRequest req) {
+        String name = req.getParameter("searchNameCpName");
+        String code = req.getParameter("searchCodeCpCode");
+
+        return partCodeService.getCompanyList(name, code);
+    }
+
 
     //업체정보 신규 저장
     @PostMapping("/admin/companyInfo/setPartCode")
