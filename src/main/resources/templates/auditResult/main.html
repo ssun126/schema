@@ -41,47 +41,18 @@
                             <th><span>결과(등급)</span></th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td class="center"><span>인증서</span></td>
-                            <td class="center"><span>2024-11-11</span></td>
-                            <td class="center"><span>제출</span></td>
-                            <td class="center"><span>서면</span></td>
+                        <tbody th:unless="${#lists.isEmpty(auditRsltData)}">
+                        <tr th:each="data : ${auditRsltData}">
+                            <td class="center"><span th:text="${data.AUTH_TYPE}">ISO 인증서</span></td>
+                            <td class="center"><span th:text="${data.APPROVE_DATE}">2024-11-11</span></td>
+                            <td class="center"><span th:text="${data.APPROVE_STATE}">제출</span></td>
+                            <td class="center"><span th:text="${data.AUDIT_WAY}">서면</span></td>
                             <td class="center"><span>2024-00-00</span></td>
-                            <td class="center"><span>/ 4</span></td>
-                            <td class="center" rowspan="5"><span></span></td>
-                        </tr>
-                        <tr>
-                            <td class="center"><span>노동환경</span></td>
-                            <td class="center"><span>2024-11-11</span></td>
-                            <td class="center"><span>미제출</span></td>
-                            <td class="center"><span>Self</span></td>
-                            <td class="center"><span>2024-00-00</span></td>
-                            <td class="center" style="border-right-width:1px;"><span>/ 20</span></td>
-                        </tr>
-                        <tr>
-                            <td class="center"><span>안전보건</span></td>
-                            <td class="center"><span>2024-11-11</span></td>
-                            <td class="center"><span>NCR</span></td>
-                            <td class="center"><span>Self</span></td>
-                            <td class="center"><span>2024-00-00</span></td>
-                            <td class="center" style="border-right-width:1px;"><span>/ 20</span></td>
-                        </tr>
-                        <tr>
-                            <td class="center"><span>품질체계</span></td>
-                            <td class="center"><span>2024-11-11</span></td>
-                            <td class="center"><span>NCR</span></td>
-                            <td class="center"><span>Self</span></td>
-                            <td class="center"><span>2024-00-00</span></td>
-                            <td class="center" style="border-right-width:1px;"><span>/ 50</span></td>
-                        </tr>
-                        <tr>
-                            <td class="center"><span>분쟁/책임광물</span></td>
-                            <td class="center"><span>2024-11-11</span></td>
-                            <td class="center"><span>NCR</span></td>
-                            <td class="center"><span>Self</span></td>
-                            <td class="center"><span>2024-00-00</span></td>
-                            <td class="center" style="border-right-width:1px;"><span>/ 6</span></td>
+                            <td class="center">
+                                <span th:text="${data.POINT}"></span> /
+                                <span th:text="${data.AUTH_TYPE == 'ISO'? '4':'20'}"></span>
+                            </td>
+                            <td class="center"><span></span></td>
                         </tr>
                         </tbody>
                     </table>

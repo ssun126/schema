@@ -14,19 +14,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class NcrMgmtController {
 
     @GetMapping("/admin/auditMgmt/ncrMgmt")
-    public String GetncrMgmtAdminList(Model model) {
+    public String getNcrMgmtAdminList(Model model) {
         return "ncrMgmt/adminMain";
     }
 
+    @GetMapping("/admin/auditMgmt/ncrMgmtDetail")
+    public String getNcrMgmtAdminDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
+        return "ncrMgmt/detail";
+    }
+
+
     @GetMapping("/user/auditMgmt/ncrMgmt")
-    public String GetncrMgmtList(Model model) {
+    public String getNcrMgmtList(Model model) {
         return "ncrMgmt/main";
     }
 
     @GetMapping("/user/auditMgmt/ncrMgmtDetail")
-    public String GetncrMgmtAdminDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
+    public String getNcrMgmtDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
+
         return "ncrMgmt/detail";
     }
-
 
 }

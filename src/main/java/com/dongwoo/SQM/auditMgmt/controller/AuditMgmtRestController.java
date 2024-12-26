@@ -8,6 +8,7 @@ import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.common.service.FileStorageService;
 import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
+import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,6 +46,8 @@ public class AuditMgmtRestController {
     @Autowired
     private AuditCommonService auditCommonService;
     @Autowired
+    private AuditResultService auditResultService;
+    @Autowired
     private ConflictMineralsService conflictMineralsService;
 
     @Value("${Upload.path.attach}")
@@ -67,6 +70,19 @@ public class AuditMgmtRestController {
 
         // 검색 결과와 페이지
         return isoAuthService.searchCompanies(type, code, name, state);
+    }
+
+    //Audit 결과 리스트 조회
+    //업체 목록 검색 LIST
+    @PostMapping("/searchAuditRsltMgmt")
+    public List<AuditMgmtDTO> searchAuditRsltMgmt(HttpServletRequest req) {
+        String name = req.getParameter("searchName");
+        String code = req.getParameter("searchCode");
+        String state = req.getParameter("searchState");
+        String type = req.getParameter("searchType");
+        log.info("type??"+type);
+
+        return auditResultService.searchCompanies(type, code, name, state);
     }
 
     /**

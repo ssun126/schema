@@ -11,6 +11,8 @@ public class AuditMgmtDTO {
     private String COM_NAME;
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
+    @JsonProperty("AUDIT_WAY")
+    private String AUDIT_WAY;
     @JsonProperty("AUTH_CODE")
     private String AUTH_CODE;
     @JsonProperty("AUTH_SEQ")
