@@ -53,6 +53,7 @@ public class SvhcListController {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
         List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
+        int count =0;
         //for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
         for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
             SvhcListDTO svhcListDTO = new SvhcListDTO();
@@ -72,6 +73,7 @@ public class SvhcListController {
             svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
 
             svhcListDTOList.add(svhcListDTO);
+            count++;
         }
 
         try {

@@ -947,7 +947,7 @@ public class PartMgmtController {
 
     }
 
-    @RequestMapping("setDeclExcelData")
+    @RequestMapping("/setDeclExcelData")
     public String setDeclExcelData(HttpServletRequest request, HttpServletResponse response){
         String partDeclListStr = null;
         try{

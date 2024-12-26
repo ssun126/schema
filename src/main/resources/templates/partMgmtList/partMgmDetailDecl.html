@@ -29,6 +29,9 @@
         .cui_file_field{
             display:flex;
         }
+        .cui_table{
+            vertical-align: middle;
+        }
 
         .cui_attachments{
             display:block;
@@ -39,7 +42,7 @@
 <div class="cui_content">
     <div class="cui_main">
         <div class="cui_head head_title">
-            <div class="head_content">
+            <div class="head_content" style="padding:0px 10px 10px 10px;">
                 <h3><span>자재코드 : </span><span th:text="${partMgmtDTO.PM_PART_CODE}"></span></h3>
                 <h3><span>자재명 : </span><span th:text="${partMgmtDTO.PART_NAME}">자재명</span></h3>
                 <h3><span>승인현황 : </span><span th:text="${partMgmtDTO.PM_APPROVAL_STATUS}">검토중</span></h3>
@@ -96,7 +99,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${declDTO.WARRANTY_ITEM}" reqcheck="reqcheck">
+                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${declDTO.WARRANTY_ITEM}" reqcheck="reqcheck" readonly="readonly">
                                     </div>
                                 </div>
                             </td>
@@ -121,7 +124,8 @@
                                         <div class="cui_attachments" style="display:flex;">
                                             <input type="file" class="cui_file_field" name="DECL_FILE">
                                             <input type="hidden" name="FILE_STATUS">
-                                            <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${declDTO.FILE_NAME == '' ? 'display:none;' : '' }">
+                                            <button type="button" class="cui_button primary" onclick="setDeclExcelData();"><span data-langsid="적용"></span></button>
+                                            <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${declDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${declDTO.FILE_NAME}" th:value="${declDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
                                                     <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
@@ -234,7 +238,7 @@
         ReqInfo.formData  = new FormData();
         ReqInfo.AddParameter(frmObj);
 
-        Common.Ajax("/user/partMgmt/setSvhcExcelData", ReqInfo, function (data) {
+        Common.Ajax("/user/partMgmt/setDeclExcelData", ReqInfo, function (data) {
             var dataJson = JSON.parse(data);
 
             $("#gridArea_attach").pqGrid("option", "dataModel.data", dataJson);
@@ -254,34 +258,31 @@
 
         var obj = {
             bubble: false,
-            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            numberCell: { show: false, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-            editModel: { clicksToEdit: 1 },
+            editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
             height: $(window).height() - heightMinus,
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
             roundCorners: false,
             rowBorders: true,
             showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
-            virtualY: true,
-            hwrap: false,
-            wrap: false,
+            wrap: true,
             autoAddRow: false,
             freezeCols:0,
-            autoRow: false,
+            autoRow: true,
             autoRowHead: false,
+            rowHt:25,
             rowInit: function () {
                 return { style: 'font-size:12px;' };
             },
@@ -302,11 +303,14 @@
         };
         obj.colModel = [
 
-            {  title: "No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
-            { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
-            { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
-            { title: "EU No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
-            { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true, editor: false, editable: false }
+            {  title: "No.", width: 50, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_NUM", sortable: false, editor: false, editable: false },
+            {  title: "Sub No.", width: 75, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: false, editor: false, editable: false },
+            { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_NAME", sortable: false, editor: false, editable: false },
+            { title: "CAS No.", width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: false, editor: false, editable: false },
+            { data_langsid: "해당", title: siteLang.getLang("해당"), width: 60, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_YN", sortable: false, editor: false, editable: false },
+            { data_langsid: "함량", title: siteLang.getLang("함량"), width: 270, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: false, editor: false, editable: false },
+            { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: false, editor: false, editable: false }
+
 
         ];
         obj.dataModel = { data: [] };
