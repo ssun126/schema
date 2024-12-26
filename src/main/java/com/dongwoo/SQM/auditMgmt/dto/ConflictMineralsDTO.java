@@ -20,6 +20,8 @@ public class ConflictMineralsDTO {
     //분쟁광물 정보
     @JsonProperty("COM_CODE")
     private String COM_CODE;
+    @JsonProperty("PART_CODE")
+    private String PART_CODE;
     @JsonProperty("TANTALUM_YN")
     private String TANTALUM_YN;
     @JsonProperty("TUNGSTEN_YN")

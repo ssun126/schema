@@ -5,7 +5,9 @@ import com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.ConflictMineralsRepository;
+import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ import java.util.Map;
 public class ConflictMineralsService {
     private final AuditMgmtRepository auditMgmtRepository;
     private final ConflictMineralsRepository conflictMineralsRepository;
+    private final CompanyInfoService companyInfoService;
 
     @Value("${Upload.path.attach}")
     private String uploadPath;
@@ -93,27 +96,18 @@ public class ConflictMineralsService {
             }
         }
 
-        //인증서 데이터 저장
-//        for (ConflictMineralsDTO dto : conflictMinerals) {
-//            dto.setCOM_CODE(comCode);
-//
-//            if(dto.getFILE_NAME()== null) { //파일 업로드를 하지 않으면 입력 항목 저장됨.
-//                Map<String, Object> params = new HashMap<>();
-//                params.put("AUTH_CODE", dto.getAUTH_CODE());
-//                params.put("COM_CODE", comCode);
-//                IsoAuthItemDTO ItemDTO = conflictMineralsRepository.findByIsoAuthItem(params);
-//                log.info(ItemDTO.getITEM_STATE());
-//                log.info(dto.getITEM_STATE());
-//                if (ItemDTO.getAUTH_CODE() != null) {
-//                    log.info(dto.getITEM_STATE());
-//                    if(ItemDTO != dto) {
-//                        conflictMineralsRepository.updateItem(dto);  // updateItem
-//                    }
-//                } else {
-//                    conflictMineralsRepository.insertItem(dto);  // insert
-//                }
-//            }
-//        }
+        //List<BaseCodeDTO> partCodeList = companyInfoService.GetBaseCode("ConflictMinerals");
+
+        // 데이터 저장
+        for (ConflictMineralsDTO dto : conflictMinerals) {
+            dto.setCOM_CODE(comCode);
+            //if(dto.getFILE_NAME()== null) { //파일 업로드를 하지 않으면 입력 항목 저장됨.
+
+                log.info(dto.getCOBALT_YN());
+                int rtCnt = conflictMineralsRepository.insertItem(dto);  // insert
+                log.info("데이터 저장 Count: " + rtCnt);
+           // }
+        }
         log.info("회사별 Audit 데이터 저장 완료");
 
     }
@@ -146,4 +140,5 @@ public class ConflictMineralsService {
         params.put("COM_CODE", code);
         return conflictMineralsRepository.getConflictData(params);
     }
+
 }

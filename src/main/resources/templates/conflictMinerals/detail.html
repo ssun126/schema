@@ -13,13 +13,15 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span>TITLE</span>
-                    <span style="float: right;padding-left: 20px;">(제출 : 2024-11-18)</span></h2>
+                <h2 class="cui_title"><span th:text="${companyAuth.COM_NAME}"></span></h2>
+            </div>
+            <div class="head_aside">
+                <p><span id="authState"></span></p>
             </div>
         </div>
         <div class="cui_body">
             <form class="cui_form_section" data-legend="true">
-                <fieldset>
+                <fieldset th:unless="${companyAuthFile == null}">
                     <legend><span>조사 양식</span></legend>
                     <table class="cui_table">
                         <colgroup>
@@ -30,60 +32,31 @@
                         <tr>
                             <th><span>분쟁광물(CMRT)</span></th>
                             <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span>
-                                                    </button>
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="search_square" data-tooltip-title="미리보기">
-                                                        <span>미리보기</span></button>
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="xmark" data-tooltip-title="삭제">
-                                                        <span>삭제</span></button>
-                                                </div>
-                                            </div>
+                                <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                    <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'CMRT' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <th><span>책임광물(EMRT)</span></th>
                             <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span>
-                                                    </button>
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="search_square" data-tooltip-title="미리보기">
-                                                        <span>미리보기</span></button>
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="xmark" data-tooltip-title="삭제">
-                                                        <span>삭제</span></button>
-                                                </div>
-                                            </div>
+                                <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                    <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'EMRT'}">
+                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                        <div class="item_content">
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-
-                        </tr>
                         </tbody>
                     </table>
-                    <div>* 양식 첨부 <span style="color:var(--primary);">(Self-Audit 갱신 시점 기준 3개월 이내 조사인 경우, 변경사항이 없으면 그대로 제출 가능)</span>
-                    </div>
+                   <!-- <div>* 양식 첨부 <span style="color:var(&#45;&#45;primary);">(Self-Audit 갱신 시점 기준 3개월 이내 조사인 경우, 변경사항이 없으면 그대로 제출 가능)</span>
+                    </div>-->
                 </fieldset>
                 <fieldset>
                     <legend><span>조사 결과 기재</span></legend>
@@ -176,16 +149,16 @@
                       </tr>
                       </tbody>
                     </table>
-                    <div>
+                   <!-- <div>
                         * 보증 내역의 재확인<br>
                         -. 신규 추가 된 자재내 분쟁공물 / 책임광물이 미포함 되었습니다.<br>
                         -. 기 제출한 분쟁광물 / 책임광물 조사 내역에 대한 변경 사실이 없음을 확인 드립니다.<br>
                         (확인 결과는 아래의 전자 보증서 제출버턴 클릭시, 보증서 제출과 동일하게 1년씩 기간이 연장 됩니다.)
-                    </div>
-                    <label class="cui_checkbox">
+                    </div>-->
+                    <!--<label class="cui_checkbox">
                         <input type="checkbox" name="checkbox1"><i></i>
                         <span>전자 보증서 제출(기 제출 자료에서 변경사항 無)</span>
-                    </label>
+                    </label>-->
 
                     <table class="cui_table">
                         <colgroup>
@@ -361,13 +334,8 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-
-                            </tr>
                             </tbody>
                         </table>
-                        <div>* 양식 첨부 <span style="color:var(--primary);">(Self-Audit 갱신 시점 기준 3개월 이내 조사인 경우, 변경사항이 없으면 그대로 제출 가능)</span>
-                        </div>
                     </fieldset>
                     <fieldset>
                         <legend><span>조사 결과 기재</span></legend>
@@ -455,16 +423,6 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div>
-                            * 보증 내역의 재확인<br>
-                            -. 신규 추가 된 자재내 분쟁공물 / 책임광물이 미포함 되었습니다.<br>
-                            -. 기 제출한 분쟁광물 / 책임광물 조사 내역에 대한 변경 사실이 없음을 확인 드립니다.<br>
-                            (확인 결과는 아래의 전자 보증서 제출버턴 클릭시, 보증서 제출과 동일하게 1년씩 기간이 연장 됩니다.)
-                        </div>
-                        <label class="cui_checkbox">
-                            <input type="checkbox" name="checkbox1" disabled><i></i>
-                            <span>전자 보증서 제출(기 제출 자료에서 변경사항 無)</span>
-                        </label>
 
                         <table class="cui_table">
                             <colgroup>
@@ -516,10 +474,25 @@
 </body>
 </html>
 <script>
-    $('.modal-close').on('click', function(e){
-       e.preventDefault();
-       const modal = $(this).parents('.cui_dialog');
-       modal.fadeOut();
-       modal_init();
-     });
+    $(document).ready(function () {
+       const code = `[[${companyAuth.COM_CODE}]]`;
+       const state = `[[${companyAuth.APPROVE_STATE}]]`;
+
+       if(state != "" ){
+           console.log(state);
+       }
+   });
+
+    function downloadFile(fileName) {
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
+    }
 </script>

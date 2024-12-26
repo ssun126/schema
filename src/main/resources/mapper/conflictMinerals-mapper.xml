@@ -8,6 +8,11 @@
         VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{FILE_NAME}, #{FILE_PATH}, #{AUTH_SEQ}, #{FILE_TYPE})
     </insert>
 
+    <insert id="insertItem" parameterType="conflict">
+        INSERT INTO SC_CONFLICT_MINERAL (COM_CODE, TANTALUM_YN, TUNGSTEN_YN, TIN_YN, GOLD_YN, COBALT_YN, MICA_YN, INSPECTION_DATE, PART_CODE)
+        VALUES( #{COM_CODE}, #{TANTALUM_YN}, #{TUNGSTEN_YN}, #{TIN_YN}, #{GOLD_YN}, #{COBALT_YN}, #{MICA_YN}, #{INSPECTION_DATE}, #{PART_CODE})
+    </insert>
+
     <select id="getCompanyAuthFile" parameterType="map" resultType="conflict">
         SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH
         FROM SC_AUTH_COMPANY_INFO ACI

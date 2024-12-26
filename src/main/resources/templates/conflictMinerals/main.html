@@ -110,7 +110,7 @@
                                 <div class="item_label">조사일자</div>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" value="2024.09.30" id="datepicker" disabled>
+                                        <input type="text" class="cui_text_field" value="2024.09.30" id="datepicker" name="INSPECTION_DATE" disabled>
                                         <label for="datepicker" class="cui_button icon endpoint" data-cui-icon="calendar"><span>날자 선택</span></label>
                                     </div>
                                 </div>
@@ -156,40 +156,42 @@
                         </tbody>
                         <tbody th:unless="${#lists.isEmpty(conflictData)}">
                         <tr th:each="data : ${conflictData}">
-                            <td><span th:text="${data.PM_PART_CODE}"></span></td>
+                            <td>
+                                <span th:text="${data.PM_PART_CODE}"></span>
+                            </td>
                             <td><span th:text="${data.PM_PART_NAME}"></span></td>
                             <td>
-                                <select class="cui_select_field" disabled>
+                                <select class="cui_select_field" name="TANTALUM_YN" disabled>
                                     <option value="Y" th:selected="${data.TANTALUM_YN == 'Y'}">사용</option>
                                     <option value="N" th:selected="${data.TANTALUM_YN == 'N'}">미사용</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="cui_select_field" disabled>
+                                <select class="cui_select_field" name="TUNGSTEN_YN" disabled>
                                     <option value="Y" th:selected="${data.TUNGSTEN_YN == 'Y'}">사용</option>
                                     <option value="N" th:selected="${data.TUNGSTEN_YN == 'N'}">미사용</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="cui_select_field" disabled>
+                                <select class="cui_select_field" name="TIN_YN" disabled>
                                     <option value="Y" th:selected="${data.TIN_YN == 'Y'}">사용</option>
                                     <option value="N" th:selected="${data.TIN_YN == 'N'}">미사용</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="cui_select_field" disabled>
+                                <select class="cui_select_field" name="GOLD_YN" disabled>
                                     <option value="Y" th:selected="${data.GOLD_YN == 'Y'}">사용</option>
                                     <option value="N" th:selected="${data.GOLD_YN == 'N'}">미사용</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="cui_select_field" disabled>
+                                <select class="cui_select_field" name="COBALT_YN" disabled>
                                     <option value="Y" th:selected="${data.COBALT_YN == 'Y'}">사용</option>
                                     <option value="N" th:selected="${data.COBALT_YN == 'N'}">미사용</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="cui_select_field" disabled>
+                                <select class="cui_select_field" name="MICA_YN" disabled>
                                     <option value="Y" th:selected="${data.MICA_YN == 'Y'}">사용</option>
                                     <option value="N" th:selected="${data.MICA_YN == 'N'}">미사용</option>
                                 </select>
@@ -285,7 +287,7 @@
         alert("양식파일 등록후 다운로드.");
     }
 
-     // 제출 버튼 클릭 시 데이터 저장
+    // 제출 버튼 클릭 시 데이터 저장
     $("#sendAuth").click(function() {
         var tableData = [];
         var formData = new FormData();
@@ -308,6 +310,22 @@
                     console.log("파일 검증 실패: " + file.name);
                 }
             }
+            tableData.push(row);
+        });
+        console.log($(document).find('input[name="INSPECTION_DATE"]').val());
+        $("#conflictTable tbody tr").each(function() {
+            var row = {};
+            row['PART_CODE'] = $(this).find('td').eq(1).text();
+            row['TANTALUM_YN'] = $(this).find('select[name="TANTALUM_YN"]').val() || '';
+            row['TUNGSTEN_YN'] = $(this).find('select[name="TUNGSTEN_YN"]').val() || '';
+            row['TIN_YN'] = $(this).find('select[name="TIN_YN"]').val() || '';
+            row['GOLD_YN'] = $(this).find('select[name="GOLD_YN"]').val() || '';
+            row['COBALT_YN'] = $(this).find('select[name="COBALT_YN"]').val() || '';
+            row['MICA_YN'] = $(this).find('select[name="MICA_YN"]').val() || '';
+
+            row['INSPECTION_DATE'] = $(document).find('input[name="INSPECTION_DATE"]').val();
+
+            console.log("insert data"+row['PART_CODE']);
             tableData.push(row);
         });
 

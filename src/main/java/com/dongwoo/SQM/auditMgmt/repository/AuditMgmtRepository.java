@@ -68,4 +68,9 @@ public class AuditMgmtRepository {
     public int updateStatus(AuditMgmtDTO auditMgmtDTO) {
         return sql.update("AuditMgmt.updateStatus", auditMgmtDTO);
     }
+
+    //업체별 Audit 결과 조회
+    public List<AuditMgmtDTO> searchCompanies(Map<String, Object> params) {
+        return sql.selectList("AuditMgmt.searchCompanies", params);
+    }
 }

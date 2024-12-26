@@ -39,6 +39,10 @@ public class ConflictMineralsController {
         List<ConflictMineralsDTO> conflictData = conflictMineralsService.getConflictData("CONFLICT", COM_CODE);
         model.addAttribute("conflictData", conflictData);
 
+        //첨부 파일 가져오기
+        List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("CONFLICT", COM_CODE);
+        model.addAttribute("companyAuthFile", companyAuthFile);
+
         return "conflictMinerals/detail";
     }
 

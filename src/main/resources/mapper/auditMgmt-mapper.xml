@@ -85,4 +85,27 @@
         FROM SYS_USER
         WHERE USER_ID = #{USERID}
     </select>
+
+    <select id="searchCompanies" parameterType="map" resultType="authMgmt">
+        SELECT
+        ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUDIT_WAY, APPROVE_STATE,
+        TO_CHAR(APPROVE_DATE, 'YYYY.MM.DD') AS APPROVE_DATE,
+        TO_CHAR(SEND_DATE, 'YYYY.MM.DD') AS SEND_DATE, TO_NUMBER(POINT, '999999.0') AS POINT
+        FROM SC_AUTH_COMPANY_INFO ACI
+        INNER JOIN SC_COMPANY_CODE CC
+        ON CC.COM_CODE = ACI.COM_CODE
+        WHERE 1 =1
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+        </if>
+        <if test="COM_NAME != null and COM_NAME != ''">
+            AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
+        </if>
+        <if test="COM_STATUS != null and COM_STATUS != ''">
+            AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
+        </if>
+        <if test="AUTH_TYPE != null and AUTH_TYPE != ''">
+            AND (ACI.AUTH_TYPE LIKE CONCAT(CONCAT('%',  #{AUTH_TYPE}), '%'))
+        </if>
+    </select>
 </mapper>
