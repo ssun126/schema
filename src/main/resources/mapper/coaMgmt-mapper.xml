@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="coaMgmt">
+
+    <select id="getCOAList"  parameterType="coaMgmt" resultType="coaMgmt">
+        SELECT
+        CM.COA_ID
+        , CM.VENDOR_ID
+        , MT.VENDOR_NAME
+        , CM.MATERIAL_ID
+        , MT.MATERIAL_NAME
+        , CM.FACTORY_ID
+        , SML.LANGUAGE_CODE_DATA AS FACTORY_NAME
+        , CM.LOT_NO
+        , CM.STOCK_DATE
+        , CM.MF_DATE
+        , CM.COA_STATUS
+        , CM.ETC
+        , CM.IF_SEND_DATETIME
+        , CM.RETURN_DESC
+        , CM.IF_USER
+        , TO_CHAR(CM.IF_DATETIME, 'YYYY-MM-DD') AS IF_DATETIME
+        , CM.CREATOR
+        , CM.CREATE_DATETIME
+        , (SELECT MIN(CD.IS_SPECIN)
+        FROM COA_DETAIL CD
+        WHERE CD.COA_ID = CM.COA_ID
+        AND CD.LOT_NO = CM.LOT_NO) AS SPEC_IN
+        , (SELECT SM.LANGUAGE_CODE_DATA
+        FROM CODE_DETAIL CD
+        JOIN SYS_MULTI_LANGUAGE SM
+        ON CD.MULTI_LANG_ID = SM.LANGUAGE_CODE_ID
+        AND SM.LANGUAGE = 'KR'
+        WHERE MASTER_ID = 'COA_STATUS'
+        AND CD.CODE_VALUE = CM.COA_STATUS) AS COA_STATUS_STR
+        , SU.USER_NAME AS CREATOR_NAME
+        , CM.VENDOR_COMMENT
+        , MT.WETPR
+        , CM.E_DATE
+        , CM.QUANTITY
+        FROM COA_MASTER CM
+        JOIN MATERIAL MT
+        ON CM.VENDOR_ID = MT.VENDOR_ID
+        AND CM.MATERIAL_ID = MT.MATERIAL_ID
+        AND CM.FACTORY_ID = MT.FACTORY_ID
+        JOIN SYS_USER SU
+        ON SU.USER_ID = CM.CREATOR
+        JOIN(SELECT PLANT.ID,
+        SYS_MULTI_LANGUAGE.LANGUAGE_CODE_DATA
+        FROM PLANT, SYS_MULTI_LANGUAGE
+        WHERE
+        PLANT.MULTI_LANG_ID = SYS_MULTI_LANGUAGE.LANGUAGE_CODE_ID
+        AND SYS_MULTI_LANGUAGE.LANGUAGE = 'KR') SML
+        ON CM.FACTORY_ID = SML.ID
+        WHERE
+            1=1
+<!--        <if test="TOKEN_USER_TYPE == null or TOKEN_USER_TYPE == ''">-->
+<!--            1 = 0-->
+<!--        </if>-->
+
+<!--        <if test="TOKEN_USER_TYPE != null">-->
+<!--            <if test="TOKEN_USER_TYPE != 'AU' and TOKEN_USER_TYPE != 'MU' and TOKEN_USER_TYPE != 'VU'">-->
+<!--                1 = 0-->
+<!--            </if>-->
+<!--            <if test="TOKEN_USER_TYPE == 'AU' or TOKEN_USER_TYPE == 'MU' or TOKEN_USER_TYPE == 'VU'">-->
+<!--                1 = 1-->
+<!--            </if>-->
+<!--        </if>-->
+
+<!--        <if test="fromDate != null and fromDate != ''">-->
+<!--            AND CM.CREATE_DATETIME <![CDATA[ >= ]]> #{fromDate} || ' 00:00:00.000'-->
+<!--        </if>-->
+
+<!--        <if test="toDate != null and toDate != ''">-->
+<!--            AND CM.CREATE_DATETIME <![CDATA[ <= ]]> #{toDate} || ' 23:59:59.999'-->
+<!--        </if>-->
+
+<!--        <if test="registerName != null and registerName != ''">-->
+<!--            AND UPPER(SU.USER_NAME) LIKE '%' || UPPER(#{registerName}) || '%'-->
+<!--        </if>-->
+
+<!--        <if test="registerName == null or registerName == ''">-->
+<!--            <if test="registerId != null and registerId != ''">-->
+<!--                AND CM.CREATOR = #{registerId}-->
+<!--            </if>-->
+<!--        </if>-->
+
+<!--        <if test="vendorNameList != null">-->
+<!--            AND MT.VENDOR_NAME IN-->
+<!--            <foreach collection="vendorNameList" item="item" index="index" separator="," open="(" close=")">-->
+<!--                #{item}-->
+<!--            </foreach>-->
+<!--        </if>-->
+
+<!--        <if test="vendorNameList == null">-->
+<!--            <if test="vendorName != null and vendorName != ''">-->
+<!--                AND UPPER(MT.VENDOR_NAME) LIKE '%' || UPPER(#{vendorName}) || '%'-->
+<!--            </if>-->
+<!--        </if>-->
+
+<!--        <if test="vendorName == null or vendorName == ''">-->
+<!--            <if test="vendorId != null and vendorId != ''">-->
+<!--                AND CM.VENDOR_ID = #{vendorId}-->
+<!--            </if>-->
+<!--        </if>-->
+
+<!--        <if test="coaNumber != null and coaNumber != ''">-->
+<!--            AND CM.COA_ID LIKE '%' || #{coaNumber} || '%'-->
+<!--        </if>-->
+
+<!--        <if test="materialName != null and materialName != ''">-->
+<!--            AND UPPER(MT.MATERIAL_NAME) LIKE '%' || UPPER(#{materialName}) || '%'-->
+<!--        </if>-->
+
+<!--        <if test="materialName == null or materialName == ''">-->
+<!--            <if test="materialId != null and materialId != ''">-->
+<!--                AND CM.MATERIAL_ID = #{materialId}-->
+<!--            </if>-->
+<!--        </if>-->
+
+<!--        <if test='acceptance != null and acceptance == "Y"'>-->
+<!--            AND NOT EXISTS (SELECT 1-->
+<!--            FROM COA_DETAIL CD-->
+<!--            WHERE CD.COA_ID = CM.COA_ID-->
+<!--            AND CD.LOT_NO = CM.LOT_NO-->
+<!--            AND CD.IS_SPECIN = 'N')-->
+<!--        </if>-->
+
+<!--        <if test='acceptance != null and acceptance == "N"'>-->
+<!--            AND EXISTS (SELECT 1-->
+<!--            FROM COA_DETAIL CD-->
+<!--            WHERE CD.COA_ID = CM.COA_ID-->
+<!--            AND CD.LOT_NO = CM.LOT_NO-->
+<!--            AND CD.IS_SPECIN = 'N')-->
+<!--        </if>-->
+
+
+<!--        <if test="coaStatus != null and coaStatus != ''">-->
+<!--            AND CM.COA_STATUS = #{coaStatus}-->
+<!--        </if>-->
+
+<!--        <if test="lotNo != null and lotNo != ''">-->
+<!--            AND CM.LOT_NO LIKE '%' || #{lotNo} || '%'-->
+<!--        </if>-->
+
+<!--        <if test="factoryId != null and factoryId != ''">-->
+<!--            AND CM.FACTORY_ID = #{factoryId}-->
+<!--        </if>-->
+
+<!--        <if test="dlvFromDate != null and dlvFromDate != ''">-->
+<!--            AND CM.STOCK_DATE <![CDATA[ >= ]]> #{dlvFromDate}-->
+<!--        </if>-->
+
+<!--        <if test="dlvToDate != null and dlvToDate != ''">-->
+<!--            AND CM.STOCK_DATE <![CDATA[ <= ]]> #{dlvToDate}-->
+<!--        </if>-->
+
+<!--        <if test="TOKEN_USER_TYPE != null and TOKEN_USER_TYPE == 'MU'">-->
+<!--            AND MT.FACTORY_ID IN (SELECT PLANT_ID FROM USER_PLANT WHERE USER_ID = #{TOKEN_USER_ID})-->
+<!--        </if>-->
+
+<!--        <if test="TOKEN_USER_TYPE != null and TOKEN_USER_TYPE == 'VU'">-->
+<!--            AND MT.VENDOR_ID IN (SELECT VENDOR_ID FROM USER_VENDOR WHERE USER_ID = #{TOKEN_USER_ID})-->
+<!--        </if>-->
+
+        ORDER BY COA_ID DESC
+    </select>
+
+
+
+</mapper>

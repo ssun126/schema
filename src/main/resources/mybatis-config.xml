@@ -52,6 +52,7 @@
         <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailSccsDTO" alias="partDetailSccs"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailIngredDTO" alias="partDetailIngred"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.partMgmt.dto.partDetailGuarantDTO" alias="partDetailGuarant"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.qualityCtrl.dto.coaMgmtDTO" alias="coaMgmt"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.common.dto.CommonDTO" alias="common"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.common.dto.ExpirationDateDTO" alias="expirationDate"></typeAlias>
 
