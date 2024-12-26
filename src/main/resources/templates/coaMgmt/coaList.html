@@ -44,11 +44,11 @@
                                     <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
-                            <div class="cui_items_wrap" data-direction="left">
+                            <div class="cui_items_wrap" data-direction="left" id = "CpCodeMgmt">
                                 <strong class="item_label" data-langsid="업체명"></strong>
                                 <div class="item_content">
                                     <input class="cui_text_field" type="text" id="vendorName" name="vendorName">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
+                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
 
@@ -153,6 +153,12 @@
            $("#gridArea").pqGrid("refreshView");
        }, { contentType : "application/json" });
    }
+
+
+ var selCpCodeOpen = function () {
+    Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
+   }
+
 
 $(document).ready(function () {
 
