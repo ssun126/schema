@@ -199,6 +199,7 @@
                     <div class="item_content">
                         <input type="hidden"  name="INFO_FLAG" >
                         <button type="button" class="cui_button primary" onclick="frmDetailSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" class="cui_button primary" onclick="frmDetailPrev();"><span data-langsid="이전"></span></button>
                         <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="다음"></span></button>
                     </div>
                 </div>
@@ -308,6 +309,12 @@
                 Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
                 return;
             }
+
+        }
+
+        var frmDetailPrev = function () {
+            var pmidx  = $("input[name=PM_IDX]").val();
+            Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" +pmidx;
 
         }
 
