@@ -20,18 +20,14 @@
                                 <div class="item_content">
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-<!--                                            <input type="text" id="Sch_CreateStartDate" class="cui_text_field" value="2024.12.13">-->
-<!--                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>-->
-                                            <input type="text" class="cui_text_field datepicker" id="fromDate" name="fromDate" datePickerControl="" th:value="${sStartDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="fromDate" name="fromDate" datePickerControl="" th:value="${sStartDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-<!--                                            <input type="text" id="Sch_CreateEndDate" class="cui_text_field" value="2024.12.13">-->
-<!--                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>-->
-                                            <input type="text" class="cui_text_field datepicker" id="toDate" name="toDate" datePickerControl="" th:value="${sEndDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="toDate" name="toDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
@@ -40,14 +36,14 @@
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="등록자"></strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="registerName" name="registerName">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
+                                    <input class="cui_text_field" type="text" id="registerName" name="registerName" search="searchBtn">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selUserOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left" id = "CpCodeMgmt">
                                 <strong class="item_label" data-langsid="업체명"></strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="vendorName" name="vendorName">
+                                    <input class="cui_text_field" type="text" id="vendorName" name="vendorName" search="searchBtn">
                                     <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
@@ -57,14 +53,14 @@
                                 <div class="item_content">
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="dlvFromDate" name="dlvFromDate" datePickerControl="" th:value="${sEndDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="dlvFromDate" name="dlvFromDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="dlvToDate" name="dlvToDate" datePickerControl="" th:value="${sEndDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="dlvToDate" name="dlvToDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
@@ -73,8 +69,8 @@
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="자재"></strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="materialName" name="materialName">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
+                                    <input class="cui_text_field" type="text" id="materialName" name="materialName" search="searchBtn">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selpartMatrailOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
@@ -91,7 +87,7 @@
                             <div class="cui_items_wrap required_field">
                                 <strong class="item_label">LOT NO</strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="" id="lotNo" name="lotNo">
+                                    <input class="cui_text_field" type="text" placeholder="" id="lotNo" name="lotNo" search="searchBtn">
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
@@ -107,7 +103,6 @@
                             </div>
                         </div>
                         <div class="search_action">
-<!--                            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span data-langsid="검색"></span></button>-->
                             <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
                         </div>
                     </div>
@@ -118,9 +113,12 @@
                     <div class="cui_jqGrid_head">
                         <div class="jqGrid_label"></div>
                         <div class="jqGrid_aside">
-                            <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delPartCode();"><span data-langsid="삭제"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="copy" onclick="addOpen();"><span data-langsid="복사"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="addOpen();"><span data-langsid="스팩 다운로드"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="업로드"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="check" onclick="addOpen();"><span data-langsid="등록"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delPartCode();"><span data-langsid="선택 삭제"></span></button>
+<!--                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>-->
                         </div>
                     </div>
                     <div class="cui_jqGrid_body" id="Grid">
@@ -157,6 +155,14 @@
 
  var selCpCodeOpen = function () {
     Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
+   }
+
+var selUserOpen = function () {
+    Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
+   }
+
+   var selpartMatrailOpen = function () {
+    Common.Dialog({ url : "/admin/companyInfo/materialList" });
    }
 
 
