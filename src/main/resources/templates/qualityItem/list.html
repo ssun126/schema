@@ -13,7 +13,7 @@
             <div class="cui_main">
                 <div class="cui_head">
                     <div class="head_content">
-                        <h2 class="cui_title"><span data-langsid="Audit 안전보건"></span></h2>
+                        <h2 class="cui_title"><span data-langsid="Audit 품질관리"></span></h2>
                     </div>
                 </div>
                 <div class="cui_body">
@@ -77,17 +77,21 @@
 
     var SheetDataConvert = function (data) {
         var dataJson = JSON.parse(data);
+        for(var i = 0; i < dataJson.length; i++){
+            //if(dataJson[i].AUDIT_CRITERIA != null) dataJson[i].AUDIT_CRITERIA = dataJson[i].AUDIT_CRITERIA.replaceAll("\n","<br>");
+            //if(dataJson[i].POINT_CRITERIA != null) dataJson[i].POINT_CRITERIA = dataJson[i].POINT_CRITERIA.replaceAll("\n","<br>")
+        }
         return dataJson;
     }
 
     $(function () {
-        var heightMinus = 300;
+        var heightMinus = 260;
 
         var data = SheetDataConvert($("#gridArea").attr("initData"));
 
         var obj = {
             bubble: false,
-            numberCell: { show: false, resizable: true, title: "", width: 35, minWidth: 35 },
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
             editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
@@ -95,26 +99,23 @@
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
             roundCorners: false,
             rowBorders: true,
-            showBottom: true,
+            showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
-            virtualY: true,
-            hwrap: false,
-            wrap: false,
+            wrap: true,
             autoAddRow: false,
             freezeCols:0,
-            autoRow: false,
+            autoRow: true,
             autoRowHead: false,
+            rowHt:25,
             rowInit: function () {
                 return { style: 'font-size:12px;' };
             },
@@ -134,9 +135,11 @@
             }
         };
         obj.colModel = [
-            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "MAIN_ITEM", sortable: true, editor: false, editable: false },
-            { title: "No.", width: 90, halign: "center", align: "right", dataType: "string", dataIndx: "AUDIT_ID", sortable: true, editor: false, editable: false },
-            { title: "Check List", width: 600, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false }
+            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 110, halign: "center", align: "center", dataType: "string", dataIndx: "PROVISION", sortable: true, editor: false, editable: false },
+            { title: "No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ID", sortable: true, editor: false, editable: false },
+            { data_langsid: "항목", title: siteLang.getLang("항목"), width: 190, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false },
+            { data_langsid: "판정 기준", title: siteLang.getLang("판정 기준"), width: 750, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: true, editor: false, editable: false },
+            { data_langsid: "배점 기준", title: siteLang.getLang("배점 기준"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: true, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);

@@ -71,18 +71,25 @@ var auditNcr = {
         }).trigger('resize');
 */
     	$(document).on("resize", ".layer-pop-con.ui-resizable", function(){
-    		var height = $(this).height();
-    		var gridBox  = $(this).find(".grid-box")
-    		height -= $(this).find(".w-clearfix.layer-header").height();
-    		height -= $(this).find(".layer-if").height();
-    		height -= $(this).find(".layer-footer").height();
-    		height -= 20;
-    		gridBox.height(height);
-    		if($(this).find("table.ui-jqgrid-btable").length > 0){
-    			$(this).find("table.ui-jqgrid-btable").setGridWidth(gridBox.width());
-    			$(this).find("table.ui-jqgrid-btable").setGridHeight(gridBox.height()-50);
-    		}
-    	});
+            var height = $(this).height();
+            var gridBox  = $(this).find(".grid-box");
+            height -= $(this).find(".w-clearfix.layer-header").height();
+            height -= $(this).find(".layer-if").height();
+            height -= $(this).find(".layer-footer").height();
+            height -= 20;
+            gridBox.height(height);
+
+            var grid = $(this).find(".pq-grid").pqGrid("instance");  // pqGrid 인스턴스를 가져오기
+
+            if (grid) {
+                var gridWidth = gridBox.width();
+                var gridHeight = gridBox.height() - 50;
+
+                grid.option("width", gridWidth);  // 그리드의 너비를 설정
+                grid.option("height", gridHeight);  // 그리드의 높이를 설정
+                grid.refresh();  // 그리드를 리프레시하여 새로운 사이즈 적용
+            }
+        });
     	$(".layer-popup .layer-pop-con").resizable({
     		minWidth: 300,
     		minHeight: 270

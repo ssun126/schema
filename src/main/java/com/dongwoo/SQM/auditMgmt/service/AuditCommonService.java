@@ -2,6 +2,7 @@ package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
+import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,7 +31,7 @@ public class AuditCommonService {
     @Value("${Upload.path.attach}")
     private String uploadPath;
 
-
+    //Audit 공통 제출
     public void saveCommonAuthData(String tableData, String type, int total, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
@@ -151,6 +152,10 @@ public class AuditCommonService {
         return auditMgmtRepository.getExpDateList(params);
     }
 
+    public  Map<String, String> getUserInfoMap(Map<String,Object> parameterMap) {
+        return auditMgmtRepository.getUserInfo(parameterMap);
+    }
+
     public  Map<String, String> getUserInfo(String code, String name, String type) {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_CODE", code);
@@ -159,4 +164,21 @@ public class AuditCommonService {
         return auditMgmtRepository.getUserInfo(params);
     }
 
+    //Audit 공통 승인/반려
+    public int updateStatus(String com_code, int auth_seq, String reason, String state, String auth_type) {
+        AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
+        auditMgmtDTO.setCOM_CODE(com_code);
+        auditMgmtDTO.setAUTH_SEQ(auth_seq);
+        auditMgmtDTO.setAUTH_TYPE(auth_type);
+        auditMgmtDTO.setAPPROVE_STATE(state);
+        auditMgmtDTO.setREASON(reason);
+        auditMgmtDTO.setPOINT(0); //todo 전체 점수 저장 필요
+
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int loginIdx = user.getUSER_IDX();
+        auditMgmtDTO.setUP_DW_USER_IDX(loginIdx);
+
+        //saveAuthResult(com_code, state); //인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
+        return auditMgmtRepository.updateAuth(auditMgmtDTO);  // updateItem
+    }
 }

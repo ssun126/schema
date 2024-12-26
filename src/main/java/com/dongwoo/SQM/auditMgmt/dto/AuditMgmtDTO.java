@@ -11,6 +11,8 @@ public class AuditMgmtDTO {
     private String COM_NAME;
     @JsonProperty("AUTH_TYPE")
     private String AUTH_TYPE;
+    @JsonProperty("AUTH_CODE")
+    private String AUTH_CODE;
     @JsonProperty("AUTH_SEQ")
     private int AUTH_SEQ;
     @JsonProperty("APPROVE_STATE")
@@ -28,5 +30,7 @@ public class AuditMgmtDTO {
     @JsonProperty("FILE_TYPE")
     private String FILE_TYPE;
     @JsonProperty("POINT")
-    private int POINT;
+    private double POINT;
+    @JsonProperty("REASON")
+    private String REASON;
 }

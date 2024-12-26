@@ -27,5 +27,8 @@ public class DeclarationDTO {
     @JsonProperty("DECL_GROUND")
     private String DECL_GROUND;
 
+    @JsonProperty("DECL_YN")
+    private String DECL_YN;
+
 
 }

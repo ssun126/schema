@@ -3,6 +3,7 @@ package com.dongwoo.SQM.partMgmt.controller;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.partMgmt.dto.*;
 import com.dongwoo.SQM.partMgmt.service.PartMgmtService;
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
 import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.system.service.MemberService;
@@ -13,6 +14,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -34,6 +40,7 @@ import java.util.Map;
 public class PartMgmtController {
     private final PartMgmtService partMgmtService;
     private final MemberService memberService;
+    private final com.dongwoo.SQM.siteMgr.service.BaseConfigService BaseConfigService;
 
     //메인 리스트 화면
     @RequestMapping("/matReg")
@@ -235,7 +242,7 @@ public class PartMgmtController {
 
 
     @GetMapping("/goReadDetail")
-    public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model) {
+    public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model, @RequestHeader Map<String, String> header) {
 
         PartMgmtDTO partMgmtDTO = partMgmtService.getPartData(idx);
         if (partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
@@ -274,11 +281,41 @@ public class PartMgmtController {
         model.addAttribute("svhcDTO", svhcDTO);
         log.info("svhcDTO=============================" + svhcDTO);
 
-        //declar
+        List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
+        partSvhcDTOList = partMgmtService.getSvhcData();
 
+        ObjectMapper mapper = new ObjectMapper();
+        String partSvhcListStr = null;
+        try {
+            partSvhcListStr = mapper.writeValueAsString(partSvhcDTOList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        log.info("partSvhcDTOList=============================" + partSvhcDTOList);
+
+        model.addAttribute("partSvhcList",partSvhcListStr);
+
+
+        //declar
         partDetailDeclarDTO declarDTO = partMgmtService.getDetailDeclData(idx);
         if (declarDTO == null) declarDTO = new partDetailDeclarDTO();
         model.addAttribute("declarDTO", declarDTO);
+
+        List<DeclarationDTO> declDTOList = new ArrayList<>();
+
+        declDTOList = partMgmtService.getDeclData();
+
+        ObjectMapper mapper2 = new ObjectMapper();
+        String partDeclListStr = null;
+        try {
+            partDeclListStr = mapper2.writeValueAsString(declDTOList);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        model.addAttribute("partDeclList",partDeclListStr);
+
 
         //sccs 성분 rlxk 들고가기
         partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(idx);
@@ -464,13 +501,13 @@ public class PartMgmtController {
             //if (!msdsFile.isEmpty()) {
             if(msdsFile != null){
                 if (!msdsFile.isEmpty()) {
-                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
-                    String etc_filename = msdsFile.getOriginalFilename();
+                    String msds_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
+                    String msds_filename = msdsFile.getOriginalFilename();
 
 //            MSDS_FILE_NAME=etc_filename;
 //            MSDS_FILE_PATH = etc_filepath;
-                    msdsDTO.setMSDS_FILE_NAME(etc_filename);
-                    msdsDTO.setMSDS_FILE_PATH(etc_filepath);
+                    msdsDTO.setMSDS_FILE_NAME(msds_filename);
+                    msdsDTO.setMSDS_FILE_PATH(msds_filepath);
 
                 }
             }
@@ -536,12 +573,10 @@ public class PartMgmtController {
             //HALOGEN FILE
             if (halgFile != null) {
                 String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, halgFile);
-                String etc_filename = rohsFile.getOriginalFilename();
+                String etc_filename = halgFile.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
-                rohsDTO.setROHS_FILE_NAME(etc_filename);
-                rohsDTO.setROHS_FILE_PATH(etc_filepath);
+                halGDTO.setHALOGEN_FILE_NAME(etc_filename);
+                halGDTO.setHALOGEN_FILE_PATH(etc_filepath);
 
             }
 
@@ -569,7 +604,7 @@ public class PartMgmtController {
             }
 
 
-            List<partDetailEtcDTO> etcDTOList = new ArrayList<>();
+            //List<partDetailEtcDTO> etcDTOList = new ArrayList<>();
             for (int i = 0; i < EtcCount; i++) {
                 if(request.getParameter("ETC_IDX"+(i+1)) != null) {
                     partDetailEtcDTO etcDTO = new partDetailEtcDTO();
@@ -579,19 +614,16 @@ public class PartMgmtController {
                     etcDTO.setETC_ANALYSE_ENTRY(GetParam(request, "ETC_ANALYSE_ENTRY" + (i+1), ""));
                     etcDTO.setETC_ANALYSE_RESULT(GetParam(request, "ETC_ANALYSE_RESULT" + (i+1), ""));
 
-                    if(etcFile != null){
-                        if (!etcFile[i].isEmpty()) {
-                            MultipartFile files = etcFile[i];
+                    MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("ETC_FILE" + (i+1));
+
+                    if(files != null){
 
                             String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, files);
                             String etc_filename = files.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                             etcDTO.setETC_FILE_NAME(etc_filename);
                             etcDTO.setETC_FILE_PATH(etc_filepath);
 
-                        }
                     }
 
                     if(GetParam(request, "ETC_IDX" + (i+1), "").equals("")) {
@@ -648,7 +680,12 @@ public class PartMgmtController {
             List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
             if(svhcDTO == null) {
                 svhcDTO = new PartDetailSvhcDTO();
+
+                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
+                svhcDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
+
+
 
 //            if(svhcDTO.getDATA_GUBUN().equals("WRITE")){
 //                partSvhcDTOList = partMgmtService.getSvhcData();
@@ -699,6 +736,53 @@ public class PartMgmtController {
 
         return "partMgmtList/partMgmDetailSvhc";
 
+
+    }
+
+    @RequestMapping("setSvhcExcelData")
+    public String setSvhcExcelData(HttpServletRequest request, HttpServletResponse response){
+        String partSvhcListStr = null;
+        try{
+            MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("SVHC_FILE");
+            XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
+
+            for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
+                SvhcListDTO svhcListDTO = new SvhcListDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                XSSFRow row = worksheet.getRow(i);
+
+                String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
+                String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
+
+                String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
+                String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
+                String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
+
+                svhcListDTO.setSVHC_NUM(SVHC_NUM);
+                svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
+                svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
+                svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
+                svhcListDTO.setSVHC_YN(SVHC_YN);
+
+                svhcListDTOList.add(svhcListDTO);
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            partSvhcListStr = mapper.writeValueAsString(svhcListDTOList);
+
+            PrintWriter printer = response.getWriter();
+            printer.print(partSvhcListStr);
+            printer.close();
+
+
+            } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "blank";
 
     }
 
@@ -809,6 +893,9 @@ public class PartMgmtController {
             List<DeclarationDTO> declDTOList = new ArrayList<>();
             if(declDTO == null) {
                 declDTO = new partDetailDeclarDTO();
+
+                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("DECLARATIONREV");
+                declDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
             model.addAttribute("declDTO",declDTO);
             log.info("svhcDTO=============================" + declDTO);
@@ -860,6 +947,60 @@ public class PartMgmtController {
 
     }
 
+    @RequestMapping("setDeclExcelData")
+    public String setDeclExcelData(HttpServletRequest request, HttpServletResponse response){
+        String partDeclListStr = null;
+        try{
+            MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("DECL_FILE");
+            XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            List<DeclarationDTO> declarationDTOList = new ArrayList<>();
+
+            for(int i = 4; i<worksheet.getPhysicalNumberOfRows(); i++){
+                DeclarationDTO declarationDTO = new DeclarationDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                XSSFRow row = worksheet.getRow(i);
+
+                String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+                String DECL_YN = formatter.formatCellValue(row.getCell(8));
+
+                log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                declarationDTO.setDECL_NUM(DECL_NUM);
+                declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                declarationDTO.setDECL_NAME(DECL_NAME);
+                declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                declarationDTO.setDECL_CLASS(DECL_CLASS);
+                declarationDTO.setDECL_GROUND(DECL_GROUND);
+                declarationDTO.setDECL_YN(DECL_YN);
+
+                declarationDTOList.add(declarationDTO);
+
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            partDeclListStr = mapper.writeValueAsString(declarationDTOList);
+
+            PrintWriter printer = response.getWriter();
+            printer.print(partDeclListStr);
+            printer.close();
+
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return "blank";
+
+    }
+
     @RequestMapping("/getDeclListData")
     public String  getDeclData(  HttpServletResponse response,  @RequestHeader Map<String, String> header ){
         String partDeclListStr = null;
@@ -905,17 +1046,15 @@ public class PartMgmtController {
 
         try {
 
-            //msds
             String DECL_IDX = GetParam(request, "DECL_IDX", "");
 
-            //msds file
             if(declFile != null){
                 if (!declFile.isEmpty()) {
-                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, declFile);
-                    String etc_filename = declFile.getOriginalFilename();
+                    String decl_filepath = partMgmtService.uploadFileData(PM_PART_CODE, declFile);
+                    String decl_filename = declFile.getOriginalFilename();
 
-                    declDTO.setFILE_NAME(etc_filename);
-                    declDTO.setFILE_PATH(etc_filepath);
+                    declDTO.setFILE_NAME(decl_filename);
+                    declDTO.setFILE_PATH(decl_filepath);
 
                 }
             }
@@ -1035,7 +1174,7 @@ public class PartMgmtController {
 
         try {
 
-            //msds
+            //SCCS
 //        String saveMode = GetParam(request,"SaveMode","");
 //
             String SCCS_IDX = GetParam(request, "SCCS_IDX", "");
@@ -1047,8 +1186,6 @@ public class PartMgmtController {
                     String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, sccsFile);
                     String etc_filename = sccsFile.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                     sccsDTO.setSCCS_FILE_NAME(etc_filename);
                     sccsDTO.setSCCS_FILE_PATH(etc_filepath);
 
@@ -1065,18 +1202,16 @@ public class PartMgmtController {
             }
 
 
-            //Rohs
+            //Ingredent
             String INGRED_IDX = GetParam(request, "INGRED_IDX", "");
 
 
-            //ROHS file
+            //Ingredent file
             //if (!rohsFile.isEmpty()) {
             if (ingredFile != null) {
                 String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, ingredFile);
                 String etc_filename = ingredFile.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                 ingredGDTO.setINGRED_FILE_NAME(etc_filename);
                 ingredGDTO.setINGRED_FILE_PATH(etc_filepath);
 
@@ -1108,28 +1243,29 @@ public class PartMgmtController {
             }
 
 
-            List<partDetailGuarantDTO> guarantDTOList = new ArrayList<>();
+            //List<partDetailGuarantDTO> guarantDTOList = new ArrayList<>();
             for (int i = 0; i < guarantCount; i++) {
-                if(request.getParameter("ETC_IDX"+(i+1)) != null) {
+                if(request.getParameter("GUARANT_IDX"+(i+1)) != null) {
                     partDetailGuarantDTO guarantDTO = new partDetailGuarantDTO();
                     guarantDTO.setGUARANT_IDX(GetParam(request, "GUARANT_IDX" + (i+1), ""));
                     guarantDTO.setPM_IDX(GetParam(request, "PM_IDX" , ""));
                     guarantDTO.setGUARANT_TYPE(GetParam(request, "GUARANT_TYPE" + (i+1), ""));
                     guarantDTO.setGUARANT_CONFIRM_DATE(GetParam(request, "GUARANT_CONFIRM_DATE" + (i+1), ""));
 
-                    if(guarantFile != null){
-                        if (!guarantFile[i].isEmpty()) {
-                            MultipartFile files = guarantFile[i];
+                    MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("GUARANT_FILE" + (i+1));
+
+                    if(files != null){
+//                    if(guarantFile != null){
+//                        if (!guarantFile[i].isEmpty()) {
+                            //MultipartFile files = guarantFile[i];
 
                             String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, files);
                             String etc_filename = files.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
                             guarantDTO.setGUARANT_FILE_NAME(etc_filename);
                             guarantDTO.setGUARANT_FILE_PATH(etc_filepath);
 
-                        }
+                        //}
                     }
 
                     if(GetParam(request, "GUARANT_IDX" + (i+1), "").equals("")) {

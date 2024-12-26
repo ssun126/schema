@@ -276,7 +276,12 @@
     <update id="msdsUpdate" parameterType="partDetailMsds">
         UPDATE  SC_PART_MGMT_DETAIL_MSDS
         SET MSDS_REG_DATE=#{MSDS_REG_DATE},MSDS_LANG = #{MSDS_LANG},MSDS_APPROVAL_NUM = #{MSDS_APPROVAL_NUM}
-            ,MSDS_FILE_NAME=#{MSDS_FILE_NAME} ,MSDS_FILE_PATH=#{MSDS_FILE_PATH}
+        <if test="MSDS_FILE_NAME != null and MSDS_FILE_NAME != ''">
+            <![CDATA[
+                ,MSDS_FILE_NAME=#{MSDS_FILE_NAME} ,MSDS_FILE_PATH=#{MSDS_FILE_PATH}
+            ]]>
+        </if>
+
         WHERE  MSDS_IDX = #{MSDS_IDX}
 
     </update>
@@ -284,24 +289,28 @@
     <update id="rohsUpdate" parameterType="partDetailRohs">
         UPDATE SC_PART_MGMT_DETAIL_ROHS
         set ROHS_CONFIRM_DATE= #{ROHS_CONFIRM_DATE},ROHS_CD=#{ROHS_CD},ROHS_HG = #{ROHS_HG},ROHS_PB = #{ROHS_PB}, ROHS_CR6= #{ROHS_CR6}
-            ,ROHS_PBBS = #{ROHS_PBBS},ROHS_PBDES= #{ROHS_PBDES},ROHS_DEHP = #{ROHS_DEHP},ROHS_BBP = #{ROHS_BBP},ROHS_DBP = #{ROHS_DBP}
-            ,ROHS_DIBP = #{ROHS_DIBP},ROHS_FILE_NAME= #{ROHS_FILE_NAME},ROHS_FILE_PATH = #{ROHS_FILE_PATH}
+            ,ROHS_PBBS = #{ROHS_PBBS},ROHS_PBDES= #{ROHS_PBDES},ROHS_DEHP = #{ROHS_DEHP},ROHS_BBP = #{ROHS_BBP},ROHS_DBP = #{ROHS_DBP},ROHS_DIBP = #{ROHS_DIBP}
+        <if test="ROHS_FILE_NAME != null and ROHS_FILE_NAME != ''">
+            <![CDATA[
+                ,ROHS_FILE_NAME= #{ROHS_FILE_NAME},ROHS_FILE_PATH = #{ROHS_FILE_PATH}
+            ]]>
+        </if>
+
         WHERE ROHS_IDX = #{ROHS_IDX}
     </update>
 
     <update id="halgUpdate" parameterType="partDetailHalg">
         UPDATE SC_PART_MGMT_DETAIL_HALOGEN
-        set HALOGEN_CONFIRM_DATE = #{HALOGEN_CONFIRM_DATE},HALOGEN_CL = #{HALOGEN_CL}, HALOGEN_BR = #{HALOGEN_BR},HALOGEN_CLBR = #{HALOGEN_CLBR}
-        ,HALOGEN_F = #{HALOGEN_F}, HALOGEN_I= #{HALOGEN_I},HALOGEN_FILE_NAME = #{HALOGEN_FILE_NAME},HALOGEN_FILE_PATH = #{HALOGEN_FILE_PATH}
+        set HALOGEN_CONFIRM_DATE = #{HALOGEN_CONFIRM_DATE},HALOGEN_CL = #{HALOGEN_CL}, HALOGEN_BR = #{HALOGEN_BR},HALOGEN_CLBR = #{HALOGEN_CLBR},HALOGEN_F = #{HALOGEN_F}, HALOGEN_I= #{HALOGEN_I}
+        <if test="HALOGEN_FILE_NAME != null and HALOGEN_FILE_NAME != ''">
+            <![CDATA[
+                ,HALOGEN_FILE_NAME = #{HALOGEN_FILE_NAME},HALOGEN_FILE_PATH = #{HALOGEN_FILE_PATH}
+            ]]>
+        </if>
+
         WHERE HALOGEN_IDX =#{HALOGEN_IDX}
     </update>
     
-    <update id="etcUpdate" parameterType="partDetailEtc">
-        UPDATE SC_PART_MGMT_DETAIL_ETC
-        SET ETC_CONFIRM_DATE = #{ETC_CONFIRM_DATE},ETC_ANALYSE_ENTRY = #{ETC_ANALYSE_ENTRY},ETC_ANALYSE_RESULT = #{ETC_ANALYSE_RESULT}
-                ,ETC_FILE_NAME = #{ETC_FILE_NAME},ETC_FILE_PATH = #{ETC_FILE_PATH}
-        WHERE ETC_IDX =#{ETC_IDX}
-    </update>
 
     <insert id="msdsSave" parameterType="partDetailMsds">
         INSERT INTO SC_PART_MGMT_DETAIL_MSDS(MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH)
@@ -326,7 +335,11 @@
     <update id="updateEtcData" parameterType="partDetailEtc">
         update SC_PART_MGMT_DETAIL_ETC
         set ETC_CONFIRM_DATE =#{ETC_CONFIRM_DATE},ETC_ANALYSE_ENTRY = #{ETC_ANALYSE_ENTRY},ETC_ANALYSE_RESULT = #{ETC_ANALYSE_RESULT}
-            ,ETC_FILE_NAME=#{ETC_FILE_NAME},ETC_FILE_PATH=#{ETC_FILE_PATH}
+        <if test="ETC_FILE_NAME != null and ETC_FILE_NAME != ''">
+            <![CDATA[
+                ,ETC_FILE_NAME = #{ETC_FILE_NAME},ETC_FILE_PATH = #{ETC_FILE_PATH}
+            ]]>
+        </if>
         where ETC_IDX = #{ETC_IDX}
     </update>
 
@@ -356,7 +369,13 @@
 
     <update id="svhcUpdate" parameterType="partDetailSvhc">
         UPDATE SC_PART_MGMT_SVHC_DATA
-        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        <if test="FILE_NAME != null and FILE_NAME != ''">
+            <![CDATA[
+                ,FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME}
+            ]]>
+        </if>
+
         WHERE PM_IDX =#{PM_IDX}
     </update>
 
@@ -382,7 +401,13 @@
 
     <update id="declarUpdate" parameterType="partDetailDeclar">
         UPDATE SC_PART_MGMT_DECLARATION_DATA
-        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        <if test="FILE_NAME != null and FILE_NAME != ''">
+            <![CDATA[
+                ,FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME}
+            ]]>
+        </if>
+
         WHERE DECL_IDX =#{DECL_IDX}
     </update>
 
@@ -400,7 +425,13 @@
 
     <update id="sccsUpdate" parameterType="partDetailSccs">
         UPDATE SC_PART_MGMT_DETAIL_SCCS
-        SET SCCS_CONFIRM_DATE = #{SCCS_CONFIRM_DATE},SCCS_CHAR = #{SCCS_CHAR},SCCS_FILE_NAME = #{SCCS_FILE_NAME},SCCS_FILE_PATH=#{SCCS_FILE_PATH}
+        SET SCCS_CONFIRM_DATE = #{SCCS_CONFIRM_DATE},SCCS_CHAR = #{SCCS_CHAR}
+        <if test="SCCS_FILE_NAME != null and SCCS_FILE_NAME != ''">
+            <![CDATA[
+                ,SCCS_FILE_NAME = #{SCCS_FILE_NAME},SCCS_FILE_PATH=#{SCCS_FILE_PATH}
+            ]]>
+        </if>
+
         WHERE SCCS_IDX =#{SCCS_IDX}
     </update>
 
@@ -418,7 +449,13 @@
 
     <update id="ingredUpdate" parameterType="partDetailIngred">
         UPDATE SC_PART_MGMT_DETAIL_INGRED
-        SET INGRED_CONFIRM_DATE = #{INGRED_CONFIRM_DATE},INGRED_FILE_NAME = #{INGRED_FILE_NAME},INGRED_FILE_PATH = #{INGRED_FILE_PATH}
+        SET INGRED_CONFIRM_DATE = #{INGRED_CONFIRM_DATE}
+        <if test="INGRED_FILE_NAME != null and INGRED_FILE_NAME != ''">
+            <![CDATA[
+                ,INGRED_FILE_NAME = #{INGRED_FILE_NAME},INGRED_FILE_PATH = #{INGRED_FILE_PATH}
+            ]]>
+        </if>
+
         WHERE INGRED_IDX =#{INGRED_IDX}
     </update>
 
@@ -436,14 +473,20 @@
 
     <update id="guarantUpdate" parameterType="partDetailGuarant">
         UPDATE SC_PART_MGMT_DETAIL_GUARANT
-        SET GUARANT_TYPE = #{GUARANT_TYPE},GUARANT_CONFIRM_DATE = #{GUARANT_CONFIRM_DATE},GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
+        SET GUARANT_TYPE = #{GUARANT_TYPE},GUARANT_CONFIRM_DATE = #{GUARANT_CONFIRM_DATE}
+        <if test="GUARANT_FILE_NAME != null and GUARANT_FILE_NAME != ''">
+            <![CDATA[
+                ,GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
+            ]]>
+        </if>
         WHERE GUARANT_IDX =#{GUARANT_IDX}
     </update>
 
-    <delete id="deleteGuarantData" parameterType="int">
+    <delete id="deleteguarantData" parameterType="int">
         DELETE SC_PART_MGMT_DETAIL_GUARANT
         WHERE GUARANT_IDX = #{idx}
     </delete>
+
 
 
 

@@ -21,54 +21,55 @@
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap ">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">업체코드</strong>
+                            <strong class="item_label" data-langsid="업체Code"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" placeholder="업체코드를 입력해주세요"/>
+                                <input id="comCode" name="COM_CODE" class="cui_text_field" type="text" search="searchBtn" >
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">업체명</strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" placeholder="업체명을 입력해주세요"/>
+                                <input id="comName" name="comName" class="cui_text_field" type="text" search="searchBtn" >
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left"></div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">분쟁광물</strong>
+                            <strong class="item_label" data-langsid="분쟁광물"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field">
-                                    <option value="">분쟁광물1</option>
-                                    <option value="">분쟁광물2</option>
-                                    <option value="">분쟁광물3</option>
-                                    <option value="">분쟁광물4</option>
+                                <select id="conflict" name="conflict" class="cui_select_field" onchange="ListSearch();">
+                                    <option value=""></option>
+                                    <option value="TANTALUM_YN" data-langsid="티타늄"></option>
+                                    <option value="TIN_YN" data-langsid="주석"></option>
+                                    <option value="TUNGSTEN_YN" data-langsid="텅스텐"></option>
+                                    <option value="GOLD_YN" data-langsid="금"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">책임광물</strong>
+                            <strong class="item_label" data-langsid="책임광물"></strong>
                             <div class="item_content">
-                                <select class="cui_select_field">
-                                    <option value="">책임광물1</option>
-                                    <option value="">책임광물2</option>
-                                    <option value="">책임광물3</option>
-                                    <option value="">책임광물4</option>
+                                <select id="mineral" name="mineral" class="cui_select_field" onchange="ListSearch();">
+                                    <option value=""></option>
+                                    <option value="COBALT_YN" data-langsid="코발트"></option>
+                                    <option value="MICA_YN" data-langsid="운모"></option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">Audit 구분</strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchAuditType">
-                                    <option value="">구분1</option>
-                                    <option value="">구분2</option>
-                                    <option value="">구분3</option>
-                                    <option value="">구분4</option>
+                                <select class="cui_select_field" id="searchAuditType" onchange="ListSearch();">
+                                    <option value="ISO">ISO인증</option>
+                                    <option value="LABOUR">노동환경</option>
+                                    <option value="SAFETY">안전보건/환경</option>
+                                    <option value="QUALITY">품질체계</option>
+                                    <option value="CONFILICT">분쟁/책임광물</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                     <div class="search_action">
-                        <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span>검색</span>
+                        <button type="submit" class="cui_button primary search_btn" id="searchBtn" onclick="ListSearch()"><span>검색</span>
                         </button>
                     </div>
                 </div>
@@ -120,56 +121,182 @@
             <div id="pagination" class="pagination" style="text-align: center"></div>
             <div class="table-wrapper">
             </div>
-
         </div>
     </div>
 </div>
 </body>
 </html>
 <script>
-    // 페이지네이션 처리 함수 (updatePagination)
-      function updatePagination(pageMaker) {
-          var paginationHtml = '';
-          var currentPage = pageMaker.criteria.pageNum;
-          var startPage = pageMaker.startPage;
-          var endPage = pageMaker.endPage;
-          var totalPages = pageMaker.totalPages;
+    Common.AddProperty(document.getElementById('gridArea'), 'gridColModel', function () {
+        colModel = [
 
-          // 이전 페이지 버튼
-          if (currentPage > 1) {
-              paginationHtml += `<a href="#" class="prev" data-page="${currentPage - 1}">&lt;&lt;</a>`;
+            {  data_langsid :"업체코드" , title: siteLang.getLang("업체코드"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
+            {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
+            {
+                data_langsid: "Audit일자",
+                title: siteLang.getLang("Audit일자"),
+                width: 70,
+                halign: "center",
+                align: "center",
+                dataType: "string",
+                dataIndx: "APPROVE_DATE",
+                sortable: true,
+                editor: false,
+                editable: false
+            },
+            {  data_langsid :"점수" ,title: siteLang.getLang("점수"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
+            {  data_langsid :"Audit구분" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "AUTH_TYPE", sortable: true, editor: false, editable: false },
+            {
+                data_langsid :"분쟁광물" , title: siteLang.getLang("분쟁 및 책임광물"), width: 480 , halign: "center", align: "center"
+            },
+            {  data_langsid :"분쟁결과" ,title: siteLang.getLang("점수"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
+            {  data_langsid :"책임광물" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "AUTH_TYPE", sortable: true, editor: false, editable: false },
+            {  data_langsid :"책임결과" ,title: siteLang.getLang("실시일"), width: 90, halign: "center", align: "center", dataType: "string", dataIndx: "AUTH_TYPE", sortable: true, editor: false, editable: false }
+       ];
+       return colModel;
+    });
+
+    $(document).ready(function()
+      ListSearch();
+    });
+
+    function ListSearch() {
+
+      const dto = {
+          "COM_CODE": document.getElementById('comCode').value,
+          "COM_NAME": document.getElementById('comName').value,
+          "DEPT_CODE": document.getElementById('deptCode').value,
+          "MINERAL": document.getElementById('mineral').value,
+          "COM_AUDIT_POINT_FROM": document.getElementById('pointFrom').value,
+          "COM_AUDIT_POINT_TO": document.getElementById('pointTo').value ,
+          "COM_MANAGE_STATUS": document.getElementById('comManageStatus').value
+      };
+
+      fetch('/admin/companyInfo/getCompanyInfo', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dto)
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
           }
-
-          // 페이지 번호
-          for (var i = startPage; i <= endPage; i++) {
-              if (i === currentPage) {
-                  paginationHtml += `<a href="#" class="page active" data-page="${i}">${i}</a>`;
-              } else {
-                  paginationHtml += `<a href="#" class="page" data-page="${i}">${i}</a>`;
-              }
-          }
-
-          // 다음 페이지 버튼
-          if (currentPage < totalPages) {
-              paginationHtml += `<a href="#" class="next" data-page="${currentPage + 1}">&gt;&gt;</a>`;
-          }
-
-          // 페이지네이션 HTML 업데이트
-          $('#pagination').html(paginationHtml);
-
-          // 페이지 번호 클릭 시, 해당 페이지로 데이터 로드
-          $('.page, .prev, .next').on('click', function(event) {
-              event.preventDefault();
-              var pageNum = $(this).data('page');
-              searchCompanies(pageNum);
-          });
-      }
-
-    $(document).ready(function () {
-      $('#searchBtn').on('click', function (event) {
-        event.preventDefault();  // 기본 폼 제출 동작 방지
-
-        showAlert('warning','API 연동 후 조회 가능합니다');
+          return response.json();
+      })
+      .then(data => {
+           var dataJson =data;
+           if (data && Array.isArray(data)) {
+                $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea").pqGrid("refreshView");
+           }
+      })
+      .catch(error => {
+          console.error('데이터 조회 실패:', error);
       });
+   }
+
+    function loadPage(cpcode) {
+
+          const url = "/admin/companyInfo/cpMainListDetail?com_code=" + cpcode  ;
+
+          sessionStorage.setItem('preSearch', cpcode);
+          const queryParams = {
+              cpMain_COM_CODE: document.getElementById('comCode').value,
+              cpMain_COM_NAME: document.getElementById('comName').value,
+              cpMain_DEPT_CODE: document.getElementById('deptCode').value,
+              cpMain_MINERAL: document.getElementById('mineral').value,
+              cpMain_COM_AUDIT_POINT_FROM: document.getElementById('pointFrom').value,
+              cpMain_COM_AUDIT_POINT_TO: document.getElementById('pointTo').value ,
+              cpMain_COM_MANAGE_STATUS: document.getElementById('comManageStatus').value
+          };
+
+          Object.keys(queryParams).forEach(key => {
+              sessionStorage.setItem(key, queryParams[key]);
+          });
+
+           location.href = url;
+    }
+
+    var downloadExcel = function () {
+        var grid = $("#gridArea").pqGrid("instance");
+
+        var format = "xlsx",
+            blob = grid.exportData({
+                format: format,
+                nopqdata: true,
+                render: true
+            });
+        if (typeof blob === "string") {
+            blob = new Blob([blob]);
+        }
+        saveAs(blob, "COMPANY_LIST_" + Common.GetTodayTimeString() + "." + format);
+    }
+
+    $(function () {
+       var heightMinus = 252;
+
+       var data = [];
+
+       var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 2 },
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus - $(".cui_search").height(),
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: false,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            roundCorners: false,
+            rowBorders: true,
+            showBottom: false,
+            showHeader: true,
+            showTitle: true,
+            showTop: false,
+            showToolbar: true,
+            stripeRows: false,
+            wrap: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            rowHt:25,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+           selectChange: function (event, ui) {
+           },
+           rowClick: function (event, ui) {
+           },
+           cellClick: function (event, ui) {
+           },
+           rowDblClick: function (event, ui) {
+               var data = ui.rowData;
+               const cpcode = data.COM_CODE ;
+               loadPage(cpcode) ;
+           },
+           rowSelect: function (event, ui) {
+           },
+           open: function () {
+           },
+           headerCellClick: function (event, ui) {
+           }
+       };
+       obj.colModel = $("#gridArea").get(0).gridColModel;
+       obj.dataModel = { data: data };
+       $("#gridArea").pqGrid(obj);
+       $("#gridArea").attr("gridYN", "Y");
+
+       $(window).resize(function () {
+           $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus - $(".cui_search").height());
+           $("#gridArea").pqGrid("refreshView");
+       });
+
+       ListSearch();
     });
 </script>

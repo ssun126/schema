@@ -142,6 +142,21 @@ public class AuditMgmtRestController {
                 .body(resource);
     }
 
+    //Audit 공통 승인/반려 처리
+    @PostMapping("/setAuthData")
+    public ResponseEntity<?> setAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("auth_seq")int auth_seq, @RequestParam("state")String state, @RequestParam("auth_type")String auth_type) {
+        //ISO 인증서 승인 상태 업데이트
+        int resultCnt = auditCommonService.updateStatus(com_code, auth_seq, reason, state, auth_type);
+
+        // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
+        if(resultCnt > 0){
+            return ResponseEntity.ok("Form submitted successfully!");
+        }else{
+            return ResponseEntity.ok("Form submitted fail!");
+        }
+    }
+
+
     /**
      * 노동환경 제출
      * @param fileNames

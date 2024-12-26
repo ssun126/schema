@@ -93,8 +93,8 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="MSDS_FILE" >
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" >
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME"></span></div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == null ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -164,8 +164,8 @@
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="ROHS_FILE">
                                     <input type="hidden" name="FILE_STATUS">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" ></span></div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -207,7 +207,7 @@
                         <tr>
                             <td>
                                 <input type="hidden" name="HALOGEN_IDX" th:value="${halGDTO.HALOGEN_IDX}">
-                                <input type="text" class="cui_text_field datepicker" th:value="${halGDTO.HALOGEN_CONFIRM_DATE}"  name="HALOGEN_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="" data-messages="Halogen 확인날짜 입력해주세요." messages="">
+                                <input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_CONFIRM_DATE}"  name="HALOGEN_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="" data-messages="Halogen 확인날짜 입력해주세요." messages="">
                             </td>
                             <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_CL}" name="HALOGEN_CL" reqcheck="reqcheck" data-messages="Halogen CL 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_BR}" name="HALOGEN_BR" reqcheck="reqcheck" data-messages="Halogen BR 입력해주세요." messages=""></td>
@@ -217,8 +217,8 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME"></span></div>
+                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
+                                        <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -261,10 +261,16 @@
                                     <input type="hidden" class="cui_text_field" th:name="'ETC_FLAG'+${etcStat.count}"></td>
                                 <td>
                                     <div class="cui_attachments" style="display:flex;">
-                                        <input type="file" class="cui_file_field" name="ETC_FILE">
-                                    </div>
-                                    <div class="cui_items_wrap file_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME"></span></div>
+                                        <input type="file" class="cui_file_field" th:name="'ETC_FILE'+${etcStat.count}">
+
+                                        <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${etcDTO.ETC_FILE_NAME == null ? 'display:none;' : '' }" >
+                                            <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME" th:value="${etcDTO.ETC_FILE_NAME}" th:text="${etcDTO.ETC_FILE_NAME}"></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                                ><span>다운로드</span></button>
+                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td><button type="button" class="cui_button icon"  id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제"></span></button></td>
@@ -297,7 +303,7 @@
                          + '                <td>'
                          + '                    <div class="cui_attachments" style="display:flex;">'
     <!--                     + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '">'-->
-                         + '                        <input type="file" class="cui_file_field" name="ETC_FILE">'
+                         + '                        <input type="file" class="cui_file_field" name="ETC_FILE' + etcCount + '" >'
                          + '                    </div>'
                          + '                </td>'
                          + '    <td><button type="button" class="cui_button icon" id="delRowButton"  data-cui-icon="trash"><span data-langsid="삭제">' + siteLang.getLang("삭제") + '</span></button></td>'
@@ -398,15 +404,63 @@
         }
 
         var frmDetailNext = function () {
-            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
-                mode : "confrim"
-                , okback : function () {
-                    $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                    $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                    //$("#frmDetail").submit();
-                    frmDetailSubmit();
+            //유효성체크
+            var frmObj = $("#frmDetail");
+            var isValid = false;
+            isValid = Common.Validate(frmObj);
+
+            //파일 체크
+            var flag = '';
+            if($("input[name=MSDS_FILE]") == '' && $("#MSDS_FILE_NAME").val() == '') {
+                 isValid=false;
+                 flag='MSDS';
+            }
+            if($("input[name=ROHS_FILE]") == '' && $("#ROHS_FILE_NAME]").val() == '') {
+                 isValid=false;
+                 flag='ROHS';
+            }
+            if($("input[name=HALOGEN_FILE]") == '' && $("#HALOGEN_FILE_NAME").val() == '') {
+                 isValid=false;
+                 flag='HALOGEN';
+            }
+
+            if(!isValid){
+                Common.Msg(siteLang.getLang( flag+"파일을 첨부해주십시오."));
+                return;
+            }
+
+            // etc 파일이나 데이터가 있으면 무조건 둘 다 있어야함. 데이터가 아무것도 없다면 기타는 데이터가 없을 수 있음
+            const rows = document.querySelectorAll('#etcBodyArea tr');
+
+            // 각 tr(row)에 대해 유효성 검사 수행
+            rows.forEach(row => {
+                var confirmDate = row.querySelector('[name^="ETC_CONFIRM_DATE"]').value.trim();
+                var analyseEntry = row.querySelector('[name^="ETC_ANALYSE_ENTRY"]').value.trim();
+                var analyseResult = row.querySelector('[name^="ETC_ANALYSE_RESULT"]').value.trim();
+                var fileInput = row.querySelector('[name^="ETC_FILE"]');
+                var fileName = fileInput.value.trim();
+                if(fileName == '') fileName = row.querySelector('#ETC_FILE_NAME').innerText;
+
+                // 해당 tr에 대해 모두 값이 채워졌거나 모두 비어 있어야 유효
+                if (confirmDate || analyseEntry || analyseResult || fileName) {
+                    // 값이 하나라도 있다면, 나머지 값들도 있어야 함
+                    if (!confirmDate || !analyseEntry || !analyseResult || !fileName) {
+                        isValid = false;
+                        return false; // 유효성 검사를 중지하고 오류 메시지 표시
+                    }
                 }
             });
+
+            if(!isValid){
+                Common.Msg(siteLang.getLang( "기타의 모든 항목을 채우거나 모든 항목을 비워야 합니다."));
+                return;
+            }else{
+                $("#frmDetail").find("input[name=SaveMode]").val("Next");
+                //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                //$("#frmDetail").submit();
+                frmDetailSubmit();
+            }
+
         }
     </script>
 </div>

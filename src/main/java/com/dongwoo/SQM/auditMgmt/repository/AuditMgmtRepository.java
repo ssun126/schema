@@ -1,9 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.repository;
 
-import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
-import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
-import com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO;
-import com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO;
+import com.dongwoo.SQM.auditMgmt.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -65,5 +62,10 @@ public class AuditMgmtRepository {
 
     public Map<String, String> getUserInfo(Map<String, Object> parameterMap) {
         return sql.selectOne("AuditMgmt.getUserInfo", parameterMap);
+    }
+
+    //상태 업데이트
+    public int updateStatus(AuditMgmtDTO auditMgmtDTO) {
+        return sql.update("AuditMgmt.updateStatus", auditMgmtDTO);
     }
 }

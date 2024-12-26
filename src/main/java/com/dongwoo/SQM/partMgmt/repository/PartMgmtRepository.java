@@ -176,7 +176,6 @@ public class PartMgmtRepository {
 
 
 
-
     public int updateApprovalStatus(String idx){ return sql.update("partManagement.updateApprovalStatus",idx);}
 
 

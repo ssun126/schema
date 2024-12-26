@@ -64,7 +64,7 @@
 
             var obj = {
                 bubble: false,
-                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
                 editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
                 editModel: { clicksToEdit: 2 },
                 selectionModel: { type: 'cell', mode: 'block' },
@@ -72,14 +72,12 @@
                 title: "",
                 sortable: false,
                 resizable: true,
-                menuIcon: true,
+                menuIcon: false,
                 scrollModel: { autoFit: false },
                 hoverMode: 'row',
-                rowHtHead: 30,
-                rowHt:30,
                 roundCorners: false,
                 rowBorders: true,
-                showBottom: true,
+                showBottom: false,
                 showHeader: true,
                 showTitle: true,
                 showTop: false,
@@ -90,6 +88,7 @@
                 freezeCols:0,
                 autoRow: false,
                 autoRowHead: false,
+                rowHt:25,
                 rowInit: function () {
                     return { style: 'font-size:12px;' };
                 },

@@ -37,7 +37,7 @@ public class IsoAuthItemDTO {
     @JsonProperty("REASON")
     private String REASON;
     @JsonProperty("POINT")
-    private int POINT;
+    private double POINT;
     @JsonProperty("FILE_NAME")
     private String FILE_NAME; // 파일 이름
     @JsonProperty("FILE_PATH")

@@ -18,7 +18,7 @@
             <form class="cui_form_section" data-legend="true">
                 <fieldset>
                     <legend><span>노동환경/윤리경영 (배점 10점)</span></legend>
-                    <table class="cui_table">
+                    <table class="cui_table" th:unless="${companyAuthFile == null}">
                         <colgroup>
                             <col>
                         </colgroup>
@@ -52,8 +52,8 @@
                     <span>평가점수 0 ~ 10 점</span>
                 </div>
             </div>
-            <form class="cui_border_section" data-legend="true">
-                <div class="cui_section" th:unless="${#lists.isEmpty(auditItems)}">
+            <form data-legend="true">
+                <div class="cui_section">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label">
                             <span>평가 문항</span>
@@ -61,33 +61,52 @@
                     </div>
                     <table class="cui_table">
                         <colgroup>
-                            <col style="width:120px;">
-                            <col>
-                            <col style="width:300px;">
+                            <col style="width:100px;">
+                            <col style="width:150px;">
+                            <col style="width:250px;">
                             <col style="width:200px;">
                             <col style="width:100px;">
+                            <col style="width:70px;">
+                            <col style="width:70px;">
+                            <col>
                         </colgroup>
                         <thead>
                         <tr>
+                            <th><span>구분</span></th>
                             <th><span>항목</span></th>
                             <th><span>내용</span></th>
                             <th><span>답변 가이던스</span></th>
-                            <th><span>평가점수</span></th>
-                            <th><span>답변</span></th>
+                            <th><span>평가 기준</span></th>
+                            <th><span>평가</span></th>
+                            <th><span>점수</span></th>
+                            <th><span>근거자료</span></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="data, iterStat : ${auditItems}">
+                        <tr th:unless="${#lists.isEmpty(auditItemPoint)}" th:each="data, iterStat : ${auditItemPoint}">
+                            <td><span th:text="${data.PROVISION}"></span></td>
                             <td><span th:text="${data.AUDIT_ITEM}"></span></td>
                             <td><span th:text="${data.AUDIT_DESC}"></span></td>
-                            <td><span th:text="${data.AUDIT_CRITERIA}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
                             <td><span></span></td>
-                            <td><span></span></td>
+                            <td><span th:text="${data.POINT}"></span></td>
+                            <td>
+                                <input type="text" name="AUDIT_COMMENT" class="cui_text_field"  th:value="${data.AUDIT_COMMENT}">
+                                <input type="hidden" name="AUDIT_ID" th:value="${data.AUDIT_ID}">
+                            </td>
                         </tr>
                         </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="6" style="text-align: right;">Total</td>
+                            <td id="totalPoint"></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
                     </table>
                 </div>
-                <div class="cui_section" id="resultField">
+                <div class="cui_section" id="resultField" th:if="${companyAuth.APPROVE_STATE != 'SEND'}">
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>결과</span></div>
                     </div>
@@ -101,27 +120,27 @@
                         <tbody>
                         <tr>
                             <th><span>점수</span></th>
-                            <td></td>
+                            <td th:text="${companyAuth.POINT}"></td>
                             <th><span>처리결과</span></th>
-                            <td></td>
+                            <td th:text="${companyAuth.APPROVE_STATE}"></td>
                         </tr>
                         <tr>
                             <th><span>처리자</span></th>
-                            <td></td>
+                            <td th:text="${companyAuth.UP_DW_USER_IDX}"></td>
                             <th><span>처리일자</span></th>
-                            <td></td>
+                            <td th:text="${companyAuth.APPROVE_DATE}"></td>
                         </tr>
-                        <tr id="rejectReason">
+                        <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                             <th><span>반려사유</span></th>
-                            <td colspan="3"><textarea rows="2" style="width:100%"></textarea></td>
+                            <td colspan="3"><textarea rows="2" style="width:100%" th:value="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="cui_items_wrap" data-direction="right">
+                <div class="cui_items_wrap" data-direction="right" th:if="${companyAuth.APPROVE_STATE == 'SEND'}">
                     <div class="item_content">
-                        <button type="submit" class="cui_button primary" th:onclick="approveIsoAuth(`[[${companyAuth.AUTH_SEQ}]]`)"><span>승인</span></button>
-                        <button type="submit" class="cui_button primary" th:onclick="rejectIsoAuth(`[[${companyAuth.AUTH_SEQ}]]`)"><span>반려</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="approveIsoAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="rejectIsoAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
                     </div>
                 </div>
             </form>
@@ -146,7 +165,7 @@
                     <input type="hidden" name="COM_CODE">
                     <div class="cui_items_wrap" data-direction="center" >
                         <div class="item_content" style="padding: 10px;">
-                            <label for="inputReason"></label><textarea class="cui_text_field" rows="2" style="width:100%;" id="inputReason"></textarea>
+                            <label for="inputReason"></label><textarea class="cui_text_field" rows="5" style="width:100%;" id="inputReason"></textarea>
                         </div>
                     </div>
                     <div class="cui_items_wrap" data-direction="center">
@@ -167,25 +186,110 @@
 
         $('#authState').text('');
         loadInfo();
+
+        // 평가기준에 맞게 Select box 표시 >> 선택된 값의 Total 점수 표시
+        var totalScore = 0;
+        $('#itemTable tbody tr').each(function(index, row) {
+            // 첫 번째 행은 헤더이므로 건너뜁니다.
+            //if (index === 0) return;
+
+            var $cells = $(row).find('td'); // td 요소들을 jQuery 객체로 가져옴
+            var thirdTdContent = $cells.eq(4).html() || '';  // 5번째 td의 내용을 가져오기
+            var thirdTdContentStr = thirdTdContent.replace('<span>', '').replace('</span>', '');
+            var lines = thirdTdContentStr.split('\n');  // 내용을 줄 단위로 분리
+
+            var $selectBox = $('<select></select>');  // select box 생성
+            var $baseOption = $('<option></option>');
+            $baseOption.val('');  // 빈값
+            $baseOption.text('평가');
+            $selectBox.append($baseOption);
+            // 각 줄을 옵션으로 변환하여 select box에 추가
+            lines.forEach(function(line) {
+                var cleanLine = line.replace('ㆍ', '').trim();  // "ㆍ" 문자를 제거하고 여백 제거
+                var parts = cleanLine.split(':'); // " : "을 기준으로 분리
+
+                if (parts.length === 2) {
+                    var $option = $('<option></option>');
+                    $option.val(parts[1].trim());  // 값 (예: 4)
+                    $option.text(parts[0].trim());  // 텍스트 (예: Conformance)
+                    $selectBox.append($option);
+                } else if (parts.length === 1) {
+                    var $option = $('<option></option>');
+                    $option.val('');  // 값이 없으면 빈 값을 설정
+                    $option.text(parts[0].trim());  // 항목 이름만 설정
+                    $selectBox.append($option);
+                }
+            });
+
+            // 5번째 td에 select box 추가
+            $cells.eq(5).append($selectBox);
+            // 6번째 td에 기존 점수가 있다면, 셀렉트 박스를 자동으로 설정
+            var existingScore = $cells.eq(6).text().trim();  // 7번째 td에서 기존 점수를 가져옴
+            var previousScore = 0;  // 기존 점수 저장용
+
+            if (existingScore) {
+                // 기존 점수와 일치하는 option을 셀렉트 박스에서 선택
+                $selectBox.find('option').each(function() {
+                    if ($(this).val() === existingScore) {
+                        $(this).prop('selected', true);  // 값이 일치하면 해당 option을 선택
+                        previousScore = parseFloat(existingScore);  // 기존 점수를 저장
+                        return false;  // 루프 종료
+                    }
+                });
+            }
+
+            // 7번째 td에 초기 점수 추가 (선택된 값에 따라 점수 추가)
+            if (previousScore) {
+                totalScore += previousScore;  // 기존 점수를 총점에 추가
+                $('#totalPoint').text(totalScore);
+            }
+
+            // change 이벤트 핸들러 추가
+            $selectBox.on('change', function(event) {
+                var selectedValue = $(event.target).val();  // 선택된 값
+                var selectedScore = parseFloat(selectedValue);  // 숫자 값으로 변환
+
+                // 만약 점수가 NaN이면 0으로 처리
+                if (isNaN(selectedScore)) {
+                    selectedScore = 0;
+                }
+
+                // 7번째 td에 선택된 값(점수) 표시
+                $cells.eq(6).text(selectedScore);
+
+                // 기존 점수 빼고 새로운 점수 더하기
+                totalScore -= previousScore;  // 이전 점수 빼기
+                totalScore += selectedScore;  // 새 점수 더하기
+                $('#totalPoint').text(totalScore);  // 총점 갱신
+
+                // 이전 점수를 업데이트
+                previousScore = selectedScore;  // 새 점수로 업데이트
+            });
+        });
     });
 
     //입력 파일 출력
     function loadInfo(){
         var dataSize = [[${companyAuthFile != null ? 1 : 0}]];
+        console.log(dataSize);
         if (dataSize > 0) {
             var state = '[[${companyAuthFile.APPROVE_STATE != null ? companyAuthFile.APPROVE_STATE : ''}]]';
-            if (state !== '') {
+        console.log(state);
+            if (state != '') {
                 var fileName = '[[${companyAuthFile.FILE_NAME}]]';
                 $('#downFileName').text(fileName);
                 $('#deleteButton').css("display", "block");
 
                 var approvedDate = '[[${companyAuthFile.APPROVE_DATE}]]';
-                if (state === 'SEND') {
+                if(state == 'SEND'){
                     $('#authState').text('[제출:' +approvedDate+']');
-                    $('#deleteButton').css("display", "none");
-                    $('.resultField').show();
-                    $('#sendAuth').hide();
                 }
+                if(state == 'APPROVED'){
+                    $('#authState').text('[승인:' +approvedDate+']');
+                }
+                $('#deleteButton').css("display", "none");
+                $('#resultField').show();
+
             }
         }
     }
@@ -208,54 +312,46 @@
 
     // 반려 버튼 클릭시 반려사유 입력
     function rejectIsoAuth(key){
-        console.log("key??"+key);
-        const comCode = `[[${companyAuth.COM_CODE}]]`;
+        Common.Dialog({ obj : $("#Reason"), blockClose : false });
         $('input[name="authCode"]').val(key);
-        $('input[name="COM_CODE"]').val(comCode);
-        Common.Dialog({ obj : $("#Reason"), blockClose : true });
-        //modal_open('Reason', 'add', '', '') //모달창 오픈
+        $('input[name="COM_CODE"]').val(`[[${companyAuth.COM_CODE}]]`);
+    }
+
+    // 공통 저장 처리
+    function updateIsoAuthData(state, reason, authSeq) {
+        const comCode = `[[${companyAuth.COM_CODE}]]`;  // 회사 코드
+        const type = 'LABOUR';
+        $.ajax({
+            url: '/auditMgmt/setAuthData',  // 서버의 API URL
+            type: 'POST',
+            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type },
+            success: function(response) {
+                // 상태만 변경
+                $('div[name="stateField"]').text(state); // 상태 표시 업데이트
+                showAlert('success', '데이터가 성공적으로 저장되었습니다.');
+                if (state === 'APPROVED') {
+                    loadPage(1); // 승인 시 페이지 새로고침
+                }
+            },
+            error: function() {
+                showAlert('warning', '정보를 가져오는 데 실패했습니다.');
+            }
+        });  // $.ajax 호출 끝
     }
 
     // 반려 사유 저장
     $('#ReasonAdd').on('click', function() {
-        const comCode = `[[${companyAuth.COM_CODE}]]`;
-        const authCode =  $('input[name="authCode"]').val();
+        const authSeq = $('input[name="authCode"]').val();
         const inputReason = $('#inputReason').val();  // 반려사유
         const state = 'REJECT';
-        $.ajax({
-            url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
-            type: 'POST',
-            data: { reason: inputReason, state: state, com_code: comCode, auth_code: authCode },
-            success: function(response) {
-                showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                //상태만 변경
-                $(this).closest('div[name="stateField"]').text(state);
-            },
-            error: function() {
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            }
-        });  // $.ajax 호출 끝
+        updateIsoAuthData(state, inputReason, authSeq);
     });
 
-     // 승인 버튼 클릭시 승인 처리
+    // 승인 버튼 클릭시 승인 처리
     function approveIsoAuth(key) {
-        const comCode = `[[${companyAuth.COM_CODE}]]`;
-        const authCode = key;
+        const authSeq = key;
         const state = 'APPROVED';
-        $.ajax({
-            url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
-            type: 'POST',
-            data: { reason: '', state: state, com_code: comCode, auth_code: authCode },
-            success: function(response) {
-                //상태에 승인 상태표시
-                $(this).closest('div[name="stateField"]').text(state);
-                showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                loadPage(1);
-            },
-            error: function() {
-                showAlert('warning','정보를 가져오는 데 실패했습니다.');
-            }
-        });  // $.ajax 호출 끝
+        updateIsoAuthData(state, '', authSeq);  // 승인 시에는 이유를 비워둡니다.
     }
 </script>
 </body>
