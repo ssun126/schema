@@ -479,11 +479,11 @@
         };
         obj.colModel = [
 
-            {  title: "No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NUM", sortable: true, editor: false, editable: false },
-            {  title: "Sub No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: true, editor: false, editable: false },
-            { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NAME", sortable: true, editor: false, editable: false },
-            { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: true, editor: false, editable: false },
-            { data_langsid: "해당", title: siteLang.getLang("해당"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_YN", sortable: true
+            {  title: "No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NUM", sortable: false, editor: false, editable: false },
+            {  title: "Sub No.", width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: false, editor: false, editable: false },
+            { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_NAME", sortable: false, editor: false, editable: false },
+            { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: false, editor: false, editable: false },
+            { data_langsid: "해당", title: siteLang.getLang("해당"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_YN", sortable: false
                 , editor: {
                     type : "select",
                     options : DECL_YN_SELECT_ITEMS,
@@ -512,8 +512,8 @@
 <!--                    }-->
 <!--                }-->
             },
-            { data_langsid: "함량", title: siteLang.getLang("함량"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: true, editor: false, editable: false },
-            { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: true, editor: false, editable: false }
+            { data_langsid: "함량", title: siteLang.getLang("함량"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: false, editor: false, editable: false },
+            { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: false, editor: false, editable: false }
 
         ];
         obj.dataModel = { data: data };
