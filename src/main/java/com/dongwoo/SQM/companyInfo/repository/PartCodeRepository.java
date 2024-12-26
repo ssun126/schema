@@ -35,6 +35,11 @@ public class PartCodeRepository {
         return sql.selectList("partCode.getMaterialList", params);
     }
 
+    //업체코드 팝업 조회
+    public List<HashMap> getCompanyList(Map<String, Object> params) {
+        return sql.selectList("partCode.getCompanyList", params);
+    }
+
     public List<CompanyInfoDTO> getCompanyInfoList(Criteria criteria) {
         return sql.selectList("partCode.getCompanyInfoList",criteria);
     }

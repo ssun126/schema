@@ -106,6 +106,17 @@
         from INTER_PART_MATERIAL
     </select>
 
+    <select id="getCompanyList" parameterType="map" resultType="hashMap">
+        select DISTINCT COM_CODE AS COM_CODE, COM_NAME AS COM_NAME from SC_COMPANY_CODE
+        WHERE 1=1
+        AND COM_STATUS = 'Y'
+        <if test="COM_CODE != null and COM_CODE != '' ">
+            and COM_CODE = #{COM_CODE}
+        </if>
+        <if test="COM_NAME != null and COM_NAME != '' ">
+            and COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%')
+        </if>
+    </select>
 
     <insert id="setPartCode" parameterType="companyInfo">
         INSERT INTO SC_PART_CODE
