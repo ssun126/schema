@@ -219,13 +219,16 @@ var downloadExcel = function () {
     var colModel = grid.getColModel();
     colModel[0].hidden = true;
 
-    grid.exportData({
-        url: "/common/exportData",
-        format: "xlsx",
-        zip: false,
-        filename: "COMPANY_CODE_" + Common.GetTodayTimeString(),
-        render: true
-    });
+    var format = "xlsx",
+        blob = grid.exportData({
+            format: format,
+            nopqdata: true,
+            render: true
+        });
+    if (typeof blob === "string") {
+        blob = new Blob([blob]);
+    }
+    saveAs(blob, "COMPANY_CODE_" + Common.GetTodayTimeString() + "." + format);
 
     colModel[0].hidden = false;
 }

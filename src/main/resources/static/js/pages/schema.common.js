@@ -659,6 +659,18 @@ Common.Msg = function (Msg, info) {
     }
 }
 
+//값체크
+//strValue(string) : 원본문자열, strCheck(string) : 체크문자열
+Common.Contains = function (strValue, strCheck) {
+    if (strValue == undefined || strValue == null)
+        return false;
+
+    if (strValue.indexOf(strCheck) == -1)
+        return false;
+    else
+        return true;
+}
+
 //===========================================================================================
 //제목 : Ajax
 //===========================================================================================
@@ -1521,6 +1533,13 @@ Common.EncParam = function(value) {
         var jsonString = JSON.stringify(val);
         return encodeURIComponent(jsonString);  // URL-safe하게 변환
     }
+}
+
+String.prototype.trim = function () {
+    return this.replace(/(^\s*)|(\s*$)/gi, "");
+}
+Number.prototype.trim = function () {
+    return this.replace(/(^\s*)|(\s*$)/gi, "");
 }
 
 Common.SelectBox = function(selectId, dataList, textName, valueName, defaultText = "") {

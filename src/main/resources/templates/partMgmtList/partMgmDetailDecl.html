@@ -370,38 +370,36 @@
 
         var obj = {
             bubble: false,
-            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            numberCell: { show: false, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-            editModel: { clicksToEdit: 1 },
+            editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
             height: $(window).height() - heightMinus,
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
             roundCorners: false,
             rowBorders: true,
             showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
-            virtualY: true,
-            hwrap: false,
-            wrap: false,
+            wrap: true,
             autoAddRow: false,
             freezeCols:0,
-            autoRow: false,
+            autoRow: true,
             autoRowHead: false,
+            rowHt:25,
             rowInit: function () {
                 return { style: 'font-size:12px;' };
             },
             selectChange: function (event, ui) {
+                /*
                 var rowData = ui.rowData;
                 var grid = $("#gridArea").pqGrid("instance");
                 if(rowData.DECL_NUM !== ' ' && rowData.DECL_SUB_NUM === ' '){
@@ -432,7 +430,39 @@
                     }
 
                 }
+                */
+            },
+            change: function (event, ui) {
+                var grid = $(this.element).pqGrid("instance");
 
+                if (ui.source == "paste" || ui.source == "edit" || ui.source == "update" || ui.source == "clear" || ui.source == "checkbox" || ui.source == "undo") {
+                    if (ui.updateList.length > 0) {
+                        for (var i = 0; i < ui.updateList.length; i++) {
+                            var rowInfo = ui.updateList[i];
+
+                            if (rowInfo.newRow.DECL_YN == "N") {
+                                var data = rowInfo.rowData;
+
+                                for (j = 0; j < grid.pdata.length; j++) {
+                                    if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.Contains(grid.pdata[j]["DECL_SUB_NUM"], data.DECL_NUM + "-")) {
+                                        grid.pdata[j]["DECL_YN"] = "N";
+                                    }
+                                }
+                            } else if (rowInfo.newRow.DECL_YN == "Y") {
+                                var data = rowInfo.rowData;
+                                var tmp_DECL_NUM = data.DECL_SUB_NUM.split("-")[0];
+
+                                for (j = 0; j < grid.pdata.length; j++) {
+                                    if (grid.pdata[j]["DECL_NUM"].trim() == tmp_DECL_NUM) {
+                                        grid.pdata[j]["DECL_YN"] = "Y";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $(this.element).pqGrid("refreshView");
             },
             rowClick: function (event, ui) {
             },

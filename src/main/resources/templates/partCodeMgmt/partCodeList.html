@@ -186,14 +186,16 @@
         var colModel = grid.getColModel();
         colModel[0].hidden = true;
 
-        grid.exportData({
-            url: "/common/exportData",
-            format: "xlsx",
-            zip: false,
-            filename: "PART_CODE_" + Common.GetTodayTimeString(),
-            render: true
-        });
-
+        var format = "xlsx",
+            blob = grid.exportData({
+                format: format,
+                nopqdata: true,
+                render: true
+            });
+        if (typeof blob === "string") {
+            blob = new Blob([blob]);
+        }
+        saveAs(blob, "PART_CODE_" + Common.GetTodayTimeString() + "." + format);
         colModel[0].hidden = false;
    }
 
@@ -426,7 +428,7 @@
 
 
 $(function () {
-   var heightMinus = 330;
+   var heightMinus = 252;
 
    var data = [];
 
@@ -443,36 +445,35 @@ $(function () {
     }
 
    var obj = {
-       bubble: false,
-       numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
-       editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-       editModel: { clicksToEdit: 2 },
-       selectionModel: { type: 'cell', mode: 'block' },
-       height: $(window).height() - heightMinus,
-       title: "",
-       sortable: false,
-       resizable: true,
-       menuIcon: true,
-       scrollModel: { autoFit: false },
-       hoverMode: 'row',
-       rowHtHead: 30,
-       rowHt:30,
-       roundCorners: false,
-       rowBorders: true,
-       showBottom: true,
-       showHeader: true,
-       showTitle: true,
-       showTop: false,
-       showToolbar: true,
-       stripeRows: false,
-       wrap: false,
-       autoAddRow: false,
-       freezeCols:0,
-       autoRow: false,
-       autoRowHead: false,
-       rowInit: function () {
-           return { style: 'font-size:12px;' };
-       },
+        bubble: false,
+        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
+        editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+        editModel: { clicksToEdit: 2 },
+        selectionModel: { type: 'cell', mode: 'block' },
+        height: $(window).height() - heightMinus - $(".cui_search").height(),
+        title: "",
+        sortable: false,
+        resizable: true,
+        menuIcon: false,
+        scrollModel: { autoFit: false },
+        hoverMode: 'row',
+        roundCorners: false,
+        rowBorders: true,
+        showBottom: false,
+        showHeader: true,
+        showTitle: true,
+        showTop: false,
+        showToolbar: true,
+        stripeRows: false,
+        wrap: false,
+        autoAddRow: false,
+        freezeCols:0,
+        autoRow: false,
+        autoRowHead: false,
+        rowHt:25,
+        rowInit: function () {
+            return { style: 'font-size:12px;' };
+        },
        selectChange: function (event, ui) {
        },
        rowClick: function (event, ui) {
@@ -562,7 +563,7 @@ $(function () {
    $("#gridArea").attr("gridYN", "Y");
 
    $(window).resize(function () {
-       $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+       $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus - $(".cui_search").height());
        $("#gridArea").pqGrid("refreshView");
    });
 

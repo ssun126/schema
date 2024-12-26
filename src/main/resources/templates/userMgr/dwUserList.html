@@ -611,13 +611,16 @@ $(function () {
         var colModel = grid.getColModel();
         colModel[0].hidden = true;
 
-        grid.exportData({
-            url: "/common/exportData",
-            format: "xlsx",
-            zip: false,
-            filename: "USER_INFO" + Common.GetTodayTimeString(),
-            render: true
-        });
+        var format = "xlsx",
+            blob = grid.exportData({
+                format: format,
+                nopqdata: true,
+                render: true
+            });
+        if (typeof blob === "string") {
+            blob = new Blob([blob]);
+        }
+        saveAs(blob, "USER_INFO_" + Common.GetTodayTimeString() + "." + format);
 
         colModel[0].hidden = false;
    }

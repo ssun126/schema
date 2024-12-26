@@ -142,7 +142,7 @@
     }
 
     $(function () {
-        var heightMinus = 330;
+        var heightMinus = 252;
         var PM_ACTIVE_YN_SELECT_ITEMS = ['ACTIVE', 'INACTIVE'];
 
         var data = SheetDataConvert($("#gridArea").attr("initData"));
@@ -153,7 +153,7 @@
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
             editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
-            height: $(window).height() - heightMinus,
+            height: $(window).height() - heightMinus  - $(".cui_search").height(),
             title: "",
             sortable: false,
             resizable: true,
@@ -266,7 +266,7 @@
         $("#gridArea").attr("gridYN", "Y");
 
         $(window).resize(function () {
-        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus  - $(".cui_search").height());
             $("#gridArea").pqGrid("refreshView");
         });
     });
@@ -276,14 +276,16 @@
         var colModel = grid.getColModel();
         colModel[0].hidden = true;
 
-        grid.exportData({
-            url: "/common/exportData",
-            format: "xlsx",
-            zip: false,
-            filename: "PART_MANAGEMENT_" + Common.GetTodayTimeString(),
-            render: true
-        });
-
+        var format = "xlsx",
+            blob = grid.exportData({
+                format: format,
+                nopqdata: true,
+                render: true
+            });
+        if (typeof blob === "string") {
+            blob = new Blob([blob]);
+        }
+        saveAs(blob, "PART_MANAGEMENT_" + Common.GetTodayTimeString() + "." + format);
         colModel[0].hidden = false;
     }
 
