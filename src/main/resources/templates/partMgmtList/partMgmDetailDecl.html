@@ -167,6 +167,7 @@
                     <div class="item_content">
                         <input type="hidden"  name="INFO_FLAG" >
                         <button type="button" class="cui_button primary" onclick="frmDetailSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" class="cui_button primary" onclick="frmDetailPrev();"><span data-langsid="이전"></span></button>
                         <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="다음"></span></button>
                     </div>
                 </div>
@@ -646,6 +647,12 @@
 
     }
 
+    var frmDetailPrev = function () {
+        var pmidx  = $("input[name=PM_IDX]").val();
+        //Common.MoveUrl("/user/partMgmt/goSvhcDetail?PM_IDX=" +pmidx;
+
+    }
+
     var frmDetailNext = function () {
         //유효성체크
         var frmObj = $("#frmDetail");
@@ -654,14 +661,26 @@
 
 
         //대표no의 yn값이 없으면 안됨
-        var returnVal =setApplicableNo('attach');
-        if(returnVal === 'NoneVal'){
-            isValid = false;
-            message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-        }else if(returnVal !== 'true'){
-            isValid = false;
-            message= returnVal+' 에 내용이 없습니다';
-        }
+        if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
+            var returnVal =setApplicableNo('attach');
+            if(returnVal === 'NoneVal'){
+                isValid = false;
+                message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+            }else if(returnVal !== 'true'){
+                isValid = false;
+                message= returnVal+' 에 내용이 없습니다';
+            }
+        }else{
+            var returnVal =setApplicableNo();
+            if(returnVal === 'NoneVal'){
+                isValid = false;
+                message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+            }else if(returnVal !== 'true'){
+                isValid = false;
+                message= returnVal+' 에 내용이 없습니다';
+            }
+            }
+
         //Y 일때는 하위 내용이 하나라도 Y가 있어야함
 
         if(isValid){
