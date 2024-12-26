@@ -86,7 +86,8 @@
             , pc.PART_NAME
             , cc.COM_CODE
             , cc.COM_NAME
-            --, TO_CHAR(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
+            , msds.MSDS_REG_DATE  AS REG_DATE
+        --, TO_CHAR(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
             ,TO_CHAR( ADD_MONTHS(TO_DATE(msds.MSDS_REG_DATE, 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
             SC_PART_MGMT_DETAIL_MSDS msds
@@ -121,6 +122,7 @@
         , pc.PART_NAME
         , cc.COM_CODE
         , cc.COM_NAME
+        , spmdd.CONFIRM_DATE  AS REG_DATE
         --, TO_CHAR(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
         ,TO_CHAR( ADD_MONTHS(TO_DATE(spmdd.CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
@@ -149,6 +151,7 @@
         , pc.PART_NAME
         , cc.COM_CODE
         , cc.COM_NAME
+        , spmde.ETC_CONFIRM_DATE AS REG_DATE
         --, TO_CHAR(TO_DATE(spmde.ETC_CONFIRM_DATE , 'YYYY-MM-DD') + (INTERVAL '1' YEAR), 'YYYY-MM-DD') AS EXP_DATE
         ,TO_CHAR( ADD_MONTHS(TO_DATE(spmde.ETC_CONFIRM_DATE  , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
@@ -177,6 +180,7 @@
         , pc.PART_NAME
         , cc.COM_CODE
         , cc.COM_NAME
+        , spmds.SCCS_CONFIRM_DATE AS REG_DATE
         ,TO_CHAR( ADD_MONTHS(TO_DATE(spmds.SCCS_CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
         SC_PART_MGMT_DETAIL_SCCS spmds
@@ -205,6 +209,7 @@
         , pc.PART_NAME
         , cc.COM_CODE
         , cc.COM_NAME
+        , spmdi.INGRED_CONFIRM_DATE AS REG_DATE
         ,TO_CHAR( ADD_MONTHS(TO_DATE(spmdi.INGRED_CONFIRM_DATE , 'YYYY-MM-DD'), #{EXP_MONTH}) , 'YYYY-MM-DD')  AS EXP_DATE
         FROM
         SC_PART_MGMT_DETAIL_INGRED spmdi

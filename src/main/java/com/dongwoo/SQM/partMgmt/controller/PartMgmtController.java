@@ -501,13 +501,13 @@ public class PartMgmtController {
             //if (!msdsFile.isEmpty()) {
             if(msdsFile != null){
                 if (!msdsFile.isEmpty()) {
-                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
-                    String etc_filename = msdsFile.getOriginalFilename();
+                    String msds_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
+                    String msds_filename = msdsFile.getOriginalFilename();
 
 //            MSDS_FILE_NAME=etc_filename;
 //            MSDS_FILE_PATH = etc_filepath;
-                    msdsDTO.setMSDS_FILE_NAME(etc_filename);
-                    msdsDTO.setMSDS_FILE_PATH(etc_filepath);
+                    msdsDTO.setMSDS_FILE_NAME(msds_filename);
+                    msdsDTO.setMSDS_FILE_PATH(msds_filepath);
 
                 }
             }
@@ -573,12 +573,10 @@ public class PartMgmtController {
             //HALOGEN FILE
             if (halgFile != null) {
                 String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, halgFile);
-                String etc_filename = rohsFile.getOriginalFilename();
+                String etc_filename = halgFile.getOriginalFilename();
 
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
-                rohsDTO.setROHS_FILE_NAME(etc_filename);
-                rohsDTO.setROHS_FILE_PATH(etc_filepath);
+                halGDTO.setHALOGEN_FILE_NAME(etc_filename);
+                halGDTO.setHALOGEN_FILE_PATH(etc_filepath);
 
             }
 
