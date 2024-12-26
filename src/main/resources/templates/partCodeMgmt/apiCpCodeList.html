@@ -103,6 +103,8 @@
                     var data = ui.rowData;
                     $("#CpCodeMgmt").find("input[name=COM_CODE]").val(data.COM_CODE);
                     $("#CpCodeMgmt").find("input[name=COM_NAME]").val(data.COM_NAME);
+                    $("#CpCodeMgmt").find("input[name=vendorName]").val(data.COM_NAME);
+
                     $("#CpCode").data("Hide")();
                 },
                 rowSelect: function (event, ui) {

@@ -10,13 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -50,6 +54,7 @@ public class coaMgmtController {
 //            reqParam.put("TOKEN_USER_LANG", tokenInfo.get("USER_LANG"));
 //            reqParam.put("TOKEN_SITE_ID", tokenInfo.get("SITE_ID"));
 
+            //로그인 사용자 정보
             UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String user_gubun = user.getUSER_GUBUN();
             String user_id = user.getUsername();
@@ -58,9 +63,42 @@ public class coaMgmtController {
             coaMgmtdto.setTOKEN_USER_TYPE("AU");   //user_gubun :  관리자 , 사용자 권한 구분 확인
             coaMgmtdto.setTOKEN_USER_LANG("KR");   //언어 설정 확인.
             coaMgmtdto.setTOKEN_USER_ID("tykkim@lg.com"); //user_id 유저 매핑 해야됨.   test ===  >   tester  ,tykkim@lg.com
+
+
+//            String vendorNameStr = (String) reqParam.get("vendorName");
+//            List<String> vendorNameList = new ArrayList<String>();
+//
+//            if (!StringUtils.isEmpty(vendorNameStr)) {
+//                if (vendorNameStr.indexOf("|") > -1) {
+//                    String[] vendorNameArr = vendorNameStr.split("|");
+//                    for (int i = 0 ; i < vendorNameArr.length ; i++) {
+//                        vendorNameList.add(vendorNameArr[i]);
+//                    }
+//                    coaMgmtdto.setvendorNameList(vendorNameList);
+//                }
+//            }
+
+
+//            public int deleteCompanyUser(String comCode,int useridx , List<Integer> companyUseridxList) {
+//                Map<String, Object> params = new HashMap<>();
+//                params.put("COM_CODE", comCode);
+//                params.put("USER_IDX", useridx);
+//                params.put("list", companyUseridxList);
+//                return sql.delete("Member.deleteUserinfoCompanyUser", params);
+//            }
+//
+//             <delete id="deleteUserinfoCompanyUser" parameterType="map">
+//                    DELETE FROM SC_USER_INFO_COMPANY_USER
+//            WHERE COM_CODE = #{COM_CODE} AND USER_IDX =#{USER_IDX}
+//            AND COM_USER_IDX NOT IN
+//        <foreach collection="list" item="COM_USER_IDX" open="(" separator="," close=")">
+//            #{COM_USER_IDX}
+//        </foreach>
+//    </delete>
+
+
             List<coaMgmtDTO> coaList = coaMgmtService.getCOAList(coaMgmtdto);
 
-            //System.out.println("select companyUserList: " + scoreList);
             return ResponseEntity.ok(coaList);
 
         } catch (Exception e) {

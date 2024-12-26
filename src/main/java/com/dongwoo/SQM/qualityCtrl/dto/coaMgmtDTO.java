@@ -114,8 +114,14 @@ public class coaMgmtDTO {
     private String coaNumber;
     @JsonProperty("registerName")
     private String registerName;
+    @JsonProperty("registerId")
+    private String registerId;
+
     @JsonProperty("vendorName")
     private String vendorName;
+    @JsonProperty("vendorNameList")
+    private String vendorNameList;
+
     @JsonProperty("materialName")
     private String materialName;
     @JsonProperty("coaStatus")
