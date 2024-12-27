@@ -35,6 +35,10 @@ public class SafetyHealthController {
     @GetMapping("/admin/auditMgmt/safetyHealthDetail")
     public String labourHRDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
 
+        // 업체의 인증정보 가져오기 - 인증상태/인증일
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("SAFETY", COM_CODE);
+        model.addAttribute("companyAuth", companyAuth);
+
         // 회사의  심사항목 정보를 가져옵니다.
         List<AuditItemPointDTO> auditItemPoint = safetyHealthService.getCompanyAuthItemPoint("SAFETY", COM_CODE);
         for (AuditItemPointDTO dto: auditItemPoint){
@@ -58,6 +62,10 @@ public class SafetyHealthController {
     public String GetList(Model model) {
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
+
+        // 업체의 인증정보 가져오기 - 인증상태/인증일
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("SAFETY", comCode);
+        model.addAttribute("companyAuth", companyAuth);
 
         //저장된 데이터가 있는지 확인
         List<AuditItemPointDTO> auditItemPoint = safetyHealthService.getCompanyAuthItemPoint("SAFETY", comCode);

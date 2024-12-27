@@ -36,7 +36,9 @@ public class QualityControlController {
 
     @GetMapping("/admin/auditMgmt/qualityControlDetail")
     public String GetDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
-
+// 업체의 인증정보 가져오기 - 인증상태/인증일
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("QUALITY", COM_CODE);
+        model.addAttribute("companyAuth", companyAuth);
         //저장된 데이터가 있는지 확인
         List<AuditItemPointDTO> auditItemPoint = qualityControlService.getCompanyAuthItemPoint("QUALITY", COM_CODE);
         log.info("auditItemPoint+========"+auditItemPoint);
@@ -62,7 +64,9 @@ public class QualityControlController {
         //업체의 품질관리 Audit 기본 정보를 보여준다.
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
-
+        // 업체의 인증정보 가져오기 - 인증상태/인증일
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("QUALITY", comCode);
+        model.addAttribute("companyAuth", companyAuth);
         //저장된 데이터가 있는지 확인
         List<AuditItemPointDTO> auditItemPoint = qualityControlService.getCompanyAuthItemPoint("QUALITY", comCode);
         log.info("auditItemPoint+========"+auditItemPoint);
