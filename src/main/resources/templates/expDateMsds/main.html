@@ -193,29 +193,25 @@
 
             var obj = {
                 bubble: false,
-                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
                 editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
                 editModel: { clicksToEdit: 2 },
                 selectionModel: { type: 'cell', mode: 'block' },
-                height: $(window).height() - heightMinus,
+                height: $(window).height() - heightMinus - $(".cui_search").height(),
                 title: "",
                 sortable: false,
                 resizable: true,
-                menuIcon: true,
+                menuIcon: false,
                 scrollModel: { autoFit: false },
                 hoverMode: 'row',
-                rowHtHead: 30,
-                //rowHt:30,
                 roundCorners: false,
                 rowBorders: true,
                 showBottom: false,
                 showHeader: true,
                 showTitle: true,
-                showTop: false, //excel 버튼 보이기
-                showToolbar: false,
+                showTop: false,
+                showToolbar: true,
                 stripeRows: false,
-                virtualY: true,
-                hwrap: false,
                 wrap: false,
                 autoAddRow: false,
                 freezeCols:0,
@@ -262,7 +258,7 @@
             $("#gridArea").attr("gridYN", "Y");
 
             $(window).resize(function () {
-                $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+                $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus- $(".cui_search").height());
                 $("#gridArea").pqGrid("refreshView");
             });
         });

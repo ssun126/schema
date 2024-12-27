@@ -27,6 +27,6 @@ public class partDetailHalGDTO {
     @JsonProperty("HALOGEN_FILE_PATH")
     private String HALOGEN_FILE_PATH;
 
-    @JsonProperty("FILE_STATUS")
-    private String FILE_STATUS;
+    @JsonProperty("HALOGEN_FILE_STATUS")
+    private String HALOGEN_FILE_STATUS;
 }

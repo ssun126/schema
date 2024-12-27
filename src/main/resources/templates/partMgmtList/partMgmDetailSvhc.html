@@ -90,7 +90,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck">
+                                        <input type="text" class="cui_text_field" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="날자을 입력해주세요." messages="">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${svhcDTO.WARRANTY_ITEM}" reqcheck="reqcheck" readonly="readonly">
+                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${svhcDTO.WARRANTY_ITEM}"  readonly="readonly">
                                     </div>
                                 </div>
                             </td>
@@ -539,10 +539,14 @@
                     if(!AttachStatus){
                         flag = false;
                         message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                        Common.Msg(siteLang.getLang(message));
+                        return;
                     }
                     if(!setApplicableNo('attach')){
                         flag = false;
                         message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+                        Common.Msg(siteLang.getLang(message));
+                        return;
                     }
                 }
 
@@ -555,7 +559,6 @@
                 Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                     mode : "confrim"
                     , okback : function () {
-
                         $("#frmDetail").find("input[name=SaveMode]").val("Save");
                         //$("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
                         //$("#frmDetail").submit();
@@ -575,7 +578,7 @@
 
         var frmDetailPrev = function () {
             var pmidx  = $("input[name=PM_IDX]").val();
-            //Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" +pmidx;
+            Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" +pmidx);
 
         }
 
@@ -590,24 +593,31 @@
 
             //write
             if(frmObj.find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
+                if($("input[name=SVHC_FILE]").val() === '' && $("#FILE_NAME").text() === ''){
+                    isValid = false;
+                    message= '첨부파일을 등록해 주세요';
+                    Common.Msg(siteLang.getLang(message));
+                    return;
+                }
+
+                if(!AttachStatus){
+                    isValid = false;
+                    message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                    Common.Msg(siteLang.getLang(message));
+                    return;
+                }
                 if(!setApplicableNo('attach')){
                     isValid = false;
                     message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+                    Common.Msg(siteLang.getLang(message));
+                    return;
                 }
             }else{
-                //Y 데이터 삽입
-<!--                setApplicableNo();-->
-<!--    -->
-<!--                //무조건 y 하나 이상 있어야함-->
-<!--                if($("input[name=APPLICABLE_NO]").val() === '' && $("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){-->
-<!--                    isValid=false;-->
-<!--                    $("input[name=APPLICABLE_NO]").val('');-->
-<!--                    message= '"Y로 해당되는 건이 없습니다.";-->
-<!--                    //return;-->
-<!--                }-->
                 if(!setApplicableNo()){
                     isValid = false;
                     message= 'Y로 해당되는 내용이 없습니다';
+                    Common.Msg(siteLang.getLang(message));
+                    return;
                 }
 
             }
@@ -619,8 +629,6 @@
                 //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
                 //$("#frmDetail").submit();
                 frmDetailSubmit();
-            }else{
-                Common.Msg(siteLang.getLang(message));
             }
 
         }

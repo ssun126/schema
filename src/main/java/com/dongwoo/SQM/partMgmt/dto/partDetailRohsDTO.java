@@ -37,8 +37,8 @@ public class partDetailRohsDTO {
     @JsonProperty("ROHS_FILE_PATH")
     private String ROHS_FILE_PATH;
 
-    @JsonProperty("FILE_STATUS")
-    private String FILE_STATUS;
+    @JsonProperty("ROHS_FILE_STATUS")
+    private String ROHS_FILE_STATUS;
 
 
 }

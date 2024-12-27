@@ -200,7 +200,7 @@
                         <input type="hidden"  name="INFO_FLAG" >
                         <button type="button" class="cui_button primary" onclick="frmDetailSave();"><span data-langsid="저장"></span></button>
                         <button type="button" class="cui_button primary" onclick="frmDetailPrev();"><span data-langsid="이전"></span></button>
-                        <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="다음"></span></button>
+                        <button type="button" class="cui_button primary" onclick="frmDetailNext();"><span data-langsid="승인"></span></button>
                     </div>
                 </div>
 
@@ -224,6 +224,17 @@
                          + '</tr>');
             Common.Load(newRow);
 
+            newRow.find("button[data-cui-icon=trash]").bind("click", function () {
+                var row = $(this).parent().parent();
+                var selIdx = row.find("input[name^=ETC_IDX]").val();
+                var arrDelIdx = $('input[name=ETC_DEL_IDX]').val();
+                if(selIdx != ''){
+                    if(arrDelIdx != '') arrDelIdx += ',';
+                    arrDelIdx += selIdx;
+                }
+                $('input[name=ETC_DEL_IDX]').val(arrDelIdx);
+                $(this).parent().parent().remove();
+            });
 
 
             $('#guarBodyArea').append(newRow);
@@ -314,7 +325,7 @@
 
         var frmDetailPrev = function () {
             var pmidx  = $("input[name=PM_IDX]").val();
-            Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" +pmidx;
+            Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" +pmidx);
 
         }
 
