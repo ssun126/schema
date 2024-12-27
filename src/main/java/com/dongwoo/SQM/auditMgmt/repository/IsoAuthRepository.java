@@ -61,6 +61,11 @@ public class IsoAuthRepository {
         return sql.selectOne("IsoAuthItem.findByIsoAuthItem", params);
     }
 
+    //iso 인증코드와 업체 코드로 정보 조회
+    public List<IsoAuthItemDTO> getIsoAuthItems(Map<String, Object> params) {
+        return sql.selectList("IsoAuthItem.getIsoAuthItems", params);
+    }
+
     //iso 인증코드와 업체 코드로 수 조회
     public int selectAuthItem(IsoAuthItemDTO isoAuthItemDTO) {
         return sql.selectOne("IsoAuthItem.selectAuthItem", isoAuthItemDTO);
@@ -77,7 +82,7 @@ public class IsoAuthRepository {
     }
     
     //검색어와 페이징으로 리스트 조회
-    public List<AuditMgmtDTO> searchCompanies(Map<String, Object> params) {
+    public List<IsoAuthItemDTO> searchCompanies(Map<String, Object> params) {
         return sql.selectList("IsoAuthItem.searchCompanies", params);
     }
 

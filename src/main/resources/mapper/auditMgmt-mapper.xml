@@ -22,6 +22,13 @@
         AND AUTH_SEQ = #{AUTH_SEQ}
     </update>
 
+    <update id="saveAuthResult" parameterType="authMgmt">
+        UPDATE SC_AUTH_COMPANY_INFO
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}
+        WHERE COM_CODE = #{COM_CODE}
+        AND AUTH_TYPE = #{AUTH_TYPE}
+    </update>
+
     <select id="selectAuth" parameterType="authMgmt" resultType="authMgmt">
         select * from SC_AUTH_COMPANY_INFO where AUTH_TYPE=#{AUTH_TYPE} and COM_CODE=#{COM_CODE}
     </select>
@@ -82,8 +89,8 @@
     <select id='getUserInfo' resultType="java.util.LinkedHashMap">
         SELECT
         *
-        FROM SYS_USER
-        WHERE USER_ID = #{USERID}
+        FROM SC_USER_INFO
+        WHERE USER_IDX = #{USER_IDX}
     </select>
 
     <select id="searchCompanies" parameterType="map" resultType="authMgmt">

@@ -61,11 +61,11 @@
                     </div>
                     <table class="cui_table">
                         <colgroup>
-                            <col style="width:100px;">
+                            <col style="width:90px;">
                             <col style="width:150px;">
-                            <col style="width:250px;">
+                            <col style="width:260px;">
                             <col style="width:200px;">
-                            <col style="width:100px;">
+                            <col style="width:200px;">
                             <col style="width:70px;">
                             <col style="width:70px;">
                             <col>
@@ -87,7 +87,7 @@
                             <td><span th:text="${data.PROVISION}"></span></td>
                             <td><span th:text="${data.AUDIT_ITEM}"></span></td>
                             <td><span th:text="${data.AUDIT_DESC}"></span></td>
-                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${data.AUDIT_CRITERIA}"></span></td>
                             <td style="text-align: left;"><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
                             <td><span></span></td>
                             <td><span th:text="${data.POINT}"></span></td>
@@ -318,13 +318,13 @@
     }
 
     // 공통 저장 처리
-    function updateIsoAuthData(state, reason, authSeq) {
+    function updateAuthData(state, reason, authSeq, point) {
         const comCode = `[[${companyAuth.COM_CODE}]]`;  // 회사 코드
         const type = 'LABOUR';
         $.ajax({
             url: '/auditMgmt/setAuthData',  // 서버의 API URL
             type: 'POST',
-            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type },
+            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type, point: point  },
             success: function(response) {
                 // 상태만 변경
                 $('div[name="stateField"]').text(state); // 상태 표시 업데이트
@@ -344,14 +344,15 @@
         const authSeq = $('input[name="authCode"]').val();
         const inputReason = $('#inputReason').val();  // 반려사유
         const state = 'REJECT';
-        updateIsoAuthData(state, inputReason, authSeq);
+        updateAuthData(state, inputReason, authSeq, 0.0);
     });
 
     // 승인 버튼 클릭시 승인 처리
     function approveIsoAuth(key) {
         const authSeq = key;
         const state = 'APPROVED';
-        updateIsoAuthData(state, '', authSeq);  // 승인 시에는 이유를 비워둡니다.
+        const point = $('#totalPoint').text();
+        updateAuthData(state, '', authSeq, point);
     }
 </script>
 </body>

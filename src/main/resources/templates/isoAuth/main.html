@@ -227,6 +227,7 @@
                 var fileInput = $(this).find('input[type="file"]')[0];
                 if (fileInput && fileInput.files.length > 0) {
                     row['FILE_NAME'] = fileInput.files[0].name;
+                    row['FILE_PATH'] = fileInput.files[0].path;
                 }
 
                 if(row['FILE_NAME'] == undefined){

@@ -164,21 +164,57 @@ public class AuditCommonService {
         return auditMgmtRepository.getUserInfo(params);
     }
 
+    //업체별/메뉴별 전체 Auth 상태업데이트
+    public int saveAuthResult(String com_code, String state, double totalPoint) {
+        AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
+        auditMgmtDTO.setCOM_CODE(com_code);
+        auditMgmtDTO.setAUTH_TYPE("ISO");
+        auditMgmtDTO.setAPPROVE_STATE(state);
+        auditMgmtDTO.setPOINT(totalPoint);
+
+        return auditMgmtRepository.saveAuthResult(auditMgmtDTO);
+    }
+
     //Audit 공통 승인/반려
-    public int updateStatus(String com_code, int auth_seq, String reason, String state, String auth_type) {
+    public int updateStatus(String com_code, int auth_seq, String reason, String state, String auth_type, double point) {
         AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
         auditMgmtDTO.setCOM_CODE(com_code);
         auditMgmtDTO.setAUTH_SEQ(auth_seq);
         auditMgmtDTO.setAUTH_TYPE(auth_type);
         auditMgmtDTO.setAPPROVE_STATE(state);
         auditMgmtDTO.setREASON(reason);
-        auditMgmtDTO.setPOINT(0); //todo 전체 점수 저장 필요
 
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int loginIdx = user.getUSER_IDX();
         auditMgmtDTO.setUP_DW_USER_IDX(loginIdx);
 
-        //saveAuthResult(com_code, state); //인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
+        //평가항목 Item 점수 가져오기
+        List<AuditItemPointDTO> getItemList = getCompanyAuthItemPoint(auth_type, com_code);
+        double totalPoint = 0;
+        //심사종류별 최대점수 설정
+        Map<String, Double> maxPoints = new HashMap<>();
+        maxPoints.put("LABOUR", 20.0);
+        maxPoints.put("SAFETY", 20.0);
+        maxPoints.put("QUALITY", 50.0);
+        maxPoints.put("CONFLICT", 6.0);
+        maxPoints.put("ISO", 4.0);
+
+        double maxPoint = maxPoints.getOrDefault(auth_type, 0.0); // auth_type이 없으면 0으로 설정
+        if(auth_type.equals("CONFLICT")) {
+            //입력받은 점수를 설정
+            auditMgmtDTO.setPOINT(point);//합계 점수
+        }else{
+            for (AuditItemPointDTO item : getItemList) {
+                totalPoint += item.getPOINT(); // 각 객체의 point 값을 더함
+            }
+            if(totalPoint >  maxPoint){ //심사종류별 최대점수
+                totalPoint = maxPoint;
+            }
+            auditMgmtDTO.setPOINT(totalPoint);//합계 점수
+        }
+
+
+
         return auditMgmtRepository.updateAuth(auditMgmtDTO);  // updateItem
     }
 }

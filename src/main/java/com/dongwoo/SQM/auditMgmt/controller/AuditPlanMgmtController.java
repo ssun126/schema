@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONValue;
 import org.json.JSONArray;
@@ -27,14 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/api/audit")
+@RequiredArgsConstructor
 public class AuditPlanMgmtController {
 
     @Resource(name = "commonService")
@@ -52,7 +50,7 @@ public class AuditPlanMgmtController {
      * @throws Exception
      */
 
-	@PostMapping("/auditPlanMgmt/getCodeList")
+	@PostMapping("/api/audit/auditPlanMgmt/getCodeList")
 	public ResponseEntity<Map<String, Object>> getCodeList(
 			@RequestBody String param,
 			HttpServletRequest request,
@@ -60,7 +58,7 @@ public class AuditPlanMgmtController {
 			) throws Exception {
 		Map<String, Object> responseData = new HashMap<>();
     	// JSON Parameter Parsing
-    	Map<String, Object> reqParam = commonService.jsonDataMap(param);
+    	Map<String, Object> reqParam = reqToMap(request);
     	MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
     	HttpHeaders headers = new HttpHeaders();
     	ArrayList arrayList = new ArrayList();
@@ -105,13 +103,13 @@ public class AuditPlanMgmtController {
      * @return
      * @throws Exception
      */
-	@RequestMapping(value="/auditPlanMgmt/list/{param:.+}", method = RequestMethod.GET)
+	@GetMapping("/api/audit/auditPlanMgmt/list/{param:.+}")
 	public ResponseEntity<Map<String, Object>> auditPlanMgmt(@PathVariable("param") String param,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		Map<String, Object> responseData = new HashMap<>();
     	// JSON Parameter Parsing
-    	Map<String, Object> reqParam = commonService.jsonDataMap(param);
+    	Map<String, Object> reqParam = reqToMap(request);
     	MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
 		String multiLanguage ="ko";
     	HttpHeaders headers = new HttpHeaders();
@@ -172,7 +170,7 @@ public class AuditPlanMgmtController {
      * @throws Exception
      */
 
-	@PostMapping("/auditPlanMgmt/getAuditPlanInfo")
+	@PostMapping("/api/audit/auditPlanMgmt/getAuditPlanInfo")
 	public ResponseEntity<Map<String, Object>> getAuditPlanInfo(
 			@RequestBody String param,
 			HttpServletRequest request,
@@ -180,7 +178,7 @@ public class AuditPlanMgmtController {
 			) throws Exception {
 		Map<String, Object> responseData = new HashMap<>();
     	// JSON Parameter Parsing
-    	Map<String, Object> reqParam = commonService.jsonDataMap(param);
+    	Map<String, Object> reqParam = reqToMap(request);
     	MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
     	ArrayList arrayList = new ArrayList();
     	Map<String, String> tokenInfo = (Map<String, String>) request.getAttribute("TOKEN_INFO");
@@ -271,7 +269,7 @@ public class AuditPlanMgmtController {
      * @throws Exception
      */
 
-	@PostMapping("/auditPlanMgmt/getAuditPlanCsTemplate")
+	@PostMapping("/api/audit/auditPlanMgmt/getAuditPlanCsTemplate")
 	public ResponseEntity<Map<String, Object>> getAuditPlanCsTemplate(
 			@RequestBody String param,
 			HttpServletRequest request,
@@ -279,7 +277,7 @@ public class AuditPlanMgmtController {
 			) throws Exception {
 		Map<String, Object> responseData = new HashMap<>();
     	// JSON Parameter Parsing
-    	Map<String, Object> reqParam = commonService.jsonDataMap(param);
+    	Map<String, Object> reqParam = reqToMap(request);
     	MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
     	ArrayList arrayList = new ArrayList();
     	try {
@@ -314,7 +312,7 @@ public class AuditPlanMgmtController {
      * @return
      * @throws Exception
      */
-	@GetMapping(value="/auditPlanMgmt/csTemplateFileDownload")
+	@GetMapping("/api/audit/auditPlanMgmt/csTemplateFileDownload")
 	public void pcnFileDownload(
 			@RequestParam(value="fileName", required=false) String fileName,
 			@RequestParam(value="povisFlag", required=false) String povisFlag,
@@ -363,7 +361,7 @@ public class AuditPlanMgmtController {
      * @throws Exception
      */
 
-	@RequestMapping(value="/auditPlanMgmt/csSave", method = RequestMethod.POST)
+	@PostMapping("/api/audit/auditPlanMgmt/csSave")
 	public ResponseEntity<Map<String, Object>>  csSave(
 			@RequestBody String param,
 			HttpServletRequest request,
@@ -371,7 +369,7 @@ public class AuditPlanMgmtController {
 			) throws Exception {
 		Map<String, Object> responseData = new HashMap<>();
     	// JSON Parameter Parsing
-    	Map<String, Object> reqParam = commonService.jsonDataMap(param);
+    	Map<String, Object> reqParam = reqToMap(request);
     	MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
     	try {
 			HttpHeaders headers = new HttpHeaders();
@@ -451,7 +449,7 @@ public class AuditPlanMgmtController {
      * @throws Exception
      */
 
-	@PostMapping("/auditPlanMgmt/csDownload")
+	@PostMapping("/api/audit/auditPlanMgmt/csDownload")
 	public void csDownload(
 			@RequestParam(value="fileName", required=false) String fileName,
 			@RequestParam(value="amSeq", required=false) String amSeq,
@@ -500,42 +498,39 @@ public class AuditPlanMgmtController {
      *
      * @param param
      * @param request
-     * @param response
      * @return
      * @throws Exception
      */
 
-	@RequestMapping(value="/auditPlanMgmt/csDelete", method = RequestMethod.POST)
+	@PostMapping("/auditPlanMgmt/csDelete")
 	public ResponseEntity<Map<String, Object>> csDelete(
 			@RequestBody String param,
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request
 			) throws Exception {
 		Map<String, Object> responseData = new HashMap<>();
     	// JSON Parameter Parsing
-    	Map<String, Object> reqParam = commonService.jsonDataMap(param);
+    	Map<String, Object> reqParam = reqToMap(request);
     	MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<String, Object>();
     	ArrayList arrayList = new ArrayList();
     	Map<String, String> tokenInfo = (Map<String, String>) request.getAttribute("TOKEN_INFO");
     	try {
-	    		HttpHeaders headers = new HttpHeaders();
-	   		 	Charset utf8 = Charset.forName("UTF-8");
+			HttpHeaders headers = new HttpHeaders();
+			Charset utf8 = Charset.forName("UTF-8");
 
-	   		 	headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-	   		 	headers.setAcceptCharset(Arrays.asList(Charset.forName("UTF-8")));
-	   		 	for(int i=0; i<Integer.parseInt(changeNull(reqParam.get("count")));i++){
-	   		 		bodyMap = new LinkedMultiValueMap<String, Object>();
-	   		 		HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
-	   			 	bodyMap.add("fnc", "JTAUDIM02M_ATTACH");
-	   			 	bodyMap.add("flag", "D");
-	   			 	bodyMap.add("am_seq", changeNull(reqParam.get("am_seq")));
-		      		bodyMap.add("attach_seq", (i+1)+"");
-		      		RestTemplate restTemplate = new RestTemplate();
-		      		restTemplate.getMessageConverters()
-		      		.add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
-		      		ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
-	      		}
-
+			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			headers.setAcceptCharset(Arrays.asList(Charset.forName("UTF-8")));
+			for(int i=0; i<Integer.parseInt(changeNull(reqParam.get("count")));i++){
+				bodyMap = new LinkedMultiValueMap<String, Object>();
+				HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(bodyMap, headers);
+				bodyMap.add("fnc", "JTAUDIM02M_ATTACH");
+				bodyMap.add("flag", "D");
+				bodyMap.add("am_seq", changeNull(reqParam.get("am_seq")));
+				bodyMap.add("attach_seq", (i+1)+"");
+				RestTemplate restTemplate = new RestTemplate();
+				restTemplate.getMessageConverters()
+				.add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+				ResponseEntity<String> responseEn = restTemplate.exchange(povisInterfaceURL, HttpMethod.POST, requestEntity, String.class);
+			}
 		} catch (Exception e) {
 			log.info("Exception/Start(auditPlanMgmt/csDelete)============================>");
 			log.info("",e);
@@ -544,8 +539,38 @@ public class AuditPlanMgmtController {
 
 		return ResponseEntity.ok(responseData);
 	}
-	public String changeNull(Object ob){
-		if(ob == null) return "";
+	
+	public String changeNull(Object ob) {
+		if (ob == null) return "";
 		return ob.toString();
+	}
+
+	private String GetParam(HttpServletRequest request, String pName, String pDefault) {
+		String ParamValue = request.getParameter(pName);
+
+		if (ParamValue == null || ParamValue.isEmpty()) {
+			ParamValue = pDefault;
+		};
+
+		return ParamValue;
+	}
+
+	private Map<String, Object> reqToMap(HttpServletRequest request) {
+		Map<String, Object> reqParam = new HashMap<>();
+		// 요청 파라미터를 모두 Map에 넣기
+		Enumeration<String> parameterNames = request.getParameterNames();
+		while (parameterNames.hasMoreElements()) {
+			String paramName = parameterNames.nextElement();
+			String[] paramValues = request.getParameterValues(paramName);
+
+			// 파라미터가 여러 값일 수 있으므로 배열로 저장
+			if (paramValues.length == 1) {
+				reqParam.put(paramName, paramValues[0]);
+			} else {
+				reqParam.put(paramName, paramValues);
+			}
+		}
+
+		return reqParam;
 	}
 }

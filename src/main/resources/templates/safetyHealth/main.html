@@ -207,8 +207,8 @@
                             <col style="width:100px;">
                             <col style="width:180px;">
                             <col>
-                            <col style="width:130px;">
-                            <col style="width:130px;">
+                            <col style="width:250px;">
+                            <col style="width:150px;">
                             <col style="width:70px;">
                             <col style="width:160px;">
                         </colgroup>
@@ -230,7 +230,7 @@
                             <td style="text-align: left;"><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
                             <td style="text-align: left;"><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
                             <td style="text-align: center;"></td>
-                            <td style="text-align: right;" th:text="${data.POINT}"></td>
+                            <td style="text-align: right;"><span th:text="${data.POINT % 1 == 0 ? data.POINT.intValue() : data.POINT}"></span></td>
                             <td>
                                 <input type="text" name="AUDIT_COMMENT" class="cui_text_field"  th:value="${data.AUDIT_COMMENT}">
                                 <input type="hidden" name="AUDIT_ID" th:value="${data.AUDIT_ID}">
@@ -399,7 +399,7 @@
             var $cells = $(row).find('td'); // td 요소들을 jQuery 객체로 가져옴
             var thirdTdContent = $cells.eq(3).html() || '';  // 4번째 td의 내용을 가져오기
             var thirdTdContentStr = thirdTdContent.replace('<span>', '').replace('</span>', '');
-            var lines = thirdTdContentStr.split('\n');  // 내용을 줄 단위로 분리
+            var lines = thirdTdContentStr.split('<br>');  // 내용을 줄 단위로 분리
 
             var $selectBox = $('<select></select>');  // select box 생성
             var $baseOption = $('<option></option>');

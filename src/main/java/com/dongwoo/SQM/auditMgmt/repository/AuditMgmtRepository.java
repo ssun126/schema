@@ -33,6 +33,11 @@ public class AuditMgmtRepository {
         return sql.update("AuditMgmt.updateAuth", auditMgmtDTO);
     }
 
+    //Auth 업체별/메뉴별 승인/반려 처리
+    public int saveAuthResult(AuditMgmtDTO auditMgmtDTO) {
+        return sql.update("AuditMgmt.saveAuthResult", auditMgmtDTO);
+    }
+
     //업체별-Auth type별 평가항목 insert
     public int insertItemPoint(AuditItemPointDTO auditItemPoint) {
         return sql.insert("AuditMgmt.insertItemPoint", auditItemPoint);

@@ -39,6 +39,17 @@ public class LabourHRController {
 
         // 회사의 노동환경 심사항목 정보를 가져옵니다.
         List<AuditItemPointDTO> auditItemPoint = labourHRService.getCompanyAuthItemPoint("LABOUR", COM_CODE);
+
+        log.info("auditItemPoint+========"+auditItemPoint);
+        for (AuditItemPointDTO dto: auditItemPoint){
+            String originAudit = dto.getAUDIT_CRITERIA();
+            String originPoint = dto.getPOINT_CRITERIA();
+            String formattedAudit = originAudit != null ? originAudit.replace("\n", "<br>") : "";
+            String formattedPoint = originPoint != null ? originPoint.replace("\n", "<br>") : "";
+            dto.setAUDIT_CRITERIA(formattedAudit);
+            dto.setPOINT_CRITERIA(formattedPoint);
+        }
+        log.info("dto+========"+auditItemPoint);
         model.addAttribute("auditItemPoint", auditItemPoint);
 
         LabourHRDTO companyAuthFile = labourHRService.getCompanyAuthFile("LABOUR", COM_CODE);
@@ -59,6 +70,14 @@ public class LabourHRController {
 
         // 회사의 노동환경 심사항목 정보를 가져옵니다.
         List<AuditItemPointDTO> auditItemPoint = labourHRService.getCompanyAuthItemPoint("LABOUR", comCode);
+        for (AuditItemPointDTO dto: auditItemPoint){
+            String originAudit = dto.getAUDIT_CRITERIA();
+            String originPoint = dto.getPOINT_CRITERIA();
+            String formattedAudit = originAudit != null ? originAudit.replace("\n", "<br>") : "";
+            String formattedPoint = originPoint != null ? originPoint.replace("\n", "<br>") : "";
+            dto.setAUDIT_CRITERIA(formattedAudit);
+            dto.setPOINT_CRITERIA(formattedPoint);
+        }
         model.addAttribute("auditItemPoint", auditItemPoint);
 
         LabourHRDTO companyAuthFile = labourHRService.getCompanyAuthFile("LABOUR", comCode);

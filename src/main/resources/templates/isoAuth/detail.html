@@ -63,8 +63,8 @@
                             </td>
                             <td class="stateField">
                                 <div style="padding:1px;" th:if="${data.ITEM_STATE == 'SEND'}">
-                                    <button type="button" class="cui_button first" style="height:98%" th:onclick="approveIsoAuth(`[[${companyAuth.AUTH_CODE}]]`)"><span>승인</span></button>
-                                    <button type="button" class="cui_button secondary" style="height:98%" th:onclick="rejectIsoAuth([[${data.AUTH_CODE}]])"><span>반려</span></button>
+                                    <button type="button" class="cui_button first" th:onclick="approveIsoAuth([[${data.AUTH_CODE}]])"><span>승인</span></button>
+                                    <button type="button" class="cui_button secondary" th:onclick="rejectIsoAuth([[${data.AUTH_CODE}]])"><span>반려</span></button>
                                 </div>
                                 <div th:if="${data.ITEM_STATE != 'SEND'}"><span th:text="${data.ITEM_STATE}"></span></div>
                             </td>
@@ -132,10 +132,10 @@
 
     // 반려 버튼 클릭시 반려사유 입력
     function rejectIsoAuth(key){
+        modal_open('Reason', 'add', '', '') //모달창 오픈
         const comCode = `[[${companyAuth.COM_CODE}]]`;
         $('input[name="authCode"]').val(key);
         $('input[name="COM_CODE"]').val(comCode);
-        modal_open('Reason', 'add', '', '') //모달창 오픈
     }
 
     // 반려 사유 저장
@@ -149,9 +149,9 @@
             type: 'POST',
             data: { reason: inputReason, state: state, com_code: comCode, auth_code: authCode },
             success: function(response) {
-                showAlert('success','데이터가 성공적으로 저장되었습니다.');
                 //상태만 변경
                 $(this).closest('div[class="stateField"]').text(state);
+                showAlert('success','데이터가 성공적으로 저장되었습니다.');
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
@@ -164,6 +164,7 @@
         const comCode = `[[${companyAuth.COM_CODE}]]`;
         const authCode = key;
         const state = 'APPROVED';
+        $(this).closest('div[class="stateField"]').text("aaa");
         $.ajax({
             url: '/auditMgmt/setIsoAuthData',  // 서버의 API URL
             type: 'POST',
@@ -172,7 +173,7 @@
                 //상태에 승인 상태표시
                 $(this).closest('div[class="stateField"]').text(state);
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                loadPage(1);
+                //loadPage(1);
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');
