@@ -105,6 +105,9 @@
                     $("#modalPartCode").val(data.MAT_ID);
                     $("#modalPartName").val(data.MAT_NAME);
                     $("#hdnmodalplant").val(data.PLAND_ID);
+
+                    $("#searchMaterial").find("input[name=materialName]").val(data.MAT_NAME);
+
                     $("#MaterialCode").data("Hide")();
                 },
                 rowSelect: function (event, ui) {

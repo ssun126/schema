@@ -20,34 +20,30 @@
                                 <div class="item_content">
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-<!--                                            <input type="text" id="Sch_CreateStartDate" class="cui_text_field" value="2024.12.13">-->
-<!--                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>-->
-                                            <input type="text" class="cui_text_field datepicker" id="fromDate" name="fromDate" datePickerControl="" th:value="${sStartDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="fromDate" name="fromDate" datePickerControl="" th:value="${sStartDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-<!--                                            <input type="text" id="Sch_CreateEndDate" class="cui_text_field" value="2024.12.13">-->
-<!--                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span>달력 선택</span></button>-->
-                                            <input type="text" class="cui_text_field datepicker" id="toDate" name="toDate" datePickerControl="" th:value="${sEndDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="toDate" name="toDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="cui_items_wrap" data-direction="left">
+                            <div class="cui_items_wrap" data-direction="left" id = "searchUserList">
                                 <strong class="item_label" data-langsid="등록자"></strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="registerName" name="registerName">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
+                                    <input class="cui_text_field" type="text" id="registerName" name="registerName" search="searchBtn">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selUserOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left" id = "CpCodeMgmt">
                                 <strong class="item_label" data-langsid="업체명"></strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="vendorName" name="vendorName">
+                                    <input class="cui_text_field" type="text" id="vendorName" name="vendorName" search="searchBtn">
                                     <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
@@ -57,14 +53,14 @@
                                 <div class="item_content">
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="dlvFromDate" name="dlvFromDate" datePickerControl="" th:value="${sEndDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="dlvFromDate" name="dlvFromDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
                                     <div class="field_connect">~</div>
                                     <div class="cui_items_wrap">
                                         <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="dlvToDate" name="dlvToDate" datePickerControl="" th:value="${sEndDate}">
+                                            <input type="text" class="cui_text_field datepicker" id="dlvToDate" name="dlvToDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
                                         </div>
                                     </div>
@@ -72,42 +68,43 @@
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="자재"></strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="materialName" name="materialName">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search"><span data-langsid="검색"></span></button>
+                                <div class="item_content" id="searchMaterial">
+                                    <input class="cui_text_field" type="text" id="materialName" name="materialName" search="searchBtn">
+                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selpartMatrailOpen();"><span data-langsid="검색"></span></button>
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="성적서 상태"></strong>
                                 <div class="item_content">
-                                    <select class="cui_select_field" id="coaStatus" name="coaStatus">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
+                                    <select id="coaStatus" name="coaStatus" class="cui_select_field wide" onchange="ListSearch();">
+                                        <option value=""></option>
+                                        <option th:each="Status : ${coaStatusList}"
+                                                th:value="${Status.BASE_CODE}"
+                                                th:text="${Status.BASE_NAME}">
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="cui_items_wrap required_field">
                                 <strong class="item_label">LOT NO</strong>
                                 <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="" id="lotNo" name="lotNo">
+                                    <input class="cui_text_field" type="text" placeholder="" id="lotNo" name="lotNo" search="searchBtn">
                                 </div>
                             </div>
                             <div class="cui_items_wrap" data-direction="left">
                                 <strong class="item_label" data-langsid="플랜트"></strong>
                                 <div class="item_content">
-                                    <select class="cui_select_field" id="factoryId" name="factoryId">
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
-                                        <option value="">제목</option>
+                                    <select id="factoryId" name="factoryId" class="cui_select_field wide" onchange="ListSearch();">
+                                        <option value=""></option>
+                                        <option th:each="plant : ${coaPlantList}"
+                                                th:value="${plant.BASE_CODE}"
+                                                th:text="${plant.BASE_OPTION2}">
+                                        </option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="search_action">
-<!--                            <button type="submit" class="cui_button primary search_btn" id="searchBtn"><span data-langsid="검색"></span></button>-->
                             <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
                         </div>
                     </div>
@@ -118,9 +115,12 @@
                     <div class="cui_jqGrid_head">
                         <div class="jqGrid_label"></div>
                         <div class="jqGrid_aside">
-                            <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delPartCode();"><span data-langsid="삭제"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="copy" onclick="addOpen();"><span data-langsid="복사"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="addOpen();"><span data-langsid="스팩 다운로드"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="업로드"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="check" onclick="addOpen();"><span data-langsid="등록"></span></button>
+                            <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delPartCode();"><span data-langsid="선택 삭제"></span></button>
+<!--                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>-->
                         </div>
                     </div>
                     <div class="cui_jqGrid_body" id="Grid">
@@ -136,163 +136,166 @@
 <script>
 
 
-   var ListSearch = function () {
-       var url = "/admin/qualityCtrl/getCOAList";
-
-       var ReqInfo = new Common.RequestInfo();
-       ReqInfo.AddParameter($("#searchArea"));
-
-       Common.Ajax(url, ReqInfo, function (data) {
-           var dataJson = JSON.parse(data);
-
-           for (var i = 0; i < dataJson.length; i++) {
-               dataJson[i].CHECK_YN = false;
-           }
-
-           $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
-           $("#gridArea").pqGrid("refreshView");
-       }, { contentType : "application/json" });
-   }
-
-
- var selCpCodeOpen = function () {
-    Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
-   }
-
-
-$(document).ready(function () {
-
-});
-
-
-
-$(function () {
-   var heightMinus = 330;
-
-   var data = [];
-
-
-  var RowColorChg = function (ui) {
-
-        var data = ui.rowData;
-        var coaStatus = data.COA_STATUS;
-
-            if (coaStatus == "B" || coaStatus == "C") {
-                return { style: "background-color:#A9E2F3" } ;
-            } else if (coaStatus == "D" || coaStatus == "H" || coaStatus == "K") {
-                return { style: "background-color:#F5A9A9" } ;
-            } else if (coaStatus == "E" || coaStatus == "J" ) {
-                return { style: "background-color:#FFFFFF" } ;
-            } else if (coaStatus == "F" || coaStatus == "G" || coaStatus == "I") {
-                return { style: "background-color:#FFC19E" } ;
-            } else {
-                return { style: "background-color:#E1F5A9" } ;
-            }
-    }
-
-   var obj = {
-       bubble: false,
-       numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
-       editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-       editModel: { clicksToEdit: 2 },
-       selectionModel: { type: 'cell', mode: 'block' },
-       height: $(window).height() - heightMinus,
-       title: "",
-       sortable: false,
-       resizable: true,
-       menuIcon: true,
-       scrollModel: { autoFit: false },
-       hoverMode: 'row',
-       rowHtHead: 30,
-       rowHt:30,
-       roundCorners: false,
-       rowBorders: true,
-       showBottom: true,
-       showHeader: true,
-       showTitle: true,
-       showTop: false,
-       showToolbar: true,
-       stripeRows: false,
-       wrap: false,
-       autoAddRow: false,
-       freezeCols:0,
-       autoRow: false,
-       autoRowHead: false,
-       rowInit: function () {
-           return { style: 'font-size:12px;' };
-       },
-       selectChange: function (event, ui) {
-       },
-       rowClick: function (event, ui) {
-       },
-       cellClick: function (event, ui) {
-       },
-       rowDblClick: function (event, ui) {
-           var data = ui.rowData;
-           const part_code = data.PART_CODE ;
-           const plant_code = data.PLANT_CODE ;
-
-           Common.Dialog({ obj : $("#PartCodeMgmt"), blockClose : false });
-           getModPop(part_code,plant_code);
-       },
-       rowSelect: function (event, ui) {
-       },
-       open: function () {
-       },
-       headerCellClick: function (event, ui) {
-       }
-   };
-   obj.colModel = [
-       {
-           dataIndx: "CHECK_YN", width: 40, halign: "center", align: "center", resizable: true,
-           title: "",
-           type: 'checkBoxSelection', sortable: true, editor: true, editable: true,
-           dataType: 'bool',
-           cb: {
-               all: false,
-               header: false
-           }, render: function (ui) {
-
-               if (ui.cellData == undefined) {
-                   return { text: "" };
-               } else {
-                   return;
+       var ListSearch = function () {
+           var url = "/admin/qualityCtrl/getCOAList";
+           var ReqInfo = new Common.RequestInfo();
+           ReqInfo.AddParameter($("#searchArea"));
+           Common.Ajax(url, ReqInfo, function (data) {
+               var dataJson = JSON.parse(data);
+               for (var i = 0; i < dataJson.length; i++) {
+                   dataJson[i].CHECK_YN = false;
                }
+               $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+               $("#gridArea").pqGrid("refreshView");
+           }, { contentType : "application/json" });
+       }
 
-                var data = ui.rowData;
-                var coaStatus = data.COA_STATUS;
+       var selCpCodeOpen = function () {
+        Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
+       }
 
+       var selUserOpen = function () {
+        Common.Dialog({ url : "/admin/qualityCtrl/userList" });
+       }
+
+       var selpartMatrailOpen = function () {
+        Common.Dialog({ url : "/admin/companyInfo/materialList" });
+       }
+
+
+       var popCoaOpen = function () {
+        Common.Dialog({ url : "/admin/qualityCtrl/popCoa" });
+       }
+
+    $(function () {
+       var heightMinus = 330;
+       var data = [];
+
+      var RowColorChg = function (ui) {
+
+            var data = ui.rowData;
+            var coaStatus = data.COA_STATUS;
+
+                if (coaStatus == "B" || coaStatus == "C") {
+                    return { style: "background-color:#A9E2F3" } ;
+                } else if (coaStatus == "D" || coaStatus == "H" || coaStatus == "K") {
+                    return { style: "background-color:#F5A9A9" } ;
+                } else if (coaStatus == "E" || coaStatus == "J" ) {
+                    return { style: "background-color:#FFFFFF" } ;
+                } else if (coaStatus == "F" || coaStatus == "G" || coaStatus == "I") {
+                    return { style: "background-color:#FFC19E" } ;
+                } else {
+                    return { style: "background-color:#E1F5A9" } ;
+                }
+        }
+
+       var obj = {
+           bubble: false,
+           numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+           editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+           editModel: { clicksToEdit: 2 },
+           selectionModel: { type: 'cell', mode: 'block' },
+           height: $(window).height() - heightMinus,
+           title: "",
+           sortable: false,
+           resizable: true,
+           menuIcon: true,
+           scrollModel: { autoFit: false },
+           hoverMode: 'row',
+           rowHtHead: 30,
+           rowHt:30,
+           roundCorners: false,
+           rowBorders: true,
+           showBottom: true,
+           showHeader: true,
+           showTitle: true,
+           showTop: false,
+           showToolbar: true,
+           stripeRows: false,
+           wrap: false,
+           autoAddRow: false,
+           freezeCols:0,
+           autoRow: false,
+           autoRowHead: false,
+           rowInit: function () {
+               return { style: 'font-size:12px;' };
+           },
+           selectChange: function (event, ui) {
+           },
+           rowClick: function (event, ui) {
+           },
+           cellClick: function (event, ui) {
+           },
+           rowDblClick: function (event, ui) {
+               var data = ui.rowData;
+               //const part_code = data.PART_CODE ;
+               //const plant_code = data.PLANT_CODE ;
+
+               //Common.Dialog({ obj : $("#popCOA"), blockClose : false });
+               //getModPop(part_code,plant_code);
+
+               popCoaOpen();
+           },
+           rowSelect: function (event, ui) {
+           },
+           open: function () {
+           },
+           headerCellClick: function (event, ui) {
            }
-       },
-       {  data_langsid :"COA ID" ,title: siteLang.getLang("COA ID"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "COA_ID", sortable: true, editor: false, editable: false ,render: RowColorChg} ,
-       {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "VENDOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_ID", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"공장명" ,title: siteLang.getLang("공장명"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"LOT NO." ,title: siteLang.getLang("LOT NO."), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "LOT_NO", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"Quantity(KG)" ,title: siteLang.getLang("Quantity(KG)"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "QUANTITY", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"출하일" ,title: siteLang.getLang("출하일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "STOCK_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"제조일" ,title: siteLang.getLang("제조일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "MF_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"만료일" ,title: siteLang.getLang("만료일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "E_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"COA 상태" ,title: siteLang.getLang("COA 상태"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "COA_STATUS_STR", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"유효" ,title: siteLang.getLang("유효"), width: 50, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_IN", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"작성자" ,title: siteLang.getLang("작성자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "CREATOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"등록일시" ,title: siteLang.getLang("등록일시"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "CREATE_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"작업자" ,title: siteLang.getLang("작업자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "IF_USER", sortable: true, editor: false, editable: false ,render: RowColorChg},
-       {  data_langsid :"수신일자" ,title: siteLang.getLang("수신일자"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "IF_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg}
+       };
+       obj.colModel = [
+           {
+               dataIndx: "CHECK_YN", width: 40, halign: "center", align: "center", resizable: true,
+               title: "",
+               type: 'checkBoxSelection', sortable: true, editor: true, editable: true,
+               dataType: 'bool',
+               cb: {
+                   all: false,
+                   header: false
+               }, render: function (ui) {
 
-   ];
-   obj.dataModel = { data: data };
-   $("#gridArea").pqGrid(obj);
-   $("#gridArea").attr("gridYN", "Y");
+                   if (ui.cellData == undefined) {
+                       return { text: "" };
+                   } else {
+                       return;
+                   }
 
-   $(window).resize(function () {
-       $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
-       $("#gridArea").pqGrid("refreshView");
-   });
+                    var data = ui.rowData;
+                    var coaStatus = data.COA_STATUS;
 
-   ListSearch();
-});
+               }
+           },
+           {  data_langsid :"COA ID" ,title: siteLang.getLang("COA ID"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "COA_ID", sortable: true, editor: false, editable: false ,render: RowColorChg} ,
+           {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "VENDOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_ID", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"공장명" ,title: siteLang.getLang("공장명"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"LOT NO." ,title: siteLang.getLang("LOT NO."), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "LOT_NO", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"Quantity(KG)" ,title: siteLang.getLang("Quantity(KG)"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "QUANTITY", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"출하일" ,title: siteLang.getLang("출하일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "STOCK_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"제조일" ,title: siteLang.getLang("제조일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "MF_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"만료일" ,title: siteLang.getLang("만료일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "E_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"COA 상태" ,title: siteLang.getLang("COA 상태"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "COA_STATUS_STR", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"유효" ,title: siteLang.getLang("유효"), width: 50, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_IN", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"작성자" ,title: siteLang.getLang("작성자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "CREATOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"등록일시" ,title: siteLang.getLang("등록일시"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "CREATE_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"작업자" ,title: siteLang.getLang("작업자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "IF_USER", sortable: true, editor: false, editable: false ,render: RowColorChg},
+           {  data_langsid :"수신일자" ,title: siteLang.getLang("수신일자"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "IF_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg}
 
+       ];
+       obj.dataModel = { data: data };
+       $("#gridArea").pqGrid(obj);
+       $("#gridArea").attr("gridYN", "Y");
 
+       $(window).resize(function () {
+           $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+           $("#gridArea").pqGrid("refreshView");
+       });
+
+       ListSearch();
+    });
+
+    $(document).ready(function () {
+
+    });
 </script>

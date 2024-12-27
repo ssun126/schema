@@ -67,7 +67,8 @@
             </div>
 
             <div class="cui_section">
-                <textarea  class="cui_text_field" type="text" name="BOARD_DESC" cols="30" rows="20" readonly th:text="${board.BOARD_DESC}"></textarea>
+                <textarea  class="cui_text_field" type="text" name="BOARD_DESC" cols="30" rows="20" style="display:none;" readonly th:text="${board.BOARD_DESC}"></textarea>
+                [(${board.BOARD_DESC})]
             </div>
             <div class="cui_attachments list" th:if="${board.FILE_SHOTNAME != null && board.FILE_SHOTNAME.trim() != ''}">
                 <div class="cui_attachments_head">
@@ -125,7 +126,7 @@
                 </div>
 
                 <div class="cui_section">
-                    <textarea class="cui_text_field" type="text" name="ANSWER" cols="30" rows="5" readonly th:text="${board.ANSWER}"></textarea>
+                    <textarea class="cui_text_field" type="text" name="ANSWER" cols="30" rows="5" readonly th:text="${board.ANSWER}" editerMode="true"></textarea>
                 </div>
 
                 <div class="cui_attachments list" th:if="${board.ANSWER_FILE_SHOTNAME != null && board.ANSWER_FILE_SHOTNAME.trim() != ''}">

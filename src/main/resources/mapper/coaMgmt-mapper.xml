@@ -4,6 +4,24 @@
 
 <mapper namespace="coaMgmt">
 
+    <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
+        SELECT * FROM  SC_base_code
+        WHERE  GROUP_CODE != BASE_CODE
+        AND BASE_STATUS ='Y'
+        AND GROUP_CODE  =#{GROUP_CODE}
+        ORDER BY BASE_SORT ASC
+    </select>
+
+    <select id="GetBaseCodePLANT"  parameterType="String" resultType="baseCode">
+        SELECT * FROM  SC_base_code
+        WHERE  GROUP_CODE != BASE_CODE
+        AND BASE_STATUS ='Y'
+        AND GROUP_CODE  =#{GROUP_CODE}
+        AND BASE_OPTION2 IS NOT null
+        ORDER BY BASE_SORT ASC
+    </select>
+
+
     <select id="getCOAList"  parameterType="coaMgmt" resultType="coaMgmt">
         SELECT
         CM.COA_ID
@@ -134,6 +152,31 @@
         ORDER BY COA_ID DESC
     </select>
 
+
+    <select id="getUserList"  parameterType="map" resultType="hashMap">
+        SELECT
+        u.USER_IDX,
+        u.USER_ID,
+        u.USER_PWD,
+        u.USER_NAME,
+        u.USER_GUBN,
+        u.USER_STATUS,
+        u.REG_DW_USER_IDX,
+        u.UP_DW_USER_IDX,
+        u.DEL_DW_USER_IDX,
+        TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
+        u.UP_DATE,
+        u.DEL_DATE
+        FROM SC_USER_INFO u
+        WHERE 1=1
+        AND  u.USER_STATUS = 'Y'
+        <if test="USER_ID != null and USER_ID != ''">
+            AND u.USER_ID LIKE '%' || #{USER_ID} || '%'
+        </if>
+        <if test="USER_NAME != null and USER_NAME != ''">
+            AND u.USER_NAME LIKE '%' || #{USER_NAME} || '%'
+        </if>
+    </select>
 
 
 </mapper>

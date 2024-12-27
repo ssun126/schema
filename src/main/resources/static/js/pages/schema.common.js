@@ -1076,7 +1076,8 @@ Common.Load = function (Obj) {
         var thisObj = $(this);
         thisObj.datepicker({
             dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
-        });
+
+        }).css('z-index', 999);
         var nextObj = thisObj.next();
         if (nextObj && nextObj.attr("data-cui-icon") && nextObj.attr("data-cui-icon") == "calendar") {
             nextObj.bind("click", function () {
@@ -1087,6 +1088,46 @@ Common.Load = function (Obj) {
                 }
             });
         }
+    });
+
+    Obj.find('textarea[editerMode=true]').each(function () {
+        var thisObj = $(this);
+        $(this).summernote({
+            lang: 'ko-KR',
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['codeview', ['codeview']],
+                ['misc', ['undo', 'redo']]
+            ],
+            height: $(this).css("height"),
+            dialogsInBody: true,
+            disableDragAndDrop: false,
+            fontNames: ['돋움', '돋움체', '굴림', '굴림체', '바탕', '바탕체', '궁서', 'Arial', 'Tahoma', 'Times New Roman', 'Verdana'],
+            fontNamesIgnoreCheck: ['돋움'],
+            fontName: '돋움',
+            callbacks: {
+                onEnter: function (e) {
+                    // You may replace `c` with whatever key you want
+                    if ((e.metaKey || e.ctrlKey) && e.which == 13) {
+                        Common.EventCancelBubble(e);
+                        Common.EventReturnValue(e);
+                    }
+                }
+            }
+        });
+
+        thisObj.data("Text", function (text) {
+            setTimeout(function () {
+                thisObj.next().find(".panel-body").html(text);
+            }, 100);
+            thisObj.val(text);
+        });
     });
 }
 

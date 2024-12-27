@@ -1,0 +1,131 @@
+<div class="cui_dialog" style="width:880px;display:none;" id="UserList">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span data-langsid="등록자 선택"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <div class="cui_search">
+                    <div class="search_list cui_grid_wrap " id="searchAreaCpCode">
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="아이디"></strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="searchUserid" name="searchUserid" search="searchBtnCpCode" data-langsid="업체코드를 입력해주세요" placeholder=""/>
+                            </div>
+                        </div>
+                        <div class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="이름"></strong>
+                            <div class="item_content">
+                                <input class="cui_text_field" type="text" id="searchUserName" name="searchUserName" search="searchBtnCpCode" data-langsid="업체명을 입력해주세요" placeholder=""/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search_action">
+                        <button type="button" class="cui_button primary search_btn" id="searchBtnCpCode" onclick="ListSearchCpCode();"><span data-langsid="검색"></span></button>
+                    </div>
+                </div>
+
+                <div class="cui_jqGrid_section">
+                    <div class="cui_jqGrid_head">
+                        <div class="jqGrid_label"> &nbsp;</div>
+                        <div class="jqGrid_aside">
+
+                        </div>
+                    </div>
+                    <div class="cui_jqGrid_body" id="Grid">
+                        <div id="gridArea_CpCode" gridYN=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ListSearchCpCode = function () {
+
+            var url = "/admin/qualityCtrl/getUserList";
+
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#searchAreaCpCode"));
+
+            Common.Ajax(url, ReqInfo, function (data) {
+                var dataJson = JSON.parse(data);
+
+                $("#gridArea_CpCode").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea_CpCode").pqGrid("refreshView");
+            });
+        }
+
+        $(function () {
+            var data = [];
+
+            var obj = {
+                bubble: false,
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
+                editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+                editModel: { clicksToEdit: 2 },
+                selectionModel: { type: 'cell', mode: 'block' },
+                height: 500,
+                title: "",
+                sortable: false,
+                resizable: true,
+                menuIcon: false,
+                scrollModel: { autoFit: false },
+                hoverMode: 'row',
+                roundCorners: false,
+                rowBorders: true,
+                showBottom: false,
+                showHeader: true,
+                showTitle: true,
+                showTop: false,
+                showToolbar: true,
+                stripeRows: false,
+                wrap: false,
+                autoAddRow: false,
+                freezeCols:0,
+                autoRow: false,
+                autoRowHead: false,
+                rowHt:25,
+                rowInit: function () {
+                    return { style: 'font-size:12px;' };
+                },
+                selectChange: function (event, ui) {
+                },
+                rowClick: function (event, ui) {
+                },
+                cellClick: function (event, ui) {
+                },
+                rowDblClick: function (event, ui) {
+                    var data = ui.rowData;
+                    $("#searchUserList").find("input[name=USER_ID]").val(data.USER_ID);
+                    $("#searchUserList").find("input[name=USER_NAME]").val(data.USER_NAME);
+                    $("#searchUserList").find("input[name=registerName]").val(data.USER_NAME);
+
+                    $("#UserList").data("Hide")();
+                },
+                rowSelect: function (event, ui) {
+                },
+                open: function () {
+                },
+                headerCellClick: function (event, ui) {
+                }
+            };
+            obj.colModel = [
+                { data_langsid: "아이디", title: siteLang.getLang("아이디"), width: 200, halign: "center", align: "left", dataType: "string", dataIndx: "USER_ID", sortable: true, editor: false, editable: false },
+                { data_langsid: "이름", title: siteLang.getLang("이름"), width: 250, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+            ];
+            obj.dataModel = { data: data };
+            $("#gridArea_CpCode").pqGrid(obj);
+            $("#gridArea_CpCode").attr("gridYN", "Y");
+        });
+
+        $(document).ready(function() {
+            ListSearchCpCode();
+        });
+    </script>
+</div>
