@@ -350,6 +350,22 @@
                 else   dataJson[i].DECL_YN='N';
             }
 
+            if (dataJson[i].DECL_NUM.trim() == "") {
+                dataJson[i].pq_hidden = true;
+            } else {
+                var SubExt = false;
+                for(var j = 0; j < dataJson.length; j++){
+                    if (Common.Contains(dataJson[j]["DECL_SUB_NUM"], dataJson[i].DECL_NUM + "-")) {
+                        SubExt = true;
+                        break;
+                    }
+                }
+                if (SubExt) {
+                    dataJson[i].SubItemsExists = true;
+                } else {
+                    dataJson[i].SubItemsExists = false;
+                }
+            }
         }
 
         return dataJson;
@@ -365,6 +381,40 @@
             $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
             $("#gridArea").pqGrid("refreshView");
         });
+    }
+
+    var SheetShowHide = function (Obj) {
+        var grid = $("#gridArea").pqGrid("instance");
+
+        var rowList = grid.search( {
+            row: { DECL_NUM : Obj.attr("DECL_NUM") }
+        });
+
+        if (Obj.hasClass("ui-icon-triangle-1-e")) {
+            Obj.removeClass("ui-icon-triangle-1-e");
+            Obj.addClass("ui-icon-triangle-1-se");
+
+            for (j = 0; j < grid.pdata.length; j++) {
+                if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.Contains(grid.pdata[j]["DECL_SUB_NUM"], Obj.attr("DECL_NUM") + "-")) {
+                    grid.pdata[j].pq_hidden = false;
+                }
+            }
+
+            rowList[0].rowData.SubShowHide = true;
+        } else {
+            Obj.addClass("ui-icon-triangle-1-e");
+            Obj.removeClass("ui-icon-triangle-1-se");
+
+            for (j = 0; j < grid.pdata.length; j++) {
+                if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.Contains(grid.pdata[j]["DECL_SUB_NUM"], Obj.attr("DECL_NUM") + "-")) {
+                    grid.pdata[j].pq_hidden = true;
+                }
+            }
+
+            rowList[0].rowData.SubShowHide = false;
+        }
+
+        $("#gridArea").pqGrid("refreshView");
     }
 
     $(function () {
@@ -486,7 +536,24 @@
         obj.colModel = [
 
             {  title: "No.", width: 50, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_NUM", sortable: false, editor: false, editable: false },
-            {  title: "Sub No.", width: 75, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: false, editor: false, editable: false },
+            {  title: "Sub No.", width: 75, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: false, editor: false, editable: false
+                , render : function (ui) {
+                    var data = ui.rowData;
+                    if (data.DECL_NUM.trim() != "") {
+                        if (data.SubItemsExists) {
+                            var iconHtml = "";
+
+                            if (data.SubShowHide == undefined || data.SubShowHide == false) {
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-e" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                            } else {
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-se" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                            }
+
+                            return iconHtml;
+                        }
+                    }
+                }
+            },
             { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_NAME", sortable: false, editor: false, editable: false },
             { title: "CAS No.", width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: false, editor: false, editable: false },
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 60, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_YN", sortable: false
