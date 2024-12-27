@@ -1076,7 +1076,8 @@ Common.Load = function (Obj) {
         var thisObj = $(this);
         thisObj.datepicker({
             dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
-        });
+
+        }).css('z-index', 999);
         var nextObj = thisObj.next();
         if (nextObj && nextObj.attr("data-cui-icon") && nextObj.attr("data-cui-icon") == "calendar") {
             nextObj.bind("click", function () {
