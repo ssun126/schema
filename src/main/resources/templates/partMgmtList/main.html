@@ -123,6 +123,8 @@
             } else if (dataJson[i].PM_APPROVAL_STATUS == "6") {
                 dataJson[i].PM_APPROVAL_STATUS_NAME = siteLang.getLang("자료보완");
             }
+
+            dataJson[i].PM_ACTIVE_YN_ORG = dataJson[i].PM_ACTIVE_YN;
         }
 
         return dataJson;
@@ -139,6 +141,24 @@
             $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
             $("#gridArea").pqGrid("refreshView");
         });
+    }
+
+    var EidtModeChange = function (Obj) {
+        var PM_IDX = Common.Convert.Int(Obj.attr("PM_IDX"));
+
+        var grid = $("#gridArea").pqGrid("instance");
+
+        var rowList = grid.search( {
+            row: { PM_IDX : PM_IDX }
+        });
+
+        if (rowList.length > 0) {
+            rowList[0].rowData.SheetEditModeStatus = true;
+        } else {
+            alert("Search Error!.");
+        }
+
+        $("#gridArea").pqGrid("refreshView");
     }
 
     $(function () {
@@ -174,6 +194,30 @@
             autoRow: false,
             autoRowHead: false,
             selectChange: function (event, ui) {
+            },
+            change: function (event, ui) {
+                var sheetObj = $(this.element);
+                var grid = sheetObj.pqGrid("instance");
+
+                if (ui.source == "paste" || ui.source == "edit" || ui.source == "update" || ui.source == "clear" || ui.source == "checkbox" || ui.source == "undo") {
+                    if (ui.updateList.length > 0) {
+                        if (ui.updateList[0].newRow.PM_ACTIVE_YN) {
+                            Common.Msg(siteLang.getLang("변경하시겠습니까?"), {
+                                mode : "confrim"
+                                , cancelback : function () {
+                                    var rowInfo = ui.updateList[0];
+
+                                    var rowList = grid.search( {
+                                        row: { PM_IDX : rowInfo.rowData.PM_IDX }
+                                    });
+
+                                    rowList[0].rowData.PM_ACTIVE_YN = rowInfo.oldRow.PM_ACTIVE_YN;
+                                    sheetObj.pqGrid("refreshView");
+                                }
+                            });
+                        }
+                    }
+                }
             },
             rowClick: function (event, ui) {
 
@@ -244,7 +288,15 @@
                     type: "select",
                     options: PM_ACTIVE_YN_SELECT_ITEMS
                 }
-                , editable: true
+                , editable: function (ui) {
+                    var data = ui.rowData;
+
+                    if (data.SheetEditModeStatus) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             },
             { data_langsid: "승인현황", title: siteLang.getLang("승인현황"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_APPROVAL_STATUS_NAME", sortable: false, editor: false, editable: false },
             { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PM_APPROVAL_DATE", sortable: false, editor: false, editable: false },
@@ -252,9 +304,9 @@
                 render : function (ui) {
                     var data = ui.rowData;
 
-                    if(Common.Convert.Int(data.PM_APPROVAL_STATUS) >= 3){
-                        return { text : "<button class='cui_button' style='min-width:45px;margin:0px;height:18px;'>Edit</button>", style: "padding:0px;" };
-                    }
+                    //if(Common.Convert.Int(data.PM_APPROVAL_STATUS) >= 3){
+                        return { text : "<button class='cui_button' style='min-width:45px;margin:0px;height:18px;' PM_IDX='" + data.PM_IDX + "' onclick='EidtModeChange($(this));'>Edit</button>", style: "padding:0px;" };
+                    //}
                     return;
                 }
             },
