@@ -1,0 +1,260 @@
+<div class="cui_dialog" style="width:880px;display:none;" id="popCoa">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span data-langsid="성적서"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+
+                <form id="updateForm"  class="cui_form_section">
+                    <fieldset>
+                        <legend><span data-langsid="업체 기본정보"></span></legend>
+                        <table class="cui_table">
+                            <colgroup>
+                                <col style="width:154px;">
+                                <col>
+                                <col style="width:154px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span data-langsid="Vendor"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COM_CODE}" ></span>-->
+<!--                                            <input type="hidden" name="COM_CODE" id="COM_CODE" th:value="${member.COM_CODE}" >-->
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span data-langsid="플랜트"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COM_NAME}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span data-langsid="자재명"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+
+<!--                                            <span th:text="${member.COM_NAME}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span data-langsid="자재 코드"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COM_NATION}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span data-langsid="출하일"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COMPANY_NAME}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span data-langsid="제조일"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.FACTORY_NAME}"></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span data-langsid="만료일"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span  th:text="${member.BUS_NUMBER}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span data-langsid="Quantity(KG)"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COM_ADDRESS}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span data-langsid="LOT NO."></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span  th:text="${member.COM_CEO_NAME}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span data-langsid="탱크로리번호"></span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COM_CEO_PHONE}" ></span>-->
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span data-langsid="비고"></span></th>
+                                <td colspan="3">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+<!--                                            <span th:text="${member.COM_CEO_EMAIL}" ></span>-->
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span data-langsid="의견"></span></th>
+                                <td colspan="3">
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <!--                                            <span th:text="${member.COM_CEO_EMAIL}" ></span>-->
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </form>
+
+
+                <div class="cui_jqGrid_section">
+                    <div class="cui_jqGrid_head">
+                        <div class="jqGrid_label"> &nbsp;</div>
+                        <div class="jqGrid_aside">
+
+                        </div>
+                    </div>
+                    <div class="cui_jqGrid_body" id="Grid">
+                        <div id="gridArea_CpCode" gridYN=""></div>
+                    </div>
+                </div>
+
+
+
+                <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                    <div class="item_content">
+                        <input type="hidden" id="savetype" name="savetype" value="insert" >
+                        <button type="button" id="PartCodeMgmtAdd" class="cui_button primary" onclick="addPartCodeSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" id="PartCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ListSearchCpCode = function () {
+
+            var url = "/admin/qualityCtrl/getUserList";
+
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.AddParameter($("#searchAreaCpCode"));
+
+            Common.Ajax(url, ReqInfo, function (data) {
+                var dataJson = JSON.parse(data);
+
+                $("#gridArea_CpCode").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea_CpCode").pqGrid("refreshView");
+            });
+        }
+
+        $(function () {
+            var data = [];
+
+            var obj = {
+                bubble: false,
+                numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
+                editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+                editModel: { clicksToEdit: 2 },
+                selectionModel: { type: 'cell', mode: 'block' },
+                height: 500,
+                title: "",
+                sortable: false,
+                resizable: true,
+                menuIcon: false,
+                scrollModel: { autoFit: false },
+                hoverMode: 'row',
+                roundCorners: false,
+                rowBorders: true,
+                showBottom: false,
+                showHeader: true,
+                showTitle: true,
+                showTop: false,
+                showToolbar: true,
+                stripeRows: false,
+                wrap: false,
+                autoAddRow: false,
+                freezeCols:0,
+                autoRow: false,
+                autoRowHead: false,
+                rowHt:25,
+                rowInit: function () {
+                    return { style: 'font-size:12px;' };
+                },
+                selectChange: function (event, ui) {
+                },
+                rowClick: function (event, ui) {
+                },
+                cellClick: function (event, ui) {
+                },
+                rowDblClick: function (event, ui) {
+                    var data = ui.rowData;
+                    $("#searchUserList").find("input[name=USER_ID]").val(data.USER_ID);
+                    $("#searchUserList").find("input[name=USER_NAME]").val(data.USER_NAME);
+                    $("#searchUserList").find("input[name=registerName]").val(data.USER_NAME);
+
+                    $("#popCoa").data("Hide")();
+                },
+                rowSelect: function (event, ui) {
+                },
+                open: function () {
+                },
+                headerCellClick: function (event, ui) {
+                }
+            };
+            obj.colModel = [
+                { data_langsid: "스펙 ID", title: siteLang.getLang("스펙 ID"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "USER_ID", sortable: true, editor: false, editable: false },
+                { data_langsid: "스팩명", title: siteLang.getLang("스팩명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "스팩영문명", title: siteLang.getLang("스팩영문명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "스팩범위", title: siteLang.getLang("스팩범위"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "관리선", title: siteLang.getLang("관리선"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "결과값", title: siteLang.getLang("결과값"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "유효", title: siteLang.getLang("유효"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false }
+            ];
+            obj.dataModel = { data: data };
+            $("#gridArea_CpCode").pqGrid(obj);
+            $("#gridArea_CpCode").attr("gridYN", "Y");
+        });
+
+        $(document).ready(function() {
+            ListSearchCpCode();
+        });
+    </script>
+</div>
