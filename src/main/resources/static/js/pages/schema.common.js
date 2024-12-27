@@ -1089,6 +1089,46 @@ Common.Load = function (Obj) {
             });
         }
     });
+
+    Obj.find('textarea[editerMode=true]').each(function () {
+        var thisObj = $(this);
+        $(this).summernote({
+            lang: 'ko-KR',
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontname', ['fontname']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['codeview', ['codeview']],
+                ['misc', ['undo', 'redo']]
+            ],
+            height: $(this).css("height"),
+            dialogsInBody: true,
+            disableDragAndDrop: false,
+            fontNames: ['돋움', '돋움체', '굴림', '굴림체', '바탕', '바탕체', '궁서', 'Arial', 'Tahoma', 'Times New Roman', 'Verdana'],
+            fontNamesIgnoreCheck: ['돋움'],
+            fontName: '돋움',
+            callbacks: {
+                onEnter: function (e) {
+                    // You may replace `c` with whatever key you want
+                    if ((e.metaKey || e.ctrlKey) && e.which == 13) {
+                        Common.EventCancelBubble(e);
+                        Common.EventReturnValue(e);
+                    }
+                }
+            }
+        });
+
+        thisObj.data("Text", function (text) {
+            setTimeout(function () {
+                thisObj.next().find(".panel-body").html(text);
+            }, 100);
+            thisObj.val(text);
+        });
+    });
 }
 
 //현재 날짜시간 포함 string 리턴
