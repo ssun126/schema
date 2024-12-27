@@ -3,6 +3,8 @@ package com.dongwoo.SQM.qualityCtrl.controller;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.qualityCtrl.dto.coaMgmtDTO;
 import com.dongwoo.SQM.qualityCtrl.service.coaMgmtService;
+import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -39,6 +42,15 @@ public class coaMgmtController {
         String sStartDate = today.format(formatter);
 
         model.addAttribute("sStartDate", sStartDate);
+
+        List<BaseCodeDTO> deptList = coaMgmtService.GetBaseCode("COA_STATUS");
+        model.addAttribute("coaStatusList", deptList);
+
+        List<BaseCodeDTO> plantList = coaMgmtService.GetBaseCodePLANT("PLANT");
+        model.addAttribute("coaPlantList", plantList);
+
+
+
         return "coaMgmt/coaList";
     }
 
@@ -110,18 +122,23 @@ public class coaMgmtController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-    @GetMapping("/user/qualityCtrl/scoreMgmt")
-    public String getMain(Model model) {
-        return "scoreMgmt/main";
+    @PostMapping("/admin/qualityCtrl/userList")
+    public String userList(Model model) {
+        return "coaMgmt/apiUserList";
     }
+
+    @PostMapping("/admin/qualityCtrl/getUserList")
+    @ResponseBody
+    public List<HashMap> getUserList(HttpServletRequest req) {
+        String code = req.getParameter("searchUserid");
+        String name = req.getParameter("searchUserName");
+        return coaMgmtService.getUserList(code,name);
+    }
+
+    @PostMapping("/admin/qualityCtrl/popCoa")
+    public String popCoa(Model model) {
+        return "coaMgmt/popCoa";
+    }
+
+
 }
