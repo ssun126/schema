@@ -67,18 +67,44 @@
 </body>
 </html>
 <script>
-    var ListSearch = function () {
-        var url = "/auditMgmt/searchAuditMgmt";
+    var AuditTypeSearch = function () {
+        //Audit 구분
+        var typeUrl = "/api/audit/auditPlanMgmt/getCodeList";
 
         var ReqInfo = new Common.RequestInfo();
         ReqInfo.AddParameter($("#searchArea"));
 
-        Common.Ajax(url, ReqInfo, function (data) {
-            var dataJson = JSON.parse(data);
-
-            $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
-            $("#gridArea").pqGrid("refreshView");
+        Common.Ajax(typeUrl, ReqInfo, function (data) {
+            console.log(data);
+            var localData = data.dataList;
+            Common.SelectBox("#searchNcrAuditType", localData, 'name', 'code');
         });
+    }
+    var ListSearch = function () {
+        var setData = {
+            "ncr_no": "",
+            "type": "",
+            "ncr_type": "",
+            "year": "2024",
+            "ncr_status": ""
+        };
+        var encodedData = Common.EncParam(setData);
+        var url = "/api/audit/auditPlanMgmt/list/"+ encodedData;
+
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter($("#searchArea"));
+
+         Common.Ajax(url, ReqInfo, function (data) {
+            var dataJson = JSON.parse(data);
+            var listStr = dataJson.LIST; // "LIST"에 해당하는 값이 JSON 형식의 문자열이므로 이를 추출
+
+            // 2. LIST 값을 다시 JSON 객체로 파싱
+            var list = JSON.parse(listStr); // 이제 LIST는 JavaScript 배열이 됩니다.
+            var listData = JSON.parse(list.LIST);
+
+            $("#gridArea").pqGrid("option", "dataModel.data", listData);
+            $("#gridArea").pqGrid("refreshView");
+        }, {formMethod :"GET"}); //Get으로 보내도록 설정 추가
     }
 
     $(function () {
@@ -133,8 +159,8 @@
             },
             rowDblClick: function (event, ui) {
                 var data = ui.rowData;
-                const cpcode = data.COM_CODE ;
-                loadPage(cpcode) ;
+                const ap_seq = data.ap_seq ;
+                loadPage(ap_seq) ;
             },
             rowSelect: function (event, ui) {
             },
@@ -166,9 +192,9 @@
         ListSearch();
     });
 
-    function loadPage(cpcode) {
+    function loadPage(ap_seq) {
 
-          const url = "/admin/auditMgmt/safetyHealthDetail?COM_CODE=" + cpcode  ;
+          const url = "/admin/auditMgmt/safetyHealthDetail?ap_seq=" + ap_seq  ;
           location.href = url;
     }
 

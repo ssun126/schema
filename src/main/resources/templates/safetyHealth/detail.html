@@ -12,266 +12,300 @@
             </div>
         </div>
         <div class="cui_body">
-            <form class="cui_form_section" data-legend="true">
-                <fieldset>
-                    <legend><span>안전보건환경 Audit 계획</span></legend>
-                    <table class="cui_table">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>업체명</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>코비젼</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>담당자</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>동우</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>구분</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>PR</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><span>Audit 계획일</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>2024-10-01</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>Audit 방법</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span id="auditPWay">대면</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <th><span>Audit 구분</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>정기</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <table class="cui_table visit">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>Audit 내용</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>POVIS의 audit 요청사항 그대로 기재</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><span>File 첨부</span></th>
-                            <td class="attachmentsContainer">
-                                <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
-                                    <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+            <fieldset>
+                <legend><span>안전보건환경 Audit 계획</span></legend>
+                    <form  id="form" name="form" class="cui_form_section" data-legend="true">
+                        <input type='hidden' id='popAuditPlanApSeq' name='popAuditPlanApSeq'>
+                        <input type='hidden' id='popAuditPlanAmSeq' name='popAuditPlanAmSeq'>
+                        <input type='hidden' id='popAuditPlanPlant' name='popAuditPlanPlant'>
+                        <table class="cui_table">
+                            <colgroup>
+                                <col style="width:114px;">
+                                <col>
+                                <col style="width:114px;">
+                                <col>
+                                <col style="width:114px;">
+                                <col>
+                                <col style="width:114px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>계획번호</span></th>
+                                <td>
                                     <div class="cui_items_wrap" data-direction="left">
-                                        <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                            <span id='popAuditPlanApNo'>코비젼</span>
                                         </div>
                                     </div>
-                                    <button type="button" class="cui_button" id="addVisitBtn"><span>추가</span></button>
-                                </div>
-                                <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
-                                    <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
-                                        <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                </td>
+                                <th><span>업체명</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            <span id='popAuditPlanVendorNm'>코비젼</span>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <table class="cui_table self">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>Audit 항목</span></th>
-                            <td>
-                                <table class="cui_table center" id="companyTable">
-                                    <colgroup>
-                                        <col style="width:100px;">
-                                        <col style="width:130px;">
-                                        <col>
-                                        <col style="width:80px;">
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th><span>항목</span></th>
-                                        <th><span>내용</span></th>
-                                        <th><span>답변</span></th>
-                                        <th><span>평가점수</span></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>AAAA1</td>
-                                        <td>코비젼-</td>
-                                        <td class="center"></td>
-                                        <td class="center">10</td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <td colspan="3">Total</td>
-                                        <td>88</td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><span>근거서류</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="search_square" data-tooltip-title="미리보기">
-                                                        <span>미리보기</span></button>
+                                </td>
+                                <th><span>담당자</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span id='popAuditPlanMakeEmpNm'>동우</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span>구분</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span id='popAuditPlanWetpr'>PR</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span>Audit 계획일</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span id='popAuditPlanApDate'>2024-10-01</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span>Audit 방법</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span id='popAuditPlanApWay'>대면</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span>Audit 구분</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span id='popAuditPlanApType'>정기</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span>등급</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span id='popAuditPlanGrade'>정기</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="cui_table visit">
+                            <colgroup>
+                                <col style="width:114px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>Audit 내용</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <textarea id="popAuditPlanApComment" disabled='true' style="width:100%; height:140px; resize:none; margin-top:2px"></textarea>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span>File 첨부</span></th>
+                                <td class="attachmentsContainer">
+                                    <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
+                                        <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="cui_button" id="addVisitBtn"><span>추가</span></button>
+                                    </div>
+                                    <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                        <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
+                                            <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            </div>
+                                        </div>
+                                        <div  id = 'popAuditPlanAttachFileArea'  class = 'txt-detailview-none remark' style="height:100px; width:90%; padding-left:0px; overflow:hidden">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="cui_table self">
+                            <colgroup>
+                                <col style="width:114px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>Audit 항목</span></th>
+                                <td>
+                                    <table class="cui_table center" id="companyTable">
+                                        <colgroup>
+                                            <col style="width:100px;">
+                                            <col style="width:130px;">
+                                            <col>
+                                            <col style="width:80px;">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th><span>항목</span></th>
+                                            <th><span>내용</span></th>
+                                            <th><span>답변</span></th>
+                                            <th><span>평가점수</span></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>AAAA1</td>
+                                            <td>코비젼-</td>
+                                            <td class="center"></td>
+                                            <td class="center">10</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="3">Total</td>
+                                            <td>88</td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span>근거서류</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <div class="cui_attachments">
+                                                <div class="cui_items_wrap" data-direction="left">
+                                                    <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
+                                                    </div>
+                                                    <div class="item_content">
+                                                        <button type="button" class="cui_button icon endpoint"
+                                                                data-cui-icon="search_square" data-tooltip-title="미리보기">
+                                                            <span>미리보기</span></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </fieldset>
                 <fieldset class="resultField">
                     <legend><span>안전보건환경 Audit 결과</span></legend>
-                    <table class="cui_table">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>Audit 실시일</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>2024-10-01</span>
+                    <form id="form-2" name="form-2">
+                        <input type='hidden' name='popAuditPlanApSeq'>
+                        <input type='hidden' name='popAuditPlanAmSeq'>
+                        <table class="cui_table">
+                            <colgroup>
+                                <col style="width:114px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>Audit 실시일</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span>2024-10-01</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <th><span>Audit 등급</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>A</span>
+                                </td>
+                                <th><span>Audit 등급</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span>A</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <th><span>NCR 발행여부</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>Y</span>
+                                </td>
+                                <th><span>NCR 발행여부</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <span>Y</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <table class="cui_table">
-                        <colgroup>
-                            <col style="width:154px;">
-                            <col>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th><span>Audit 결과</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <span>POVIS 결과 내용 그대로 기재</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="cui_table">
+                            <colgroup>
+                                <col style="width:114px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>Audit 결과</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <textarea id="popAuditPlanResultApComment" disabled='true' style="width:100%; height:140px; resize:none; margin-top:2px"></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th><span>첨부자료</span></th>
-                            <td>
-                                <div class="cui_items_wrap" data-direction="left">
-                                    <div class="item_content">
-                                        <div class="cui_attachments">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
-                                                </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="search_square" data-tooltip-title="미리보기">
-                                                        <span>미리보기</span></button>
-                                                </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th><span>첨부자료</span></th>
+                                <td>
+                                    <div class="cui_items_wrap" data-direction="left">
+                                        <div class="item_content">
+                                            <div id='popAuditPlanResultAttachFileArea' class='txt-detailview-none remark' style="height:100px; width:90%; padding-left:0px; overflow:hidden">
                                             </div>
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
+                                            <div class="cui_attachments">
+                                                <div class="cui_items_wrap" data-direction="left">
+                                                    <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
+                                                    </div>
+                                                    <div class="item_content">
+                                                        <button type="button" class="cui_button icon endpoint"
+                                                                data-cui-icon="search_square" data-tooltip-title="미리보기">
+                                                            <span>미리보기</span></button>
+                                                    </div>
                                                 </div>
-                                                <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint"
-                                                            data-cui-icon="search_square" data-tooltip-title="미리보기">
-                                                        <span>미리보기</span></button>
+                                                <div class="cui_items_wrap" data-direction="left">
+                                                    <div class="item_label" data-cui-icon="paperclip"><span>파일명.html</span>
+                                                    </div>
+                                                    <div class="item_content">
+                                                        <button type="button" class="cui_button icon endpoint"
+                                                                data-cui-icon="search_square" data-tooltip-title="미리보기">
+                                                            <span>미리보기</span></button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
+                        <button type="button" class="cui_button secondary" id='btnPopAuditPlanSave'><span data-langsid="CheckSheet 등록"></span></button>
+                        <button type="button" class="cui_button secondary" id='btnPopAuditCheckSheetDel'><span data-langsid="CheckSheet 삭제"></span></button>
                         <button type="button" class="cui_button secondary" onClick="goList()"><span data-langsid="목록"></span></button>
                     </div>
                 </div>
-            </form>
+
         </div>
     </div>
 </div>
@@ -288,6 +322,55 @@
         //Audit 결과
         //$(".resultField").hide();
     });
+
+    var ListSearchAudit = function () {
+        var url = "/api/audit/auditPlanMgmt/getAuditPlanInfo";
+
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter($("#popArea"));
+        ReqInfo.AddParameter("ncr_seq", `[[${NCR_SEQ}]]`);
+
+        Common.Ajax(url, ReqInfo, function (data) {
+            var dataJson = JSON.parse(data)
+
+            if(data.auditPlanInfo && data.auditPlanInfo){
+                var auditPlanInfo = data.auditPlanInfo[0];
+                $("[name='popAuditPlanApSeq']").val(auditPlanInfo.AP_Seq);
+                $("[name='popAuditPlanAmSeq']").val(auditPlanInfo.AM_Seq);
+                $("[name='popAuditPlanApNo']").html(auditPlanInfo.AP_No);
+                $("#popAuditPlanApDate").html(auditPlanInfo.AP_Date);
+                $("#popAuditPlanApType").html(auditPlanInfo.AP_Type);
+                $("#popAuditPlanWetpr").html(auditPlanInfo.WETPR);
+                $("#popAuditPlanApWay").html(auditPlanInfo.AP_Way);
+                $("#popAuditPlanMakeEmpNm").html(auditPlanInfo.Make_EmpNM);
+                $("#popAuditPlanApComment").val(auditPlanInfo.AP_COMMENT);
+                $("#popAuditPlanPlant").val(auditPlanInfo.PLANT);
+            }
+            if(data.auditResultInfo && data.auditResultInfo){
+                var auditResultInfo = data.auditResultInfo[0];
+                $("#popAuditPlanVendorNm").html(auditResultInfo.PartnersNM);
+                $("#popAuditPlanResultApComment").val(auditResultInfo.COMMENT);
+                $("#popAuditPlanGrade").html(auditResultInfo.GRADE);
+            }
+            if(data.auditPlanInfoResultFile && data.auditPlanInfoResultFile.length>0 && (data.auditPlanInfoResultFile[0].status=='C'||data.auditPlanInfoResultFile[0].status=='D'||data.auditPlanInfoResultFile[0].status=='F')){
+
+                auditPlan.multiFileInput.downloadSet("popAuditPlanResultAttachFileArea",data.auditPlanInfoResultFile);
+
+            }
+            if(data.auditPlanInfoCsFile && data.auditPlanInfoCsFile.length>0){
+                auditPlan.multiFileInput.downloadSet("popAuditPlanAttachFileArea",data.auditPlanInfoCsFile);
+                $("#btnPopAuditPlanSave").hide();
+                $("#btnPopAuditCheckSheetDel").show();
+            }else{
+                auditPlan.multiFileInput.set("popAuditPlanAttachFileArea")
+                $("#btnPopAuditPlanSave").show();
+                $("#btnPopAuditCheckSheetDel").hide();
+            }
+            $("#popAuditPlan").micaModal('show');
+            auditPlan.lodingBar.hide();
+        });
+    }
+
 
     function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
