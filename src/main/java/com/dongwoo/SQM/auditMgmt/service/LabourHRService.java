@@ -7,21 +7,34 @@ import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
 import com.dongwoo.SQM.auditMgmt.repository.LabourHRRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.dongwoo.SQM.siteMgr.dto.LabourItemDTO;
+import com.dongwoo.SQM.siteMgr.service.LabourItemService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -29,6 +42,7 @@ import java.util.Map;
 public class LabourHRService {
     private final LabourHRRepository labourHRRepository;
     private final AuditMgmtRepository auditMgmtRepository;
+    private final LabourItemService labourItemService;
     private final IsoAuthRepository isoAuthRepository;
 
     @Value("${Upload.path.attach}")
@@ -38,12 +52,11 @@ public class LabourHRService {
         return labourHRRepository.insertFileInfo(labourHRDTO);
     }
 
-    public void saveAuthData(String type, MultipartFile fileNames) throws IOException {
+    public void saveAuthData(String tableData, String type, MultipartFile fileNames, String chkType) throws IOException {
 
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
         int loginIdx = user.getUSER_IDX();
-
 
         //회사별 Audit 데이터 저장
         AuditMgmtDTO authDTO = new AuditMgmtDTO();
@@ -61,11 +74,9 @@ public class LabourHRService {
         }
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
 
-        LabourHRDTO dto = new LabourHRDTO();
-        log.info("fileNames.length??????"+fileNames);
         // 파일이 존재하면 처리
-        if (fileNames != null && authMgmtDTO != null) {
-
+        if (Objects.equals(chkType, "file") && fileNames != null && authMgmtDTO != null) {
+            LabourHRDTO dto = new LabourHRDTO();
             String filePath = saveFile(fileNames);
 
             // Paths 클래스를 사용하여 파일명 추출
@@ -76,9 +87,60 @@ public class LabourHRService {
             dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
             dto.setFILE_NAME(fileName);  // 파일명 추가
             dto.setFILE_PATH(filePath);  // 파일 경로 추가
-        }
-        int rtCnt = labourHRRepository.insertFileInfo(dto);  // insert
 
+            int rtCnt = labourHRRepository.insertFileInfo(dto);  // insert
+
+            //파일내용을 저장
+            uploadLabourData(fileNames);
+
+        }else{
+            // JSON 문자열을 DTO 객체로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<AuditItemPointDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<AuditItemPointDTO>>() {});
+
+            for (AuditItemPointDTO dto : authItems) {
+                dto.setCOM_CODE(comCode);
+                int rtCnt = labourHRRepository.insertAuthItem(dto);  // insert
+                log.info("데이터 저장 Count: " + rtCnt);
+            }
+        }
+    }
+    @Transactional
+    public void uploadLabourData(@RequestParam(value="file") MultipartFile file) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        XSSFSheet worksheet = workbook.getSheetAt(0);
+        List<AuditItemPointDTO> labourItemDTOList = new ArrayList<>();
+        for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+            AuditItemPointDTO labourItemDTO = new AuditItemPointDTO();
+
+            DataFormatter formatter = new DataFormatter();
+            XSSFRow row = worksheet.getRow(i);
+
+            String PROVISION = formatter.formatCellValue((row.getCell(0)));
+            String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
+            String AUDIT_ITEM = formatter.formatCellValue((row.getCell(2)));
+            String AUDIT_DESC = formatter.formatCellValue((row.getCell(3)));
+            String AUDIT_CRITERIA = formatter.formatCellValue((row.getCell(4)));
+            String POINT_CRITERIA = formatter.formatCellValue((row.getCell(5)));
+            double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(6))));
+
+            labourItemDTO.setPROVISION(PROVISION);
+            labourItemDTO.setAUDIT_ID(AUDIT_ID);
+            labourItemDTO.setAUDIT_ITEM(AUDIT_ITEM);
+            labourItemDTO.setAUDIT_DESC(AUDIT_DESC);
+            labourItemDTO.setAUDIT_CRITERIA(AUDIT_CRITERIA);
+            labourItemDTO.setPOINT_CRITERIA(POINT_CRITERIA);
+            labourItemDTO.setPOINT(POINT);
+
+            labourItemDTOList.add(labourItemDTO);
+            log.info("labourItemDTO====================="+labourItemDTO);
+        }
+
+        try {
+            insertLabourItem(labourItemDTOList);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String saveFile(MultipartFile file) throws IOException {
@@ -116,6 +178,18 @@ public class LabourHRService {
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return labourHRRepository.getCompanyAuthItemPoint(params);
+    }
+
+    public void insertLabourItem(List<AuditItemPointDTO> labourItemDTOList) throws SQLException {
+        log.info("test11111111111111111111111");
+        try{
+            for(AuditItemPointDTO dto : labourItemDTOList){
+                log.info("test2-1");
+                labourHRRepository.insertAuthItem(dto);
+            }
+        }catch (Exception e){
+            log.info(e.toString());
+        }
     }
 
 }

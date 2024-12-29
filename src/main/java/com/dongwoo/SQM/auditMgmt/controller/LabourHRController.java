@@ -128,7 +128,6 @@ public class LabourHRController {
         }
 
         try {
-            log.info("test333333333====================="+labourItemDTOList);
             //전체삭제
             labourItemService.deletAll();
             labourItemService.insert_labourBulk(labourItemDTOList);

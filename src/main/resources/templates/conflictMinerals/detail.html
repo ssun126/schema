@@ -160,7 +160,7 @@
                         <span>전자 보증서 제출(기 제출 자료에서 변경사항 無)</span>
                     </label>-->
 
-                    <table class="cui_table">
+                    <table class="cui_table" id="rsltTable">
                         <colgroup>
                             <col style="width:154px;">
                             <col>
@@ -204,8 +204,8 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button secondary"><span>승인</span></button>
-                    <button type="button" class="cui_button secondary"><span>반려</span></button>
+                    <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
+                    <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
                     <button type="button" class="cui_button secondary"><span>이전 정보 보기</span></button>
                 </div>
             </div>
@@ -262,7 +262,38 @@
         </div>
     </div>
 </div>
+<div class="cui_dialog" style="width:600px;display:none;" id="Reason">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span>반려 사유</span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('Reason')"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_field" data-legend="true" id="formReason">
+                    <input type="hidden" name="authCode">
+                    <input type="hidden" name="COM_CODE">
+                    <div class="cui_items_wrap" data-direction="center" >
+                        <div class="item_content" style="padding: 10px;">
+                            <label for="inputReason"></label><textarea class="cui_text_field" rows="5" style="width:100%;" id="inputReason"></textarea>
+                        </div>
+                    </div>
+                    <div class="cui_items_wrap" data-direction="center">
+                        <div class="item_content">
+                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span>저장</span></button>
+                            <button type="button" id="ReasonPop" class="cui_button secondary" onClick="modal_close('Reason')"><span>닫기</span></button>
+                        </div>
+                    </div>
 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="cui_dialog" style="width:1200px;display:none;" id="Popup2">
     <div class="dialog_container">
         <div class="dialog_head">
@@ -424,7 +455,7 @@
                             </tbody>
                         </table>
 
-                        <table class="cui_table">
+                        <table class="cui_table" name="rslt">
                             <colgroup>
                                 <col style="width:154px;">
                                 <col>
@@ -434,10 +465,7 @@
                             <tbody>
                             <tr>
                                 <th><span>점수</span></th>
-                                <td>
-                  <span>
-                    10/10</span>
-                                </td>
+                                <td> <span>10/10</span></td>
                                 <th><span>처리결과</span></th>
                                 <td>
                                     <span>승인</span>
@@ -475,14 +503,61 @@
 </html>
 <script>
     $(document).ready(function () {
+        $("#rsltTable").hide();
        const code = `[[${companyAuth.COM_CODE}]]`;
        const state = `[[${companyAuth.APPROVE_STATE}]]`;
 
        if(state != "" ){
            console.log(state);
        }
-   });
+    });
+    
+    
+    // 반려 버튼 클릭시 반려사유 입력
+    function rejectAuth(key){
+        Common.Dialog({ obj : $("#Reason"), blockClose : false });
+        $('input[name="authCode"]').val(key);
+        $('input[name="COM_CODE"]').val(`[[${companyAuth.COM_CODE}]]`);
+    }
 
+    // 공통 저장 처리
+    function updateAuthData(state, reason, authSeq, point) {
+        const comCode = `[[${companyAuth.COM_CODE}]]`;  // 회사 코드
+        const type = 'CONFLICT';
+        $.ajax({
+            url: '/auditMgmt/setAuthData',  // 서버의 API URL
+            type: 'POST',
+            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type, point: point  },
+            success: function(response) {
+                // 상태만 변경
+                $('div[name="stateField"]').text(state); // 상태 표시 업데이트
+                showAlert('success', '데이터가 성공적으로 저장되었습니다.');
+                if (state === 'APPROVED') {
+                    loadPage(1); // 승인 시 페이지 새로고침
+                }
+            },
+            error: function() {
+                showAlert('warning', '정보를 가져오는 데 실패했습니다.');
+            }
+        });  // $.ajax 호출 끝
+    }
+
+     // 반려 사유 저장
+    $('#ReasonAdd').on('click', function() {
+        const authSeq = $('input[name="authCode"]').val();
+        const inputReason = $('#inputReason').val();  // 반려사유
+        const state = 'REJECT';
+        updateAuthData(state, inputReason, authSeq, 0.0);
+    });
+
+    // 승인 버튼 클릭시 승인 처리
+    function approveAuth(key) {
+        const authSeq = key;
+        const state = 'APPROVED';
+        const point = $('#totalPoint').text();
+        updateAuthData(state, '', authSeq, point);
+    }
+    
     function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
         var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);

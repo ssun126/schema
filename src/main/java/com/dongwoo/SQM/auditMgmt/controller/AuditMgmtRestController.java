@@ -180,10 +180,10 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendLabourAuthData")
-    public String sendLabourAuthData(@RequestParam(value = "file_name", required = false) MultipartFile fileNames) throws IOException {
+    public String sendLabourAuthData(@RequestParam("data") String data, @RequestParam("chkType") String chkType, @RequestParam(value = "file_name", required = false) MultipartFile fileNames) throws IOException {
         try {
 
-            labourHRService.saveAuthData("LABOUR" , fileNames);
+            labourHRService.saveAuthData(data,"LABOUR", fileNames, chkType);
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {

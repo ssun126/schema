@@ -139,8 +139,8 @@
                 </div>
                 <div class="cui_items_wrap" data-direction="right" th:if="${companyAuth.APPROVE_STATE == 'SEND'}">
                     <div class="item_content">
-                        <button type="button" class="cui_button primary" th:onclick="approveIsoAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
-                        <button type="button" class="cui_button primary" th:onclick="rejectIsoAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
                     </div>
                 </div>
             </form>
@@ -311,7 +311,7 @@
 
 
     // 반려 버튼 클릭시 반려사유 입력
-    function rejectIsoAuth(key){
+    function rejectAuth(key){
         Common.Dialog({ obj : $("#Reason"), blockClose : false });
         $('input[name="authCode"]').val(key);
         $('input[name="COM_CODE"]').val(`[[${companyAuth.COM_CODE}]]`);
@@ -348,7 +348,7 @@
     });
 
     // 승인 버튼 클릭시 승인 처리
-    function approveIsoAuth(key) {
+    function approveAuth(key) {
         const authSeq = key;
         const state = 'APPROVED';
         const point = $('#totalPoint').text();
