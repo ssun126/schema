@@ -21,7 +21,32 @@
         ORDER BY BASE_SORT ASC
     </select>
 
+    <select id="getUserList"  parameterType="map" resultType="hashMap">
+        SELECT
+        u.USER_IDX,
+        u.USER_ID,
+        u.USER_PWD,
+        u.USER_NAME,
+        u.USER_GUBN,
+        u.USER_STATUS,
+        u.REG_DW_USER_IDX,
+        u.UP_DW_USER_IDX,
+        u.DEL_DW_USER_IDX,
+        TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
+        u.UP_DATE,
+        u.DEL_DATE
+        FROM SC_USER_INFO u
+        WHERE 1=1
+        AND  u.USER_STATUS = 'Y'
+        <if test="USER_ID != null and USER_ID != ''">
+            AND u.USER_ID LIKE '%' || #{USER_ID} || '%'
+        </if>
+        <if test="USER_NAME != null and USER_NAME != ''">
+            AND u.USER_NAME LIKE '%' || #{USER_NAME} || '%'
+        </if>
+    </select>
 
+    <!--성적서 그리드-->
     <select id="getCOAList"  parameterType="coaMgmt" resultType="coaMgmt">
         SELECT
         CM.COA_ID
@@ -152,31 +177,109 @@
         ORDER BY COA_ID DESC
     </select>
 
-
-    <select id="getUserList"  parameterType="map" resultType="hashMap">
+    <!--  팝업 성적서 상단 -->
+    <select id="getCOADetailTitle" parameterType="coaMgmt" resultType="coaMgmt">
+        /* coaMgmtMapper.getCOADetailTitle */
         SELECT
-        u.USER_IDX,
-        u.USER_ID,
-        u.USER_PWD,
-        u.USER_NAME,
-        u.USER_GUBN,
-        u.USER_STATUS,
-        u.REG_DW_USER_IDX,
-        u.UP_DW_USER_IDX,
-        u.DEL_DW_USER_IDX,
-        TO_CHAR(u.REG_DATE, 'YYYY-MM-DD') REG_DATE ,
-        u.UP_DATE,
-        u.DEL_DATE
-        FROM SC_USER_INFO u
-        WHERE 1=1
-        AND  u.USER_STATUS = 'Y'
-        <if test="USER_ID != null and USER_ID != ''">
-            AND u.USER_ID LIKE '%' || #{USER_ID} || '%'
-        </if>
-        <if test="USER_NAME != null and USER_NAME != ''">
-            AND u.USER_NAME LIKE '%' || #{USER_NAME} || '%'
-        </if>
+            CM.COA_ID
+            , CM.VENDOR_ID
+            , MT.VENDOR_NAME
+            , CM.MATERIAL_ID
+            , MT.MATERIAL_NAME
+            , CM.FACTORY_ID
+            , MT.FACTORY_NAME
+            , CM.LOT_NO
+            , CM.STOCK_DATE
+            , CM.MF_DATE
+            , CM.COA_STATUS
+            , CM.ETC
+            , CM.IF_SEND_DATETIME
+            , CM.RETURN_DESC
+            , CM.CREATOR
+            , CM.CREATE_DATETIME
+            , CM.VENDOR_COMMENT
+            , CM.E_DATE
+            , CM.QUANTITY
+        FROM COA_MASTER CM
+            JOIN MATERIAL MT
+                ON CM.VENDOR_ID = MT.VENDOR_ID
+            AND CM.MATERIAL_ID = MT.MATERIAL_ID
+            AND CM.FACTORY_ID = MT.FACTORY_ID
+        WHERE CM.COA_ID = #{COA_ID}
+            AND CM.VENDOR_ID = #{VENDOR_ID}
+            AND CM.MATERIAL_ID = #{MATERIAL_ID}
+            AND CM.FACTORY_ID = #{FACTORY_ID}
+            AND CM.LOT_NO = #{LOT_NO}
     </select>
 
+    <!--성적서 팝업 그리드(스팩)-->
+    <select id="getCOADetailSpec" parameterType="coaMgmt" resultType="coaMgmt">
+        /* coaMgmtMapper.getCOADetailSpec */
+        SELECT
+        CD.COA_ID
+        , CD.LOT_NO
+        , CD.SPEC_ID
+        , SP.SPEC_NAME
+        , SP.SPEC_ENG_NAME
+        , CD.SPEC_LSL
+        , CD.SPEC_USL
+        , NVL(CD.RESULT_VALUE, ' ') AS RESULT_VALUE
+        , CD.IS_SPECIN
+        , CD.IF_SEND_DATETIME
+        <![CDATA[
+		     , NVL2(CD.SPEC_LSL
+		            , NVL2(CD.SPEC_USL
+		                   , DECODE(SUBSTR(CD.SPEC_LSL, 1, 1), '.', '0'||CD.SPEC_LSL, CD.SPEC_LSL) || ' ~ ' || DECODE(SUBSTR(CD.SPEC_USL, 1, 1), '.', '0'||CD.SPEC_USL, CD.SPEC_USL)
+		                   , '>= ' || DECODE(SUBSTR(CD.SPEC_LSL, 1, 1), '.', '0'||CD.SPEC_LSL, CD.SPEC_LSL))
+		            , NVL2(CD.SPEC_USL
+		                   , '<= ' || DECODE(SUBSTR(CD.SPEC_USL, 1, 1), '.', '0'||CD.SPEC_USL, CD.SPEC_USL)
+		                   , 'No Spec')) AS SPEC_AREA
+		     ]]>
+        <![CDATA[
+		     , NVL2(CD.SPEC_LCL
+		            , NVL2(CD.SPEC_UCL
+		                   , DECODE(SUBSTR(CD.SPEC_LCL, 1, 1), '.', '0'||CD.SPEC_LCL, CD.SPEC_LCL) || ' ~ ' || DECODE(SUBSTR(CD.SPEC_UCL, 1, 1), '.', '0'||CD.SPEC_UCL, CD.SPEC_UCL)
+		                   , '>= ' || DECODE(SUBSTR(CD.SPEC_LCL, 1, 1), '.', '0'||CD.SPEC_LCL, CD.SPEC_LCL))
+		            , NVL2(CD.SPEC_UCL
+		                   , '<= ' || DECODE(SUBSTR(CD.SPEC_UCL, 1, 1), '.', '0'||CD.SPEC_UCL, CD.SPEC_UCL)
+		                   , 'No Spec')) AS SPEC_AREA2
+		     ]]>
+        <![CDATA[
+             , CASE WHEN CD.SPEC_LSL IS NULL AND CD.SPEC_USL IS NULL THEN 'N'
+                    WHEN CD.SPEC_LSL IS NULL AND TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+                    WHEN CD.SPEC_USL IS NULL AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+                    WHEN TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+                    ELSE 'Y'
+               END AS IS_SPEC_YN
+             ]]>
+        <![CDATA[
+             , CASE WHEN CD.SPEC_LCL IS NULL AND CD.SPEC_UCL IS NULL THEN 'N'
+                    WHEN CD.SPEC_LCL IS NULL AND TO_NUMBER(CD.SPEC_UCL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+                    WHEN CD.SPEC_UCL IS NULL AND TO_NUMBER(CD.SPEC_LCL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+                    WHEN TO_NUMBER(CD.SPEC_UCL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LCL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+                    ELSE 'Y'
+               END AS IS_CONTROL_YN
+            ]]>
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{COA_ID}
+        AND CD.LOT_NO = #{LOT_NO}
+        AND SP.VENDOR_ID = #{VENDOR_ID}
+        AND SP.MATERIAL_ID = #{MATERIAL_ID}
+        AND SP.FACTORY_ID = #{FACTORY_ID}
+        ORDER BY
+        SP.ORDER_NO
+    </select>
+
+    <update id="updateVendorComment">
+        /* coaMgmtMapper.updateVendorComment */
+        UPDATE COA_MASTER
+        SET VENDOR_COMMENT = #{VENDOR_COMMENT}
+        , MODIFIER = #{TOKEN_USER_ID}
+        , MODIFY_TIME = SYSDATE
+        WHERE COA_ID = #{COA_ID}
+        AND LOT_NO = #{LOT_NO}
+    </update>
 
 </mapper>
