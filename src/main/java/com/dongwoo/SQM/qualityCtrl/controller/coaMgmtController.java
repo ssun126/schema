@@ -4,26 +4,25 @@ import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.qualityCtrl.dto.coaMgmtDTO;
 import com.dongwoo.SQM.qualityCtrl.service.coaMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.system.dto.ComPanyCodeDTO;
+import com.dongwoo.SQM.system.dto.UserInfoCompanyDTO;
+import com.dongwoo.SQM.system.dto.UserInfoDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -31,6 +30,29 @@ import java.util.Map;
 public class coaMgmtController {
 
     private final coaMgmtService coaMgmtService;
+
+    private String GetParam(HttpServletRequest request, String pName, String pDefault) {
+        String ParamValue = request.getParameter(pName);
+
+        if (ParamValue == null || ParamValue.isEmpty()) {
+            ParamValue = pDefault;
+        };
+
+        return ParamValue;
+    }
+
+    @PostMapping("/admin/qualityCtrl/userList")
+    public String userList(Model model) {
+        return "coaMgmt/apiUserList";
+    }
+
+    @PostMapping("/admin/qualityCtrl/getUserList")
+    @ResponseBody
+    public List<HashMap> getUserList(HttpServletRequest req) {
+        String code = req.getParameter("searchUserid");
+        String name = req.getParameter("searchUserName");
+        return coaMgmtService.getUserList(code,name);
+    }
 
 
     @GetMapping("/admin/qualityCtrl/coaMgmt")
@@ -49,11 +71,8 @@ public class coaMgmtController {
         List<BaseCodeDTO> plantList = coaMgmtService.GetBaseCodePLANT("PLANT");
         model.addAttribute("coaPlantList", plantList);
 
-
-
         return "coaMgmt/coaList";
     }
-
 
     //COA LIST 검색
     @PostMapping("/admin/qualityCtrl/getCOAList")
@@ -120,25 +139,93 @@ public class coaMgmtController {
         }
     }
 
-
-
-    @PostMapping("/admin/qualityCtrl/userList")
-    public String userList(Model model) {
-        return "coaMgmt/apiUserList";
-    }
-
-    @PostMapping("/admin/qualityCtrl/getUserList")
-    @ResponseBody
-    public List<HashMap> getUserList(HttpServletRequest req) {
-        String code = req.getParameter("searchUserid");
-        String name = req.getParameter("searchUserName");
-        return coaMgmtService.getUserList(code,name);
-    }
-
+    //성적서 팝업
     @PostMapping("/admin/qualityCtrl/popCoa")
-    public String popCoa(Model model) {
+    public String popCoa(Model model ,HttpServletRequest request) {
+
+
+       String coa_id = GetParam(request,"COA_ID", "")  ;
+       String vendor_id  = GetParam(request,"VENDOR_ID", "") ;
+       String material_id = GetParam(request,"MATERIAL_ID", "");
+       String factory_id =GetParam(request,"FACTORY_ID", "");
+       String lot_no  = GetParam(request,"LOT_NO", "");
+
+        coaMgmtDTO coaParamDto = new coaMgmtDTO();
+        coaParamDto.setCOA_ID(coa_id);
+        coaParamDto.setVENDOR_ID(vendor_id);
+        coaParamDto.setMATERIAL_ID(material_id);
+        coaParamDto.setFACTORY_ID(factory_id);
+        coaParamDto.setLOT_NO(lot_no);
+
+        //test
+           coaParamDto.setCOA_ID("COA-17040515102694");
+           coaParamDto.setVENDOR_ID("1000428");
+           coaParamDto.setMATERIAL_ID("RCAD0010");
+           coaParamDto.setFACTORY_ID("1300");
+           coaParamDto.setLOT_NO("058116091026-2");
+        //
+
+        coaMgmtDTO coaDETAIL = coaMgmtService.getCOADetailTitle(coaParamDto);
+        model.addAttribute("DETAIL", coaDETAIL);
+        System.out.println("select coaDETAIL: " + coaDETAIL);
+
         return "coaMgmt/popCoa";
     }
+
+    //성적서 팝업 스팩리스트 검색
+    @PostMapping("/admin/qualityCtrl/Detail")
+    public ResponseEntity<?> caoDetail(@RequestBody coaMgmtDTO coaMgmtdto ,Model model) {
+        try {
+            System.out.println("Received coaMgmtdto: " + coaMgmtdto);
+
+            //스펙 리스트
+            List<coaMgmtDTO> specList = coaMgmtService.getCOADetailSpec(coaMgmtdto);
+            System.out.println("select SPEC: " + specList);
+
+            return ResponseEntity.ok(specList);
+
+        } catch (Exception e) {
+            System.out.println("검색 에러!!!: " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"서버 오류 발생\"}");
+        }
+    }
+
+
+    //저장
+    @PostMapping("/admin/qualityCtrl/updateVendorComment")
+    @ResponseBody
+    public Map<String, String> updateVendorComment(
+            @RequestParam("COA_ID") String coa_id
+            ,@RequestParam("LOT_NO") String lot_no
+            ,@RequestParam("VENDOR_COMMENT") String vendor_comment
+            , Authentication authentication) {
+        Map<String, String> response = new HashMap<>();
+        try {
+
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String user_gubun = user.getUSER_GUBUN();
+            String user_id = user.getUsername();
+
+            coaMgmtDTO coaParamDto = new coaMgmtDTO();
+            coaParamDto.setTOKEN_USER_ID(user_id);
+            coaParamDto.setCOA_ID(coa_id);
+            coaParamDto.setVENDOR_COMMENT(vendor_comment);
+            coaParamDto.setLOT_NO(lot_no);
+
+            coaMgmtService.updateVendorComment(coaParamDto);
+
+            response.put("status", "success");
+            response.put("message", "승인 처리 되었습니다.");
+
+
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "처리 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
+
 
 
 }
