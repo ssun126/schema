@@ -276,7 +276,7 @@
     <update id="msdsUpdate" parameterType="partDetailMsds">
         UPDATE  SC_PART_MGMT_DETAIL_MSDS
         SET MSDS_REG_DATE=#{MSDS_REG_DATE},MSDS_LANG = #{MSDS_LANG},MSDS_APPROVAL_NUM = #{MSDS_APPROVAL_NUM}
-        <if test="MSDS_FILE_NAME != null and MSDS_FILE_NAME != ''">
+        <if test="MSDS_FILE_NAME != null and MSDS_FILE_NAME != '' and MSDS_FILE_STATUS != 'DEL'">
             <![CDATA[
                 ,MSDS_FILE_NAME=#{MSDS_FILE_NAME} ,MSDS_FILE_PATH=#{MSDS_FILE_PATH}
             ]]>

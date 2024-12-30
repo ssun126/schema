@@ -90,7 +90,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field datepicker" datePickerControl=""  id="confirmDate" name="CONFIRM_DATE" th:value="${declDTO.CONFIRM_DATE}" reqcheck="reqcheck">
+                                        <input type="text" class="cui_text_field datepicker" datePickerControl=""  id="confirmDate" name="CONFIRM_DATE" th:value="${declDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="날자을 입력해주세요." messages="">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${declDTO.WARRANTY_ITEM}" reqcheck="reqcheck" readonly="readonly">
+                                        <input type="text" class="cui_text_field" name="WARRANTY_ITEM"  th:value="${declDTO.WARRANTY_ITEM}" readonly="readonly" >
                                     </div>
                                 </div>
                             </td>
@@ -716,7 +716,7 @@
 
     var frmDetailPrev = function () {
         var pmidx  = $("input[name=PM_IDX]").val();
-        //Common.MoveUrl("/user/partMgmt/goSvhcDetail?PM_IDX=" +pmidx;
+        Common.MoveUrl("/user/partMgmt/goSvhcDetail?PM_IDX=" +pmidx);
 
     }
 
@@ -746,7 +746,7 @@
                 isValid = false;
                 message= returnVal+' 에 내용이 없습니다';
             }
-            }
+        }
 
         //Y 일때는 하위 내용이 하나라도 Y가 있어야함
 

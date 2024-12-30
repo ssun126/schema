@@ -95,7 +95,7 @@
                 editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
                 editModel: { clicksToEdit: 2 },
                 selectionModel: { type: 'cell', mode: 'block' },
-                height: $(window).height() - heightMinus,
+                height: $(window).height() - heightMinus ,
                 title: "",
                 sortable: false,
                 resizable: true,
@@ -110,12 +110,11 @@
                 showTop: false,
                 showToolbar: true,
                 stripeRows: false,
-                wrap: true,
+                wrap: false,
                 autoAddRow: false,
                 freezeCols:0,
-                autoRow: true,
+                autoRow: false,
                 autoRowHead: false,
-                rowHt:25,
                 rowInit: function () {
                     return { style: 'font-size:12px;' };
                 },

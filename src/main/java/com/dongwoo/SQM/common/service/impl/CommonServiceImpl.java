@@ -6,6 +6,7 @@ import com.dongwoo.SQM.common.service.CommonService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +18,6 @@ import java.util.*;
 public class CommonServiceImpl implements CommonService {
 
     private CommonRepository commonRepository;
-
-
 
 
     public Map<String, Object> jsonDataMap(String json) throws Exception {

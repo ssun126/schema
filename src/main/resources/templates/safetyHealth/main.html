@@ -207,8 +207,8 @@
                             <col style="width:100px;">
                             <col style="width:180px;">
                             <col>
-                            <col style="width:130px;">
-                            <col style="width:130px;">
+                            <col style="width:180px;">
+                            <col style="width:150px;">
                             <col style="width:70px;">
                             <col style="width:160px;">
                         </colgroup>
@@ -227,10 +227,10 @@
                         <tr th:each="data : ${auditItemPoint}">
                             <td><span th:text="${data.PROVISION}"></span></td>
                             <td><span th:text="${data.AUDIT_ITEM}"></span></td>
-                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
-                            <td style="text-align: left;"><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${data.AUDIT_CRITERIA}"></span></td>
+                            <td style="text-align: left;"><span th:utext="${data.POINT_CRITERIA}"></span></td>
                             <td style="text-align: center;"></td>
-                            <td style="text-align: right;" th:text="${data.POINT}"></td>
+                            <td style="text-align: right;"><span th:text="${data.POINT % 1 == 0 ? data.POINT.intValue() : data.POINT}"></span></td>
                             <td>
                                 <input type="text" name="AUDIT_COMMENT" class="cui_text_field"  th:value="${data.AUDIT_COMMENT}">
                                 <input type="hidden" name="AUDIT_ID" th:value="${data.AUDIT_ID}">
@@ -248,7 +248,7 @@
                 </fieldset>
                 <!-- Audit 방법 : Self -->
                 <div class="cui_items_wrap" data-direction="right">
-                    <div class="item_content" th:if="${#lists.isEmpty(companyAuthFile)}">
+                    <div class="item_content" th:if="${companyAuth.APPROVE_STATE != 'SEND'}">
                         <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
                     </div>
                 </div>
@@ -393,13 +393,10 @@
 
         var totalScore = 0;
         $('#itemTable tbody tr').each(function(index, row) {
-            // 첫 번째 행은 헤더이므로 건너뜁니다.
-            //if (index === 0) return;
-
             var $cells = $(row).find('td'); // td 요소들을 jQuery 객체로 가져옴
             var thirdTdContent = $cells.eq(3).html() || '';  // 4번째 td의 내용을 가져오기
             var thirdTdContentStr = thirdTdContent.replace('<span>', '').replace('</span>', '');
-            var lines = thirdTdContentStr.split('\n');  // 내용을 줄 단위로 분리
+            var lines = thirdTdContentStr.split('<br>');  // 내용을 줄 단위로 분리
 
             var $selectBox = $('<select></select>');  // select box 생성
             var $baseOption = $('<option></option>');
@@ -426,11 +423,9 @@
 
             // 5번째 td에 select box 추가
             $cells.eq(4).append($selectBox);
-            // 6번째 td에 기존 점수가 있다면, 셀렉트 박스를 자동으로 설정
             var existingScore = $cells.eq(5).text().trim();  // 6번째 td에서 기존 점수를 가져옴
             var previousScore = 0;  // 기존 점수 저장용
 
-            console.log(existingScore);
             if (existingScore) {
                 // 기존 점수와 일치하는 option을 셀렉트 박스에서 선택
                 $selectBox.find('option').each(function() {
@@ -441,12 +436,12 @@
                     }
                 });
             }
-            //console.log(previousScore);
+            console.log(previousScore);
             // 6번째 td에 초기 점수 추가 (선택된 값에 따라 점수 추가)
-            //if (previousScore) {
-            //    totalScore += previousScore;  // 기존 점수를 총점에 추가
-            //    $('#totalPoint').text(totalScore);
-            //}
+            if (previousScore) {
+                totalScore += previousScore;  // 기존 점수를 총점에 추가
+                $('#totalPoint').text(totalScore);
+            }
 
             // change 이벤트 핸들러 추가
             $selectBox.on('change', function(event) {
@@ -470,7 +465,6 @@
                 previousScore = selectedScore;  // 새 점수로 업데이트
             });
         });
-
     });
 
     function downloadFile(fileName) {
@@ -517,9 +511,7 @@
                     }
                 }
             });
-
         }else{ // 직접 입력을 선택했다면
-
             $("#itemTable tbody tr").each(function() {
                 var row = {};
                 var fileCnt = {};

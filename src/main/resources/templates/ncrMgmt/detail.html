@@ -12,15 +12,20 @@
             </div>
         </div>
         <div class="cui_body">
-            <form class="cui_form_section" data-legend="true">
+            <form id="popArea" class="cui_form_section" data-legend="true">
+                <input type='hidden' id='popAuditNcrNcrSeq'>
+                <input type='hidden' id='popAuditNcrNcrDif'>
+                <input type='hidden' id='popAuditNcrPlant'>
+                <input type='hidden' id='popAuditNcrNcrStatus'>
+                <input type='hidden' id='ncr_seq' name='ncr_seq'>
                 <fieldset>
                     <table class="cui_table">
                         <colgroup>
-                            <col style="width:154px;">
+                            <col style="width:134px;">
                             <col>
-                            <col style="width:154px;">
+                            <col style="width:134px;">
                             <col>
-                            <col style="width:154px;">
+                            <col style="width:134px;">
                             <col>
                         </colgroup>
                         <tbody>
@@ -29,7 +34,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrAuditType' ></span>
                                     </div>
                                 </div>
                             </td>
@@ -37,7 +42,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrPartnersNm' ></span>
                                     </div>
                                 </div>
                             </td>
@@ -45,7 +50,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrMakeDate' ></span>
                                     </div>
                                 </div>
                             </td>
@@ -55,7 +60,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrNcrTypeNm' ></span>
                                     </div>
                                 </div>
                             </td>
@@ -63,7 +68,7 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrAuditor' ></span>
                                     </div>
                                 </div>
                             </td>
@@ -71,27 +76,27 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrAuditDate' ></span>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th><span>제목</span></th>
-                            <td colspan="7">
+                            <td colspan="5">
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <span id='popAuditNcrNcrSubject' ></span>
                                     </div>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th><span>지적내용</span></th>
-                            <td colspan="7">
+                            <td colspan="5">
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <input class="cui_text_field" type="text" value="12341234" disabled>
+                                        <textarea id="popAuditNcrNcrComment" disabled='true' style="width:100%; height:40px; resize:none; margin-top:2px"></textarea>
                                     </div>
                                 </div>
                             </td>
@@ -105,15 +110,15 @@
                         <div class="tab_list">
                             <ul>
                                 <li aria-selected="true">
-                                    <button type="button" class="tab_button" data-tab-target="#tab1"><span>탭버튼1</span>
+                                    <button type="button" class="tab_button" data-tab-target="#tab1" id="tabBtn1"><span> 1 차 </span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button type="button" class="tab_button" data-tab-target="#tab2"><span>탭버튼2</span>
+                                    <button type="button" class="tab_button" data-tab-target="#tab1" id="tabBtn2"><span> 2 차 </span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button type="button" class="tab_button" data-tab-target="#tab3"><span>탭버튼3</span>
+                                    <button type="button" class="tab_button" data-tab-target="#tab1" id="tabBtn3"><span> 3 차  </span>
                                     </button>
                                 </li>
                             </ul>
@@ -125,29 +130,29 @@
                                     <legend><span>조치계획</span></legend>
                                     <table class="cui_table">
                                         <colgroup>
-                                            <col style="width:154px;">
+                                            <col style="width:134px;">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
                                         </colgroup>
                                         <tbody>
                                         <tr>
                                             <th><span>등록일시</span></th>
-                                            <td></td>
+                                            <td><span id='popAuditNcrTabPlanMakeDate' ></span></td>
                                             <th><span>작성자</span></th>
-                                            <td></td>
-                                            <th><span>시정조치계획일</span></th>
-                                            <td></td>
+                                            <td><span id='popAuditNcrTabPlanEmpnm' ></span></td>
+                                            <th><span>조치계획일</span></th>
+                                            <td><input id='popAuditNcrTabPlanDate' type='text' placeholder='' required='True' input-type='datepicker' date-format='date' class='w-input input-date'></td>
                                             <th><span>메일주소</span></th>
-                                            <td></td>
+                                            <td><span id='popAuditNcrTabPlanEmail' ></span></td>
                                         </tr>
                                         <tr>
                                             <th><span>사유</span></th>
-                                            <td colspan="7"></td>
+                                            <td colspan="7"><textarea id="popAuditNcrTabPlanComment" style="width:100%; height:40px; resize:none; margin-top:2px"></textarea></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -156,27 +161,31 @@
                                     <legend><span>조치결과</span></legend>
                                     <table class="cui_table">
                                         <colgroup>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
                                         </colgroup>
                                         <tbody>
                                         <tr>
                                             <th><span>등록일시</span></th>
-                                            <td></td>
+                                            <td><span id='popAuditNcrTabResultMakeDate' ></span></td>
                                             <th><span>조치완료일</span></th>
-                                            <td></td>
-                                            <td colspan="2"></td>
-                                            <td colspan="2"></td>
+                                            <td><input  id = 'popAuditNcrTabResultCompleteDate'  type = 'text'  placeholder = ''  required = 'True'  input-type = 'datepicker'  date-format = 'date'  class = 'w-input input-date'></td>
+                                            <td colspan="4"></td>
+                                        </tr>
+                                        <tr>
+                                            <th><span>조치내용</span></th>
+                                            <td colspan="7"><textarea id="popAuditNcrTabResultComment" style="width:100%; height:40px; resize:none; margin-top:2px"></textarea></td>
                                         </tr>
                                         <tr>
                                             <th><span>첨부파일</span></th>
                                             <td colspan="7">
+                                                <div  id = 'popAuditResultFileArea' class = 'txt-detailview-none remark' style="height:100px; width:90%; padding-left:0px; overflow:hidden">
                                                 <div class="cui_attachments">
                                                     <input type="file" class="cui_file_field">
                                                     <div class="cui_items_wrap" data-direction="left">
@@ -205,50 +214,46 @@
                                     <legend><span>조치확인</span></legend>
                                     <table class="cui_table">
                                         <colgroup>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
-                                            <col style="width:154px;">
-                                            <col>
-                                            <col style="width:154px;">
+                                            <col style="width:134px">
                                             <col>
                                         </colgroup>
                                         <tbody>
                                         <tr>
                                             <th><span>확인일</span></th>
-                                            <td></td>
+                                            <td><span id='popAuditNcrTabNcrConfirmDate' ></span></td>
                                             <th><span>확인자</span></th>
-                                            <td></td>
+                                            <td><span id='popAuditNcrTabConfirmEmpNm' ></span></td>
                                             <th><span>승인여부</span></th>
-                                            <td></td>
-                                            <td colspan="2"></td>
+                                            <td><span id='popAuditNcrTabConfirmYn' ></span></td>
                                         </tr>
                                         <tr>
                                             <th><span>COMMENT</span></th>
-                                            <td colspan="7">
-                                                <textarea rows="5" style="width:100%" class="cui_text_field"></textarea>
+                                            <td colspan="5">
+                                                <textarea id="popAuditNcrTabConfirmComment" disabled='true' style="width:100%; height:40px; resize:none; margin-top:2px"></textarea>
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </fieldset>
                                 <!-- 기재 항목 Set -->
-
                             </div>
                             <div id="tab2" class="tab_content">
-                                2번탭 내용
+                                2번 탭
                             </div>
                             <div id="tab3" class="tab_content">
-                                3번탭 내용
+                               3번 탭
                             </div>
                         </div>
                     </div>
                     <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                         <div class="item_content">
-                            <button type="button" id="BT1" name="INFO_FLAG" value="Reg"
+                            <button type="button" id='btnPopAuditNcrResultSave' name="INFO_FLAG" value="Reg"
                                     class="cui_button secondary"><span>조치결과 저장</span></button>
-                            <button type="button" id="BT2" name="INFO_FLAG" value="Save"
+                            <button type="button" id='btnPopAuditNcrResultComplete' name="INFO_FLAG" value="Save"
                                     class="cui_button secondary"><span>조치결과 등록</span></button>
                             <button type="button" id="BtnClose" name="INFO_FLAG" value="Close"
                                     class="cui_button primary"><span>목록</span></button>
@@ -263,7 +268,185 @@
 </body>
 </html>
 <script>
+
+$(document).ready(function() {
+    ListSearchMaterialCode();
+    AuditPlanTab(1);
+});
+
+
+var ListSearchMaterialCode = function () {
+    var url = "/api/audit/auditNcrMgmt/getAuditNcrInfo";
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter($("#popArea"));
+    ReqInfo.AddParameter("ncr_seq", `[[${NCR_SEQ}]]`);
+
+    Common.Ajax(url, ReqInfo, function (data) {
+        var dataJson = JSON.parse(data)
+
+        if(dataJson.auditNcrInfo){ //data.auditNcrInfo[0]
+            var auditNcrInfo = dataJson.auditNcrInfo; ////data.auditNcrInfo[0]
+            $("#popAuditNcrNcrStatus").val(auditNcrInfo.NCR_Status);
+            $("#popAuditNcrAuditType").html(auditNcrInfo.TypeNM);
+            $("#popAuditNcrPartnersNm").html(auditNcrInfo.PartnersNM);
+            $("#popAuditNcrAuditDate").html(auditNcrInfo.Audit_Date);
+            $("#popAuditNcrMakeDate").html(auditNcrInfo.Make_Date);
+            $("#popAuditNcrNcrTypeNm").html(auditNcrInfo.NCR_TypeNM);
+            $("#popAuditNcrAuditor").html(auditNcrInfo.AuditorNM);
+            $("#popAuditNcrNcrSubject").html(auditNcrInfo.NCR_Subject);
+            $("#popAuditNcrNcrComment").val(auditNcrInfo.NCR_Comment);
+            $("#popAuditNcrNcrSeq").val(auditNcrInfo.NCR_Seq);
+            $("#popAuditNcrNcrDif").val(auditNcrInfo.NCR_DIF);
+            $("#popAuditNcrPlant").val(auditNcrInfo.PLANT);//CM:공통, PT:평택, IF:익산
+            //auditNcr.tab.btnClick("tabBtn"+auditNcrInfo.NCR_DIF,auditNcrInfo.NCR_DIF);
+        }
+    });
+}
+
+var AuditPlanTab = function (paramDif) {
+    var url = "/api/audit/auditNcrMgmt/getAuditNcrInfoTab";
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter("ncr_seq", $("#popAuditNcrNcrSeq").val());
+    ReqInfo.AddParameter("dif", paramDif);
+
+    Common.Ajax(url, ReqInfo, function (data) {
+        var dataJson = JSON.parse(data)
+        console.log(dataJson);
+        if(dataJson.auditNcrInfoPlan){ //data.auditNcrInfoPlan[0]
+            var auditNcrInfoPlan = dataJson.auditNcrInfoPlan; //data.auditNcrInfoPlan[0]
+            var userInfo = dataJson.userInfo;
+            if(!auditNcrInfoPlan){
+                $("#popAuditNcrTabPlanEmpnm").html(userInfo.USER_NAME);
+                $("#popAuditNcrTabPlanEmail").html(userInfo.EMAIL_ADDRESS);
+                $("#popAuditNcrTabPlanEmpcd").val(userInfo.USER_ID);
+            }else{
+                $("#popAuditNcrTabPlanEmpnm").html(auditNcrInfoPlan.NCR_P_Make_EmpNM);
+                $("#popAuditNcrTabPlanEmail").html(auditNcrInfoPlan.NCR_P_EMail);
+                $("#popAuditNcrTabPlanEmpcd").val(auditNcrInfoPlan.NCR_P_Make_EmpCD);
+                $("#popAuditNcrTabPlanMakeDate").html(auditNcrInfoPlan.NCR_P_Make_Date);
+                $("#popAuditNcrTabPlanDate").val(auditNcrInfoPlan.NCR_P_Plan_Date);
+                $("#popAuditNcrTabPlanComment").val(auditNcrInfoPlan.NCR_P_Comment);
+            }
+        }
+        if(dataJson.auditNcrInfoResult){ //data.auditNcrInfoResult[0]
+            var auditNcrInfoResult = dataJson.auditNcrInfoResult; //data.auditNcrInfoResult[0]
+            $("#popAuditNcrTabResultMakeDate").html(auditNcrInfoResult["NCR_R_Make_Date"]);
+            $("#popAuditNcrTabResultCompleteDate").val(auditNcrInfoResult["NCR_R_Complete_Date"]);
+            $("#popAuditNcrTabResultComment").val(auditNcrInfoResult["NCR_R_Comment"]);
+
+            $("#popAuditNcrTabNcrConfirmDate").html(auditNcrInfoResult["NCR_C_Confirm_Date"]);
+            $("#popAuditNcrTabConfirmEmpNm").html(auditNcrInfoResult["NCR_C_Confirm_EmpNM"]);
+            $("#popAuditNcrTabConfirmYn").html(auditNcrInfoResult["NCR_C_Confirm_YN"]);
+            $("#popAuditNcrTabConfirmComment").val(auditNcrInfoResult["NCR_C_Confirm_Comment"]);
+        }
+    });
+}
+//탭영역
+const tabButtons = ["#tabBtn1", "#tabBtn2", "#tabBtn3"];
+
+// 각 버튼에 클릭 이벤트 처리기 설정
+tabButtons.forEach(function(buttonId, index) {
+    $(buttonId).click(function() {
+        AuditPlanTab((index + 1)); // index + 1로 '1', '2', '3' 값을 전달
+    });
+});
+
+popGetData: function(rowData){
+    auditPlan.popControl.popClearData();
+    var reqParam = {
+        ap_seq : rowData.AP_Seq
+    };
+    var options = {
+        method : "POST",
+        success: function (data) {
+            if(data.auditPlanInfo && data.auditPlanInfo){
+                var auditPlanInfo = data.auditPlanInfo[0];
+                $("#popAuditPlanApSeq").val(auditPlanInfo.AP_Seq);
+                $("#popAuditPlanAmSeq").val(auditPlanInfo.AM_Seq);
+                $("#popAuditPlanApNo").html(auditPlanInfo.AP_No);
+                $("#popAuditPlanApDate").html(auditPlanInfo.AP_Date);
+                $("#popAuditPlanApType").html(auditPlanInfo.AP_Type);
+                $("#popAuditPlanWetpr").html(auditPlanInfo.WETPR);
+                $("#popAuditPlanApWay").html(auditPlanInfo.AP_Way);
+                $("#popAuditPlanMakeEmpNm").html(auditPlanInfo.Make_EmpNM);
+                $("#popAuditPlanApComment").val(auditPlanInfo.AP_COMMENT);
+                $("#popAuditPlanPlant").val(auditPlanInfo.PLANT);
+            }
+            if(data.auditResultInfo && data.auditResultInfo){
+                var auditResultInfo = data.auditResultInfo[0];
+                $("#popAuditPlanVendorNm").html(auditResultInfo.PartnersNM);
+                $("#popAuditPlanResultApComment").val(auditResultInfo.COMMENT);
+                $("#popAuditPlanGrade").html(auditResultInfo.GRADE);
+            }
+            if(data.auditPlanInfoResultFile && data.auditPlanInfoResultFile.length>0 && (data.auditPlanInfoResultFile[0].status=='C'||data.auditPlanInfoResultFile[0].status=='D'||data.auditPlanInfoResultFile[0].status=='F')){
+
+                auditPlan.multiFileInput.downloadSet("popAuditPlanResultAttachFileArea",data.auditPlanInfoResultFile);
+
+            }
+            if(data.auditPlanInfoCsFile && data.auditPlanInfoCsFile.length>0){
+                auditPlan.multiFileInput.downloadSet("popAuditPlanAttachFileArea",data.auditPlanInfoCsFile);
+                $("#btnPopAuditPlanSave").hide();
+                $("#btnPopAuditCheckSheetDel").show();
+            }else{
+                auditPlan.multiFileInput.set("popAuditPlanAttachFileArea")
+                $("#btnPopAuditPlanSave").show();
+                $("#btnPopAuditCheckSheetDel").hide();
+            }
+            $("#popAuditPlan").micaModal('show');
+                auditPlan.lodingBar.hide();
+				}
+			};
+			common.ajax("/api/audit/auditPlanMgmt/getAuditPlanInfo", reqParam, options);
+
+    	}
+
+downloadSet = function(multiFileId,fileInfoAry,dif){
+    $("#"+multiFileId).append("<div class='multiFileArea'></div>");
+    $("#"+multiFileId+" .multiFileArea").append("<div id='"+multiFileId+"_multiFileData' class='multifilearea-multifiledata' style='overflow-x:hidden; overflow-y:scroll; height:60px; margin-top: 5px; padding-left: 5px;'></div>");
+    if(fileInfoAry && fileInfoAry.length>0){
+        for(var i=0; i<fileInfoAry.length; i++){
+            if(fileInfoAry[i].attach_filename && fileInfoAry[i].attach_path){
+                var fileName = fileInfoAry[i].attach_filename;
+                var povisPath = fileInfoAry[i].attach_path;
+                var fileSeq = fileInfoAry[i].attach_seq;
+                var ncrSeq = fileInfoAry[i].NCR_Seq;
+                var filesize = fileInfoAry[i].attach_size;
+                var filePathAry = String(povisPath).split('/');
+                filePath = "";
+                for(var j=0; j<filePathAry.length; j++){
+                    if(j>0){
+                        filePath+="\/";
+                    }
+                    filePath += filePathAry[j];
+                }
+                if(i>0){
+                    $("#"+multiFileId+'_multiFileData').append("<div style='clear:both;'>");
+                }
+                var template= "<div style='float:left'><div style='float:left'><a class='btn fa fa-folder-open' type='button' onclick='auditNcr.multiFileInput.del($(this))' style='width:15px; height:25px; background-color:white; color:#353535'></a></div>";
+                template += "<div style='float:left; margin-left: 4px; padding-top: 2px;'><a dif='"+dif+"' ncrSeq='"+ncrSeq+"' fileSeq='"+fileSeq+"' dpPortalPath='"+filePath+"' povisPath='"+povisPath+"' onClick='auditNcr.multiFileInput.downloadSetAction($(this))'>"+fileName+"</a></div></div>";
+                $("#"+multiFileId+'_multiFileData').append(template);
+            }
+        }
+    }
+}
+downloadSetAction = function(self){
+    var url = "/api/audit/auditNcrMgmt/resultFileDownload";
+    if( url ){
+        var inputs = '';
+        inputs+='<input type="hidden" name="povisPath" value="'+self.attr("povisPath")+'" />';
+        inputs+='<input type="hidden" name="dpPortalPath" value="'+self.attr("dpPortalPath")+'" />';
+        inputs+='<input type="hidden" name="fileName" value="'+self.text()+'" />';
+        inputs+='<input type="hidden" name="attachSeq" value="'+self.attr("fileSeq")+'" />';
+        inputs+='<input type="hidden" name="dif" value="'+self.attr("dif")+'" />';
+        inputs+='<input type="hidden" name="ncrSeq" value="'+self.attr("ncrSeq")+'" />';
+        inputs+='<input type="hidden" name="attachType" value="'+"AUDIT"+'" />';
+        jQuery('<form action="'+ url +'" method="post">'+inputs+'</form>')
+        .appendTo('body').submit().remove();
+    };
+}
     $('.toggle_btn').on('click', function() {
-    $(this).addClass('primary').siblings().removeClass('primary');
-  });
+        $(this).addClass('primary').siblings().removeClass('primary');
+      });
 </script>

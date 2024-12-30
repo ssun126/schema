@@ -93,11 +93,12 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="MSDS_FILE" >
+                                    <input type="hidden" name="MSDS_FILE_STATUS">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -115,16 +116,11 @@
                     <table class="cui_table center">
                         <colgroup>
                             <col style="width:110px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
-                            <col style="width:90px;">
+                            <col style="width:120px;">
+                            <col style="width:120px;">
+                            <col style="width:120px;">
+                            <col style="width:120px;">
+                            <col style="width:120px;">
                             <col>
                         </colgroup>
                         <thead>
@@ -135,18 +131,14 @@
                             <th><span>PB</span></th>
                             <th><span>CR6</span></th>
                             <th><span>PBBS</span></th>
-                            <th><span>PBDES</span></th>
-                            <th><span>DEHP</span></th>
-                            <th><span>BBP</span></th>
-                            <th><span>DBP</span></th>
-                            <th><span>DIBP</span></th>
+
                             <th><span data-langsid="첨부파일"></span></th>
 
                         </tr>
                         </thead>
                         <tbody id="tableBody2">
                         <tr>
-                            <td>
+                            <td rowspan="3">
                                 <input type="hidden" name="ROHS_IDX" th:value="${rohsDTO.ROHS_IDX}" >
                                 <input type="text" class="cui_text_field datepicker" th:value="${rohsDTO.ROHS_CONFIRM_DATE}" name="ROHS_CONFIRM_DATE"  reqcheck="reqcheck" datePickerControl="" data-messages="Rohs 확인날짜 입력해주세요." messages="">
                             </td>
@@ -155,25 +147,36 @@
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PB}"  name="ROHS_PB" reqcheck="reqcheck" data-messages="Rohs PB 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_CR6}"  name="ROHS_CR6" reqcheck="reqcheck" data-messages="Rohs CR6 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PBBS}"  name="ROHS_PBBS" reqcheck="reqcheck" data-messages="Rohs PBBS 입력해주세요." messages=""></td>
+
+                            <td rowspan="3">
+                                <div class="cui_attachments" style="display:flex;">
+                                    <input type="file" class="cui_file_field" name="ROHS_FILE">
+                                    <input type="hidden" name="ROHS_FILE_STATUS">
+
+                                </div>
+                                <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }" style="width:auto;">
+                                    <div class="item_label" data-cui-icon="paperclip" style="width:auto"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}"></span></div>
+                                    <div class="item_content">
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
+                                        <button type="button" class="cui_button icon endpoint"  onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>PBDES</span></th>
+                            <th><span>DEHP</span></th>
+                            <th><span>BBP</span></th>
+                            <th><span>DBP</span></th>
+                            <th><span>DIBP</span></th>
+                        </tr>
+                        <tr>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PBDES}"  name="ROHS_PBDES" reqcheck="reqcheck" data-messages="Rohs PBDES 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_DEHP}"  name="ROHS_DEHP" reqcheck="reqcheck" data-messages="Rohs DEHP 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_BBP}"  name="ROHS_BBP" reqcheck="reqcheck" data-messages="Rohs BBP 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_DBP}"  name="ROHS_DBP" reqcheck="reqcheck" data-messages="Rohs DBP 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_DIBP}"  name="ROHS_DIBP" reqcheck="reqcheck" data-messages="Rohs DIBP 입력해주세요." messages=""></td>
-                            <td>
-                                <div class="cui_attachments" style="display:flex;">
-                                    <input type="file" class="cui_file_field" name="ROHS_FILE">
-                                    <input type="hidden" name="FILE_STATUS">
-                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}"></span></div>
-                                        <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -217,11 +220,12 @@
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
+                                    <input type="hidden" name="HALOGEN_FILE_STATUS">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}" ></span></div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -268,7 +272,7 @@
                                             <div class="item_content">
                                                 <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                 ><span>다운로드</span></button>
-                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del()" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -310,12 +314,17 @@
                          + '</tr>');
             Common.Load(newRow);
 
-<!--            newRow.find("button[data-cui-icon=trash]").bind("click", function () {-->
-<!--                $(this).parent().parent().remove();-->
-<!--                var row = $(this).parent().parent();-->
-<!--                row.css("display","none");-->
-<!--                row.find("input[name^=ETC_FLAG]").val('DEL');-->
-<!--            });-->
+            newRow.find("button[data-cui-icon=trash]").bind("click", function () {
+                var row = $(this).parent().parent();
+                var selIdx = row.find("input[name^=ETC_IDX]").val();
+                var arrDelIdx = $('input[name=ETC_DEL_IDX]').val();
+                if(selIdx != ''){
+                    if(arrDelIdx != '') arrDelIdx += ',';
+                    arrDelIdx += selIdx;
+                }
+                $('input[name=ETC_DEL_IDX]').val(arrDelIdx);
+                $(this).parent().parent().remove();
+            });
 
             $('#etcBodyArea').append(newRow);
             $("#etcCount").val(etcCount);
@@ -331,6 +340,13 @@
             $('input[name=ETC_DEL_IDX]').val(arrDelIdx);
             $(this).parent().parent().remove();
         });
+
+        var status_Del = function(obj){
+            var row = obj.parent().parent();
+            row.find("span[id*=FILE_NAME]").text('');
+            row.parent().find("input[name*=FILE_STATUS").val("DEL");
+            row.css("display","");
+        }
 
         var frmDetailSubmit = function () {
             //e.preventDefault();
@@ -391,7 +407,7 @@
                     mode : "confrim"
                     , okback : function () {
                         $("#frmDetail").find("input[name=SaveMode]").val("Save");
-                        $("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                        //$("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
                         //$("#frmDetail").submit();
                         frmDetailSubmit();
                     }
@@ -411,15 +427,15 @@
 
             //파일 체크
             var flag = '';
-            if($("input[name=MSDS_FILE]") == '' && $("#MSDS_FILE_NAME").val() == '') {
+            if($("input[name=MSDS_FILE]").val() === '' && $("#MSDS_FILE_NAME").text() === '') {
                  isValid=false;
                  flag='MSDS';
             }
-            if($("input[name=ROHS_FILE]") == '' && $("#ROHS_FILE_NAME]").val() == '') {
+            if($("input[name=ROHS_FILE]").val() == '' && $("#ROHS_FILE_NAME]").text() === '') {
                  isValid=false;
                  flag='ROHS';
             }
-            if($("input[name=HALOGEN_FILE]") == '' && $("#HALOGEN_FILE_NAME").val() == '') {
+            if($("input[name=HALOGEN_FILE]").val() == '' && $("#HALOGEN_FILE_NAME").text() === '') {
                  isValid=false;
                  flag='HALOGEN';
             }

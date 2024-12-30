@@ -26,6 +26,10 @@
         select * from SC_ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
     </select>
 
+    <select id="getIsoAuthItems" parameterType="map" resultType="isoAuthItem">
+        select * from SC_ISO_AUTH_COMPANY_ITEM where COM_CODE=#{COM_CODE}
+    </select>
+
     <select id="getCompanyAuth" parameterType="map" resultType="authMgmt">
         SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, POINT
         FROM SC_AUTH_COMPANY_INFO ACI

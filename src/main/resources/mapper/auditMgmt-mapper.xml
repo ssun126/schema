@@ -5,8 +5,8 @@
 <mapper namespace="AuditMgmt">
 
     <insert id="insertAuth" parameterType="authMgmt">
-        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, APPROVE_DATE, AUTH_TYPE, POINT,REG_DW_USER_IDX,UP_DW_USER_IDX)
-        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, #{AUTH_TYPE}, #{POINT}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX})
+        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, AUTH_TYPE, POINT,REG_DW_USER_IDX,UP_DW_USER_IDX)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, sysdate, #{AUTH_TYPE}, #{POINT}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX})
     </insert>
 
     <insert id="insertItemPoint" parameterType="auditItemPoint">
@@ -20,6 +20,13 @@
         WHERE COM_CODE = #{COM_CODE}
         AND AUTH_TYPE = #{AUTH_TYPE}
         AND AUTH_SEQ = #{AUTH_SEQ}
+    </update>
+
+    <update id="saveAuthResult" parameterType="authMgmt">
+        UPDATE SC_AUTH_COMPANY_INFO
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}
+        WHERE COM_CODE = #{COM_CODE}
+        AND AUTH_TYPE = #{AUTH_TYPE}
     </update>
 
     <select id="selectAuth" parameterType="authMgmt" resultType="authMgmt">
@@ -59,7 +66,7 @@
     </select>
 
     <select id="getCompanyAuthItemPoint" parameterType="map" resultType="auditItemPoint">
-        SELECT COM_CODE, AUDIT_ID, AUTH_TYPE, TO_NUMBER(AA.POINT, '999999.0') AS POINT, AUDIT_COMMENT, AUTH_SEQ, REG_COM_USER_IDX, REG_DATE
+        SELECT COM_CODE, AUDIT_ID, AUTH_TYPE, POINT, AUDIT_COMMENT, AUTH_SEQ, REG_COM_USER_IDX, REG_DATE
         FROM SC_AUDIT_ITEM_POINT
         WHERE COM_CODE = #{COM_CODE} AND AUTH_TYPE = #{AUTH_TYPE}
     </select>
@@ -82,8 +89,8 @@
     <select id='getUserInfo' resultType="java.util.LinkedHashMap">
         SELECT
         *
-        FROM SYS_USER
-        WHERE USER_ID = #{USERID}
+        FROM SC_USER_INFO
+        WHERE USER_IDX = #{USER_IDX}
     </select>
 
     <select id="searchCompanies" parameterType="map" resultType="authMgmt">

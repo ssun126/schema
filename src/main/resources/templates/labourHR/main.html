@@ -98,7 +98,7 @@
                                     <col style="width:150px;">
                                     <col style="width:250px;">
                                     <col style="width:200px;">
-                                    <col style="width:100px;">
+                                    <col style="width:200px;">
                                     <col style="width:70px;">
                                     <col style="width:70px;">
                                     <col>
@@ -128,7 +128,7 @@
                                     <td style="text-align: left;"><span th:utext="${#strings.replace(data.AUDIT_CRITERIA, '\n', '<br/>')}"></span></td>
                                     <td style="text-align: left;"><span th:utext="${#strings.replace(data.POINT_CRITERIA, '\n', '<br/>')}"></span></td>
                                     <td style="text-align: center;"></td>
-                                    <td style="text-align: right;" th:text="${data.POINT}"></td>
+                                    <td style="text-align: right;"  th:text="${data.POINT}"></td>
                                     <td>
                                         <input type="text" name="AUDIT_COMMENT" class="cui_text_field"  th:value="${data.AUDIT_COMMENT}">
                                         <input type="hidden" name="AUDIT_ID" th:value="${data.AUDIT_ID}">
@@ -175,13 +175,10 @@
         // 평가기준에 맞게 Select box 표시 >> 선택된 값의 Total 점수 표시
         var totalScore = 0;
         $('#itemTable tbody tr').each(function(index, row) {
-            // 첫 번째 행은 헤더이므로 건너뜁니다.
-            //if (index === 0) return;
-
             var $cells = $(row).find('td'); // td 요소들을 jQuery 객체로 가져옴
             var thirdTdContent = $cells.eq(4).html() || '';  // 5번째 td의 내용을 가져오기
             var thirdTdContentStr = thirdTdContent.replace('<span>', '').replace('</span>', '');
-            var lines = thirdTdContentStr.split('\n');  // 내용을 줄 단위로 분리
+            var lines = thirdTdContentStr.split('<br>');  // 내용을 줄 단위로 분리
 
             var $selectBox = $('<select></select>');  // select box 생성
             var $baseOption = $('<option></option>');
@@ -208,7 +205,6 @@
 
             // 5번째 td에 select box 추가
             $cells.eq(5).append($selectBox);
-            // 6번째 td에 기존 점수가 있다면, 셀렉트 박스를 자동으로 설정
             var existingScore = $cells.eq(6).text().trim();  // 7번째 td에서 기존 점수를 가져옴
             var previousScore = 0;  // 기존 점수 저장용
 
@@ -238,9 +234,7 @@
                 if (isNaN(selectedScore)) {
                     selectedScore = 0;
                 }
-
-                // 7번째 td에 선택된 값(점수) 표시
-                $cells.eq(6).text(selectedScore);
+                $cells.eq(6).text(selectedScore); // 7번째 td에 선택된 값(점수) 표시
 
                 // 기존 점수 빼고 새로운 점수 더하기
                 totalScore -= previousScore;  // 이전 점수 빼기
@@ -349,6 +343,7 @@
         }
 
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
+        formData.append('type', chkValue);
 
         $.ajax({
             url: '/auditMgmt/sendLabourAuthData',

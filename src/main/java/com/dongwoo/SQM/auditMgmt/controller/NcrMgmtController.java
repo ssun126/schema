@@ -19,7 +19,8 @@ public class NcrMgmtController {
     }
 
     @GetMapping("/admin/auditMgmt/ncrMgmtDetail")
-    public String getNcrMgmtAdminDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
+    public String getNcrMgmtAdminDetail(Model model, @RequestParam("NCR_SEQ") String NCR_SEQ) {
+        model.addAttribute("NCR_SEQ", NCR_SEQ);
         return "ncrMgmt/detail";
     }
 

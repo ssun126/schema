@@ -2,12 +2,10 @@ package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO;
-import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.ConflictMineralsRepository;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
 import com.dongwoo.SQM.config.security.UserCustom;
-import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -50,22 +48,18 @@ public class ConflictMineralsService {
         authDTO.setCOM_CODE(comCode);
         authDTO.setAUTH_TYPE("CONFLICT");
         authDTO.setAPPROVE_STATE("SEND"); //제출
-        authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-        authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
+        authDTO.setREG_DW_USER_IDX(loginIdx);
+        authDTO.setUP_DW_USER_IDX(loginIdx);
         log.info("authDTO::::::::::"+authDTO);
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
         if(comCnt > 0) {
             int rsltCnt = auditMgmtRepository.updateAuth(authDTO);  // updateItem
-            log.info("update rsltCnt::::::::::"+rsltCnt);
         }else{
             int rsltCnt = auditMgmtRepository.insertAuth(authDTO); //저장
-            log.info("insert rsltCnt::::::::::"+rsltCnt);
         }
 
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
-        log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
-
         // 파일이 존재하면 처리
         if (fileNames != null && fileNames.length > 0 && authMgmtDTO != null) {
 
@@ -96,7 +90,6 @@ public class ConflictMineralsService {
             }
         }
 
-        //List<BaseCodeDTO> partCodeList = companyInfoService.GetBaseCode("ConflictMinerals");
 
         // 데이터 저장
         for (ConflictMineralsDTO dto : conflictMinerals) {

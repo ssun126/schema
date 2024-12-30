@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,10 @@ public class LabourHRRepository {
 
     public int insertFileInfo(LabourHRDTO labourHRDTO) {
         return sql.insert("Labour.insertFile", labourHRDTO);
+    }
+
+    public int insertAuthItem(AuditItemPointDTO auditItemPointDTO) {
+        return sql.insert("Labour.insertAuthItem", auditItemPointDTO);
     }
     public LabourHRDTO getCompanyAuth(Map<String, Object> params) {
         return sql.selectOne("Labour.getCompanyAuth", params);

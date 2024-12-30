@@ -5,23 +5,6 @@
       layout:fragment="Content">
 <head>
     <meta charset="UTF-8">
-<!--    <link rel='stylesheet' type='text/css' href='../../../css/jqwidgets/jqx.base.css'>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxcore.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxlistbox.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxcombobox.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxexpander.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxsplitter.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxbuttons.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxscrollbar.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxdata.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxmenu.js"></script>
-    <script type="text/javascript" src="../../../js/jqwidgets/jqxnotification.js"></script>
-   &lt;!&ndash; <script type="text/javascript" src="../../../js/dongwoo/common.js"></script>&ndash;&gt;
-    <script type="text/javascript" src="../../../js/dongwoo/mica.js"></script>
-    <script type="text/javascript" src="../../../js/dongwoo/dongwoo.common.js"></script>
-    <script type="text/javascript" src="../../../js/dongwoo/mica.common.js"></script>
-    <script type="text/javascript" src="../../../js/pages/audit_ncr.js"></script>-->
     <title>NCR 관리</title>
 </head>
 <body>
@@ -448,8 +431,8 @@ $(function () {
         },
         rowDblClick: function (event, ui) {
             var data = ui.rowData;
-            const cpcode = data.PartnersCD ;
-            loadPage(cpcode) ;
+            const ncrseq = data.NCR_Seq ;
+            loadPage(ncrseq) ;
         },
         rowSelect: function (event, ui) {
         },
@@ -468,7 +451,7 @@ $(function () {
         { data_langsid: "Author", title: siteLang.getLang("Author"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "Auditor", sortable: true, editor: false, editable: false },
         { data_langsid: "시정조치계획일", title: siteLang.getLang("시정조치계획일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionPlanDate", sortable: true, editor: false, editable: false },
         { data_langsid: "시정조치등록일", title: siteLang.getLang("시정조치등록일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionMakeDate", sortable: true, editor: false, editable: false },
-        { data_langsid: "업체명", title: siteLang.getLang("업체명"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PartnersCD", sortable: true, editor: false, editable: false },
+        { data_langsid: "NCRSEQ", title: siteLang.getLang("NCRSEQ"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "NCR_Seq", sortable: true, editor: false, editable: false },
         { data_langsid: "완료일", title: siteLang.getLang("완료일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CompleteDate", sortable: true, editor: false, editable: false }
       ];
     obj.dataModel = { data: data };
@@ -488,8 +471,8 @@ $(document).ready(function() {
     ListSearch();
 });
 
-function loadPage(cpcode) {
-      const url = "/admin/auditMgmt/ncrMgmtDetail?COM_CODE=" + cpcode  ;
+function loadPage(ncrseq) {
+      const url = "/admin/auditMgmt/ncrMgmtDetail?NCR_SEQ=" + ncrseq  ;
       location.href = url;
 }
 

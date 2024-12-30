@@ -61,7 +61,7 @@ public class AuditMgmtRestController {
     }
     // admin -Audit 공통 검색어로 업체 정보 가져오기
     @PostMapping("/searchAuditMgmt")
-    public List<AuditMgmtDTO> searchCompanies(HttpServletRequest req) {
+    public List<IsoAuthItemDTO> searchCompanies(HttpServletRequest req) {
         String name = req.getParameter("searchName");
         String code = req.getParameter("searchCode");
         String state = req.getParameter("searchState");
@@ -160,9 +160,9 @@ public class AuditMgmtRestController {
 
     //Audit 공통 승인/반려 처리
     @PostMapping("/setAuthData")
-    public ResponseEntity<?> setAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("auth_seq")int auth_seq, @RequestParam("state")String state, @RequestParam("auth_type")String auth_type) {
-        //ISO 인증서 승인 상태 업데이트
-        int resultCnt = auditCommonService.updateStatus(com_code, auth_seq, reason, state, auth_type);
+    public ResponseEntity<?> setAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("auth_seq")int auth_seq, @RequestParam("state")String state, @RequestParam("auth_type")String auth_type, @RequestParam("point")double point) {
+        //인증서 승인 상태 업데이트
+        int resultCnt = auditCommonService.updateStatus(com_code, auth_seq, reason, state, auth_type, point);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
         if(resultCnt > 0){
@@ -180,10 +180,10 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendLabourAuthData")
-    public String sendLabourAuthData(@RequestParam(value = "file_name", required = false) MultipartFile fileNames) throws IOException {
+    public String sendLabourAuthData(@RequestParam("data") String data, @RequestParam("chkType") String chkType, @RequestParam(value = "file_name", required = false) MultipartFile fileNames) throws IOException {
         try {
 
-            labourHRService.saveAuthData("LABOUR" , fileNames);
+            labourHRService.saveAuthData(data,"LABOUR", fileNames, chkType);
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {

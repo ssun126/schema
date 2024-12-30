@@ -20,8 +20,8 @@ public class partDetailMsdsDTO {
     private String MSDS_FILE_NAME;
     @JsonProperty("MSDS_FILE_PATH")
     private String MSDS_FILE_PATH;
-    @JsonProperty("FILE_STATUS")
-    private String FILE_STATUS;
+    @JsonProperty("MSDS_FILE_STATUS")
+    private String MSDS_FILE_STATUS;
 
     @JsonProperty("MSDS_PART_CODE")
     private String MSDS_PART_CODE;

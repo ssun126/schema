@@ -498,7 +498,10 @@ public class PartMgmtController {
 //        String MSDS_PART_CODE = GetParam(request,"MSDS_PART_CODE","");
 //        String MSDS_PART_NAME = GetParam(request,"MSDS_PART_NAME","");
             //msds file
-            //if (!msdsFile.isEmpty()) {
+            if (msdsDTO.getMSDS_FILE_STATUS().equals("DEL")) {
+                msdsDTO.setMSDS_FILE_NAME("");
+                msdsDTO.setMSDS_FILE_PATH("");
+            }
             if(msdsFile != null){
                 if (!msdsFile.isEmpty()) {
                     String msds_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
@@ -1177,7 +1180,8 @@ public class PartMgmtController {
             //SCCS
 //        String saveMode = GetParam(request,"SaveMode","");
 //
-            String SCCS_IDX = GetParam(request, "SCCS_IDX", "");
+            String SCCS_IDX = GetParam(request, "SCCS_IDX",
+                    "");
 
             //msds file
             //if (!msdsFile.isEmpty()) {

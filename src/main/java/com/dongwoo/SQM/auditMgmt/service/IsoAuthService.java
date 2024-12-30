@@ -4,17 +4,15 @@ import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
-import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.config.security.UserCustom;
-import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -144,7 +142,7 @@ public class IsoAuthService {
     }
 
     // ISO 인증 업체 리스트- 조건을 처리하는 검색 메서드
-    public List<AuditMgmtDTO> searchCompanies(String type, String code, String name, String state) {
+    public List<IsoAuthItemDTO> searchCompanies(String type, String code, String name, String state) {
         Map<String, Object> params = new HashMap<>();
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
@@ -189,19 +187,19 @@ public class IsoAuthService {
     }
 
     //업체별 ISO 인증서 리스트-상세보기
-    public List<IsoAuthItemDTO> findByCompanyId(String com_id) {
+    public List<IsoAuthItemDTO> getIsoAuthItems(String com_id) {
         Map<String, Object> params = new HashMap<>();
         params.put("COM_CODE", com_id);
-        return isoAuthRepository.findByCompanyId(params);
+        return isoAuthRepository.getIsoAuthItems(params);
     }
 
     //업체별/메뉴별 전체 Auth 상태업데이트
-    public int saveAuthResult(String com_code, String state) {
+    public int saveAuthResult(String com_code, String state, double totalPoint) {
         AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
         auditMgmtDTO.setCOM_CODE(com_code);
         auditMgmtDTO.setAUTH_TYPE("ISO");
         auditMgmtDTO.setAPPROVE_STATE(state);
-        //todo 전체 점수 저장 필요.
+        auditMgmtDTO.setPOINT(totalPoint);
 
         return isoAuthRepository.saveAuthResult(auditMgmtDTO);
     }
@@ -225,8 +223,29 @@ public class IsoAuthService {
         int loginIdx = user.getUSER_IDX();
         isoAuthItemDTO.setUP_DW_USER_IDX(loginIdx);
 
-        saveAuthResult(com_code, state); //인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
-        return isoAuthRepository.updateStatus(isoAuthItemDTO);
+        //ISO Item 정보 가져오기
+        List<IsoAuthItemDTO> getIsoItemsList = getIsoAuthItems(com_code);
+        double totalPoint = 0;
+
+        for (IsoAuthItemDTO item : getIsoItemsList) {
+            totalPoint += item.getPOINT(); // 각 객체의 point 값을 더함
+        }
+        if(totalPoint > 4.0){ //ISO 인증은 최대 점수가 4점
+            totalPoint = 4.0;
+        }
+
+        int rsltCnt = 0;
+        try {
+            log.info("isoAuthItemDTO??"+isoAuthItemDTO);
+            rsltCnt = isoAuthRepository.updateStatus(isoAuthItemDTO);
+            if(rsltCnt > 0 ){
+                rsltCnt += saveAuthResult(com_code, state, totalPoint);
+            }
+        }catch(Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
+
+        return rsltCnt;//인증서에도 상태 정보 업데이트 (반려시 업데이트/승인시는 전체 승인만.. 업데이트 해야 함)
     }
 
 

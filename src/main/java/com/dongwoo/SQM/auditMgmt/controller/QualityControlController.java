@@ -36,9 +36,22 @@ public class QualityControlController {
 
     @GetMapping("/admin/auditMgmt/qualityControlDetail")
     public String GetDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
-
-        List<QualityItemDTO> auditItems = qualityItemService.findAll();
-        model.addAttribute("auditItems", auditItems);
+// 업체의 인증정보 가져오기 - 인증상태/인증일
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("QUALITY", COM_CODE);
+        model.addAttribute("companyAuth", companyAuth);
+        //저장된 데이터가 있는지 확인
+        List<AuditItemPointDTO> auditItemPoint = qualityControlService.getCompanyAuthItemPoint("QUALITY", COM_CODE);
+        log.info("auditItemPoint+========"+auditItemPoint);
+        for (AuditItemPointDTO dto: auditItemPoint){
+            String originAudit = dto.getAUDIT_CRITERIA();
+            String originPoint = dto.getPOINT_CRITERIA();
+            String formattedAudit = originAudit != null ? originAudit.replace("\n", "<br>") : "";
+            String formattedPoint = originPoint != null ? originPoint.replace("\n", "<br>") : "";
+            dto.setAUDIT_CRITERIA(formattedAudit);
+            dto.setPOINT_CRITERIA(formattedPoint);
+        }
+        log.info("dto+========"+auditItemPoint);
+        model.addAttribute("auditItemPoint", auditItemPoint);
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("QUALITY", COM_CODE);
         model.addAttribute("companyAuthFile", companyAuthFile);
@@ -51,9 +64,21 @@ public class QualityControlController {
         //업체의 품질관리 Audit 기본 정보를 보여준다.
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String comCode = user.getCOM_CODE();
-
+        // 업체의 인증정보 가져오기 - 인증상태/인증일
+        AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("QUALITY", comCode);
+        model.addAttribute("companyAuth", companyAuth);
         //저장된 데이터가 있는지 확인
         List<AuditItemPointDTO> auditItemPoint = qualityControlService.getCompanyAuthItemPoint("QUALITY", comCode);
+        log.info("auditItemPoint+========"+auditItemPoint);
+        for (AuditItemPointDTO dto: auditItemPoint){
+            String originAudit = dto.getAUDIT_CRITERIA();
+            String originPoint = dto.getPOINT_CRITERIA();
+            String formattedAudit = originAudit != null ? originAudit.replace("\n", "<br>") : "";
+            String formattedPoint = originPoint != null ? originPoint.replace("\n", "<br>") : "";
+            dto.setAUDIT_CRITERIA(formattedAudit);
+            dto.setPOINT_CRITERIA(formattedPoint);
+        }
+        log.info("dto+========"+auditItemPoint);
         model.addAttribute("auditItemPoint", auditItemPoint);
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("QUALITY", comCode);

@@ -318,7 +318,7 @@
         $("#gridArea").attr("gridYN", "Y");
 
         $(window).resize(function () {
-        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus  - $(".cui_search").height());
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus  - $(".cui_search").height());
             $("#gridArea").pqGrid("refreshView");
         });
     });
