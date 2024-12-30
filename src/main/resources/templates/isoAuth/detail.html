@@ -173,7 +173,9 @@
                 //상태에 승인 상태표시
                 $(this).closest('div[class="stateField"]').text(state);
                 showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                //loadPage(1);
+                setTimeout(function() {
+                    loadPage(1); // 승인 시 페이지 새로고침
+                }, 100);  // 100ms 후에 실행
             },
             error: function() {
                 showAlert('warning','정보를 가져오는 데 실패했습니다.');

@@ -165,17 +165,23 @@ public class AuditCommonService {
 
     //업체별/메뉴별 전체 Auth 상태업데이트
     public int saveAuthResult(String com_code, String state, double totalPoint) {
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int loginIdx = user.getUSER_IDX();
+
         AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
         auditMgmtDTO.setCOM_CODE(com_code);
         auditMgmtDTO.setAUTH_TYPE("ISO");
         auditMgmtDTO.setAPPROVE_STATE(state);
         auditMgmtDTO.setPOINT(totalPoint);
+        auditMgmtDTO.setREG_DW_USER_IDX(loginIdx);  // 생성자
+        auditMgmtDTO.setUP_DW_USER_IDX(loginIdx);  // 수정자
 
         return auditMgmtRepository.saveAuthResult(auditMgmtDTO);
     }
 
     //Audit 공통 승인/반려
     public int updateStatus(String com_code, int auth_seq, String reason, String state, String auth_type, double point) {
+        log.info("setAuthData22222222222222!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
         auditMgmtDTO.setCOM_CODE(com_code);
         auditMgmtDTO.setAUTH_SEQ(auth_seq);

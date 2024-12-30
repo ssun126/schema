@@ -27,6 +27,8 @@
                         <colgroup>
                             <col style="width:154px;">
                             <col>
+                            <col style="width:154px;">
+                            <col>
                         </colgroup>
                         <tbody>
                         <tr>
@@ -60,7 +62,7 @@
                 </fieldset>
                 <fieldset>
                     <legend><span>조사 결과 기재</span></legend>
-                    <table class="cui_table">
+                    <table class="cui_table" th:unless="${#lists.isEmpty(conflictData)}">
                         <colgroup>
                             <col style="width:154px;">
                             <col>
@@ -69,7 +71,7 @@
                         <tr>
                             <th><span>조사일자</span></th>
                             <td>
-                                <span>2024-11-11</span>
+                                <span th:each="data : ${conflictData}" th:text="${data.INSPECTION_DATE}">2024-11-11</span>
                             </td>
                         </tr>
                         </tbody>
@@ -170,30 +172,19 @@
                         <tbody>
                         <tr>
                             <th><span>점수</span></th>
-                            <td>
-                  <span>
-                    <input class="cui_text_field" type="text" style="width: 10px;float: left;"> /10</span>
-                            </td>
+                            <td><input type="text" name="point" id="totalPoint" th:value="${companyAuth.POINT != null ? companyAuth.POINT : 0}"> / 6 </td>
                             <th><span>처리결과</span></th>
-                            <td>
-                                <span>승인</span>
-                            </td>
+                            <td th:text="${companyAuth.APPROVE_STATE}"></td>
                         </tr>
                         <tr>
                             <th><span>처리자</span></th>
-                            <td>
-                                <span>홍길동</span>
-                            </td>
+                            <td th:text="${companyAuth.WORK_USER_NAME}"></td>
                             <th><span>처리일자</span></th>
-                            <td>
-                                <span>2024-11-11</span>
-                            </td>
+                            <td th:text="${companyAuth.APPROVE_DATE}"></td>
                         </tr>
-                        <tr>
+                        <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                             <th><span>반려사유</span></th>
-                            <td colspan="3">
-
-                            </td>
+                            <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
                     </table>
@@ -311,6 +302,8 @@
                         <legend><span>조사 양식</span></legend>
                         <table class="cui_table">
                             <colgroup>
+                                <col style="width:154px;">
+                                <col>
                                 <col style="width:154px;">
                                 <col>
                             </colgroup>
@@ -503,7 +496,6 @@
 </html>
 <script>
     $(document).ready(function () {
-        $("#rsltTable").hide();
        const code = `[[${companyAuth.COM_CODE}]]`;
        const state = `[[${companyAuth.APPROVE_STATE}]]`;
 
@@ -529,12 +521,10 @@
             type: 'POST',
             data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type, point: point  },
             success: function(response) {
-                // 상태만 변경
-                $('div[name="stateField"]').text(state); // 상태 표시 업데이트
                 showAlert('success', '데이터가 성공적으로 저장되었습니다.');
-                if (state === 'APPROVED') {
+                setTimeout(function() {
                     loadPage(1); // 승인 시 페이지 새로고침
-                }
+                }, 100);  // 100ms 후에 실행
             },
             error: function() {
                 showAlert('warning', '정보를 가져오는 데 실패했습니다.');
@@ -554,7 +544,8 @@
     function approveAuth(key) {
         const authSeq = key;
         const state = 'APPROVED';
-        const point = $('#totalPoint').text();
+        const pointText = $('#totalPoint').text().trim();  // Trim whitespace
+        const point = !isNaN(parseFloat(pointText)) ? parseFloat(pointText) : 0.0;
         updateAuthData(state, '', authSeq, point);
     }
     

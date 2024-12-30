@@ -13,6 +13,13 @@
         VALUES( #{COM_CODE}, #{TANTALUM_YN}, #{TUNGSTEN_YN}, #{TIN_YN}, #{GOLD_YN}, #{COBALT_YN}, #{MICA_YN}, #{INSPECTION_DATE}, #{PART_CODE})
     </insert>
 
+    <insert id="updateItem" parameterType="conflict">
+        UPDATE SC_CONFLICT_MINERAL
+        SET TANTALUM_YN=#{TANTALUM_YN}, TUNGSTEN_YN=#{TUNGSTEN_YN}, TIN_YN=#{TIN_YN}, GOLD_YN=#{GOLD_YN}, COBALT_YN=#{COBALT_YN}, MICA_YN=#{MICA_YN}, INSPECTION_DATE=#{INSPECTION_DATE}
+        WHERE PART_CODE=#{PART_CODE} and COM_CODE=#{COM_CODE}
+    </insert>
+
+
     <select id="getCompanyAuthFile" parameterType="map" resultType="conflict">
         SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH
         FROM SC_AUTH_COMPANY_INFO ACI
@@ -41,6 +48,10 @@
         LEFT OUTER JOIN  SC_CONFLICT_MINERAL cm ON pc.COM_CODE = cm.COM_CODE
         WHERE 1 =1
         AND pc.COM_CODE = #{COM_CODE}
+    </select>
+
+    <select id="findByPartItem" parameterType="map" resultType="conflict">
+        select * from SC_CONFLICT_MINERAL where PART_CODE=#{PART_CODE} and COM_CODE=#{COM_CODE}
     </select>
 
 </mapper>

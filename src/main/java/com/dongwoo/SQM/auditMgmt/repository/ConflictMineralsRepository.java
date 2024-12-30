@@ -20,6 +20,10 @@ public class ConflictMineralsRepository {
         return sql.insert("ConflictMinerals.insertItem", conflict);
     }
 
+    public int updateItem(ConflictMineralsDTO conflict) {
+        return sql.update("ConflictMinerals.updateItem", conflict);
+    }
+
     //업체별-Auth type별 첨부 파일 조회
     public List<ConflictMineralsDTO> getCompanyAuthFile(Map<String, Object> params) {
         return sql.selectList("ConflictMinerals.getCompanyAuthFile", params);
@@ -30,7 +34,7 @@ public class ConflictMineralsRepository {
     }
 
     //분쟁광물 리스트 가져오기
-    public IsoAuthItemDTO findByConflictItem(Map<String, Object> params) {
-        return sql.selectOne("ConflictMinerals.findByIsoAuthItem", params);
+    public ConflictMineralsDTO findByPartItem(Map<String, Object> params) {
+        return sql.selectOne("ConflictMinerals.findByPartItem", params);
     }
 }

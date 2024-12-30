@@ -45,7 +45,7 @@ public class LabourHRService {
     private final LabourItemService labourItemService;
     private final IsoAuthRepository isoAuthRepository;
 
-    @Value("${Upload.path.attach}")
+    @Value("${Upload.path.audit}")
     private String uploadPath;
 
     public int insertFileInfo(LabourHRDTO labourHRDTO) {
@@ -76,6 +76,42 @@ public class LabourHRService {
 
         // 파일이 존재하면 처리
         if (Objects.equals(chkType, "file") && fileNames != null && authMgmtDTO != null) {
+
+            int comUserIdx = user.getCOM_USER_IDX();
+            XSSFWorkbook workbook = new XSSFWorkbook(fileNames.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
+            List<AuditItemPointDTO> labourItemDTOList = new ArrayList<>();
+
+            log.info("worksheet:::"+worksheet.getPhysicalNumberOfRows());
+            for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+                AuditItemPointDTO auditItemDTO = new AuditItemPointDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                XSSFRow row = worksheet.getRow(i);
+
+                String AUTH_TYPE = "LABOUR";
+                String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
+                double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(6)))); //점수
+                String AUDIT_COMMENT = formatter.formatCellValue((row.getCell(7))); //근거자료
+                auditItemDTO.setCOM_CODE(comCode);
+                auditItemDTO.setAUDIT_ID(AUDIT_ID);
+                auditItemDTO.setAUTH_TYPE(AUTH_TYPE);
+                auditItemDTO.setPOINT(POINT);
+                auditItemDTO.setAUDIT_COMMENT(AUDIT_COMMENT);
+                auditItemDTO.setREG_COM_USER_IDX(comUserIdx);
+                auditItemDTO.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
+
+                labourItemDTOList.add(auditItemDTO);
+                log.info("labourItemDTO====================="+auditItemDTO);
+            }
+
+            try {
+                insertLabourItem(labourItemDTOList); //파일의 점수 저장
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            //파일 저장
             LabourHRDTO dto = new LabourHRDTO();
             String filePath = saveFile(fileNames);
 
@@ -90,9 +126,6 @@ public class LabourHRService {
 
             int rtCnt = labourHRRepository.insertFileInfo(dto);  // insert
 
-            //파일내용을 저장
-            uploadLabourData(fileNames);
-
         }else{
             // JSON 문자열을 DTO 객체로 변환
             ObjectMapper objectMapper = new ObjectMapper();
@@ -106,34 +139,34 @@ public class LabourHRService {
         }
     }
     @Transactional
-    public void uploadLabourData(@RequestParam(value="file") MultipartFile file) throws IOException {
+    public void saveLabourUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq) throws IOException {
+        log.info("saveLabourUploadData====================="+auth_seq);
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int comUserIdx = user.getCOM_USER_IDX();
+
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
         List<AuditItemPointDTO> labourItemDTOList = new ArrayList<>();
         for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
-            AuditItemPointDTO labourItemDTO = new AuditItemPointDTO();
+            AuditItemPointDTO auditItemDTO = new AuditItemPointDTO();
 
             DataFormatter formatter = new DataFormatter();
             XSSFRow row = worksheet.getRow(i);
 
-            String PROVISION = formatter.formatCellValue((row.getCell(0)));
+            String AUTH_TYPE = "LABOUR";
             String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
-            String AUDIT_ITEM = formatter.formatCellValue((row.getCell(2)));
-            String AUDIT_DESC = formatter.formatCellValue((row.getCell(3)));
-            String AUDIT_CRITERIA = formatter.formatCellValue((row.getCell(4)));
-            String POINT_CRITERIA = formatter.formatCellValue((row.getCell(5)));
-            double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(6))));
+            double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(6)))); //점수
+            String AUDIT_COMMENT = formatter.formatCellValue((row.getCell(7))); //근거자료
 
-            labourItemDTO.setPROVISION(PROVISION);
-            labourItemDTO.setAUDIT_ID(AUDIT_ID);
-            labourItemDTO.setAUDIT_ITEM(AUDIT_ITEM);
-            labourItemDTO.setAUDIT_DESC(AUDIT_DESC);
-            labourItemDTO.setAUDIT_CRITERIA(AUDIT_CRITERIA);
-            labourItemDTO.setPOINT_CRITERIA(POINT_CRITERIA);
-            labourItemDTO.setPOINT(POINT);
+            auditItemDTO.setAUDIT_ID(AUDIT_ID);
+            auditItemDTO.setAUTH_TYPE(AUTH_TYPE);
+            auditItemDTO.setPOINT(POINT);
+            auditItemDTO.setAUDIT_COMMENT(AUDIT_COMMENT);
+            auditItemDTO.setREG_COM_USER_IDX(comUserIdx);
+            auditItemDTO.setAUTH_SEQ(auth_seq);
 
-            labourItemDTOList.add(labourItemDTO);
-            log.info("labourItemDTO====================="+labourItemDTO);
+            labourItemDTOList.add(auditItemDTO);
+            log.info("labourItemDTO====================="+auditItemDTO);
         }
 
         try {
@@ -149,7 +182,7 @@ public class LabourHRService {
         }
 
         // 저장할 파일의 경로 설정 (파일 이름에 타임스탬프를 추가하여 중복 방지)
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String fileName = file.getOriginalFilename()+ "_"+System.currentTimeMillis() ;
         File destinationFile  = new File(uploadPath  + File.separator +  fileName);
         file.transferTo(destinationFile );  // 파일 저장
 
@@ -185,7 +218,7 @@ public class LabourHRService {
         try{
             for(AuditItemPointDTO dto : labourItemDTOList){
                 log.info("test2-1");
-                labourHRRepository.insertAuthItem(dto);
+                auditMgmtRepository.insertItemPoint(dto);
             }
         }catch (Exception e){
             log.info(e.toString());

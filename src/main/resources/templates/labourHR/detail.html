@@ -132,7 +132,7 @@
                         </tr>
                         <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                             <th><span>반려사유</span></th>
-                            <td colspan="3"><textarea rows="2" style="width:100%" th:value="${companyAuth.REASON}"></textarea></td>
+                            <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
                     </table>
@@ -329,9 +329,9 @@
                 // 상태만 변경
                 $('div[name="stateField"]').text(state); // 상태 표시 업데이트
                 showAlert('success', '데이터가 성공적으로 저장되었습니다.');
-                if (state === 'APPROVED') {
+                setTimeout(function() {
                     loadPage(1); // 승인 시 페이지 새로고침
-                }
+                }, 100);  // 100ms 후에 실행
             },
             error: function() {
                 showAlert('warning', '정보를 가져오는 데 실패했습니다.');
@@ -351,7 +351,7 @@
     function approveAuth(key) {
         const authSeq = key;
         const state = 'APPROVED';
-        const point = $('#totalPoint').text();
+        const point = $('#totalPoint').text() != null ? $('#totalPoint').text() : 0;
         updateAuthData(state, '', authSeq, point);
     }
 

@@ -34,8 +34,8 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="file" checked><i></i><span>파일첨부</span></label>
-                                        <label class="cui_checkbox"><input type="radio" name="checkbox1" value="text"><i></i><span>직접입력</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="chkType" value="file" checked><i></i><span>파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="chkType" value="text"><i></i><span>직접입력</span></label>
                                     </div>
                                 </div>
                             </td>
@@ -117,7 +117,7 @@
                                 </thead>
                                 <tbody th:if="${#lists.isEmpty(auditItemPoint)}">
                                 <tr>
-                                    <td colspan="8">등록된 자재정보가 없습니다.</td>
+                                    <td colspan="8">등록된 정보가 없습니다.</td>
                                 </tr>
                                 </tbody>
                                 <tbody>
@@ -147,12 +147,12 @@
                     </form>
                 </fieldset>
                 <fieldset class="resultField">
-                    <div class="cui_section" id="rejectReason">
+                    <div class="cui_section" id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                         <div class="cui_bullet_title">
                             <div class="bullet_title_label"><span>반려사유</span></div>
                         </div>
                         <div>
-                            <textarea class="cui_border_section" rows="3" style="width:100%"></textarea>
+                            <textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea>
                         </div>
                     </div>
                 </fieldset>
@@ -247,8 +247,8 @@
         });
     });
 
-    $("input:radio[name=checkbox1]").change(function () {
-            var chkValue = $("input:radio[name=checkbox1]:checked").val();
+    $("input:radio[name=chkType]").change(function () {
+            var chkValue = $("input:radio[name=chkType]:checked").val();
 
             if(chkValue == "file"){
                 $("#fs_file").show();
@@ -300,7 +300,8 @@
     $("#sendAuth").click(function() {
         const formData = new FormData();
 
-        var chkValue = $("input:radio[name=checkbox1]:checked").val();
+        var chkValue = $("input:radio[name=chkType]:checked").val();
+        console.log("chkValue>>>>>>>>>>"+chkValue);
         if(chkValue == "file"){
             const fileInput = document.querySelector('input[type="file"]');
             if (fileInput && fileInput.files.length > 0) {
@@ -331,11 +332,9 @@
                     if (fileInput && fileInput.files.length > 0) {
                         row['FILE_NAME'] = fileInput.files[0].name;
                     }
-
                     if(row['FILE_NAME'] == undefined){
                         row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
                     }
-
                     console.log("insert data"+row['FILE_NAME']);
                     tableData.push(row);
                 }
@@ -343,7 +342,7 @@
         }
 
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
-        formData.append('type', chkValue);
+        formData.append('chkType', chkValue);
 
         $.ajax({
             url: '/auditMgmt/sendLabourAuthData',
@@ -353,6 +352,9 @@
             contentType: false,  // 기본 contentType을 사용하지 않음
             success: function(response) {
                 showAlert('success',response);
+                setTimeout(function() {
+                    location.reload();  // 페이지 새로 고침
+                }, 100);  // 100ms 후에 실행
             },
             error: function(xhr, status, error) {
                 showAlert('warning','데이터 저장에 실패했습니다.');

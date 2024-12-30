@@ -25,6 +25,8 @@ public class AuditMgmtDTO {
     private int REG_DW_USER_IDX;
     @JsonProperty("UP_DW_USER_IDX")
     private int UP_DW_USER_IDX;
+    @JsonProperty("SEND_USER_IDX")
+    private int SEND_USER_IDX;
     @JsonProperty("FILE_NAME")
     private String FILE_NAME;
     @JsonProperty("FILE_PATH")
@@ -35,4 +37,6 @@ public class AuditMgmtDTO {
     private double POINT;
     @JsonProperty("REASON")
     private String REASON;
+    @JsonProperty("WORK_USER_NAME")
+    private String WORK_USER_NAME;
 }

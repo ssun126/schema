@@ -124,7 +124,7 @@
     document.getElementById('rejectReason').value = rejectReasons;
 
     var allApproved = companyIsoAuth.every(function(data) {
-        return data.ITEM_STATE === 'APPROVED';  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
+        return data.ITEM_STATE === 'APPROVED' || data.ITEM_STATE === null;  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
     });
     var notApproved = companyIsoAuth.some(function(data) {
         return data.ITEM_STATE === 'REJECT';
@@ -133,14 +133,15 @@
         return data.ITEM_STATE === 'SEND';
     });
 
+
     if (notApproved) { //반려가 있는 경우
-        document.getElementById('topButton').style.display = 'none';
-        document.getElementById('submitIsoAuth').style.display = 'none';
-        document.getElementById('rejectArea').style.display = 'block';
+        $('#topButton').hide();
+        $('#submitIsoAuth').hide();
+        $('#rejectArea').show();
     }
     if (sendSubmit || allApproved) { //모두 승인이 되면 전체 버튼 숨기기
-        document.getElementById('footButton').style.display = 'none';
-        document.getElementById('topButton').style.display = 'none';
+        $('#footButton').hide();
+        $('#topButton').hide();
     }
 
     // 저장 버튼,제출 버튼 클릭 시 데이터 저장

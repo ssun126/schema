@@ -142,7 +142,7 @@ $(function () {
         { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
         { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
         { data_langsid: "제출일자", title: siteLang.getLang("제출일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: true, editor: false, editable: false },
-        { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false }
+        { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false }
     ];
     obj.dataModel = { data: data };
     $("#gridArea").pqGrid(obj);

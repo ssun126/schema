@@ -118,7 +118,7 @@
                         </div>
                     </div>
                     <div class="toolbar_aside">
-                        <button type="button" class="cui_button secondary" onclick="modify(event,'#sectionDisabled')"><span>수정</span></button>
+                        <button type="button" id="modifyBtn" class="cui_button secondary" onclick="modify(event,'#sectionDisabled')"><span>수정</span></button>
                     </div>
                 </div>
                 <div id="sectionDisabled" class="cui_section" aria-disabled="true">
@@ -208,12 +208,12 @@
                         (확인 결과는 아래의 전자 보증서 제출버턴 클릭시, 보증서 제출과 동일하게 1년씩 기간이 연장 됩니다.)
                     </div>
                     <label class="cui_checkbox">
-                        <input type="checkbox" name="checkbox1"><i></i>
+                        <input type="checkbox" name="warranty"><i></i>
                         <span>전자 보증서 제출(기 제출 자료에서 변경사항 無)</span>
                     </label>
                 </fieldset>
-                <fieldset class="resultField">
-                    <table class="cui_table" style="display:none;">
+                <fieldset class="resultField" style="display:none;">
+                    <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
                             <col>
@@ -223,30 +223,19 @@
                         <tbody>
                         <tr>
                             <th><span>점수</span></th>
-                            <td>
-                          <span>
-                            <input class="cui_text_field" type="text" style="width: 10px;float: left;"> /10</span>
-                            </td>
+                            <td><span th:text="${companyAuth.POINT}"></span> / 6 </td>
                             <th><span>처리결과</span></th>
-                            <td>
-                                <span>승인</span>
-                            </td>
+                            <td th:text="${companyAuth.APPROVE_STATE}"></td>
                         </tr>
                         <tr>
                             <th><span>처리자</span></th>
-                            <td>
-                                <span>홍길동</span>
-                            </td>
+                            <td th:text="${companyAuth.WORK_USER_NAME}"></td>
                             <th><span>처리일자</span></th>
-                            <td>
-                                <span>2024-11-11</span>
-                            </td>
+                            <td th:text="${companyAuth.APPROVE_DATE}"></td>
                         </tr>
-                        <tr id="rejectReason">
+                        <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                             <th><span>반려사유</span></th>
-                            <td colspan="3">
-                                <textarea class="cui_border_section" rows="2" style="width:100%"></textarea>
-                            </td>
+                            <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
                     </table>
@@ -266,21 +255,33 @@
 <script>
     $(document).ready(function () {
         $('#authState').text('(미제출)');
-        $('#rejectReason').hide();
-        $('.resultField').hide();
+        loadInfo();
 
         // datepicker 초기화
         $("#datepicker").datepicker({
             dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
         });
-
-        const code = `[[${companyAuth.COM_CODE}]]`;
-        const state = `[[${companyAuth.APPROVE_STATE}]]`;
-
-        if(state != "" ){
-            console.log(state);
-        }
     });
+
+    //제출 상태
+    function loadInfo(){
+        const comState = `[[${companyAuth.APPROVE_STATE}]]`;
+        $('.resultField').hide();
+        if(comState != "" ){
+            if(comState === 'SEND'){
+                $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('#sendAuth').hide();
+            }else if(comState === 'APPROVED'){
+                $('#authState').text('[승인:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('.resultField').show(); // 결과 보이기
+                $('#sendAuth').hide();
+            }else if(comState === 'REJECT'){
+                $('#authState').text('[반려:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('#rsltState').text('반려');
+                $('.resultField').show(); // 결과 보이기
+            }
+        }
+    }
 
     //샘플다운로드
     function downSampleFile() {
@@ -312,25 +313,29 @@
             }
             tableData.push(row);
         });
-        console.log($(document).find('input[name="INSPECTION_DATE"]').val());
-        $("#conflictTable tbody tr").each(function() {
-            var row = {};
-            row['PART_CODE'] = $(this).find('td').eq(1).text();
-            row['TANTALUM_YN'] = $(this).find('select[name="TANTALUM_YN"]').val() || '';
-            row['TUNGSTEN_YN'] = $(this).find('select[name="TUNGSTEN_YN"]').val() || '';
-            row['TIN_YN'] = $(this).find('select[name="TIN_YN"]').val() || '';
-            row['GOLD_YN'] = $(this).find('select[name="GOLD_YN"]').val() || '';
-            row['COBALT_YN'] = $(this).find('select[name="COBALT_YN"]').val() || '';
-            row['MICA_YN'] = $(this).find('select[name="MICA_YN"]').val() || '';
+        //수정모드일때만 Table 데이터 저장
+        if($('#modifyBtn').prop('disabled')) {
+            $("#conflictTable tbody tr").each(function() {
+                var row = {};
+                row['PART_CODE'] = $(this).find('td').eq(1).text();
+                row['TANTALUM_YN'] = $(this).find('select[name="TANTALUM_YN"]').val() || '';
+                row['TUNGSTEN_YN'] = $(this).find('select[name="TUNGSTEN_YN"]').val() || '';
+                row['TIN_YN'] = $(this).find('select[name="TIN_YN"]').val() || '';
+                row['GOLD_YN'] = $(this).find('select[name="GOLD_YN"]').val() || '';
+                row['COBALT_YN'] = $(this).find('select[name="COBALT_YN"]').val() || '';
+                row['MICA_YN'] = $(this).find('select[name="MICA_YN"]').val() || '';
+                row['INSPECTION_DATE'] = $(document).find('input[name="INSPECTION_DATE"]').val();
 
-            row['INSPECTION_DATE'] = $(document).find('input[name="INSPECTION_DATE"]').val();
-
-            console.log("insert data"+row['PART_CODE']);
-            tableData.push(row);
-        });
-
+                console.log("insert data"+row['PART_CODE']);
+                tableData.push(row);
+            });
+        }
+        var chkValue = $("input:checkbox[name=warranty]:checked").val(); //전자 보증서 제출 선택 여부
+        console.log("chkValue>>>>>>>>>>>>>"+chkValue);
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
         formData.append('type', 'CONFLICT');
+        formData.append('modify', $('#modifyBtn').prop('disabled')?'Y':'N');
+        formData.append('warranty', chkValue);
 
          $.ajax({
             url: '/auditMgmt/sendConflictAuthData',
@@ -340,6 +345,9 @@
             contentType: false,  // 기본 contentType을 사용하지 않음
             success: function(response) {
                 showAlert('success', response);
+                setTimeout(function() {
+                    location.reload();  // 페이지 새로 고침
+                }, 100);  // 100ms 후에 실행
             },
             error: function(xhr, status, error) {
                 showAlert('warning','데이터 저장에 실패했습니다.');

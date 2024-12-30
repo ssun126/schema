@@ -152,7 +152,7 @@
     }
 
     $(function () {
-        var heightMinus = 650;
+        var heightMinus = 500;
 
         var data = SheetDataConvert($("#gridArea").attr("initData"));
 
@@ -162,7 +162,7 @@
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
             editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
-            height: $(window).height() - heightMinus - $(".cui_search").height(),
+            height: $(window).height() - heightMinus ,
             title: "",
             sortable: false,
             resizable: true,
@@ -211,7 +211,7 @@
         $("#gridArea").attr("gridYN", "Y");
 
         $(window).resize(function () {
-            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus- $(".cui_search").height());
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus );
             $("#gridArea").pqGrid("refreshView");
         });
     });

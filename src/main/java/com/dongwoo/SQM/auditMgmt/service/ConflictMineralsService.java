@@ -2,6 +2,7 @@ package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO;
+import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.ConflictMineralsRepository;
 import com.dongwoo.SQM.companyInfo.service.CompanyInfoService;
@@ -31,10 +32,10 @@ public class ConflictMineralsService {
     private final ConflictMineralsRepository conflictMineralsRepository;
     private final CompanyInfoService companyInfoService;
 
-    @Value("${Upload.path.attach}")
+    @Value("${Upload.path.audit}")
     private String uploadPath;
 
-    public void saveAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {
+    public void saveAuthData(String tableData, String warranty, String modify, String type, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         List<ConflictMineralsDTO> conflictMinerals = objectMapper.readValue(tableData, new TypeReference<List<ConflictMineralsDTO>>() {});
@@ -48,6 +49,7 @@ public class ConflictMineralsService {
         authDTO.setCOM_CODE(comCode);
         authDTO.setAUTH_TYPE("CONFLICT");
         authDTO.setAPPROVE_STATE("SEND"); //제출
+        authDTO.setSEND_USER_IDX(loginIdx);
         authDTO.setREG_DW_USER_IDX(loginIdx);
         authDTO.setUP_DW_USER_IDX(loginIdx);
         log.info("authDTO::::::::::"+authDTO);
@@ -90,16 +92,25 @@ public class ConflictMineralsService {
             }
         }
 
-
         // 데이터 저장
-        for (ConflictMineralsDTO dto : conflictMinerals) {
-            dto.setCOM_CODE(comCode);
-            //if(dto.getFILE_NAME()== null) { //파일 업로드를 하지 않으면 입력 항목 저장됨.
-
-                log.info(dto.getCOBALT_YN());
-                int rtCnt = conflictMineralsRepository.insertItem(dto);  // insert
-                log.info("데이터 저장 Count: " + rtCnt);
-           // }
+        if(modify.equals("Y") && authMgmtDTO != null) {
+            for (ConflictMineralsDTO dto : conflictMinerals) {
+                dto.setCOM_CODE(comCode);
+                //기존 정보가 있는지 확인
+                if (dto.getPART_CODE() != null) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("PART_CODE", dto.getPART_CODE());
+                    params.put("COM_CODE", comCode);
+                    ConflictMineralsDTO ItemDTO = conflictMineralsRepository.findByPartItem(params);
+                    if (ItemDTO != null) {
+                        if (ItemDTO != dto) {
+                            conflictMineralsRepository.updateItem(dto);  // updateItem
+                        }
+                    } else {
+                        conflictMineralsRepository.insertItem(dto);  // insert
+                    }
+                }
+            }
         }
         log.info("회사별 Audit 데이터 저장 완료");
 

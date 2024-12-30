@@ -50,7 +50,7 @@ public class AuditMgmtRestController {
     @Autowired
     private ConflictMineralsService conflictMineralsService;
 
-    @Value("${Upload.path.attach}")
+    @Value("${Upload.path.audit}")
     private String uploadPath;
 
     private final FileStorageService fileStorageService;
@@ -161,6 +161,7 @@ public class AuditMgmtRestController {
     //Audit 공통 승인/반려 처리
     @PostMapping("/setAuthData")
     public ResponseEntity<?> setAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("auth_seq")int auth_seq, @RequestParam("state")String state, @RequestParam("auth_type")String auth_type, @RequestParam("point")double point) {
+        log.info("setAuthData!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         //인증서 승인 상태 업데이트
         int resultCnt = auditCommonService.updateStatus(com_code, auth_seq, reason, state, auth_type, point);
 
@@ -217,9 +218,9 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendConflictAuthData")
-    public String sendConflictAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
+    public String sendConflictAuthData(@RequestParam("data") String data, @RequestParam("warranty") String warranty, @RequestParam("modify") String modify, @RequestParam("type") String type, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
         try {
-            conflictMineralsService.saveAuthData(data, type, fileNames);
+            conflictMineralsService.saveAuthData(data, warranty, modify, type, fileNames);
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {

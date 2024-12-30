@@ -31,7 +31,7 @@ public class IsoAuthService {
     private final IsoAuthRepository isoAuthRepository;
     private final AuditMgmtRepository auditMgmtRepository;
 
-    @Value("${Upload.path.attach}")
+    @Value("${Upload.path.audit}")
     private String uploadPath;
 
 
@@ -57,8 +57,9 @@ public class IsoAuthService {
         authDTO.setCOM_CODE(comCode);
         authDTO.setAUTH_TYPE("ISO");
         authDTO.setAPPROVE_STATE(type); //제출 또는 저장
-        authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-        authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
+        authDTO.setSEND_USER_IDX(loginIdx);  //저장/제출자 저장
+        authDTO.setREG_DW_USER_IDX(loginIdx);  // 생성자
+        authDTO.setUP_DW_USER_IDX(loginIdx);  // 수정자
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
         if(comCnt > 0) {
@@ -195,10 +196,16 @@ public class IsoAuthService {
 
     //업체별/메뉴별 전체 Auth 상태업데이트
     public int saveAuthResult(String com_code, String state, double totalPoint) {
+
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int loginIdx = user.getUSER_IDX();
+
         AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
         auditMgmtDTO.setCOM_CODE(com_code);
         auditMgmtDTO.setAUTH_TYPE("ISO");
         auditMgmtDTO.setAPPROVE_STATE(state);
+        auditMgmtDTO.setREG_DW_USER_IDX(loginIdx);  // 생성자
+        auditMgmtDTO.setUP_DW_USER_IDX(loginIdx);  // 수정자
         auditMgmtDTO.setPOINT(totalPoint);
 
         return isoAuthRepository.saveAuthResult(auditMgmtDTO);

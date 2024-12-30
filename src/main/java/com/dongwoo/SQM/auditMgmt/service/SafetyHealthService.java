@@ -30,7 +30,7 @@ public class SafetyHealthService {
     private final SafetyHealthRepository safetyHealthRepository;
     private final AuditMgmtRepository auditMgmtRepository;
 
-    @Value("${Upload.path.attach}")
+    @Value("${Upload.path.audit}")
     private String uploadPath;
 
     public void saveAuthData(String tableData, String type, MultipartFile[] fileNames) throws IOException {

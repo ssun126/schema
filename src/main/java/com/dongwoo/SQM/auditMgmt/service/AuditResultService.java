@@ -31,6 +31,6 @@ public class AuditResultService {
         params.put("COM_CODE", code);
         params.put("COM_NAME", name);
         params.put("COM_STATUS", state);
-        return auditMgmtRepository.searchCompanies(params);
+        return auditMgmtRepository.getAuditResult(params);
     }
 }
