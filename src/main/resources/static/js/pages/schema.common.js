@@ -1129,6 +1129,271 @@ Common.Load = function (Obj) {
             thisObj.val(text);
         });
     });
+
+    Obj.find("div[multiFileUpload]").each(function () {
+        var thisObj = $(this);
+        var fileName = thisObj.attr("multiFileUpload");
+
+        var orgFileInfo = thisObj.find("div");
+        var orgFileHTML = "";
+
+        if (orgFileInfo.length > 0) {
+            orgFileInfo.each(function () {
+                var oneDivObj = $(this);
+                var fileInfoData = oneDivObj.html();
+                orgFileHTML = "";
+
+                var AddFile = "";
+                /*
+                AddFile += "<li>";
+                AddFile += '<a href="#" orgFileInfo="1" style="display:none" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
+                AddFile += '<em class="ico_file ' + Common.FileExe(file.name) + '"></em> ';
+                AddFile += '<label class="file_name" style="cursor:pointer;">' + file.name + '</label>';
+                AddFile += '<span class="file_size">' + Common.Convert.FileSize(file.size) + ' <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
+                AddFile += "</li>";
+                */
+
+                AddFile += "<li>";
+                AddFile += '<a href="#" orgFileInfo="1" style="display:" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
+                AddFile += '<em class="ico_file "></em> ';
+                AddFile += '<label class="file_name" style="cursor:pointer;">파일명.xmls</label>';
+                AddFile += '<span class="file_size">23 Bytes</span>';
+                AddFile += "</li>";
+
+                orgFileHTML += AddFile;
+            });
+        }
+
+        var fileHtml = '<div class="form_file_wrap" oncontextmenu="return false" filename="{fileName}_FILE" uploadtype="multi">';
+        fileHtml += '    <div class="ar_fl">';
+        fileHtml += '        <button type="button" class="cui_button" onclick="$(\'#{fileName}_FILE_file_input\').trigger(\'click\');" style="height:20px;font-size:13px;min-width:8px;">FILE</button>';
+        fileHtml += '    </div>';
+        fileHtml += '    <div class="ar_fr">';
+        fileHtml += '        <span class="form_txt_srmy">Size : </span>';
+        fileHtml += '        <span id="{fileName}_FILE_size_srmy" class="form_txt_srmy st3" filesize="0">0KB</span>';
+        fileHtml += '    </div>';
+        fileHtml += '    <div class="file_list_wrap" style="">';
+        fileHtml += '       <input type="file" class="file_hidden" multiple="true" id="{fileName}_FILE_file_input" name="{fileName}_FILE_file_input" dragfiles="" uploadfilename="{fileName}_FILE">';
+        fileHtml += '       <p class="file_cmt" style="line-height:58px;margin:0px;display:{fileListSummary};" data-langsid="여러개의 파일을 마우스로 끌어놓으세요.">' + siteLang.getLang("여러개의 파일을 마우스로 끌어놓으세요.") + '</p>';
+        fileHtml += '       <ul class="file_list" id="{fileName}_FILE_file_list_area" style="display:{fileListShow};margin:0px;">{orgFileList}</ul>';
+        fileHtml += '    </div>';
+        fileHtml += '</div>';
+
+        if (orgFileHTML != "") {
+            thisObj.html(fileHtml.replaceAll("{fileName}", fileName).replaceAll("{orgFileList}", orgFileHTML).replace("{fileListShow}", "").replace("{fileListSummary}", "none"));
+        } else {
+            thisObj.html(fileHtml.replaceAll("{fileName}", fileName).replaceAll("{orgFileList}", "").replace("{fileListShow}", "none").replace("{fileListSummary}", ""));
+        }
+    });
+
+    // File Event Set
+    Obj.find(".form_file_wrap").each(function () {
+        var thisObj = $(this);
+        var fileName = thisObj.attr("fileName");
+        var fileInputObj = thisObj.find("#" + fileName);
+        var show_hide_btn = thisObj.find("button[iType=showhide]");
+        var fileDragShowHide = Cookies("comfdsh");
+
+        if (fileDragShowHide == "hide") {
+            Cookies("comfdsh", "hide", 365);
+            show_hide_btn.html("<i class=\"fa fa-chevron-down\"></i> 펼치기");
+            thisObj.find(".file_list_wrap").css("display", "none");
+        } else {
+            show_hide_btn.html("<i class=\"fa fa-chevron-up\"></i> 숨기기");
+            thisObj.find(".file_list_wrap").css("display", "");
+        }
+        show_hide_btn.bind("click", function () {
+            if (Common.Contains(show_hide_btn.find("i").attr("class"), "fa-chevron-up")) {
+                show_hide_btn.html("<i class=\"fa fa-chevron-down\"></i> 펼치기");
+                thisObj.find(".file_list_wrap").css("display", "none");
+                Cookies("comfdsh", "hide", 365);
+            } else {
+                show_hide_btn.html("<i class=\"fa fa-chevron-up\"></i> 숨기기");
+                thisObj.find(".file_list_wrap").css("display", "");
+                Cookies("comfdsh", "", 365);
+            }
+        });
+
+
+        thisObj.find(".file_hidden").bind("change", function () {
+            var fileObj = $(this)[0];
+            for (var i = 0; i < fileObj.files.length; i++) {
+                var file = fileObj.files[i];
+                Common.FileUpload(file, fileInputObj, thisObj.find("span.st3"), thisObj.find(".file_cmt"), thisObj.find(".file_list"), thisObj);
+                //fileObj.value = "";
+            }
+            show_hide_btn.html("<i class=\"fa fa-chevron-up\"></i> 숨기기");
+            thisObj.find(".file_list_wrap").css("display", "");
+        });
+
+        thisObj.bind("drop", function (e) {
+            if (typeof FileList == 'undefined') {
+                alert("File Drag & Drop 미지원 브라우저 혹은 버전입니다. 다른 브라우저를 이용하거나 브라우저를 업데이트 해주세요.");
+                return;
+            }
+
+            var fileObj = "";
+
+            if (e.originalEvent == undefined) {
+                fileObj = e.dataTransfer;
+            } else {
+                fileObj = e.originalEvent.dataTransfer;
+            }
+
+            if (!fileObj.files) {
+                alert("File Drag & Drop 미지원 브라우저 혹은 버전입니다. 다른 브라우저를 이용하거나 브라우저를 업데이트 해주세요.");
+            } else {
+                for (var i = 0; i < fileObj.files.length; i++) {
+                    var file = fileObj.files[i];
+                    Common.FileUpload(file, fileInputObj, thisObj.find("span.st3"), thisObj.find(".file_cmt"), thisObj.find(".file_list"), thisObj);
+                }
+            }
+
+            // 에디터기 변경으로 인해 이벤트 멈춤 빼기
+            //Common.EventReturnValue(e);
+            //Common.EventCancelBubble(e);
+            return;
+        });
+
+        // 파일 초기화 기능 추가
+        fileInputObj.data("Init", function () {
+            thisObj.find(".file_cmt").css("display", "");
+            thisObj.find(".file_list").css("display", "none");
+            thisObj.find(".file_list").html("");
+        });
+    });
+}
+
+Common.FileDeleteOrg = function (FileOrgObj) {
+    var form_file_wrap_Obj = FileOrgObj.parent().parent().parent().parent();
+
+    //var orgFileInfo = FileOrgObj.attr("orgFileInfo");
+    if (confirm("파일을 삭제하시겠습니까?") == true) {
+        // 실제 Ajax로 파일 삭제 처리
+
+        // 삭제된 정보 html 제거
+        FileOrgObj.parent().remove();
+
+        //Common.FileDelete(size_srmyObj, noListObj, listObj, controllObj);
+    }
+}
+
+Common.FileUpload = function (file, fileInputObj, size_srmyObj, noListObj, listObj, controllObj) {
+    var AddFile = "";
+    AddFile += "<li>";
+    AddFile += '<a href="#" style="display:none" class="file_del" onclick="return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
+    AddFile += '<em class="ico_file ' + Common.FileExe(file.name) + '"></em> ';
+    AddFile += '<label class="file_name" style="cursor:pointer;">' + file.name + '</label>';
+    AddFile += '<span class="file_size">' + Common.Convert.FileSize(file.size) + ' <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
+    AddFile += "</li>";
+    var AddFileObj = $(AddFile);
+
+    noListObj.css("display", "none");
+    listObj.css("display", "");
+    listObj.append(AddFileObj);
+
+    var fileName = Common.GetTodayTimeString();
+
+    var dragFileCount = 1;
+    if (controllObj.attr("dragFileCount") == undefined) {
+        controllObj.attr("dragFileCount", "1");
+    } else {
+        dragFileCount = Common.Convert.Int(controllObj.attr("dragFileCount")) + 1;
+    }
+    AddFileObj.attr("dragFileCount", dragFileCount);
+
+    if (controllObj.attr("dragFile") != undefined && controllObj.attr("dragFile") != "") {
+        fileName = controllObj.attr("dragFile");
+    } else {
+        controllObj.attr("dragFile", fileName);
+    }
+    controllObj.find("input[type=file]").attr("dragFiles", fileName);
+
+    var sendFileObj = Common.RequestInfo.Files[fileName];
+
+    if (sendFileObj == undefined || sendFileObj == null) {
+        var file_arr = [];
+        file_arr.push({ dragFileCount: dragFileCount, file: file });
+        Common.RequestInfo.Files[fileName] = file_arr;
+    } else {
+        sendFileObj.push({ dragFileCount: dragFileCount, file: file });
+        Common.RequestInfo.Files[fileName] = sendFileObj;
+    }
+
+    AddFileObj.find(".gauge_in").parent().remove();
+    AddFileObj.find("a.file_del").css("display", "");
+
+    AddFileObj.find("a.file_del").bind("click", function () {
+        if (confirm("파일을 삭제하시겠습니까?") == true) {
+            var dragFileCount = AddFileObj.attr("dragFileCount");
+            AddFileObj.remove();
+
+            var sendFileObj = Common.RequestInfo.Files[fileName];
+
+            for (var Idx in sendFileObj) {
+                if (sendFileObj[Idx] && sendFileObj[Idx].dragFileCount == dragFileCount) {
+                    delete sendFileObj[Idx];
+                    Common.RequestInfo.Files[fileName] = sendFileObj;
+                    break;
+                }
+            }
+
+            Common.FileDelete(size_srmyObj, noListObj, listObj, controllObj);
+        }
+    });
+
+    AddFileObj.attr("filesize", file.size);
+
+    var filesize = Common.Convert.Int(file.size);
+    var total_filesize = Common.Convert.Int(size_srmyObj.attr("filesize"));
+    size_srmyObj.attr("filesize", total_filesize + filesize);
+    size_srmyObj.html(Common.Convert.FileSize(total_filesize + filesize))
+}
+
+Common.FileDelete = function (size_srmyObj, noListObj, listObj, controllObj) {
+    if (listObj.children().length == 0) {
+        noListObj.css("display", "");
+        listObj.css("display", "none");
+        controllObj.removeAttr("dragFile");
+    } else {
+        noListObj.css("display", "none");
+        listObj.css("display", "");
+    }
+
+    var tmpValue = "";
+    var total_filesize = 0;
+
+    listObj.children().each(function () {
+        total_filesize += Common.Convert.Int($(this).attr("filesize"));
+    });
+
+    size_srmyObj.attr("filesize", total_filesize);
+    size_srmyObj.html(Common.Convert.FileSize(total_filesize));
+}
+
+// 파일업로드
+Common.FileExe = function (fileName) {
+    var rtnValue = "zip";
+
+    try {
+        var fileNameArr = fileName.split(".");
+        var ext = fileNameArr[fileNameArr.length - 1];
+
+        if (ext.toLowerCase() == "jpg" || ext.toLowerCase() == "gif" || ext.toLowerCase() == "png" || ext.toLowerCase() == "jpeg" || ext.toLowerCase() == "bmp") {
+            rtnValue = "img";
+        } else if (ext.toLowerCase() == "pdf") {
+            rtnValue = "pdf";
+        } else if (ext.toLowerCase() == "doc" || ext.toLowerCase() == "ppt" || ext.toLowerCase() == "pptx" || ext.toLowerCase() == "xlsx" || ext.toLowerCase() == "xls" || ext.toLowerCase() == "hwp") {
+            rtnValue = "doc";
+        } else if (ext.toLowerCase() == "mp3" || ext.toLowerCase() == "mp4" || ext.toLowerCase() == "avi" || ext.toLowerCase() == "wmv" || ext.toLowerCase() == "flv" || ext.toLowerCase() == "mov") {
+            rtnValue = "mov";
+        }
+
+    } catch (e) {
+        rtnValue = "zip";
+    }
+
+    return rtnValue;
 }
 
 //현재 날짜시간 포함 string 리턴
@@ -1574,6 +1839,14 @@ Common.EncParam = function(value) {
         var jsonString = JSON.stringify(val);
         return encodeURIComponent(jsonString);  // URL-safe하게 변환
     }
+}
+
+String.prototype.replaceAll = function (org, rep) {
+    var temp_str = this.trim();
+    try {
+        temp_str = temp_str.split(org).join(rep);
+    } catch (e) { }
+    return temp_str;
 }
 
 String.prototype.trim = function () {

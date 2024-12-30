@@ -87,7 +87,7 @@
     .cui_attachments { width:100%; };
 </style>
 </head>
-<body>
+<body ondragenter="return false;" ondragover="return false;" ondrop="return false;">
 <div class="cui_app">
     <div class="cui_container" data-module="">
         <div class="cui_content">
@@ -177,7 +177,11 @@
 <!--                                <td  th:unless="${rowStat.index==0}" th:rowspan="${korPlantList.size()}"></td>-->
                                 <td ><span th:text="${korPlantList.BASE_CODE}"></span></td>
                                 <td>
-                                    <div class="cui_items_wrap" data-direction="column">
+                                    <div th:multiFileUpload="'PLANT_'+${korPlantList.BASE_CODE}+'_Files'">
+                                        <div>dkdefefewf|fewfew|F|fewf\WEfew|</div>
+                                    </div>
+
+                                    <div class="cui_items_wrap" data-direction="column" style="display:none;">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <div class="cui_attachments">
