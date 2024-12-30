@@ -1,4 +1,4 @@
-<div class="cui_dialog" style="width:880px;display:none;" id="popCoa">
+<div class="cui_dialog" style="width:880px;display:none;" id="popCoa" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
@@ -14,7 +14,7 @@
                 <form id="updateForm"  class="cui_form_section">
                     <fieldset>
                         <legend><span data-langsid="업체 기본정보"></span></legend>
-                        <table class="cui_table">
+                        <table class="cui_table" id="searchAreaPOP">
                             <colgroup>
                                 <col style="width:154px;">
                                 <col>
@@ -27,8 +27,16 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COM_CODE}" ></span>-->
-<!--                                            <input type="hidden" name="COM_CODE" id="COM_CODE" th:value="${member.COM_CODE}" >-->
+
+                                            <span th:text="${DETAIL.VENDOR_ID}" ></span>
+<!--                                            <span th:text="${DETAIL.COA_STATUS}" ></span>-->
+
+                                            <input type="hidden" name="COA_ID" id="COA_ID" th:value="${DETAIL.COA_ID}" >
+                                            <input type="hidden" name="VENDOR_ID" id="VENDOR_ID" th:value="${DETAIL.VENDOR_ID}" >
+                                            <input type="hidden" name="MATERIAL_ID" id="MATERIAL_ID" th:value="${DETAIL.MATERIAL_ID}" >
+                                            <input type="hidden" name="FACTORY_ID" id="FACTORY_ID" th:value="${DETAIL.FACTORY_ID}" >
+                                            <input type="hidden" name="LOT_NO" id="LOT_NO" th:value="${DETAIL.LOT_NO}" >
+
                                         </div>
                                     </div>
                                 </td>
@@ -36,7 +44,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COM_NAME}" ></span>-->
+                                            <span th:text="${DETAIL.FACTORY_NAME}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -46,8 +54,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-
-<!--                                            <span th:text="${member.COM_NAME}" ></span>-->
+                                            <span th:text="${DETAIL.MATERIAL_NAME}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -55,7 +62,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COM_NATION}" ></span>-->
+                                            <span th:text="${DETAIL.MATERIAL_ID}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -65,7 +72,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COMPANY_NAME}" ></span>-->
+                                            <span th:text="${DETAIL.STOCK_DATE}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -73,7 +80,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.FACTORY_NAME}"></span>-->
+                                            <span th:text="${DETAIL.MF_DATE}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -83,7 +90,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span  th:text="${member.BUS_NUMBER}" ></span>-->
+                                            <span th:text="${DETAIL.E_DATE}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -91,7 +98,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COM_ADDRESS}" ></span>-->
+                                            <span th:text="${DETAIL.QUANTITY}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -101,7 +108,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span  th:text="${member.COM_CEO_NAME}" ></span>-->
+                                            <span th:text="${DETAIL.LOT_NO}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -109,7 +116,7 @@
                                 <td>
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COM_CEO_PHONE}" ></span>-->
+                                            <span th:text="${DETAIL.ETC}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -119,8 +126,7 @@
                                 <td colspan="3">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-<!--                                            <span th:text="${member.COM_CEO_EMAIL}" ></span>-->
-
+                                            <textarea id="vendorComment" style="width:100%; height:40px; resize:none; margin-top:2px" th:text="${DETAIL.VENDOR_COMMENT}"></textarea>
                                         </div>
                                     </div>
                                 </td>
@@ -130,8 +136,7 @@
                                 <td colspan="3">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_content">
-                                            <!--                                            <span th:text="${member.COM_CEO_EMAIL}" ></span>-->
-
+                                            <span th:text="${DETAIL.RETURN_DESC}" ></span>
                                         </div>
                                     </div>
                                 </td>
@@ -141,7 +146,6 @@
                         </table>
                     </fieldset>
                 </form>
-
 
                 <div class="cui_jqGrid_section">
                     <div class="cui_jqGrid_head">
@@ -155,12 +159,9 @@
                     </div>
                 </div>
 
-
-
                 <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                     <div class="item_content">
-                        <input type="hidden" id="savetype" name="savetype" value="insert" >
-                        <button type="button" id="PartCodeMgmtAdd" class="cui_button primary" onclick="addPartCodeSave();"><span data-langsid="저장"></span></button>
+                        <button type="button" id="PartCodeMgmtAdd" class="cui_button primary" onclick="updateVendorComment();" th:if="${DETAIL.COA_STATUS != 'A'}"><span data-langsid="저장"></span></button>
                         <button type="button" id="PartCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기"></span></button>
                     </div>
                 </div>
@@ -170,19 +171,20 @@
     </div>
 
     <script>
-        var ListSearchCpCode = function () {
+        var ListSearch = function () {
 
-            var url = "/admin/qualityCtrl/getUserList";
+            var url = "/admin/qualityCtrl/Detail";
 
             var ReqInfo = new Common.RequestInfo();
-            ReqInfo.AddParameter($("#searchAreaCpCode"));
+            ReqInfo.AddParameter($("#searchAreaPOP"));
 
             Common.Ajax(url, ReqInfo, function (data) {
                 var dataJson = JSON.parse(data);
 
                 $("#gridArea_CpCode").pqGrid("option", "dataModel.data", dataJson);
                 $("#gridArea_CpCode").pqGrid("refreshView");
-            });
+
+            }, { contentType : "application/json" });
         }
 
         $(function () {
@@ -194,7 +196,7 @@
                 editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
                 editModel: { clicksToEdit: 2 },
                 selectionModel: { type: 'cell', mode: 'block' },
-                height: 500,
+                height: 400,
                 title: "",
                 sortable: false,
                 resizable: true,
@@ -240,13 +242,13 @@
                 }
             };
             obj.colModel = [
-                { data_langsid: "스펙 ID", title: siteLang.getLang("스펙 ID"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "USER_ID", sortable: true, editor: false, editable: false },
-                { data_langsid: "스팩명", title: siteLang.getLang("스팩명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "스팩영문명", title: siteLang.getLang("스팩영문명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "스팩범위", title: siteLang.getLang("스팩범위"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "관리선", title: siteLang.getLang("관리선"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "결과값", title: siteLang.getLang("결과값"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "유효", title: siteLang.getLang("유효"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "USER_NAME", sortable: true, editor: false, editable: false }
+                { data_langsid: "스펙 ID", title: siteLang.getLang("스펙 ID"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_ID", sortable: true, editor: false, editable: false },
+                { data_langsid: "스팩명", title: siteLang.getLang("스팩명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "SPEC_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "스팩영문명", title: siteLang.getLang("스팩영문명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "SPEC_ENG_NAME", sortable: true, editor: false, editable: false },
+                { data_langsid: "스팩범위", title: siteLang.getLang("스팩범위"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_LSL", sortable: true, editor: false, editable: false },
+                { data_langsid: "관리선", title: siteLang.getLang("관리선"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_USL", sortable: true, editor: false, editable: false },
+                { data_langsid: "결과값", title: siteLang.getLang("결과값"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "RESULT_VALUE", sortable: true, editor: false, editable: false },
+                { data_langsid: "유효", title: siteLang.getLang("유효"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_USL", sortable: true, editor: false, editable: false }
             ];
             obj.dataModel = { data: data };
             $("#gridArea_CpCode").pqGrid(obj);
@@ -254,7 +256,39 @@
         });
 
         $(document).ready(function() {
-            ListSearchCpCode();
+            ListSearch();
         });
+
+
+    function updateVendorComment() {
+
+         var vendorComment = $("#vendorComment").val();
+         let coaid =  $("#COA_ID").val();
+         let lotno =  $("#LOT_NO").val();
+
+         $.ajax({
+            type: "post",
+            url: "/admin/qualityCtrl/updateVendorComment",
+            data: {
+                  "COA_ID": coaid ,
+                  "LOT_NO" : lotno ,
+                  "VENDOR_COMMENT" : vendorComment
+              },
+            success: function(response) {
+                if(response.status === "success") {
+                    Common.Msg(siteLang.getLang("저장되었습니다."));
+                    $("#popCoa").data("Hide")();
+                }
+            },
+            error: function(err) {
+              console.log("에러발생", err);
+              Common.Msg(err)  ;
+            }
+        });
+   }
+
+
+
     </script>
+
 </div>

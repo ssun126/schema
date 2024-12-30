@@ -133,6 +133,7 @@
 
 </body>
 </html>
+
 <script>
 
 
@@ -162,9 +163,8 @@
         Common.Dialog({ url : "/admin/companyInfo/materialList" });
        }
 
-
-       var popCoaOpen = function () {
-        Common.Dialog({ url : "/admin/qualityCtrl/popCoa" });
+       var popCoaOpen = function (coaId, vendorId, materialId,factoryId ,lotNo) {
+        Common.Dialog({ url : "/admin/qualityCtrl/popCoa" , param : { COA_ID :coaId , VENDOR_ID : vendorId, MATERIAL_ID : materialId ,FACTORY_ID : factoryId ,LOT_NO : lotNo } });
        }
 
     $(function () {
@@ -228,13 +228,13 @@
            },
            rowDblClick: function (event, ui) {
                var data = ui.rowData;
-               //const part_code = data.PART_CODE ;
-               //const plant_code = data.PLANT_CODE ;
 
-               //Common.Dialog({ obj : $("#popCOA"), blockClose : false });
-               //getModPop(part_code,plant_code);
-
-               popCoaOpen();
+                const coaId = data.COA_ID ;
+                const vendorId = data.VENDOR_ID ;
+                const materialId = data.MATERIAL_ID ;
+                const factoryId = data.FACTORY_ID ;
+                const lotNo = data.LOT_NO ;
+               popCoaOpen(coaId,vendorId, materialId,factoryId ,lotNo);
            },
            rowSelect: function (event, ui) {
            },
@@ -298,4 +298,75 @@
     $(document).ready(function () {
 
     });
+
+
+    <!--복사  사용안함 주석처리 됨. 확인후 구현-->
+    $("#btnCopy").click(function(){
+
+    		var data = micaCommon.grid.get.selData("#gridTable");
+
+			if (data.length < 1) {
+				coa.messageBox(micaCommon.lang("M_NotSelectedRow"));
+				return false;
+			}
+
+			var confirmData = true;
+			$.each(data, function(idx, item) {
+				if (item.L_COAStatus != 'E') {
+					confirmData = false;
+					return false;
+				}
+			});
+
+			if (!confirmData) {
+				coa.messageBox(micaCommon.lang("M_NotRegistItem"));
+				return false;
+			}
+
+			var otherFacory = false;
+			var mdFactory = false;
+			$.each(data, function(idx, item) {
+				if (item.L_FactoryId == '3100') {
+					mdFactory = true;
+				} else {
+					otherFacory = true;
+				}
+			});
+
+			if (otherFacory && mdFactory) {
+				coa.messageBox(micaCommon.lang("M_SelectNotSameTime"));
+				return false;
+			}
+
+			coa.lodingBar.show();
+			$("#popCopyCoaDDate").val("");
+			$("#popCopyCoaMDate").val("");
+			$("#popCopyCoaEDate").val("");
+			$("#popCopyCoaVolume").val("");
+			$("#popCopyCoa").micaModal('show');
+			coa.lodingBar.hide();
+
+			/*
+                var reqCheckParam = {
+                    coaRegList : data
+                };
+                var checkOptions = {
+                    method : "POST",
+                    success: function (data) {
+                        console.log(data)
+                        if(data.IS_SPEC_YN_CNT){
+                            //coa.messageBox(micaCommon.lang("M_NotSelectedRow"));
+                            $("#popSpecCheck").micaModal('show');
+                            $("#popSpecCheckLanguageType").val(data.USER_LANG);
+                            $("#popSpecCheckViewInfo").html(data.SPEC_CHECK_CONT1+data.SPEC_CHECK_SPEC+data.SPEC_CHECK_CONT2);
+                            coa.lodingBar.hide();
+                        }
+                    }
+                };
+                common.ajax("/api/coa/coamgmt/registCheck/", reqCheckParam, checkOptions);
+			*/
+
+			return;
+    	});
 </script>
+
