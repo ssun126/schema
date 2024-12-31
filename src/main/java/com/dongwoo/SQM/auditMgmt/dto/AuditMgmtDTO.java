@@ -21,6 +21,8 @@ public class AuditMgmtDTO {
     private String APPROVE_STATE;
     @JsonProperty("APPROVE_DATE")
     private String APPROVE_DATE;
+    @JsonProperty("SEND_DATE")
+    private String SEND_DATE;
     @JsonProperty("REG_DW_USER_IDX")
     private int REG_DW_USER_IDX;
     @JsonProperty("UP_DW_USER_IDX")
@@ -35,6 +37,8 @@ public class AuditMgmtDTO {
     private String FILE_TYPE;
     @JsonProperty("POINT")
     private double POINT;
+    @JsonProperty("FULL_POINT")
+    private double FULL_POINT;
     @JsonProperty("REASON")
     private String REASON;
     @JsonProperty("WORK_USER_NAME")

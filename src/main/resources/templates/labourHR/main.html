@@ -245,43 +245,44 @@
                 previousScore = selectedScore;  // 새 점수로 업데이트
             });
         });
+
+        //파일 타입 체크
+        $('input[type="file"]').on('change', function(event) {
+            const files = event.target.files; // 선택된 모든 파일
+            let isValid = true;
+
+            // 각 파일에 대해 validation 체크
+            $.each(files, function(index, file) {
+                if (file && !validation(file)) {
+                    // 잘못된 파일인 경우
+                    event.target.value = '';  // input 초기화
+                    clearFile($(event.target).closest('.cui_attachments').find('#deleteButton'));
+                    console.log('잘못된 파일: ', file.name);
+                    isValid = false;
+                    return false;  // 잘못된 파일이 있으면 반복문을 종료
+                }
+            });
+        });
     });
 
     $("input:radio[name=chkType]").change(function () {
-            var chkValue = $("input:radio[name=chkType]:checked").val();
+        var chkValue = $("input:radio[name=chkType]:checked").val();
 
-            if(chkValue == "file"){
-                $("#fs_file").show();
-                $("#fs_text").hide();
-            }
-            else if(chkValue == "text"){
-                $("#fs_file").hide();
-                $("#fs_text").show();
-            }
-        });
-
-    //제출 상태
-    function loadInfo(){
-        const comState = `[[${companyAuth.APPROVE_STATE}]]`;
-        $('.resultField').hide();
-        if(comState != "" ){
-            if(comState === 'SEND'){
-                $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
-                $('#sendAuth').hide();
-            }else if(comState === 'APPROVED'){
-                $('#authState').text('[승인:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
-                $('#sendAuth').hide();
-            }else if(comState === 'REJECT'){
-                $('#authState').text('[반려:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
-                $('.resultField').show(); // 결과 보이기
-            }
+        if(chkValue == "file"){
+            $("#fs_file").show();
+            $("#fs_text").hide();
         }
-    }
+        else if(chkValue == "text"){
+            $("#fs_file").hide();
+            $("#fs_text").show();
+        }
+    });
+
 
     //파일다운로드
     function downloadFile() {
         var fileName = '[[${companyAuthFile != null ? companyAuthFile.FILE_NAME:''}]]';
-        var url = "/auditMgmt/getIsoAuthFileDown?filename=" + encodeURIComponent(fileName);
+        var url = "/auditMgmt/getAuditFileDown?filename=" + encodeURIComponent(fileName);
 
         var link = document.createElement("a");
         link.href = url;
@@ -299,7 +300,7 @@
     // 제출 버튼 클릭 시 데이터 저장
     $("#sendAuth").click(function() {
         const formData = new FormData();
-
+        var tableData = [];
         var chkValue = $("input:radio[name=chkType]:checked").val();
         console.log("chkValue>>>>>>>>>>"+chkValue);
         if(chkValue == "file"){
@@ -316,28 +317,15 @@
                 }
             }
         }else{
-            var tableData = [];
-
             $("#itemTable tbody tr").each(function() {
                 var row = {};
                 var fileCnt = {};
-                row['AUTH_TYPE'] = $(this).find('td').eq(0).text();
-                row['AUTH_CODE'] = $(this).find('td').eq(1).text() == ''?$(this).find('input[name="AUTH_CODE"]').val():$(this).find('td').eq(1).text();
-                row['AUTH_DATE'] = $(this).find('input[name="AUTH_DATE"]').val();
-                row['EXP_DATE'] = $(this).find('input[name="EXP_DATE"]').val();
-                row['REG_INPUT_DATE'] = $(this).find('input[name="REG_INPUT_DATE"]').val();
-                //APPROVED, SEND 상태인 항목은 제외
-                if($(this).find('input[name="ITEM_STATE"]').val() == 'REJECT' || $(this).find('input[name="ITEM_STATE"]').val() == 'SAVE' || $(this).find('input[name="ITEM_STATE"]').val() == null){
-                    var fileInput = $(this).find('input[type="file"]')[0];
-                    if (fileInput && fileInput.files.length > 0) {
-                        row['FILE_NAME'] = fileInput.files[0].name;
-                    }
-                    if(row['FILE_NAME'] == undefined){
-                        row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
-                    }
-                    console.log("insert data"+row['FILE_NAME']);
-                    tableData.push(row);
-                }
+                row['POINT'] = $(this).find('td').eq(6).text();
+                row['AUDIT_COMMENT'] = $(this).find('input[name="AUDIT_COMMENT"]').val() || '';
+                row['AUDIT_ID'] = $(this).find('input[name="AUDIT_ID"]').val();
+
+                console.log("insert data"+row['AUDIT_ID']);
+                tableData.push(row);
             });
         }
 
@@ -362,7 +350,6 @@
         });
     });
 
-
     // 파일 삭제
     function clearFile(button) {
         const fileInput = button.closest('td').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음
@@ -377,23 +364,41 @@
         fileLabelDiv.style.display = 'none';
     }
 
-    setTimeout(function() {
-        const fileInput = document.querySelector('input[type="file"]');
-        if (fileInput) {
-            fileInput.addEventListener('change', function(event) {
-                const files = event.target.files;  // 선택된 모든 파일
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    if (file && !validation(file)) {
-                        event.target.value = '';  // 잘못된 파일 선택시 input 초기화
-                        clearFile(fileInput.closest('.cui_attachments').querySelector('#deleteButton'));
-                        console.log('잘못된 파일: ', file.name);
-                        break;  // 잘못된 파일이 있으면 더 이상 파일을 체크하지 않음
-                    }
-                }
-            });
+    //제출 상태
+    function loadInfo(){
+        const comState = `[[${companyAuth.APPROVE_STATE}]]`;
+        //const date = formattedDate([[${companyAuth.APPROVE_DATE}]]);
+        //console.log(date);
+        $('.resultField').hide();
+        if(comState != "" ){
+            if(comState === 'SEND'){
+                $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('#sendAuth').hide();
+            }else if(comState === 'APPROVED'){
+                $('#authState').text('[승인:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('#sendAuth').hide();
+            }else if(comState === 'REJECT'){
+                $('#authState').text('[반려:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('.resultField').show(); // 결과 보이기
+            }
         }
-    }, 100); // setTimeout 종료
+    }
+
+    var formattedDate = function (date) {
+        if (!date) return '';
+        var dateObj = new Date(date);
+
+        if (isNaN(dateObj.getTime())) {
+            return '';
+        }
+        // Format the date to 'yyyy-mm-dd'
+        var year = dateObj.getFullYear();
+        var month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+        var day = String(dateObj.getDate()).padStart(2, '0'); // Add leading zero if needed
+        console.log(year + '-' + month + '-' + day);
+        return year + '-' + month + '-' + day;
+    };
+
 </script>
 </body>
 </html>

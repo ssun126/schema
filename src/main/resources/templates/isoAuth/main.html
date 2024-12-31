@@ -10,6 +10,9 @@
             <div class="head_content">
                 <h2 class="cui_title"><span th:text="${#authentication.principal.COM_NAME}"></span></h2>
             </div>
+            <div class="head_aside">
+                <p><span id="authState">미제출</span></p>
+            </div>
         </div>
         <div class="cui_body">
             <div class="cui_section">
@@ -27,7 +30,7 @@
                         <table class="cui_table center" id="isoAuthItemTable">
                             <colgroup>
                                 <col style="width:120px;">
-                                <col>
+                                <col style="width:180px;">
                                 <col style="width:120px;">
                                 <col style="width:120px;">
                                 <col style="width:120px;">
@@ -123,8 +126,11 @@
     // 결합된 REASON 값을 textarea에 출력
     document.getElementById('rejectReason').value = rejectReasons;
 
+    var notSend = companyIsoAuth.every(function(data) {
+        return data.ITEM_STATE === null;  // 모든 항목의 ITEM_STATE가 null 인지 확인
+    });
     var allApproved = companyIsoAuth.every(function(data) {
-        return data.ITEM_STATE === 'APPROVED' || data.ITEM_STATE === null;  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
+        return data.ITEM_STATE === 'APPROVED' && data.COM_CODE !== null;  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
     });
     var notApproved = companyIsoAuth.some(function(data) {
         return data.ITEM_STATE === 'REJECT';
@@ -132,14 +138,18 @@
     var sendSubmit= companyIsoAuth.some(function(data) {
         return data.ITEM_STATE === 'SEND';
     });
-
-
+    if (notSend) { //제출전
+        $('#footButton').show();
+        $('#topButton').show();
+    }
     if (notApproved) { //반려가 있는 경우
+        $('#authState').text('[반려 : ' + formattedDate([[${companyAuth.APPROVE_DATE}]])+']');
         $('#topButton').hide();
         $('#submitIsoAuth').hide();
         $('#rejectArea').show();
     }
-    if (sendSubmit || allApproved) { //모두 승인이 되면 전체 버튼 숨기기
+    if (sendSubmit || allApproved) { //제출하거나 모두 승인이 되면 전체 버튼 숨기기
+        $('#authState').text('[' + (sendSubmit ? '제출: ' + formattedDate([[${companyAuth.SEND_DATE}]]) : '승인: ' + formattedDate([[${companyAuth.APPROVE_DATE}]])) + ']');
         $('#footButton').hide();
         $('#topButton').hide();
     }
@@ -224,20 +234,28 @@
             row['EXP_DATE'] = $(this).find('input[name="EXP_DATE"]').val();
             row['REG_INPUT_DATE'] = $(this).find('input[name="REG_INPUT_DATE"]').val();
             //APPROVED, SEND 상태인 항목은 제외
-            if($(this).find('input[name="ITEM_STATE"]').val() == 'REJECT' || $(this).find('input[name="ITEM_STATE"]').val() == 'SAVE' || $(this).find('input[name="ITEM_STATE"]').val() == null){
+            if($(this).find('input[name="ITEM_STATE"]').val() !== 'APPROVED' || $(this).find('input[name="ITEM_STATE"]').val() !== 'SEND'){
+                var authDate = row['AUTH_DATE'];
+                var expDate = row['EXP_DATE'];
+                var regInputDate = row['REG_INPUT_DATE'];
+
                 var fileInput = $(this).find('input[type="file"]')[0];
+
+                if ((authDate || expDate || regInputDate) && (!fileInput || fileInput.files.length === 0)) {
+                    showAlert('warning','인증정보를 입력한 경우 파일을 등록해야 합니다.');
+                    return false;  // Stops the loop and prevents form submission
+                }
+
                 if (fileInput && fileInput.files.length > 0) {
                     row['FILE_NAME'] = fileInput.files[0].name;
                     row['FILE_PATH'] = fileInput.files[0].path;
                 }
-
                 if(row['FILE_NAME'] == undefined){
                     row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
                 }
-
                 console.log("insert data"+row['FILE_NAME']);
-                tableData.push(row);
             }
+            tableData.push(row);
         });
 
         var formData = new FormData();
@@ -266,10 +284,10 @@
             processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
             contentType: false,  // 기본 contentType을 사용하지 않음
             success: function(response) {
-                console.log(response);
-                if(response.ok){
-                    showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                }
+                showAlert('success','데이터가 성공적으로 저장되었습니다.');
+                setTimeout(function() {
+                    loadPage(1); // 승인 시 페이지 새로고침
+                }, 100);  // 100ms 후에 실행
             },
             error: function(xhr, status, error) {
                 showAlert('warning','데이터 저장에 실패했습니다.');
@@ -279,7 +297,7 @@
 
      function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
-        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+        var downloadUrl = '/auditMgmt/getIsoAuditFileDown?filename=' + encodeURIComponent(fileName);
 
         // 다운로드 링크를 동적으로 생성
         var link = document.createElement('a');
@@ -290,6 +308,20 @@
         link.click();
     }
 
+    var formattedDate = function (date) {
+        if (!date) return '';
+        var dateObj = new Date(date);
+
+        if (isNaN(dateObj.getTime())) {
+            return '';
+        }
+        // Format the date to 'yyyy-mm-dd'
+        var year = dateObj.getFullYear();
+        var month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+        var day = String(dateObj.getDate()).padStart(2, '0'); // Add leading zero if needed
+        console.log(year + '-' + month + '-' + day);
+        return year + '-' + month + '-' + day;
+    };
 
 </script>
 </body>

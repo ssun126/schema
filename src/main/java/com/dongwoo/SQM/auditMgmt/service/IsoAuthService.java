@@ -97,7 +97,8 @@ public class IsoAuthService {
             dto.setREG_DW_USER_IDX(loginIdx);
             dto.setUP_DW_USER_IDX(loginIdx);
 
-            if(dto.getAUTH_DATE() != null && dto.getEXP_DATE() != null && dto.getREG_INPUT_DATE() != null && dto.getFILE_NAME() != null) {
+            log.info(dto.getAUTH_DATE());
+            if(!dto.getAUTH_DATE().isEmpty() && !dto.getEXP_DATE().isEmpty() && !dto.getREG_INPUT_DATE().isEmpty() && !dto.getFILE_NAME().isEmpty()) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("AUTH_CODE", dto.getAUTH_CODE());
                 params.put("COM_CODE", comCode);

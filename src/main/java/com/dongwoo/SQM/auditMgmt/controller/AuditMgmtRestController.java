@@ -2,16 +2,10 @@ package com.dongwoo.SQM.auditMgmt.controller;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
-import com.dongwoo.SQM.auditMgmt.dto.AuditSearchResult;
 import com.dongwoo.SQM.auditMgmt.service.*;
 import com.dongwoo.SQM.board.dto.Criteria;
-import com.dongwoo.SQM.board.dto.PageDTO;
 import com.dongwoo.SQM.common.service.FileStorageService;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoDTO;
-import com.dongwoo.SQM.companyInfo.dto.CompanyInfoParamDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,12 +14,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
@@ -140,7 +132,26 @@ public class AuditMgmtRestController {
     }
 
     //인증서 파일 다운로드
-    @GetMapping("/getIsoAuthFileDown")
+    @GetMapping("/getIsoAuditFileDown")
+    public ResponseEntity<Resource> downloadISOFile(@RequestParam("filename") String filename) throws Exception {
+        Path path = fileStorageService.getISOUploadDirectory().resolve(filename).normalize();
+        FileSystemResource resource = new FileSystemResource(path);
+
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new Exception("File not found or not readable: " + filename);
+        }
+
+        // Encode the filename in UTF-8 and handle non-ASCII characters
+        String encodedFilename = encodeFileName(filename);
+
+        // Return the file as a downloadable resource
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFilename)
+                .body(resource);
+    }
+
+    //인증서 파일 다운로드
+    @GetMapping("/getAuditFileDown")
     public ResponseEntity<Resource> downloadFile(@RequestParam("filename") String filename) throws Exception {
         Path path = fileStorageService.getUploadDirectory().resolve(filename).normalize();
         FileSystemResource resource = new FileSystemResource(path);

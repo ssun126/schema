@@ -297,7 +297,7 @@
     //파일다운로드
     function downloadFile() {
         var fileName = '[[${companyAuthFile.FILE_NAME}]]';
-        var url = "/auditMgmt/getIsoAuthFileDown?filename=" + encodeURIComponent(fileName);
+        var url = "/auditMgmt/getAuditFileDown?filename=" + encodeURIComponent(fileName);
 
         var link = document.createElement("a");
         link.href = url;

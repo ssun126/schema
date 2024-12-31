@@ -31,7 +31,7 @@
     </select>
 
     <select id="getCompanyAuth" parameterType="map" resultType="authMgmt">
-        SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, POINT
+        SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, POINT
         FROM SC_AUTH_COMPANY_INFO ACI
         INNER JOIN SC_COMPANY_CODE CC
         ON CC.COM_CODE = ACI.COM_CODE
@@ -61,35 +61,6 @@
         </if>
     </select>
 
-
-    <select id="searchCompanies_" parameterType="map" resultType="authMgmt">
-        SELECT RN, COM_CODE, COM_NAME, AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') AS APPROVE_DATE, POINT
-        FROM
-        (
-            SELECT /*+ INDEX_DESC(SC_ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-                ROWNUM RN, ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, POINT
-            FROM SC_AUTH_COMPANY_INFO ACI
-            INNER JOIN SC_COMPANY_CODE CC
-            ON CC.COM_CODE = ACI.COM_CODE
-            WHERE 1 =1
-            <if test="COM_CODE != null and COM_CODE != ''">
-                AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
-            </if>
-            <if test="COM_NAME != null and COM_NAME != ''">
-                AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
-            </if>
-            <if test="COM_STATUS != null and COM_STATUS != ''">
-                AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
-            </if>
-            <if test="AUTH_TYPE != null and AUTH_TYPE != ''">
-                AND (ACI.AUTH_TYPE LIKE CONCAT(CONCAT('%',  #{AUTH_TYPE}), '%'))
-            </if>
-            <if test="criteria != null and criteria != ''">
-        <![CDATA[  AND ROWNUM <= (#{criteria.pageNum} * #{criteria.amount}) ]]>
-            </if>
-        )
-        WHERE RN > ((#{criteria.pageNum}-1) * #{criteria.amount})
-    </select>
 
     <select id="countByKeyword" parameterType="map" resultType="int">
         select count(*) CNT
@@ -124,11 +95,9 @@
             FILE_NAME,
             FILE_PATH,
             REASON
-        FROM
-            (
+        FROM (
             SELECT
-                /*+ INDEX_DESC(SC_ISO_AUTH_COMPANY_ITEM PK_ISO_AUTH_COMPANY_ITEM) */
-                IACI.COM_CODE,
+                COALESCE(IACI.COM_CODE, #{COM_CODE}) AS COM_CODE,
                 BC.BASE_VALUE AS AUTH_TYPE,
                 BC.BASE_NAME AS AUTH_CODE,
                 IACI.AUTH_DATE,
@@ -138,12 +107,42 @@
                 IACI.ITEM_STATE,
                 IACI.FILE_NAME,
                 IACI.FILE_PATH,
-                IACI.REASON
-            FROM (SELECT * FROM SC_base_code WHERE GROUP_CODE != BASE_CODE AND BASE_STATUS ='Y' AND GROUP_CODE ='IsoAuthCode')  BC
-            LEFT OUTER JOIN	SC_ISO_AUTH_COMPANY_ITEM IACI
-            ON BC.BASE_NAME = IACI.AUTH_CODE
-            AND IACI.COM_CODE = #{COM_CODE} ORDER BY BC.BASE_SORT ASC
-            )
+                IACI.REASON,
+                BC.BASE_SORT
+            FROM SC_base_code BC
+            LEFT JOIN SC_ISO_AUTH_COMPANY_ITEM IACI
+                ON BC.BASE_NAME = IACI.AUTH_CODE
+                AND IACI.COM_CODE = #{COM_CODE}
+            WHERE
+                BC.GROUP_CODE != BC.BASE_CODE
+                AND BC.BASE_STATUS = 'Y'
+                AND BC.GROUP_CODE = 'IsoAuthCode'
+            UNION ALL
+            SELECT
+                COALESCE(IACI.COM_CODE, #{COM_CODE}) AS COM_CODE,
+                IACI.AUTH_TYPE,
+                IACI.AUTH_CODE,
+                IACI.AUTH_DATE,
+                IACI.EXP_DATE,
+                IACI.REG_INPUT_DATE,
+                IACI.UP_DATE,
+                IACI.ITEM_STATE,
+                IACI.FILE_NAME,
+                IACI.FILE_PATH,
+                IACI.REASON,
+                999 AS BASE_SORT
+            FROM SC_ISO_AUTH_COMPANY_ITEM IACI
+            WHERE IACI.COM_CODE = #{COM_CODE}
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM SC_base_code BC
+                    WHERE BC.BASE_NAME = IACI.AUTH_CODE
+                    AND BC.GROUP_CODE != BC.BASE_CODE
+                    AND BC.BASE_STATUS = 'Y'
+                    AND BC.GROUP_CODE = 'IsoAuthCode'
+                )
+            ) AA
+        ORDER BY AA.BASE_SORT ASC
     </select>
 
 

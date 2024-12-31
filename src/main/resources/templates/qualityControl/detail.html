@@ -291,7 +291,7 @@
 
     function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
-        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+        var downloadUrl = '/auditMgmt/getAuditFileDown?filename=' + encodeURIComponent(fileName);
 
         // 다운로드 링크를 동적으로 생성
         var link = document.createElement('a');

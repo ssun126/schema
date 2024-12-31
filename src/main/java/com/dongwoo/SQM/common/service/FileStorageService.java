@@ -8,8 +8,15 @@ import java.nio.file.Paths;
 
 @Service
 public class FileStorageService {
-    @Value("${Upload.path.attach}")
+    @Value("${Upload.path.audit}")
     private String uploadPath;
+
+    @Value("${Upload.path.iso}")
+    private String uploadPathIso;
+
+    public Path getISOUploadDirectory() {
+        return Paths.get(uploadPathIso); // Converts the string path to a Path object
+    }
 
     public Path getUploadDirectory() {
         return Paths.get(uploadPath); // Converts the string path to a Path object

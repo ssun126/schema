@@ -15,7 +15,7 @@
             <h2 class="cui_title"><span th:text="${#authentication.principal.COM_NAME}"></span></h2>
         </div>
         <div class="head_aside">
-            <p><span id="authState"></span></p>
+            <p><span id="authState">(미제출)</span></p>
         </div>
     </div>
     <div class="cui_body">
@@ -254,7 +254,6 @@
 </div>
 <script>
     $(document).ready(function () {
-        $('#authState').text('(미제출)');
         loadInfo();
 
         // datepicker 초기화
@@ -357,7 +356,7 @@
 
     function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
-        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+        var downloadUrl = '/auditMgmt/getAuditFileDown?filename=' + encodeURIComponent(fileName);
 
         // 다운로드 링크를 동적으로 생성
         var link = document.createElement('a');

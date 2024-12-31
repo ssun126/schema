@@ -1923,3 +1923,4 @@ var commonSettings = {
             headerCellClick: function (event, ui) {
             }
 };
+

@@ -81,6 +81,7 @@ Upload:
     iso: "D:/SCHEMA/STORAGE/ISO"
     audit: "D:/SCHEMA/STORAGE/AUDIT"
     warranty: "D:/SCHEMA/STORAGE/WARRANTY"
+    sample: "D:/SCHEMA/STORAGE/SAMPLE"
 
 restfull:
   povis:

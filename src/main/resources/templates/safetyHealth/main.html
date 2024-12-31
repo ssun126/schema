@@ -469,7 +469,7 @@
 
     function downloadFile(fileName) {
         // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
-        var downloadUrl = '/auditMgmt/getIsoAuthFileDown?filename=' + encodeURIComponent(fileName);
+        var downloadUrl = '/auditMgmt/getAuditFileDown?filename=' + encodeURIComponent(fileName);
 
         // 다운로드 링크를 동적으로 생성
         var link = document.createElement('a');
@@ -525,7 +525,7 @@
         }
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
         formData.append('type', 'SAFETY');  // flag가 SAFETY / SAFETY
-        formData.append('total', 100);  // total 점수 $('#totalPoint').val();
+        formData.append('total', $('#totalPoint').val());  // total 점수
 
          $.ajax({
             url: '/auditMgmt/sendAuthData',
