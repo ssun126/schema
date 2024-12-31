@@ -227,5 +227,40 @@ public class coaMgmtController {
     }
 
 
+    //복사  ---작업중!!!!! 2024.12.31 sylee ---DB가 끊겼어!@@
+    @PostMapping("/admin/qualityCtrl/copyCoa")
+    @ResponseBody
+    public Map<String, String> copyCoa(
+            @RequestParam("COA_ID") String coa_id
+            ,@RequestParam("LOT_NO") String lot_no
+            ,@RequestParam("VENDOR_COMMENT") String vendor_comment
+            , Authentication authentication) {
+        Map<String, String> response = new HashMap<>();
+        try {
+
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String user_gubun = user.getUSER_GUBUN();
+            String user_id = user.getUsername();
+
+            coaMgmtDTO coaParamDto = new coaMgmtDTO();
+            coaParamDto.setTOKEN_USER_ID(user_id);
+            coaParamDto.setCOA_ID(coa_id);
+            coaParamDto.setVENDOR_COMMENT(vendor_comment);
+            coaParamDto.setLOT_NO(lot_no);
+
+            coaMgmtService.copyCOAMaster(coaParamDto);
+            coaMgmtService.copyCOADetail(coaParamDto);
+
+            response.put("status", "success");
+            response.put("message", "복사 처리 되었습니다.");
+
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "처리 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
+
+
 
 }

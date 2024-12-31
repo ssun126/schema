@@ -4,6 +4,12 @@
 
 <mapper namespace="coaMgmt">
 
+    <select id="getCOANumber" resultType="String">
+        /* coaMgmtMapper.getCOANumber */
+        SELECT 'COA-'|| TO_CHAR(SYSDATE, 'YYMMDD') || LPAD(SEQ_COA_ID_01.NEXTVAL, 8, '0')
+        FROM DUAL
+    </select>
+
     <select id="GetBaseCode"  parameterType="String" resultType="baseCode">
         SELECT * FROM  SC_base_code
         WHERE  GROUP_CODE != BASE_CODE
@@ -281,5 +287,76 @@
         WHERE COA_ID = #{COA_ID}
         AND LOT_NO = #{LOT_NO}
     </update>
+
+
+    <insert id="copyCOAMaster">
+        INSERT INTO COA_MASTER (
+        COA_ID,
+        VENDOR_ID,
+        MATERIAL_ID,
+        FACTORY_ID,
+        LOT_NO,
+        STOCK_DATE,
+        MF_DATE,
+        COA_STATUS,
+        E_DATE,
+        QUANTITY,
+        LANGUAGE_TYPE,
+        CREATOR,
+        CREATE_DATETIME
+        )
+        SELECT
+        #{COPY_COA_ID},
+        VENDOR_ID,
+        MATERIAL_ID,
+        FACTORY_ID,
+        LOT_NO,
+        #{D_DATE},
+        #{M_DATE},
+        'A',
+        #{E_DATE},
+        #{VOLUME},
+        LANGUAGE_TYPE,
+        #{USERID},
+        SYSDATE
+        FROM COA_MASTER
+        WHERE
+        COA_ID = #{L_COAId}
+        AND LOT_NO = #{L_LotNo}
+        AND VENDOR_ID = #{L_VendorId}
+        AND MATERIAL_ID = #{L_MaterialId}
+        AND FACTORY_ID = #{L_FactoryId}
+    </insert>
+
+    <insert id="copyCOADetail">
+        /* coaMgmtMapper.insertCOADetail */
+        INSERT
+        INTO COA_DETAIL (
+        COA_ID
+        , LOT_NO
+        , SPEC_ID
+        , SPEC_LSL
+        , SPEC_USL
+        , RESULT_VALUE
+        , IS_SPECIN
+        , SPEC_LCL
+        , SPEC_UCL
+        )
+        SELECT
+        #{COPY_COA_ID}
+        , LOT_NO
+        , SPEC_ID
+        , SPEC_LSL
+        , SPEC_USL
+        , RESULT_VALUE
+        , IS_SPECIN
+        , SPEC_LCL
+        , SPEC_UCL
+        FROM COA_DETAIL
+        WHERE
+        COA_ID = #{L_COAId}
+        AND LOT_NO = #{L_LotNo}
+    </insert>
+
 
 </mapper>
