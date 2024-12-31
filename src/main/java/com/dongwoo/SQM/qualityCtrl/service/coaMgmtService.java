@@ -49,4 +49,13 @@ public class coaMgmtService {
         return coaMgmtRepository.updateVendorComment(coaMgmtDTO);
     }
 
+
+    public int copyCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.updateVendorComment(coaMgmtDTO);
+    }
+
+    public int copyCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.updateVendorComment(coaMgmtDTO);
+    }
+
 }

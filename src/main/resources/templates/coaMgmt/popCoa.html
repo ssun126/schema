@@ -190,6 +190,29 @@
         $(function () {
             var data = [];
 
+            var RowColorChg = function (ui) {
+                var data = ui.rowData;
+                var isSpecYn = data.IS_SPEC_YN;
+                var isControlYn = data.IS_CONTROL_YN;
+
+                if (isSpecYn == "D") {
+                    return { style: "background-color:red" ; "font-weight":'bold"; } ;
+                } else if (isSpecYn == "Y") {
+                    return { style: "background-color:green" ; "font-weight":'bold";} ;
+                } else if (isControlYn == "Y") {
+                    return { style: "background-color:blue" ; "font-weight":'bold";} ;
+                }
+
+<!--                if (isSpecYn == "D") {-->
+<!--                    return { style: "background-color:red"} ;-->
+<!--                } else if (isSpecYn == "Y") {-->
+<!--                    return { style: "background-color:green"} ;-->
+<!--                } else if (isControlYn == "Y") {-->
+<!--                    return { style: "background-color:blue"} ;-->
+<!--                }-->
+
+            }
+
             var obj = {
                 bubble: false,
                 numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
@@ -228,10 +251,9 @@
                 },
                 rowDblClick: function (event, ui) {
                     var data = ui.rowData;
-                    $("#searchUserList").find("input[name=USER_ID]").val(data.USER_ID);
-                    $("#searchUserList").find("input[name=USER_NAME]").val(data.USER_NAME);
-                    $("#searchUserList").find("input[name=registerName]").val(data.USER_NAME);
-
+<!--                    $("#searchUserList").find("input[name=USER_ID]").val(data.USER_ID);-->
+<!--                    $("#searchUserList").find("input[name=USER_NAME]").val(data.USER_NAME);-->
+<!--                    $("#searchUserList").find("input[name=registerName]").val(data.USER_NAME);-->
                     $("#popCoa").data("Hide")();
                 },
                 rowSelect: function (event, ui) {
@@ -242,13 +264,13 @@
                 }
             };
             obj.colModel = [
-                { data_langsid: "스펙 ID", title: siteLang.getLang("스펙 ID"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_ID", sortable: true, editor: false, editable: false },
-                { data_langsid: "스팩명", title: siteLang.getLang("스팩명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "SPEC_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "스팩영문명", title: siteLang.getLang("스팩영문명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "SPEC_ENG_NAME", sortable: true, editor: false, editable: false },
-                { data_langsid: "스팩범위", title: siteLang.getLang("스팩범위"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_LSL", sortable: true, editor: false, editable: false },
-                { data_langsid: "관리선", title: siteLang.getLang("관리선"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_USL", sortable: true, editor: false, editable: false },
-                { data_langsid: "결과값", title: siteLang.getLang("결과값"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "RESULT_VALUE", sortable: true, editor: false, editable: false },
-                { data_langsid: "유효", title: siteLang.getLang("유효"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_USL", sortable: true, editor: false, editable: false }
+                { data_langsid: "스펙 ID", title: siteLang.getLang("스펙 ID"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_ID", sortable: true, editor: false, editable: false ,render: RowColorChg },
+                { data_langsid: "스팩명", title: siteLang.getLang("스팩명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "SPEC_NAME", sortable: true, editor: false, editable: false,render: RowColorChg },
+                { data_langsid: "스팩영문명", title: siteLang.getLang("스팩영문명"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "SPEC_ENG_NAME", sortable: true, editor: false, editable: false,render: RowColorChg },
+                { data_langsid: "스팩범위", title: siteLang.getLang("스팩범위"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_AREA", sortable: true, editor: false, editable: false,render: RowColorChg },
+                { data_langsid: "관리선", title: siteLang.getLang("관리선"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_AREA2", sortable: true, editor: false, editable: false,render: RowColorChg },
+                { data_langsid: "결과값", title: siteLang.getLang("결과값"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "RESULT_VALUE", sortable: true, editor: false, editable: false,render: RowColorChg },
+                { data_langsid: "유효", title: siteLang.getLang("유효"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "IS_SPEC_YN", sortable: true, editor: false, editable: false ,render: RowColorChg}
             ];
             obj.dataModel = { data: data };
             $("#gridArea_CpCode").pqGrid(obj);

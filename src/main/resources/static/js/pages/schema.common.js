@@ -1090,6 +1090,24 @@ Common.Load = function (Obj) {
         }
     });
 
+    Obj.find('input[datePickerControlModal]').each(function () {
+        var thisObj = $(this);
+        thisObj.datepicker({
+            dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
+
+        }).css('z-index', 9999);
+        var nextObj = thisObj.next();
+        if (nextObj && nextObj.attr("data-cui-icon") && nextObj.attr("data-cui-icon") == "calendar") {
+            nextObj.bind("click", function () {
+                if (thisObj.datepicker("widget").is(":visible")) {
+                    thisObj.datepicker("hide"); // datepicker 숨기기
+                } else {
+                    thisObj.datepicker("show"); // datepicker 보이기
+                }
+            });
+        }
+    });
+
     Obj.find('textarea[editerMode=true]').each(function () {
         var thisObj = $(this);
         $(this).summernote({
