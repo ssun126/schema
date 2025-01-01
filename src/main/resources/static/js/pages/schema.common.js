@@ -1942,3 +1942,17 @@ var commonSettings = {
             }
 };
 
+var formattedDate = function (date) {
+    if (!date) return '';
+    var dateObj = new Date(date);
+
+    if (isNaN(dateObj.getTime())) {
+        return '';
+    }
+    // Format the date to 'yyyy-mm-dd'
+    var year = dateObj.getFullYear();
+    var month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+    var day = String(dateObj.getDate()).padStart(2, '0'); // Add leading zero if needed
+    console.log(year + '-' + month + '-' + day);
+    return year + '-' + month + '-' + day;
+};

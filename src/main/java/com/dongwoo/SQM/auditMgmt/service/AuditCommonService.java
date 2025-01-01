@@ -8,15 +8,23 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +76,8 @@ public class AuditCommonService {
             if (fileNames != null && fileNames.length > 0) {
                 // 각 파일을 저장하고 경로를 DTO에 추가
                 for (int i = 0; i < fileNames.length; i++) {
-                    String filePath = saveFile(fileNames[i]);
+                    saveUploadData(fileNames[i], authMgmtDTO.getAUTH_SEQ(), type);//파일 내용 저장
+                    String filePath = saveFile(fileNames[i]); //파일 저장
 
                     // Paths 클래스를 사용하여 파일명 추출
                     Path path = Paths.get(filePath);
@@ -104,6 +113,43 @@ public class AuditCommonService {
             log.info("Error"+e.getMessage());
         }
     }
+    @Transactional
+    public void saveUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq, String Auth_Type) throws IOException {
+        log.info("saveLabourUploadData====================="+auth_seq);
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int comUserIdx = user.getCOM_USER_IDX();
+
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        XSSFSheet worksheet = workbook.getSheetAt(0);
+        List<AuditItemPointDTO> itemDTOList = new ArrayList<>();
+        for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+            AuditItemPointDTO auditItemDTO = new AuditItemPointDTO();
+
+            DataFormatter formatter = new DataFormatter();
+            XSSFRow row = worksheet.getRow(i);
+
+            String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
+            double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(5)))); //점수
+            String AUDIT_COMMENT = formatter.formatCellValue((row.getCell(6))); //근거자료
+
+            auditItemDTO.setAUDIT_ID(AUDIT_ID);
+            auditItemDTO.setAUTH_TYPE(Auth_Type);
+            auditItemDTO.setPOINT(POINT);
+            auditItemDTO.setAUDIT_COMMENT(AUDIT_COMMENT);
+            auditItemDTO.setREG_COM_USER_IDX(comUserIdx);
+            auditItemDTO.setAUTH_SEQ(auth_seq);
+
+            itemDTOList.add(auditItemDTO);
+            log.info("itemDTOList====================="+auditItemDTO);
+        }
+
+        try {
+            insertLabourItem(itemDTOList);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public String saveFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
@@ -140,6 +186,18 @@ public class AuditCommonService {
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return auditMgmtRepository.getCompanyAuthItemPoint(params);
+    }
+
+    public void insertLabourItem(List<AuditItemPointDTO> itemDTOList) throws SQLException {
+        log.info("test11111111111111111111111");
+        try{
+            for(AuditItemPointDTO dto : itemDTOList){
+                log.info("test2-1");
+                auditMgmtRepository.insertItemPoint(dto);
+            }
+        }catch (Exception e){
+            log.info(e.toString());
+        }
     }
 
     //업체별 만료일 정보 리스트

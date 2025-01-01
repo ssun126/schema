@@ -274,7 +274,6 @@ $(document).ready(function() {
     AuditPlanTab(1);
 });
 
-
 var ListSearchMaterialCode = function () {
     var url = "/api/audit/auditNcrMgmt/getAuditNcrInfo";
 
@@ -353,54 +352,6 @@ tabButtons.forEach(function(buttonId, index) {
     });
 });
 
-popGetData: function(rowData){
-    auditPlan.popControl.popClearData();
-    var reqParam = {
-        ap_seq : rowData.AP_Seq
-    };
-    var options = {
-        method : "POST",
-        success: function (data) {
-            if(data.auditPlanInfo && data.auditPlanInfo){
-                var auditPlanInfo = data.auditPlanInfo[0];
-                $("#popAuditPlanApSeq").val(auditPlanInfo.AP_Seq);
-                $("#popAuditPlanAmSeq").val(auditPlanInfo.AM_Seq);
-                $("#popAuditPlanApNo").html(auditPlanInfo.AP_No);
-                $("#popAuditPlanApDate").html(auditPlanInfo.AP_Date);
-                $("#popAuditPlanApType").html(auditPlanInfo.AP_Type);
-                $("#popAuditPlanWetpr").html(auditPlanInfo.WETPR);
-                $("#popAuditPlanApWay").html(auditPlanInfo.AP_Way);
-                $("#popAuditPlanMakeEmpNm").html(auditPlanInfo.Make_EmpNM);
-                $("#popAuditPlanApComment").val(auditPlanInfo.AP_COMMENT);
-                $("#popAuditPlanPlant").val(auditPlanInfo.PLANT);
-            }
-            if(data.auditResultInfo && data.auditResultInfo){
-                var auditResultInfo = data.auditResultInfo[0];
-                $("#popAuditPlanVendorNm").html(auditResultInfo.PartnersNM);
-                $("#popAuditPlanResultApComment").val(auditResultInfo.COMMENT);
-                $("#popAuditPlanGrade").html(auditResultInfo.GRADE);
-            }
-            if(data.auditPlanInfoResultFile && data.auditPlanInfoResultFile.length>0 && (data.auditPlanInfoResultFile[0].status=='C'||data.auditPlanInfoResultFile[0].status=='D'||data.auditPlanInfoResultFile[0].status=='F')){
-
-                auditPlan.multiFileInput.downloadSet("popAuditPlanResultAttachFileArea",data.auditPlanInfoResultFile);
-
-            }
-            if(data.auditPlanInfoCsFile && data.auditPlanInfoCsFile.length>0){
-                auditPlan.multiFileInput.downloadSet("popAuditPlanAttachFileArea",data.auditPlanInfoCsFile);
-                $("#btnPopAuditPlanSave").hide();
-                $("#btnPopAuditCheckSheetDel").show();
-            }else{
-                auditPlan.multiFileInput.set("popAuditPlanAttachFileArea")
-                $("#btnPopAuditPlanSave").show();
-                $("#btnPopAuditCheckSheetDel").hide();
-            }
-            $("#popAuditPlan").micaModal('show');
-                auditPlan.lodingBar.hide();
-				}
-			};
-			common.ajax("/api/audit/auditPlanMgmt/getAuditPlanInfo", reqParam, options);
-
-    	}
 
 downloadSet = function(multiFileId,fileInfoAry,dif){
     $("#"+multiFileId).append("<div class='multiFileArea'></div>");

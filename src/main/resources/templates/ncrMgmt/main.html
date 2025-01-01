@@ -23,8 +23,8 @@
                         <colgroup>
                             <col style="width:104px;">
                             <col>
-                            <col style="width:104px;">
-                            <col>
+                            <!--<col style="width:104px;">
+                            <col>-->
                         </colgroup>
                         <tbody>
                         <tr>
@@ -32,11 +32,11 @@
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <span>코비젼</span>
+                                        <span th:text="${#authentication.principal.COM_NAME}"></span>
                                     </div>
                                 </div>
                             </td>
-                            <th><span>담당자</span></th>
+                           <!-- <th><span>담당자</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -51,9 +51,9 @@
                                         <span>PR</span>
                                     </div>
                                 </div>
-                            </td>
+                            </td>-->
                         </tr>
-                        <tr>
+                       <!-- <tr>
                             <th><span data-langsid="Audit 계획일">Audit 계획일</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
@@ -78,58 +78,22 @@
                                     </div>
                                 </div>
                             </td>
-                        </tr>
+                        </tr>-->
                         </tbody>
                     </table>
                 </fieldset>
                 <fieldset>
                     <legend><span>NCR List</span></legend>
-                    <table class="cui_table center" id="Table">
-                        <colgroup>
-                            <col style="width:100px;">
-                            <col style="width:130px;">
-                            <col>
-                            <col style="width:130px;">
-                            <col style="width:130px;">
-                            <col style="width:130px;">
-                            <col style="width:130px;">
-                            <col style="width:130px;">
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th><span>분류</span></th>
-                            <th><span>지적구분</span></th>
-                            <th><span>지적내용</span></th>
-                            <th><span>진행상태</span></th>
-                            <th><span>NCR발행일</span></th>
-                            <th><span>조치계획일</span></th>
-                            <th><span>시정조치일</span></th>
-                            <th><span>완료일</span></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr onclick="goDetail()">
-                            <td><span>품질</span></td>
-                            <td><span>부적합</span></td>
-                            <td><span>AAAAA</span></td>
-                            <td><span>NCR발행완료</span></td>
-                            <td><span>2024-09-30</span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                        </tr>
-                        <tr>
-                            <td><span>환안</span></td>
-                            <td><span>권고</span></td>
-                            <td><span>BBBBB</span></td>
-                            <td><span>조치계획작성완료</span></td>
-                            <td><span>2024-09-10</span></td>
-                            <td><span>2024-09-21</span></td>
-                            <td><span></span></td>
-                            <td><span></span></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="cui_jqGrid_section">
+                        <div class="cui_jqGrid_head">
+                            <div class="jqGrid_label"> &nbsp;</div>
+                            <div class="jqGrid_aside">
+                            </div>
+                        </div>
+                        <div class="cui_jqGrid_body" id="Grid">
+                            <div id="gridArea" gridYN=""></div>
+                        </div>
+                    </div>
                 </fieldset>
             </form>
         </div>
@@ -362,10 +326,125 @@
        Common.Dialog({ obj : $("#PopupncrMgmt"), blockClose : true });
    }
 
-   $(document).ready(function() {
+   var ListSearch = function () {
+    var setData = {
+        "ncr_no": "",
+        "type": "",
+        "ncr_type": "",
+        "year": "2024",
+        "ncr_status": ""
+    };
+    var encodedData = Common.EncParam(setData);
+    var url = "/api/audit/auditNcrMgmt/list/"+ encodedData;
 
-   });
-// 파일 선택 시 삭제 버튼 표시
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter($("#searchArea"));
+
+    console.log(ReqInfo);
+    Common.Ajax(url, ReqInfo, function (data) {
+        var dataJson = JSON.parse(data);
+        var listStr = dataJson.LIST; // "LIST"에 해당하는 값이 JSON 형식의 문자열이므로 이를 추출
+
+        // 2. LIST 값을 다시 JSON 객체로 파싱
+        var list = JSON.parse(listStr); // 이제 LIST는 JavaScript 배열이 됩니다.
+        var listData = JSON.parse(list.LIST);
+
+        $("#gridArea").pqGrid("option", "dataModel.data", listData);
+        $("#gridArea").pqGrid("refreshView");
+    }, {formMethod :"GET"}); //Get으로 보내도록 설정 추가
+}
+
+$(function () {
+    var heightMinus = 330;
+    var data = [];
+
+    var obj = {
+        bubble: false,
+        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+        editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+        editModel: { clicksToEdit: 2 },
+        selectionModel: { type: 'cell' },
+        height: $(window).height() - heightMinus,
+        title: "",
+        sortable: false,
+        resizable: true,
+        menuIcon: true,
+        scrollModel: { autoFit: false },
+        hoverMode: 'row',
+        rowHtHead: 30,
+        //rowHt:30,
+        roundCorners: true,
+        rowBorders: true,
+        showBottom: true,
+        showHeader: true,
+        showTitle: true,
+        showTop: false, //excel 버튼 보이기
+        showToolbar: false,
+        stripeRows: false,
+        autoAddRow: false,
+        freezeCols:0,
+        autoRow: false,
+        autoRowHead: false,
+        virtualY: true,
+        hwrap: false,
+        wrap: false,
+        rowInit: function () {
+            return { style: 'font-size:12px;' };
+        },
+        selectChange: function (event, ui) {
+        },
+        rowClick: function (event, ui) {
+        },
+        cellClick: function (event, ui) {
+        },
+        rowDblClick: function (event, ui) {
+            var data = ui.rowData;
+            const ncrseq = data.NCR_Seq ;
+            loadPage(ncrseq) ;
+        },
+        rowSelect: function (event, ui) {
+        },
+        open: function () {
+        },
+        headerCellClick: function (event, ui) {
+        }
+    };
+    obj.colModel = [
+        { data_langsid: "NCR번호", title: siteLang.getLang("NCR번호"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_NcrNo", sortable: true, editor: false, editable: false },
+        { data_langsid: "진행상태", title: siteLang.getLang("진행상태"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "L_Progress", sortable: true, editor: false, editable: false },
+        { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "L_AuditPlanType", sortable: true, editor: false, editable: false },
+        { data_langsid: "지적구분", title: siteLang.getLang("지적구분"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrType", sortable: true, editor: false, editable: false },
+        { data_langsid: "제목", title: siteLang.getLang("제목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "L_Title", sortable: true, editor: false, editable: false },
+        { data_langsid: "NCR발행일", title: siteLang.getLang("NCR발행일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrPublishedDate", sortable: true, editor: false, editable: false },
+        { data_langsid: "Author", title: siteLang.getLang("Author"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "Auditor", sortable: true, editor: false, editable: false },
+        { data_langsid: "시정조치계획일", title: siteLang.getLang("시정조치계획일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionPlanDate", sortable: true, editor: false, editable: false },
+        { data_langsid: "시정조치등록일", title: siteLang.getLang("시정조치등록일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionMakeDate", sortable: true, editor: false, editable: false },
+        { data_langsid: "NCRSEQ", title: siteLang.getLang("NCRSEQ"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "NCR_Seq", sortable: true, editor: false, editable: false },
+        { data_langsid: "완료일", title: siteLang.getLang("완료일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CompleteDate", sortable: true, editor: false, editable: false }
+      ];
+    obj.dataModel = { data: data };
+    $("#gridArea").pqGrid(obj);
+    $("#gridArea").attr("gridYN", "Y");
+
+    $(window).resize(function () {
+        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+        $("#gridArea").pqGrid("refreshView");
+    });
+
+});
+
+$(document).ready(function() {
+
+    // AuditTypeSearch();
+    ListSearch();
+});
+
+function loadPage(ncrseq) {
+      const url = "/admin/auditMgmt/ncrMgmtDetail?NCR_SEQ=" + ncrseq  ;
+      location.href = url;
+}
+
+    // 파일 선택 시 삭제 버튼 표시
    function toggleDeleteButton(input) {
        const deleteButton = input.closest('td').querySelector('.cui_button');
        const fileLabel = input.closest('td').querySelector('.item_label span');

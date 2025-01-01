@@ -535,6 +535,9 @@
             contentType: false,  // 기본 contentType을 사용하지 않음
             success: function(response) {
                 showAlert('success', response);
+                setTimeout(function() {
+                    location.reload();  // 승인 시 페이지 새로고침
+                }, 100);  // 100ms 후에 실행
             },
             error: function(xhr, status, error) {
                 showAlert('warning','데이터 저장에 실패했습니다.');

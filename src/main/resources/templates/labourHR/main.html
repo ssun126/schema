@@ -367,9 +367,8 @@
     //제출 상태
     function loadInfo(){
         const comState = `[[${companyAuth.APPROVE_STATE}]]`;
-        //const date = formattedDate([[${companyAuth.APPROVE_DATE}]]);
-        //console.log(date);
         $('.resultField').hide();
+
         if(comState != "" ){
             if(comState === 'SEND'){
                 $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
@@ -384,20 +383,6 @@
         }
     }
 
-    var formattedDate = function (date) {
-        if (!date) return '';
-        var dateObj = new Date(date);
-
-        if (isNaN(dateObj.getTime())) {
-            return '';
-        }
-        // Format the date to 'yyyy-mm-dd'
-        var year = dateObj.getFullYear();
-        var month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
-        var day = String(dateObj.getDate()).padStart(2, '0'); // Add leading zero if needed
-        console.log(year + '-' + month + '-' + day);
-        return year + '-' + month + '-' + day;
-    };
 
 </script>
 </body>

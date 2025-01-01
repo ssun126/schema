@@ -37,10 +37,8 @@
                             <div class="item_content">
                                 <select id="CMRT" name="CMRT" class="cui_select_field" onchange="ListSearch();">
                                     <option value=""></option>
-                                    <option value="TANTALUM_YN" data-langsid="티타늄"></option>
-                                    <option value="TIN_YN" data-langsid="주석"></option>
-                                    <option value="TUNGSTEN_YN" data-langsid="텅스텐"></option>
-                                    <option value="GOLD_YN" data-langsid="금"></option>
+                                    <option value="Y" data-langsid="사용"></option>
+                                    <option value="N" data-langsid="미사용"></option>
                                 </select>
                             </div>
                         </div>
@@ -49,8 +47,8 @@
                             <div class="item_content">
                                 <select id="EMRT" name="EMRT" class="cui_select_field" onchange="ListSearch();">
                                     <option value=""></option>
-                                    <option value="COBALT_YN" data-langsid="코발트"></option>
-                                    <option value="MICA_YN" data-langsid="운모"></option>
+                                    <option value="Y" data-langsid="사용"></option>
+                                    <option value="N" data-langsid="미사용"></option>
                                 </select>
                             </div>
                         </div>
@@ -59,11 +57,9 @@
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchAuditType" name="searchAuditType" onchange="ListSearch();">
                                     <option value=""></option>
-                                    <option value="ISO">ISO인증</option>
-                                    <option value="LABOUR">노동환경</option>
-                                    <option value="SAFETY">안전보건/환경</option>
-                                    <option value="QUALITY">품질체계</option>
-                                    <option value="CONFLICT">분쟁/책임광물</option>
+                                    <option value="SELF">SELF</option>
+                                    <option value="VISIT">대면</option>
+                                    <option value="PAPER">서면</option>
                                 </select>
                             </div>
                         </div>
@@ -169,11 +165,11 @@
             { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
             { data_langsid: "Audit일자", title: siteLang.getLang("Audit일자"), hidden : false, width: 110, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
             { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
-            { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "AUTH_TYPE", sortable: true, editor: false, editable: false },
-            { data_langsid: "분쟁광물", title: siteLang.getLang("분쟁광물"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
-            { data_langsid: "분쟁결과", title: siteLang.getLang("분쟁결과"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
-            { data_langsid: "책임광물", title: siteLang.getLang("책임광물"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
-            { data_langsid: "책임결과", title: siteLang.getLang("책임결과"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false }
+            { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_WAY", sortable: true, editor: false, editable: false },
+            { data_langsid: "분쟁광물", title: siteLang.getLang("분쟁광물"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
+            { data_langsid: "분쟁광물-결과", title: siteLang.getLang("분쟁결과"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "CMRT", sortable: true, editor: false, editable: false },
+            { data_langsid: "책임광물", title: siteLang.getLang("책임광물"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
+            { data_langsid: "책임광물-결과", title: siteLang.getLang("책임결과"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "EMRT", sortable: true, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);

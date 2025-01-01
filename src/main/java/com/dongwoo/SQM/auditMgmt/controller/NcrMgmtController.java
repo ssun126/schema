@@ -1,7 +1,9 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
+import com.dongwoo.SQM.config.security.UserCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,7 @@ public class NcrMgmtController {
 
     @GetMapping("/user/auditMgmt/ncrMgmt")
     public String getNcrMgmtList(Model model) {
+
         return "ncrMgmt/main";
     }
 

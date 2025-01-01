@@ -43,4 +43,8 @@ public class AuditMgmtDTO {
     private String REASON;
     @JsonProperty("WORK_USER_NAME")
     private String WORK_USER_NAME;
+    @JsonProperty("EMRT")
+    private String EMRT;
+    @JsonProperty("CMRT")
+    private String CMRT;
 }

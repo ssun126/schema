@@ -47,8 +47,8 @@
             CC.COM_NAME,
             ACI.AUTH_TYPE,
             ACI.APPROVE_STATE,
-            ACI.APPROVE_DATE,
-            ACI.SEND_DATE,
+            TO_CHAR(ACI.APPROVE_DATE,'YYYY-MM-DD') AS APPROVE_DATE,
+            TO_CHAR(ACI.SEND_DATE,'YYYY-MM-DD') AS SEND_DATE,
             ACI.POINT,
             ACI.AUTH_SEQ,
             ACI.UP_DW_USER_IDX,
@@ -117,16 +117,27 @@
 
     <select id="searchCompanies" parameterType="map" resultType="authMgmt">
         SELECT
-        ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, AUDIT_WAY, APPROVE_STATE,
-        TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') AS APPROVE_DATE,
-        TO_CHAR(SEND_DATE, 'YYYY-MM-DD') AS SEND_DATE,
-        TO_NUMBER(POINT, '999999.0') AS POINT
-        FROM SC_AUTH_COMPANY_INFO ACI
-        INNER JOIN SC_COMPANY_CODE CC
-        ON CC.COM_CODE = ACI.COM_CODE
+            CC.COM_CODE,
+            CC.COM_NAME,
+            ACI.AUDIT_WAY,
+            ACI.APPROVE_STATE,
+            TO_CHAR(ACI.APPROVE_DATE,'YYYY-MM-DD') AS APPROVE_DATE,
+            TO_CHAR(ACI.SEND_DATE,'YYYY-MM-DD') AS SEND_DATE,
+            ACI.POINT,
+            CASE
+                WHEN MAX(CASE WHEN CM.TANTALUM_YN = 'Y' OR CM.TUNGSTEN_YN = 'Y' OR CM.TIN_YN = 'Y' OR CM.GOLD_YN = 'Y' THEN 1 ELSE 0 END) = 1 THEN 'Y'
+                ELSE 'N'
+            END AS CMRT,
+            CASE
+                WHEN MAX(CASE WHEN CM.COBALT_YN = 'Y' OR CM.MICA_YN = 'Y' THEN 1 ELSE 0 END) = 1 THEN 'Y'
+                ELSE 'N'
+            END AS EMRT
+        FROM SC_COMPANY_CODE CC
+        LEFT OUTER JOIN SC_AUTH_COMPANY_INFO ACI ON CC.COM_CODE = ACI.COM_CODE AND ACI.AUTH_TYPE = 'QUALITY'
+        LEFT JOIN SC_CONFLICT_MINERAL CM ON CC.COM_CODE = CM.COM_CODE
         WHERE 1 =1
         <if test="COM_CODE != null and COM_CODE != ''">
-            AND (ACI.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
+            AND (CC.COM_CODE LIKE CONCAT(CONCAT('%',  #{COM_CODE}), '%'))
         </if>
         <if test="COM_NAME != null and COM_NAME != ''">
             AND (CC.COM_NAME LIKE CONCAT(CONCAT('%',  #{COM_NAME}), '%'))
@@ -135,7 +146,15 @@
             AND (ACI.APPROVE_STATE LIKE CONCAT(CONCAT('%',  #{COM_STATUS}), '%'))
         </if>
         <if test="AUTH_TYPE != null and AUTH_TYPE != ''">
-            AND (ACI.AUTH_TYPE LIKE CONCAT(CONCAT('%',  #{AUTH_TYPE}), '%'))
+            AND (ACI.AUDIT_WAY LIKE CONCAT(CONCAT('%',  #{AUDIT_WAY}), '%'))
         </if>
+        GROUP BY
+            CC.COM_CODE,
+            CC.COM_NAME,
+            ACI.AUDIT_WAY,
+            ACI.APPROVE_STATE,
+            ACI.APPROVE_DATE,
+            ACI.SEND_DATE,
+            ACI.POINT
     </select>
 </mapper>
