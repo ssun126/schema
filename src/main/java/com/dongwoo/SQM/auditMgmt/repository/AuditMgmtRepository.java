@@ -43,8 +43,17 @@ public class AuditMgmtRepository {
         return sql.insert("AuditMgmt.insertItemPoint", auditItemPoint);
     }
 
+    //심사항목별 승인 상태 조회
     public AuditMgmtDTO getCompanyAuth(Map<String, Object> params) {
         return sql.selectOne("AuditMgmt.getCompanyAuth", params);
+    }
+
+    //심사항목별 History
+    public List<AuditMgmtHistDTO> getCompanyAuthHistory(Map<String, Object> params) {
+        return sql.selectList("AuditMgmt.getCompanyAuthHistory", params);
+    }
+    public AuditMgmtHistDTO getCompanyAuthHistoryDetail(Map<String, Object> params) {
+        return sql.selectOne("AuditMgmt.getCompanyAuthHistory", params);
     }
 
     public int insertFileInfo(AuditMgmtDTO auditMgmtDTO) {

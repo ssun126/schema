@@ -5,8 +5,8 @@
 <mapper namespace="AuditMgmt">
 
     <insert id="insertAuth" parameterType="authMgmt">
-        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE, APPROVE_DATE, SEND_DATE, AUTH_TYPE, POINT,REG_DW_USER_IDX,UP_DW_USER_IDX)
-        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate, sysdate, #{AUTH_TYPE}, #{POINT}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX})
+        INSERT INTO SC_AUTH_COMPANY_INFO(COM_CODE, APPROVE_STATE,  SEND_DATE, AUTH_TYPE, POINT,REG_DW_USER_IDX,UP_DW_USER_IDX)
+        VALUES (#{COM_CODE}, #{APPROVE_STATE}, sysdate,  #{AUTH_TYPE}, #{POINT}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX})
     </insert>
 
     <insert id="insertItemPoint" parameterType="auditItemPoint">
@@ -58,13 +58,38 @@
         LEFT OUTER JOIN SC_AUTH_COMPANY_INFO ACI ON
         CC.COM_CODE = ACI.COM_CODE AND ACI.AUTH_TYPE = #{AUTH_TYPE}
         WHERE CC.COM_CODE = #{COM_CODE}
+        <if test="AUTH_SEQ != null and AUTH_SEQ != ''">
+            AND ACI.AUTH_SEQ = #{AUTH_SEQ}
+        </if>
+    </select>
+
+    <select id="getCompanyAuthHistory" parameterType="map" resultType="authMgmtHist">
+        SELECT
+            ACI.COM_CODE,
+            ACI.AUTH_TYPE,
+            ACI.APPROVE_STATE,
+            TO_CHAR(ACI.APPROVE_DATE,'YYYY-MM-DD') AS APPROVE_DATE,
+            TO_CHAR(ACI.SEND_DATE,'YYYY-MM-DD') AS SEND_DATE,
+            ACI.POINT,
+            ACI.AUTH_SEQ,
+            ACI.UP_DW_USER_IDX,
+            ACI.REASON
+        FROM SC_AUTH_COMPANY_INFO_HISTORY ACI
+        WHERE ACI.COM_CODE = #{COM_CODE}
+        AND ACI.AUTH_TYPE = #{AUTH_TYPE}
+        <if test="AUTH_SEQ != null and AUTH_SEQ != ''">
+            AND ACI.AUTH_SEQ = #{AUTH_SEQ}
+        </if>
     </select>
 
     <select id="getCompanyAuthFile" parameterType="map" resultType="authMgmt">
         SELECT ACI.COM_CODE, ACI.AUTH_TYPE, APPROVE_STATE, TO_CHAR(APPROVE_DATE, 'YYYY-MM-DD') as APPROVE_DATE, POINT, AF.FILE_NAME, AF.FILE_PATH, AF.FILE_TYPE, AF.AUTH_SEQ
         FROM SC_AUTH_COMPANY_INFO ACI
         INNER JOIN SC_AUTH_FILE AF ON AF.COM_CODE = ACI.COM_CODE AND AF.AUTH_TYPE = ACI.AUTH_TYPE
-        WHERE ACI.AUTH_TYPE=#{AUTH_TYPE} and ACI.COM_CODE=#{COM_CODE}
+        WHERE ACI.AUTH_TYPE = #{AUTH_TYPE} and ACI.COM_CODE = #{COM_CODE}
+        <if test="AUTH_SEQ != null and AUTH_SEQ != ''">
+            AND ACI.AUTH_SEQ = #{AUTH_SEQ}
+        </if>
     </select>
 
     <select id="getCompanyAuthItemPoint" parameterType="map" resultType="auditItemPoint">

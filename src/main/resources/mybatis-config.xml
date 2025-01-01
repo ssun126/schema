@@ -34,6 +34,7 @@
         <typeAlias type="com.dongwoo.SQM.siteMgr.dto.SampleFileDTO" alias="sampleFile"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO" alias="auditItemPoint"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO" alias="authMgmt"></typeAlias>
+        <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.AuditMgmtHistDTO" alias="authMgmtHist"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO" alias="isoAuthItem"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.LabourHRDTO" alias="labour"></typeAlias>
         <typeAlias type="com.dongwoo.SQM.auditMgmt.dto.SafetyHealthDTO" alias="safetyHealth"></typeAlias>

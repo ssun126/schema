@@ -2,6 +2,7 @@ package com.dongwoo.SQM.auditMgmt.service;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
+import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtHistDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -56,7 +57,7 @@ public class AuditCommonService {
         authDTO.setAPPROVE_STATE("SEND"); //제출
         authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
         authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-        authDTO.setPOINT(total);  // 점수
+       // authDTO.setPOINT(total);  // 점수  점수는 승일시 넣도록
         log.info("authDTO::::::::::"+authDTO);
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
@@ -69,7 +70,7 @@ public class AuditCommonService {
         // AUTH_SEQ 가져오기
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
         log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
-        log.info(" total:::::::::"+  total);
+        //log.info(" total:::::::::"+  total);
 
         try {
             // 파일이 있는 경우 파일 정보 저장
@@ -113,11 +114,13 @@ public class AuditCommonService {
             log.info("Error"+e.getMessage());
         }
     }
+
     @Transactional
-    public void saveUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq, String Auth_Type) throws IOException {
+    public void saveUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq, String AUTH_TYPE) throws IOException {
         log.info("saveLabourUploadData====================="+auth_seq);
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int comUserIdx = user.getCOM_USER_IDX();
+        String comCode = user.getCOM_CODE();
 
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
@@ -131,9 +134,9 @@ public class AuditCommonService {
             String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
             double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(5)))); //점수
             String AUDIT_COMMENT = formatter.formatCellValue((row.getCell(6))); //근거자료
-
+            auditItemDTO.setCOM_CODE(comCode);
             auditItemDTO.setAUDIT_ID(AUDIT_ID);
-            auditItemDTO.setAUTH_TYPE(Auth_Type);
+            auditItemDTO.setAUTH_TYPE(AUTH_TYPE);
             auditItemDTO.setPOINT(POINT);
             auditItemDTO.setAUDIT_COMMENT(AUDIT_COMMENT);
             auditItemDTO.setREG_COM_USER_IDX(comUserIdx);
@@ -164,7 +167,7 @@ public class AuditCommonService {
         return destinationFile.getAbsolutePath();  // 저장된 파일 경로 반환
     }
 
-    //업체별 인증서 정보
+    //업체별 심사 정보
     public AuditMgmtDTO getCompanyAuth(String type, String code) {
         Map<String, Object> params = new HashMap<>();
         params.put("AUTH_TYPE", type);
@@ -172,9 +175,40 @@ public class AuditCommonService {
         return auditMgmtRepository.getCompanyAuth(params);
     }
 
+    //업체별 심사 정보
+    public AuditMgmtDTO getCompanyAuth(String type, String code, String AUTH_SEQ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_SEQ", AUTH_SEQ);
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return auditMgmtRepository.getCompanyAuth(params);
+    }
+
+    //업체별 심사 히스토리 정보
+    public List<AuditMgmtHistDTO> getCompanyAuthHistory(String type, String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return auditMgmtRepository.getCompanyAuthHistory(params);
+    }
+    public AuditMgmtHistDTO getCompanyAuthHistoryDetail(String type, String code, String AUTH_SEQ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_SEQ", AUTH_SEQ);
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return auditMgmtRepository.getCompanyAuthHistoryDetail(params);
+    }
+
     //업체별 인증 파일 정보
     public List<AuditMgmtDTO> getCompanyAuthFile(String type, String code) {
         Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return auditMgmtRepository.getCompanyAuthFile(params);
+    }
+    public List<AuditMgmtDTO> getCompanyAuthFile(String type, String code, String AUTH_SEQ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_SEQ", AUTH_SEQ);
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return auditMgmtRepository.getCompanyAuthFile(params);

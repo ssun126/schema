@@ -9,8 +9,8 @@
     </insert>
 
     <insert id="insertItem" parameterType="conflict">
-        INSERT INTO SC_CONFLICT_MINERAL (COM_CODE, TANTALUM_YN, TUNGSTEN_YN, TIN_YN, GOLD_YN, COBALT_YN, MICA_YN, INSPECTION_DATE, PART_CODE)
-        VALUES( #{COM_CODE}, #{TANTALUM_YN}, #{TUNGSTEN_YN}, #{TIN_YN}, #{GOLD_YN}, #{COBALT_YN}, #{MICA_YN}, #{INSPECTION_DATE}, #{PART_CODE})
+        INSERT INTO SC_CONFLICT_MINERAL (COM_CODE, TANTALUM_YN, TUNGSTEN_YN, TIN_YN, GOLD_YN, COBALT_YN, MICA_YN, INSPECTION_DATE, PART_CODE, AUTH_SEQ)
+        VALUES( #{COM_CODE}, #{TANTALUM_YN}, #{TUNGSTEN_YN}, #{TIN_YN}, #{GOLD_YN}, #{COBALT_YN}, #{MICA_YN}, #{INSPECTION_DATE}, #{PART_CODE}, #{AUTH_SEQ})
     </insert>
 
     <insert id="updateItem" parameterType="conflict">
@@ -48,6 +48,9 @@
         LEFT OUTER JOIN  SC_CONFLICT_MINERAL cm ON pc.COM_CODE = cm.COM_CODE
         WHERE 1 =1
         AND pc.COM_CODE = #{COM_CODE}
+        <if test="AUTH_SEQ != null and AUTH_SEQ != ''">
+            AND cm.AUTH_SEQ = #{AUTH_SEQ}
+        </if>
     </select>
 
     <select id="findByPartItem" parameterType="map" resultType="conflict">

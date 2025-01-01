@@ -321,146 +321,145 @@
        $("#datepicker").datepicker({
            dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
        });
-   });
-   var goDetail = function () {
-       Common.Dialog({ obj : $("#PopupncrMgmt"), blockClose : true });
-   }
+    });
+    var goDetail = function () {
+        Common.Dialog({ obj : $("#PopupncrMgmt"), blockClose : true });
+    }
 
-   var ListSearch = function () {
-    var setData = {
-        "ncr_no": "",
-        "type": "",
-        "ncr_type": "",
-        "year": "2024",
-        "ncr_status": ""
-    };
-    var encodedData = Common.EncParam(setData);
-    var url = "/api/audit/auditNcrMgmt/list/"+ encodedData;
+    var ListSearch = function () {
+        var setData = {
+            "ncr_no": "",
+            "type": "",
+            "ncr_type": "",
+            "year": "2024",
+            "ncr_status": ""
+        };
+        var encodedData = Common.EncParam(setData);
+        var url = "/api/audit/auditNcrMgmt/list/"+ encodedData;
 
-    var ReqInfo = new Common.RequestInfo();
-    ReqInfo.AddParameter($("#searchArea"));
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter($("#searchArea"));
 
-    console.log(ReqInfo);
-    Common.Ajax(url, ReqInfo, function (data) {
-        var dataJson = JSON.parse(data);
-        var listStr = dataJson.LIST; // "LIST"에 해당하는 값이 JSON 형식의 문자열이므로 이를 추출
+        console.log(ReqInfo);
+        Common.Ajax(url, ReqInfo, function (data) {
+            var dataJson = JSON.parse(data);
+            var listStr = dataJson.LIST; // "LIST"에 해당하는 값이 JSON 형식의 문자열이므로 이를 추출
 
-        // 2. LIST 값을 다시 JSON 객체로 파싱
-        var list = JSON.parse(listStr); // 이제 LIST는 JavaScript 배열이 됩니다.
-        var listData = JSON.parse(list.LIST);
+            // 2. LIST 값을 다시 JSON 객체로 파싱
+            var list = JSON.parse(listStr); // 이제 LIST는 JavaScript 배열이 됩니다.
+            var listData = JSON.parse(list.LIST);
 
-        $("#gridArea").pqGrid("option", "dataModel.data", listData);
-        $("#gridArea").pqGrid("refreshView");
-    }, {formMethod :"GET"}); //Get으로 보내도록 설정 추가
-}
+            $("#gridArea").pqGrid("option", "dataModel.data", listData);
+            $("#gridArea").pqGrid("refreshView");
+        }, {formMethod :"GET"}); //Get으로 보내도록 설정 추가
+    }
 
-$(function () {
-    var heightMinus = 330;
-    var data = [];
+    $(function () {
+        var heightMinus = 330;
+        var data = [];
 
-    var obj = {
-        bubble: false,
-        numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
-        editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-        editModel: { clicksToEdit: 2 },
-        selectionModel: { type: 'cell' },
-        height: $(window).height() - heightMinus,
-        title: "",
-        sortable: false,
-        resizable: true,
-        menuIcon: true,
-        scrollModel: { autoFit: false },
-        hoverMode: 'row',
-        rowHtHead: 30,
-        //rowHt:30,
-        roundCorners: true,
-        rowBorders: true,
-        showBottom: true,
-        showHeader: true,
-        showTitle: true,
-        showTop: false, //excel 버튼 보이기
-        showToolbar: false,
-        stripeRows: false,
-        autoAddRow: false,
-        freezeCols:0,
-        autoRow: false,
-        autoRowHead: false,
-        virtualY: true,
-        hwrap: false,
-        wrap: false,
-        rowInit: function () {
-            return { style: 'font-size:12px;' };
-        },
-        selectChange: function (event, ui) {
-        },
-        rowClick: function (event, ui) {
-        },
-        cellClick: function (event, ui) {
-        },
-        rowDblClick: function (event, ui) {
-            var data = ui.rowData;
-            const ncrseq = data.NCR_Seq ;
-            loadPage(ncrseq) ;
-        },
-        rowSelect: function (event, ui) {
-        },
-        open: function () {
-        },
-        headerCellClick: function (event, ui) {
-        }
-    };
-    obj.colModel = [
-        { data_langsid: "NCR번호", title: siteLang.getLang("NCR번호"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_NcrNo", sortable: true, editor: false, editable: false },
-        { data_langsid: "진행상태", title: siteLang.getLang("진행상태"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "L_Progress", sortable: true, editor: false, editable: false },
-        { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "L_AuditPlanType", sortable: true, editor: false, editable: false },
-        { data_langsid: "지적구분", title: siteLang.getLang("지적구분"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrType", sortable: true, editor: false, editable: false },
-        { data_langsid: "제목", title: siteLang.getLang("제목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "L_Title", sortable: true, editor: false, editable: false },
-        { data_langsid: "NCR발행일", title: siteLang.getLang("NCR발행일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrPublishedDate", sortable: true, editor: false, editable: false },
-        { data_langsid: "Author", title: siteLang.getLang("Author"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "Auditor", sortable: true, editor: false, editable: false },
-        { data_langsid: "시정조치계획일", title: siteLang.getLang("시정조치계획일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionPlanDate", sortable: true, editor: false, editable: false },
-        { data_langsid: "시정조치등록일", title: siteLang.getLang("시정조치등록일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionMakeDate", sortable: true, editor: false, editable: false },
-        { data_langsid: "NCRSEQ", title: siteLang.getLang("NCRSEQ"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "NCR_Seq", sortable: true, editor: false, editable: false },
-        { data_langsid: "완료일", title: siteLang.getLang("완료일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CompleteDate", sortable: true, editor: false, editable: false }
-      ];
-    obj.dataModel = { data: data };
-    $("#gridArea").pqGrid(obj);
-    $("#gridArea").attr("gridYN", "Y");
+        var obj = {
+            bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+            editModel: { clicksToEdit: 2 },
+            selectionModel: { type: 'cell' },
+            height: $(window).height() - heightMinus,
+            title: "",
+            sortable: false,
+            resizable: true,
+            menuIcon: true,
+            scrollModel: { autoFit: false },
+            hoverMode: 'row',
+            rowHtHead: 30,
+            //rowHt:30,
+            roundCorners: true,
+            rowBorders: true,
+            showBottom: true,
+            showHeader: true,
+            showTitle: true,
+            showTop: false, //excel 버튼 보이기
+            showToolbar: false,
+            stripeRows: false,
+            autoAddRow: false,
+            freezeCols:0,
+            autoRow: false,
+            autoRowHead: false,
+            virtualY: true,
+            hwrap: false,
+            wrap: false,
+            rowInit: function () {
+                return { style: 'font-size:12px;' };
+            },
+            selectChange: function (event, ui) {
+            },
+            rowClick: function (event, ui) {
+            },
+            cellClick: function (event, ui) {
+            },
+            rowDblClick: function (event, ui) {
+                var data = ui.rowData;
+                const ncrseq = data.NCR_Seq ;
+                loadPage(ncrseq) ;
+            },
+            rowSelect: function (event, ui) {
+            },
+            open: function () {
+            },
+            headerCellClick: function (event, ui) {
+            }
+        };
+        obj.colModel = [
+            { data_langsid: "NCR번호", title: siteLang.getLang("NCR번호"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_NcrNo", sortable: true, editor: false, editable: false },
+            { data_langsid: "진행상태", title: siteLang.getLang("진행상태"), width: 120, halign: "center", align: "left", dataType: "string", dataIndx: "L_Progress", sortable: true, editor: false, editable: false },
+            { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 80, halign: "center", align: "left", dataType: "string", dataIndx: "L_AuditPlanType", sortable: true, editor: false, editable: false },
+            { data_langsid: "지적구분", title: siteLang.getLang("지적구분"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrType", sortable: true, editor: false, editable: false },
+            { data_langsid: "제목", title: siteLang.getLang("제목"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "L_Title", sortable: true, editor: false, editable: false },
+            { data_langsid: "NCR발행일", title: siteLang.getLang("NCR발행일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_NcrPublishedDate", sortable: true, editor: false, editable: false },
+            { data_langsid: "Author", title: siteLang.getLang("Author"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "Auditor", sortable: true, editor: false, editable: false },
+            { data_langsid: "시정조치계획일", title: siteLang.getLang("시정조치계획일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionPlanDate", sortable: true, editor: false, editable: false },
+            { data_langsid: "시정조치등록일", title: siteLang.getLang("시정조치등록일"),  width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CorrectiveActionMakeDate", sortable: true, editor: false, editable: false },
+            { data_langsid: "NCRSEQ", title: siteLang.getLang("NCRSEQ"), hidden:true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "NCR_Seq", sortable: true, editor: false, editable: false },
+            { data_langsid: "완료일", title: siteLang.getLang("완료일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CompleteDate", sortable: true, editor: false, editable: false }
+          ];
+        obj.dataModel = { data: data };
+        $("#gridArea").pqGrid(obj);
+        $("#gridArea").attr("gridYN", "Y");
 
-    $(window).resize(function () {
-        $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
-        $("#gridArea").pqGrid("refreshView");
+        $(window).resize(function () {
+            $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+            $("#gridArea").pqGrid("refreshView");
+        });
+
     });
 
-});
+    $(document).ready(function() {
+        // AuditTypeSearch();
+        ListSearch();
+    });
 
-$(document).ready(function() {
-
-    // AuditTypeSearch();
-    ListSearch();
-});
-
-function loadPage(ncrseq) {
-      const url = "/admin/auditMgmt/ncrMgmtDetail?NCR_SEQ=" + ncrseq  ;
-      location.href = url;
-}
+    function loadPage(ncrseq) {
+        const url = "/admin/auditMgmt/ncrMgmtDetail?NCR_SEQ=" + ncrseq  ;
+        location.href = url;
+    }
 
     // 파일 선택 시 삭제 버튼 표시
-   function toggleDeleteButton(input) {
-       const deleteButton = input.closest('td').querySelector('.cui_button');
-       const fileLabel = input.closest('td').querySelector('.item_label span');
-       const fileLabelDiv = input.closest('td').querySelector('.item_label');
+    function toggleDeleteButton(input) {
+        const deleteButton = input.closest('td').querySelector('.cui_button');
+        const fileLabel = input.closest('td').querySelector('.item_label span');
+        const fileLabelDiv = input.closest('td').querySelector('.item_label');
 
-       if (input.files && input.files.length > 0) {
+        if (input.files && input.files.length > 0) {
            var fileName = input.files[0].name;  // Get the file name
            fileLabel.textContent = fileName;    // Update the file name
            fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
            deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
-       } else {
+        } else {
            fileLabel.textContent = '';
            fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
            deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
-       }
-   }
+        }
+    }
 
    // 파일 삭제
    function clearFile(button) {

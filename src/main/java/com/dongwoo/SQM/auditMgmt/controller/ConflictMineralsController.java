@@ -1,9 +1,11 @@
 package com.dongwoo.SQM.auditMgmt.controller;
 
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
+import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtHistDTO;
 import com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO;
 import com.dongwoo.SQM.auditMgmt.service.AuditCommonService;
 import com.dongwoo.SQM.auditMgmt.service.ConflictMineralsService;
+import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.config.security.UserCustom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -32,9 +35,14 @@ public class ConflictMineralsController {
 
     @GetMapping("/admin/auditMgmt/conflictMineralsDetail")
     public String Detail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
-        // 회사의 ISO 상태 정보를 가져옵니다.
+        // 회사의 심사 상태 정보를 가져옵니다.
         AuditMgmtDTO companyAuth = auditCommonService.getCompanyAuth("CONFLICT", COM_CODE);
         model.addAttribute("companyAuth", companyAuth);
+
+        // 회사의 심사 history 정보를 가져옵니다.
+        List<AuditMgmtHistDTO> companyAuthHistory = auditCommonService.getCompanyAuthHistory("CONFLICT", COM_CODE);
+        model.addAttribute("companyAuthHistory", companyAuthHistory);
+
         //분쟁광물정보 가져오기
         List<ConflictMineralsDTO> conflictData = conflictMineralsService.getConflictData("CONFLICT", COM_CODE);
         model.addAttribute("conflictData", conflictData);
@@ -63,5 +71,23 @@ public class ConflictMineralsController {
         model.addAttribute("companyAuthFile", companyAuthFile);
 
         return "conflictMinerals/main";
+    }
+
+    @PostMapping("/admin/auditMgmt/viewHistoryDetail")
+    public String cpCodeMgmtApi(@RequestParam("COM_CODE") String COM_CODE, @RequestParam("AUTH_SEQ") String AUTH_SEQ, Model model) {
+
+        // 회사의 심사 상태 정보를 가져옵니다.
+        AuditMgmtHistDTO companyAuthHistory = auditCommonService.getCompanyAuthHistoryDetail("CONFLICT", COM_CODE, AUTH_SEQ);
+        model.addAttribute("companyAuth", companyAuthHistory);
+
+        //분쟁광물정보 가져오기
+        List<ConflictMineralsDTO> conflictData = conflictMineralsService.getConflictData("CONFLICT", COM_CODE, AUTH_SEQ);
+        model.addAttribute("conflictData", conflictData);
+
+        //첨부 파일 가져오기
+        List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("CONFLICT", COM_CODE, AUTH_SEQ);
+        model.addAttribute("companyAuthFile", companyAuthFile);
+
+        return "conflictMinerals/detailHistory";
     }
 }

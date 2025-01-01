@@ -1,0 +1,192 @@
+<div class="cui_dialog" style="width:1200px;display:none;" id="Popup2">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label">승인 History</div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close" onClick="modal_close('dialog')"><span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_section" data-legend="true">
+                    <fieldset th:unless="${companyAuthFile == null}">
+                        <legend><span>조사 양식</span></legend>
+                        <table class="cui_table">
+                            <colgroup>
+                                <col style="width:154px;">
+                                <col>
+                                <col style="width:154px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>분쟁광물(CMRT)</span></th>
+                                <td>
+                                    <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                        <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'CMRT' }">
+                                            <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <th><span>책임광물(EMRT)</span></th>
+                                <td>
+                                    <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
+                                        <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'EMRT'}">
+                                            <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- <div>* 양식 첨부 <span style="color:var(&#45;&#45;primary);">(Self-Audit 갱신 시점 기준 3개월 이내 조사인 경우, 변경사항이 없으면 그대로 제출 가능)</span>
+                         </div>-->
+                    </fieldset>
+                    <fieldset>
+                        <legend><span>조사 결과 기재</span></legend>
+                        <table class="cui_table" th:unless="${#lists.isEmpty(conflictData)}">
+                            <colgroup>
+                                <col style="width:154px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>조사일자</span></th>
+                                <td>
+                                    <span th:each="data : ${conflictData}" th:text="${data.INSPECTION_DATE}">2024-11-11</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="cui_table center" id="Table">
+                            <colgroup>
+                                <col style="width:100px;">
+                                <col style="width:130px;">
+                                <col style="width:80px;">
+                                <col style="width:80px;">
+                                <col style="width:80px;">
+                                <col style="width:80px;">
+                                <col style="width:80px;">
+                                <col style="width:80px;">
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th rowspan="2"><span>자재코드</span></th>
+                                <th rowspan="2"><span>자재명</span></th>
+                                <th colspan="4"><span>분쟁광물(CMRT)</span></th>
+                                <th colspan="2"><span>책임광물(EMRT)</span></th>
+                            </tr>
+                            <tr>
+                                <th><span>Tantalum</span></th>
+                                <th><span>Tungsten</span></th>
+                                <th><span>Tin</span></th>
+                                <th><span>Gold</span></th>
+                                <th><span>Cobalt</span></th>
+                                <th><span>Mica</span></th>
+                            </tr>
+                            </thead>
+                            <tbody th:if="${#lists.isEmpty(conflictData)}">
+                            <tr>
+                                <td colspan="8">등록된 자재 정보가 없습니다.</td>
+                            </tr>
+                            </tbody>
+                            <tbody th:unless="${#lists.isEmpty(conflictData)}">
+                            <tr th:each="data : ${conflictData}">
+                                <td><span th:text="${data.PM_PART_CODE}"></span></td>
+                                <td><span th:text="${data.PM_PART_NAME}"></span></td>
+                                <td>
+                                    <select class="cui_select_field" disabled>
+                                        <option value="Y" th:selected="${data.TANTALUM_YN == 'Y'}">사용</option>
+                                        <option value="N" th:selected="${data.TANTALUM_YN == 'N'}">미사용</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="cui_select_field" disabled>
+                                        <option value="Y" th:selected="${data.TUNGSTEN_YN == 'Y'}">사용</option>
+                                        <option value="N" th:selected="${data.TUNGSTEN_YN == 'N'}">미사용</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="cui_select_field" disabled>
+                                        <option value="Y" th:selected="${data.TIN_YN == 'Y'}">사용</option>
+                                        <option value="N" th:selected="${data.TIN_YN == 'N'}">미사용</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="cui_select_field" disabled>
+                                        <option value="Y" th:selected="${data.GOLD_YN == 'Y'}">사용</option>
+                                        <option value="N" th:selected="${data.GOLD_YN == 'N'}">미사용</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="cui_select_field" disabled>
+                                        <option value="Y" th:selected="${data.COBALT_YN == 'Y'}">사용</option>
+                                        <option value="N" th:selected="${data.COBALT_YN == 'N'}">미사용</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="cui_select_field" disabled>
+                                        <option value="Y" th:selected="${data.MICA_YN == 'Y'}">사용</option>
+                                        <option value="N" th:selected="${data.MICA_YN == 'N'}">미사용</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!-- <div>
+                             * 보증 내역의 재확인<br>
+                             -. 신규 추가 된 자재내 분쟁공물 / 책임광물이 미포함 되었습니다.<br>
+                             -. 기 제출한 분쟁광물 / 책임광물 조사 내역에 대한 변경 사실이 없음을 확인 드립니다.<br>
+                             (확인 결과는 아래의 전자 보증서 제출버턴 클릭시, 보증서 제출과 동일하게 1년씩 기간이 연장 됩니다.)
+                         </div>-->
+                        <!--<label class="cui_checkbox">
+                            <input type="checkbox" name="checkbox1"><i></i>
+                            <span>전자 보증서 제출(기 제출 자료에서 변경사항 無)</span>
+                        </label>-->
+
+                        <table class="cui_table" id="rsltTable">
+                            <colgroup>
+                                <col style="width:154px;">
+                                <col>
+                                <col style="width:154px;">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th><span>점수</span></th>
+                                <td><input type="text" name="point" id="totalPoint" th:value="${companyAuth.POINT != null ? companyAuth.POINT : 0}"> / 6 </td>
+                                <th><span>처리결과</span></th>
+                                <td th:text="${companyAuth.APPROVE_STATE}"></td>
+                            </tr>
+                            <tr>
+                                <th><span>처리자</span></th>
+                                <td th:text="${companyAuth.WORK_USER_NAME}"></td>
+                                <th><span>처리일자</span></th>
+                                <td th:text="${companyAuth.APPROVE_DATE}"></td>
+                            </tr>
+                            <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
+                                <th><span>반려사유</span></th>
+                                <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </form>
+               <!-- <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                    <div class="item_content">
+                        <button type="button" id="BtnClose1" name="INFO_FLAG" value="Close"
+                                class="cui_button primary modal-close" dialogBtn="close"><span>닫기</span></button>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>

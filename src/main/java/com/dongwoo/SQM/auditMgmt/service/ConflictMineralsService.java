@@ -96,6 +96,7 @@ public class ConflictMineralsService {
         if(modify.equals("Y") && authMgmtDTO != null) {
             for (ConflictMineralsDTO dto : conflictMinerals) {
                 dto.setCOM_CODE(comCode);
+                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
                 //기존 정보가 있는지 확인
                 if (dto.getPART_CODE() != null) {
                     Map<String, Object> params = new HashMap<>();
@@ -140,6 +141,13 @@ public class ConflictMineralsService {
     //업체별 분쟁광물 정보 가져오기
     public List<ConflictMineralsDTO> getConflictData(String type, String code) {
         Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_TYPE", type);
+        params.put("COM_CODE", code);
+        return conflictMineralsRepository.getConflictData(params);
+    }
+    public List<ConflictMineralsDTO> getConflictData(String type, String code, String AUTH_SEQ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("AUTH_SEQ", AUTH_SEQ);
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return conflictMineralsRepository.getConflictData(params);
