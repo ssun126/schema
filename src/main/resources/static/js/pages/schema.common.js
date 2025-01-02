@@ -1161,25 +1161,25 @@ Common.Load = function (Obj) {
                 var oneDivObj = $(this);
                 //idx|namq|path|size
                 var fileInfoData = oneDivObj.html();
-                //var splitData = fileInfoData.split("|");
+                var splitData = fileInfoData.split("|");
 
                 var AddFile = "";
-
+/*
                 AddFile += "<li>";
                 AddFile += '<a href="#" orgFileInfo="" style="display:none" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
                 AddFile += '<em class="ico_file"></em> ';
                 AddFile += '<label class="file_name" style="cursor:pointer;">' + oneDivObj.html() + '</label>';
                 AddFile += '<span class="file_size"> <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
                 AddFile += "</li>";
+*/
 
-                /*
                 AddFile += "<li>";
-                AddFile += '<a href="#" orgFileInfo='+splitData[0]+' style="display:none" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
+                AddFile += '<a href="#" orgFileInfo='+splitData[0]+' style="display:" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
                 AddFile += '<em class="ico_file ' + Common.FileExe(splitData[1]) + '"></em> ';
                 AddFile += '<label class="file_name" style="cursor:pointer;">' + splitData[1] + '</label>';
-                AddFile += '<span class="file_size">' + Common.Convert.FileSize(splitData[3]) + ' <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
+                AddFile += '<span class="file_size">' + Common.Convert.FileSize(splitData[3]) + ' </span>';
                 AddFile += "</li>";
-                */
+
 
                 /*
                 AddFile += "<li>";

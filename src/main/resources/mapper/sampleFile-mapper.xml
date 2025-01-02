@@ -60,7 +60,7 @@
     </select>
 
     <select id="getPlantFileInfo" parameterType="String" resultType="hashMap">
-        SELECT  sd.FILE_GUBN ,sd.FILE_LANG ,sd.FILE_NUM ,sd.FILE_PATH,sd.FILE_NAME
+        SELECT  sd.FILE_IDX,sd.FILE_NAME,sd.FILE_PATH,22 as FILE_SIZE,sd.FILE_GUBN ,sd.FILE_LANG ,sd.FILE_NUM
         FROM SC_SAMPLEFILE_DATA sd
         INNER JOIN SC_BASE_CODE bc ON  bc.BASE_CODE = sd.FILE_GUBN
         WHERE FILE_LANG =#{sLang}

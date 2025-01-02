@@ -179,7 +179,7 @@
                                 <td ><span th:text="${korPlantList.BASE_CODE}"></span></td>
                                 <td>
                                     <div th:multiFileUpload="'PLANT_'+${korPlantList.BASE_CODE}+'_Files'">
-                                        <div th:each="plantList : ${plantFileList}" th:if="${korPlantList.BASE_CODE==plantList.FILE_GUBN}" th:text="'${plantList.FILE_IDX}'++''"></div>
+                                        <div th:each="plantList : ${plantFileList}" th:if="${korPlantList.BASE_CODE==plantList.FILE_GUBN}" th:text="${plantList.FILE_IDX}+'|'+${plantList.FILE_NAME}+'|'+${plantList.FILE_PATH}+'|'+${plantList.FILE_SIZE}"></div>
                                     </div>
                                 </td>
                             </tr>
