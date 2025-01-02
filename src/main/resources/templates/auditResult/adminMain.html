@@ -161,12 +161,12 @@
             }
         };
         obj.colModel = [
-            { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-            { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-            { data_langsid: "Audit일자", title: siteLang.getLang("Audit일자"), hidden : false, width: 110, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
-            { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
-            { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_WAY", sortable: true, editor: false, editable: false },
-            { data_langsid: "분쟁광물", title: siteLang.getLang("분쟁광물"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
+            { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: false, editor: false, editable: false },
+            { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 150, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: false, editor: false, editable: false },
+            { data_langsid: "Audit일자", title: siteLang.getLang("Audit일자"), hidden : false, width: 110, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: false, editor: false, editable: false },
+            { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: false, editor: false, editable: false },
+            { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_WAY", sortable: false, editor: false, editable: false },
+            { data_langsid: "분쟁광물", title: siteLang.getLang("분쟁광물"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: false, editor: false, editable: false },
             { data_langsid: "분쟁광물-결과", title: siteLang.getLang("분쟁결과"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "CMRT", sortable: true, editor: false, editable: false },
             { data_langsid: "책임광물", title: siteLang.getLang("책임광물"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false },
             { data_langsid: "책임광물-결과", title: siteLang.getLang("책임결과"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "EMRT", sortable: true, editor: false, editable: false }
@@ -189,7 +189,7 @@
 
     function loadPage(cpcode) {
 
-          const url = "/admin/auditMgmt/isoDetail?COM_CODE=" + cpcode  ;
+          const url = "/admin/auditMgmt/isoAuthDetail?COM_CODE=" + cpcode  ;
           location.href = url;
     }
     var downloadExcel = function () {

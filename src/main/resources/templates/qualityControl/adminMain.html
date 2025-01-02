@@ -120,34 +120,31 @@
 
         var obj = {
             bubble: false,
-            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
             editModel: { clicksToEdit: 2 },
-            selectionModel: { type: 'cell' },
-            height: $(window).height() - heightMinus,
+            selectionModel: { type: 'cell', mode: 'block' },
+            height: $(window).height() - heightMinus - $(".cui_search").height(),
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
-            roundCorners: true,
+            roundCorners: false,
             rowBorders: true,
-            showBottom: true,
+            showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
+            wrap: false,
             autoAddRow: false,
             freezeCols:0,
             autoRow: false,
             autoRowHead: false,
-            virtualY: true,
-            hwrap: false,
-            wrap: false,
+            rowHt:25,
             rowInit: function () {
                 return { style: 'font-size:12px;' };
             },
@@ -170,12 +167,16 @@
             }
         };
         obj.colModel = [
-            { data_langsid: "승인상태", title: siteLang.getLang("승인상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "APPROVE_STATE", sortable: true, editor: false, editable: false },
-            { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: true, editor: false, editable: false },
-            { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: true, editor: false, editable: false },
-            { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: true, editor: false, editable: false },
-            { data_langsid: "제출일자", title: siteLang.getLang("제출일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: true, editor: false, editable: false },
-            { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: true, editor: false, editable: false }
+            { data_langsid: "Audit번호", title: siteLang.getLang("Audit번호"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "AP_No", sortable: true, editor: false, editable: false },
+            { data_langsid: "진행상태", title: siteLang.getLang("진행상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_Progress", sortable: true, editor: false, editable: false },
+            { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_Vendor", sortable: true, editor: false, editable: false },
+            { data_langsid: "Audit구분", title: siteLang.getLang("Audit구분"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_AuditPlanType", sortable: true, editor: false, editable: false },
+            { data_langsid: "Audit방법", title: siteLang.getLang("Audit방법"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_AuditPlanWay", sortable: true, editor: false, editable: false },
+            { data_langsid: "Audit계획일", title: siteLang.getLang("Audit계획일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_AuditPlanDate", sortable: true, editor: false, editable: false },
+            { data_langsid: "Audit실행일", title: siteLang.getLang("Audit실행일"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_AuditDate", sortable: true, editor: false, editable: false },
+            { data_langsid: "WETPR", title: siteLang.getLang("WETPR"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "WETPR", sortable: true, editor: false, editable: false },
+            { data_langsid: "GRADE", title: siteLang.getLang("GRADE"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "GRADE", sortable: true, editor: false, editable: false },
+            { data_langsid: "작성자", title: siteLang.getLang("작성자"), hidden : true, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "L_CreatorName", sortable: true, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);

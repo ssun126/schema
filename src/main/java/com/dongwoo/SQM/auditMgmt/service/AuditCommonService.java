@@ -96,7 +96,6 @@ public class AuditCommonService {
                     log.info("파일저장 Count: " + rtCnt);
                 }
             } else {
-
                 log.info("authItems::::: " + authItems);
                 //인증서 데이터 저장
                 for (AuditItemPointDTO dto : authItems) {

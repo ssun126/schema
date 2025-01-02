@@ -28,7 +28,7 @@ spring:
 #    username: nsqm
 #    password: dongwoo1234
 #    url: jdbc:oracle:thin:@175.126.38.80:1521/ORCL
-    url: jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe
+    url: jdbc:oracle:thin:@localhost:1521/xe
     username: c##NSQM
     password: 12345
   messages:

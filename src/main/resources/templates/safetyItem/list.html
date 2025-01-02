@@ -135,11 +135,11 @@
             }
         };
         obj.colModel = [
-            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PROVISION", sortable: true, editor: false, editable: false },
-            { title: "No.", width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ID", sortable: true, editor: false, editable: false },
-            { data_langsid: "항목", title: siteLang.getLang("항목"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: true, editor: false, editable: false },
-            { data_langsid: "판정 기준", title: siteLang.getLang("판정 기준"), width: 750, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: true, editor: false, editable: false },
-            { data_langsid: "배점 기준", title: siteLang.getLang("배점 기준"), width: 135, halign: "center", align: "left", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: true, editor: false, editable: false }
+            { data_langsid: "구분", title: siteLang.getLang("구분"),width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "PROVISION", sortable: false, editor: false, editable: false },
+            { title: "No.", width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "AUDIT_ID", sortable: false, editor: false, editable: false },
+            { data_langsid: "항목", title: siteLang.getLang("항목"), width: 180, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_ITEM", sortable: false, editor: false, editable: false },
+            { data_langsid: "판정 기준", title: siteLang.getLang("판정 기준"), width: 750, halign: "center", align: "left", dataType: "string", dataIndx: "AUDIT_CRITERIA", sortable: false, editor: false, editable: false },
+            { data_langsid: "배점 기준", title: siteLang.getLang("배점 기준"), width: 135, halign: "center", align: "left", dataType: "string", dataIndx: "POINT_CRITERIA", sortable: false, editor: false, editable: false }
         ];
         obj.dataModel = { data: data };
         $("#gridArea").pqGrid(obj);

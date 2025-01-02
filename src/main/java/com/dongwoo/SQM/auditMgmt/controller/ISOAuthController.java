@@ -46,7 +46,7 @@ public class ISOAuthController {
         return "isoAuth/adminMain";
     }
 
-    @GetMapping("/admin/auditMgmt/isoDetail")
+    @GetMapping("/admin/auditMgmt/isoAuthDetail")
     public String isoAuthAdminDetail(Model model, @RequestParam("COM_CODE") String COM_CODE) {
 
         // 회사의 ISO 상태 정보를 가져옵니다.
