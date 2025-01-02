@@ -2,6 +2,6 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe
-    username: C##SCHEMA
-    password: 12345
+    url: jdbc:oracle:thin:@192.168.13.28:1521/EMP
+    username: nsqm
+    password: dongwoo1234

@@ -34,6 +34,8 @@ public class IsoAuthItemDTO {
     private int DEL_DW_USER_IDX;
     @JsonProperty("ITEM_STATE")
     private String ITEM_STATE;
+    @JsonProperty("STATE_DATE")
+    private String STATE_DATE;
     @JsonProperty("REASON")
     private String REASON;
     @JsonProperty("POINT")

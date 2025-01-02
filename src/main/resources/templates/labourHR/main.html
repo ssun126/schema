@@ -168,7 +168,7 @@
 </div>
 <script>
     $(document).ready(function() {
-        $('#rejectReason').hide();fs_text
+        $('#rejectReason').hide();
         $("#fs_text").hide(); //파일첨부가 초기값이므로
         loadInfo();
 
@@ -184,9 +184,10 @@
             var $baseOption = $('<option></option>');
             $baseOption.val('');  // 빈값
             $baseOption.text('평가');
+            $selectBox.attr('name', 'selectPoint');
             $selectBox.append($baseOption);
             // 각 줄을 옵션으로 변환하여 select box에 추가
-            lines.forEach(function(line) {
+
                 var cleanLine = line.replace('ㆍ', '').trim();  // "ㆍ" 문자를 제거하고 여백 제거
                 var parts = cleanLine.split(':'); // " : "을 기준으로 분리
 
@@ -267,7 +268,6 @@
 
     $("input:radio[name=chkType]").change(function () {
         var chkValue = $("input:radio[name=chkType]:checked").val();
-
         if(chkValue == "file"){
             $("#fs_file").show();
             $("#fs_text").hide();
@@ -370,6 +370,7 @@
         $('.resultField').hide();
 
         if(comState != "" ){
+            $("#fs_text").show();
             if(comState === 'SEND'){
                 $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
                 $('#sendAuth').hide();
@@ -381,6 +382,8 @@
                 $('.resultField').show(); // 결과 보이기
             }
         }
+         $("input:radio[name=chkType]").prop("disabled", true);
+        // $("select[name='selectPoint']").prop("disabled", false);
     }
 
 

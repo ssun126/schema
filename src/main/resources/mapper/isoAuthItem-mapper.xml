@@ -4,8 +4,8 @@
 
 <mapper namespace="IsoAuthItem">
     <insert id="insertItem" parameterType="isoAuthItem">
-        INSERT INTO SC_ISO_AUTH_COMPANY_ITEM(COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_INPUT_DATE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE, ITEM_STATE, FILE_NAME, FILE_PATH)
-        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_INPUT_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, #{ITEM_STATE}, #{FILE_NAME}, #{FILE_PATH})
+        INSERT INTO SC_ISO_AUTH_COMPANY_ITEM(COM_CODE, AUTH_TYPE, AUTH_CODE, AUTH_DATE, EXP_DATE, REG_INPUT_DATE, REG_DW_USER_IDX, UP_DW_USER_IDX, REG_DATE, UP_DATE, ITEM_STATE, STATE_DATE, FILE_NAME, FILE_PATH)
+        VALUES (#{COM_CODE}, #{AUTH_TYPE}, #{AUTH_CODE}, #{AUTH_DATE}, #{EXP_DATE}, #{REG_INPUT_DATE}, #{REG_DW_USER_IDX}, #{UP_DW_USER_IDX}, sysdate, sysdate, #{ITEM_STATE}, sysdate, #{FILE_NAME}, #{FILE_PATH})
     </insert>
 
     <update id="updateItem" parameterType="isoAuthItem">
@@ -13,7 +13,7 @@
         SET ITEM_STATE=#{ITEM_STATE},
             AUTH_DATE=#{AUTH_DATE}, EXP_DATE=#{EXP_DATE}, REG_INPUT_DATE=#{REG_INPUT_DATE},
             FILE_NAME=#{FILE_NAME}, FILE_PATH=#{FILE_PATH},
-            UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+            UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate, STATE_DATE = sysdate
         WHERE COM_CODE=#{COM_CODE} AND AUTH_CODE=#{AUTH_CODE}
     </update>
 
@@ -92,6 +92,7 @@
             TO_CHAR(REG_INPUT_DATE, 'YYYY-MM-DD') AS REG_INPUT_DATE,
             TO_CHAR(UP_DATE, 'YYYY-MM-DD') AS UP_DATE,
             ITEM_STATE,
+            STATE_DATE,
             FILE_NAME,
             FILE_PATH,
             REASON
@@ -105,6 +106,7 @@
                 IACI.REG_INPUT_DATE,
                 IACI.UP_DATE,
                 IACI.ITEM_STATE,
+                IACI.STATE_DATE,
                 IACI.FILE_NAME,
                 IACI.FILE_PATH,
                 IACI.REASON,
@@ -127,6 +129,7 @@
                 IACI.REG_INPUT_DATE,
                 IACI.UP_DATE,
                 IACI.ITEM_STATE,
+                IACI.STATE_DATE,
                 IACI.FILE_NAME,
                 IACI.FILE_PATH,
                 IACI.REASON,
@@ -174,7 +177,7 @@
 
     <update id="updateStatus" parameterType="isoAuthItem">
         UPDATE SC_ISO_AUTH_COMPANY_ITEM
-        SET ITEM_STATE=#{ITEM_STATE}, REASON=#{REASON}, POINT=#{POINT}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate
+        SET ITEM_STATE=#{ITEM_STATE}, REASON=#{REASON}, POINT=#{POINT}, UP_DW_USER_IDX = #{UP_DW_USER_IDX}, UP_DATE = sysdate, STATE_DATE = sysdate
         WHERE COM_CODE=#{COM_CODE} AND AUTH_CODE=#{AUTH_CODE}
     </update>
 
