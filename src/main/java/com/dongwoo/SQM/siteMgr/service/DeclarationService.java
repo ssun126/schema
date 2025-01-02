@@ -4,6 +4,7 @@ import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.repository.DeclarationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -17,6 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeclarationService
 {
+
+    @Value("${spring.datasource.url}")
+    private String jdbcURl;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+
     private final DeclarationRepository declarationRepository;
 
     public List<DeclarationDTO> findAll(){
@@ -34,7 +43,8 @@ public class DeclarationService
         try{
             String sql = "INSERT INTO SC_DECLARATION_DATA(DECL_IDX,DECL_NUM,DECL_SUB_NUM,DECL_NAME,DECL_CASNUM,DECL_WEIGHT,DECL_CLASS,DECL_GROUND) VALUES (SEQ_DECL_DATA.NEXTVAL,?,?,?,?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","c##NSQM","12345");
+            //conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.1.191:1521/xe","c##NSQM","12345");
+            conn = DriverManager.getConnection(jdbcURl,username,password);
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
 

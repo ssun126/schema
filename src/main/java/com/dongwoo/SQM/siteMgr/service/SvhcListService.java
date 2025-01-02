@@ -4,6 +4,7 @@ import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.siteMgr.repository.SvhcListRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -16,6 +17,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SvhcListService {
+
+    @Value("${spring.datasource.url}")
+    private String jdbcURl;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
 
     private final SvhcListRepository svhcListRepository;
     public List<SvhcListDTO> findAll(){
@@ -34,7 +42,7 @@ public class SvhcListService {
         try{
             String sql  = "INSERT INTO SC_SVHC_DATA(SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM) VALUES (?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe","c##NSQM","12345");
+            conn = DriverManager.getConnection(jdbcURl,username,password);
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement(sql);
             log.info("test2222222222222");

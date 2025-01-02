@@ -357,6 +357,7 @@
             var ReqInfo = new Common.RequestInfo();
             ReqInfo.formData  = new FormData();
             ReqInfo.AddParameter(frmObj);
+
             Common.Ajax("/user/partMgmt/goMsdsSave", ReqInfo, function (response) {
                     if (response == "OK") {
                         if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
@@ -431,7 +432,7 @@
                  isValid=false;
                  flag='MSDS';
             }
-            if($("input[name=ROHS_FILE]").val() == '' && $("#ROHS_FILE_NAME]").text() === '') {
+            if($("input[name=ROHS_FILE]").val() == '' && $("#ROHS_FILE_NAME").text() === '') {
                  isValid=false;
                  flag='ROHS';
             }

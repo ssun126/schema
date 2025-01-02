@@ -73,4 +73,11 @@
         WHERE FILE_CASE != 'PLANT' AND  FILE_LANG =#{sLang}
 
     </select>
+
+
+
+    <delete id="deleteOrgFile" parameterType="int">
+        DELETE SC_SAMPLEFILE_DATA
+        where FILE_IDX = #{idx}
+    </delete>
 </mapper>

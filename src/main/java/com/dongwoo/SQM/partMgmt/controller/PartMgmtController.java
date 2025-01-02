@@ -1165,7 +1165,6 @@ public class PartMgmtController {
                                                     , HttpServletResponse response
                                                     , @RequestParam(value = "SCCS_FILE", required = false) MultipartFile sccsFile
                                                     , @RequestParam(value = "INGRED_FILE", required = false) MultipartFile ingredFile
-                                                    , @RequestParam(value = "GUARANT_FILE", required = false) MultipartFile[] guarantFile
                                                     , @ModelAttribute partDetailSccsDTO sccsDTO
                                                     , @ModelAttribute partDetailIngredDTO ingredGDTO) {
 

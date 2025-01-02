@@ -115,7 +115,8 @@
                 </div>
 
                 <div class="cui_body version_KOR">
-                    <form action="/admin/siteMgmt/upload" method="post" enctype="multipart/form-data">
+                    <form class="cui_form_section" data-legend="true" id="frmSampleFile" enctype="multipart/form-data" onsubmit="return false;">
+                        <input type="hidden" name="SaveMode">
                         <table class="cui_table">
                             <colgroup>
                                 <col style="width:250px">
@@ -178,57 +179,7 @@
                                 <td ><span th:text="${korPlantList.BASE_CODE}"></span></td>
                                 <td>
                                     <div th:multiFileUpload="'PLANT_'+${korPlantList.BASE_CODE}+'_Files'">
-                                        <div>dkdefefewf|fewfew|F|fewf\WEfew|</div>
-                                    </div>
-
-                                    <div class="cui_items_wrap" data-direction="column" style="display:none;">
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <div class="cui_attachments">
-                                                    <input type="file" class="cui_file_field" name="files">
-                                                    <input type="hidden" name="FILE_STATUS">
-                                                    <input type="hidden" name="FILE_CASE" value="PLANT"/>
-                                                    <input type="hidden" name="FILE_GUBN" th:value="${korPlantList.BASE_CODE}"/>
-                                                    <input type="hidden" name="FILE_NUM" value="1"/>
-                                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:id="'PLANT_'+${korPlantList.BASE_CODE}+'_1_fileDiv'">
-                                                        <div class="item_label" data-cui-icon="paperclip">
-                                                            <span th:id="'PLANT_'+${korPlantList.BASE_CODE}+'_1'"></span>
-                                                        </div>
-                                                        <div class="item_content">
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download"
-                                                                    th:href="@{/admin/siteMgmt/download(baseCode=${korPlantList.BASE_CODE},fileNum=1,sLang=${Language},GUBN=PLANT)}">
-                                                                <span data-langsid="다운로드"></span>
-                                                            </button>
-                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="cui_items_wrap" data-direction="left">
-                                            <div class="item_content">
-                                                <div class="cui_attachments">
-                                                    <input type="file" class="cui_file_field" name="files">
-                                                    <input type="hidden" name="FILE_STATUS">
-                                                    <input type="hidden" name="FILE_CASE" value="PLANT"/>
-                                                    <input type="hidden" name="FILE_GUBN"  th:value="${korPlantList.BASE_CODE}"/>
-                                                    <input type="hidden" name="FILE_NUM" value="2"/>
-                                                    <div class="cui_items_wrap file_wrap" data-direction="left" th:id="'PLANT_'+${korPlantList.BASE_CODE}+'_2_fileDiv'">
-                                                        <div class="item_label" data-cui-icon="paperclip">
-                                                            <span th:id="'PLANT_'+${korPlantList.BASE_CODE}+'_2'"></span>
-                                                        </div>
-                                                        <div class="item_content">
-                                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download"
-                                                                    th:href="@{/admin/siteMgmt/download(baseCode=${korPlantList.BASE_CODE},fileNum=2,sLang=${Language},GUBN=PLANT)}">
-                                                                <span data-langsid="다운로드">다운로드</span>
-                                                            </button>
-                                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark"><span data-langsid="삭제"></span></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                                        <div th:each="plantList : ${plantFileList}" th:if="${korPlantList.BASE_CODE==plantList.FILE_GUBN}" th:text="'${plantList.FILE_IDX}'++''"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -290,12 +241,13 @@
 
                             </tbody>
                         </table>
+                        <input type="hidden" th:value="${PLANT_ORGINFO}">
                         <div class="cui_items_wrap" data-direction="right" style="margin-top:20px;">
                             <div class="item_content">
-                                <button type="submit" name="FILE_LANG" value="KOR" id="submit_KOR" class="cui_button primary" th:style="${Language} == 'KOR'? '' : 'display:none' " ><span data-langsid="저장"></span></button>
-                                <button type="submit" name="FILE_LANG" value="ENG" id="submit_ENG" class="cui_button primary" th:style="${Language} == 'ENG'? '' : 'display:none' "><span data-langsid="저장"></span></button>
-                                <button type="submit" name="FILE_LANG" value="JPN" id="submit_JPN" class="cui_button primary" th:style="${Language} == 'JPN'? '' : 'display:none' "><span data-langsid="저장"></span></button>
-                                <button type="submit" name="FILE_LANG" value="CHN" id="submit_CHN" class="cui_button primary" th:style="${Language} == 'CHN'? '' : 'display:none' "><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" onclick="frmSubmit('KOR')" class="cui_button primary" th:style="${Language} == 'KOR'? '' : 'display:none' " ><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" onclick="frmSubmit('ENG')" class="cui_button primary" th:style="${Language} == 'ENG'? '' : 'display:none' "><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" onclick="frmSubmit('JPN')" class="cui_button primary" th:style="${Language} == 'JPN'? '' : 'display:none' "><span data-langsid="저장"></span></button>
+                                <button type="submit" name="FILE_LANG" onclick="frmSubmit('CHN')" class="cui_button primary" th:style="${Language} == 'CHN'? '' : 'display:none' "><span data-langsid="저장"></span></button>
                             </div>
                         </div>
 
@@ -314,6 +266,7 @@
         let slang = $("#selectLang").val();
         console.log("test : ============== "+slang);
         getplantData(slang);
+
 
     });
 
@@ -475,7 +428,7 @@
         });
 
 
-        getplantData(lange);
+        //getplantData(lange);
         //getotherData(lange);
 
     }
@@ -484,6 +437,42 @@
 <!--    buttons.forEach(function(button){-->
 <!--        button.addEventListener("click",displayFileDiv);-->
 <!--    });-->
+
+
+    var frmSubmit = function(flag){
+        var frmObj = $("#frmSampleFile");
+        $("#frmSampleFile").find("input[name=SaveMode]").val(flag);
+        //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+
+
+        Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+              var ReqInfo = new Common.RequestInfo();
+              ReqInfo.formData  = new FormData();
+              ReqInfo.AddParameter(frmObj);
+
+              Common.Loading.Show();
+              setTimeout(function () {
+                Common.Ajax("/admin/siteMgmt/upload", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        location.reload();
+                    }
+                });
+              }, 10);
+            }
+        });
+    }
+
+    var DeleteOrgFile = function (idx){
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.AddParameter("DEL_IDX", idx);
+        Common.Ajax("/admin/siteMgmt/deleteOrgFile", ReqInfo, function (response) {
+            if (response == "OK") {
+                location.reload();
+            }
+        });
+    }
 
 
 

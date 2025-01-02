@@ -1152,31 +1152,43 @@ Common.Load = function (Obj) {
         var thisObj = $(this);
         var fileName = thisObj.attr("multiFileUpload");
 
-        var orgFileInfo = thisObj.find("div");
+        var orgFileInfoDiv = thisObj.find("div");
+        //var orgFileInfo = orgFileInfoDiv.split(",");
         var orgFileHTML = "";
 
-        if (orgFileInfo.length > 0) {
-            orgFileInfo.each(function () {
+        if (orgFileInfoDiv.length > 0) {
+            orgFileInfoDiv.each(function () {
                 var oneDivObj = $(this);
+                //idx|namq|path|size
                 var fileInfoData = oneDivObj.html();
-                orgFileHTML = "";
+                //var splitData = fileInfoData.split("|");
 
                 var AddFile = "";
+
+                AddFile += "<li>";
+                AddFile += '<a href="#" orgFileInfo="" style="display:none" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
+                AddFile += '<em class="ico_file"></em> ';
+                AddFile += '<label class="file_name" style="cursor:pointer;">' + oneDivObj.html() + '</label>';
+                AddFile += '<span class="file_size"> <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
+                AddFile += "</li>";
+
                 /*
                 AddFile += "<li>";
-                AddFile += '<a href="#" orgFileInfo="1" style="display:none" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
-                AddFile += '<em class="ico_file ' + Common.FileExe(file.name) + '"></em> ';
-                AddFile += '<label class="file_name" style="cursor:pointer;">' + file.name + '</label>';
-                AddFile += '<span class="file_size">' + Common.Convert.FileSize(file.size) + ' <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
+                AddFile += '<a href="#" orgFileInfo='+splitData[0]+' style="display:none" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
+                AddFile += '<em class="ico_file ' + Common.FileExe(splitData[1]) + '"></em> ';
+                AddFile += '<label class="file_name" style="cursor:pointer;">' + splitData[1] + '</label>';
+                AddFile += '<span class="file_size">' + Common.Convert.FileSize(splitData[3]) + ' <em class="file_trans_gauge"><em class="gauge_in" style="width:0%">&nbsp;</em></em></span>';
                 AddFile += "</li>";
                 */
 
+                /*
                 AddFile += "<li>";
                 AddFile += '<a href="#" orgFileInfo="1" style="display:" class="file_del" onclick="Common.FileDeleteOrg($(this));return false;"><img src="/images/ico_file_del.gif" width="16" height="" alt="" /></a> ';
                 AddFile += '<em class="ico_file "></em> ';
                 AddFile += '<label class="file_name" style="cursor:pointer;">파일명.xmls</label>';
                 AddFile += '<span class="file_size">23 Bytes</span>';
                 AddFile += "</li>";
+                */
 
                 orgFileHTML += AddFile;
             });
@@ -1238,8 +1250,8 @@ Common.Load = function (Obj) {
             for (var i = 0; i < fileObj.files.length; i++) {
                 var file = fileObj.files[i];
                 Common.FileUpload(file, fileInputObj, thisObj.find("span.st3"), thisObj.find(".file_cmt"), thisObj.find(".file_list"), thisObj);
-                //fileObj.value = "";
             }
+            fileObj.value = "";
             show_hide_btn.html("<i class=\"fa fa-chevron-up\"></i> 숨기기");
             thisObj.find(".file_list_wrap").css("display", "");
         });
@@ -1288,6 +1300,9 @@ Common.FileDeleteOrg = function (FileOrgObj) {
     //var orgFileInfo = FileOrgObj.attr("orgFileInfo");
     if (confirm("파일을 삭제하시겠습니까?") == true) {
         // 실제 Ajax로 파일 삭제 처리
+        var idx = FileOrgObj.attr("orgFileInfo");
+        // 개별 페이지에 삭제 함수 생성
+        DeleteOrgFile(idx);
 
         // 삭제된 정보 html 제거
         FileOrgObj.parent().remove();
@@ -1311,6 +1326,15 @@ Common.FileUpload = function (file, fileInputObj, size_srmyObj, noListObj, listO
     listObj.append(AddFileObj);
 
     var fileName = Common.GetTodayTimeString();
+
+    //khs modify
+//    var fileName = "";
+//    if(controllObj.attr("dragfile") == undefined){
+//        fileName = Common.GetTodayTimeString();
+//    }else{
+//        fileName = controllObj.attr("dragfile");
+//    }
+
 
     var dragFileCount = 1;
     if (controllObj.attr("dragFileCount") == undefined) {

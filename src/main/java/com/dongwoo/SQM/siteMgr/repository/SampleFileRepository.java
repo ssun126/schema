@@ -43,4 +43,6 @@ public class SampleFileRepository {
     public List<SampleFileDTO> getOtherFileInfo(String sLang){
         return sql.selectList("sampleFile.getOtherFileInfo",sLang);
     }
+
+    public int deleteOrgFile(int idx){ return sql.delete("sampleFile.deleteOrgFile",idx);}
 }

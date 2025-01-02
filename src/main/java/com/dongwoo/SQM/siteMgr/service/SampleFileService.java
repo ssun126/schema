@@ -59,4 +59,6 @@ public class SampleFileService {
     public List<SampleFileDTO> getOtherFileInfo(String sLang){
         return  sampleFileRepository.getOtherFileInfo(sLang);
     }
+
+    public int deleteOrgFile (int idx) { return sampleFileRepository.deleteOrgFile(idx);}
 }
