@@ -55,6 +55,8 @@
                     <div class="jqGrid_label"> &nbsp;</div>
                     <div class="jqGrid_aside">
                         <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload"
+                                onclick="sendMailAlert();"><span data-langsid="메일 발송"></span></button>
                     </div>
                 </div>
                 <div class="cui_jqGrid_body" id="Grid">
@@ -67,6 +69,42 @@
 </body>
 </html>
 <script>
+    var sendMailAlert = function () {
+        var sel_idxs = "";
+        var sel_idxs_count = 0;
+        var grid = $("#gridArea").pqGrid("instance");
+        for (j = 0; j < grid.pdata.length; j++) {
+            if (grid.pdata[j]["CHECK_YN"] == true) {
+                if (sel_idxs == "") sel_idxs += ",";
+                sel_idxs += grid.pdata[j]["MSDS_IDX"];
+                sel_idxs_count++;
+            }
+        }
+
+        if (sel_idxs_count == 0) {
+            Common.Msg(siteLang.getLang("갱신 요청 데이터를 선택하세요."));
+            return;
+        }else{
+            Common.Msg(siteLang.getLang("발송 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.AddParameter(obj);
+
+                    Common.Loading.Show();
+                    setTimeout(function () {
+                        Common.Ajax("/sendEmail?fromMail=recipient@example.com&to=recipient@example.com&subject=Test&text=Hello+World!", ReqInfo, function (response) {
+                            if (response == "OK") {
+                                Common.Msg(sel_idxs_count + "건 발송 되었습니다.");
+                            }
+                            Common.Loading.Hide();
+                        });
+                    }, 10);
+                }
+            });
+        }
+    }
+
     var AuditTypeSearch = function () {
         //Audit 구분
         var typeUrl = "/api/audit/auditPlanMgmt/getCodeList";
@@ -167,6 +205,15 @@
             }
         };
         obj.colModel = [
+            {
+                dataIndx: "CHECK_YN", width: 50, halign: "center", align: "center", resizable: true,
+                type: 'checkBoxSelection', sortable: false, editor: true, editable: true,
+                dataType: 'bool',
+                cb: {
+                    all: false,
+                    header: true
+                }
+            },
             { data_langsid: "Audit번호", title: siteLang.getLang("Audit번호"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "AP_No", sortable: true, editor: false, editable: false },
             { data_langsid: "진행상태", title: siteLang.getLang("진행상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_Progress", sortable: true, editor: false, editable: false },
             { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "L_Vendor", sortable: true, editor: false, editable: false },

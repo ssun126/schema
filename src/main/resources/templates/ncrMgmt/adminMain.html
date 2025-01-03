@@ -20,15 +20,15 @@
                 <div class="cui_search">
                     <div class="search_list cui_grid_wrap " id="searchArea">
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label" data-langsid="업체코드"></strong>
+                            <strong class="item_label" data-langsid="NCR번호"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchCode" name="searchCode" search="searchBtn" placeholder=""/>
+                                <input class="cui_text_field" type="text" id='searchAuditNcrNo'  name="searchCode" search="searchBtn" placeholder=""/>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label" data-langsid="업체명"></strong>
                             <div class="item_content">
-                                <input class="cui_text_field" type="text" id="searchName" name="searchName" search="searchBtn" placeholder=""/>
+                                <input class="cui_text_field" type="text" id="searchAuditEntName" name="searchName" search="searchBtn" placeholder=""/>
                             </div>
                             <input type="hidden" id="pFlag" name="pFlag"/>
                             <input type="hidden" id="pGroupCd" name="pGroupCd" value="9999"/>
@@ -36,11 +36,7 @@
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">지적구분</strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchGubun">
-                                    <option value="" selected>선택하세요</option>
-                                    <option value="SEND">제출</option>
-                                    <option value="APPROVED">승인</option>
-                                    <option value="REJECT">반려</option>
+                                <select class="cui_select_field" id="searchAuditNcrNcrType">
                                 </select>
                             </div>
                         </div>
@@ -48,30 +44,20 @@
                             <strong class="item_label">진행상태</strong>
                             <div class="item_content">
                                 <select class="cui_select_field" id="searchAuditNcrNcrStatus">
-                                    <option value="">선택하세요</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
                             <strong class="item_label">Audit 구분</strong>
                             <div class="item_content">
-                                <select class="cui_select_field" id="searchNcrAuditType">
-                                    <option value="">품질</option>
-                                    <option value="">환안</option>
+                                <select class="cui_select_field" id="searchAuditNcrAuditType">
                                 </select>
                             </div>
                         </div>
                         <div class="cui_items_wrap" data-direction="left">
-                            <strong class="item_label">조회기간</strong>
+                            <strong class="item_label">년도</strong>
                             <div class="item_content">
-                                <select class="cui_select_field">
-                                    <option value="">선택하세요</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
-                                    <option value="">제목</option>
+                                <select class="cui_select_field" id='searchAuditNcrNcrYear'>
                                 </select>
                             </div>
                         </div>
@@ -344,21 +330,74 @@
 </body>
 </html>
 <script>
-var AuditTypeSearch = function () {
-    //Audit 구분
+var AuditNcrStatusSearch = function () {
     var typeUrl = "/api/audit/auditNcrMgmt/getCodeList";
 
     var ReqInfo = new Common.RequestInfo();
-    ReqInfo.AddParameter($("#searchArea"));
+    ReqInfo.AddParameter("pflag", "PARTNER_AUDIT_NCRSTA");
 
     Common.Ajax(typeUrl, ReqInfo, function (data) {
         console.log(data);
         var localData = data.dataList;
-        Common.SelectBox("#searchNcrAuditType", localData, 'name', 'code');
+        Common.SelectBox("#searchAuditNcrNcrStatus", localData, 'name', 'code');
     });
 }
 
+var AuditTypeSearch = function () {
+    var typeUrl = "/api/audit/auditNcrMgmt/getCodeList";
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter("pflag", "PARTNER_AUDIT_TYPE");
+
+    Common.Ajax(typeUrl, ReqInfo, function (data) {
+        console.log(data);
+        var localData = data.dataList;
+        Common.SelectBox("#searchAuditNcrAuditType", localData, 'name', 'code');
+    });
+}
+
+var AuditNCRTypeSearch = function () {
+    var typeUrl = "/api/audit/auditNcrMgmt/getCodeList";
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter("pflag", "PARTNER_AUDIT_NCRTYP");
+
+    Common.Ajax(typeUrl, ReqInfo, function (data) {
+        console.log(data);
+        var localData = data.dataList;
+        Common.SelectBox("#searchAuditNcrNcrType", localData, 'name', 'code');
+    });
+}
+
+
+var AuditNCRYearSearch = function () {
+    //년
+    var localData = new Array();
+    var currentYear = new Date().getFullYear();
+    var currentMonth = new Date().getMonth();
+    if(3>Number(currentMonth)){
+        currentYear = (Number(currentYear) -1)+"";
+    }
+    for(var i=Number(currentYear); i>=2018; i--){
+        var tempObj = new Object();
+        tempObj["NAME"] =i+"";
+        tempObj["ID"] =i+"";
+        localData.push(tempObj);
+    }
+    console.log(localData);
+    Common.SelectBox("#searchAuditNcrNcrYear", localData, 'NAME', 'ID');
+}
+
 var ListSearch = function () {
+    var data = {
+        ncr_no : $("#searchAuditNcrNo").val(),
+        type : $("#searchAuditNcrAuditType").val(),
+        partnerscd : $("#searchAuditEntName").attr("data-code"),
+        ncr_type : $("#searchAuditNcrNcrType").val(),
+        year : $("#searchAuditNcrNcrYear").val(),
+        ncr_status : $("#searchAuditNcrNcrStatus").val()
+    };
+
     var setData = {
         "ncr_no": "",
         "type": "",
@@ -466,8 +505,10 @@ $(function () {
 });
 
 $(document).ready(function() {
-
-    // AuditTypeSearch();
+    AuditNCRYearSearch();
+    AuditNCRTypeSearch();
+    AuditTypeSearch();
+    AuditNcrStatusSearch();
     ListSearch();
 });
 

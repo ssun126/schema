@@ -56,6 +56,12 @@ public class QualityControlController {
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("QUALITY", COM_CODE);
         model.addAttribute("companyAuthFile", companyAuthFile);
 
+        //접속 업체가 SELF AUDIT 대상자인지 체크
+        //1. 당해년도 대면/서면 대상 업체인지
+        //2. 아니라면 전년도 대면/서면 업체인지
+        //1,2 모두 아니면 SELF AUDIT
+        model.addAttribute("auditWay", "SELF"); //셀프일때
+
         return "qualityControl/detail";
     }
 
@@ -83,6 +89,13 @@ public class QualityControlController {
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("QUALITY", comCode);
         model.addAttribute("companyAuthFile", companyAuthFile);
+
+
+        //접속 업체가 SELF AUDIT 대상자인지 체크
+        //1. 당해년도 대면/서면 대상 업체인지
+        //2. 아니라면 전년도 대면/서면 업체인지
+        //1,2 모두 아니면 SELF AUDIT
+        model.addAttribute("auditWay", "SELF"); //셀프일때
 
         return "qualityControl/main";
     }

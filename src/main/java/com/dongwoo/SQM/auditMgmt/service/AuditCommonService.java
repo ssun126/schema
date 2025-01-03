@@ -40,7 +40,7 @@ public class AuditCommonService {
     private String uploadPath;
 
     //Audit 공통 제출
-    public void saveCommonAuthData(String tableData, String type, int total, MultipartFile[] fileNames) throws IOException {
+    public void saveCommonAuthData(String tableData, String type, String inputType, MultipartFile[] fileNames) throws IOException {
         // JSON 문자열을 DTO 객체로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         List<AuditItemPointDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<AuditItemPointDTO>>() {});
@@ -55,10 +55,11 @@ public class AuditCommonService {
         authDTO.setCOM_CODE(comCode);
         authDTO.setAUTH_TYPE(type); //SAFETY / QUALITY
         authDTO.setAPPROVE_STATE("SEND"); //제출
-        authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-        authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-       // authDTO.setPOINT(total);  // 점수  점수는 승일시 넣도록
-        log.info("authDTO::::::::::"+authDTO);
+        authDTO.setREG_DW_USER_IDX(loginIdx);
+        authDTO.setUP_DW_USER_IDX(loginIdx);
+        authDTO.setINPUT_TYPE(inputType);  // 파일/직접입력 구분
+
+       // authDTO.setPOINT(total);  // 점수  점수는 승인일시 넣도록 log.info("authDTO::::::::::"+authDTO);
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
         if(comCnt > 0) {
@@ -70,7 +71,6 @@ public class AuditCommonService {
         // AUTH_SEQ 가져오기
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
         log.info(" authMgmtDTO.getAUTH_SEQ()::::::::::"+ authMgmtDTO.getAUTH_SEQ());
-        //log.info(" total:::::::::"+  total);
 
         try {
             // 파일이 있는 경우 파일 정보 저장
@@ -109,6 +109,9 @@ public class AuditCommonService {
                 }
             }
             log.info("회사별 Audit 데이터 저장 완료");
+
+            //TODO 제출시 메일 발송
+            //TODO 셀프일떄는 제출시 POVIS 전송
         }catch (Exception e){
             log.info("Error"+e.getMessage());
         }

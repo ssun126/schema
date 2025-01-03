@@ -490,8 +490,8 @@
         var tableData = [];
         var formData = new FormData();
 
-        var chkValue = $("input:radio[name=checkbox1]:checked").val();
-        if(chkValue == "file"){ //파일첨부를 선택했다면
+        var inputType = $("input:radio[name=checkbox1]:checked").val();
+        if(inputType == "file"){ //파일첨부를 선택했다면
 
             $("#authItemTable .cui_attachments").each(function() {
                 var row = {};
@@ -525,7 +525,7 @@
         }
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
         formData.append('type', 'SAFETY');  // flag가 SAFETY / SAFETY
-        formData.append('total', $('#totalPoint').val());  // total 점수
+        formData.append('inputType', inputType);  // total 점수
 
          $.ajax({
             url: '/auditMgmt/sendAuthData',

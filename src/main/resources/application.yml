@@ -80,6 +80,7 @@ Upload:
     excel: "D:/SCHEMA/STORAGE/EXCEL"
     iso: "D:/SCHEMA/STORAGE/ISO"
     audit: "D:/SCHEMA/STORAGE/AUDIT"
+    pcnTemplate: "D:/SCHEMA/STORAGE/pcntemplate"
     warranty: "D:/SCHEMA/STORAGE/WARRANTY"
     sample: "D:/SCHEMA/STORAGE/SAMPLE"
 

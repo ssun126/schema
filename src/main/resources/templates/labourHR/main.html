@@ -304,7 +304,7 @@
         const formData = new FormData();
         var tableData = [];
         var chkValue = $("input:radio[name=chkType]:checked").val();
-        console.log("chkValue>>>>>>>>>>"+chkValue);
+
         if(chkValue == "file"){
             const fileInput = document.querySelector('input[type="file"]');
             if (fileInput && fileInput.files.length > 0) {
@@ -369,9 +369,13 @@
     //제출 상태
     function loadInfo(){
         const comState = `[[${companyAuth.APPROVE_STATE}]]`;
+        const inputType = `[[${companyAuth.INPUT_TYPE}]]`;
 
         if(comState != "" ){
             $("#fs_text").show();
+            $("input:radio[name=chkType]").prop("disabled", true);
+            $("select[name=selectPoint]").prop("disabled", true);
+
             if(comState === 'SEND'){
                 $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
                 $('#sendAuth').hide();
@@ -383,8 +387,7 @@
                 $('.resultField').show(); // 결과 보이기
             }
         }
-        $("input:radio[name=chkType]").prop("disabled", true);
-        $("select[name=selectPoint]").prop("disabled", true);
+
     }
 
 

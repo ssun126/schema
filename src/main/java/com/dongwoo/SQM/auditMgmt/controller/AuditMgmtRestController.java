@@ -212,9 +212,11 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendAuthData")
-    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam("total") int total, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
+    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam("inputType") String inputType, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
         try {
-            auditCommonService.saveCommonAuthData(data, type, total, fileNames);
+            auditCommonService.saveCommonAuthData(data, type, inputType, fileNames);
+            //TODO 제출시 메일 발송
+            //TODO 셀프일떄는 제출시 POVIS 전송
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {
