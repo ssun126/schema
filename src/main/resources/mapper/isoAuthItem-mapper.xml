@@ -92,7 +92,7 @@
             TO_CHAR(REG_INPUT_DATE, 'YYYY-MM-DD') AS REG_INPUT_DATE,
             TO_CHAR(UP_DATE, 'YYYY-MM-DD') AS UP_DATE,
             ITEM_STATE,
-            STATE_DATE,
+            TO_CHAR(STATE_DATE, 'YYYY-MM-DD') AS STATE_DATE,
             FILE_NAME,
             FILE_PATH,
             REASON

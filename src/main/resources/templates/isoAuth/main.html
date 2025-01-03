@@ -66,7 +66,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><input type="hidden" class="cui_text_field" name="ITEM_STATE" th:value="${data.ITEM_STATE}"><span th:text="${data.ITEM_STATE}"></span><span th:if="${data.ITEM_STATE == 'APPROVED'}" th:text="${data.STATE_DATE}"></span></td>
+                                <td><input type="hidden" class="cui_text_field" name="ITEM_STATE" th:value="${data.ITEM_STATE}"><span th:text="${data.ITEM_STATE}"></span><span th:if="${data.ITEM_STATE == 'APPROVED'}" th:text="'[' +${data.STATE_DATE}+']'"></span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -140,13 +140,11 @@
         $('#topButton').show();
     }
     if (notApproved) { //반려가 있는 경우
-        //$('#authState').text('[반려 : ' + formattedDate([[${companyAuth.APPROVE_DATE}]])+']');
         $('#topButton').hide();
         $('#submitIsoAuth').hide();
         $('#rejectArea').show();
     }
     if (sendSubmit || allApproved) { //제출하거나 모두 승인이 되면 전체 버튼 숨기기
-        //$('#authState').text('[' + (sendSubmit ? '제출: ' + formattedDate([[${companyAuth.SEND_DATE}]]) : '승인: ' + formattedDate([[${companyAuth.APPROVE_DATE}]])) + ']');
         $('#footButton').hide();
         $('#topButton').hide();
     }
