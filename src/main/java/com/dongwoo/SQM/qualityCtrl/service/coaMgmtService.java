@@ -41,6 +41,11 @@ public class coaMgmtService {
         return coaMgmtRepository.getCOADetailTitle(coaMgmtDTO);
     }
 
+    public String getCOANumber() {
+        return coaMgmtRepository.getCOANumber();
+    }
+
+
     public List<coaMgmtDTO> getCOADetailSpec(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getCOADetailSpec(coaMgmtDTO);
     }
@@ -51,11 +56,11 @@ public class coaMgmtService {
 
 
     public int copyCOAMaster(coaMgmtDTO coaMgmtDTO) {
-        return coaMgmtRepository.updateVendorComment(coaMgmtDTO);
+        return coaMgmtRepository.copyCOAMaster(coaMgmtDTO);
     }
 
     public int copyCOADetail(coaMgmtDTO coaMgmtDTO) {
-        return coaMgmtRepository.updateVendorComment(coaMgmtDTO);
+        return coaMgmtRepository.copyCOADetail(coaMgmtDTO);
     }
 
 }
