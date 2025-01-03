@@ -46,4 +46,17 @@ public class coaMgmtRepository {
     }
 
 
+    public String getCOANumber() {
+        return sql.selectOne("coaMgmt.getCOANumber");
+    }
+
+    public int copyCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return sql.insert("coaMgmt.copyCOAMaster", coaMgmtDTO);
+    }
+
+    public int copyCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return sql.insert("coaMgmt.copyCOADetail", coaMgmtDTO);
+    }
+
+
 }

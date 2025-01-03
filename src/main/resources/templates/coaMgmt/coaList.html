@@ -454,41 +454,61 @@
     };
 
 
-        //복사 팝업 (등록) 버튼 클릭.
-    	var copy = function() {
+    //복사 팝업 (등록) 버튼 클릭.
+    var copy = function() {
 
-            if (Common.Validate($("#popCopyCoa")) != true) {
-              return;
-            }
+        if (Common.Validate($("#popCopyCoa")) != true) {
+          return;
+        }
 
-             Common.Msg(siteLang.getLang("복사 하시겠습니까?"), {
-                    mode : "confrim"
-                    , okback : function () {
-                        Common.Loading.Show();
-                        setTimeout(function () {
-                            //deletePartCode(selectedData);
-                            copyCoa();
-                            $("#popCopyCoa").data("Hide")();
-                            Common.Loading.Hide();
-                        }, 10);
-                    }
-             });
+         Common.Msg(siteLang.getLang("복사 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    Common.Loading.Show();
+                    setTimeout(function () {
+                        //deletePartCode(selectedData);
+                        copyCoa();
+                        $("#popCopyCoa").data("Hide")();
+                        Common.Loading.Hide();
+                    }, 10);
+                }
+         });
 
 
-    	};
+    };
 
 
     function copyCoa() {
 
-
         var grid = $("#gridArea").pqGrid("instance");
         var selectedData = [];
+
+        var dDate =  $("#popCopyCoaDDate").val();
+        var mDate =  $("#popCopyCoaMDate").val();
+        var eDate =  $("#popCopyCoaEDate").val();
+        var volume = $("#popCopyCoaVolume").val();
+
         for (j = 0; j < grid.pdata.length; j++) {
 
             if (grid.pdata[j]["CHECK_YN"] == true) {
-               var factoryId =  grid.pdata[j]["FACTORY_ID"]   ;
-               var coaStatus = grid.pdata[j]["COA_STATUS"]    ;
-               selectedData.push({ factoryId: factoryId, coaStatus: coaStatus });
+               var coaId =  grid.pdata[j]["COA_ID"]   ;
+               var vendorId = grid.pdata[j]["VENDOR_ID"]    ;
+               var materialId = grid.pdata[j]["MATERIAL_ID"]    ;
+               var factoryId = grid.pdata[j]["FACTORY_ID"]    ;
+               var lotNo = grid.pdata[j]["LOT_NO"]    ;
+
+               selectedData.push({
+                      COA_ID :coaId
+                     ,VENDOR_ID : vendorId
+                     ,MATERIAL_ID : materialId
+                     ,FACTORY_ID : factoryId
+                     ,LOT_NO : lotNo
+                     ,STOCK_DATE: dDate
+                     ,MF_DATE:mDate
+                     ,E_DATE:eDate
+                     ,QUANTITY:volume
+                                      });
+
             }
         }
 
@@ -496,44 +516,14 @@
          $.ajax({
             type: "post",
             url: "/admin/qualityCtrl/copyCoa",
-            data: {
-/*
-          //{"coaRegList":[{"L_COAId":"COA-20090400042279"
-          ,"L_VendorName":"(주) 삼양사 세종공장"
-          ,"L_MaterialName":"SPI-03"
-          ,"L_MaterialId":"RCRH0053"
-          ,"L_FactoryName":"케미컬(평택)"
-          ,"L_LotNo":"mail4"
-          ,"L_StockDate":"2020-08-24"
-          ,"L_MFDate":"2019-08-24"
-          ,"L_COAStatusStr":"승인"
-          ,"L_SpecIn":"Y"
-          ,"L_CreatorName":"손재현"
-          ,"L_CreateDatetime":"2020-09-04 11:17:29"
-          ,"L_WorkUser":"LIMS"
-          ,"L_ReciveDateTime":"2020-09-04"
-          ,"L_Creator":"jaehyunson"
-          ,"L_COAStatus":"E"
-          ,"L_VendorId":"1000572"
-          ,"L_FactoryId":"1300"
-          ,"L_VendorComment":""
-          ,"L_WetPr":"PR"
-          ,"L_EDate":"2020-09-24"
-          ,"L_Quantity":"1"}]
-          ,"dDate":"2021-06-23"
-          ,"USERID":"jaehyunson"
-          ,"SITEID":"DW01"}
- */
-                coaRegList : selectedData,  //이게 체크한거 리스트로 가야 된다. 필요 컬럼 추리기.
-                dDate : $("#popCopyCoaDDate").val(),
-                mDate : $("#popCopyCoaMDate").val(),
-                eDate : $("#popCopyCoaEDate").val(),
-                volume : $("#popCopyCoaVolume").val()
-            },
+            contentType: "application/json",
+            data: JSON.stringify(selectedData ),
             success: function(response) {
                 if(response.status === "success") {
-                    Common.Msg(siteLang.getLang("저장되었습니다."));
+                    Common.Msg(siteLang.getLang("복사 되었습니다."));
                     $("#popCoa").data("Hide")();
+                }else{
+                  Common.Msg(response.message);
                 }
             },
             error: function(err) {

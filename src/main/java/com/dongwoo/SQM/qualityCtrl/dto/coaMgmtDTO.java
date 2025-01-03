@@ -6,6 +6,7 @@ import lombok.*;
 
 @Data
 public class coaMgmtDTO {
+
 //master
     @JsonProperty("COA_ID")
     private String COA_ID ;
@@ -73,6 +74,10 @@ public class coaMgmtDTO {
     private String MODIFY_TIME;
     @JsonProperty("LANGUAGE_TYPE")
     private String LANGUAGE_TYPE;
+
+
+    @JsonProperty("COPY_COA_ID")
+    private String COPY_COA_ID;
 
 //    Detail
     @JsonProperty("SPEC_ID")

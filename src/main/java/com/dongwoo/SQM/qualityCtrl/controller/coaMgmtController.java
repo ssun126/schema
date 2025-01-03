@@ -227,14 +227,10 @@ public class coaMgmtController {
     }
 
 
-    //복사  ---작업중!!!!! 2024.12.31 sylee ---DB가 끊겼어!@@
+    //복사
     @PostMapping("/admin/qualityCtrl/copyCoa")
     @ResponseBody
-    public Map<String, String> copyCoa(
-            @RequestParam("COA_ID") String coa_id
-            ,@RequestParam("LOT_NO") String lot_no
-            ,@RequestParam("VENDOR_COMMENT") String vendor_comment
-            , Authentication authentication) {
+    public Map<String, String> copyCoa(@RequestBody List<coaMgmtDTO> coaRegList) {
         Map<String, String> response = new HashMap<>();
         try {
 
@@ -242,14 +238,28 @@ public class coaMgmtController {
             String user_gubun = user.getUSER_GUBUN();
             String user_id = user.getUsername();
 
-            coaMgmtDTO coaParamDto = new coaMgmtDTO();
-            coaParamDto.setTOKEN_USER_ID(user_id);
-            coaParamDto.setCOA_ID(coa_id);
-            coaParamDto.setVENDOR_COMMENT(vendor_comment);
-            coaParamDto.setLOT_NO(lot_no);
+            for (coaMgmtDTO data : coaRegList) {
 
-            coaMgmtService.copyCOAMaster(coaParamDto);
-            coaMgmtService.copyCOADetail(coaParamDto);
+                coaMgmtDTO coaParamDto = new coaMgmtDTO();
+                coaParamDto.setCOA_ID(data.getCOA_ID());
+                coaParamDto.setVENDOR_ID(data.getVENDOR_ID());
+                coaParamDto.setMATERIAL_ID(data.getMATERIAL_ID());
+                coaParamDto.setFACTORY_ID(data.getFACTORY_ID());
+                coaParamDto.setLOT_NO(data.getLOT_NO());
+
+                coaParamDto.setSTOCK_DATE(data.getSTOCK_DATE());
+                coaParamDto.setMF_DATE(data.getMF_DATE());
+                coaParamDto.setE_DATE(data.getE_DATE());
+                coaParamDto.setQUANTITY(data.getQUANTITY());
+
+                coaParamDto.setCREATOR(user_id);
+                coaParamDto.setCOPY_COA_ID(coaMgmtService.getCOANumber());
+
+                coaMgmtService.copyCOAMaster(coaParamDto);
+
+                coaMgmtService.copyCOADetail(coaParamDto);
+
+            }
 
             response.put("status", "success");
             response.put("message", "복사 처리 되었습니다.");
