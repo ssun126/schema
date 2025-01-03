@@ -204,6 +204,7 @@
             $baseOption.val('');  // 빈값
             $baseOption.text('평가');
             $selectBox.append($baseOption);
+            $selectBox.attr('name', 'selectPoint');
             // 각 줄을 옵션으로 변환하여 select box에 추가
             lines.forEach(function(line) {
                 var cleanLine = line.replace('ㆍ', '').trim();  // "ㆍ" 문자를 제거하고 여백 제거

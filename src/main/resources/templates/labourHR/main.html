@@ -177,7 +177,7 @@
         var totalScore = 0;
         $('#itemTable tbody tr').each(function(index, row) {
             var $cells = $(row).find('td'); // td 요소들을 jQuery 객체로 가져옴
-            var thirdTdContent = $cells.eq(4).html() || '';  // 5번째 td의 내용을F 가져오기
+            var thirdTdContent = $cells.eq(4).html() || '';  // 5번째 td의 내용을 가져오기
             var thirdTdContentStr = thirdTdContent.replace('<span>', '').replace('</span>', '');
             var lines = thirdTdContentStr.split('<br>');  // 내용을 줄 단위로 분리
 
@@ -249,6 +249,23 @@
         });
         loadInfo();
 
+        //파일 타입 체크
+        $('input[type="file"]').on('change', function(event) {
+            const files = event.target.files; // 선택된 모든 파일
+            let isValid = true;
+
+            // 각 파일에 대해 validation 체크
+            $.each(files, function(index, file) {
+                if (file && !validation(file)) {
+                    // 잘못된 파일인 경우
+                    event.target.value = '';  // input 초기화
+                    clearFile($(event.target).closest('.cui_attachments').find('#deleteButton'));
+                    console.log('잘못된 파일: ', file.name);
+                    isValid = false;
+                    return false;  // 잘못된 파일이 있으면 반복문을 종료
+                }
+            });
+        });
     });
 
     $("input:radio[name=chkType]").change(function () {
@@ -281,24 +298,6 @@
     function downSampleFile() {
         alert("양식파일 등록후 다운로드.");
     }
-
-    //파일 타입 체크
-        $('input[type="file"]').on('change', function(event) {
-            const files = event.target.files; // 선택된 모든 파일
-            let isValid = true;
-
-            // 각 파일에 대해 validation 체크
-            $.each(files, function(index, file) {
-                if (file && !validation(file)) {
-                    // 잘못된 파일인 경우
-                    event.target.value = '';  // input 초기화
-                    clearFile($(event.target).closest('.cui_attachments').find('#deleteButton'));
-                    console.log('잘못된 파일: ', file.name);
-                    isValid = false;
-                    return false;  // 잘못된 파일이 있으면 반복문을 종료
-                }
-            });
-        });
 
     // 제출 버튼 클릭 시 데이터 저장
     $("#sendAuth").click(function() {
@@ -380,7 +379,7 @@
                 $('#authState').text('[승인:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
                 $('#sendAuth').hide();
             }else if(comState === 'REJECT'){
- F               $('#authState').text('[반려:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('#authState').text('[반려:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
                 $('.resultField').show(); // 결과 보이기
             }
         }
