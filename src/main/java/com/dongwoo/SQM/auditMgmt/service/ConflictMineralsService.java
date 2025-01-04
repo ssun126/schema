@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.auditMgmt.service;
 
+import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.ConflictMineralsDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
@@ -11,15 +12,23 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +58,7 @@ public class ConflictMineralsService {
         authDTO.setCOM_CODE(comCode);
         authDTO.setAUTH_TYPE("CONFLICT");
         authDTO.setAPPROVE_STATE("SEND"); //제출
-        authDTO.setSEND_USER_IDX(loginIdx);
+        authDTO.setSEND_USER_IDX(loginIdx); //제출자
         authDTO.setREG_DW_USER_IDX(loginIdx);
         authDTO.setUP_DW_USER_IDX(loginIdx);
         log.info("authDTO::::::::::"+authDTO);
@@ -67,6 +76,8 @@ public class ConflictMineralsService {
 
             // 각 파일을 저장하고 경로를 DTO에 추가
             for(int i = 0; i < fileNames.length; i++) {
+                saveUploadData(fileNames[i], authMgmtDTO.getAUTH_SEQ(), type);//파일 내용 저장
+
                 String filePath = saveFile(fileNames[i]);
 
                 // Paths 클래스를 사용하여 파일명 추출
@@ -117,8 +128,73 @@ public class ConflictMineralsService {
 
     }
 
+    @Transactional
+    public void saveUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq, String AUTH_TYPE) throws IOException {
+        log.info("saveLabourUploadData====================="+auth_seq);
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int comUserIdx = user.getCOM_USER_IDX();
+        String comCode = user.getCOM_CODE();
+
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+        XSSFSheet worksheet = workbook.getSheetAt(3); //4번째 탭
+        //32번쨰 라인의 데이터 가져오기
+        DataFormatter formatter = new DataFormatter();
+        XSSFRow row = worksheet.getRow(31);
+        String resValue = formatter.formatCellValue((row.getCell(3)));
+        log.info("resValue====================="+resValue);
+        String resValue4 = formatter.formatCellValue((row.getCell(4)));
+        log.info("resValue4====================="+resValue4);
+
+        /*List<AuditItemPointDTO> itemDTOList = new ArrayList<>();
+        for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
+            AuditItemPointDTO auditItemDTO = new AuditItemPointDTO();
+
+            DataFormatter formatter = new DataFormatter();
+            XSSFRow row = worksheet.getRow(i);
+
+            String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
+            double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(5)))); //점수
+            String AUDIT_COMMENT = formatter.formatCellValue((row.getCell(6))); //근거자료
+            auditItemDTO.setCOM_CODE(comCode);
+            auditItemDTO.setAUDIT_ID(AUDIT_ID);
+            auditItemDTO.setAUTH_TYPE(AUTH_TYPE);
+            auditItemDTO.setPOINT(POINT);
+            auditItemDTO.setAUDIT_COMMENT(AUDIT_COMMENT);
+            auditItemDTO.setREG_COM_USER_IDX(comUserIdx);
+            auditItemDTO.setAUTH_SEQ(auth_seq);
+
+            itemDTOList.add(auditItemDTO);
+            log.info("itemDTOList====================="+auditItemDTO);
+        }*/
+
+        /*try {
+            for (ConflictMineralsDTO dto : conflictMinerals) {
+                dto.setCOM_CODE(comCode);
+                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
+                //기존 정보가 있는지 확인
+                if (dto.getPART_CODE() != null) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("PART_CODE", dto.getPART_CODE());
+                    params.put("COM_CODE", comCode);
+                    ConflictMineralsDTO ItemDTO = conflictMineralsRepository.findByPartItem(params);
+                    if (ItemDTO != null) {
+                        if (ItemDTO != dto) {
+                            conflictMineralsRepository.updateItem(dto);  // updateItem
+                        }
+                    } else {
+                        conflictMineralsRepository.insertItem(dto);  // insert
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }*/
+    }
+
+
     public String saveFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
+
             throw new IOException("파일이 없습니다.");
         }
 
