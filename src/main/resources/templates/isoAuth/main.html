@@ -22,7 +22,7 @@
                     </div>
                 </div>
 
-                <form class="cui_form_section" data-legend="true" id="isoForm">
+                <form class="cui_form_section" data-legend="true">
                     <fieldset>
                         <table class="cui_table center" id="isoAuthItemTable">
                             <colgroup>
@@ -90,8 +90,6 @@
     </div>
 </div>
 <script th:inline="javascript">
-var form = document.getElementById('isoForm');
-var initialFormData = new FormData(form);
 $(document).ready(function() {
 
     //파일 타입 체크
@@ -220,51 +218,6 @@ function clearFile(button) {
 
 // 저장/제출
 function saveTableData(flag) {
-    var currentFormData = new FormData(form);
-    var isFormChanged = false;
-
-    // 초기 데이터와 현재 데이터를 비교
-    for (var pair of currentFormData.entries()) {
-        if (pair[0] === 'file') {
-                var currentFile = pair[1];
-                var initialFile = initialFormData.get(pair[0]);
-
-                // 파일이 선택되지 않은 경우
-                if (!currentFile && initialFile) {
-                    isFormChanged = true;
-                    break;
-                }
-
-                // 파일이 새로 선택된 경우
-                if (currentFile && !initialFile) {
-                    isFormChanged = true;
-                    break;
-                }
-
-                // 파일 내용 비교
-                if (currentFile && initialFile) {
-                    getFileHash(currentFile, function(currentHash) {
-                        getFileHash(initialFile, function(initialHash) {
-                            if (currentHash !== initialHash) {
-                                isFormChanged = true;
-                            }
-                        });
-                    });
-                    // 파일 내용을 비교 중인 경우 바로 종료하지 않도록 함
-                    if (isFormChanged) break;
-                }
-            } else if (pair[1] !== initialFormData.get(pair[0])) {
-                // 파일이 아닌 필드의 값 비교
-                isFormChanged = true;
-                break;
-            }
-    }
-
-    if (!isFormChanged) {
-        alert('폼에 변경 사항이 없습니다.');
-        event.preventDefault();  // 폼 제출 방지
-    }
-
     var tableData = [];
 
     $("#isoAuthItemTable tbody tr").each(function() {
@@ -283,11 +236,6 @@ function saveTableData(flag) {
 
             var fileInput = $(this).find('input[type="file"]')[0];
 
-            if ((authDate || expDate || regInputDate) && (!fileInput || fileInput.files.length === 0)) {
-                showAlert('warning','인증정보를 입력한 경우 파일을 등록해야 합니다.');
-                return false;  // Stops the loop and prevents form submission
-            }
-
             if (fileInput && fileInput.files.length > 0) {
                 row['FILE_NAME'] = fileInput.files[0].name;
                 row['FILE_PATH'] = fileInput.files[0].path;
@@ -295,6 +243,7 @@ function saveTableData(flag) {
             }
             if(row['FILE_NAME'] == undefined){
                 row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
+                 console.log("$(this).find('td').eq(5).find('span').eq(2).text()"+$(this).find('td').eq(5).find('span').eq(2).text());
             }
             console.log("insert data"+row['FILE_NAME']);
         }

@@ -106,11 +106,11 @@ public class IsoAuthService {
                 params.put("AUTH_CODE", dto.getAUTH_CODE());
                 params.put("COM_CODE", comCode);
                 IsoAuthItemDTO ItemDTO = isoAuthRepository.findByIsoAuthItem(params);
-                if(ItemDTO != null){
-                    log.info(ItemDTO.getITEM_STATE());
-                    log.info(dto.getITEM_STATE());
-                    if(ItemDTO != dto) {
+                if(ItemDTO != null){ //이전 정보가 있고
+                    if(ItemDTO != dto) { //정보가 같지 않다면 update
                         isoAuthRepository.updateItem(dto);  // updateItem
+                    }else{
+                        isoAuthRepository.updateStatus(dto);  //상태만 변경
                     }
                 }else {
                     isoAuthRepository.insertItem(dto);  // insert
