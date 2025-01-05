@@ -105,6 +105,18 @@
                         </tr>
                         </tfoot>
                     </table>
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span>승인의견</span></th>
+                            <td><textarea  id="approveComment" name="approveComment" rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="cui_section" id="resultField" th:if="${companyAuth.APPROVE_STATE != 'SEND'}">
                     <div class="cui_bullet_title">
@@ -120,15 +132,15 @@
                         <tbody>
                         <tr>
                             <th><span>점수</span></th>
-                            <td th:text="${companyAuth.POINT}"></td>
+                            <td><span th:text="${companyAuth.POINT}">0</span> / 20</td>
                             <th><span>처리결과</span></th>
-                            <td th:text="${companyAuth.APPROVE_STATE}"></td>
+                            <td><span th:text="${companyAuth.APPROVE_STATE}"></span></td>
                         </tr>
                         <tr>
                             <th><span>처리자</span></th>
-                            <td th:text="${companyAuth.UP_DW_USER_IDX}"></td>
+                            <td><span th:text="${companyAuth.UP_DW_USER_IDX}"></span></td>
                             <th><span>처리일자</span></th>
-                            <td th:text="${companyAuth.APPROVE_DATE}"></td>
+                            <td><span th:text="${companyAuth.APPROVE_DATE}"></span></td>
                         </tr>
                         <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                             <th><span>반려사유</span></th>
@@ -320,19 +332,42 @@
 
     // 공통 저장 처리
     function updateAuthData(state, reason, authSeq, point) {
+        const formData = new FormData();
+        const tableData = [];
         const comCode = `[[${companyAuth.COM_CODE}]]`;  // 회사 코드
         const type = 'LABOUR';
+
+        $("#itemTable tbody tr").each(function() {
+            var row = {};
+            var fileCnt = {};
+            row['POINT'] = $(this).find('td').eq(6).text();
+            row['AUDIT_COMMENT'] = $(this).find('input[name="AUDIT_COMMENT"]').val() || '';
+            row['AUDIT_ID'] = $(this).find('input[name="AUDIT_ID"]').val();
+
+            console.log("insert data"+row['AUDIT_ID']);
+            tableData.push(row);
+        });
+        formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
+        formData.append('reason', reason);
+        formData.append('state', state);
+        formData.append('com_code', comCode);
+        formData.append('auth_seq', authSeq);
+        formData.append('auth_type', type);
+        formData.append('point', point);
+
         $.ajax({
             url: '/auditMgmt/setAuthData',  // 서버의 API URL
             type: 'POST',
-            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type, point: point  },
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 // 상태만 변경
                 $('div[name="stateField"]').text(state); // 상태 표시 업데이트
                 showAlert('success', '데이터가 성공적으로 저장되었습니다.');
                 setTimeout(function() {
                     location.reload();  // 승인 시 페이지 새로고침
-                }, 100);  // 100ms 후에 실행
+                }, 500);  // 500ms 후에 실행
             },
             error: function() {
                 showAlert('warning', '정보를 가져오는 데 실패했습니다.');
@@ -353,7 +388,8 @@
         const authSeq = key;
         const state = 'APPROVED';
         const point = $('#totalPoint').text() != null ? $('#totalPoint').text() : 0;
-        updateAuthData(state, '', authSeq, point);
+        const approveComment = $('#approveComment').val();  // 반려사유
+        updateAuthData(state, approveComment, authSeq, point);
     }
 
     function goList() {

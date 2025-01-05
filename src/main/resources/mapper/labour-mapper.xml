@@ -13,6 +13,15 @@
         VALUES (#{COM_CODE}, #{AUDIT_ID}, #{AUTH_TYPE}, #{POINT}, #{AUDIT_COMMENT}, #{AUTH_SEQ}, #{REG_COM_USER_IDX}, sysdate)
     </insert>
 
+    <update id="updateItemPoint" parameterType="auditItemPoint">
+        UPDATE SC_AUDIT_ITEM_POINT
+        SET POINT = #{POINT}, AUDIT_COMMENT = #{AUDIT_COMMENT}
+        WHERE COM_CODE = #{COM_CODE}
+        AND AUDIT_ID = #{AUDIT_ID}
+        AND AUTH_TYPE = #{AUTH_TYPE}
+        AND AUTH_SEQ = #{AUTH_SEQ}
+    </update>
+
     <select id="getCompanyAuth" parameterType="map" resultType="labour">
         SELECT ACI.COM_CODE, CC.COM_NAME, AUTH_TYPE, APPROVE_STATE, APPROVE_DATE, POINT
         FROM SC_AUTH_COMPANY_INFO ACI

@@ -4,7 +4,9 @@ import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditItemPointDTO;
 import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtHistDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
+import com.dongwoo.SQM.auditMgmt.repository.LabourHRRepository;
 import com.dongwoo.SQM.config.security.UserCustom;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuditCommonService {
     private final AuditMgmtRepository auditMgmtRepository;
+    private final LabourHRRepository labourHRRepository;
 
     @Value("${Upload.path.attach}")
     private String uploadPath;
@@ -274,7 +277,26 @@ public class AuditCommonService {
     }
 
     //Audit 공통 승인/반려
-    public int updateStatus(String com_code, int auth_seq, String reason, String state, String auth_type, double point) {
+    public int updateStatus(String tableData, String com_code, int auth_seq, String reason, String state, String auth_type, double point)  {
+        log.info("tableData: " + tableData);
+        if(tableData != null){//승인시 변경된 정보가 있다면 저장
+            try {
+                // JSON 문자열을 DTO 객체로 변환
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<AuditItemPointDTO> authItems = objectMapper.readValue(tableData, new TypeReference<List<AuditItemPointDTO>>() {});
+
+                for (AuditItemPointDTO dto : authItems) {
+                    dto.setCOM_CODE(com_code);
+                    dto.setAUTH_SEQ(auth_seq);
+                    dto.setAUTH_TYPE(auth_type);
+                    int rtCnt = labourHRRepository.updateAuthItem(dto);  // insert
+                    log.info("데이터 저장 Count: " + rtCnt);
+                }
+            }catch (Exception e){
+                log.info("데이터 저장 err: " + e.getMessage());
+            }
+        }
+
         log.info("setAuthData22222222222222!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         AuditMgmtDTO auditMgmtDTO = new AuditMgmtDTO();
         auditMgmtDTO.setCOM_CODE(com_code);
@@ -290,7 +312,7 @@ public class AuditCommonService {
         //평가항목 Item 점수 가져오기
         List<AuditItemPointDTO> getItemList = getCompanyAuthItemPoint(auth_type, com_code);
         double totalPoint = 0;
-        //심사종류별 최대점수 설정
+        //심사종류별 배점
         Map<String, Double> maxPoints = new HashMap<>();
         maxPoints.put("LABOUR", 20.0);
         maxPoints.put("SAFETY", 20.0);
@@ -307,11 +329,11 @@ public class AuditCommonService {
             for (AuditItemPointDTO item : getItemList) {
                 totalPoint += item.getPOINT(); // 각 객체의 point 값을 더함
             }
-            if(totalPoint >  maxPoint){ //심사종류별 최대점수
-                totalPoint = maxPoint;
-            }
+
+            totalPoint = (totalPoint / 100) * maxPoint;
+            long resultPoint = Math.round(totalPoint); //소수점 반올림
             log.info("totalPoint!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+totalPoint);
-            auditMgmtDTO.setPOINT(totalPoint);//합계 점수
+            auditMgmtDTO.setPOINT(resultPoint);//합계 점수
         }
 
         return auditMgmtRepository.updateAuth(auditMgmtDTO);  // updateItem

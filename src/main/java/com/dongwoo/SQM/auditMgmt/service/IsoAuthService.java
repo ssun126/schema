@@ -109,8 +109,6 @@ public class IsoAuthService {
                 if(ItemDTO != null){ //이전 정보가 있고
                     if(ItemDTO != dto) { //정보가 같지 않다면 update
                         isoAuthRepository.updateItem(dto);  // updateItem
-                    }else{
-                        isoAuthRepository.updateStatus(dto);  //상태만 변경
                     }
                 }else {
                     isoAuthRepository.insertItem(dto);  // insert

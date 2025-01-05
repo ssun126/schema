@@ -19,7 +19,11 @@ public class LabourHRRepository {
     }
 
     public int insertAuthItem(AuditItemPointDTO auditItemPointDTO) {
-        return sql.insert("Labour.insertAuthItem", auditItemPointDTO);
+        return sql.insert("Labour.insertItemPoint", auditItemPointDTO);
+    }
+
+    public int updateAuthItem(AuditItemPointDTO auditItemPointDTO) {
+        return sql.update("Labour.updateItemPoint", auditItemPointDTO);
     }
     public LabourHRDTO getCompanyAuth(Map<String, Object> params) {
         return sql.selectOne("Labour.getCompanyAuth", params);

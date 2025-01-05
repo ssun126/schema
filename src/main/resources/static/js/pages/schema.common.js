@@ -236,7 +236,7 @@ function validation(obj){
                       'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp',
                       'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'audio/mpeg', 'audio/wav',
-                      'video/mp4', 'application/zip', 'application/xlsx'
+                      'video/mp4', 'application/zip', 'application/xlsx', 'application/pptx'
                     ];
     if (obj.name.length > 100) {
         alert("파일명이 100자 이상인 파일은 제외되었습니다.");
