@@ -1965,3 +1965,17 @@ var commonSettings = {
             headerCellClick: function (event, ui) {
             }
 };
+
+function getFileHash(file, callback) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var hash = 0;
+        var data = new Uint8Array(event.target.result);
+        for (var i = 0; i < data.length; i++) {
+            hash = (hash << 5) - hash + data[i];
+            hash |= 0;  // 32-bit overflow
+        }
+        callback(hash); // 계산된 해시값을 콜백으로 전달
+    };
+    reader.readAsArrayBuffer(file); // 파일을 읽어 배열 버퍼로 변환
+}

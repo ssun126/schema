@@ -300,6 +300,7 @@ public class AuditCommonService {
 
         double maxPoint = maxPoints.getOrDefault(auth_type, 0.0); // auth_type이 없으면 0으로 설정
         if(auth_type.equals("CONFLICT")) {
+            log.info("point!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+point);
             //입력받은 점수를 설정
             auditMgmtDTO.setPOINT(point);//합계 점수
         }else{
@@ -309,10 +310,9 @@ public class AuditCommonService {
             if(totalPoint >  maxPoint){ //심사종류별 최대점수
                 totalPoint = maxPoint;
             }
+            log.info("totalPoint!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+totalPoint);
             auditMgmtDTO.setPOINT(totalPoint);//합계 점수
         }
-
-
 
         return auditMgmtRepository.updateAuth(auditMgmtDTO);  // updateItem
     }

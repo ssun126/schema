@@ -44,6 +44,7 @@ dependencies {
 	implementation 'com.navercorp.lucy:lucy-xss-servlet:2.0.1'
 	implementation 'org.apache.commons:commons-lang3:3.17.0'
 
+
 	/* thymeleaf */
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'

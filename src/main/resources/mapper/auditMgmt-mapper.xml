@@ -16,7 +16,10 @@
 
     <update id="updateAuth" parameterType="authMgmt">
         UPDATE SC_AUTH_COMPANY_INFO
-        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}, REASON = #{REASON}, INPUT_TYPE = #{INPUT_TYPE}
+        SET APPROVE_STATE = #{APPROVE_STATE}, APPROVE_DATE= sysdate, POINT = #{POINT}, REASON = #{REASON}
+        <if test="INPUT_TYPE != null and INPUT_TYPE != ''">
+        , INPUT_TYPE = #{INPUT_TYPE}
+        </if>
         WHERE COM_CODE = #{COM_CODE}
         AND AUTH_TYPE = #{AUTH_TYPE}
     </update>

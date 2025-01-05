@@ -195,8 +195,8 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
-                    <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
+                    <button type="button" class="cui_button primary" id="appBtn" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
+                    <button type="button" class="cui_button primary" id="rejBtn" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
                     <button type="button" class="cui_button secondary" th:onclick="viewHistory()"><span>이전 정보 보기</span></button>
                 </div>
             </div>
@@ -292,6 +292,7 @@
 
        if(state != "" ){
            console.log(state);
+           loadInfo();
        }
     });
     
@@ -315,7 +316,7 @@
                 showAlert('success', '데이터가 성공적으로 저장되었습니다.');
                 setTimeout(function() {
                     location.reload();  // 승인 시 페이지 새로고침
-                }, 100);  // 100ms 후에 실행
+                }, 500);  // 500ms 후에 실행
             },
             error: function() {
                 showAlert('warning', '정보를 가져오는 데 실패했습니다.');
@@ -335,7 +336,8 @@
     function approveAuth(key) {
         const authSeq = key;
         const state = 'APPROVED';
-        const pointText = $('#totalPoint').text().trim();  // Trim whitespace
+        const pointText = $('#totalPoint').val().trim();  // Trim whitespace
+        console.log("pointText>>>>>>>>>>>>>>>>>"+pointText);
         const point = !isNaN(parseFloat(pointText)) ? parseFloat(pointText) : 0.0;
         updateAuthData(state, '', authSeq, point);
     }
@@ -362,4 +364,17 @@
         // 링크 클릭 이벤트를 트리거하여 다운로드 실행
         link.click();
     }
+
+    //제출 상태 제어
+    function loadInfo(){
+        const comState = `[[${companyAuth.APPROVE_STATE}]]`;
+        if(comState != "" ){
+            if(comState === 'APPROVED'){
+                $('#appBtn').hide();
+                $('#rejBtn').hide();
+            }else if(comState === 'REJECT'){
+            }
+        }
+    }
+
 </script>
