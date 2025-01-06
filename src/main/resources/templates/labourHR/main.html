@@ -143,6 +143,18 @@
                                 </tr>
                                 </tfoot>
                             </table>
+                            <table class="cui_table center" th:if="${companyAuth.APPROVE_STATE == 'APPROVED'}">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span>승인의견</span></th>
+                                    <td><textarea  id="approveComment" name="approveComment" rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </form>
                 </fieldset>

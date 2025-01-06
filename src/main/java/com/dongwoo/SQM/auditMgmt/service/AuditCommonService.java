@@ -150,7 +150,7 @@ public class AuditCommonService {
             itemDTOList.add(auditItemDTO);
             log.info("itemDTOList====================="+auditItemDTO);
         }
-
+        workbook.close();
         try {
             insertLabourItem(itemDTOList);
         } catch (SQLException e) {

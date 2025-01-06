@@ -1,5 +1,6 @@
 package com.dongwoo.SQM.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+@Slf4j
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     /**
@@ -26,6 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry){
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.."+localeChangeInterceptor.getParamName());
         registry.addInterceptor(localeChangeInterceptor);
     }
 

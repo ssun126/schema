@@ -12,7 +12,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -76,7 +79,7 @@ public class ConflictMineralsService {
 
             // 각 파일을 저장하고 경로를 DTO에 추가
             for(int i = 0; i < fileNames.length; i++) {
-               // saveUploadData(fileNames[i], authMgmtDTO.getAUTH_SEQ(), type);//파일 내용 저장
+                saveUploadData(fileNames[i], authMgmtDTO.getAUTH_SEQ(), type);//파일 내용 저장
 
                 String filePath = saveFile(fileNames[i]);
 
@@ -136,38 +139,53 @@ public class ConflictMineralsService {
         String comCode = user.getCOM_CODE();
 
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(3); //4번째 탭
-        //32번쨰 라인의 데이터 가져오기
-        DataFormatter formatter = new DataFormatter();
-        XSSFRow row = worksheet.getRow(31);
-        String resValue = formatter.formatCellValue((row.getCell(3)));
-        log.info("resValue====================="+resValue);
-        String resValue4 = formatter.formatCellValue((row.getCell(4)));
-        log.info("resValue4====================="+resValue4);
+        XSSFSheet sheet4 = workbook.getSheetAt(3); // 4번째 시트는 0-based index이므로 3번째
 
-        /*List<AuditItemPointDTO> itemDTOList = new ArrayList<>();
-        for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
-            AuditItemPointDTO auditItemDTO = new AuditItemPointDTO();
+        // 병합된 셀 찾기 (32번째 행부터 4개의 행) >> CMRT이면 4개, EMRT이면 2개
+        int mergedRegions = sheet4.getNumMergedRegions();
+        for (int i = 0; i < mergedRegions; i++) {
+            CellRangeAddress mergedRegion = sheet4.getMergedRegion(i);
 
-            DataFormatter formatter = new DataFormatter();
-            XSSFRow row = worksheet.getRow(i);
+            // 병합된 셀이 32번째 행부터 시작하는지 확인
+            if (mergedRegion.getFirstRow() >= 31 && mergedRegion.getLastRow() < 35) {
+                // 병합된 셀이 D, E열에 걸쳐 있는지 확인
+                if (mergedRegion.getFirstColumn() == 3 && mergedRegion.getLastColumn() == 4) {
+                    // 병합된 셀의 첫 번째 셀에서 값 가져오기
+                    int firstRow = mergedRegion.getFirstRow();
+                    int firstCol = mergedRegion.getFirstColumn();
+                    Row row = sheet4.getRow(firstRow);
+                    Cell cell = row.getCell(firstCol);
 
-            String AUDIT_ID = formatter.formatCellValue((row.getCell(1)));
-            double POINT = Double.parseDouble(formatter.formatCellValue((row.getCell(5)))); //점수
-            String AUDIT_COMMENT = formatter.formatCellValue((row.getCell(6))); //근거자료
-            auditItemDTO.setCOM_CODE(comCode);
-            auditItemDTO.setAUDIT_ID(AUDIT_ID);
-            auditItemDTO.setAUTH_TYPE(AUTH_TYPE);
-            auditItemDTO.setPOINT(POINT);
-            auditItemDTO.setAUDIT_COMMENT(AUDIT_COMMENT);
-            auditItemDTO.setREG_COM_USER_IDX(comUserIdx);
-            auditItemDTO.setAUTH_SEQ(auth_seq);
+                    // 병합된 셀의 값 확인
+                    if (cell != null && cell.toString().equals("YES")) {
+                        System.out.println("병합된 셀 값이 'YES'입니다. 이제 7번째 시트의 데이터를 가져옵니다.");
 
-            itemDTOList.add(auditItemDTO);
-            log.info("itemDTOList====================="+auditItemDTO);
-        }*/
+                        // 7번째 시트 가져오기
+                        XSSFSheet sheet7 = workbook.getSheetAt(6); // 7번째 시트는 0-based index이므로 6번째
 
-        /*try {
+                        // 6번째 행(0-based index로 5번째)부터 시작
+                        for (int j = 5; j < sheet7.getPhysicalNumberOfRows(); j++) {
+                            Row row7 = sheet7.getRow(j);
+                            if (row7 == null) {
+                                continue; // 빈 행이면 건너뜀
+                            }
+
+                            // B열(2번째 열) 데이터 읽기
+                            Cell cellB = row7.getCell(1); // B열은 1번 인덱스
+                            if (cellB != null) {
+                                // B열의 값 출력
+                                System.out.println("7번째 시트의 " + (j + 1) + "번째 행 B열 데이터: " + cellB.toString());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 엑셀 파일을 닫기
+        workbook.close();
+
+       /* try {
             for (ConflictMineralsDTO dto : conflictMinerals) {
                 dto.setCOM_CODE(comCode);
                 dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
