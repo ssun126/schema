@@ -53,9 +53,10 @@ public class SvhcListController {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet worksheet = workbook.getSheetAt(0);
         List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
-        int count =0;
+        int svhcCnt =0;
         //for(int i = 1; i<worksheet.getPhysicalNumberOfRows(); i++){
         for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
+            svhcCnt++;
             SvhcListDTO svhcListDTO = new SvhcListDTO();
 
             DataFormatter formatter = new DataFormatter();
@@ -67,13 +68,13 @@ public class SvhcListController {
             String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
             String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
 
+            svhcListDTO.setSVHC_IDX(svhcCnt);
             svhcListDTO.setSVHC_NUM(SVHC_NUM);
             svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
             svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
             svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
 
             svhcListDTOList.add(svhcListDTO);
-            count++;
         }
 
         try {

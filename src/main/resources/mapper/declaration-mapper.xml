@@ -5,6 +5,7 @@
     <select id="findAll" resultType="Declaration">
         SELECT DECL_NUM,DECL_SUB_NUM,DECL_NAME,DECL_CASNUM,DECL_WEIGHT,DECL_CLASS,DECL_GROUND
         FROM SC_DECLARATION_DATA
+        ORDER BY DECL_IDX asc
     </select>
     <delete id="deleteAll">
         DELETE SC_DECLARATION_DATA

@@ -40,7 +40,7 @@ public class SvhcListService {
         log.info("test11111111111111111111111");
 
         try{
-            String sql  = "INSERT INTO SC_SVHC_DATA(SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM) VALUES (?,?,?,?) ";
+            String sql  = "INSERT INTO SC_SVHC_DATA(SVHC_IDX,SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM) VALUES (?,?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
             conn = DriverManager.getConnection(jdbcURl,username,password);
             conn.setAutoCommit(false);
@@ -51,11 +51,11 @@ public class SvhcListService {
             for(SvhcListDTO dto : svhcListDTOList){
                 log.info("test2-1");
                 count++;
-
-                pstmt.setString(1,dto.getSVHC_NUM());
-                pstmt.setString(2,dto.getSVHC_NAME());
-                pstmt.setString(3,dto.getSVHC_CASNUM());
-                pstmt.setString(4,dto.getSVHC_EUNUM());
+                pstmt.setInt(1,dto.getSVHC_IDX());
+                pstmt.setString(2,dto.getSVHC_NUM());
+                pstmt.setString(3,dto.getSVHC_NAME());
+                pstmt.setString(4,dto.getSVHC_CASNUM());
+                pstmt.setString(5,dto.getSVHC_EUNUM());
                 log.info("test2-2");
                 pstmt.addBatch();
                 pstmt.clearParameters();
