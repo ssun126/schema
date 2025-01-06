@@ -34,7 +34,7 @@ public class MultiLanguageController {
     public @ResponseBody List<HashMap> setLocalStorage(HttpSession session, Model model)  throws Exception{
 
         List<HashMap> multiLanguageList =  multiLanguageService.getMultiLanguageList_HashMap();
-        //log.info("multiLanguageList = " + multiLanguageList);
+        log.info("multiLanguageList = " + multiLanguageList);
 
         return multiLanguageList;
     }
@@ -43,14 +43,14 @@ public class MultiLanguageController {
     public @ResponseBody List<HashMap> getLocalStorage()  throws Exception{
 
         List<HashMap> multiLangsList =  multiLanguageService.getMultiLangsList_HashMap();
-        //log.info("multiLanguageList = " + multiLanguageList);
+        log.info("multiLanguageList = " + multiLangsList);
 
         return multiLangsList;
     }
 
     @PostMapping("/multiLanguage/saveMultiLanguage")
     public @ResponseBody void saveMultiLanguage(@RequestParam("KOR") String KOR)  throws Exception{
-        //System.out.println("saveMultiLanguage????"+KOR);
+        System.out.println("saveMultiLanguage????"+KOR);
         List<HashMap> multiLangsList =  multiLanguageService.getMultiLangs_HashMap(KOR);
 
         if (multiLangsList.isEmpty()) {

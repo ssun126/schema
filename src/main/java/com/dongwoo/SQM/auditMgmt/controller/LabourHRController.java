@@ -126,7 +126,7 @@ public class LabourHRController {
             labourItemDTOList.add(labourItemDTO);
             log.info("labourItemDTO====================="+labourItemDTO);
         }
-
+        workbook.close();
         try {
             //전체삭제
             labourItemService.deletAll();
