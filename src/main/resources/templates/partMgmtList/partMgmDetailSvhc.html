@@ -219,7 +219,7 @@
                             initData('WRITE');
                         }
                         ,cancelback : function (){
-                            $("input[name='DATA_GUBUN']:checked").val('ATTACH');
+                            $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
                         }
                     });
 		        }else{
@@ -292,7 +292,7 @@
                 var row = obj.parent().parent();
                 row.find("span[id*=FILE_NAME]").text('');
                 row.parent().find("input[name*=FILE_STATUS").val("DEL");
-                row.css("display","");
+                row.css("display","none");
             }
         });
     }
@@ -638,18 +638,21 @@
                     return;
                 }
 
-                if(!AttachStatus){
-                    isValid = false;
-                    message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
-                    Common.Msg(siteLang.getLang(message));
-                    return;
+                if($("input[name=SVHC_FILE]").val() !== ''){
+                    if(!AttachStatus){
+                        isValid = false;
+                        message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                        Common.Msg(siteLang.getLang(message));
+                        return;
+                    }
+                    if(!setApplicableNo('attach')){
+                        isValid = false;
+                        message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+                        Common.Msg(siteLang.getLang(message));
+                        return;
+                    }
                 }
-                if(!setApplicableNo('attach')){
-                    isValid = false;
-                    message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-                    Common.Msg(siteLang.getLang(message));
-                    return;
-                }
+
             }else{
                 if(!setApplicableNo()){
                     isValid = false;

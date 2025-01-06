@@ -272,7 +272,7 @@
                                             <div class="item_content">
                                                 <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                 ><span>다운로드</span></button>
-                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del()" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -348,7 +348,7 @@
                     var row = obj.parent().parent();
                     row.find("span[id*=FILE_NAME]").text('');
                     row.parent().find("input[name*=FILE_STATUS").val("DEL");
-                    row.css("display","");
+                    row.css("display","none");
                 }
             });
 
