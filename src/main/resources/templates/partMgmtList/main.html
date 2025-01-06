@@ -88,6 +88,7 @@
                 <div class="cui_jqGrid_head">
                     <div class="jqGrid_label"> &nbsp;</div>
                     <div class="jqGrid_aside">
+                        <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="submitActive();"><span data-langsid="Active 변경 제출"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="추가"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delpart();"><span data-langsid="삭제"></span></button>
                         <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>
@@ -159,6 +160,8 @@
         }
 
         $("#gridArea").pqGrid("refreshView");
+        Common.Msg(siteLang.getLang("사용여부 변경이 가능합니다. (변경 후 상단 Active 변경 버튼 클릭 시 변경이 완료됩니다)"));
+
     }
 
     $(function () {
@@ -226,7 +229,7 @@
                 var data = ui.rowData;
                 if(ui.dataIndx =="PM_PART_CODE"){
                     Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
-                } else if(ui.dataIndx =="PART_NAME"){
+                } else if(ui.dataIndx == "PART_NAME"){
                     /*
                     //Common.Dialog({ url : "/user/partMgmt/matRegPopup", param : { mode : "Edit", PM_IDX : data.PM_IDX } });
                     if(data.PM_APPROVAL_STATUS  < 2 || (data.PM_APPROVAL_STATUS  >3 && data.PM_ACTIVE_YN == "INACTIVE") ){
@@ -377,6 +380,52 @@
                 }, 10);
             }
         });
+    }
+
+    var submitActive =  function(){
+        var grid = $("#gridArea").pqGrid("instance");
+        var activeIdx = "";
+        var inactiveIdx = "";
+
+        for (var j = 0; j < grid.pdata.length; j++) {
+            if (grid.pdata[j]["PM_ACTIVE_YN_ORG"] !== grid.pdata[j]["PM_ACTIVE_YN"]) {
+                if (grid.pdata[j]["PM_ACTIVE_YN"] === "ACTIVE") {
+                    if (activeIdx != "") activeIdx += ",";
+                    activeIdx += grid.pdata[j]["PM_IDX"];
+                }else{
+                    if (inactiveIdx != "") inactiveIdx += ",";
+                    inactiveIdx += grid.pdata[j]["PM_IDX"];
+
+                }
+            }
+        }
+
+        if(activeIdx === "" && inactiveIdx === ""){
+            Common.Msg(siteLang.getLang("변경된 Active 여부가 없습니다."));
+            retrun;
+        }
+
+        Common.Msg(siteLang.getLang("Active 여부를 변경하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                Common.Loading.Show();
+
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.AddParameter("ACTIVE_IDX", activeIdx);
+                ReqInfo.AddParameter("INACTIVE_IDX", inactiveIdx);
+
+                Common.Ajax("/user/partMgmt/updateActiveStatus", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        ListSearch();
+                    }
+
+                    Common.Loading.Hide();
+                    Common.Msg(siteLang.getLang("변경되었습니다."));
+                });
+            }
+        });
+
+
     }
 
 

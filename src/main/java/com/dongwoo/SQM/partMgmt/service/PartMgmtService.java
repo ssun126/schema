@@ -78,6 +78,10 @@ public class PartMgmtService {
         partMgmtRepository.updateActive(status, idx);
     }
 
+    public void updateActiveList(String active , String idxList) {
+        partMgmtRepository.updateActiveList(active, idxList);
+    }
+
     //상단 공통 자재코드 정보
     public PartMgmtDTO getPartData(String idx) {
         return partMgmtRepository.getPartData(idx);

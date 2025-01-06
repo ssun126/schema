@@ -33,6 +33,15 @@
         WHERE PM_IDX=#{idx}
     </update>
 
+    <update id="updateActiveList" parameterType="HashMap">
+        UPDATE SC_PART_MANAGEMENT_DATA
+        SET PM_ACTIVE_YN= #{status}
+        WHERE PM_IDX IN
+        <foreach item="item" index="index" collection="idxList.split(',')" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
     <select id="searchPartMgmt" parameterType="partManagement" resultType="partManagement">
 
         SELECT
@@ -353,6 +362,7 @@
     <select id="getSvhcList" resultType="svhcList">
         SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
         FROM SC_SVHC_DATA
+        ORDER BY SVHC_IDX asc
     </select>
 
     <select id="getDetailSvhcData" parameterType="String" resultType="partDetailSvhc">
@@ -384,7 +394,7 @@
 
         SELECT NVL(DECL_NUM,' ') AS DECL_NUM ,NVL(DECL_SUB_NUM,' ') as DECL_SUB_NUM,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT ,NVL(DECL_CLASS, ' ') AS DECL_CLASS
         FROM SC_DECLARATION_DATA
-
+        ORDER BY DECL_IDX asc
     </select>
 
     <select id="getDetailDeclarData" parameterType="String" resultType="partDetailDeclar">

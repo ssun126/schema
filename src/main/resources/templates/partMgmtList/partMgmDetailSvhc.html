@@ -86,11 +86,11 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><span>확인일자</span></th>
+                            <th><span>확인일자</span><span style="color: #e74c3c;">*</span></th>
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="날자을 입력해주세요." messages="">
+                                        <input type="text" class="cui_text_field" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="확인일자를 입력해주세요." messages="">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -125,10 +125,10 @@
                                             <input type="file" class="cui_file_field" name="SVHC_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <button type="button" class="cui_button primary" onclick="setSvhcExcelData();"><span data-langsid="적용"></span></button>
-                                            <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${svhcDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
+                                            <div class="cui_items_wrap file_wrap svhc_file_div" data-direction="left"  th:style="${svhcDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${svhcDTO.FILE_NAME}" th:value="${svhcDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,36 +193,6 @@
 <script>
     var AttachStatus = false;
     $(document).ready(function(){
-        $("input[name=DATA_GUBUN]").bind("change", function(){
-        // 직접입력
-		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
-		        $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
-		        $("#gridArea_attach").pqGrid("refreshView");
-		        $("#Grid_attach_Div").css("display","none");
-		        AttachStatus = false;
-
-		        $('#svhcFileFieldset').hide();
-		    	$('#svhcDataFieldset').show();
-		    	//초기화
-		    	$("input[name=SVHC_FILE]").val('');
-		    	$(".cui_attachments .cui_text_field").val('');
-		    	ListLoad();
-
-		    }
-		    // 첨부파일
-		    else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
-		        $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
-		        $("#gridArea_attach").pqGrid("refreshView");
-
-		        $('#svhcFileFieldset').show();
-		    	$('#svhcDataFieldset').hide();
-		    	//초기화
-		    	$("input[name=APPLICABLE_NO]").val('');
-		    	//$("#gridArea").empty();
-		    	$("#gridArea").pqGrid("refreshView");
-		    }
-        });
-
         //처음 로드 시 기존 저장된 데이터 있는지 확인
         if($("input[name=SVHC_IDX]").val() != ''){
             //저장된 데이터 로드됨
@@ -232,15 +202,67 @@
                 $('#svhcFileFieldset').hide();
 		    	$('#svhcDataFieldset').show();
 		    	//getSvhcData();
-
             }
-
-
         }else{
             //신규 제출구분 파일첨부 기본
             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
         }
+
+        //CHANGE EVENT BIND
+        $("input[name=DATA_GUBUN]").bind("change", function(){
+            // 직접입력
+		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+		        if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== '' || $("#FILE_NAME").text() !== '' ){
+		            Common.Msg(siteLang.getLang("기존 데이터가 삭제됩니다. 제출구분을 변경하시겠습니까?"), {
+                        mode : "confrim"
+                        , okback : function () {
+                            initData('WRITE');
+                        }
+                        ,cancelback : function (){
+                            $("input[name='DATA_GUBUN']:checked").val('ATTACH');
+                        }
+                    });
+		        }else{
+		            initData('WRITE');
+		        }
+
+		    }
+		    // 첨부파일
+		    else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
+		        initData('ATTACH');
+		    }
+        });
+
+
     });
+
+    var initData = function (status){
+        if(status === 'WRITE'){
+            $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
+            $("#gridArea_attach").pqGrid("refreshView");
+            $("#Grid_attach_Div").css("display","none");
+            AttachStatus = false;
+
+            $('#svhcFileFieldset').hide();
+            $('#svhcDataFieldset').show();
+            //초기화
+            $("input[name=SVHC_FILE]").val('');
+            $("#FILE_NAME").text('');
+            $(".svhc_file_div").hide();
+            $(".cui_attachments .cui_text_field").val('');
+            ListLoad();
+        }else {
+            $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
+		    $("#gridArea_attach").pqGrid("refreshView");
+
+		    $('#svhcFileFieldset').show();
+		    $('#svhcDataFieldset').hide();
+		    //초기화
+		    $("input[name=APPLICABLE_NO]").val('');
+		    //$("#gridArea").empty();
+		    $("#gridArea").pqGrid("refreshView");
+        }
+    }
 
     var setSvhcExcelData = function (){
         Common.Loading.Show();
@@ -262,6 +284,20 @@
         });
 
     }
+
+    var status_Del = function(obj){
+        Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                var row = obj.parent().parent();
+                row.find("span[id*=FILE_NAME]").text('');
+                row.parent().find("input[name*=FILE_STATUS").val("DEL");
+                row.css("display","");
+            }
+        });
+    }
+
+
 
 
     var SheetDataConvert = function (data) {
@@ -300,6 +336,7 @@
         });
     }
 
+//write
     $(function () {
         var heightMinus = 650;
         var SVHC_YN_SELECT_ITEMS = ['Y', 'N'];
@@ -535,17 +572,16 @@
             });
 
             if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
+                //if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== '' && $("#FILE_NAME").text() === '' ){
                 if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== ''){
                     if(!AttachStatus){
                         flag = false;
-                        message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
-                        Common.Msg(siteLang.getLang(message));
+                        Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
                         return;
                     }
                     if(!setApplicableNo('attach')){
                         flag = false;
-                        message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-                        Common.Msg(siteLang.getLang(message));
+                        Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
                         return;
                     }
                 }
@@ -587,11 +623,13 @@
             var frmObj = $("#frmDetail");
             var isValid = true;
             var message ='';
-            isValid = Common.Validate(frmObj);
+
+            if(Common.Validate(frmObj) != true){
+                return;
+            }
 
 
-
-            //write
+            //첨부
             if(frmObj.find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
                 if($("input[name=SVHC_FILE]").val() === '' && $("#FILE_NAME").text() === ''){
                     isValid = false;
