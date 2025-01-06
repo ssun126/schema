@@ -1,6 +1,8 @@
 package com.dongwoo.SQM.config;
 
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -9,15 +11,11 @@ import org.springframework.web.client.RestTemplate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.net.http.HttpClient;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 @Configuration
 public class RestTemplateConfig {
-/*
     @Bean
     public RestTemplate restTemplate() throws NoSuchAlgorithmException {
         // SSLContext 설정: 모든 인증서를 신뢰하는 TrustManager 설정
@@ -49,7 +47,7 @@ public class RestTemplateConfig {
         poolingConnManager.setDefaultMaxPerRoute(20);  // 각 호스트 당 최대 커넥션 수
 
         CloseableHttpClient httpClient = HttpClients.custom()
-                .setSSLContext(sslContext)  // SSLContext 설정
+               // .setSSLContext(sslContext)  // SSLContext 설정
                 .setConnectionManager(poolingConnManager)  // 커넥션 풀 설정
                 .build();
 
@@ -60,5 +58,5 @@ public class RestTemplateConfig {
         // RestTemplate 생성
         RestTemplate restTemplate = new RestTemplate(factory);
         return restTemplate;
-    }*/
+    }
 }
