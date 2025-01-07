@@ -677,6 +677,109 @@ public class PartMgmtController {
 
     }
 
+    @RequestMapping("/DeleteFileDetail")
+    public ResponseEntity<?> DeleteFileDetail(Model model, HttpServletRequest request){
+
+        String PM_IDX = GetParam(request,"PM_IDX","");
+        String Mode = GetParam(request,"MODE","");
+        String strIdx = GetParam(request,"IDX","0");
+
+        String path = "";
+        String name = "";
+
+        int idx = Integer.parseInt(strIdx);
+
+        if(Mode.equals("MSDS")){
+            partDetailMsdsDTO msdsDTO = partMgmtService.getMsdsData(PM_IDX);
+
+            path = msdsDTO.getMSDS_FILE_PATH();
+            name= msdsDTO.getMSDS_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.MsdsDeleteFile(idx);
+            }
+        }else if(Mode.equals("ROHS")){
+            partDetailRohsDTO rohsDTO = partMgmtService.getRohsData(PM_IDX);
+
+            path = rohsDTO.getROHS_FILE_PATH();
+            name= rohsDTO.getROHS_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.RohsDeleteFile(idx);
+            }
+        }else if(Mode.equals("HALOGEN")){
+            partDetailHalGDTO halgDTO = partMgmtService.getHalgData(PM_IDX);
+
+            path = halgDTO.getHALOGEN_FILE_PATH();
+            name= halgDTO.getHALOGEN_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.HalogenDeleteFile(idx);
+            }
+        }else if(Mode.equals("ETC")){
+            partDetailEtcDTO etcDTO = partMgmtService.getEtcDataIdx(idx);
+
+            path = etcDTO.getETC_FILE_PATH();
+            name= etcDTO.getETC_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.EtcDeleteFile(idx);
+            }
+        }else if(Mode.equals("SVHC")){
+            PartDetailSvhcDTO svhcDTO = partMgmtService.getDetailSvhcData(PM_IDX);
+
+            path = svhcDTO.getFILE_PATH();
+            name= svhcDTO.getFILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.SvhcDeleteFile(idx);
+            }
+        }else if(Mode.equals("DECL")){
+            partDetailDeclarDTO declarDTO = partMgmtService.getDetailDeclData(PM_IDX);
+
+            path = declarDTO.getFILE_PATH();
+            name= declarDTO.getFILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.DeclDeleteFile(idx);
+            }
+        }else if(Mode.equals("SCCS")){
+            partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(PM_IDX);
+
+            path = sccsDTO.getSCCS_FILE_PATH();
+            name= sccsDTO.getSCCS_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.SccsDeleteFile(idx);
+            }
+        }else if(Mode.equals("INGRED")){
+            partDetailIngredDTO ingredDTO = partMgmtService.getIngredData(PM_IDX);
+
+            path = ingredDTO.getINGRED_FILE_PATH();
+            name= ingredDTO.getINGRED_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.IngredDeleteFile(idx);
+            }
+        }else if(Mode.equals("GUARANT")){
+            partDetailGuarantDTO guarantDTO = partMgmtService.getGuarantDataIdx(idx);
+
+            path = guarantDTO.getGUARANT_FILE_PATH();
+            name= guarantDTO.getGUARANT_FILE_NAME();
+
+            if(partMgmtService.deleteFileData(name,path)){
+                partMgmtService.GuarantDeleteFile(idx);
+            }
+        }
+
+//        if(flag.equals("Save")) {
+//            return ResponseEntity.ok("OK");
+//        }else{
+//            return ResponseEntity.ok("NEXT|||"+PM_IDX);
+//        }
+        return ResponseEntity.ok("OK");
+    }
+
 
 
     /*********************************************************************************************************************
@@ -853,6 +956,13 @@ public class PartMgmtController {
 
             //msds
             String SVHC_IDX = GetParam(request, "SVHC_IDX", "");
+            String FILE_STATUS = GetParam(request,"FILE_STATUS","");
+
+            //msds file
+            if (FILE_STATUS.equals("DEL")) {
+                svhcDTO.setFILE_NAME("");
+                svhcDTO.setFILE_PATH("");
+            }
 
             //msds file
             if(svhcFile != null){

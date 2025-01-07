@@ -671,6 +671,17 @@ Common.Contains = function (strValue, strCheck) {
         return true;
 }
 
+//값체크 체크 문자열로 시작하는 값 찾기
+//strValue(string) : 원본문자열, strCheck(string) : 체크문자열
+Common.StartContains = function (strValue, strCheck) {
+    if (strValue == undefined || strValue == null)
+        return false;
+
+    // 정규식: strCheck로 시작하는 값을 찾음
+    const regex = new RegExp('^'+strCheck);
+    return regex.test(strValue);
+}
+
 //===========================================================================================
 //제목 : Ajax
 //===========================================================================================

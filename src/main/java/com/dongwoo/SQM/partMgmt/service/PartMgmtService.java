@@ -147,6 +147,14 @@ public class PartMgmtService {
         return partMgmtRepository.getEtcData(idx);
     }
 
+    //파일삭제
+    public void MsdsDeleteFile (int idx) { partMgmtRepository.MsdsDeleteFile(idx);}
+    public void RohsDeleteFile (int idx) { partMgmtRepository.RohsDeleteFile(idx);}
+    public void HalogenDeleteFile (int idx) { partMgmtRepository.HalogenDeleteFile(idx);}
+
+    public partDetailEtcDTO getEtcDataIdx (int idx) { return partMgmtRepository.getEtcDataIdx(idx);}
+    public void EtcDeleteFile (int idx) { partMgmtRepository.EtcDeleteFile(idx);}
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** svhc 페이지 **
@@ -168,6 +176,8 @@ public class PartMgmtService {
         return  partMgmtRepository.getSvhcData();
 
     }
+
+    public void SvhcDeleteFile (int idx) { partMgmtRepository.SvhcDeleteFile(idx);}
 
     /*********************************************************************************************************************
      ** Detail v페이지
@@ -191,12 +201,14 @@ public class PartMgmtService {
 
     }
 
+    public void DeclDeleteFile (int idx) { partMgmtRepository.DeclDeleteFile(idx);}
+
 
     /*********************************************************************************************************************
      ** Detail v페이지
      ** SCCS / 성분명세서 / 기타보증 페이지 **
      *********************************************************************************************************************/
-    //msds 데이터 로직
+    //SCCS 데이터 로직
     public partDetailSccsDTO getSccsData(String idx) {
         return partMgmtRepository.getSccsData(idx);
     }
@@ -209,7 +221,7 @@ public class PartMgmtService {
         return partMgmtRepository.updateSccsData(sccsDTO);
     }
 
-    //rohs 데이터 로직
+    //성분명세서 데이터 로직
     public partDetailIngredDTO getIngredData(String idx) {
         return partMgmtRepository.getIngredData(idx);
     }
@@ -223,7 +235,7 @@ public class PartMgmtService {
     }
 
 
-    //etc 데이터 로직
+    //기타보증 데이터 로직
     public List<partDetailGuarantDTO> getGuarantData(String idx) {
         return partMgmtRepository.getGuarantData(idx);
     }
@@ -240,18 +252,37 @@ public class PartMgmtService {
         return partMgmtRepository.deleteGuarantData(GUARANT_IDX);
     }
 
+    //파일삭제
+    public void SccsDeleteFile (int idx) { partMgmtRepository.SccsDeleteFile(idx);}
+    public void IngredDeleteFile (int idx) { partMgmtRepository.IngredDeleteFile(idx);}
+
+    public partDetailGuarantDTO getGuarantDataIdx (int idx) { return partMgmtRepository.getGuarantDataIdx(idx);}
+    public void GuarantDeleteFile (int idx) { partMgmtRepository.GuarantDeleteFile(idx);}
+
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** 파일 관련
      *********************************************************************************************************************/
 
-    public void deleteFileData (String orgName, String orgPath){
+    public Boolean deleteFileData (String orgName, String orgPath){
 
-        if( orgName != null && orgPath != null ){
-            //파일 삭제
-            File file = new File(orgName+orgPath);
-            if(file.exists()) file.delete();
+        Boolean flag = true;
+        try{
+            if( orgName != null && orgPath != null ){
+                //파일 삭제
+                File file = new File(orgName+orgPath);
+                if(file.exists()) {
+                    file.delete();
+                }
+            }
+        } catch (Exception e) {
+            flag=false;
+            //throw new RuntimeException(e);
         }
+
+
+        return flag;
 
     }
 
@@ -259,17 +290,17 @@ public class PartMgmtService {
         String orgName= null;
         String orgPath= null;
 
-        HashMap<String,Object> map = partMgmtRepository.getFileData(idx);
-        if(map != null){
-            orgName = (String) map.get("FILE_NAME");
-            orgPath = (String) map.get("FILE_PATH");
-
-            if( orgName != null && orgPath != null ){
-                //파일 삭제
-                File file = new File(orgName+orgPath);
-                if(file.exists()) file.delete();
-            }
-        }
+//        HashMap<String,Object> map = partMgmtRepository.getFileData(idx);
+//        if(map != null){
+//            orgName = (String) map.get("FILE_NAME");
+//            orgPath = (String) map.get("FILE_PATH");
+//
+//            if( orgName != null && orgPath != null ){
+//                //파일 삭제
+//                File file = new File(orgName+orgPath);
+//                if(file.exists()) file.delete();
+//            }
+//        }
 
 
     }

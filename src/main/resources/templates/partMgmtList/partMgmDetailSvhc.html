@@ -74,7 +74,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>제출구분</span></th>
+                            <th><span>제출구분</span></span><span style="color: #e74c3c;">*</span></th>
                             <td colspan="3">
                                 <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                     <input type="hidden" name="SVHC_IDX" th:value="${svhcDTO.SVHC_IDX}">
@@ -128,7 +128,7 @@
                                             <div class="cui_items_wrap file_wrap svhc_file_div" data-direction="left"  th:style="${svhcDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${svhcDTO.FILE_NAME}" th:value="${svhcDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'SVHC',[[${svhcDTO.SVHC_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -142,7 +142,7 @@
                     </table>
 
                     <div class="cui_jqGrid_section" id="Grid_attach_Div" style="display:none;">
-                        <div class="cui_jqGrid_head">ㅎㄹ
+                        <div class="cui_jqGrid_head">
                             <div class="jqGrid_label"> &nbsp;</div>
                         </div>
                         <div class="cui_jqGrid_body" id="Grid_attach">
@@ -233,6 +233,10 @@
 		    }
         });
 
+        $("input[name=SVHC_FILE]").bind("change", function(){
+            AttachStatus = false;
+        });
+
 
     });
 
@@ -285,16 +289,45 @@
 
     }
 
-    var status_Del = function(obj){
+<!--    var status_Del = function(obj){-->
+<!--        Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {-->
+<!--            mode : "confrim"-->
+<!--            , okback : function () {-->
+<!--                var row = obj.parent().parent();-->
+<!--                row.find("span[id*=FILE_NAME]").text('');-->
+<!--                row.parent().find("input[name*=FILE_STATUS").val("DEL");-->
+<!--                row.css("display","none");-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+    var status_Del = function(obj,mode,idx){
+        //alert(idx+"++++"+mode);
         Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
             mode : "confrim"
             , okback : function () {
+                var frmObj = $("#frmDetail");
+                var ReqInfo = new Common.RequestInfo();
+                ReqInfo.formData  = new FormData();
+                ReqInfo.AddParameter(frmObj);
+                ReqInfo.AddParameter("MODE",mode);
+                ReqInfo.AddParameter("IDX",idx);
+
+                Common.Ajax("/user/partMgmt/DeleteFileDetail", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        Common.Msg(siteLang.getLang("삭제되었습니다."));
+                    }
+                });
+
                 var row = obj.parent().parent();
                 row.find("span[id*=FILE_NAME]").text('');
                 row.parent().find("input[name*=FILE_STATUS").val("DEL");
                 row.css("display","none");
+
+
             }
         });
+
     }
 
 

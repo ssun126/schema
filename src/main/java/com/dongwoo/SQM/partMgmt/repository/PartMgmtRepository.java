@@ -53,13 +53,7 @@ public class PartMgmtRepository {
 
     public int deletePartMgmt(String idx){return sql.delete("partManagement.deletePartMgmt",idx);}
 
-    public HashMap<String,Object> getFileData(String idx){
 
-//        HashMap<String,Object> map = new HashMap<>();
-//        map.put("idx",idx);
-//        map.put("gubun",gubun);
-        return sql.selectOne("partManagement.getEtcFileData",idx);
-    }
 
     public PartMgmtDTO getPartMgmtData(String idx){
         return sql.selectOne("partManagement.getPartMgmtData",idx);
@@ -118,6 +112,13 @@ public class PartMgmtRepository {
     public int updateEtcData (partDetailEtcDTO etcDTO){ return sql.update("partManagement.updateEtcData",etcDTO);}
     public int deleteEtcData(int idx){ return sql.delete("partManagement.deleteEtcData",idx);}
 
+    public void MsdsDeleteFile(int idx) { sql.update("partManagement.MsdsDeleteFile",idx);}
+    public void RohsDeleteFile(int idx) { sql.update("partManagement.RohsDeleteFile",idx);}
+    public void HalogenDeleteFile(int idx) { sql.update("partManagement.HalogenDeleteFile",idx);}
+
+    public partDetailEtcDTO getEtcDataIdx(int idx) { return sql.selectOne("partManagement.EtcDeleteFile",idx);}
+    public void EtcDeleteFile(int idx) { sql.update("partManagement.EtcDeleteFile",idx);}
+
 
 
     /*********************************************************************************************************************
@@ -133,6 +134,8 @@ public class PartMgmtRepository {
     public PartDetailSvhcDTO getDetailSvhcData(String idx){
         return sql.selectOne("partManagement.getDetailSvhcData",idx);
     }
+
+    public void SvhcDeleteFile(int idx) { sql.update("partManagement.SvhcDeleteFile",idx);}
 
 //    public  int saveDetailSvhcData(PartDetailSvhcDTO svhcDTO) {return sql.insert("partManagement.svhcSave", svhcDTO);}
 //    public int updateDetailSvhcData(PartDetailSvhcDTO svhcDTO) {return sql.update("partManagement.svhcUpdate",svhcDTO);}
@@ -151,6 +154,7 @@ public class PartMgmtRepository {
     public  int insertDeclData(partDetailDeclarDTO declarDTO) {return sql.insert("partManagement.declarSave", declarDTO);}
     public int updateDeclData(partDetailDeclarDTO declarDTO) {return sql.update("partManagement.declarUpdate",declarDTO);}
 
+    public void DeclDeleteFile(int idx) { sql.update("partManagement.DeclDeleteFile",idx);}
 
 
     /*********************************************************************************************************************
@@ -180,6 +184,12 @@ public class PartMgmtRepository {
     public int updateGuarantData(partDetailGuarantDTO guarantDTO){ return sql.update("partManagement.guarantUpdate",guarantDTO);}
     public int deleteGuarantData(int idx){ return sql.delete("partManagement.deleteguarantData",idx);}
 
+
+    public void SccsDeleteFile(int idx) { sql.update("partManagement.SccsDeleteFile",idx);}
+    public void IngredDeleteFile(int idx) { sql.update("partManagement.IngredDeleteFile",idx);}
+
+    public partDetailGuarantDTO getGuarantDataIdx(int idx) { return sql.selectOne("partManagement.getGuarantDataIdx",idx);}
+    public void GuarantDeleteFile(int idx) { sql.update("partManagement.GuarantDeleteFile",idx);}
 
 
 

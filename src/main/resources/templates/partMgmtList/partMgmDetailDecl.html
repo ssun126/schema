@@ -74,7 +74,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>제출구분</span></th>
+                            <th><span>제출구분</span></span><span style="color: #e74c3c;">*</span></th>
                             <td colspan="3">
                                 <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                     <input type="hidden" name="DECL_IDX" th:value="${declDTO.DECL_IDX}">
@@ -86,7 +86,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><span>확인일자</span></th>
+                            <th><span>확인일자</span></span><span style="color: #e74c3c;">*</span></th>
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
@@ -128,7 +128,7 @@
                                             <div class="cui_items_wrap file_wrap decl_file_div" data-direction="left"  th:style="${declDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${declDTO.FILE_NAME}" th:value="${declDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'DECL',[[${declDTO.DECL_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -225,20 +225,41 @@
 		    }
         });
 
+        $("input[name=DECL_FILE]").bind("change", function(){
+            AttachStatus = false;
+        });
+
 
     });
 
-    var status_Del = function(obj){
-        Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
-            mode : "confrim"
-            , okback : function () {
-                var row = obj.parent().parent();
-                row.find("span[id*=FILE_NAME]").text('');
-                row.parent().find("input[name*=FILE_STATUS").val("DEL");
-                row.css("display","none");
-            }
-        });
-    }
+    var status_Del = function(obj,mode,idx){
+            //alert(idx+"++++"+mode);
+            Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var frmObj = $("#frmDetail");
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.formData  = new FormData();
+                    ReqInfo.AddParameter(frmObj);
+                    ReqInfo.AddParameter("MODE",mode);
+                    ReqInfo.AddParameter("IDX",idx);
+
+                    Common.Ajax("/user/partMgmt/DeleteFileDetail", ReqInfo, function (response) {
+                        if (response == "OK") {
+                            Common.Msg(siteLang.getLang("삭제되었습니다."));
+                        }
+                    });
+
+                    var row = obj.parent().parent();
+                    row.find("span[id*=FILE_NAME]").text('');
+                    row.parent().find("input[name*=FILE_STATUS").val("DEL");
+                    row.css("display","none");
+
+
+                }
+            });
+
+        }
 
     var initData = function (status){
         if(status === 'WRITE'){
@@ -409,7 +430,7 @@
             } else {
                 var SubExt = false;
                 for(var j = 0; j < dataJson.length; j++){
-                    if (Common.Contains(dataJson[j]["DECL_SUB_NUM"], dataJson[i].DECL_NUM + "-")) {
+                    if (Common.StartContains(dataJson[j]["DECL_SUB_NUM"], dataJson[i].DECL_NUM + "-")) {
                         SubExt = true;
                         break;
                     }
@@ -449,7 +470,7 @@
             Obj.addClass("ui-icon-triangle-1-se");
 
             for (j = 0; j < grid.pdata.length; j++) {
-                if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.Contains(grid.pdata[j]["DECL_SUB_NUM"], Obj.attr("DECL_NUM") + "-")) {
+                if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.StartContains(grid.pdata[j]["DECL_SUB_NUM"], Obj.attr("DECL_NUM") + "-")) {
                     grid.pdata[j].pq_hidden = false;
                 }
             }
@@ -460,7 +481,7 @@
             Obj.removeClass("ui-icon-triangle-1-se");
 
             for (j = 0; j < grid.pdata.length; j++) {
-                if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.Contains(grid.pdata[j]["DECL_SUB_NUM"], Obj.attr("DECL_NUM") + "-")) {
+                if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.StartContains(grid.pdata[j]["DECL_SUB_NUM"], Obj.attr("DECL_NUM") + "-")) {
                     grid.pdata[j].pq_hidden = true;
                 }
             }
@@ -554,7 +575,7 @@
                                 var data = rowInfo.rowData;
 
                                 for (j = 0; j < grid.pdata.length; j++) {
-                                    if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.Contains(grid.pdata[j]["DECL_SUB_NUM"], data.DECL_NUM + "-")) {
+                                    if (grid.pdata[j]["DECL_NUM"].trim() == "" && Common.StartContains(grid.pdata[j]["DECL_SUB_NUM"], data.DECL_NUM + "-")) {
                                         grid.pdata[j]["DECL_YN"] = "N";
                                     }
                                 }
@@ -706,7 +727,7 @@
                     //var tmp_DECL_NUM = Nos.split("-")[0];
 
                     for (k = 0; k < grid.pdata.length; k++) {
-                        if (Common.Contains(grid.pdata[k]["DECL_SUB_NUM"], grid.pdata[j]["DECL_NUM"] + "-")) {
+                        if (Common.StartContains(grid.pdata[k]["DECL_SUB_NUM"], grid.pdata[j]["DECL_NUM"] + "-")) {
                             if(grid.pdata[k]["DECL_YN"] === "Y"){
                                 flagY=true;
                                 break;
@@ -760,7 +781,7 @@
 
         if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
             if($("#frmDetail").find("input[name='DECL_FILE']").val() !== ''){
-                if(AttachStatus){
+                if(!AttachStatus){
                     flag = false;
                     Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
                     return;
@@ -811,19 +832,34 @@
         //유효성체크
         var frmObj = $("#frmDetail");
         var isValid = true;
-        isValid = Common.Validate(frmObj);
+
+        if(Common.Validate(frmObj) != true){
+            return;
+        }
 
         var returnVal ="";
         //대표no의 yn값이 없으면 안됨
         if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
-            returnVal =setApplicableNo('attach');
+            if($("input[name=DECL_FILE]").val() === '' && $("#FILE_NAME").text() === ''){
+                isValid = false;
+                Common.Msg(siteLang.getLang("첨부파일을 등록해 주세요"));
+                return;
+            }
+            if($("input[name='DECL_FILE']").val() !== ''){
+                if(!AttachStatus){
+                    flag = false;
+                    Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
+                    return;
+                }
+                returnVal =setApplicableNo('attach');
+            }
         }else{
             returnVal =setApplicableNo();
         }
 
         if(returnVal === 'false'){
             isValid = false;
-            Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+            Common.Msg(siteLang.getLang("Y로 해당되는 내용이 없습니다"));
             return;
         }else if(returnVal !== 'true'){
             isValid = false;
@@ -838,8 +874,6 @@
             //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
             //$("#frmDetail").submit();
             frmDetailSubmit();
-        }else{
-            Common.Msg(siteLang.getLang(message));
         }
 
 

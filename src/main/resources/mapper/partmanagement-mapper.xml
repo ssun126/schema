@@ -239,11 +239,7 @@
         }
     </delete>
 
-    <select id="getEtcFileData" parameterType="String" resultType="HashMap">
-        select ETC_FILE_NAME, ETC_FILE_PATH
-        from SC_PART_MGMT_DETAIL_ETC
-        where ETC_IDX = #{idx}
-    </select>
+
 
 <!--   Detail    -->
 
@@ -358,6 +354,36 @@
         WHERE ETC_IDX = #{idx}
     </delete>
 
+
+    <update id="MsdsDeleteFile" parameterType="int">
+        UPDATE  SC_PART_MGMT_DETAIL_MSDS
+        SET MSDS_FILE_NAME= '' ,MSDS_FILE_PATH=''
+        WHERE  MSDS_IDX = #{idx}
+    </update>
+    <update id="RohsDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_ROHS
+        SET ROHS_FILE_NAME=  '' ,ROHS_FILE_PATH =  ''
+        WHERE ROHS_IDX = #{idx}
+    </update>
+
+    <update id="HalogenDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_HALOGEN
+        SET HALOGEN_FILE_NAME =  '' ,HALOGEN_FILE_PATH =  ''
+        WHERE HALOGEN_IDX =#{idx}
+    </update>
+    <select id="getEtcDataIdx" parameterType="int" resultType="partDetailEtc">
+        SELECT *
+        FROM SC_PART_MGMT_DETAIL_ETC
+        WHERE ETC_IDX=#{idx}
+    </select>
+    <update id="EtcDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_ETC
+        SET ETC_FILE_NAME = '',ETC_FILE_PATH = ''
+        WHERE ETC_IDX = #{idx}
+    </update>
+
+
+
     <!--   SVHC   -->
     <select id="getSvhcList" resultType="svhcList">
         SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
@@ -387,6 +413,12 @@
         </if>
 
         WHERE PM_IDX =#{PM_IDX}
+    </update>
+
+    <update id="SvhcDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_SVHC_DATA
+        SET FILE_PATH='',FILE_NAME=''
+        WHERE SVHC_IDX =#{idx}
     </update>
 
     <!--   DECLARATION LETTER   -->
@@ -421,6 +453,12 @@
         WHERE DECL_IDX =#{DECL_IDX}
     </update>
 
+    <update id="DeclDeleteFile" parameterType="INT">
+        UPDATE SC_PART_MGMT_DECLARATION_DATA
+        SET FILE_PATH='' ,FILE_NAME=''
+        WHERE DECL_IDX =#{idx}
+    </update>
+
     <!--   SCCS   -->
     <select id="getSccsData" parameterType="String" resultType="partDetailSccs">
         SELECT *
@@ -445,6 +483,12 @@
         WHERE SCCS_IDX =#{SCCS_IDX}
     </update>
 
+    <update id="SccsDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_SCCS
+        SET SCCS_FILE_NAME ='',SCCS_FILE_PATH=''
+        WHERE SCCS_IDX =#{idx}
+    </update>
+
     <!--   ingred   -->
     <select id="getIngredData" parameterType="String" resultType="partDetailIngred">
         SELECT *
@@ -467,6 +511,12 @@
         </if>
 
         WHERE INGRED_IDX =#{INGRED_IDX}
+    </update>
+
+    <update id="IngredDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_INGRED
+        SET INGRED_FILE_NAME = '',INGRED_FILE_PATH = ''
+        WHERE INGRED_IDX =#{idx}
     </update>
 
     <!--   guarant   -->
@@ -496,6 +546,18 @@
         DELETE SC_PART_MGMT_DETAIL_GUARANT
         WHERE GUARANT_IDX = #{idx}
     </delete>
+
+
+    <select id="getGuarantDataIdx" parameterType="int" resultType="partDetailGuarant">
+        SELECT *
+        FROM SC_PART_MGMT_DETAIL_GUARANT
+        WHERE GUARANT_IDX=#{idx}
+    </select>
+    <update id="GuarantDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_GUARANT
+        SET GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
+        WHERE GUARANT_IDX =#{idx}
+    </update>
 
 
 
