@@ -74,7 +74,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>제출구분</span></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>제출구분</span></th>
                             <td colspan="3">
                                 <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                     <input type="hidden" name="DECL_IDX" th:value="${declDTO.DECL_IDX}">
@@ -90,7 +90,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field datepicker" datePickerControl=""  id="confirmDate" name="CONFIRM_DATE" th:value="${declDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="날자을 입력해주세요." messages="">
+                                        <input type="text" class="cui_text_field datepicker" datePickerControl=""  id="confirmDate" name="CONFIRM_DATE" th:value="${declDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="확인일자를 입력해주세요." messages="">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -117,7 +117,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>파일첨부</span></th>
+                            <th><span>파일첨부</span><span style="color: #e74c3c;">*</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -125,7 +125,7 @@
                                             <input type="file" class="cui_file_field" name="DECL_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <button type="button" class="cui_button primary" onclick="setDeclExcelData();"><span data-langsid="적용"></span></button>
-                                            <div class="cui_items_wrap file_wrap decl_file_div" data-direction="left"  th:style="${declDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
+                                            <div class="cui_items_wrap file_wrap decl_file_div" data-direction="left"  th:style="${declDTO.FILE_NAME == ' ' || declDTO.FILE_NAME == null ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${declDTO.FILE_NAME}" th:value="${declDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
                                                     <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'DECL',[[${declDTO.DECL_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
@@ -204,11 +204,26 @@
         $("input[name=DATA_GUBUN]").bind("change", function(){
         // 직접입력
 		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
-		        if($("#frmDetail").find("input[name='DECL_FILE']").val() !== '' || $("#FILE_NAME").text() !== '' ){
+		        if($("#frmDetail").find("input[name='DECL_FILE']").val() !== '' || $("#FILE_NAME").text().trim() !== '' ){
 		            Common.Msg(siteLang.getLang("기존 데이터가 삭제됩니다. 제출구분을 변경하시겠습니까?"), {
                         mode : "confrim"
                         , okback : function () {
-                            initData('WRITE');
+                            if($("#FILE_NAME").text().trim() !== ''){
+                                var frmObj = $("#frmDetail");
+                                var ReqInfo = new Common.RequestInfo();
+                                ReqInfo.formData  = new FormData();
+                                ReqInfo.AddParameter(frmObj);
+                                ReqInfo.AddParameter("MODE","DECL");
+                                ReqInfo.AddParameter("IDX",$("input[name=DECL_IDX]").val());
+
+                                Common.Ajax("/user/partMgmt/DeleteFileDetail", ReqInfo, function (response) {
+                                    if (response == "OK") {
+                                        initData('WRITE');
+                                    }
+                                });
+                            }else {
+                                initData('WRITE');
+                            }
                         }
                         ,cancelback : function (){
                             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
@@ -276,6 +291,10 @@
 		    $("#FILE_NAME").text('');
             $(".decl_file_div").hide();
 		    $(".cui_attachments .cui_text_field").val('');
+
+		    $("input[name=APPLICABLE_NO]").val('');
+            $("input[name=NONE_APPLICABLE_NO]").val('');
+
 		    ListLoad();
         }else {
             $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
@@ -287,6 +306,9 @@
 		    $("input[name=APPLICABLE_NO]").val('');
 		    //$("#gridArea").empty();
 		    $("#gridArea").pqGrid("refreshView");
+
+		    $("input[name=APPLICABLE_NO]").val('');
+            $("input[name=NONE_APPLICABLE_NO]").val('');
         }
     }
 
@@ -367,7 +389,24 @@
         obj.colModel = [
 
             {  title: "No.", width: 50, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_NUM", sortable: false, editor: false, editable: false },
-            {  title: "Sub No.", width: 75, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: false, editor: false, editable: false },
+            {  title: "Sub No.", width: 75, halign: "center", align: "right", dataType: "string", dataIndx: "DECL_SUB_NUM", sortable: false, editor: false, editable: false
+                , render : function (ui) {
+                    var data = ui.rowData;
+                    if (data.DECL_NUM.trim() != "") {
+                        if (data.SubItemsExists) {
+                            var iconHtml = "";
+
+                            if (data.SubShowHide == undefined || data.SubShowHide == false) {
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-e" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                            } else {
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-se" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                            }
+
+                            return iconHtml;
+                        }
+                    }
+                }
+            },
             { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_NAME", sortable: false, editor: false, editable: false },
             { title: "CAS No.", width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CASNUM", sortable: false, editor: false, editable: false },
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 60, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_YN", sortable: false, editor: false, editable: false },

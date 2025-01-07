@@ -74,7 +74,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>제출구분</span></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>제출구분</span></th>
                             <td colspan="3">
                                 <div class="cui_items_wrap" data-wrap="wrap" data-direction="left">
                                     <input type="hidden" name="SVHC_IDX" th:value="${svhcDTO.SVHC_IDX}">
@@ -117,7 +117,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>파일첨부</span></th>
+                            <th><span>파일첨부</span><span style="color: #e74c3c;">*</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -125,7 +125,7 @@
                                             <input type="file" class="cui_file_field" name="SVHC_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <button type="button" class="cui_button primary" onclick="setSvhcExcelData();"><span data-langsid="적용"></span></button>
-                                            <div class="cui_items_wrap file_wrap svhc_file_div" data-direction="left"  th:style="${svhcDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
+                                            <div class="cui_items_wrap file_wrap svhc_file_div" data-direction="left"  th:style="${svhcDTO.FILE_NAME == ' ' || svhcDTO.FILE_NAME == null ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${svhcDTO.FILE_NAME}" th:value="${svhcDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
                                                     <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'SVHC',[[${svhcDTO.SVHC_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
@@ -212,11 +212,26 @@
         $("input[name=DATA_GUBUN]").bind("change", function(){
             // 직접입력
 		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
-		        if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== '' || $("#FILE_NAME").text() !== '' ){
+		        if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== '' || $("#FILE_NAME").text().trim() !== '' ){
 		            Common.Msg(siteLang.getLang("기존 데이터가 삭제됩니다. 제출구분을 변경하시겠습니까?"), {
                         mode : "confrim"
                         , okback : function () {
-                            initData('WRITE');
+                            if($("#FILE_NAME").text().trim() !== ''){
+                                var frmObj = $("#frmDetail");
+                                var ReqInfo = new Common.RequestInfo();
+                                ReqInfo.formData  = new FormData();
+                                ReqInfo.AddParameter(frmObj);
+                                ReqInfo.AddParameter("MODE","SVHC");
+                                ReqInfo.AddParameter("IDX",$("input[name=SVHC_IDX]").val());
+
+                                Common.Ajax("/user/partMgmt/DeleteFileDetail", ReqInfo, function (response) {
+                                    if (response == "OK") {
+                                        initData('WRITE');
+                                    }
+                                });
+                            }else {
+                                initData('WRITE');
+                            }
                         }
                         ,cancelback : function (){
                             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
@@ -547,97 +562,146 @@
     });
 
     var frmDetailSubmit = function () {
-            //e.preventDefault();
+        //e.preventDefault();
 
 
-            var frmObj = $("#frmDetail");
-            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
-            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
-            var ReqInfo = new Common.RequestInfo();
-            ReqInfo.formData  = new FormData();
-            ReqInfo.AddParameter(frmObj);
-            Common.Ajax("/user/partMgmt/goSvhcSave", ReqInfo, function (response) {
-                    if (response == "OK") {
-                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
-                            Common.Msg(siteLang.getLang("저장되었습니다."));
-                            location.reload();
-                        }
-                    }else {
-                        Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" + response.split('|||')[1]);
+        var frmObj = $("#frmDetail");
+        var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+        //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+        var ReqInfo = new Common.RequestInfo();
+        ReqInfo.formData  = new FormData();
+        ReqInfo.AddParameter(frmObj);
+        Common.Ajax("/user/partMgmt/goSvhcSave", ReqInfo, function (response) {
+                if (response == "OK") {
+                    if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                        Common.Msg(siteLang.getLang("저장되었습니다."));
+                        location.reload();
                     }
-                });
-
-            //ReqInfo.formData
-            //return Common.Validate(frmObj);
-
-        }
-
-        var setApplicableNo = function(flag){
-            var idxs ='';
-            var reVal = false;
-            var pqName ='';
-            if(flag === 'attach') pqName='_attach';
-            var grid = $("#gridArea"+pqName).pqGrid("instance");
-            for (j = 0; j < grid.pdata.length; j++) {
-                if (grid.pdata[j]["SVHC_YN"] === 'Y') {
-                    if (idxs != "") idxs += ",";
-                    idxs += grid.pdata[j]["SVHC_NUM"];
-                    reVal = true;
-                }
-            }
-
-            if(flag !== 'attach'){
-                $("input[name=APPLICABLE_NO]").val(idxs);
-            }
-
-            return reVal;
-        }
-
-        var frmDetailSave = function () {
-            //데이터가 아무것도 없을 때는 저장할 수 없음
-            var flag = false;
-
-            $("input[reqcheck=reqcheck]").each(function(){
-                if($(this).val() != ''){
-                    flag = true;
-                    return;
+                }else {
+                    Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" + response.split('|||')[1]);
                 }
             });
 
-            if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
-                //if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== '' && $("#FILE_NAME").text() === '' ){
-                if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== ''){
-                    if(!AttachStatus){
-                        flag = false;
-                        Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
-                        return;
-                    }
-                    if(!setApplicableNo('attach')){
-                        flag = false;
-                        Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
-                        return;
-                    }
-                }
+        //ReqInfo.formData
+        //return Common.Validate(frmObj);
 
-            }else{
-                //Y 데이터 삽입
-                setApplicableNo();
+    }
+
+    var setApplicableNo = function(flag){
+        var idxs ='';
+        var reVal = false;
+        var pqName ='';
+        if(flag === 'attach') pqName='_attach';
+        var grid = $("#gridArea"+pqName).pqGrid("instance");
+        for (j = 0; j < grid.pdata.length; j++) {
+            if (grid.pdata[j]["SVHC_YN"] === 'Y') {
+                if (idxs != "") idxs += ",";
+                idxs += grid.pdata[j]["SVHC_NUM"];
+                reVal = true;
+            }
+        }
+
+        if(flag !== 'attach'){
+            $("input[name=APPLICABLE_NO]").val(idxs);
+        }
+
+        return reVal;
+    }
+
+    var frmDetailSave = function () {
+        //데이터가 아무것도 없을 때는 저장할 수 없음
+        var flag = false;
+
+        $("input[reqcheck=reqcheck]").each(function(){
+            if($(this).val() != ''){
+                flag = true;
+                return;
+            }
+        });
+
+        if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
+            //if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== '' && $("#FILE_NAME").text() === '' ){
+            if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== ''){
+                if(!AttachStatus){
+                    flag = false;
+                    Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
+                    return;
+                }
+                if(!setApplicableNo('attach')){
+                    flag = false;
+                    Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+                    return;
+                }
             }
 
-            if(flag){
-                Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
-                    mode : "confrim"
-                    , okback : function () {
-                        $("#frmDetail").find("input[name=SaveMode]").val("Save");
-                        //$("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
-                        //$("#frmDetail").submit();
-                        frmDetailSubmit();
-                    }
-                });
-            }else{
-                if(message === ''){
-                    message = '저장 할 내용이 없습니다.';
+        }else{
+            //Y 데이터 삽입
+            setApplicableNo();
+        }
+
+        if(flag){
+            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    $("#frmDetail").find("input[name=SaveMode]").val("Save");
+                    //$("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
+                    //$("#frmDetail").submit();
+                    frmDetailSubmit();
                 }
+            });
+        }else{
+            Common.Msg(siteLang.getLang("저장 할 내용이 없습니다."));
+            return;
+        }
+
+    }
+
+
+    var frmDetailPrev = function () {
+        var pmidx  = $("input[name=PM_IDX]").val();
+        Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" +pmidx);
+
+    }
+
+    var frmDetailNext = function () {
+        //유효성체크
+        var frmObj = $("#frmDetail");
+        var isValid = true;
+        var message ='';
+
+        if(Common.Validate(frmObj) != true){
+            return;
+        }
+
+
+        //첨부
+        if(frmObj.find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
+            if($("input[name=SVHC_FILE]").val() === '' && $("#FILE_NAME").text() === ''){
+                isValid = false;
+                message= '첨부파일을 등록해 주세요';
+                Common.Msg(siteLang.getLang(message));
+                return;
+            }
+
+            if($("input[name=SVHC_FILE]").val() !== ''){
+                if(!AttachStatus){
+                    isValid = false;
+                    message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                    Common.Msg(siteLang.getLang(message));
+                    return;
+                }
+                if(!setApplicableNo('attach')){
+                    isValid = false;
+                    message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+                    Common.Msg(siteLang.getLang(message));
+                    return;
+                }
+            }
+
+        }else{
+            if(!setApplicableNo()){
+                isValid = false;
+                message= 'Y로 해당되는 내용이 없습니다';
                 Common.Msg(siteLang.getLang(message));
                 return;
             }
@@ -645,67 +709,15 @@
         }
 
 
-        var frmDetailPrev = function () {
-            var pmidx  = $("input[name=PM_IDX]").val();
-            Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" +pmidx);
 
+        if(isValid){
+            $("#frmDetail").find("input[name=SaveMode]").val("Next");
+            //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+            //$("#frmDetail").submit();
+            frmDetailSubmit();
         }
 
-        var frmDetailNext = function () {
-            //유효성체크
-            var frmObj = $("#frmDetail");
-            var isValid = true;
-            var message ='';
-
-            if(Common.Validate(frmObj) != true){
-                return;
-            }
-
-
-            //첨부
-            if(frmObj.find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
-                if($("input[name=SVHC_FILE]").val() === '' && $("#FILE_NAME").text() === ''){
-                    isValid = false;
-                    message= '첨부파일을 등록해 주세요';
-                    Common.Msg(siteLang.getLang(message));
-                    return;
-                }
-
-                if($("input[name=SVHC_FILE]").val() !== ''){
-                    if(!AttachStatus){
-                        isValid = false;
-                        message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
-                        Common.Msg(siteLang.getLang(message));
-                        return;
-                    }
-                    if(!setApplicableNo('attach')){
-                        isValid = false;
-                        message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-                        Common.Msg(siteLang.getLang(message));
-                        return;
-                    }
-                }
-
-            }else{
-                if(!setApplicableNo()){
-                    isValid = false;
-                    message= 'Y로 해당되는 내용이 없습니다';
-                    Common.Msg(siteLang.getLang(message));
-                    return;
-                }
-
-            }
-
-
-
-            if(isValid){
-                $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                //$("#frmDetail").submit();
-                frmDetailSubmit();
-            }
-
-        }
+    }
 
 
 </script>

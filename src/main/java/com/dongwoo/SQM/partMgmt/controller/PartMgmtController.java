@@ -240,107 +240,107 @@ public class PartMgmtController {
     }
 
 
-
-    @GetMapping("/goReadDetail")
-    public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model, @RequestHeader Map<String, String> header) {
-
-        PartMgmtDTO partMgmtDTO = partMgmtService.getPartData(idx);
-        if (partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
-        model.addAttribute("partMgmtDTO", partMgmtDTO);
-        log.info("partMgmtDTO=============================" + partMgmtDTO);
-
-        //데이터가 있다면 들고와서 뿌려줌
-        //MSDS
-        partDetailMsdsDTO msdsDTO = partMgmtService.getMsdsData(idx);
-        if (msdsDTO == null) msdsDTO = new partDetailMsdsDTO();
-        model.addAttribute("msdsDTO", msdsDTO);
-        log.info("msdsDTO=============================" + msdsDTO);
-        //ROHS
-        partDetailRohsDTO rohsDTO = partMgmtService.getRohsData(idx);
-        if (rohsDTO == null) rohsDTO = new partDetailRohsDTO();
-        model.addAttribute("rohsDTO", rohsDTO);
-        log.info("rohsDTO=============================" + rohsDTO);
-        //HALOGEN
-        partDetailHalGDTO halGDTO = partMgmtService.getHalgData(idx);
-        if (halGDTO == null) halGDTO = new partDetailHalGDTO();
-        model.addAttribute("halGDTO", halGDTO);
-        log.info("halGDTO=============================" + halGDTO);
-        //ETC
-        List<partDetailEtcDTO> etcListDTO = partMgmtService.getEtcData(idx);
-        if (etcListDTO == null) {
-            partDetailEtcDTO etcDTO = new partDetailEtcDTO();
-            etcListDTO.add(etcDTO);
-        }
-        model.addAttribute("etcListDTO", etcListDTO);
-        log.info("etcListDTO=============================" + etcListDTO);
-
-
-        //svhc data 들고가기
-        PartDetailSvhcDTO svhcDTO = partMgmtService.getDetailSvhcData(idx);
-        if (svhcDTO == null) svhcDTO = new PartDetailSvhcDTO();
-        model.addAttribute("svhcDTO", svhcDTO);
-        log.info("svhcDTO=============================" + svhcDTO);
-
-        List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
-        partSvhcDTOList = partMgmtService.getSvhcData();
-
-        ObjectMapper mapper = new ObjectMapper();
-        String partSvhcListStr = null;
-        try {
-            partSvhcListStr = mapper.writeValueAsString(partSvhcDTOList);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        log.info("partSvhcDTOList=============================" + partSvhcDTOList);
-
-        model.addAttribute("partSvhcList",partSvhcListStr);
-
-
-        //declar
-        partDetailDeclarDTO declarDTO = partMgmtService.getDetailDeclData(idx);
-        if (declarDTO == null) declarDTO = new partDetailDeclarDTO();
-        model.addAttribute("declarDTO", declarDTO);
-
-        List<DeclarationDTO> declDTOList = new ArrayList<>();
-
-        declDTOList = partMgmtService.getDeclData();
-
-        ObjectMapper mapper2 = new ObjectMapper();
-        String partDeclListStr = null;
-        try {
-            partDeclListStr = mapper2.writeValueAsString(declDTOList);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
-        model.addAttribute("partDeclList",partDeclListStr);
-
-
-        //sccs 성분 rlxk 들고가기
-        partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(idx);
-        if (sccsDTO == null) sccsDTO = new partDetailSccsDTO();
-        model.addAttribute("sccsDTO", sccsDTO);
-        log.info("sccsDTO=============================" + sccsDTO);
-
-        partDetailIngredDTO ingredDTO = partMgmtService.getIngredData(idx);
-        if (ingredDTO == null) ingredDTO = new partDetailIngredDTO();
-        model.addAttribute("ingredDTO", ingredDTO);
-        log.info("ingredDTO=============================" + ingredDTO);
-
-        //보증
-        List<partDetailGuarantDTO> guarantListDTO = partMgmtService.getGuarantData(idx);
-        if (guarantListDTO == null) {
-            partDetailGuarantDTO guarantDTO = new partDetailGuarantDTO();
-            guarantListDTO.add(guarantDTO);
-        }
-        model.addAttribute("guarantListDTO", guarantListDTO);
-        log.info("guarantListDTO=============================" + guarantListDTO);
-
-
-        return "partMgmtList/detailread";
-
-    }
+//
+//    @GetMapping("/goReadDetail")
+//    public String goReadDetail(@RequestParam("PM_IDX") String idx, Model model, @RequestHeader Map<String, String> header) {
+//
+//        PartMgmtDTO partMgmtDTO = partMgmtService.getPartData(idx);
+//        if (partMgmtDTO == null) partMgmtDTO = new PartMgmtDTO();
+//        model.addAttribute("partMgmtDTO", partMgmtDTO);
+//        log.info("partMgmtDTO=============================" + partMgmtDTO);
+//
+//        //데이터가 있다면 들고와서 뿌려줌
+//        //MSDS
+//        partDetailMsdsDTO msdsDTO = partMgmtService.getMsdsData(idx);
+//        if (msdsDTO == null) msdsDTO = new partDetailMsdsDTO();
+//        model.addAttribute("msdsDTO", msdsDTO);
+//        log.info("msdsDTO=============================" + msdsDTO);
+//        //ROHS
+//        partDetailRohsDTO rohsDTO = partMgmtService.getRohsData(idx);
+//        if (rohsDTO == null) rohsDTO = new partDetailRohsDTO();
+//        model.addAttribute("rohsDTO", rohsDTO);
+//        log.info("rohsDTO=============================" + rohsDTO);
+//        //HALOGEN
+//        partDetailHalGDTO halGDTO = partMgmtService.getHalgData(idx);
+//        if (halGDTO == null) halGDTO = new partDetailHalGDTO();
+//        model.addAttribute("halGDTO", halGDTO);
+//        log.info("halGDTO=============================" + halGDTO);
+//        //ETC
+//        List<partDetailEtcDTO> etcListDTO = partMgmtService.getEtcData(idx);
+//        if (etcListDTO == null) {
+//            partDetailEtcDTO etcDTO = new partDetailEtcDTO();
+//            etcListDTO.add(etcDTO);
+//        }
+//        model.addAttribute("etcListDTO", etcListDTO);
+//        log.info("etcListDTO=============================" + etcListDTO);
+//
+//
+//        //svhc data 들고가기
+//        PartDetailSvhcDTO svhcDTO = partMgmtService.getDetailSvhcData(idx);
+//        if (svhcDTO == null) svhcDTO = new PartDetailSvhcDTO();
+//        model.addAttribute("svhcDTO", svhcDTO);
+//        log.info("svhcDTO=============================" + svhcDTO);
+//
+//        List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
+//        partSvhcDTOList = partMgmtService.getSvhcData();
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        String partSvhcListStr = null;
+//        try {
+//            partSvhcListStr = mapper.writeValueAsString(partSvhcDTOList);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        log.info("partSvhcDTOList=============================" + partSvhcDTOList);
+//
+//        model.addAttribute("partSvhcList",partSvhcListStr);
+//
+//
+//        //declar
+//        partDetailDeclarDTO declarDTO = partMgmtService.getDetailDeclData(idx);
+//        if (declarDTO == null) declarDTO = new partDetailDeclarDTO();
+//        model.addAttribute("declarDTO", declarDTO);
+//
+//        List<DeclarationDTO> declDTOList = new ArrayList<>();
+//
+//        declDTOList = partMgmtService.getDeclData();
+//
+//        ObjectMapper mapper2 = new ObjectMapper();
+//        String partDeclListStr = null;
+//        try {
+//            partDeclListStr = mapper2.writeValueAsString(declDTOList);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        model.addAttribute("partDeclList",partDeclListStr);
+//
+//
+//        //sccs 성분 rlxk 들고가기
+//        partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(idx);
+//        if (sccsDTO == null) sccsDTO = new partDetailSccsDTO();
+//        model.addAttribute("sccsDTO", sccsDTO);
+//        log.info("sccsDTO=============================" + sccsDTO);
+//
+//        partDetailIngredDTO ingredDTO = partMgmtService.getIngredData(idx);
+//        if (ingredDTO == null) ingredDTO = new partDetailIngredDTO();
+//        model.addAttribute("ingredDTO", ingredDTO);
+//        log.info("ingredDTO=============================" + ingredDTO);
+//
+//        //보증
+//        List<partDetailGuarantDTO> guarantListDTO = partMgmtService.getGuarantData(idx);
+//        if (guarantListDTO == null) {
+//            partDetailGuarantDTO guarantDTO = new partDetailGuarantDTO();
+//            guarantListDTO.add(guarantDTO);
+//        }
+//        model.addAttribute("guarantListDTO", guarantListDTO);
+//        log.info("guarantListDTO=============================" + guarantListDTO);
+//
+//
+//        return "partMgmtList/detailread";
+//
+//    }
 
     @GetMapping("/updateActive")
     public void updateActive(@RequestParam("PM_ACTIVE_YN") String status, @RequestParam("PM_IDX") int pmidx) {
@@ -413,10 +413,6 @@ public class PartMgmtController {
     @RequestMapping("/partMgmDetail")
     public String partMgmDetail(Model model, HttpServletRequest request, HttpServletResponse response, @RequestHeader Map<String, String> header) {
         try {
-            model.addAttribute("PM_PART_CODE", "");
-            model.addAttribute("PART_NAME", "");
-            model.addAttribute("PM_APPROVAL_STATUS", "");
-            model.addAttribute("PM_ACTIVE_YN", "");
 
             String idx = GetParam(request, "PM_IDX", "");
             model.addAttribute("PM_IDX", idx);
@@ -453,6 +449,78 @@ public class PartMgmtController {
             }
             model.addAttribute("etcListDTO",etcListDTO);
             log.info("etcListDTO=============================" + etcListDTO);
+
+
+            //
+            String Mode = GetParam(request, "MODE", "");
+            int status = Integer.parseInt(partMgmtDTO.getPM_APPROVAL_STATUS());
+            // 수정버튼 클릭, inactive , STATUS 가 3 이상일 때는 수정페이지
+            // STATUS >= 3 검토중일때는 MODE 가 빈값일때는 .전부 READ
+            if(status >= 3 && Mode.equals("")){
+                //svhc data 들고가기
+                PartDetailSvhcDTO svhcDTO = partMgmtService.getDetailSvhcData(idx);
+                if (svhcDTO == null) svhcDTO = new PartDetailSvhcDTO();
+                model.addAttribute("svhcDTO", svhcDTO);
+                log.info("svhcDTO=============================" + svhcDTO);
+
+                List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
+                partSvhcDTOList = partMgmtService.getSvhcData();
+
+                ObjectMapper mapper = new ObjectMapper();
+                String partSvhcListStr = null;
+                try {
+                    partSvhcListStr = mapper.writeValueAsString(partSvhcDTOList);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+
+                log.info("partSvhcDTOList=============================" + partSvhcDTOList);
+
+                model.addAttribute("partSvhcList",partSvhcListStr);
+
+
+                //declar
+                partDetailDeclarDTO declarDTO = partMgmtService.getDetailDeclData(idx);
+                if (declarDTO == null) declarDTO = new partDetailDeclarDTO();
+                model.addAttribute("declarDTO", declarDTO);
+
+                List<DeclarationDTO> declDTOList = new ArrayList<>();
+
+                declDTOList = partMgmtService.getDeclData();
+
+                ObjectMapper mapper2 = new ObjectMapper();
+                String partDeclListStr = null;
+                try {
+                    partDeclListStr = mapper2.writeValueAsString(declDTOList);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+
+                model.addAttribute("partDeclList",partDeclListStr);
+
+
+                //sccs 성분 rlxk 들고가기
+                partDetailSccsDTO sccsDTO = partMgmtService.getSccsData(idx);
+                if (sccsDTO == null) sccsDTO = new partDetailSccsDTO();
+                model.addAttribute("sccsDTO", sccsDTO);
+                log.info("sccsDTO=============================" + sccsDTO);
+
+                partDetailIngredDTO ingredDTO = partMgmtService.getIngredData(idx);
+                if (ingredDTO == null) ingredDTO = new partDetailIngredDTO();
+                model.addAttribute("ingredDTO", ingredDTO);
+                log.info("ingredDTO=============================" + ingredDTO);
+
+                //보증
+                List<partDetailGuarantDTO> guarantListDTO = partMgmtService.getGuarantData(idx);
+                if (guarantListDTO == null) {
+                    partDetailGuarantDTO guarantDTO = new partDetailGuarantDTO();
+                    guarantListDTO.add(guarantDTO);
+                }
+                model.addAttribute("guarantListDTO", guarantListDTO);
+                log.info("guarantListDTO=============================" + guarantListDTO);
+
+                return "partMgmtList/detailread";
+            }
 
         } catch (Exception e) {
             if (header.get("requesttype") != null && header.get("requesttype").equals("ajax")) {
@@ -957,9 +1025,10 @@ public class PartMgmtController {
             //msds
             String SVHC_IDX = GetParam(request, "SVHC_IDX", "");
             String FILE_STATUS = GetParam(request,"FILE_STATUS","");
+            String DATA_GUBUN = GetParam(request,"DATA_GUBUN","");
 
             //msds file
-            if (FILE_STATUS.equals("DEL")) {
+            if (FILE_STATUS.equals("DEL") || DATA_GUBUN.equals("WRITE")) {
                 svhcDTO.setFILE_NAME("");
                 svhcDTO.setFILE_PATH("");
             }
@@ -1086,7 +1155,7 @@ public class PartMgmtController {
             XSSFSheet worksheet = workbook.getSheetAt(0);
             List<DeclarationDTO> declarationDTOList = new ArrayList<>();
 
-            for(int i = 4; i<worksheet.getPhysicalNumberOfRows(); i++){
+            for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
                 DeclarationDTO declarationDTO = new DeclarationDTO();
 
                 DataFormatter formatter = new DataFormatter();
@@ -1306,8 +1375,7 @@ public class PartMgmtController {
             //SCCS
 //        String saveMode = GetParam(request,"SaveMode","");
 //
-            String SCCS_IDX = GetParam(request, "SCCS_IDX",
-                    "");
+            String SCCS_IDX = GetParam(request, "SCCS_IDX","");
 
             //msds file
             //if (!msdsFile.isEmpty()) {

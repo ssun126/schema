@@ -241,8 +241,19 @@
                         Common.MoveUrl("/user/partMgmt/goReadDetail?PM_IDX=" + data.PM_IDX);
                     }
                     */
+                    var Mode='';
+                    if(data.SheetEditModeStatus){
+                        Mode='edit';
+                        if(data.PM_ACTIVE_YN_ORG === 'ACTIVE'){
+                            Common.Msg(siteLang.getLang("사용여부 INACTIVE 시 수정 가능합니다"));
+                            return;
+                        }else{
+                            Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX+"&MODE="+Mode);
+                        }
+                    }else{
+                        Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX+"&MODE="+Mode);
+                    }
 
-                    Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX);
                 }
             },
             rowDblClick: function (event, ui) {

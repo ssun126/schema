@@ -24,6 +24,11 @@
     <update id="updateApprovalStatus" parameterType="HashMap">
         UPDATE SC_PART_MANAGEMENT_DATA
         SET PM_APPROVAL_STATUS= #{status}
+        <if test="status == '3'">
+            <![CDATA[
+                , PM_REQUEST_APPROVAL_DATE = sysdate
+            ]]>
+        </if>
         WHERE PM_IDX=#{idx}
     </update>
 

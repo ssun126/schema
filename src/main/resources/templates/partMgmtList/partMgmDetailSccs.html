@@ -281,30 +281,7 @@
 
         }
 
-        var frmDetailSubmit = function () {
-            //e.preventDefault();
 
-            var frmObj = $("#frmDetail");
-            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
-            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
-            var ReqInfo = new Common.RequestInfo();
-            ReqInfo.formData  = new FormData();
-            ReqInfo.AddParameter(frmObj);
-            Common.Ajax("/user/partMgmt/goSccsSave", ReqInfo, function (response) {
-                    if (response == "OK") {
-                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
-                            Common.Msg(siteLang.getLang("저장되었습니다."));
-                            location.reload();
-                        }
-                    }else {
-                        Common.MoveUrl("/user/partMgmt/matReg");
-                    }
-                });
-
-            //ReqInfo.formData
-            //return Common.Validate(frmObj);
-
-        }
 
         var frmDetailSave = function () {
             //데이터가 아무것도 없을 때는 저장할 수 없음
@@ -415,6 +392,31 @@
                 //$("#frmDetail").submit();
                 frmDetailSubmit();
             }
+
+        }
+
+        var frmDetailSubmit = function () {
+            //e.preventDefault();
+
+            var frmObj = $("#frmDetail");
+            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.formData  = new FormData();
+            ReqInfo.AddParameter(frmObj);
+            Common.Ajax("/user/partMgmt/goSccsSave", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                            Common.Msg(siteLang.getLang("저장되었습니다."));
+                            location.reload();
+                        }
+                    }else {
+                        Common.MoveUrl("/user/partMgmt/matReg");
+                    }
+                });
+
+            //ReqInfo.formData
+            //return Common.Validate(frmObj);
 
         }
     </script>
