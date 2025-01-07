@@ -36,13 +36,13 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th><span>분류</span></th>
-                                <th><span>인증서</span></th>
-                                <th><span>인증일</span></th>
-                                <th><span>만료일</span></th>
-                                <th><span>등록일</span></th>
-                                <th><span>등록서류</span></th>
-                                <th><span>승인여부</span></th>
+                                <th><span data-langsid="분류">분류</span></th>
+                                <th><span data-langsid="인증서">인증서</span></th>
+                                <th><span data-langsid="인증일">인증일</span></th>
+                                <th><span data-langsid="만료일">만료일</span></th>
+                                <th><span data-langsid="등록일">등록일</span></th>
+                                <th><span data-langsid="등록서류">등록서류</span></th>
+                                <th><span data-langsid="승인여부">승인여부</span></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -60,8 +60,8 @@
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_label" data-cui-icon="paperclip"><span th:text="${data.FILE_NAME}"></span></div>
                                             <div class="item_content">
-                                                <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span >다운로드</span></button>
-                                                <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span>삭제</span></button>
+                                                <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span  data-langsid="다운로드">다운로드</span></button>
+                                                <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span data-langsid="삭제">삭제</span></button>
                                             </div>
                                         </div>
                                     </div>
