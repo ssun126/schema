@@ -74,10 +74,10 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span data-langsid="작성일"></span></th>
-                            <th><span data-langsid="언어"></span></th>
-                            <th><span data-langsid="승인번호"></span></th>
-                            <th><span data-langsid="첨부"></span></th>
+                            <th><span data-langsid="작성일"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="언어"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="승인번호"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="첨부"></span><span style="color: #e74c3c;">*</span></th>
                         </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -85,7 +85,7 @@
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
                                     <input type="hidden" name="MSDS_IDX" th:value="${msdsDTO.MSDS_IDX}">
-                                    <input type="text" class="cui_text_field datepicker" th:value="${msdsDTO.MSDS_REG_DATE}"  name="MSDS_REG_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="날짜를 입력해주세요." messages="">
+                                    <input type="text" class="cui_text_field datepicker" th:value="${msdsDTO.MSDS_REG_DATE}"  name="MSDS_REG_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="날짜를 입력해주세요." messages="날짜를 입력해주세요.">
                                 </div>
                             </td>
                             <td><input type="text" class="cui_text_field" th:value="${msdsDTO.MSDS_LANG}" name="MSDS_LANG" reqcheck="reqcheck" data-messages="언어를 입력해주세요." messages=""></td>
@@ -125,12 +125,12 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span data-langsid="확인일자"></span></th>
-                            <th><span>CD</span></th>
-                            <th><span>HG</span></th>
-                            <th><span>PB</span></th>
-                            <th><span>CR6</span></th>
-                            <th><span>PBBS</span></th>
+                            <th><span data-langsid="확인일자"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>CD</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>HG</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>PB</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>CR6</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>PBBS</span><span style="color: #e74c3c;">*</span></th>
 
                             <th><span data-langsid="첨부파일"></span></th>
 
@@ -165,11 +165,11 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><span>PBDES</span></th>
-                            <th><span>DEHP</span></th>
-                            <th><span>BBP</span></th>
-                            <th><span>DBP</span></th>
-                            <th><span>DIBP</span></th>
+                            <th><span>PBDES</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>DEHP</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>BBP</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>DBP</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>DIBP</span><span style="color: #e74c3c;">*</span></th>
                         </tr>
                         <tr>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PBDES}"  name="ROHS_PBDES" reqcheck="reqcheck" data-messages="Rohs PBDES 입력해주세요." messages=""></td>
@@ -196,13 +196,13 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span data-langsid="확인일자"></span></th>
-                            <th><span>Cl</span></th>
-                            <th><span>Br</span></th>
-                            <th><span>Cl+Br</span></th>
-                            <th><span>F</span></th>
-                            <th><span>I</span></th>
-                            <th><span data-langsid="첨부파일"></span></th>
+                            <th><span data-langsid="확인일자"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>Cl</span> <span style="color: #e74c3c;">*</span></th>
+                            <th><span>Br</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>Cl+Br</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>F</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span>I</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="첨부파일"></span><span style="color: #e74c3c;">*</span></th>
 
                         </tr>
                         </thead>
@@ -272,7 +272,7 @@
                                             <div class="item_content">
                                                 <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
                                                 ><span>다운로드</span></button>
-                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del()" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                             </div>
                                         </div>
                                     </div>
@@ -342,10 +342,16 @@
         });
 
         var status_Del = function(obj){
-            var row = obj.parent().parent();
-            row.find("span[id*=FILE_NAME]").text('');
-            row.parent().find("input[name*=FILE_STATUS").val("DEL");
-            row.css("display","");
+            Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var row = obj.parent().parent();
+                    row.find("span[id*=FILE_NAME]").text('');
+                    row.parent().find("input[name*=FILE_STATUS").val("DEL");
+                    row.css("display","none");
+                }
+            });
+
         }
 
         var frmDetailSubmit = function () {
@@ -423,8 +429,12 @@
         var frmDetailNext = function () {
             //유효성체크
             var frmObj = $("#frmDetail");
-            var isValid = false;
-            isValid = Common.Validate(frmObj);
+            var isValid = true;
+
+            if(Common.Validate(frmObj) != true){
+                return;
+            }
+
 
             //파일 체크
             var flag = '';

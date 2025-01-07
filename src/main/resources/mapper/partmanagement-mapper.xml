@@ -33,6 +33,15 @@
         WHERE PM_IDX=#{idx}
     </update>
 
+    <update id="updateActiveList" parameterType="HashMap">
+        UPDATE SC_PART_MANAGEMENT_DATA
+        SET PM_ACTIVE_YN= #{status}
+        WHERE PM_IDX IN
+        <foreach item="item" index="index" collection="idxList.split(',')" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
     <select id="searchPartMgmt" parameterType="partManagement" resultType="partManagement">
 
         SELECT
@@ -353,6 +362,7 @@
     <select id="getSvhcList" resultType="svhcList">
         SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
         FROM SC_SVHC_DATA
+        ORDER BY SVHC_IDX asc
     </select>
 
     <select id="getDetailSvhcData" parameterType="String" resultType="partDetailSvhc">
@@ -384,24 +394,24 @@
 
         SELECT NVL(DECL_NUM,' ') AS DECL_NUM ,NVL(DECL_SUB_NUM,' ') as DECL_SUB_NUM,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT ,NVL(DECL_CLASS, ' ') AS DECL_CLASS
         FROM SC_DECLARATION_DATA
-
+        ORDER BY DECL_IDX asc
     </select>
 
     <select id="getDetailDeclarData" parameterType="String" resultType="partDetailDeclar">
-        SELECT  DECL_IDX,PM_IDX,DATA_GUBUN,NVL(CONFIRM_DATE, ' ') AS CONFIRM_DATE,NVL(APPLICABLE_NO,' ') AS APPLICABLE_NO
+        SELECT  DECL_IDX,PM_IDX,DATA_GUBUN,NVL(CONFIRM_DATE, ' ') AS CONFIRM_DATE,NVL(APPLICABLE_NO,' ') AS APPLICABLE_NO,NVL(NONE_APPLICABLE_NO,' ') AS NONE_APPLICABLE_NO
         ,NVL(FILE_PATH,' ') AS FILE_PATH,NVL(FILE_NAME,' ') AS FILE_NAME,NVL(WARRANTY_ITEM,' ') AS WARRANTY_ITEM
         FROM SC_PART_MGMT_DECLARATION_DATA
         WHERE PM_IDX=#{idx}
     </select>
 
     <insert id="declarSave" parameterType="partDetailDeclar">
-        INSERT INTO  SC_PART_MGMT_DECLARATION_DATA(DECL_IDX,PM_IDX,DATA_GUBUN,CONFIRM_DATE,APPLICABLE_NO,FILE_PATH,FILE_NAME,WARRANTY_ITEM)
-        VALUES (SEQ_DECL_IDX.NEXTVAL,#{PM_IDX},#{DATA_GUBUN},#{CONFIRM_DATE},#{APPLICABLE_NO},#{FILE_PATH},#{FILE_NAME},#{WARRANTY_ITEM})
+        INSERT INTO  SC_PART_MGMT_DECLARATION_DATA(DECL_IDX,PM_IDX,DATA_GUBUN,CONFIRM_DATE,APPLICABLE_NO,NONE_APPLICABLE_NO,FILE_PATH,FILE_NAME,WARRANTY_ITEM)
+        VALUES (SEQ_DECL_IDX.NEXTVAL,#{PM_IDX},#{DATA_GUBUN},#{CONFIRM_DATE},#{APPLICABLE_NO},#{NONE_APPLICABLE_NO},#{FILE_PATH},#{FILE_NAME},#{WARRANTY_ITEM})
     </insert>
 
     <update id="declarUpdate" parameterType="partDetailDeclar">
         UPDATE SC_PART_MGMT_DECLARATION_DATA
-        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},NONE_APPLICABLE_NO=#{NONE_APPLICABLE_NO},WARRANTY_ITEM=#{WARRANTY_ITEM}
         <if test="FILE_NAME != null and FILE_NAME != ''">
             <![CDATA[
                 ,FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME}

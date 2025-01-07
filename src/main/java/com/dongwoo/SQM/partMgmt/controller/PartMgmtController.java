@@ -386,6 +386,23 @@ public class PartMgmtController {
         return ResponseEntity.ok("OK");
     }
 
+    @PostMapping("/updateActiveStatus")
+    public ResponseEntity<?> updateActiveStatus(HttpServletRequest request, HttpSession session) {
+        try {
+            String activePmIdx = GetParam(request, "ACTIVE_IDX", "");
+            String inactivePmIdx = GetParam(request, "INACTIVE_IDX", "");
+            log.info("test1111-================================="+activePmIdx);
+
+            if( activePmIdx != "") partMgmtService.updateActiveList("ACTIVE", activePmIdx);
+            log.info("test1111222222-================================="+inactivePmIdx);
+            if( inactivePmIdx != "") partMgmtService.updateActiveList("INACTIVE", inactivePmIdx);
+
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
+        }
+        return ResponseEntity.ok("OK");
+    }
+
 
     /*********************************************************************************************************************
      ** Detail v페이지

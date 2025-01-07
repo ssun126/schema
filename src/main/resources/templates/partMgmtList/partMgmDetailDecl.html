@@ -125,10 +125,10 @@
                                             <input type="file" class="cui_file_field" name="DECL_FILE">
                                             <input type="hidden" name="FILE_STATUS">
                                             <button type="button" class="cui_button primary" onclick="setDeclExcelData();"><span data-langsid="적용"></span></button>
-                                            <div class="cui_items_wrap file_wrap" data-direction="left"  th:style="${declDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
+                                            <div class="cui_items_wrap file_wrap decl_file_div" data-direction="left"  th:style="${declDTO.FILE_NAME == ' ' ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${declDTO.FILE_NAME}" th:value="${declDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
-                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                                    <button type="button" class="cui_button icon endpoint" onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -153,6 +153,7 @@
 
                 <fieldset id="declDataFieldset" style="display:none;">
                     <input type="hidden" name="APPLICABLE_NO" th:value="${declDTO.APPLICABLE_NO}">
+                    <input type="hidden" name="NONE_APPLICABLE_NO" th:value="${declDTO.NONE_APPLICABLE_NO}">
                     <div class="cui_jqGrid_section">
                         <div class="cui_jqGrid_head">
                             <div class="jqGrid_label"> &nbsp;</div>
@@ -184,36 +185,6 @@
 <script>
     var AttachStatus = false;
     $(document).ready(function(){
-        $("input[name=DATA_GUBUN]").bind("change", function(){
-        // 직접입력
-		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
-		        //파일 그리드 초기화
-		        $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
-		        $("#gridArea_attach").pqGrid("refreshView");
-		        $("#Grid_attach_Div").css("display","none");
-		        AttachStatus = false;
-
-		        $('#declFileFieldset').hide();
-		    	$('#declDataFieldset').show();
-		    	//초기화
-		    	$("input[name=DECL_FILE]").val('');
-		    	$(".cui_attachments .cui_text_field").val('');
-		    	ListLoad();
-
-		    }
-		    // 첨부파일
-		    else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
-		        $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
-		        $("#gridArea_attach").pqGrid("refreshView");
-
-		        $('#declFileFieldset').show();
-		    	$('#declDataFieldset').hide();
-		    	//초기화
-		    	$("input[name=APPLICABLE_NO]").val('');
-		    	//$("#gridArea").empty();
-		    	$("#gridArea").pqGrid("refreshView");
-		    }
-        });
 
         //처음 로드 시 기존 저장된 데이터 있는지 확인
         if($("input[name=DECL_IDX]").val() != ''){
@@ -228,7 +199,76 @@
             //신규 제출구분 파일첨부 기본
             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
         }
+
+
+        $("input[name=DATA_GUBUN]").bind("change", function(){
+        // 직접입력
+		    if($("input[name='DATA_GUBUN']:checked").val() == 'WRITE'){
+		        if($("#frmDetail").find("input[name='DECL_FILE']").val() !== '' || $("#FILE_NAME").text() !== '' ){
+		            Common.Msg(siteLang.getLang("기존 데이터가 삭제됩니다. 제출구분을 변경하시겠습니까?"), {
+                        mode : "confrim"
+                        , okback : function () {
+                            initData('WRITE');
+                        }
+                        ,cancelback : function (){
+                            $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
+                        }
+                    });
+		        }else{
+		            initData('WRITE');
+		        }
+
+		    }
+		    // 첨부파일
+		    else if($("input[name='DATA_GUBUN']:checked").val() == 'ATTACH'){
+		        initData('ATTACH');
+		    }
+        });
+
+
     });
+
+    var status_Del = function(obj){
+        Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                var row = obj.parent().parent();
+                row.find("span[id*=FILE_NAME]").text('');
+                row.parent().find("input[name*=FILE_STATUS").val("DEL");
+                row.css("display","none");
+            }
+        });
+    }
+
+    var initData = function (status){
+        if(status === 'WRITE'){
+            //파일 그리드 초기화
+		    $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
+		    $("#gridArea_attach").pqGrid("refreshView");
+		    $("#Grid_attach_Div").css("display","none");
+		    AttachStatus = false;
+
+		    $('#declFileFieldset').hide();
+		    $('#declDataFieldset').show();
+		    //초기화
+		    $("input[name=DECL_FILE]").val('');
+		    $("#FILE_NAME").text('');
+            $(".decl_file_div").hide();
+		    $(".cui_attachments .cui_text_field").val('');
+		    ListLoad();
+        }else {
+            $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
+		    $("#gridArea_attach").pqGrid("refreshView");
+
+		    $('#declFileFieldset').show();
+		    $('#declDataFieldset').hide();
+		    //초기화
+		    $("input[name=APPLICABLE_NO]").val('');
+		    //$("#gridArea").empty();
+		    $("#gridArea").pqGrid("refreshView");
+        }
+    }
+
 
     var setDeclExcelData = function (){
         Common.Loading.Show();
@@ -334,20 +374,34 @@
         var dataJson = JSON.parse(data);
 
         var appVal = $("input[name=APPLICABLE_NO]").val();
+        var noneappVal = $("input[name=NONE_APPLICABLE_NO]").val();
+
         var ArrData = appVal.split(',');
+        var NoneArrData = noneappVal.split(',');
 
 
         for(var i = 0; i < dataJson.length; i++){
             var flag = false;
             for(var j=0; j<ArrData.length; j++){
-                if(dataJson[i].DECL_NUM === ArrData[j]) flag= true;
+                if(dataJson[i].DECL_NUM === ArrData[j] || dataJson[i].DECL_SUB_NUM === ArrData[j]) flag= true;
             }
 
             if(flag){
                 dataJson[i].DECL_YN='Y';
             }else{
-                if(dataJson[i].DECL_SUB_NUM == ' ' )  dataJson[i].DECL_YN= '';
-                else   dataJson[i].DECL_YN='N';
+                for(var k=0; k<NoneArrData.length; k++){
+                    if(dataJson[i].DECL_NUM === NoneArrData[k] || dataJson[i].DECL_SUB_NUM === NoneArrData[k]) {
+                        dataJson[i].DECL_YN='N';
+                    }
+                }
+                if(dataJson[i].DECL_YN === null){
+                    //dataJson[i].DECL_YN='';
+                    //신규 : 대표 빈값, 하위 N  |||  기존(한번 신청된 것) : 대표,하위 값 바인딩, 신규 row(decl 데이터추가 시) -  대표 빈값, 하위 N
+                    if(dataJson[i].DECL_SUB_NUM.trim() == '' )  dataJson[i].DECL_YN= '';
+                    else   dataJson[i].DECL_YN='N';
+                }
+<!--                if(dataJson[i].DECL_SUB_NUM == ' ' )  dataJson[i].DECL_YN= '';-->
+<!--                else   dataJson[i].DECL_YN='N';-->
             }
 
             if (dataJson[i].DECL_NUM.trim() == "") {
@@ -630,32 +684,67 @@
 
     }
 
-    var setApplicableNo =  function(flag){
-        var idxs = "";
-        var reVal = 'NoneVal';
-        var emptyval ="";
+    var setApplicableNo =  function(flag,stat){
+        var idxsY = "";
+        var idxsN = "";
+        var Message = "false";
+        //var emptyval ="";
         var pqName ="";
         if(flag === 'attach') pqName='_attach';
         var grid = $("#gridArea"+pqName).pqGrid("instance");
         for (j = 0; j < grid.pdata.length; j++) {
             if (grid.pdata[j]["DECL_YN"] === 'Y') {
-                if (idxs != "") idxs += ",";
-                var Nos = grid.pdata[j]["DECL_NUM"] === ''?grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
-                idxs += Nos;
-                reVal = 'true';
-            } else if(grid.pdata[j]["DECL_YN"] === ''){
-                if (emptyval != "") emptyval += ",";
-                var Nos = grid.pdata[j]["DECL_NUM"] === ''?grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
-                emptyval += Nos;
-                reVal = emptyval;
+                if (idxsY != "") idxsY += ",";
+                var Nos = grid.pdata[j]["DECL_NUM"].trim()  === ''?grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
+
+                idxsY += Nos;
+                Message = "true";
+
+                //Y 로 선택 된 대표 번호는 하위 번호들의 값 중 하나는 Y가 있어야 한다
+                if(grid.pdata[j]["DECL_NUM"].trim() !== ''){
+                    var flagY = false;
+                    //var tmp_DECL_NUM = Nos.split("-")[0];
+
+                    for (k = 0; k < grid.pdata.length; k++) {
+                        if (Common.Contains(grid.pdata[k]["DECL_SUB_NUM"], grid.pdata[j]["DECL_NUM"] + "-")) {
+                            if(grid.pdata[k]["DECL_YN"] === "Y"){
+                                flagY=true;
+                                break;
+                            }
+                        }
+                    }
+                    if(!flagY && stat !== 'save' ){
+                        //Common.Msg(siteLang.getLang(grid.pdata[j]["DECL_NUM"]+"하위의 값 중 Y로 체크된 것이 없습니다"));
+                        Message=grid.pdata[j]["DECL_NUM"]+"하위의 값 중 Y로 체크된 것이 없습니다";
+                        return Message;
+                    }
+                }
+
+            }else if(grid.pdata[j]["DECL_YN"] === 'N'){
+                if (idxsN != "") idxsN += ",";
+                var NosN = grid.pdata[j]["DECL_NUM"].trim()  === ''?grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
+
+                idxsN += NosN;
+
+            }else if(grid.pdata[j]["DECL_YN"] === '' && stat !== 'save'){
+
+                //Common.Msg(siteLang.getLang(grid.pdata[j]["DECL_NUM"]+"의 값이 없습니다"));
+                $("input[name=APPLICABLE_NO]").val(idxsY);
+                $("input[name=NONE_APPLICABLE_NO]").val(idxsN);
+
+                var num = grid.pdata[j]["DECL_NUM"].trim() === ''? grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
+                Message= num+"의 값이 없습니다";
+                return Message;
+
             }
         }
 
-        if(flag !== 'attach'){
-           $("input[name=APPLICABLE_NO]").val(idxs);
-        }
+        //if(flag !== 'attach'){
+           $("input[name=APPLICABLE_NO]").val(idxsY);
+           $("input[name=NONE_APPLICABLE_NO]").val(idxsN);
+        //}
 
-        return reVal;
+        return Message;
     }
 
     var frmDetailSave = function () {
@@ -673,25 +762,29 @@
             if($("#frmDetail").find("input[name='DECL_FILE']").val() !== ''){
                 if(AttachStatus){
                     flag = false;
-                    message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                    Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
+                    return;
                 }
                 var returnVal =setApplicableNo('attach');
-                if(returnVal === 'NoneVal'){
+                if(returnVal === 'false'){
                     flag = false;
-                    message= '첨부내용에 Y로 해당되는 내용이 없습니다';
+                    Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+                    return;
                 }else if(returnVal !== 'true'){
                     flag = false;
-                    message= returnVal+' 에 내용이 없습니다';
+                    Common.Msg(siteLang.getLang(returnVal));
+                    return;
                 }
-<!--                if(!setApplicableNo('attach')){-->
-<!--                    flag = false;-->
-<!--                    message= '첨부내용에 Y로 해당되는 내용이 없습니다';-->
+<!--                if(!setApplicableNo('attach')){   -->
+<!--                    Common.Msg(siteLang.getLang("Y로 해당되는 내용이 없습니다"));-->
+<!--                    return;-->
 <!--                }-->
+
             }
 
         }else{
             //Y 데이터 삽입
-            setApplicableNo();
+            setApplicableNo('write', 'save');
         }
 
         if(flag){
@@ -704,12 +797,6 @@
                     frmDetailSubmit();
                 }
             });
-        }else{
-            if(message === ''){
-                message = '저장 할 내용이 없습니다.';
-            }
-            Common.Msg(siteLang.getLang(message));
-            return;
         }
 
     }
@@ -726,26 +813,22 @@
         var isValid = true;
         isValid = Common.Validate(frmObj);
 
-
+        var returnVal ="";
         //대표no의 yn값이 없으면 안됨
         if($("#frmDetail").find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
-            var returnVal =setApplicableNo('attach');
-            if(returnVal === 'NoneVal'){
-                isValid = false;
-                message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-            }else if(returnVal !== 'true'){
-                isValid = false;
-                message= returnVal+' 에 내용이 없습니다';
-            }
+            returnVal =setApplicableNo('attach');
         }else{
-            var returnVal =setApplicableNo();
-            if(returnVal === 'NoneVal'){
-                isValid = false;
-                message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-            }else if(returnVal !== 'true'){
-                isValid = false;
-                message= returnVal+' 에 내용이 없습니다';
-            }
+            returnVal =setApplicableNo();
+        }
+
+        if(returnVal === 'false'){
+            isValid = false;
+            Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+            return;
+        }else if(returnVal !== 'true'){
+            isValid = false;
+            Common.Msg(siteLang.getLang(returnVal));
+            return;
         }
 
         //Y 일때는 하위 내용이 하나라도 Y가 있어야함

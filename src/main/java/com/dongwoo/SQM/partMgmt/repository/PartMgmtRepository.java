@@ -79,6 +79,13 @@ public class PartMgmtRepository {
 
         sql.update("partManagement.updateActive",map);
     }
+    public void updateActiveList(String status,String idx ){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("status",status);
+        map.put("idxList",idx);
+
+        sql.update("partManagement.updateActiveList",map);
+    }
 
     //detailpage
     public PartMgmtDTO getPartData(String idx) { return sql.selectOne("partManagement.getPartData",idx);}
