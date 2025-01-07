@@ -13,13 +13,13 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title"><span></span></h2>
+                <h2 class="cui_title"><span data-langsid="품질관리"></span></h2>
             </div>
         </div>
         <div class="cui_body">
             <form class="cui_form_section" data-legend="true">
                 <fieldset>
-                    <legend><span>품질관리 Audit 계획</span></legend>
+                    <legend><span data-langsid="Audit 계획">Audit 계획</span></legend>
 
                     <table class="cui_table">
                         <colgroup>
@@ -30,7 +30,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>업체명</span></th>
+                            <th><span data-langsid="업체명">업체명</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -38,7 +38,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>담당자</span></th>
+                            <th><span data-langsid="담당자">담당자</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>구분</span></th>
+                            <th><span data-langsid="구분">구분</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -56,7 +56,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><span>Audit 계획일</span></th>
+                            <th><span data-langsid="Audit 계획일">Audit 계획일</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -64,7 +64,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>Audit 방법</span></th>
+                            <th><span data-langsid="Audit 방법">Audit 방법</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -72,7 +72,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>Audit 구분</span></th>
+                            <th><span data-langsid="Audit 구분">Audit 구분</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -87,8 +87,8 @@
                 <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
                 <div class="cui_items_wrap visit" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드1</span></button>
-                        <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드2</span></button>
+                        <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span data-langsid="양식다운로드1">양식다운로드1</span></button>
+                        <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span data-langsid="양식다운로드2">양식다운로드2</span></button>
                     </div>
                 </div>
                 <!-- Audit 방법 : 대면일 때 노출되는 버튼 -->
@@ -101,7 +101,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>Audit 내용</span></th>
+                            <th><span data-langsid="Audit 계획">>Audit 내용</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -111,23 +111,23 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><span>File 첨부</span></th>
+                            <th><span data-langsid="File 첨부">File 첨부</span></th>
                             <td class="attachmentsContainer">
                                 <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
                                     <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span data-langsid="삭제">삭제</span></button>
                                         </div>
                                     </div>
-                                    <button type="button" class="cui_button" id="addVisitBtn"><span>추가</span></button>
+                                    <button type="button" class="cui_button" id="addVisitBtn"><span data-langsid="추가">추가</span></button>
                                 </div>
                                 <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
                                     <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
                                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span data-langsid="다운로드" >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -146,12 +146,12 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>제출 구분</span></th>
+                            <th><span data-langsid="제출구분">제출 구분</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
-                                        <label class="cui_checkbox"><input type="radio" name="chkType" value="file" checked><i></i><span>파일첨부</span></label>
-                                        <label class="cui_checkbox"><input type="radio" name="chkType" value="text"><i></i><span>직접입력</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="chkType" value="file" checked><i></i><span data-langsid="파일첨부">파일첨부</span></label>
+                                        <label class="cui_checkbox"><input type="radio" name="chkType" value="text"><i></i><span data-langsid="직접입력">직접입력</span></label>
                                     </div>
                                 </div>
                             </td>
@@ -162,8 +162,8 @@
                 <fieldset class="self" id="fs_file">
                     <div class="cui_items_wrap" data-direction="right">
                         <div class="item_content">
-                            <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드1</span></button>
-                            <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span>양식다운로드2</span></button>
+                            <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span data-langsid="양식다운로드1">양식다운로드1</span></button>
+                            <button type="submit" class="cui_button secondary" onclick ="downSampleFile()"><span data-langsid="양식다운로드2">양식다운로드2</span></button>
                         </div>
                     </div>
                     <table class="cui_table" id="authItemTable">
@@ -173,23 +173,23 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>파일 첨부</span></th>
+                            <th><span data-langsid="파일 첨부">파일 첨부</span></th>
                             <td class="attachmentsContainer">
                                 <div class="cui_attachments"  th:if="${#lists.isEmpty(companyAuthFile)}">
                                     <input type="file" class="cui_file_field" name="file" onchange="toggleDeleteButton(this)" style="width: 75px;">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span data-langsid="삭제">삭제</span></button>
                                         </div>
                                     </div>
-                                    <button type="button" class="cui_button" id="addSelfBtn"><span>추가</span></button>
+                                    <button type="button" class="cui_button" id="addSelfBtn"><span data-langsid="추가">추가</span></button>
                                 </div>
                                 <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
                                     <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}">
                                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span data-langsid="다운로드">다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@
                 </fieldset>
                 <fieldset class="self" id="fs_text">
                     <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>평가 항목</span></div>
+                        <div class="bullet_title_label"><span data-langsid="평가 항목">평가 항목</span></div>
                     </div>
                     <table class="cui_table center" id="itemTable">
                         <colgroup>
@@ -214,13 +214,13 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가기준</span></th>
-                            <th><span>평가</span></th>
-                            <th><span>점수</span></th>
-                            <th><span>근거 자료</span></th>
+                            <th><span data-langsid="항목">항목</span></th>
+                            <th><span data-langsid="내용">내용</span></th>
+                            <th><span data-langsid="답변 가이던스">답변 가이던스</span></th>
+                            <th><span data-langsid="평가 기준">평가 기준</span></th>
+                            <th><span data-langsid="평가">평가</span></th>
+                            <th><span data-langsid="점수">점수</span></th>
+                            <th><span data-langsid="근거자료">근거자료</span></th>
                         </tr>
                         </thead>
                         <tbody th:unless="${#lists.isEmpty(auditItemPoint)}">
@@ -249,12 +249,12 @@
                 <!-- Audit 방법 : Self -->
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content" th:if="${companyAuth.APPROVE_STATE != 'SEND'}">
-                        <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
+                        <button type="submit" class="cui_button primary" id="sendAuth"><span data-langsid="제출">제출</span></button>
                     </div>
                 </div>
                 <!-- Audit 결과 -->
                 <fieldset class="resultField">
-                    <legend><span>품질관리 Audit 결과</span></legend>
+                    <legend><span data-langsid="Audit 결과">Audit 결과</span></legend>
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -266,7 +266,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>Audit 실시일</span></th>
+                            <th><span data-langsid="Audit 실시일">Audit 실시일</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -274,7 +274,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>담당자</span></th>
+                            <th><span data-langsid="담당자">담당자</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -282,7 +282,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>Audit 등급</span></th>
+                            <th><span data-langsid="Audit 등급">Audit 등급</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -290,7 +290,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <th><span>NCR 발행여부</span></th>
+                            <th><span data-langsid="NCR 발행여부">NCR 발행여부</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -310,7 +310,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>Audit 결과</span></th>
+                            <th><span data-langsid="Audit 결과">Audit 결과</span></th>
                             <td>
                                 <div class="cui_items_wrap" data-direction="left">
                                     <div class="item_content">
@@ -320,14 +320,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <th><span>첨부자료</span></th>
+                            <th><span data-langsid="첨부자료">첨부자료</span></th>
                             <td >
                                 <div class="cui_attachments">
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span>
                                         </div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span data-langsid="삭제">삭제</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -532,7 +532,7 @@
             });
         }
         formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
-        formData.append('type', 'QUALITY');  // flag가 SAFETY / QUALITY
+        formData.append('type', 'QUALITY');  // flag가 QUALITY / SAFETY
         formData.append('inputType', inputType);  // total 점수 $('#totalPoint').val();
 
          $.ajax({

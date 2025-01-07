@@ -105,19 +105,19 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th><span>구분</span></th>
-                                    <th><span>항목</span></th>
-                                    <th><span>내용</span></th>
-                                    <th><span>답변 가이던스</span></th>
-                                    <th><span>평가 기준</span></th>
-                                    <th><span>평가</span></th>
-                                    <th><span>점수</span></th>
-                                    <th><span>근거자료</span></th>
+                                    <th><span data-langsid="구분">구분</span></th>
+                                    <th><span data-langsid="항목">항목</span></th>
+                                    <th><span data-langsid="내용">내용</span></th>
+                                    <th><span data-langsid="답변 가이던스">답변 가이던스</span></th>
+                                    <th><span data-langsid="평가 기준">평가 기준</span></th>
+                                    <th><span data-langsid="평가">평가</span></th>
+                                    <th><span data-langsid="점수">점수</span></th>
+                                    <th><span data-langsid="근거자료">근거자료</span></th>
                                 </tr>
                                 </thead>
                                 <tbody th:if="${#lists.isEmpty(auditItemPoint)}">
                                 <tr>
-                                    <td colspan="8">등록된 정보가 없습니다.</td>
+                                    <td colspan="8" data-langsid="등록된 정보가 없습니다.">등록된 정보가 없습니다.</td>
                                 </tr>
                                 </tbody>
                                 <tbody>
@@ -150,7 +150,7 @@
                                 </colgroup>
                                 <tbody>
                                 <tr>
-                                    <th><span>승인의견</span></th>
+                                    <th><span data-langsid="승인의견">승인의견</span></th>
                                     <td><textarea  id="approveComment" name="approveComment" rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                                 </tr>
                                 </tbody>
@@ -161,7 +161,7 @@
                 <fieldset class="resultField">
                     <div class="cui_section" id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                         <div class="cui_bullet_title">
-                            <div class="bullet_title_label"><span>반려사유</span></div>
+                            <div class="bullet_title_label"><span data-langsid="반려사유">반려사유</span></div>
                         </div>
                         <div>
                             <textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea>
@@ -170,7 +170,7 @@
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
+                        <button type="submit" class="cui_button primary" id="sendAuth"><span data-langsid="제출">제출</span></button>
                     </div>
                 </div>
             </form>

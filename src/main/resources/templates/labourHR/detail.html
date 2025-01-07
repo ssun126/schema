@@ -72,14 +72,14 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>구분</span></th>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가 기준</span></th>
-                            <th><span>평가</span></th>
-                            <th><span>점수</span></th>
-                            <th><span>근거자료</span></th>
+                            <th><span data-langsid="구분">구분</span></th>
+                            <th><span data-langsid="항목">항목</span></th>
+                            <th><span data-langsid="내용">내용</span></th>
+                            <th><span data-langsid="답변 가이던스">답변 가이던스</span></th>
+                            <th><span data-langsid="평가 기준">평가 기준</span></th>
+                            <th><span data-langsid="평가">평가</span></th>
+                            <th><span data-langsid="점수">점수</span></th>
+                            <th><span data-langsid="근거자료">근거자료</span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -112,7 +112,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>승인의견</span></th>
+                            <th><span data-langsid="승인의견">승인의견</span></th>
                             <td><textarea  id="approveComment" name="approveComment" rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
@@ -120,7 +120,7 @@
                 </div>
                 <div class="cui_section" id="resultField" th:if="${companyAuth.APPROVE_STATE != 'SEND'}">
                     <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>결과</span></div>
+                        <div class="bullet_title_label"><span data-langsid="결과">결과</span></div>
                     </div>
                     <table class="cui_table center">
                         <colgroup>
@@ -131,19 +131,19 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>점수</span></th>
+                            <th><span data-langsid="점수">점수</span></th>
                             <td><span th:text="${companyAuth.POINT}">0</span> / 20</td>
-                            <th><span>처리결과</span></th>
+                            <th><span data-langsid="처리결과">처리결과</span></th>
                             <td><span th:text="${companyAuth.APPROVE_STATE}"></span></td>
                         </tr>
                         <tr>
-                            <th><span>처리자</span></th>
+                            <th><span data-langsid="처리자">처리자</span></th>
                             <td><span th:text="${companyAuth.UP_DW_USER_IDX}"></span></td>
-                            <th><span>처리일자</span></th>
+                            <th><span data-langsid="처리일자">처리일자</span></th>
                             <td><span th:text="${companyAuth.APPROVE_DATE}"></span></td>
                         </tr>
                         <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
-                            <th><span>반려사유</span></th>
+                            <th><span data-langsid="반려사유">반려사유</span></th>
                             <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
@@ -151,8 +151,8 @@
                 </div>
                 <div class="cui_items_wrap" data-direction="right" th:if="${companyAuth.APPROVE_STATE == 'SEND'}">
                     <div class="item_content">
-                        <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
-                        <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span data-langsid="승인">승인</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span data-langsid="반려">반려</span></button>
                     </div>
                 </div>
             </form>
@@ -168,7 +168,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span>반려 사유</span></div>
+                <div class="main_label"><span data-langsid="반려 사유">반려 사유</span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('Reason')"><span>Close</span></button>
@@ -186,8 +186,8 @@
                     </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
-                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span>저장</span></button>
-                            <button type="button" id="ReasonPop" class="cui_button secondary" onClick="modal_close('Reason')"><span>닫기</span></button>
+                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span data-langsid="저장">저장</span></button>
+                            <button type="button" id="ReasonPop" class="cui_button secondary" onClick="modal_close('Reason')"><span data-langsid="닫기">닫기</span></button>
                         </div>
                     </div>
 

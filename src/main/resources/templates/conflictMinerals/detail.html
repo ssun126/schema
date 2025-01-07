@@ -22,7 +22,7 @@
         <div class="cui_body">
             <form class="cui_form_section" data-legend="true">
                 <fieldset th:unless="${companyAuthFile == null}">
-                    <legend><span>조사 양식</span></legend>
+                    <legend><span data-langsid="조사 양식">조사 양식</span></legend>
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -32,24 +32,24 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>분쟁광물(CMRT)</span></th>
+                            <th><span data-langsid="분쟁광물(CMRT)">분쟁광물(CMRT)</span></th>
                             <td>
                                 <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
                                     <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'CMRT' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span  data-langsid="다운로드" >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
                             </td>
-                            <th><span>책임광물(EMRT)</span></th>
+                            <th><span data-langsid="책임광물(EMRT)">책임광물(EMRT)</span></th>
                             <td>
                                 <div class="cui_attachments" th:unless="${#lists.isEmpty(companyAuthFile)}">
                                     <div class="cui_items_wrap" data-direction="left" th:each="file : ${companyAuthFile}" th:if="${file.FILE_TYPE == 'EMRT'}">
                                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${file.FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span >다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${file.FILE_NAME}]])"><span data-langsid="다운로드" >다운로드</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                     </div>-->
                 </fieldset>
                 <fieldset>
-                    <legend><span>조사 결과 기재</span></legend>
+                    <legend><span data-langsid="조사 결과 기재">조사 결과 기재</span></legend>
                     <table class="cui_table" th:unless="${#lists.isEmpty(conflictData)}">
                         <colgroup>
                             <col style="width:154px;">
@@ -69,7 +69,7 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>조사일자</span></th>
+                            <th><span data-langsid="조사일자">조사일자</span></th>
                             <td>
                                 <span th:each="data : ${conflictData}" th:text="${data.INSPECTION_DATE}">2024-11-11</span>
                             </td>
@@ -89,10 +89,10 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th rowspan="2"><span>자재코드</span></th>
-                            <th rowspan="2"><span>자재명</span></th>
-                            <th colspan="4"><span>분쟁광물(CMRT)</span></th>
-                            <th colspan="2"><span>책임광물(EMRT)</span></th>
+                            <th rowspan="2"><span data-langsid="자재코드">자재코드</span></th>
+                            <th rowspan="2"><span data-langsid="자재명">자재명</span></th>
+                            <th colspan="4"><span data-langsid="분쟁광물(CMRT)">분쟁광물(CMRT)</span></th>
+                            <th colspan="2"><span data-langsid="책임광물(EMRT)">책임광물(EMRT)</span></th>
                         </tr>
                         <tr>
                             <th><span>Tantalum</span></th>
@@ -105,7 +105,7 @@
                         </thead>
                       <tbody th:if="${#lists.isEmpty(conflictData)}">
                       <tr>
-                        <td colspan="8">등록된 자재 정보가 없습니다.</td>
+                        <td colspan="8" data-langsid="등록된 자재 정보가 없습니다.">등록된 자재 정보가 없습니다.</td>
                       </tr>
                       </tbody>
                       <tbody th:unless="${#lists.isEmpty(conflictData)}">
@@ -114,38 +114,38 @@
                         <td><span th:text="${data.PM_PART_NAME}"></span></td>
                         <td>
                           <select class="cui_select_field" disabled>
-                            <option value="Y" th:selected="${data.TANTALUM_YN == 'Y'}">사용</option>
-                            <option value="N" th:selected="${data.TANTALUM_YN == 'N'}">미사용</option>
+                            <option value="Y" th:selected="${data.TANTALUM_YN == 'Y'}" data-langsid="사용">사용</option>
+                            <option value="N" th:selected="${data.TANTALUM_YN == 'N'}" data-langsid="미사용">미사용</option>
                           </select>
                         </td>
                         <td>
                           <select class="cui_select_field" disabled>
-                            <option value="Y" th:selected="${data.TUNGSTEN_YN == 'Y'}">사용</option>
-                            <option value="N" th:selected="${data.TUNGSTEN_YN == 'N'}">미사용</option>
+                            <option value="Y" th:selected="${data.TUNGSTEN_YN == 'Y'}" data-langsid="사용">사용</option>
+                            <option value="N" th:selected="${data.TUNGSTEN_YN == 'N'}" data-langsid="미사용">미사용</option>
                           </select>
                         </td>
                         <td>
                           <select class="cui_select_field" disabled>
-                            <option value="Y" th:selected="${data.TIN_YN == 'Y'}">사용</option>
-                            <option value="N" th:selected="${data.TIN_YN == 'N'}">미사용</option>
+                            <option value="Y" th:selected="${data.TIN_YN == 'Y'}" data-langsid="사용">사용</option>
+                            <option value="N" th:selected="${data.TIN_YN == 'N'}" data-langsid="미사용">미사용</option>
                           </select>
                         </td>
                         <td>
                           <select class="cui_select_field" disabled>
-                            <option value="Y" th:selected="${data.GOLD_YN == 'Y'}">사용</option>
-                            <option value="N" th:selected="${data.GOLD_YN == 'N'}">미사용</option>
+                            <option value="Y" th:selected="${data.GOLD_YN == 'Y'}" data-langsid="사용">사용</option>
+                            <option value="N" th:selected="${data.GOLD_YN == 'N'}" data-langsid="미사용">미사용</option>
                           </select>
                         </td>
                         <td>
                           <select class="cui_select_field" disabled>
-                            <option value="Y" th:selected="${data.COBALT_YN == 'Y'}">사용</option>
-                            <option value="N" th:selected="${data.COBALT_YN == 'N'}">미사용</option>
+                            <option value="Y" th:selected="${data.COBALT_YN == 'Y'}" data-langsid="사용">사용</option>
+                            <option value="N" th:selected="${data.COBALT_YN == 'N'}" data-langsid="미사용">미사용</option>
                           </select>
                         </td>
                         <td>
                           <select class="cui_select_field" disabled>
-                            <option value="Y" th:selected="${data.MICA_YN == 'Y'}">사용</option>
-                            <option value="N" th:selected="${data.MICA_YN == 'N'}">미사용</option>
+                            <option value="Y" th:selected="${data.MICA_YN == 'Y'}" data-langsid="사용">사용</option>
+                            <option value="N" th:selected="${data.MICA_YN == 'N'}" data-langsid="미사용">미사용</option>
                           </select>
                         </td>
                       </tr>
@@ -171,19 +171,19 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>점수</span></th>
+                            <th><span data-langsid="점수">점수</span></th>
                             <td><input type="text" name="point" id="totalPoint" th:value="${companyAuth.POINT != null ? companyAuth.POINT : 0}"> / 6 </td>
-                            <th><span>처리결과</span></th>
+                            <th><span data-langsid="처리결과">처리결과</span></th>
                             <td th:text="${companyAuth.APPROVE_STATE}"></td>
                         </tr>
                         <tr>
-                            <th><span>처리자</span></th>
+                            <th><span data-langsid="처리자">처리자</span></th>
                             <td th:text="${companyAuth.WORK_USER_NAME}"></td>
-                            <th><span>처리일자</span></th>
+                            <th><span data-langsid="처리일자">처리일자</span></th>
                             <td th:text="${companyAuth.APPROVE_DATE}"></td>
                         </tr>
                         <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
-                            <th><span>반려사유</span></th>
+                            <th><span data-langsid="반려사유">반려사유</span></th>
                             <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
@@ -195,9 +195,9 @@
                     <div class="toolbar_default"></div>
                 </div>
                 <div class="toolbar_aside">
-                    <button type="button" class="cui_button primary" id="appBtn" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
-                    <button type="button" class="cui_button primary" id="rejBtn" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
-                    <button type="button" class="cui_button secondary" th:onclick="viewHistory()"><span>이전 정보 보기</span></button>
+                    <button type="button" class="cui_button primary" id="appBtn" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span data-langsid="승인">승인</span></button>
+                    <button type="button" class="cui_button primary" id="rejBtn" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span data-langsid="반려">반려</span></button>
+                    <button type="button" class="cui_button secondary" th:onclick="viewHistory()"><span data-langsid="이전 정보 보기">이전 정보 보기</span></button>
                 </div>
             </div>
         </div>
@@ -208,7 +208,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label">승인 History</div>
+                <div class="main_label" data-langsid="승인 History">승인 History</div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark"><span>Close</span></button>
@@ -225,7 +225,7 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th><span>승인일</span></th>
+                                <th><span data-langsid="승인일">승인일</span></th>
                                 <th><span></span></th>
                             </tr>
                             </thead>
@@ -233,7 +233,7 @@
                             <tr th:each="data : ${companyAuthHistory}">
                                 <td><span th:text="${data.APPROVE_DATE}">2024-07-31</span></td>
                                 <td>
-                                    <span><button type="button" class="cui_button secondary" th:onclick="viewHistoryDetail([[${data.AUTH_SEQ}]])"><span>내용보기</span></button></span>
+                                    <span><button type="button" class="cui_button secondary" th:onclick="viewHistoryDetail([[${data.AUTH_SEQ}]])"><span data-langsid="내용보기">내용보기</span></button></span>
                                 </td>
                             </tr>
                             </tbody>
@@ -243,7 +243,7 @@
                 <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
                     <div class="item_content">
                         <button type="button" id="BtnClose" name="INFO_FLAG" value="Close"
-                                class="cui_button primary modal-close" dialogBtn="close"><span>닫기</span></button>
+                                class="cui_button primary modal-close" dialogBtn="close"><span data-langsid="닫기">닫기</span></button>
                     </div>
                 </div>
             </div>
@@ -254,7 +254,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span>반려 사유</span></div>
+                <div class="main_label"><span data-langsid="반려 사유">반려 사유</span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('Reason')"><span>Close</span></button>
@@ -272,8 +272,8 @@
                     </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
-                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span>저장</span></button>
-                            <button type="button" id="ReasonPop" class="cui_button secondary" dialogBtn="close"><span>닫기</span></button>
+                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span data-langsid="저장">저장</span></button>
+                            <button type="button" id="ReasonPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기">닫기</span></button>
                         </div>
                     </div>
 

@@ -33,14 +33,14 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>분류</span></th>
-                            <th><span>인증서</span></th>
-                            <th><span>인증일</span></th>
-                            <th><span>만료일</span></th>
-                            <th><span>등록일</span></th>
-                            <th><span>등록서류</span></th>
-                            <th><span>상태</span></th>
-                            <th><span>상태일자</span></th>
+                            <th><span data-langsid="분류">분류</span></th>
+                            <th><span data-langsid="인증서">인증서</span></th>
+                            <th><span data-langsid="인증일">인증일</span></th>
+                            <th><span data-langsid="만료일">만료일</span></th>
+                            <th><span data-langsid="등록일">등록일</span></th>
+                            <th><span data-langsid="등록서류">등록서류</span></th>
+                            <th><span data-langsid="상태">상태</span></th>
+                            <th><span data-langsid="상태일자">상태일자</span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -55,16 +55,16 @@
                                     <div class="cui_items_wrap" data-direction="left">
                                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${data.FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span >다운로드</span></button>
-                                            <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span  data-langsid="다운로드">다운로드</span></button>
+                                            <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span data-langsid="삭제">삭제</span></button>
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="stateField">
                                 <div style="padding:1px;" th:if="${data.ITEM_STATE == 'SEND'}">
-                                    <button type="button" class="cui_button first" th:onclick="approveIsoAuth([[${data.AUTH_CODE}]])"><span>승인</span></button>
-                                    <button type="button" class="cui_button secondary" th:onclick="rejectIsoAuth([[${data.AUTH_CODE}]])"><span>반려</span></button>
+                                    <button type="button" class="cui_button first" th:onclick="approveIsoAuth([[${data.AUTH_CODE}]])"><span data-langsid="승인">승인</span></button>
+                                    <button type="button" class="cui_button secondary" th:onclick="rejectIsoAuth([[${data.AUTH_CODE}]])"><span data-langsid="반려">반려</span></button>
                                 </div>
                                 <div th:if="${data.ITEM_STATE != 'SEND'}"><span th:text="${data.ITEM_STATE}"></span></div>
                             </td>
@@ -88,7 +88,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span>반려 사유</span></div>
+                <div class="main_label"><span data-langsid="반려 사유">반려 사유</span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
@@ -106,8 +106,8 @@
                     </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
-                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span>저장</span></button>
-                            <button type="button" id="ReasonPop" class="cui_button secondary" dialogBtn="close"><span>닫기</span></button>
+                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span data-langsid="저장">저장</span></button>
+                            <button type="button" id="ReasonPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="닫기">닫기</span></button>
                         </div>
                     </div>
                 </form>
