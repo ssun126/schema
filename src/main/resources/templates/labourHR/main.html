@@ -105,19 +105,19 @@
                                 </colgroup>
                                 <thead>
                                 <tr>
-                                    <th><span>구분</span></th>
-                                    <th><span>항목</span></th>
-                                    <th><span>내용</span></th>
-                                    <th><span>답변 가이던스</span></th>
-                                    <th><span>평가 기준</span></th>
-                                    <th><span>평가</span></th>
-                                    <th><span>점수</span></th>
-                                    <th><span>근거자료</span></th>
+                                    <th><span data-langsid="구분">구분</span></th>
+                                    <th><span data-langsid="항목">항목</span></th>
+                                    <th><span data-langsid="내용">내용</span></th>
+                                    <th><span data-langsid="답변 가이던스">답변 가이던스</span></th>
+                                    <th><span data-langsid="평가 기준">평가 기준</span></th>
+                                    <th><span data-langsid="평가">평가</span></th>
+                                    <th><span data-langsid="점수">점수</span></th>
+                                    <th><span data-langsid="근거자료">근거자료</span></th>
                                 </tr>
                                 </thead>
                                 <tbody th:if="${#lists.isEmpty(auditItemPoint)}">
                                 <tr>
-                                    <td colspan="8">등록된 정보가 없습니다.</td>
+                                    <td colspan="8" data-langsid="등록된 정보가 없습니다.">등록된 정보가 없습니다.</td>
                                 </tr>
                                 </tbody>
                                 <tbody>
@@ -143,13 +143,25 @@
                                 </tr>
                                 </tfoot>
                             </table>
+                            <table class="cui_table center" th:if="${companyAuth.APPROVE_STATE == 'APPROVED'}">
+                                <colgroup>
+                                    <col style="width:154px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span data-langsid="승인의견">승인의견</span></th>
+                                    <td><textarea  id="approveComment" name="approveComment" rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </form>
                 </fieldset>
                 <fieldset class="resultField">
                     <div class="cui_section" id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
                         <div class="cui_bullet_title">
-                            <div class="bullet_title_label"><span>반려사유</span></div>
+                            <div class="bullet_title_label"><span data-langsid="반려사유">반려사유</span></div>
                         </div>
                         <div>
                             <textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea>
@@ -158,7 +170,7 @@
                 </fieldset>
                 <div class="cui_items_wrap" data-direction="right">
                     <div class="item_content">
-                        <button type="submit" class="cui_button primary" id="sendAuth"><span>제출</span></button>
+                        <button type="submit" class="cui_button primary" id="sendAuth"><span data-langsid="제출">제출</span></button>
                     </div>
                 </div>
             </form>
@@ -170,7 +182,8 @@
     $(document).ready(function() {
         $('#rejectReason').hide();
         $("#fs_text").hide(); //파일첨부가 초기값이므로
-        loadInfo();
+        $('.resultField').hide();
+
 
         // 평가기준에 맞게 Select box 표시 >> 선택된 값의 Total 점수 표시
         var totalScore = 0;
@@ -187,7 +200,7 @@
             $selectBox.attr('name', 'selectPoint');
             $selectBox.append($baseOption);
             // 각 줄을 옵션으로 변환하여 select box에 추가
-
+            lines.forEach(function(line) {
                 var cleanLine = line.replace('ㆍ', '').trim();  // "ㆍ" 문자를 제거하고 여백 제거
                 var parts = cleanLine.split(':'); // " : "을 기준으로 분리
 
@@ -246,6 +259,7 @@
                 previousScore = selectedScore;  // 새 점수로 업데이트
             });
         });
+        loadInfo();
 
         //파일 타입 체크
         $('input[type="file"]').on('change', function(event) {
@@ -302,7 +316,7 @@
         const formData = new FormData();
         var tableData = [];
         var chkValue = $("input:radio[name=chkType]:checked").val();
-        console.log("chkValue>>>>>>>>>>"+chkValue);
+
         if(chkValue == "file"){
             const fileInput = document.querySelector('input[type="file"]');
             if (fileInput && fileInput.files.length > 0) {
@@ -367,10 +381,13 @@
     //제출 상태
     function loadInfo(){
         const comState = `[[${companyAuth.APPROVE_STATE}]]`;
-        $('.resultField').hide();
+        const inputType = `[[${companyAuth.INPUT_TYPE}]]`;
 
         if(comState != "" ){
             $("#fs_text").show();
+            $("input:radio[name=chkType]").prop("disabled", true);
+            $("select[name=selectPoint]").prop("disabled", true);
+
             if(comState === 'SEND'){
                 $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
                 $('#sendAuth').hide();
@@ -382,8 +399,7 @@
                 $('.resultField').show(); // 결과 보이기
             }
         }
-         $("input:radio[name=chkType]").prop("disabled", true);
-        // $("select[name='selectPoint']").prop("disabled", false);
+
     }
 
 

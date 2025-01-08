@@ -6,6 +6,7 @@
     <select id="findAll" resultType="svhcList">
         SELECT SVHC_NUM,SVHC_NAME,SVHC_CASNUM, SVHC_EUNUM
         FROM SC_SVHC_DATA
+        ORDER BY SVHC_IDX asc
     </select>
 
     <delete id="deletAll">

@@ -171,10 +171,12 @@ public class AuditMgmtRestController {
 
     //Audit 공통 승인/반려 처리
     @PostMapping("/setAuthData")
-    public ResponseEntity<?> setAuthData(@RequestParam("reason")String reason, @RequestParam("com_code")String com_code, @RequestParam("auth_seq")int auth_seq, @RequestParam("state")String state, @RequestParam("auth_type")String auth_type, @RequestParam("point")double point) {
+    public ResponseEntity<?> setAuthData(@RequestParam("data") String data, @RequestParam("reason")String reason, @RequestParam("com_code")String com_code,
+                                         @RequestParam("auth_seq")int auth_seq, @RequestParam("state")String state, @RequestParam("auth_type")String auth_type,
+                                         @RequestParam("point")double point) {
         log.info("setAuthData!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         //인증서 승인 상태 업데이트
-        int resultCnt = auditCommonService.updateStatus(com_code, auth_seq, reason, state, auth_type, point);
+        int resultCnt = auditCommonService.updateStatus(data, com_code, auth_seq, reason, state, auth_type, point);
 
         // 요청 결과 반환 (응답에 상태 코드와 데이터를 포함)
         if(resultCnt > 0){
@@ -212,9 +214,11 @@ public class AuditMgmtRestController {
      * @throws IOException
      */
     @PostMapping("/sendAuthData")
-    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam("total") int total, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
+    public String sendCommonAuthData(@RequestParam("data") String data, @RequestParam("type") String type, @RequestParam("inputType") String inputType, @RequestParam(value = "file_name", required = false) MultipartFile[] fileNames) throws IOException {
         try {
-            auditCommonService.saveCommonAuthData(data, type, total, fileNames);
+            auditCommonService.saveCommonAuthData(data, type, inputType, fileNames);
+            //TODO 제출시 메일 발송
+            //TODO 셀프일떄는 제출시 POVIS 전송
 
             return "데이터가 성공적으로 저장되었습니다.";
         } catch (Exception e) {

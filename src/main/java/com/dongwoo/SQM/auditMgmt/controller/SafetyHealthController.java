@@ -54,6 +54,11 @@ public class SafetyHealthController {
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("SAFETY", COM_CODE);
         model.addAttribute("companyAuthFile", companyAuthFile);
 
+        //접속 업체가 SELF AUDIT 대상자인지 체크
+        //1. 당해년도 대면/서면 대상 업체인지
+        //2. 아니라면 전년도 대면/서면 업체인지
+        //1,2 모두 아니면 SELF AUDIT
+        model.addAttribute("auditWay", "VISIT"); //대면일때
 
         return "safetyHealth/detail";
     }
@@ -81,6 +86,14 @@ public class SafetyHealthController {
 
         List<AuditMgmtDTO> companyAuthFile = auditCommonService.getCompanyAuthFile("SAFETY", comCode);
         model.addAttribute("companyAuthFile", companyAuthFile);
+
+        //접속 업체가 SELF AUDIT 대상자인지 체크
+        //1. 당해년도 대면/서면 대상 업체인지
+        //2. 아니라면 전년도 대면/서면 업체인지
+        //1,2 모두 아니면 SELF AUDIT
+        model.addAttribute("auditWay", "VISIT"); //대면일때
+
+
         return "safetyHealth/main";
     }
 }

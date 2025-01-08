@@ -72,14 +72,14 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span>구분</span></th>
-                            <th><span>항목</span></th>
-                            <th><span>내용</span></th>
-                            <th><span>답변 가이던스</span></th>
-                            <th><span>평가 기준</span></th>
-                            <th><span>평가</span></th>
-                            <th><span>점수</span></th>
-                            <th><span>근거자료</span></th>
+                            <th><span data-langsid="구분">구분</span></th>
+                            <th><span data-langsid="항목">항목</span></th>
+                            <th><span data-langsid="내용">내용</span></th>
+                            <th><span data-langsid="답변 가이던스">답변 가이던스</span></th>
+                            <th><span data-langsid="평가 기준">평가 기준</span></th>
+                            <th><span data-langsid="평가">평가</span></th>
+                            <th><span data-langsid="점수">점수</span></th>
+                            <th><span data-langsid="근거자료">근거자료</span></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -105,10 +105,22 @@
                         </tr>
                         </tfoot>
                     </table>
+                    <table class="cui_table center">
+                        <colgroup>
+                            <col style="width:154px;">
+                            <col>
+                        </colgroup>
+                        <tbody>
+                        <tr>
+                            <th><span data-langsid="승인의견">승인의견</span></th>
+                            <td><textarea  id="approveComment" name="approveComment" rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="cui_section" id="resultField" th:if="${companyAuth.APPROVE_STATE != 'SEND'}">
                     <div class="cui_bullet_title">
-                        <div class="bullet_title_label"><span>결과</span></div>
+                        <div class="bullet_title_label"><span data-langsid="결과">결과</span></div>
                     </div>
                     <table class="cui_table center">
                         <colgroup>
@@ -119,19 +131,19 @@
                         </colgroup>
                         <tbody>
                         <tr>
-                            <th><span>점수</span></th>
-                            <td th:text="${companyAuth.POINT}"></td>
-                            <th><span>처리결과</span></th>
-                            <td th:text="${companyAuth.APPROVE_STATE}"></td>
+                            <th><span data-langsid="점수">점수</span></th>
+                            <td><span th:text="${companyAuth.POINT}">0</span> / 20</td>
+                            <th><span data-langsid="처리결과">처리결과</span></th>
+                            <td><span th:text="${companyAuth.APPROVE_STATE}"></span></td>
                         </tr>
                         <tr>
-                            <th><span>처리자</span></th>
-                            <td th:text="${companyAuth.UP_DW_USER_IDX}"></td>
-                            <th><span>처리일자</span></th>
-                            <td th:text="${companyAuth.APPROVE_DATE}"></td>
+                            <th><span data-langsid="처리자">처리자</span></th>
+                            <td><span th:text="${companyAuth.UP_DW_USER_IDX}"></span></td>
+                            <th><span data-langsid="처리일자">처리일자</span></th>
+                            <td><span th:text="${companyAuth.APPROVE_DATE}"></span></td>
                         </tr>
                         <tr id="rejectReason" th:if="${companyAuth.APPROVE_STATE == 'REJECT'}">
-                            <th><span>반려사유</span></th>
+                            <th><span data-langsid="반려사유">반려사유</span></th>
                             <td colspan="3"><textarea rows="5" style="width:100%" th:text="${companyAuth.REASON}"></textarea></td>
                         </tr>
                         </tbody>
@@ -139,8 +151,8 @@
                 </div>
                 <div class="cui_items_wrap" data-direction="right" th:if="${companyAuth.APPROVE_STATE == 'SEND'}">
                     <div class="item_content">
-                        <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span>승인</span></button>
-                        <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span>반려</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="approveAuth([[${companyAuth.AUTH_SEQ}]])"><span data-langsid="승인">승인</span></button>
+                        <button type="button" class="cui_button primary" th:onclick="rejectAuth([[${companyAuth.AUTH_SEQ}]])"><span data-langsid="반려">반려</span></button>
                     </div>
                 </div>
             </form>
@@ -156,7 +168,7 @@
     <div class="dialog_container">
         <div class="dialog_head">
             <div class="dialog_title">
-                <div class="main_label"><span>반려 사유</span></div>
+                <div class="main_label"><span data-langsid="반려 사유">반려 사유</span></div>
             </div>
             <div class="dialog_toolbar">
                 <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" onClick="modal_close('Reason')"><span>Close</span></button>
@@ -174,8 +186,8 @@
                     </div>
                     <div class="cui_items_wrap" data-direction="center">
                         <div class="item_content">
-                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span>저장</span></button>
-                            <button type="button" id="ReasonPop" class="cui_button secondary" onClick="modal_close('Reason')"><span>닫기</span></button>
+                            <button type="submit" id="ReasonAdd" class="cui_button primary"><span data-langsid="저장">저장</span></button>
+                            <button type="button" id="ReasonPop" class="cui_button secondary" onClick="modal_close('Reason')"><span data-langsid="닫기">닫기</span></button>
                         </div>
                     </div>
 
@@ -204,6 +216,7 @@
             $baseOption.val('');  // 빈값
             $baseOption.text('평가');
             $selectBox.append($baseOption);
+            $selectBox.attr('name', 'selectPoint');
             // 각 줄을 옵션으로 변환하여 select box에 추가
             lines.forEach(function(line) {
                 var cleanLine = line.replace('ㆍ', '').trim();  // "ㆍ" 문자를 제거하고 여백 제거
@@ -319,19 +332,42 @@
 
     // 공통 저장 처리
     function updateAuthData(state, reason, authSeq, point) {
+        const formData = new FormData();
+        const tableData = [];
         const comCode = `[[${companyAuth.COM_CODE}]]`;  // 회사 코드
         const type = 'LABOUR';
+
+        $("#itemTable tbody tr").each(function() {
+            var row = {};
+            var fileCnt = {};
+            row['POINT'] = $(this).find('td').eq(6).text();
+            row['AUDIT_COMMENT'] = $(this).find('input[name="AUDIT_COMMENT"]').val() || '';
+            row['AUDIT_ID'] = $(this).find('input[name="AUDIT_ID"]').val();
+
+            console.log("insert data"+row['AUDIT_ID']);
+            tableData.push(row);
+        });
+        formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
+        formData.append('reason', reason);
+        formData.append('state', state);
+        formData.append('com_code', comCode);
+        formData.append('auth_seq', authSeq);
+        formData.append('auth_type', type);
+        formData.append('point', point);
+
         $.ajax({
             url: '/auditMgmt/setAuthData',  // 서버의 API URL
             type: 'POST',
-            data: { reason: reason, state: state, com_code: comCode, auth_seq: authSeq, auth_type: type, point: point  },
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(response) {
                 // 상태만 변경
                 $('div[name="stateField"]').text(state); // 상태 표시 업데이트
                 showAlert('success', '데이터가 성공적으로 저장되었습니다.');
                 setTimeout(function() {
                     location.reload();  // 승인 시 페이지 새로고침
-                }, 100);  // 100ms 후에 실행
+                }, 500);  // 500ms 후에 실행
             },
             error: function() {
                 showAlert('warning', '정보를 가져오는 데 실패했습니다.');
@@ -352,7 +388,8 @@
         const authSeq = key;
         const state = 'APPROVED';
         const point = $('#totalPoint').text() != null ? $('#totalPoint').text() : 0;
-        updateAuthData(state, '', authSeq, point);
+        const approveComment = $('#approveComment').val();  // 반려사유
+        updateAuthData(state, approveComment, authSeq, point);
     }
 
     function goList() {

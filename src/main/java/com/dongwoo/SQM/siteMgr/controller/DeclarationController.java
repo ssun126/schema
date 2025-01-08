@@ -51,8 +51,10 @@ public class DeclarationController {
         XSSFSheet worksheet = workbook.getSheetAt(0);
 
         List<DeclarationDTO> declarationDTOList = new ArrayList<>();
+        int declCnt = 0;
 
-        for(int i = 4; i<worksheet.getPhysicalNumberOfRows(); i++){
+        for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
+            declCnt++;
             DeclarationDTO declarationDTO = new DeclarationDTO();
 
             DataFormatter formatter = new DataFormatter();
@@ -67,7 +69,8 @@ public class DeclarationController {
             String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
 
 
-            log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+            log.info("엑셀 값 : "+declCnt+"!!!!!" +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+            declarationDTO.setDECL_IDX(declCnt);
             declarationDTO.setDECL_NUM(DECL_NUM);
             declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
             declarationDTO.setDECL_NAME(DECL_NAME);

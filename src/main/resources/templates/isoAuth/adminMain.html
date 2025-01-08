@@ -12,7 +12,7 @@
     <div class="cui_main">
         <div class="cui_head">
             <div class="head_content">
-                <h2 class="cui_title" data-langsid="ISO 인증"><span>ISO 인증</span></h2>
+                <h2 class="cui_title"><span data-langsid="ISO 인증">ISO 인증</span></h2>
             </div>
         </div>
         <div class="cui_body">
@@ -90,6 +90,21 @@ $(function () {
         'APPROVED': '승인',
         'REJECT': '반려'
     };
+    
+    
+    var RowColorChg = function (ui) {
+    
+        var data = ui.rowData;
+        var rowStatus = data.APPROVE_STATE;
+        console.log(rowStatus);
+        if (rowStatus == "SEND") {
+            return { style: "background-color:#A9E2F3" } ; //하늘색
+        } else if (rowStatus == "REJECT") {
+            return { style: "background-color:#F5A9A9" } ; //핑크
+        } else if (rowStatus == "APPROVED" ) {
+            return { style: "background-color:#FFFFFF" } ;
+        }
+    }
 
     var obj = {
         bubble: false,
@@ -140,12 +155,12 @@ $(function () {
         }
     };
     obj.colModel = [
-        { data_langsid: "승인상태", title: siteLang.getLang("승인상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "APPROVE_STATE", sortable: false, editor: false, editable: false },
-        { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: false, editor: false, editable: false },
-        { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: false, editor: false, editable: false },
-        { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: false, editor: false, editable: false },
-        { data_langsid: "제출일자", title: siteLang.getLang("제출일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: false, editor: false, editable: false },
-        { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: false, editor: false, editable: false }
+        { data_langsid: "승인상태", title: siteLang.getLang("승인상태"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "APPROVE_STATE", sortable: false, editor: false, editable: false,render: RowColorChg },
+        { data_langsid: "업체코드", title: siteLang.getLang("업체코드"), width: 100, halign: "center", align: "left", dataType: "string", dataIndx: "COM_CODE", sortable: false, editor: false, editable: false,render: RowColorChg },
+        { data_langsid: "업체명", title: siteLang.getLang("업체명"), width: 350, halign: "center", align: "left", dataType: "string", dataIndx: "COM_NAME", sortable: false, editor: false, editable: false,render: RowColorChg },
+        { data_langsid: "점수", title: siteLang.getLang("점수"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "POINT", sortable: false, editor: false, editable: false,render: RowColorChg },
+        { data_langsid: "제출일자", title: siteLang.getLang("제출일자"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SEND_DATE", sortable: false, editor: false, editable: false,render: RowColorChg },
+        { data_langsid: "승인일자", title: siteLang.getLang("승인일자"), hidden : false, width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "APPROVE_DATE", sortable: false, editor: false, editable: false,render: RowColorChg }
     ];
     obj.dataModel = { data: data };
     $("#gridArea").pqGrid(obj);

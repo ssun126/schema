@@ -22,6 +22,9 @@ public class partDetailSccsDTO {
     @JsonProperty("FILE_STATUS")
     private String FILE_STATUS;
 
+    @JsonProperty("CONFIRM_CHK")
+    private String CONFIRM_CHK;
+
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;
 }

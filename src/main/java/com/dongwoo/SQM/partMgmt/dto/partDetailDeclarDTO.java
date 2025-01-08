@@ -20,9 +20,13 @@ public class partDetailDeclarDTO {
     private String FILE_NAME;
     @JsonProperty("APPLICABLE_NO")
     private String APPLICABLE_NO;
+    @JsonProperty("NONE_APPLICABLE_NO")
+    private String NONE_APPLICABLE_NO;
 
     @JsonProperty("WARRANTY_ITEM")
     private String WARRANTY_ITEM;
+    @JsonProperty("CONFIRM_CHK")
+    private String CONFIRM_CHK;
 
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;

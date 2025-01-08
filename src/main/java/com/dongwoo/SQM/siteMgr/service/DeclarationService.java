@@ -41,7 +41,7 @@ public class DeclarationService
         PreparedStatement pstmt = null;
 
         try{
-            String sql = "INSERT INTO SC_DECLARATION_DATA(DECL_IDX,DECL_NUM,DECL_SUB_NUM,DECL_NAME,DECL_CASNUM,DECL_WEIGHT,DECL_CLASS,DECL_GROUND) VALUES (SEQ_DECL_DATA.NEXTVAL,?,?,?,?,?,?,?) ";
+            String sql = "INSERT INTO SC_DECLARATION_DATA(DECL_IDX,DECL_NUM,DECL_SUB_NUM,DECL_NAME,DECL_CASNUM,DECL_WEIGHT,DECL_CLASS,DECL_GROUND) VALUES (?,?,?,?,?,?,?,?) ";
             Class.forName("oracle.jdbc.OracleDriver");
             //conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.1.191:1521/xe","c##NSQM","12345");
             conn = DriverManager.getConnection(jdbcURl,username,password);
@@ -53,13 +53,15 @@ public class DeclarationService
             for(DeclarationDTO dto: declarationDTOList){
                 count++;
 
-                pstmt.setString(1, dto.getDECL_NUM());
-                pstmt.setString(2, dto.getDECL_SUB_NUM());
-                pstmt.setString(3, dto.getDECL_NAME());
-                pstmt.setString(4, dto.getDECL_CASNUM());
-                pstmt.setString(5, dto.getDECL_WEIGHT());
-                pstmt.setString(6, dto.getDECL_CLASS());
-                pstmt.setString(7, dto.getDECL_GROUND());
+
+                pstmt.setInt(1, dto.getDECL_IDX());
+                pstmt.setString(2, dto.getDECL_NUM());
+                pstmt.setString(3, dto.getDECL_SUB_NUM());
+                pstmt.setString(4, dto.getDECL_NAME());
+                pstmt.setString(5, dto.getDECL_CASNUM());
+                pstmt.setString(6, dto.getDECL_WEIGHT());
+                pstmt.setString(7, dto.getDECL_CLASS());
+                pstmt.setString(8, dto.getDECL_GROUND());
 
                 pstmt.addBatch();
                 pstmt.clearParameters();

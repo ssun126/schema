@@ -4,6 +4,7 @@ import com.dongwoo.SQM.auditMgmt.dto.AuditMgmtDTO;
 import com.dongwoo.SQM.auditMgmt.dto.IsoAuthItemDTO;
 import com.dongwoo.SQM.auditMgmt.repository.AuditMgmtRepository;
 import com.dongwoo.SQM.auditMgmt.repository.IsoAuthRepository;
+import com.dongwoo.SQM.common.service.FileStorageService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,8 @@ public class IsoAuthService {
 
     @Value("${Upload.path.audit}")
     private String uploadPath;
+
+    private final FileStorageService fileStorageService;
 
 
     public int saveAuth(AuditMgmtDTO isoAuthDTO) {
@@ -103,10 +106,8 @@ public class IsoAuthService {
                 params.put("AUTH_CODE", dto.getAUTH_CODE());
                 params.put("COM_CODE", comCode);
                 IsoAuthItemDTO ItemDTO = isoAuthRepository.findByIsoAuthItem(params);
-                if(ItemDTO != null){
-                    log.info(ItemDTO.getITEM_STATE());
-                    log.info(dto.getITEM_STATE());
-                    if(ItemDTO != dto) {
+                if(ItemDTO != null){ //이전 정보가 있고
+                    if(ItemDTO != dto) { //정보가 같지 않다면 update
                         isoAuthRepository.updateItem(dto);  // updateItem
                     }
                 }else {
@@ -115,11 +116,6 @@ public class IsoAuthService {
             }
         }
 
-        //type이 send이면 제출 >> POVIS 전송
-        if(type.equals("SEND")){
-            //POVIS 전송
-            log.info("POVIS에 ISO정보 제출");
-        }
     }
 
     private String saveFile(MultipartFile file) throws IOException {
@@ -129,7 +125,7 @@ public class IsoAuthService {
 
         // 저장할 파일의 경로 설정 (파일 이름에 타임스탬프를 추가하여 중복 방지)
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        File destinationFile  = new File(uploadPath  + File.separator +  fileName);
+        File destinationFile  = new File(fileStorageService.getISOUploadDirectory() + File.separator +  fileName);
         file.transferTo(destinationFile );  // 파일 저장
 
         return destinationFile.getAbsolutePath();  // 저장된 파일 경로 반환
@@ -248,6 +244,11 @@ public class IsoAuthService {
             rsltCnt = isoAuthRepository.updateStatus(isoAuthItemDTO);
             if(rsltCnt > 0 ){
                 rsltCnt += saveAuthResult(com_code, state, totalPoint);
+            }
+
+            //승인이면  >> POVIS 전송
+            if(state.equals("SEND")){
+                log.info("POVIS에 ISO정보 제출");
             }
         }catch(Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

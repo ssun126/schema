@@ -36,13 +36,13 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th><span>분류</span></th>
-                                <th><span>인증서</span></th>
-                                <th><span>인증일</span></th>
-                                <th><span>만료일</span></th>
-                                <th><span>등록일</span></th>
-                                <th><span>등록서류</span></th>
-                                <th><span>승인여부</span></th>
+                                <th><span data-langsid="분류">분류</span></th>
+                                <th><span data-langsid="인증서">인증서</span></th>
+                                <th><span data-langsid="인증일">인증일</span></th>
+                                <th><span data-langsid="만료일">만료일</span></th>
+                                <th><span data-langsid="등록일">등록일</span></th>
+                                <th><span data-langsid="등록서류">등록서류</span></th>
+                                <th><span data-langsid="승인여부">승인여부</span></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -60,13 +60,13 @@
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_label" data-cui-icon="paperclip"><span th:text="${data.FILE_NAME}"></span></div>
                                             <div class="item_content">
-                                                <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span >다운로드</span></button>
-                                                <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span>삭제</span></button>
+                                                <button type="button" class="cui_button icon endpoint download-button" data-cui-icon="download" data-tooltip-title="다운로드" th:onclick="downloadFile([[${data.FILE_NAME}]])"><span  data-langsid="다운로드">다운로드</span></button>
+                                                <button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" th:style="'display:' + (${data.ITEM_STATE == 'REJECT' or data.ITEM_STATE == 'SAVE'} ? 'block' : 'none')"><span data-langsid="삭제">삭제</span></button>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                <td><input type="hidden" class="cui_text_field" name="ITEM_STATE" th:value="${data.ITEM_STATE}"><span th:text="${data.ITEM_STATE}"></span><span th:if="${data.ITEM_STATE == 'APPROVED'}" th:text="${data.STATE_DATE}"></span></td>
+                                <td><input type="hidden" class="cui_text_field" name="ITEM_STATE" th:value="${data.ITEM_STATE}"><span th:text="${data.ITEM_STATE}"></span><span th:if="${data.ITEM_STATE == 'APPROVED'}" th:text="'[' +${data.STATE_DATE}+']'"></span></td>
                             </tr>
                             </tbody>
                         </table>
@@ -90,219 +90,215 @@
     </div>
 </div>
 <script th:inline="javascript">
-    $(document).ready(function() {
-        //파일 타입 체크
-        $('input[type="file"]').on('change', function(event) {
-            const files = event.target.files; // 선택된 모든 파일
-            let isValid = true;
+$(document).ready(function() {
 
-            // 각 파일에 대해 validation 체크
-            $.each(files, function(index, file) {
-                if (file && !validation(file)) {
-                    // 잘못된 파일인 경우
-                    event.target.value = '';  // input 초기화
-                    clearFile($(event.target).closest('.cui_attachments').find('#deleteButton'));
-                    console.log('잘못된 파일: ', file.name);
-                    isValid = false;
-                    return false;  // 잘못된 파일이 있으면 반복문을 종료
-                }
-            });
+    //파일 타입 체크
+    $('input[type="file"]').on('change', function(event) {
+        const files = event.target.files; // 선택된 모든 파일
+        let isValid = true;
+
+        // 각 파일에 대해 validation 체크
+        $.each(files, function(index, file) {
+            if (file && !validation(file)) {
+                // 잘못된 파일인 경우
+                event.target.value = '';  // input 초기화
+                clearFile($(event.target).closest('.cui_attachments').find('#deleteButton'));
+                console.log('잘못된 파일: ', file.name);
+                isValid = false;
+                return false;  // 잘못된 파일이 있으면 반복문을 종료
+            }
         });
     });
+});
 
-    var companyIsoAuth = /*[[${companyIsoAuth}]]*/ [];
-    // REJECT 상태인 항목에서 REASON 값만 추출하여 줄바꿈 없이 하나의 문자열로 결합
-    var rejectReasons = companyIsoAuth
-        .filter(function(data) {
-            return data.ITEM_STATE === 'REJECT';  // ITEM_STATE가 'REJECT'인 항목만 필터링
-        })
-        .map(function(data) {
-            return data.AUTH_CODE + ":"+ data.REASON;  // REASON 값만 추출
-        })
-        .join('\n');  // 빈 문자열로 결합하여 줄바꿈 넣어 하나의 문자열로 생성
-    // 결합된 REASON 값을 textarea에 출력
-    document.getElementById('rejectReason').value = rejectReasons;
+var companyIsoAuth = /*[[${companyIsoAuth}]]*/ [];
+// REJECT 상태인 항목에서 REASON 값만 추출하여 줄바꿈 없이 하나의 문자열로 결합
+var rejectReasons = companyIsoAuth
+    .filter(function(data) {
+        return data.ITEM_STATE === 'REJECT';  // ITEM_STATE가 'REJECT'인 항목만 필터링
+    })
+    .map(function(data) {
+        return data.AUTH_CODE + ":"+ data.REASON;  // REASON 값만 추출
+    })
+    .join('\n');  // 빈 문자열로 결합하여 줄바꿈 넣어 하나의 문자열로 생성
+// 결합된 REASON 값을 textarea에 출력
+document.getElementById('rejectReason').value = rejectReasons;
 
-    var notSend = companyIsoAuth.every(function(data) {
-        return data.ITEM_STATE === null;  // 모든 항목의 ITEM_STATE가 null 인지 확인
-    });
-    var allApproved = companyIsoAuth.every(function(data) {
-        return data.ITEM_STATE === 'APPROVED' && data.COM_CODE !== null;  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
-    });
-    var notApproved = companyIsoAuth.some(function(data) {
-        return data.ITEM_STATE === 'REJECT';
-    });
-    var sendSubmit= companyIsoAuth.some(function(data) {
-        return data.ITEM_STATE === 'SEND';
-    });
-    if (notSend) { //제출전
-        $('#footButton').show();
-        $('#topButton').show();
-    }
-    if (notApproved) { //반려가 있는 경우
-        //$('#authState').text('[반려 : ' + formattedDate([[${companyAuth.APPROVE_DATE}]])+']');
-        $('#topButton').hide();
-        $('#submitIsoAuth').hide();
-        $('#rejectArea').show();
-    }
-    if (sendSubmit || allApproved) { //제출하거나 모두 승인이 되면 전체 버튼 숨기기
-        //$('#authState').text('[' + (sendSubmit ? '제출: ' + formattedDate([[${companyAuth.SEND_DATE}]]) : '승인: ' + formattedDate([[${companyAuth.APPROVE_DATE}]])) + ']');
-        $('#footButton').hide();
-        $('#topButton').hide();
-    }
+var notSend = companyIsoAuth.every(function(data) {
+    return data.ITEM_STATE === null;  // 모든 항목의 ITEM_STATE가 null 인지 확인
+});
+var allApproved = companyIsoAuth.every(function(data) {
+    return data.ITEM_STATE === 'APPROVED' && data.COM_CODE !== null;  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
+});
+var notApproved = companyIsoAuth.some(function(data) {
+    return data.ITEM_STATE === 'REJECT';
+});
+var sendSubmit= companyIsoAuth.some(function(data) {
+    return data.ITEM_STATE === 'SEND';
+});
+if (notSend) { //제출전
+    $('#footButton').show();
+    $('#topButton').show();
+}
+if (notApproved) { //반려가 있는 경우
+    $('#topButton').hide();
+    $('#submitIsoAuth').hide();
+    $('#rejectArea').show();
+}
+if (sendSubmit || allApproved) { //제출하거나 모두 승인이 되면 전체 버튼 숨기기
+    $('#footButton').hide();
+    $('#topButton').hide();
+}
 
-    // 저장 버튼,제출 버튼 클릭 시 데이터 저장
-    $("#submitIsoAuth, #sendIsoAuth").click(function() {
-        if ($(this).attr('id') === 'sendIsoAuth') { //제출일때
-            saveTableData('SEND');
-        }else{
-            saveTableData('SAVE');
+// 저장 버튼,제출 버튼 클릭 시 데이터 저장
+$("#submitIsoAuth, #sendIsoAuth").click(function() {
+    if ($(this).attr('id') === 'sendIsoAuth') { //제출일때
+        saveTableData('SEND');
+    }else{
+        saveTableData('SAVE');
+    }
+});
+
+// '추가' 버튼 클릭 시 테이블에 행 추가
+$('#addRowBtn').on('click', function() {
+    // 새로운 tr 행 생성
+    var row = $('<tr>' +
+                '<td><input type="checkbox" class="delete-checkbox">기타</td>' +  // 첫 번째 td - key 입력 필드
+                '<td><input type="text" class="cui_text_field" name="AUTH_CODE"></td>' +  // 두 번째 td - value 입력 필드
+                '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +  // 날짜 필드
+                '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +  // 날짜 필드
+                '<td><input type="text" class="cui_text_field datepicker" name="REG_INPUT_DATE"></td>' +  // 날짜 필드
+                '<td><div class="cui_attachments">' +
+                        '<input type="file" class="cui_file_field" name="file">' +
+                        '<div class="cui_items_wrap" data-direction="left">' +
+                            '<div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>' +
+                            '<div class="item_content"><button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button><div>' +
+                        '</div>' +
+                    '</div>' +
+                '</td>' +
+                '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE"></td>' +  // 상태
+              '</tr>');
+    Common.Load(row);
+    $('#isoAuthItemTable tbody').append(row);
+
+    // 새로 추가된 input 필드들에 대해 datepicker 초기화
+    $(".datepicker").datepicker({
+        dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
+    });
+});
+
+// '삭제' 버튼 클릭 시 테이블에 행 삭제
+$('#delRowBtn').on('click', function() {
+    var checkboxes = document.querySelectorAll('.delete-checkbox');  // Select all checkboxes
+    checkboxes.forEach(function(checkbox) {
+        if (checkbox.checked) {
+            var row = checkbox.closest('tr');  // Find the closest row
+            row.remove();  // Remove the row from the table
+        }
+    });
+});
+
+// 파일 삭제
+function clearFile(button) {
+    const $button = $(button);
+    const $td = $button.closest('td');
+    const $fileInput = $td.find('input[type="file"]');
+    const $fileLabel = $td.find('.item_label span');
+    const $fileLabelDiv = $td.find('.item_label');
+    const $downButton = $td.find('.download-button');
+
+    // 파일 입력 초기화
+    $fileInput.val('');
+    $fileLabel.text('');
+    // 삭제 버튼 숨기기
+    $button.hide();
+    $downButton.hide();
+    $fileLabelDiv.hide();
+}
+
+// 저장/제출
+function saveTableData(flag) {
+    var tableData = [];
+
+    $("#isoAuthItemTable tbody tr").each(function() {
+        var row = {};
+        var fileCnt = {};
+        row['AUTH_TYPE'] = $(this).find('td').eq(0).text();
+        row['AUTH_CODE'] = $(this).find('td').eq(1).text() == ''?$(this).find('input[name="AUTH_CODE"]').val():$(this).find('td').eq(1).text();
+        row['AUTH_DATE'] = $(this).find('input[name="AUTH_DATE"]').val();
+        row['EXP_DATE'] = $(this).find('input[name="EXP_DATE"]').val();
+        row['REG_INPUT_DATE'] = $(this).find('input[name="REG_INPUT_DATE"]').val();
+        //APPROVED, SEND 상태인 항목은 제외
+        if($(this).find('input[name="ITEM_STATE"]').val() !== 'APPROVED' || $(this).find('input[name="ITEM_STATE"]').val() !== 'SEND'){
+            var authDate = row['AUTH_DATE'];
+            var expDate = row['EXP_DATE'];
+            var regInputDate = row['REG_INPUT_DATE'];
+
+            var fileInput = $(this).find('input[type="file"]')[0];
+
+            if (fileInput && fileInput.files.length > 0) {
+                row['FILE_NAME'] = fileInput.files[0].name;
+                row['FILE_PATH'] = fileInput.files[0].path;
+                 console.log("insert path?????????"+fileInput.files[0].path);
+            }
+            if(row['FILE_NAME'] == undefined){
+                row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
+                 console.log("$(this).find('td').eq(5).find('span').eq(2).text()"+$(this).find('td').eq(5).find('span').eq(2).text());
+            }
+            console.log("insert data"+row['FILE_NAME']);
+        }
+        tableData.push(row);
+    });
+
+    var formData = new FormData();
+    formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
+    formData.append('type', flag);  // flag가 send는 제출, save는 저장
+
+     // 파일들을 formData에 추가
+    $("#isoAuthItemTable tbody tr").each(function(index) {
+        var fileInput = $(this).find('input[name="file"]')[0];
+        if (fileInput && fileInput.files.length > 0) {
+            // 파일에 대한 유효성 검증
+            var file = fileInput.files[0];
+            if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
+                formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
+            } else {
+                showAlert('warning','파일 검증 실패했습니다.');
+                console.log("파일 검증 실패: " + file.name);
+            }
         }
     });
 
-    // '추가' 버튼 클릭 시 테이블에 행 추가
-    $('#addRowBtn').on('click', function() {
-        // 새로운 tr 행 생성
-        var row = $('<tr>' +
-                    '<td><input type="checkbox" class="delete-checkbox">기타</td>' +  // 첫 번째 td - key 입력 필드
-                    '<td><input type="text" class="cui_text_field" name="AUTH_CODE"></td>' +  // 두 번째 td - value 입력 필드
-                    '<td><input type="text" class="cui_text_field datepicker" name="AUTH_DATE"></td>' +  // 날짜 필드
-                    '<td><input type="text" class="cui_text_field datepicker" name="EXP_DATE"></td>' +  // 날짜 필드
-                    '<td><input type="text" class="cui_text_field datepicker" name="REG_INPUT_DATE"></td>' +  // 날짜 필드
-                    '<td><div class="cui_attachments">' +
-                            '<input type="file" class="cui_file_field" name="file">' +
-                            '<div class="cui_items_wrap" data-direction="left">' +
-                                '<div class="item_label" data-cui-icon="paperclip" style="display: none;"><span></span></div>' +
-                                '<div class="item_content"><button type="button" class="cui_button icon endpoint delete-button" data-cui-icon="xmark" data-tooltip-title="삭제" onclick="clearFile(this)" style="display: none;"><span>삭제</span></button><div>' +
-                            '</div>' +
-                        '</div>' +
-                    '</td>' +
-                    '<td><input type="hidden" class="cui_text_field" name="ITEM_STATE"></td>' +  // 상태
-                  '</tr>');
-        Common.Load(row);
-        $('#isoAuthItemTable tbody').append(row);
-
-        // 새로 추가된 input 필드들에 대해 datepicker 초기화
-        $(".datepicker").datepicker({
-            dateFormat: "yy-mm-dd",  // 날짜 형식 (예: 2024-11-22)
-        });
+    $.ajax({
+        url: '/auditMgmt/sendIsoAuthData',
+        type: 'POST',
+        data: formData,
+        processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
+        contentType: false,  // 기본 contentType을 사용하지 않음
+        success: function(response) {
+            showAlert('success','데이터가 성공적으로 저장되었습니다.');
+            setTimeout(function() {
+                location.reload();  // 승인 시 페이지 새로고침
+            }, 500);  // 500ms 후에 실행
+        },
+        error: function(xhr, status, error) {
+            showAlert('warning','데이터 저장에 실패했습니다.');
+        }
     });
+}
 
-    // '삭제' 버튼 클릭 시 테이블에 행 삭제
-    $('#delRowBtn').on('click', function() {
-        var checkboxes = document.querySelectorAll('.delete-checkbox');  // Select all checkboxes
-        checkboxes.forEach(function(checkbox) {
-            if (checkbox.checked) {
-                var row = checkbox.closest('tr');  // Find the closest row
-                row.remove();  // Remove the row from the table
-            }
-        });
-    });
+ function downloadFile(fileName) {
+    // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+    var downloadUrl = '/auditMgmt/getIsoAuditFileDown?filename=' + encodeURIComponent(fileName);
 
-    // 파일 삭제
-    function clearFile(button) {
-        const $button = $(button);
-        const $td = $button.closest('td');
-        const $fileInput = $td.find('input[type="file"]');
-        const $fileLabel = $td.find('.item_label span');
-        const $fileLabelDiv = $td.find('.item_label');
-        const $downButton = $td.find('.download-button');
+    // 다운로드 링크를 동적으로 생성
+    var link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
 
-        // 파일 입력 초기화
-        $fileInput.val('');
-        $fileLabel.text('');
-        // 삭제 버튼 숨기기
-        $button.hide();
-        $downButton.hide();
-        $fileLabelDiv.hide();
-    }
-
-    // 저장/제출
-    function saveTableData(flag) {
-        var tableData = [];
-
-        $("#isoAuthItemTable tbody tr").each(function() {
-            var row = {};
-            var fileCnt = {};
-            row['AUTH_TYPE'] = $(this).find('td').eq(0).text();
-            row['AUTH_CODE'] = $(this).find('td').eq(1).text() == ''?$(this).find('input[name="AUTH_CODE"]').val():$(this).find('td').eq(1).text();
-            row['AUTH_DATE'] = $(this).find('input[name="AUTH_DATE"]').val();
-            row['EXP_DATE'] = $(this).find('input[name="EXP_DATE"]').val();
-            row['REG_INPUT_DATE'] = $(this).find('input[name="REG_INPUT_DATE"]').val();
-            //APPROVED, SEND 상태인 항목은 제외
-            if($(this).find('input[name="ITEM_STATE"]').val() !== 'APPROVED' || $(this).find('input[name="ITEM_STATE"]').val() !== 'SEND'){
-                var authDate = row['AUTH_DATE'];
-                var expDate = row['EXP_DATE'];
-                var regInputDate = row['REG_INPUT_DATE'];
-
-                var fileInput = $(this).find('input[type="file"]')[0];
-
-                if ((authDate || expDate || regInputDate) && (!fileInput || fileInput.files.length === 0)) {
-                    showAlert('warning','인증정보를 입력한 경우 파일을 등록해야 합니다.');
-                    return false;  // Stops the loop and prevents form submission
-                }
-
-                if (fileInput && fileInput.files.length > 0) {
-                    row['FILE_NAME'] = fileInput.files[0].name;
-                    row['FILE_PATH'] = fileInput.files[0].path;
-                }
-                if(row['FILE_NAME'] == undefined){
-                    row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
-                }
-                console.log("insert data"+row['FILE_NAME']);
-            }
-            tableData.push(row);
-        });
-
-        var formData = new FormData();
-        formData.append('data', JSON.stringify(tableData));  // 테이블 데이터를 JSON으로 직렬화하여 전송
-        formData.append('type', flag);  // flag가 send는 제출, save는 저장
-
-         // 파일들을 formData에 추가
-        $("#isoAuthItemTable tbody tr").each(function(index) {
-            var fileInput = $(this).find('input[name="file"]')[0];
-            if (fileInput && fileInput.files.length > 0) {
-                // 파일에 대한 유효성 검증
-                var file = fileInput.files[0];
-                if (validation(file)) {  // 검증을 통과한 파일만 formData에 추가
-                    formData.append('file_name', file);  // 각 파일을 'file_name'이라는 이름으로 추가
-                } else {
-                    showAlert('warning','파일 검증 실패했습니다.');
-                    console.log("파일 검증 실패: " + file.name);
-                }
-            }
-        });
-
-        $.ajax({
-            url: '/auditMgmt/sendIsoAuthData',
-            type: 'POST',
-            data: formData,
-            processData: false,  // FormData는 자동으로 처리되지 않으므로 설정
-            contentType: false,  // 기본 contentType을 사용하지 않음
-            success: function(response) {
-                showAlert('success','데이터가 성공적으로 저장되었습니다.');
-                setTimeout(function() {
-                    location.reload();  // 승인 시 페이지 새로고침
-                }, 100);  // 100ms 후에 실행
-            },
-            error: function(xhr, status, error) {
-                showAlert('warning','데이터 저장에 실패했습니다.');
-            }
-        });
-    }
-
-     function downloadFile(fileName) {
-        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
-        var downloadUrl = '/auditMgmt/getIsoAuditFileDown?filename=' + encodeURIComponent(fileName);
-
-        // 다운로드 링크를 동적으로 생성
-        var link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
-
-        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
-        link.click();
-    }
+    // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+    link.click();
+}
 
 
 

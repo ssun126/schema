@@ -13,7 +13,26 @@
     .head_content{
         border-bottom : var(--border-primary) 1px solid;
         align-items : center;
-        justify-content : center;
+        justify-content : space-between;
+    }
+    .head-title{
+        justify-content : space-between;
+        padding :  0px 25px 15px 25px;
+    }
+
+    .cui_step{
+        margin : 20px 0px 30px 0px;
+    }
+
+    .cui_file_field{
+        display:flex;
+    }
+    .cui_table{
+        vertical-align: middle;
+    }
+
+    .cui_attachments{
+        display:block;
     }
   </style>
 </head>
@@ -44,6 +63,12 @@
         <fieldset>
           <legend><span>MSDS</span></legend>
           <table class="cui_table center">
+            <colgroup>
+              <col style="width:110px;">
+              <col style="width:150px;">
+              <col style="width:200px;">
+              <col >
+            </colgroup>
             <thead>
             <tr>
               <th><span>작성일</span></th>
@@ -62,7 +87,7 @@
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_label" data-cui-icon="paperclip"><span th:text="${msdsDTO.MSDS_FILE_NAME}">파일명.html</span></div>
                     <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${msdsDTO.MSDS_IDX}]],'MSDS')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                     </div>
                   </div>
                 </div>
@@ -74,52 +99,78 @@
         <fieldset>
           <legend><span>RoHS Ⅱ</span></legend>
           <table class="cui_table center">
+            <colgroup>
+              <col style="width:110px;">
+              <col style="width:120px;">
+              <col style="width:120px;">
+              <col style="width:120px;">
+              <col style="width:120px;">
+              <col style="width:120px;">
+              <col>
+            </colgroup>
             <thead>
             <tr>
-              <th><span>확인일자</span></th>
-              <th><span>Cd</span></th>
-              <th><span>Hg</span></th>
-              <th><span>Pb</span></th>
-              <th><span>Cr6+</span></th>
-              <th><span>PBBs</span></th>
-              <th><span>PBDEs</span></th>
-              <th><span>DEHP</span></th>
-              <th><span>BBP</span></th>
-              <th><span>DBP</span></th>
-              <th><span>DIBP</span></th>
-              <th><span>첨부</span></th>
+              <th><span data-langsid="확인일자"></span></th>
+              <th><span>CD</span></th>
+              <th><span>HG</span></th>
+              <th><span>PB</span></th>
+              <th><span>CR6</span></th>
+              <th><span>PBBS</span></th>
+
+              <th><span data-langsid="첨부파일"></span></th>
+
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td><span th:text="${rohsDTO.ROHS_CONFIRM_DATE}"></span></td>
-              <td><span th:text="${rohsDTO.ROHS_CD}"   ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_HG}"   ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_PB}"   ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_CR6}"  ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_PBBS}" ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_PBDES}"></span></td>
-              <td><span th:text="${rohsDTO.ROHS_DEHP}" ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_BBP}"  ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_DBP}"  ></span></td>
-              <td><span th:text="${rohsDTO.ROHS_DIBP}" ></span></td>
-              <td>
-                <div class="cui_attachments">
-                  <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span th:text="${rohsDTO.ROHS_FILE_NAME}">파일명.html</span></div>
-                    <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+              <tr>
+                <td rowspan="3"><span th:text="${rohsDTO.ROHS_CONFIRM_DATE}"></span></td>
+                <td><span th:text="${rohsDTO.ROHS_CD}"   ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_HG}"   ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_PB}"   ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_CR6}"  ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_PBBS}" ></span></td>
+
+                <td rowspan="3">
+                  <div class="cui_attachments">
+                    <div class="cui_items_wrap" data-direction="left">
+                      <div class="item_label" data-cui-icon="paperclip"><span th:text="${rohsDTO.ROHS_FILE_NAME}">파일명.html</span></div>
+                      <div class="item_content">
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${rohsDTO.ROHS_IDX}]],'ROHS')" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+              <tr>
+                <th><span>PBDES</span></th>
+                <th><span>DEHP</span></th>
+                <th><span>BBP</span></th>
+                <th><span>DBP</span></th>
+                <th style="border-right-width:thin;"><span>DIBP</span></th>
+              </tr>
+              <tr>
+
+                <td><span th:text="${rohsDTO.ROHS_PBDES}"></span></td>
+                <td><span th:text="${rohsDTO.ROHS_DEHP}" ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_BBP}"  ></span></td>
+                <td><span th:text="${rohsDTO.ROHS_DBP}"  ></span></td>
+                <td style="border-right-width:thin;"><span th:text="${rohsDTO.ROHS_DIBP}" ></span></td>
+              </tr>
             </tbody>
           </table>
         </fieldset>
         <fieldset>
           <legend><span>Halogen free</span></legend>
           <table class="cui_table center">
+            <colgroup>
+              <col style="width:110px;">
+              <col style="width:90px;">
+              <col style="width:90px;">
+              <col style="width:90px;">
+              <col style="width:90px;">
+              <col style="width:90px;">
+              <col>
+            </colgroup>
             <thead>
             <tr>
               <th><span>확인일자</span></th>
@@ -144,7 +195,7 @@
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_label" data-cui-icon="paperclip"><span  th:text="${halGDTO.HALOGEN_FILE_NAME}">파일명.html</span></div>
                     <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${halGDTO.HALOGEN_IDX}]],'HALOGEN')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                     </div>
                   </div>
                 </div>
@@ -155,6 +206,13 @@
         <fieldset>
           <legend><span>기타 분석서/보증서(Antimony,Cobalt 등)</span></legend>
           <table class="cui_table center">
+            <colgroup>
+              <col style="width:110px;">
+              <col style="width:90px;">
+              <col style="width:90px;">
+              <col>
+              <col style="width:90px;">
+            </colgroup>
             <thead>
             <tr>
               <th><span>확인일자</span></th>
@@ -171,9 +229,9 @@
               <td>
                 <div class="cui_attachments">
                   <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
+                    <div class="item_label" data-cui-icon="paperclip" ><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
                     <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${etcDTO.ETC_IDX}]],'ETC')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                     </div>
                   </div>
                 </div>
@@ -229,7 +287,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${svhcDTO.FILE_NAME}" >파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${svhcDTO.SVHC_IDX}]],'SVHC')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -332,7 +390,7 @@
                       <div class="cui_items_wrap" data-direction="left">
                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${declarDTO.FILE_NAME}">파일명.html</span></div>
                         <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                          <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${declarDTO.DECL_IDX}]],'DECL')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                         </div>
                       </div>
                     </div>
@@ -386,7 +444,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${sccsDTO.SCCS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${sccsDTO.SCCS_IDX}]],'SCCS')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -412,7 +470,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${ingredDTO.INGRED_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${ingredDTO.INGRED_IDX}]],'INGRED')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -440,7 +498,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${guarantDTO.GUARANT_IDX}]],'GUARANT')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -530,6 +588,8 @@
         $("#step3_contents").hide();
         $("#step4_contents").hide();
 
+        $("#gridArea_Svhc").pqGrid("refreshView");
+
         $('.btn_prev').show();
         $(".btn_next").show();
       break;
@@ -538,6 +598,9 @@
         $("#step2_contents").hide();
         $("#step3_contents").show();
         $("#step4_contents").hide();
+
+        $("#gridArea_Decl").pqGrid("refreshView");
+
 
         $('.btn_prev').show();
         $(".btn_next").show();
@@ -565,37 +628,30 @@
 
         var obj = {
             bubble: false,
-            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-            editModel: { clicksToEdit: 1 },
+            editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
             height: $(window).height() - heightMinus,
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
             roundCorners: false,
             rowBorders: true,
             showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
-            virtualY: true,
-            hwrap: false,
             wrap: false,
             autoAddRow: false,
             freezeCols:0,
             autoRow: false,
             autoRowHead: false,
-            rowInit: function () {
-                return { style: 'font-size:12px;' };
-            },
             selectChange: function (event, ui) {
             },
             rowClick: function (event, ui) {
@@ -639,6 +695,7 @@
         obj.dataModel = { data: data };
         $("#gridArea_Svhc").pqGrid(obj);
         $("#gridArea_Svhc").attr("gridYN", "Y");
+        $("#gridArea_Svhc").pqGrid("refreshView");
 
         $(window).resize(function () {
             $("#gridArea_Svhc").pqGrid("option", "height", $(window).height() - heightMinus);
@@ -657,38 +714,31 @@
         var data = SheetDataConvert($("#gridArea_Decl").attr("initData"));
 
         var obj = {
-            bubble: false,
-            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+           bubble: false,
+            numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35, style: 'border-right:1px' },
             editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-            editModel: { clicksToEdit: 1 },
+            editModel: { clicksToEdit: 2 },
             selectionModel: { type: 'cell', mode: 'block' },
             height: $(window).height() - heightMinus,
             title: "",
             sortable: false,
             resizable: true,
-            menuIcon: true,
+            menuIcon: false,
             scrollModel: { autoFit: false },
             hoverMode: 'row',
-            rowHtHead: 30,
-            //rowHt:30,
             roundCorners: false,
             rowBorders: true,
             showBottom: false,
             showHeader: true,
             showTitle: true,
-            showTop: false, //excel 버튼 보이기
-            showToolbar: false,
+            showTop: false,
+            showToolbar: true,
             stripeRows: false,
-            virtualY: true,
-            hwrap: false,
             wrap: false,
             autoAddRow: false,
             freezeCols:0,
             autoRow: false,
             autoRowHead: false,
-            rowInit: function () {
-                return { style: 'font-size:12px;' };
-            },
             selectChange: function (event, ui) {
             },
             rowClick: function (event, ui) {
@@ -756,5 +806,18 @@
 
         return dataJson;
     }
+
+  var downloadFile = function (idx,gubun) {
+      // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+      var downloadUrl = '/user/partMgmt/partMgmtFileDownIdx?IDX=' + idx +'&GUBUN='+gubun;
+
+      // 다운로드 링크를 동적으로 생성
+      var link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+      // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+      link.click();
+  }
 
 </script>

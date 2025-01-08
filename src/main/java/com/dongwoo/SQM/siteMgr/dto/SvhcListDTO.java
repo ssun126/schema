@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class SvhcListDTO {
+    @JsonProperty("SVHC_IDX")
+    private int SVHC_IDX;
     @JsonProperty("SVHC_NUM")
     private String SVHC_NUM;
     @JsonProperty("SVHC_NAME")

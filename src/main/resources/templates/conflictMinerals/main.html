@@ -382,24 +382,6 @@
         }
     }
 
-    // 파일 선택 시 삭제 버튼 표시
-    function toggleDeleteButton(input) {
-        const deleteButton = input.closest('.cui_attachments').querySelector('.cui_button');
-        const fileLabel = input.closest('.cui_attachments').querySelector('.item_label span');
-        const fileLabelDiv = input.closest('.cui_attachments').querySelector('.item_label');
-
-        if (input.files && input.files.length > 0) {
-            var fileName = input.files[0].name;  // Get the file name
-            fileLabel.textContent = fileName;    // Update the file name
-            fileLabelDiv.style.display = 'inline-block';  // 파일이 선택되면 파일명 표시
-            deleteButton.style.display = 'inline-block';  // 파일이 선택되면 삭제 버튼 표시
-        } else {
-            fileLabel.textContent = '';
-            fileLabelDiv.style.display = 'none';  // 파일이 선택되지 않으면 파일명 숨기기
-            deleteButton.style.display = 'none';  // 파일이 선택되지 않으면 삭제 버튼 숨기기
-        }
-    }
-
     // 파일 삭제
     function clearFile(button) {
         const fileInput = button.closest('.cui_attachments').querySelector('input[type="file"]');  // <input type="file"> 요소는 <button> 바로 앞에 있음

@@ -44,6 +44,7 @@ dependencies {
 	implementation 'com.navercorp.lucy:lucy-xss-servlet:2.0.1'
 	implementation 'org.apache.commons:commons-lang3:3.17.0'
 
+
 	/* thymeleaf */
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
@@ -52,8 +53,11 @@ dependencies {
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	/*implementation 'org.springframework.security:spring-security-crypto'
-	implementation 'com.j256.two-factor-auth:two-factor-auth:1.3'*/
+	// Apache HttpClient 5.x 의존성
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2'
+
+	// SSL 관련 설정을 위한 Apache HttpCore 의존성 (필요 시)
+	implementation 'org.apache.httpcomponents.core5:httpcore5:5.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	implementation  'org.springframework.boot:spring-boot-devtools'

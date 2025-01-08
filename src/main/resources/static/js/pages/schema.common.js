@@ -236,7 +236,7 @@ function validation(obj){
                       'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/svg+xml', 'image/webp',
                       'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'audio/mpeg', 'audio/wav',
-                      'video/mp4', 'application/zip', 'application/xlsx'
+                      'video/mp4', 'application/zip', 'application/xlsx', 'application/pptx'
                     ];
     if (obj.name.length > 100) {
         alert("파일명이 100자 이상인 파일은 제외되었습니다.");
@@ -669,6 +669,17 @@ Common.Contains = function (strValue, strCheck) {
         return false;
     else
         return true;
+}
+
+//값체크 체크 문자열로 시작하는 값 찾기
+//strValue(string) : 원본문자열, strCheck(string) : 체크문자열
+Common.StartContains = function (strValue, strCheck) {
+    if (strValue == undefined || strValue == null)
+        return false;
+
+    // 정규식: strCheck로 시작하는 값을 찾음
+    const regex = new RegExp('^'+strCheck);
+    return regex.test(strValue);
 }
 
 //===========================================================================================
@@ -1965,3 +1976,17 @@ var commonSettings = {
             headerCellClick: function (event, ui) {
             }
 };
+
+function getFileHash(file, callback) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var hash = 0;
+        var data = new Uint8Array(event.target.result);
+        for (var i = 0; i < data.length; i++) {
+            hash = (hash << 5) - hash + data[i];
+            hash |= 0;  // 32-bit overflow
+        }
+        callback(hash); // 계산된 해시값을 콜백으로 전달
+    };
+    reader.readAsArrayBuffer(file); // 파일을 읽어 배열 버퍼로 변환
+}

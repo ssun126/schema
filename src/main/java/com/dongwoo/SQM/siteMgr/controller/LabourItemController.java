@@ -73,7 +73,7 @@ public class LabourItemController {
             labourItemDTOList.add(labourItemDTO);
             log.info("labourItemDTO====================="+labourItemDTO);
         }
-
+        workbook.close();
         try {
             log.info("test333333333====================="+labourItemDTOList);
             //전체삭제

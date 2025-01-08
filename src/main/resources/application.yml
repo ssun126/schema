@@ -15,7 +15,9 @@ server:
     key-store-password: my123456t
     key-store-type: jks
     key-alias: mykey
-
+  tomcat:
+    max-http-header-size: 65536
+    max-swallow-size: 10MB
 #  error:
 #    include-exception: true # 오류 응답에 exception의 내용을 포함할지 여부
 #    include-stacktrace: always # 오류 응답에 stacktrace 내용을 포함할 지 여부
@@ -28,9 +30,9 @@ spring:
 #    username: nsqm
 #    password: dongwoo1234
 #    url: jdbc:oracle:thin:@175.126.38.80:1521/ORCL
-    #url: jdbc:oracle:thin:@localhost:1521/xe
+    url: jdbc:oracle:thin:@172.20.10.3:1521/orcl
    # url: jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe
-    url: jdbc:oracle:thin:@172.16.1.191:1521/xe
+#    url: jdbc:oracle:thin:@172.16.1.191:1521/xe
     username: c##NSQM
     password: 12345
   datasource2:
@@ -59,12 +61,12 @@ spring:
     suffix: .html
     freemarker:
       cache: false
-    servlet:
-      multipart:
-        enabled: true
-        max-file-size: 10MB
-        max-request-size: 10MB
-    check-template-location: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  check-template-location: true
   mail:
     host: smtp.gmail.com
     port: 587
@@ -89,10 +91,12 @@ Logging:
 # Upload File Path Setting
 Upload:
   path:
+
     attach: "D:/SCHEMA/STORAGE/ATTACH"
     excel: "D:/SCHEMA/STORAGE/EXCEL"
     iso: "D:/SCHEMA/STORAGE/ISO"
     audit: "D:/SCHEMA/STORAGE/AUDIT"
+    pcnTemplate: "D:/SCHEMA/STORAGE/pcntemplate"
     warranty: "D:/SCHEMA/STORAGE/WARRANTY"
     sample: "D:/SCHEMA/STORAGE/SAMPLE"
 
@@ -100,3 +104,5 @@ restfull:
   povis:
     url: "https://fcf98340-8a06-4f69-a8e7-da3fd354095c.mock.pstmn.io"
 
+rest:
+  ignore_ssl: true
