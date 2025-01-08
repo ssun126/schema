@@ -63,4 +63,87 @@ public class coaMgmtService {
         return coaMgmtRepository.copyCOADetail(coaMgmtDTO);
     }
 
+
+    public int delCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.delCOAMaster(coaMgmtDTO);
+    }
+
+    public int delCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.delCOADetail(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO regCheck(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.regCheck(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO regSpecCheck(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.regSpecCheck(coaMgmtDTO);
+    }
+
+
+    public String getStatusCOAMasterByPK(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.getStatusCOAMasterByPK(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO getMaterial(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.getMaterial(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO interfaceLimsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceLimsCOAMasterData(coaMgmtDTO);
+    }
+
+    public List<coaMgmtDTO> interfaceLimsCOADetailData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceLimsCOADetailData(coaMgmtDTO);
+    }
+
+
+
+    public int interfaceCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceCOAMaster(coaMgmtDTO);
+    }
+
+    public int interfaceCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceCOADetail(coaMgmtDTO);
+    }
+
+
+    public coaMgmtDTO interfaceDqmsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceDqmsCOAMasterData(coaMgmtDTO);
+    }
+
+    public List<coaMgmtDTO> interfaceDqmsCOADetailData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceDqmsCOADetailData(coaMgmtDTO);
+    }
+
+    public int interfaceCOAProcedure(String DB_LINK_TARGET_APPLY) {
+        return coaMgmtRepository.interfaceCOAProcedure(DB_LINK_TARGET_APPLY);
+    }
+
+    public int insertCOAListDqms(List<coaMgmtDTO> masterList , List<coaMgmtDTO> detailList ) {
+
+       // return coaMgmtRepository.interfaceCOAProcedure(DB_LINK_TARGET_APPLY);
+
+        for (int i = 0 ; i < masterList.size() ; i ++) {
+            //coaMgmtDqmsDAO.interfaceDqmsCOAMaster(masterList.get(i));
+
+
+        }
+
+        for (int i = 0 ; i < detailList.size() ; i ++) {
+
+
+           // coaMgmtDqmsDAO.interfaceDqmsCOADetail(detailList.get(i));
+        }
+
+
+        return  0 ;
+
+    }
+
+
+
+
+
+
 }

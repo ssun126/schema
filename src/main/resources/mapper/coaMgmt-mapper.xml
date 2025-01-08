@@ -94,8 +94,10 @@
           ON CM.VENDOR_ID = MT.VENDOR_ID
             AND CM.MATERIAL_ID = MT.MATERIAL_ID
             AND CM.FACTORY_ID = MT.FACTORY_ID
-        JOIN SYS_USER SU
-         ON SU.USER_ID = CM.CREATOR
+<!--        JOIN SYS_USER SU-->
+<!--         ON SU.USER_ID = CM.CREATOR-->
+                JOIN SC_USER_INFO SU
+                 ON SU.USER_ID = CM.CREATOR
         JOIN(SELECT PLANT.ID,
                 SYS_MULTI_LANGUAGE.LANGUAGE_CODE_DATA
             FROM PLANT, SYS_MULTI_LANGUAGE
@@ -288,8 +290,8 @@
         AND LOT_NO = #{LOT_NO}
     </update>
 
+    <update id="copyCOAMaster" parameterType="coaMgmt">
 
-    <insert id="copyCOAMaster" parameterType="coaMgmt">
         INSERT INTO COA_MASTER (
             COA_ID,
             VENDOR_ID,
@@ -305,8 +307,7 @@
             CREATOR,
             CREATE_DATETIME
         )
-        values (
-            SELECT
+        SELECT
                 #{COPY_COA_ID},
                 VENDOR_ID,
                 MATERIAL_ID,
@@ -320,20 +321,19 @@
                 LANGUAGE_TYPE,
                 #{CREATOR},
                 SYSDATE
-                FROM COA_MASTER
-            WHERE
-                COA_ID = #{COA_ID}
-                AND LOT_NO = #{LOT_NO}
-                AND VENDOR_ID = #{VENDOR_ID}
-                AND MATERIAL_ID = #{MATERIAL_ID}
-                AND FACTORY_ID = #{FACTORY_ID}
-        )
-    </insert>
+            FROM COA_MASTER
+        WHERE  COA_ID = #{COA_ID}
+            AND LOT_NO = #{LOT_NO}
+            AND VENDOR_ID = #{VENDOR_ID}
+            AND MATERIAL_ID = #{MATERIAL_ID}
+            AND FACTORY_ID = #{FACTORY_ID}
 
-    <insert id="copyCOADetail" parameterType="coaMgmt">
+    </update>
+
+
+    <update id="copyCOADetail" parameterType="coaMgmt">
         /* coaMgmtMapper.insertCOADetail */
-        INSERT
-        INTO COA_DETAIL (
+        INSERT INTO COA_DETAIL (
             COA_ID
             , LOT_NO
             , SPEC_ID
@@ -344,8 +344,7 @@
             , SPEC_LCL
             , SPEC_UCL
         )
-        values (
-            SELECT
+        SELECT
                 #{COPY_COA_ID}
                 , LOT_NO
                 , SPEC_ID
@@ -359,8 +358,405 @@
             WHERE
                 COA_ID = #{COA_ID}
                 AND LOT_NO = #{LOT_NO}
+
+    </update>
+
+
+    <delete id="delCOAMaster" parameterType="coaMgmt">
+        /* coaMgmtMapper.delCOAData */
+        DELETE
+        FROM COA_MASTER
+        WHERE COA_ID = #{COA_ID}
+        AND VENDOR_ID = #{VENDOR_ID}
+        AND MATERIAL_ID = #{MATERIAL_ID}
+        AND FACTORY_ID = #{FACTORY_ID}
+        AND LOT_NO = #{LOT_NO}
+    </delete>
+
+    <delete id="delCOADetail" parameterType="coaMgmt">
+        /* coaMgmtMapper.delCOADetail */
+        DELETE
+        FROM COA_DETAIL
+        WHERE COA_ID = #{COA_ID}
+        AND LOT_NO = #{LOT_NO}
+    </delete>
+
+
+    <select id="regCheck" parameterType="coaMgmt"  resultType="coaMgmt">
+        SELECT
+            TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.3 AS THREEDD,(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.3 AS THREED,
+            TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.5 AS FIVEDD,(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.5 AS THREED
+            , A.E_DATE, A.MF_DATE,
+            CASE WHEN TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.3 <![CDATA[<]]> TO_DATE(A.STOCK_DATE) THEN 'Y' ELSE 'N' END AS IS30LIMIT,
+            CASE WHEN TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.5 <![CDATA[<]]> TO_DATE(A.STOCK_DATE) THEN 'Y' ELSE 'N' END AS IS50LIMIT,
+            CASE WHEN B.WETPR = 'PR' THEN 'Y' ELSE 'N' END AS ISPR,
+            CASE WHEN A.FACTORY_ID = '1200' AND B.WETPR = 'WET' THEN 'Y' ELSE 'N' END AS FACTORY_SPEC_YN,
+            A.FACTORY_ID
+        FROM COA_MASTER A, MATERIAL B
+        WHERE
+            A.COA_ID = #{COA_ID}
+            AND A.VENDOR_ID = #{VENDOR_ID}
+            AND A.MATERIAL_ID = #{MATERIAL_ID}
+            AND A.FACTORY_ID = #{FACTORY_ID}
+            AND A.LOT_NO = #{LOT_NO}
+            AND A.STOCK_DATE = #{STOCK_DATE}
+            AND A.VENDOR_ID = B.VENDOR_ID(+)
+            AND A.FACTORY_ID = B.FACTORY_ID(+)
+            AND A.MATERIAL_ID = B.MATERIAL_ID(+)
+    </select>
+
+
+    <select id="regSpecCheck" parameterType="coaMgmt"  resultType="coaMgmt">
+        SELECT(
+        SELECT
+        COUNT(*)
+        FROM(
+        SELECT
+        <![CDATA[
+						CASE WHEN CD.SPEC_LSL IS NULL AND CD.SPEC_USL IS NULL THEN 'N'
+							WHEN CD.SPEC_LSL IS NULL AND TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN CD.SPEC_USL IS NULL AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    ELSE 'Y'
+						END AS IS_SPEC_YN
+					]]>
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{COA_ID}
+        AND CD.LOT_NO = #{LOT_NO}
+        AND SP.VENDOR_ID = #{VENDOR_ID}
+        AND SP.MATERIAL_ID = #{MATERIAL_ID}
+        AND SP.FACTORY_ID = #{FACTORY_ID}
+        )
+        WHERE IS_SPEC_YN = 'Y'
+        ) IS_SPEC_YN_CNT,
+        (
+        SELECT
+        LISTAGG(SPEC_NAME, ', ')
+        FROM(
+        SELECT
+        <![CDATA[
+						CASE WHEN CD.SPEC_LSL IS NULL AND CD.SPEC_USL IS NULL THEN 'N'
+							WHEN CD.SPEC_LSL IS NULL AND TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN CD.SPEC_USL IS NULL AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    ELSE 'Y'
+						END AS IS_SPEC_YN
+					]]>
+        , SP.SPEC_NAME
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{COA_ID}
+        AND CD.LOT_NO = #{LOT_NO}
+        AND SP.VENDOR_ID = #{VENDOR_ID}
+        AND SP.MATERIAL_ID = #{MATERIAL_ID}
+        AND SP.FACTORY_ID = #{FACTORY_ID}
+        )
+        WHERE IS_SPEC_YN = 'Y'
+        ) SPEC_OUT_NAMES,
+        (
+        SELECT
+        COUNT(*)
+        FROM(
+        SELECT
+        <![CDATA[
+						CASE WHEN CD.SPEC_LCL IS NULL AND CD.SPEC_UCL IS NULL THEN 'N'
+							WHEN CD.SPEC_LCL IS NULL AND TO_NUMBER(CD.SPEC_UCL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN CD.SPEC_UCL IS NULL AND TO_NUMBER(CD.SPEC_LCL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN TO_NUMBER(CD.SPEC_UCL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LCL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    ELSE 'Y'
+						END AS IS_CONTROL_YN
+		            ]]>
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{COA_ID}
+        AND CD.LOT_NO = #{LOT_NO}
+        AND SP.VENDOR_ID = #{VENDOR_ID}
+        AND SP.MATERIAL_ID = #{MATERIAL_ID}
+        AND SP.FACTORY_ID = #{FACTORY_ID}
+        )
+        WHERE IS_CONTROL_YN = 'Y'
+        ) IS_CONTROL_YN_CNT
+        FROM DUAL
+    </select>
+
+
+    <select id="getStatusCOAMasterByPK" parameterType="coaMgmt" resultType="String">
+        SELECT
+        COA_STATUS
+<!--        FROM SQM.COA_MASTER-->
+        FROM COA_MASTER
+        WHERE
+        COA_ID =#{COA_ID}
+        AND VENDOR_ID =#{VENDOR_ID}
+        AND MATERIAL_ID =#{MATERIAL_ID}
+        AND FACTORY_ID =#{FACTORY_ID}
+        AND LOT_NO =#{LOT_NO}
+        AND STOCK_DATE =#{STOCK_DATE}
+    </select>
+
+    <select id="getMaterial" parameterType="coaMgmt"  resultType="coaMgmt">
+        /* coaMgmtMapper.getMaterial */
+        SELECT
+        FACTORY_ID
+        , FACTORY_NAME
+        , VENDOR_ID
+        , VENDOR_NAME
+        , MATERIAL_ID
+        , MATERIAL_NAME
+        , NVL(TN_FLAG, 'N') AS TN_FLAG
+        , IF_TARGET
+        , IF_DATETIME
+        FROM MATERIAL
+        WHERE VENDOR_ID = #{VENDOR_ID}
+        AND MATERIAL_ID = #{MATERIAL_ID}
+        AND FACTORY_ID = #{FACTORY_ID}
+    </select>
+
+
+    <select id="interfaceLimsCOAMasterData"  parameterType="coaMgmt"  resultType="coaMgmt">
+        SELECT
+        COA_ID
+        , FACTORY_ID
+        , VENDOR_ID
+        , MATERIAL_ID
+        , LOT_NO
+        , STOCK_DATE
+        , MF_DATE
+        , 'B' AS COA_STATUS
+        , ETC
+        , CREATE_DATETIME
+        , CREATOR
+        , 'Y' AS UPLOAD_RESULT
+        , 'N' AS UPDATE_YN
+        , VENDOR_COMMENT
+        , E_DATE
+        , QUANTITY
+        FROM COA_MASTER
+        WHERE COA_ID = #{COA_ID}
+        AND VENDOR_ID = #{VENDOR_ID}
+        AND MATERIAL_ID = #{MATERIAL_ID}
+        AND FACTORY_ID = #{FACTORY_ID}
+        AND LOT_NO = #{LOT_NO}
+    </select>
+
+    <select id="interfaceLimsCOADetailData"  parameterType="coaMgmt"  resultType="coaMgmt">
+        SELECT
+        COA_ID
+        , LOT_NO
+        , SPEC_ID
+        , SPEC_LSL
+        , SPEC_USL
+        , RESULT_VALUE
+        , SYSDATE
+        , 'N' AS UPDATE_YN
+        , SPEC_LCL
+        , SPEC_UCL
+        FROM COA_DETAIL
+        WHERE COA_ID = #{COA_ID}
+        AND LOT_NO = #{LOT_NO}
+    </select>
+
+
+
+    <insert id="interfaceCOAMaster">
+        /* coaMgmtMapper.interfaceCOAMaster */
+        INSERT
+        INTO ${DB_LINK_TARGET_MASTER} (
+        COA_ID
+        , FACTORY
+        , VENDOR_CODE
+        , MAT_ID
+        , LOT_NO
+        , STOCK_DATE
+        , MF_DATE
+        , COA_STATUS
+        <if test="ETC != null and ETC != ''">
+            , ETC
+        </if>
+        , REG_DATE
+        , REG_USER
+        , UPLOAD_RESULT
+        , INTERFACE_DATE
+        , UPDATE_YN
+        , VENDOR_COMMENT
+        , E_DATE
+        , QUANTITY
+        )
+        VALUES (
+        #{COA_ID}
+        , #{FACTORY_ID}
+        , #{VENDOR_ID}
+        , #{MATERIAL_ID}
+        , #{LOT_NO}
+        , #{STOCK_DATE}
+        , #{MF_DATE}
+        , #{COA_STATUS}
+        <if test="ETC != null and ETC != ''">
+            , #{ETC}
+        </if>
+        , #{CREATE_DATETIME}
+        , #{CREATOR}
+        , #{UPLOAD_RESULT}
+        , GETDATE()
+        , #{UPDATE_YN}
+        , #{VENDOR_COMMENT}
+        , #{E_DATE}
+        , #{QUANTITY}
         )
     </insert>
+
+    <insert id="interfaceCOADetail">
+        /* coaMgmtMapper.interfaceCOADetail */
+        INSERT
+        INTO ${DB_LINK_TARGET_DETAIL} (
+        COA_ID
+        , LOT_NO
+        , INSP_ID
+        , LSL
+        , USL
+        , VALUE
+        , INTERFACE_DATE
+        , UPDATE_YN
+        , LCL
+        , UCL
+        )
+        VALUES (
+        #{COA_ID}
+        , #{LOT_NO}
+        , #{SPEC_ID}
+        , #{SPEC_LSL}
+        , #{SPEC_USL}
+        , #{RESULT_VALUE}
+        , getdate()
+        , #{UPDATE_YN}
+        , #{SPEC_LCL}
+        , #{SPEC_UCL}
+        )
+    </insert>
+
+    <select id="interfaceDqmsCOAMasterData" parameterType="coaMgmt"  resultType="coaMgmt">
+        /* coaMgmtMapper.interfaceDqmsCOAMasterData */
+        SELECT
+        SEQ_DQMS_INTER_INFO_01.NEXTVAL AS SEQ
+        , COA_ID
+        , FACTORY_ID
+        , VENDOR_ID
+        , MATERIAL_ID
+        , LOT_NO
+        , STOCK_DATE
+        , MF_DATE
+        , 'B'              AS COA_STATUS
+        , NVL(ETC, '')     AS ETC
+        , CREATE_DATETIME
+        , CREATOR
+        , 'Y'              AS UPLOAD_RESULT
+        , SYSDATE          AS INTERFACE_DATE
+        , 'N'              AS UPDATE_YN
+        , VENDOR_COMMENT
+        FROM COA_MASTER
+        WHERE COA_ID = #{COA_ID}
+        AND VENDOR_ID = #{VENDOR_ID}
+        AND MATERIAL_ID = #{MATERIAL_ID}
+        AND FACTORY_ID = #{FACTORY_ID}
+        AND LOT_NO = #{LOT_NO}
+    </select>
+
+    <select id="interfaceDqmsCOADetailData" parameterType="coaMgmt"  resultType="coaMgmt">
+        /* coaMgmtMapper.interfaceDqmsCOADetailData */
+        SELECT
+        SEQ_DQMS_INTER_COA_01.NEXTVAL AS SEQ
+        , COA_ID
+        , LOT_NO
+        , SPEC_ID
+        , SPEC_LSL
+        , SPEC_USL
+        , RESULT_VALUE
+        , SYSDATE AS INTERFACE_DATE
+        , 'N' AS UPDATE_YN
+        FROM COA_DETAIL
+        WHERE COA_ID = #{COA_ID}
+        AND LOT_NO = #{LOT_NO}
+    </select>
+
+
+    <update id="interfaceCOAProcedure" parameterType="String" >
+        /* coaMgmtMapper.interfaceCOAProcedure */
+        CALL ${DB_LINK_TARGET_APPLY}()
+    </update>
+
+
+    <insert id="interfaceDqmsCOAMaster">
+        /* coaMgmtMapper.interfaceDqmsCOAMaster */
+        INSERT
+        INTO INTF_SQM_INFO (
+        SEQ
+        , COA_ID
+        , FACTORY
+        , VENDOR_CODE
+        , MAT_ID
+        , LOT_NO
+        , STOCK_DATE
+        , MF_DATE
+        , COA_STATUS
+        , ETC
+        , REG_DATE
+        , REG_USER
+        , UPLOAD_RESULT
+        , INTERFACE_DATE
+        , VENDOR_COMMENT
+        )
+        VALUES (
+        #{SEQ}
+        , #{COA_ID}
+        , #{FACTORY_ID}
+        , #{VENDOR_ID}
+        , #{MATERIAL_ID}
+        , #{LOT_NO}
+        , #{STOCK_DATE}
+        , #{MF_DATE}
+        , #{COA_STATUS}
+        , #{ETC}
+        , #{CREATE_DATETIME}
+        , #{CREATOR}
+        , #{UPLOAD_RESULT}
+        , #{INTERFACE_DATE}
+        , #{VENDOR_COMMENT}
+        )
+    </insert>
+
+    <insert id="interfaceDqmsCOADetail">
+        /* coaMgmtMapper.interfaceDqmsCOADetail */
+        INSERT
+        INTO INTF_SQM_COA (
+        SEQ
+        , COA_ID
+        , LOT_NO
+        , INSP_ID
+        , LSL
+        , USL
+        , VALUE
+        , INTERFACE_DATE
+        )
+        VALUES (
+        #{SEQ}
+        , #{COA_ID}
+        , #{LOT_NO}
+        , #{SPEC_ID}
+        , #{SPEC_LSL}
+        , #{SPEC_USL}
+        , #{RESULT_VALUE}
+        , #{INTERFACE_DATE}
+        )
+    </insert>
+
+    <update id="interfaceDqmsCOAProcedure">
+        /* coaMgmtMapper.interfaceDqmsCOAProcedure */
+        CALL LIMS_INTF_SQM_PROC@LIMS_DEV_DB()
+    </update>
 
 
 </mapper>

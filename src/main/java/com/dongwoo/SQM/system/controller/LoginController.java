@@ -60,6 +60,26 @@ public class LoginController {
         log.info("comUserIdx======"+comUserIdx);
 
         LoginDTO loginResult = loginService.login(loginDTO);
+
+        //로그인 세션에 메일담기.
+        UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+        parmaDTO.setCOM_USER_IDX(comUserIdx);
+        List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);
+
+        String email = "" ;
+        for (UserInfoCompanyUserDTO user : companyUserList) {
+            if (user.getCOM_USER_IDX() == comUserIdx) {
+                email = user.getUSER_EMAIL();
+            }
+        }
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.setEMAIL(email);
+        //로그인 세션에 메일담기.
+
+        UserCustom user1 = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String loginDwUserEmail =  user1.getEMAIL();
+        log.info("loginDwUserEmail======"+loginDwUserEmail);
+
         if (loginResult != null) {
             if (loginResult.getUSER_GUBN().equals("1")) {
                 // OTP 인증번호 체크
@@ -186,6 +206,8 @@ public class LoginController {
 
             //메일 발송.!! sendEmail(String recipientEmail, String subject, String content)
             log.info("OTP 메일 발송.!! === "+" email:"+email + " OTP:" + randomOtp);
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user.setEMAIL(email);
 
             return ResponseEntity.ok("OK|" + randomOtp);
 
