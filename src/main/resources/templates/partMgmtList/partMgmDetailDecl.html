@@ -36,6 +36,10 @@
         .cui_attachments{
             display:block;
         }
+
+        .chkbox{
+            margin-top:20px;
+        }
     </style>
 </head>
 <body>
@@ -163,6 +167,17 @@
                         </div>
                     </div>
                 </fieldset>
+
+                <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
+                    <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
+                    * 보증 내역의 재확인<br>
+                    -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)
+                    <br>
+                    <label class="cui_checkbox">
+                        <input type="checkbox" name="CONFIRM_CHK" th:checked="${declDTO.CONFIRM_CHK == ' ' ? false:declDTO.CONFIRM_CHK}"><i></i>
+                        <span>전자 보증서 제출</span>
+                    </label>
+                </div>
 
                 <div class="cui_items_wrap" data-direction="right" >
                     <div class="item_content">
@@ -891,6 +906,8 @@
                     return;
                 }
                 returnVal =setApplicableNo('attach');
+            }else{
+                returnVal='true';
             }
         }else{
             returnVal =setApplicableNo();
@@ -905,6 +922,15 @@
             Common.Msg(siteLang.getLang(returnVal));
             return;
         }
+
+        //한번 승인 후 다시 들어온 경우
+        if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){
+            if(!$("input[name=CONFIRM_CHK]").is(":checked")){
+                Common.Msg(siteLang.getLang("보증내역 재확인에 체크 해주세요"));
+                return;
+            }
+        }
+
 
         //Y 일때는 하위 내용이 하나라도 Y가 있어야함
 

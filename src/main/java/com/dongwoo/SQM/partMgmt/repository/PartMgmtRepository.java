@@ -61,6 +61,7 @@ public class PartMgmtRepository {
 
     public void updateApprovalStatus(int idx, String status){
         HashMap<String,Object> map = new HashMap<>();
+        log.info("idx : "+idx +"++++++++ status : "+status);
         map.put("idx",idx);
         map.put("status",status);
         sql.update("partManagement.updateApprovalStatus",map);

@@ -23,6 +23,8 @@ public class PartDetailSvhcDTO {
 
     @JsonProperty("WARRANTY_ITEM")
     private String WARRANTY_ITEM;
+    @JsonProperty("CONFIRM_CHK")
+    private String CONFIRM_CHK;
 
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;

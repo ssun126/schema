@@ -40,5 +40,8 @@ public class partDetailRohsDTO {
     @JsonProperty("ROHS_FILE_STATUS")
     private String ROHS_FILE_STATUS;
 
+    @JsonProperty("ROHS_CONFIRM_CHK")
+    private String ROHS_CONFIRM_CHK;
+
 
 }
