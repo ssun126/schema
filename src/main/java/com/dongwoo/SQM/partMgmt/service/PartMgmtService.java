@@ -261,6 +261,12 @@ public class PartMgmtService {
     public void GuarantDeleteFile (int idx) { partMgmtRepository.GuarantDeleteFile(idx);}
 
 
+    /**********************
+     *
+     * initConfirmChk
+     * **************/
+    public void initConfirmChk(int pmidx){partMgmtRepository.initConfirmChk(pmidx);}
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** 파일 관련

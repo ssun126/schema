@@ -8,13 +8,15 @@ import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -31,8 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -1028,6 +1029,87 @@ public class PartMgmtController {
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
 
+        String blobData = GetParam(request, "blobData", "");
+        String Warant = GetParam(request, "WARRANTY_ITEM", "");
+        String date = GetParam(request, "CONFIRM_DATE", "").replaceAll("-","");
+        String gubun = GetParam(request, "DATA_GUBN", "").replaceAll("-","");
+        if(gubun.equals("WRITE")){
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                //Map<String, Object> dataMap = objectMapper.readValue(blobData, Map.class);
+                List<Map<String, Object>> dataList = objectMapper.readValue(blobData, new TypeReference<>() {});
+                Workbook workbook = new XSSFWorkbook();
+                Sheet sheet = workbook.createSheet("SVHC Data");
+
+                // 헤더 작성
+                Row headerRow = sheet.createRow(0);
+                if (!dataList.isEmpty()) {
+                    int cellIdx = 0;
+                    for (String key : dataList.get(0).keySet()) {
+                        Cell cell = headerRow.createCell(cellIdx++);
+                        cell.setCellValue(key);
+                    }
+                }
+
+                // 데이터 작성
+                int rowIdx = 1;
+                for (Map<String, Object> data : dataList) {
+                    Row row = sheet.createRow(rowIdx++);
+                    int cellIdx = 0;
+                    for (Object value : data.values()) {
+                        Cell cell = row.createCell(cellIdx++);
+                        cell.setCellValue(value != null ? value.toString() : "");
+                    }
+                }
+
+                // Excel 파일 저장
+                try (FileOutputStream fileOut = new FileOutputStream("C:/output/send/svhc/SVHC_"+Warant+"_"+date+".xlsx")) {
+                    workbook.write(fileOut);
+
+                    svhcDTO.setSEND_FILE_PATH("C:/output/uploads/send/svhc/");
+                    svhcDTO.setSEND_FILE_NAME("svhc_"+Warant+"_"+date+".xlsx");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Excel 파일이 생성되었습니다.");
+
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            try {
+                if (svhcFile != null && !svhcFile.isEmpty()) {
+                    // 1. 파일 저장 경로와 파일명 설정
+                    String uploadDir = "C:/output/send/svhc_files"; // 저장할 디렉터리
+//                    String fileName = "custom_name_" + System.currentTimeMillis() + "."
+//                            + getFileExtension(declFile.getOriginalFilename()); // 새로운 파일명 생성
+                    String fileName = "SVHC_"+Warant+"_"+date+".xlsx";
+
+                    File directory = new File(uploadDir);
+                    if (!directory.exists()) {
+                        directory.mkdirs(); // 디렉터리가 없으면 생성
+                    }
+
+                    // 2. 파일 저장
+                    File destinationFile = new File(directory, fileName);
+                    svhcFile.transferTo(destinationFile);
+
+                    // 3. 저장된 파일 정보 처리
+                    System.out.println("파일이 저장되었습니다: " + destinationFile.getAbsolutePath());
+
+                    // 필요하면 declDTO에 파일 경로나 이름 저장
+                    svhcDTO.setSEND_FILE_PATH(destinationFile.getAbsolutePath());
+                    svhcDTO.setSEND_FILE_NAME(fileName);
+
+                    //return ResponseEntity.ok("파일 저장 성공: " + fileName);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body("파일 저장 중 오류 발생: " + e.getMessage());
+            }
+        }
+
+
         try {
 
             //msds
@@ -1036,10 +1118,10 @@ public class PartMgmtController {
             String DATA_GUBUN = GetParam(request,"DATA_GUBUN","");
 
             //msds file
-            if (FILE_STATUS.equals("DEL") || DATA_GUBUN.equals("WRITE")) {
-                svhcDTO.setFILE_NAME("");
-                svhcDTO.setFILE_PATH("");
-            }
+//            if (FILE_STATUS.equals("DEL") || DATA_GUBUN.equals("WRITE")) {
+//                svhcDTO.setFILE_NAME("");
+//                svhcDTO.setFILE_PATH("");
+//            }
 
             //msds file
             if(svhcFile != null){
@@ -1250,6 +1332,91 @@ public class PartMgmtController {
         int PM_IDX = Integer.parseInt(GetParam(request, "PM_IDX", "0"));
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
+
+        String blobData = GetParam(request, "blobData", "");
+        String Warant = GetParam(request, "WARRANTY_ITEM", "");
+        String date = GetParam(request, "CONFIRM_DATE", "").replaceAll("-","");
+        String gubun = GetParam(request, "DATA_GUBN", "").replaceAll("-","");
+        if(gubun.equals("WRITE")){
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                //Map<String, Object> dataMap = objectMapper.readValue(blobData, Map.class);
+                List<Map<String, Object>> dataList = objectMapper.readValue(blobData, new TypeReference<>() {});
+                Workbook workbook = new XSSFWorkbook();
+                Sheet sheet = workbook.createSheet("DECL Data");
+
+                // 헤더 작성
+                Row headerRow = sheet.createRow(0);
+                if (!dataList.isEmpty()) {
+                    int cellIdx = 0;
+                    for (String key : dataList.get(0).keySet()) {
+                        Cell cell = headerRow.createCell(cellIdx++);
+                        cell.setCellValue(key);
+                    }
+                }
+
+                // 데이터 작성
+                int rowIdx = 1;
+                for (Map<String, Object> data : dataList) {
+                    Row row = sheet.createRow(rowIdx++);
+                    int cellIdx = 0;
+                    for (Object value : data.values()) {
+                        Cell cell = row.createCell(cellIdx++);
+                        cell.setCellValue(value != null ? value.toString() : "");
+                    }
+                }
+
+                // Excel 파일 저장
+                try (FileOutputStream fileOut = new FileOutputStream("C:/output/send/decl/Declaration_Rev_"+Warant+"_"+date+".xlsx")) {
+                    workbook.write(fileOut);
+
+                    declDTO.setSEND_FILE_PATH("C:/output/send/decl_files/");
+                    declDTO.setSEND_FILE_NAME("Declaration_Rev_"+Warant+"_"+date+".xlsx");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Excel 파일이 생성되었습니다.");
+
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            try {
+                if (declFile != null && !declFile.isEmpty()) {
+                    // 1. 파일 저장 경로와 파일명 설정
+                    String uploadDir = "C:/output/send/decl_files"; // 저장할 디렉터리
+//                    String fileName = "custom_name_" + System.currentTimeMillis() + "."
+//                            + getFileExtension(declFile.getOriginalFilename()); // 새로운 파일명 생성
+                    String fileName = "Declaration_Rev_"+Warant+"_"+date+".xlsx";
+
+                    File directory = new File(uploadDir);
+                    if (!directory.exists()) {
+                        directory.mkdirs(); // 디렉터리가 없으면 생성
+                    }
+
+                    // 2. 파일 저장
+                    File destinationFile = new File(directory, fileName);
+                    declFile.transferTo(destinationFile);
+
+                    // 3. 저장된 파일 정보 처리
+                    System.out.println("파일이 저장되었습니다: " + destinationFile.getAbsolutePath());
+
+                    // 필요하면 declDTO에 파일 경로나 이름 저장
+                    declDTO.setSEND_FILE_PATH(destinationFile.getAbsolutePath());
+                    declDTO.setSEND_FILE_NAME(fileName);
+
+                    //return ResponseEntity.ok("파일 저장 성공: " + fileName);
+                } else {
+                    //return ResponseEntity.badRequest().body("DECL_FILE이 비어 있습니다.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body("파일 저장 중 오류 발생: " + e.getMessage());
+            }
+        }
+
+
+
 
         try {
 
@@ -1498,6 +1665,10 @@ public class PartMgmtController {
         }else{
             //승인요청
             partMgmtService.updateApprovalStatus(PM_IDX, "3");
+            //체크 데이터 저장
+            //partMgmtService.saveConfirmChkData();
+            //체크 init
+            partMgmtService.initConfirmChk(PM_IDX);
             return ResponseEntity.ok("NEXT|||"+PM_IDX);
         }
 
@@ -1604,6 +1775,14 @@ public class PartMgmtController {
         };
 
         return ParamValue;
+    }
+
+    // 파일 확장자 추출 메서드
+    private String getFileExtension(String fileName) {
+        if (fileName != null && fileName.contains(".")) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        }
+        return "";
     }
 
 }

@@ -26,6 +26,11 @@ public class PartDetailSvhcDTO {
     @JsonProperty("CONFIRM_CHK")
     private String CONFIRM_CHK;
 
+    @JsonProperty("SEND_FILE_PATH")
+    private String SEND_FILE_PATH;
+    @JsonProperty("SEND_FILE_NAME")
+    private String SEND_FILE_NAME;
+
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;
 

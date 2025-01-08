@@ -198,6 +198,16 @@ public class PartMgmtRepository {
     public int updateApprovalStatus(String idx){ return sql.update("partManagement.updateApprovalStatus",idx);}
 
 
+    public void initConfirmChk(int pmidx){
+        sql.update("partManagement.initConfirmChk1",pmidx);
+        sql.update("partManagement.initConfirmChk2",pmidx);
+        sql.update("partManagement.initConfirmChk3",pmidx);
+        sql.update("partManagement.initConfirmChk4",pmidx);
+        sql.update("partManagement.initConfirmChk5",pmidx);
+
+    }
+
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** 파일다운로드

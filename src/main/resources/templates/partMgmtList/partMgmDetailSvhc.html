@@ -166,6 +166,7 @@
                         </div>
                     </div>
                 </fieldset>
+                <input type="hidden" name="blobData">
 
                 <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }">
                     <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
@@ -569,6 +570,8 @@
     var frmDetailSubmit = function () {
         //e.preventDefault();
 
+        downloadExcel();
+
 
         var frmObj = $("#frmDetail");
         var flag = $("#frmDetail").find("input[name=SaveMode]").val();
@@ -644,11 +647,14 @@
             setApplicableNo();
         }
 
+
+
         if(flag){
             Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                 mode : "confrim"
                 , okback : function () {
                     $("#frmDetail").find("input[name=SaveMode]").val("Save");
+
                     //$("#frmDetail").find("[reqcheck]").removeAttr("reqcheck");
                     //$("#frmDetail").submit();
                     frmDetailSubmit();
@@ -659,6 +665,46 @@
             return;
         }
 
+    }
+
+    var downloadExcel = function (flag) {
+        var idxs ='';
+        var reVal = false;
+        var pqName ='';
+        if(flag === 'attach') pqName='_attach';
+        var grid = $("#gridArea"+pqName).pqGrid("instance");
+        const gridData = $("#gridArea"+pqName).pqGrid("option", "dataModel").data;
+
+        //var grid = $("#gridArea").pqGrid("instance");
+<!--        var colModel = grid.getColModel();-->
+<!--        colModel[0].hidden = true;-->
+
+<!--        var format = "xlsx",-->
+<!--            blob = grid.exportData({-->
+<!--                format: format,-->
+<!--                nopqdata: true,-->
+<!--                render: true-->
+<!--            });-->
+<!--        if (typeof blob === "string") {-->
+<!--            blob = new Blob([blob]);-->
+<!--        }-->
+
+
+        $("input[name=blobData]").val(JSON.stringify(gridData));
+
+        //var cnt = $("input[name=WARRANTY_ITEM]").val();
+        //var date = $("input[name=CONFIRM_DATE]").val().replaceAll("-","");
+
+
+
+<!--        if(flag === 'attach'){-->
+<!--            saveAs(blob, "SVHC_" + date +"_"+cnt+ "." + format);-->
+<!--        }else{-->
+<!--            saveAs(blob, "PART_MANAGEMENT_" + Common.GetTodayTimeString() + "." + format);-->
+<!--        }-->
+
+
+        //colModel[0].hidden = false;
     }
 
 
@@ -728,6 +774,7 @@
             $("#frmDetail").find("input[name=SaveMode]").val("Next");
             //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
             //$("#frmDetail").submit();
+
             frmDetailSubmit();
         }
 
