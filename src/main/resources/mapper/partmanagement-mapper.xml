@@ -566,7 +566,53 @@
         WHERE GUARANT_IDX =#{idx}
     </update>
 
+<!--  파일다운로드  -->
 
+    <select id="getMsdsFileData" parameterType="int" resultType="Map">
+        SELECT MSDS_FILE_NAME as FILE_NAME, MSDS_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_MSDS
+        WHERE MSDS_IDX=#{idx}
+    </select>
+    <select id="getRohsFileData" parameterType="int" resultType="Map">
+        SELECT ROHS_FILE_NAME as FILE_NAME, ROHS_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_ROHS
+        WHERE ROHS_IDX=#{idx}
+    </select>
+    <select id="getHalgFileData" parameterType="int" resultType="Map">
+        SELECT HALOGEN_FILE_NAME as FILE_NAME, HALOGEN_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_HALOGEN
+        WHERE HALOGEN_IDX=#{idx}
+    </select>
+    <select id="getEtcFileData" parameterType="int" resultType="Map">
+        SELECT ETC_FILE_NAME as FILE_NAME, ETC_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_ETC
+        WHERE ETC_IDX=#{idx}
+    </select>
+    <select id="getDetailSvhcFileData" parameterType="int" resultType="Map">
+        SELECT  FILE_PATH,FILE_NAME
+        FROM SC_PART_MGMT_SVHC_DATA
+        WHERE SVHC_IDX=#{idx}
+    </select>
+    <select id="getDetailDeclFileData" parameterType="int" resultType="Map">
+        SELECT  FILE_PATH,FILE_NAME
+        FROM SC_PART_MGMT_DECLARATION_DATA
+        WHERE DECL_IDX=#{idx}
+    </select>
+    <select id="getSccsFileData" parameterType="int" resultType="Map">
+        SELECT SCCS_FILE_NAME as FILE_NAME, SCCS_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_SCCS
+        WHERE SCCS_IDX=#{idx}
+    </select>
+    <select id="getIngredFileData" parameterType="int" resultType="Map">
+        SELECT INGRED_FILE_NAME as FILE_NAME, INGRED_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_INGRED
+        WHERE INGRED_IDX=#{idx}
+    </select>
+    <select id="getGuarantDataFileData" parameterType="int" resultType="Map">
+        SELECT GUARANT_FILE_NAME as FILE_NAME, GUARANT_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_GUARANT
+        WHERE GUARANT_IDX=#{idx}
+    </select>
 
 
 

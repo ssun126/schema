@@ -97,7 +97,7 @@
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${msdsDTO.MSDS_IDX}]],'MSDS')" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'MSDS',[[${msdsDTO.MSDS_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
@@ -157,7 +157,7 @@
                                 <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${rohsDTO.ROHS_FILE_NAME == null ? 'display:none;' : '' }" style="width:auto;">
                                     <div class="item_label" data-cui-icon="paperclip" style="width:auto"><span id="ROHS_FILE_NAME" th:value="${rohsDTO.ROHS_FILE_NAME}" th:text="${rohsDTO.ROHS_FILE_NAME}"></span></div>
                                     <div class="item_content">
-                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
+                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${rohsDTO.ROHS_IDX}]],'ROHS')" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
                                         <button type="button" class="cui_button icon endpoint"  th:onclick="status_Del($(this),'ROHS',[[${rohsDTO.ROHS_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                     </div>
                                 </div>
@@ -224,7 +224,7 @@
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${halGDTO.HALOGEN_FILE_NAME == null ? 'display:none;' : '' }">
                                         <div class="item_label" data-cui-icon="paperclip"><span id="HALOGEN_FILE_NAME" th:value="${halGDTO.HALOGEN_FILE_NAME}" th:text="${halGDTO.HALOGEN_FILE_NAME}" ></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${halGDTO.HALOGEN_IDX}]],'HALOGEN')" data-tooltip-title="다운로드"><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'HALOGEN',[[${halGDTO.HALOGEN_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
@@ -270,7 +270,7 @@
                                         <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${etcDTO.ETC_FILE_NAME == null ? 'display:none;' : '' }" >
                                             <div class="item_label" data-cui-icon="paperclip"><span id="ETC_FILE_NAME" th:value="${etcDTO.ETC_FILE_NAME}" th:text="${etcDTO.ETC_FILE_NAME}"></span></div>
                                             <div class="item_content">
-                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                                <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${etcDTO.ETC_IDX}]],'ETC')" data-cui-icon="download" data-tooltip-title="다운로드"
                                                 ><span>다운로드</span></button>
                                                 <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'ETC',[[${etcDTO.ETC_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                             </div>
@@ -386,6 +386,19 @@
                 }
             });
 
+        }
+
+        var downloadFile = function (idx,gubun) {
+            // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+            var downloadUrl = '/user/partMgmt/partMgmtFileDownIdx?IDX=' + idx +'&GUBUN='+gubun;
+
+            // 다운로드 링크를 동적으로 생성
+            var link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+            // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+            link.click();
         }
 
         var frmDetailSubmit = function () {

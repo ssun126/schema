@@ -87,7 +87,7 @@
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_label" data-cui-icon="paperclip"><span th:text="${msdsDTO.MSDS_FILE_NAME}">파일명.html</span></div>
                     <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${msdsDTO.MSDS_IDX}]],'MSDS')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                     </div>
                   </div>
                 </div>
@@ -135,7 +135,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${rohsDTO.ROHS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${rohsDTO.ROHS_IDX}]],'ROHS')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -195,7 +195,7 @@
                   <div class="cui_items_wrap" data-direction="left">
                     <div class="item_label" data-cui-icon="paperclip"><span  th:text="${halGDTO.HALOGEN_FILE_NAME}">파일명.html</span></div>
                     <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${halGDTO.HALOGEN_IDX}]],'HALOGEN')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                     </div>
                   </div>
                 </div>
@@ -229,9 +229,9 @@
               <td>
                 <div class="cui_attachments">
                   <div class="cui_items_wrap" data-direction="left">
-                    <div class="item_label" data-cui-icon="paperclip"><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
+                    <div class="item_label" data-cui-icon="paperclip" ><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
                     <div class="item_content">
-                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                      <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${etcDTO.ETC_IDX}]],'ETC')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                     </div>
                   </div>
                 </div>
@@ -287,7 +287,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${svhcDTO.FILE_NAME}" >파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${svhcDTO.SVHC_IDX}]],'SVHC')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -390,7 +390,7 @@
                       <div class="cui_items_wrap" data-direction="left">
                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${declarDTO.FILE_NAME}">파일명.html</span></div>
                         <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                          <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${declarDTO.DECL_IDX}]],'DECL')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                         </div>
                       </div>
                     </div>
@@ -444,7 +444,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${sccsDTO.SCCS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${sccsDTO.SCCS_IDX}]],'SCCS')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -470,7 +470,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${ingredDTO.INGRED_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${ingredDTO.INGRED_IDX}]],'INGRED')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -498,7 +498,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${guarantDTO.GUARANT_IDX}]],'GUARANT')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -806,5 +806,18 @@
 
         return dataJson;
     }
+
+  var downloadFile = function (idx,gubun) {
+      // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+      var downloadUrl = '/user/partMgmt/partMgmtFileDownIdx?IDX=' + idx +'&GUBUN='+gubun;
+
+      // 다운로드 링크를 동적으로 생성
+      var link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+      // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+      link.click();
+  }
 
 </script>

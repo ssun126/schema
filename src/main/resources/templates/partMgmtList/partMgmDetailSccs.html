@@ -98,7 +98,7 @@
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${sccsDTO.SCCS_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="SCCS_FILE_NAME" th:value="${sccsDTO.SCCS_FILE_NAME}" th:text="${sccsDTO.SCCS_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${sccsDTO.SCCS_IDX}]],'SCCS')" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'SCCS',[[${sccsDTO.SCCS_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${ingredDTO.INGRED_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="INGRED_FILE_NAME" th:value="${ingredDTO.INGRED_FILE_NAME}" th:text="${ingredDTO.INGRED_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${ingredDTO.INGRED_IDX}]],'INGRED')" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
                                             <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'INGRED',[[${ingredDTO.INGRED_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                         </div>
@@ -184,7 +184,7 @@
                                 <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${guarantDTO.GUARANT_FILE_NAME == null ? 'display:none;' : '' }">
                                     <div class="item_label" data-cui-icon="paperclip"><span id="GUARANT_FILE_NAME" th:value="${guarantDTO.GUARANT_FILE_NAME}" th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${guarantDTO.GUARANT_IDX}]],'GUARANT')" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
                                             <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'GUARANT',[[${guarantDTO.GUARANT_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                         </div>

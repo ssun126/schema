@@ -18,6 +18,10 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1496,8 +1504,97 @@ public class PartMgmtController {
     }
 
 
+    @GetMapping("/partMgmtFileDownIdx")
+    public ResponseEntity<Resource> partMgmtDownloadFile(HttpServletRequest request) throws Exception {
+        int idx = Integer.parseInt(GetParam(request,"IDX","0"));
+        String gubun = GetParam(request,"GUBUN","");
+        Map<String,String> map = new HashMap<>();
+        String path = "";
+        String name = "";
 
+        if(gubun.equals("MSDS")){
+            map = partMgmtService.getMsdsFileData(idx);
 
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+
+        }else if(gubun.equals("ROHS")){
+            map = partMgmtService.getRohsFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+        }else if(gubun.equals("HALOGEN")){
+            map = partMgmtService.getHalgFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+        }else if(gubun.equals("ETC")){
+            map = partMgmtService.getEtcFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+
+        }else if(gubun.equals("SVHC")){
+            map = partMgmtService.getDetailSvhcFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+
+        }else if(gubun.equals("DECL")){
+            map = partMgmtService.getDetailDeclFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+
+        }else if(gubun.equals("SCCS")){
+            map = partMgmtService.getSccsFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+
+        }else if(gubun.equals("INGRED")){
+            map = partMgmtService.getIngredFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+
+        }else if(gubun.equals("GUARANT")){
+            map = partMgmtService.getGuarantDataFileData(idx);
+
+            path = map.get("FILE_PATH");
+            name = map.get("FILE_NAME");
+        }
+
+        FileSystemResource resource2 = new FileSystemResource(path+name);
+
+        if (!resource2.exists() || !resource2.isReadable()) {
+            throw new Exception("File not found or not readable: " + name);
+        }
+
+        Path file = Paths.get(path).resolve(name).normalize();
+        Resource resource = new UrlResource(file.toUri());
+
+        if(resource.exists() && resource.isReadable()){
+            String encodedFileName = URLEncoder.encode(resource.getFilename(),"UTF-8").replace("+","%20");
+            String contentDisposition = "attachment; filename*=UTF-8''" + encodedFileName;
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,contentDisposition)
+                    .body(resource);
+
+        }else{
+            //return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //파일명 인코딩
+    private String encodeFileName(String filename) throws UnsupportedEncodingException {
+        // Encode filename in UTF-8
+        String encodedFilename = URLEncoder.encode(filename, "UTF-8").replaceAll("\\+", "%20");
+
+        // Ensure that non-ASCII characters are correctly encoded
+        return encodedFilename;
+    }
 
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
         String ParamValue = request.getParameter(pName);

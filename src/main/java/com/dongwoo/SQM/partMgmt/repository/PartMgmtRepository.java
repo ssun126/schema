@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Repository
@@ -196,6 +197,21 @@ public class PartMgmtRepository {
 
     public int updateApprovalStatus(String idx){ return sql.update("partManagement.updateApprovalStatus",idx);}
 
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** 파일다운로드
+     *********************************************************************************************************************/
+
+    public Map<String,String> getMsdsFileData (int idx){ return sql.selectOne("partManagement.getMsdsFileData",idx);}
+    public Map<String,String> getRohsFileData (int idx){ return sql.selectOne("partManagement.getRohsFileData",idx);}
+    public Map<String,String> getHalgFileData (int idx){ return sql.selectOne("partManagement.getHalgFileData",idx);}
+    public Map<String,String> getEtcFileData  (int idx){ return sql.selectOne("partManagement.getEtcFileData",idx);}
+    public Map<String,String> getDetailSvhcFileData (int idx){ return sql.selectOne("partManagement.getDetailSvhcFileData",idx);}
+    public Map<String,String> getDetailDeclFileData (int idx){ return sql.selectOne("partManagement.getDetailDeclFileData",idx);}
+    public Map<String,String> getSccsFileData (int idx){ return sql.selectOne("partManagement.getSccsFileData",idx);}
+    public Map<String,String> getIngredFileData (int idx){ return sql.selectOne("partManagement.getIngredFileData",idx);}
+    public Map<String,String> getGuarantDataFileData (int idx){ return sql.selectOne("partManagement.getGuarantDataFileData",idx);}
 
 
 

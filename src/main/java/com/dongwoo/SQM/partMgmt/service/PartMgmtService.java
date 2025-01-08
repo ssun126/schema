@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -326,6 +327,16 @@ public class PartMgmtService {
 
         return filePath;
     }
+
+    public Map<String,String> getMsdsFileData (int idx){ return  partMgmtRepository.getMsdsFileData(idx);}
+    public Map<String,String> getRohsFileData (int idx){ return  partMgmtRepository.getRohsFileData(idx);}
+    public Map<String,String> getHalgFileData (int idx){ return  partMgmtRepository.getHalgFileData(idx);}
+    public Map<String,String> getEtcFileData (int idx){ return  partMgmtRepository.getEtcFileData(idx);}
+    public Map<String,String> getDetailSvhcFileData (int idx){ return  partMgmtRepository.getDetailSvhcFileData(idx);}
+    public Map<String,String> getDetailDeclFileData (int idx){ return  partMgmtRepository.getDetailDeclFileData(idx);}
+    public Map<String,String> getSccsFileData (int idx){ return  partMgmtRepository.getSccsFileData(idx);}
+    public Map<String,String> getIngredFileData (int idx){ return  partMgmtRepository.getIngredFileData(idx);}
+    public Map<String,String> getGuarantDataFileData (int idx){ return  partMgmtRepository.getGuarantDataFileData(idx);}
 
 
 
