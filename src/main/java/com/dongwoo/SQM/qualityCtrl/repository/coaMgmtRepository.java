@@ -58,5 +58,74 @@ public class coaMgmtRepository {
         return sql.insert("coaMgmt.copyCOADetail", coaMgmtDTO);
     }
 
+    public int delCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return sql.delete("coaMgmt.delCOAMaster", coaMgmtDTO);
+    }
+
+    public int delCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return sql.delete("coaMgmt.delCOADetail", coaMgmtDTO);
+    }
+
+    public coaMgmtDTO regCheck(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectOne("coaMgmt.regCheck", coaMgmtDTO);
+    }
+
+    public coaMgmtDTO regSpecCheck(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectOne("coaMgmt.regSpecCheck", coaMgmtDTO);
+    }
+
+    public String getStatusCOAMasterByPK(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectOne("coaMgmt.getStatusCOAMasterByPK", coaMgmtDTO);
+    }
+
+    public coaMgmtDTO getMaterial(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectOne("coaMgmt.getMaterial", coaMgmtDTO);
+    }
+
+
+
+//interface
+    public coaMgmtDTO interfaceLimsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectOne("coaMgmt.interfaceLimsCOAMasterData", coaMgmtDTO);
+    }
+
+    public List<coaMgmtDTO> interfaceLimsCOADetailData(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectList("coaMgmt.interfaceLimsCOADetailData", coaMgmtDTO);
+    }
+
+    public int interfaceCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return sql.update("coaMgmt.interfaceCOAMaster", coaMgmtDTO);
+    }
+
+    public int interfaceCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return sql.update("coaMgmt.interfaceCOADetail", coaMgmtDTO);
+    }
+
+    public coaMgmtDTO interfaceDqmsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectOne("coaMgmt.interfaceDqmsCOAMasterData", coaMgmtDTO);
+    }
+
+    public List<coaMgmtDTO> interfaceDqmsCOADetailData(coaMgmtDTO coaMgmtDTO) {
+        return sql.selectList("coaMgmt.interfaceDqmsCOADetailData", coaMgmtDTO);
+    }
+
+    public int interfaceCOAProcedure(String DB_LINK_TARGET_APPLY) {
+        return sql.update("coaMgmt.interfaceCOAProcedure", DB_LINK_TARGET_APPLY);
+    }
+
+
+
+    public int interfaceDqmsCOAMaster(Map<String, Object> parameterMap) {
+        return sql.insert("coaMgmt.interfaceDqmsCOAMaster", parameterMap);
+    }
+
+    public int interfaceDqmsCOADetail(Map<String, Object> parameterMap) {
+        return sql.insert("coaMgmt.interfaceDqmsCOADetail", parameterMap);
+    }
+
+
+
+
+
 
 }
