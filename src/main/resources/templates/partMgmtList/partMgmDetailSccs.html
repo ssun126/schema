@@ -37,9 +37,10 @@
             display:block;
         }
 
-        .chkbox{
-            margin-top:20px;
+        .cui_border_section{
+            margin: 20px 20px;
         }
+
     </style>
 </head>
 <body>
@@ -88,7 +89,7 @@
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
                                     <input type="hidden" name="SCCS_IDX" th:value="${sccsDTO.SCCS_IDX}">
-                                    <input type="text" class="cui_text_field datepicker" th:value="${sccsDTO.SCCS_CONFIRM_DATE}"  name="SCCS_CONFIRM_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="sccs 날짜를 입력해주세요." messages="">
+                                    <input type="text" class="cui_text_field datepicker" th:value="${sccsDTO.SCCS_CONFIRM_DATE}"  name="SCCS_CONFIRM_DATE" reqcheck="reqcheck" onkeyup="checkValidDate($(this))"  maxlength="10" datePickerControl="" data-messages="sccs 날짜를 입력해주세요." messages="">
                                 </div>
                             </td>
                             <td><input type="text" class="cui_text_field" th:value="${sccsDTO.SCCS_CHAR}" name="SCCS_CHAR" reqcheck="reqcheck" data-messages="sccs 구분자를 입력해주세요." messages=""></td>
@@ -131,7 +132,7 @@
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
                                     <input type="hidden" name="INGRED_IDX"  th:value="${ingredDTO.INGRED_IDX}" >
-                                    <input type="text" class="cui_text_field datepicker" name="INGRED_CONFIRM_DATE"  th:value="${ingredDTO.INGRED_CONFIRM_DATE}"  datePickerControl=""  reqcheck="reqcheck" data-messages="성분명세서 날짜를 입력해주세요." messages="">
+                                    <input type="text" class="cui_text_field datepicker" name="INGRED_CONFIRM_DATE"  th:value="${ingredDTO.INGRED_CONFIRM_DATE}" onkeyup="checkValidDate($(this))"  maxlength="10"  datePickerControl=""  reqcheck="reqcheck" data-messages="성분명세서 날짜를 입력해주세요." messages="">
                                 </div>
                             </td>
                             <td>
@@ -176,7 +177,7 @@
                         <tr th:each="guarantDTO,guarantStat : ${guarantListDTO}">
                             <td><input type="hidden" th:name="'GUARANT_IDX'+${guarantStat.count}" th:value="${guarantDTO.GUARANT_IDX}" >
                                 <input type="text" class="cui_text_field "  th:value="${guarantDTO.GUARANT_TYPE}" th:name="'GUARANT_TYPE'+${guarantStat.count}" ></td>
-                            <td><input type="text" class="cui_text_field"  th:value="${guarantDTO.GUARANT_CONFIRM_DATE}" th:name="'GUARANT_CONFIRM_DATE'+${guarantStat.count}"  datePickerControl="" >
+                            <td><input type="text" class="cui_text_field"  th:value="${guarantDTO.GUARANT_CONFIRM_DATE}" th:name="'GUARANT_CONFIRM_DATE'+${guarantStat.count}" onkeyup="checkValidDate($(this))"  maxlength="10" datePickerControl="" >
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field"  th:name="'GUARANT_FILE'+${guarantStat.count}" >
@@ -199,15 +200,22 @@
                     </table>
                 </fieldset>
 
-                <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
+                <div class="cui_border_section" th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
                     <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
-                    * 보증 내역의 재확인<br>
-                    -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)
-                    <br>
-                    <label class="cui_checkbox">
-                        <input type="checkbox" name="CONFIRM_CHK" th:checked="${sccsDTO.CONFIRM_CHK == ' ' ? false:sccsDTO.CONFIRM_CHK}"><i></i>
-                        <span>전자 보증서 제출</span>
-                    </label>
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>보증 내역의 재확인</span></div>
+                    </div>
+                    <ul class="cui_list" data-bullet="dash">
+                        <li>기 제출한 SCCS / 성분명세 등 보증서류에 대해 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다.</li>
+                    </ul>
+                    <div class="cui_items_wrap" data-direction="column">
+                        <div class="item_content">
+                            <label class="cui_checkbox">
+                                <input type="checkbox" name="CONFIRM_CHK" th:checked="${sccsDTO.CONFIRM_CHK == ' ' ? false:sccsDTO.CONFIRM_CHK}"><i></i>
+                                <span>전자 보증서 제출</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="cui_items_wrap" data-direction="right" >
@@ -228,8 +236,8 @@
             guarantCount++;
 
             const newRow = $('<tr>'
-                         + '    <td><input type="hidden" name="GUARANT_IDX' + guarantCount + '"" ><input type="text" class="cui_text_field datepicker" name="GUARANT_TYPE' + guarantCount + '" ></td>'
-                         + '                <td><input type="text" class="cui_text_field" name="GUARANT_CONFIRM_DATE' + guarantCount + '"  datePickerControl="" ></td>'
+                         + '    <td><input type="hidden" name="GUARANT_IDX' + guarantCount + '"" ><input type="text" class="cui_text_field "  name="GUARANT_TYPE' + guarantCount + '" ></td>'
+                         + '                <td><input type="text" class="cui_text_field" name="GUARANT_CONFIRM_DATE' + guarantCount + '" onkeyup="checkValidDate($(this))"  maxlength="10"  datePickerControl="" ></td>'
                          + '                <td>'
                          + '                    <div class="cui_attachments" style="display:flex;">'
                          + '                        <input type="file" class="cui_file_field" name="GUARANT_FILE' + guarantCount + '">'
@@ -294,6 +302,28 @@
                 }
             });
 
+        }
+
+        var checkValidDate = function(obj) {
+            let val = obj.val().replace(/\D/g, "");
+            let leng = val.length;
+            let result = '';
+
+            if(leng < 6) result = val;
+            else if(leng < 8){
+                result += val.substring(0,4);
+                result += "-";
+                result += val.substring(4);
+            } else{
+                result += val.substring(0,4);
+                result += "-";
+                result += val.substring(4,6);
+                result += "-";
+                result += val.substring(6);
+
+
+            }
+            obj.val(result);
         }
 
 
@@ -363,11 +393,11 @@
 
             //파일 체크
             var flag = '';
-            if($("input[name=SCCS_FILE]") == '' && $("#SCCS_FILE_NAME").val() == '') {
+            if($("input[name=SCCS_FILE]") === '' && $("#SCCS_FILE_NAME").text() === '') {
                  isValid=false;
                  flag='SCCS';
             }
-            if($("input[name=INGRED_FILE]") == '' && $("#INGRED_FILE_NAME]").val() == '') {
+            if($("input[name=INGRED_FILE]") === '' && $("#INGRED_FILE_NAME]").text() == ='') {
                  isValid=false;
                  flag='성분명세서';
             }

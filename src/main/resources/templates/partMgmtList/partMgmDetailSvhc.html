@@ -37,8 +37,8 @@
             display:block;
         }
 
-        .chkbox{
-            margin-top:20px;
+        .cui_border_section{
+            margin: 20px 20px;
         }
     </style>
 </head>
@@ -84,7 +84,7 @@
                                     <input type="hidden" name="SVHC_IDX" th:value="${svhcDTO.SVHC_IDX}">
                                     <div class="item_content">
                                         <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="ATTACH" id="Attach" th:checked="${svhcDTO.DATA_GUBUN eq 'ATTACH'}"><i></i><span>파일첨부</span></label>
-                                        <label class="cui_checkbox"><input type="radio" name="DATA_GUBUN" value="WRITE" id="Write"  th:checked="${svhcDTO.DATA_GUBUN eq 'WRITE'}"><i></i><span>직접입력</span></label>
+                                        <label class="cui_checkbox" th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }"><input type="radio" name="DATA_GUBUN" value="WRITE" id="Write"  th:checked="${svhcDTO.DATA_GUBUN eq 'WRITE'}"><i></i><span>직접입력</span></label>
                                     </div>
                                 </div>
                             </td>
@@ -94,7 +94,7 @@
                             <td>
                                 <div class="cui_items_wrap">
                                     <div class="item_content" data-role="calendar-picker">
-                                        <input type="text" class="cui_text_field" id="confirmDate" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="확인일자를 입력해주세요." messages="">
+                                        <input type="text" class="cui_text_field" id="confirmDate" onkeyup="checkValidDate($(this))"  maxlength="10" datePickerControl=""  name="CONFIRM_DATE" th:value="${svhcDTO.CONFIRM_DATE}" reqcheck="reqcheck" data-messages="확인일자를 입력해주세요." messages="">
                                         <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar" id="confirmDate_btn"><span>날자 선택</span></button>
                                     </div>
                                 </div>
@@ -157,6 +157,7 @@
 
                 <fieldset id="svhcDataFieldset" style="display:none;">
                     <input type="hidden" name="APPLICABLE_NO" th:value="${svhcDTO.APPLICABLE_NO}">
+                    <input type="hidden" name="NONE_APPLICABLE_NO" th:value="${svhcDTO.NONE_APPLICABLE_NO}">
                     <div class="cui_jqGrid_section">
                         <div class="cui_jqGrid_head">
                             <div class="jqGrid_label"> &nbsp;</div>
@@ -168,14 +169,22 @@
                 </fieldset>
                 <input type="hidden" name="blobData">
 
-                <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }">
+                <div class="cui_border_section" th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }">
                     <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
-                    * 보증 내역의 재확인<br>
-                    -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>
-                    <label class="cui_checkbox">
-                        <input type="checkbox" name="CONFIRM_CHK" th:checked="${svhcDTO.CONFIRM_CHK == ' ' ? false:svhcDTO.CONFIRM_CHK}"><i></i>
-                        <span>전자 보증서 제출</span>
-                    </label>
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>보증 내역의 재확인</span></div>
+                    </div>
+                    <ul class="cui_list" data-bullet="dash">
+                        <li>SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.</li>
+                    </ul>
+                    <div class="cui_items_wrap" data-direction="column">
+                        <div class="item_content">
+                            <label class="cui_checkbox">
+                                <input type="checkbox" name="CONFIRM_CHK" th:checked="${svhcDTO.CONFIRM_CHK == ' ' ? false:svhcDTO.CONFIRM_CHK}"><i></i>
+                                <span>전자 보증서 제출</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="cui_items_wrap" data-direction="right" style="margin-top:25px;" >
@@ -289,6 +298,28 @@
         }
     }
 
+    var checkValidDate = function(obj) {
+        let val = obj.val().replace(/\D/g, "");
+        let leng = val.length;
+        let result = '';
+
+        if(leng < 6) result = val;
+        else if(leng < 8){
+            result += val.substring(0,4);
+            result += "-";
+            result += val.substring(4);
+        } else{
+            result += val.substring(0,4);
+            result += "-";
+            result += val.substring(4,6);
+            result += "-";
+            result += val.substring(6);
+
+
+        }
+        obj.val(result);
+    }
+
     var setSvhcExcelData = function (){
         Common.Loading.Show();
         $("#Grid_attach_Div").css("display","block");
@@ -306,6 +337,14 @@
             $("#gridArea_attach").pqGrid("refreshView");
             AttachStatus = true;
             Common.Loading.Hide();
+
+            var returnVal = setApplicableNo('attach',true,'imsi');
+            if(returnVal !== 'true'){
+                isValid = false;
+                Common.Msg(siteLang.getLang(returnVal));
+                return;
+            }
+
         });
 
     }
@@ -357,7 +396,10 @@
     var SheetDataConvert = function (data) {
         var dataJson = JSON.parse(data);
         var appVal = $("input[name=APPLICABLE_NO]").val();
+        var noneappVal = $("input[name=NONE_APPLICABLE_NO]").val();
+
         var ArrData = appVal.split(',');
+        var NoneArrData = noneappVal.split(',');
 
 
         for(var i = 0; i < dataJson.length; i++){
@@ -370,7 +412,16 @@
             if(flag){
                 dataJson[i].SVHC_YN='Y';
             }else{
-                dataJson[i].SVHC_YN='N';
+                for(var k=0; k<NoneArrData.length; k++){
+                    if(dataJson[i].SVHC_NUM === NoneArrData[k]) {
+                        dataJson[i].SVHC_YN='N';
+                    }
+                }
+
+                if(dataJson[i].SVHC_YN === null){
+                    dataJson[i].SVHC_YN= '';
+                }
+
             }
 
         }
@@ -393,7 +444,7 @@
 //write
     $(function () {
         var heightMinus = 650;
-        var SVHC_YN_SELECT_ITEMS = ['Y', 'N'];
+        var SVHC_YN_SELECT_ITEMS = ['','Y', 'N'];
 
 
         var data = SheetDataConvert($("#gridArea").attr("initData"));
@@ -457,8 +508,8 @@
 
             {  title: "No.", width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
             { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
+            { title: "EC No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
             { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
-            { title: "EU No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true
                 , editor: {
                     type : "select",
@@ -549,8 +600,8 @@
 
             {  title: "No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
             { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
+            { title: "EC No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
             { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
-            { title: "EU No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true, editor: false, editable: false }
 
         ];
@@ -572,7 +623,6 @@
 
         downloadExcel();
 
-
         var frmObj = $("#frmDetail");
         var flag = $("#frmDetail").find("input[name=SaveMode]").val();
         //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
@@ -580,37 +630,54 @@
         ReqInfo.formData  = new FormData();
         ReqInfo.AddParameter(frmObj);
         Common.Ajax("/user/partMgmt/goSvhcSave", ReqInfo, function (response) {
-                if (response == "OK") {
-                    if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
-                        Common.Msg(siteLang.getLang("저장되었습니다."));
-                        location.reload();
-                    }
-                }else {
-                    Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" + response.split('|||')[1]);
+            if (response == "OK") {
+                if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                    Common.Msg(siteLang.getLang("저장되었습니다."));
+                    location.reload();
                 }
-            });
-
-        //ReqInfo.formData
-        //return Common.Validate(frmObj);
+            }else {
+                Common.MoveUrl("/user/partMgmt/goDeclDetail?PM_IDX=" + response.split('|||')[1]);
+            }
+        });
 
     }
 
-    var setApplicableNo = function(flag){
-        var idxs ='';
-        var reVal = false;
+    var setApplicableNo = function(flag,stat,gubun){
+        var idxsY = "";
+        var idxsN = "";
+        var idxsNull = "";
+        var idxsEtc = "";
+        var reVal = "true";
         var pqName ='';
         if(flag === 'attach') pqName='_attach';
         var grid = $("#gridArea"+pqName).pqGrid("instance");
         for (j = 0; j < grid.pdata.length; j++) {
-            if (grid.pdata[j]["SVHC_YN"] === 'Y') {
-                if (idxs != "") idxs += ",";
-                idxs += grid.pdata[j]["SVHC_NUM"];
-                reVal = true;
+            if (grid.pdata[j]["SVHC_YN"].trim() === 'Y' || grid.pdata[j]["SVHC_YN"].trim() === 'y') {
+                if (idxsY != "") idxsY += ",";
+                idxsY += grid.pdata[j]["SVHC_NUM"];
+            }else if(grid.pdata[j]["SVHC_YN"].trim() === 'N' || grid.pdata[j]["SVHC_YN"].trim() === 'n'){
+                if (idxsN != "") idxsN += ",";
+                idxsN += grid.pdata[j]["SVHC_NUM"];
+            }else if(grid.pdata[j]["SVHC_YN"].trim() === '' ){
+                if (idxsNull != "") idxsNull += ",";
+                idxsNull += grid.pdata[j]["SVHC_NUM"];
+                if(stat){
+                    reVal = grid.pdata[j]["SVHC_YN"].trim() +"의 값이 없습니다";
+                    return reVal;
+                }
+            }else{
+                if (idxsEtc != "") idxsEtc += ",";
+                idxsEtc += grid.pdata[j]["SVHC_NUM"];
+                if(stat){
+                    reVal = grid.pdata[j]["SVHC_NUM"].trim() +" :  해당여부의 값은 Y/N으로 작성해주세요.";
+                    return reVal;
+                }
             }
         }
 
-        if(flag !== 'attach'){
-            $("input[name=APPLICABLE_NO]").val(idxs);
+        if(gubun !== 'imsi' ){
+            $("input[name=APPLICABLE_NO]").val(idxsY);
+            $("input[name=NONE_APPLICABLE_NO]").val(idxsN);
         }
 
         return reVal;
@@ -635,16 +702,16 @@
                     Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
                     return;
                 }
-                if(!setApplicableNo('attach')){
-                    flag = false;
-                    Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+                var returnVal = setApplicableNo('attach',true);
+                if(returnVal !== 'true'){
+                    Common.Msg(siteLang.getLang(returnVal));
                     return;
                 }
             }
 
         }else{
             //Y 데이터 삽입
-            setApplicableNo();
+            setApplicableNo('write',false);
         }
 
 
@@ -675,36 +742,8 @@
         var grid = $("#gridArea"+pqName).pqGrid("instance");
         const gridData = $("#gridArea"+pqName).pqGrid("option", "dataModel").data;
 
-        //var grid = $("#gridArea").pqGrid("instance");
-<!--        var colModel = grid.getColModel();-->
-<!--        colModel[0].hidden = true;-->
-
-<!--        var format = "xlsx",-->
-<!--            blob = grid.exportData({-->
-<!--                format: format,-->
-<!--                nopqdata: true,-->
-<!--                render: true-->
-<!--            });-->
-<!--        if (typeof blob === "string") {-->
-<!--            blob = new Blob([blob]);-->
-<!--        }-->
-
-
         $("input[name=blobData]").val(JSON.stringify(gridData));
 
-        //var cnt = $("input[name=WARRANTY_ITEM]").val();
-        //var date = $("input[name=CONFIRM_DATE]").val().replaceAll("-","");
-
-
-
-<!--        if(flag === 'attach'){-->
-<!--            saveAs(blob, "SVHC_" + date +"_"+cnt+ "." + format);-->
-<!--        }else{-->
-<!--            saveAs(blob, "PART_MANAGEMENT_" + Common.GetTodayTimeString() + "." + format);-->
-<!--        }-->
-
-
-        //colModel[0].hidden = false;
     }
 
 
@@ -718,7 +757,7 @@
         //유효성체크
         var frmObj = $("#frmDetail");
         var isValid = true;
-        var message ='';
+        var returnVal ="";
 
         if(Common.Validate(frmObj) != true){
             return;
@@ -729,33 +768,35 @@
         if(frmObj.find("input[name='DATA_GUBUN']:checked").val()=='ATTACH'){
             if($("input[name=SVHC_FILE]").val() === '' && $("#FILE_NAME").text() === ''){
                 isValid = false;
-                message= '첨부파일을 등록해 주세요';
-                Common.Msg(siteLang.getLang(message));
+                returnVal= '첨부파일을 등록해 주세요';
+                Common.Msg(siteLang.getLang(returnVal));
                 return;
             }
 
             if($("input[name=SVHC_FILE]").val() !== ''){
                 if(!AttachStatus){
                     isValid = false;
-                    message= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
-                    Common.Msg(siteLang.getLang(message));
+                    returnVal= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                    Common.Msg(siteLang.getLang(returnVal));
                     return;
                 }
-                if(!setApplicableNo('attach')){
+                returnVal = setApplicableNo('attach',true);
+                if(returnVal !== 'true'){
                     isValid = false;
-                    message= '첨부내용에 Y로 해당되는 내용이 없습니다';
-                    Common.Msg(siteLang.getLang(message));
+                    Common.Msg(siteLang.getLang(returnVal));
                     return;
                 }
+
             }
 
         }else{
-            if(!setApplicableNo()){
+            returnVal = setApplicableNo('write',true);
+            if(returnVal !== 'true'){
                 isValid = false;
-                message= 'Y로 해당되는 내용이 없습니다';
-                Common.Msg(siteLang.getLang(message));
+                Common.Msg(siteLang.getLang(returnVal));
                 return;
             }
+
 
         }
 
@@ -767,14 +808,8 @@
             }
         }
 
-
-
-
         if(isValid){
             $("#frmDetail").find("input[name=SaveMode]").val("Next");
-            //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-            //$("#frmDetail").submit();
-
             frmDetailSubmit();
         }
 
