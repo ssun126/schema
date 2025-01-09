@@ -6,9 +6,12 @@ import com.dongwoo.SQM.qualityCtrl.dto.coaMgmtDTO;
 import com.dongwoo.SQM.qualityCtrl.service.coaMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
+import com.dongwoo.SQM.siteMgr.service.UserMgrService;
 import com.dongwoo.SQM.system.dto.ComPanyCodeDTO;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyDTO;
 import com.dongwoo.SQM.system.dto.UserInfoDTO;
+import jakarta.annotation.Resource;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +39,14 @@ import java.util.*;
 public class coaMgmtController {
 
     private final coaMgmtService coaMgmtService;
+
+    private final UserMgrService userMgrService;
+
+
+    // E-Mail
+    @Resource(name="mailSender")
+    private JavaMailSender mailSender;
+
 
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
         String ParamValue = request.getParameter(pName);
@@ -426,29 +438,6 @@ public class coaMgmtController {
     }
 
 
-//
-//    //regist
-//    @PostMapping("/admin/qualityCtrl/regist")
-//    @ResponseBody
-//    public Map<String, Object> regist(@RequestBody List<coaMgmtDTO> coaRegList ,HttpServletRequest request) {
-//        Map<String, Object> response = new HashMap<>();
-//        try {
-//
-//
-//
-//            //Map<String, String> resultMap = coaMgmtService.setCoaRegist(coaRegList);
-//
-//        } catch (Exception e) {
-//            response.put("status", "error");
-//            response.put("message", "처리 중 오류가 발생했습니다.");
-//        }
-//
-//        return  response ;
-//    }
-
-
-//    public Map<String, String> setCoaRegist(Map<String,Object> parameterMap) {
-
     @PostMapping("/admin/qualityCtrl/regist")
     @ResponseBody
     public Map<String, Object> regist(@RequestBody List<coaMgmtDTO> coaRegList ,HttpServletRequest request) {
@@ -459,7 +448,6 @@ public class coaMgmtController {
         ArrayList<coaMgmtDTO> limsIFList = new ArrayList<coaMgmtDTO>();
         ArrayList<coaMgmtDTO> cpsIFMasterList = new ArrayList<coaMgmtDTO>();
         ArrayList<coaMgmtDTO> cpsIFDetailList = new ArrayList<coaMgmtDTO>();
-
 
         ArrayList<String> factoryList = new ArrayList<String>();
 
@@ -472,8 +460,8 @@ public class coaMgmtController {
 
                 //Map<String, Object> regData = coaRegList.get(i);
                                    //: === > paramDto
-                //spec out체크로직 -> 메니저,관리자 권한만 통과  //sylee test 권한 설정 보류..
-                if((Integer.parseInt(checkMap2.getIS_SPEC_YN_CNT()))>0
+                //spec out체크로직 -> 메니저,관리자 권한만 통과
+                if((Integer.parseInt(checkMap2.getIS_SPEC_YN_CNT())) > 0
                          //   && (!"AU".equals(parameterMap.get("USER_TYPE")) && !"MU".equals(parameterMap.get("USER_TYPE")))
                 ){
                     //response.put("SUCCESS", "N");
@@ -481,7 +469,6 @@ public class coaMgmtController {
                     response.put("MSG", "SPEC OUT");
                     return response;
                 }
-
 
                 String sStatus  = coaMgmtService.getStatusCOAMasterByPK(paramDto);
 
@@ -496,7 +483,7 @@ public class coaMgmtController {
                 ifTarget = "CPS" ;
 //
                 if ("LIMS".equals(ifTarget.toUpperCase())) {
-                    HashMap<String, Object> coaDataMap = new HashMap<>();
+
                     coaMgmtDTO ifMasterData = coaMgmtService.interfaceLimsCOAMasterData(paramDto);
 
                     //check상태 변경
@@ -507,22 +494,22 @@ public class coaMgmtController {
                         ifMasterData.setCOA_STATUS("I");
                     }
                     ifMasterData.setDB_LINK_TARGET_MASTER(PropUtils.get("if.lims.coa.master"));
-                    coaMgmtService.interfaceCOAMaster(ifMasterData); //입력! 테이블 또는 뷰가 존재하지 않습니다
+                    coaMgmtService.interfaceCOAMaster(ifMasterData); //입력! 테이블 또는 뷰가 존재하지 않습니다  LIMS_INTF_SQM_INFO_TEMP
 
                     List<coaMgmtDTO> ifDetailList = coaMgmtService.interfaceLimsCOADetailData(paramDto);
 
                     for( int j=0; j<ifDetailList.size() ; j++ ){
                         coaMgmtDTO detailMap = ifDetailList.get(j);
                         detailMap.setDB_LINK_TARGET_DETAIL(PropUtils.get("if.lims.coa.detail"));
-                        coaMgmtService.interfaceCOADetail(detailMap); //입력! 테이블 또는 뷰가 존재하지 않습니다
+                        coaMgmtService.interfaceCOADetail(detailMap); //입력! 테이블 또는 뷰가 존재하지 않습니다 LIMS_INTF_SQM_COA_TEMP
                     }
 
                     limsIFList.add(ifMasterData);
                 } else if ("CPS".equals(ifTarget.toUpperCase())) {
-                    coaMgmtDTO ifMasterData = coaMgmtService.interfaceDqmsCOAMasterData(paramDto);  //SEQ_DQMS_INTER_INFO_01.NEXTVAL 누락
+                    coaMgmtDTO ifMasterData = coaMgmtService.interfaceDqmsCOAMasterData(paramDto);
                     cpsIFMasterList.add(ifMasterData);
 
-                    List<coaMgmtDTO> ifDetailList = coaMgmtService.interfaceDqmsCOADetailData(paramDto);  //SEQ_DQMS_INTER_COA_01.NEXTVAL 누락
+                    List<coaMgmtDTO> ifDetailList = coaMgmtService.interfaceDqmsCOADetailData(paramDto);
                     cpsIFDetailList.addAll(ifDetailList);
                 } else if("SEMA".equals(ifTarget.toUpperCase())){
                     paramDto.setDB_LINK_TARGET_MASTER(PropUtils.get("if.lims.xian.coa.master"));
@@ -533,7 +520,6 @@ public class coaMgmtController {
                 }
                 else {
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                    //response.put("SUCCESS", "N");
                     response.put("status", "err");
                     response.put("MSG", "M_WrongIFTarget");
                     return response;
@@ -560,236 +546,329 @@ public class coaMgmtController {
             //*CPS
             // Insert CPS Interface Data
             if (cpsIFMasterList.size() > 0) {
-                coaMgmtService.insertCOAListDqms(cpsIFMasterList, cpsIFDetailList);
-            }
-//
-//            //update 추가하자.!!!
-//            for (int i = 0 ; i < coaRegList.size() ; i ++) {
-//
-//
-////                Map<String, Object> regData = regList.get(i);
-////                Map<String,Object> checkMap = regCheck(regList.get(i));
-////                Map<String,Object> checkMap2 = regSpecCheck(regList.get(i));
-////
-//                coaMgmtDTO paramDto = coaRegList.get(i);
-//                coaMgmtDTO checkMap = coaMgmtService.regCheck(paramDto);
-//                coaMgmtDTO checkMap2 = coaMgmtService.regSpecCheck(paramDto);
-//
-//
-//
-//                //현업 권한만 spec out 등록가능
-//                if(Integer.parseInt(checkMap2.getIS_SPEC_YN_CNT())> 0
-////                        && !"MU".equals(parameterMap.get("USER_TYPE"))
-//                ){
-//                    response.put("status", "err");
-//                    response.put("MSG", "SPECOUT REG CHECKING");
-//                    return response;
-//                }
-//
-//                //기존
-//                //Map<String,Object> userInfo = coaMgmtDAO.getMyEmail(parameterMap);
-//
-//                UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//                user.getEMAIL();
-//
-//
-//
-//
-//
-//                if("Y".equals(checkMap.getIS30LIMIT())
-//                            || "Y".equals(checkMap.get("IS50LIMIT"))){
-//                    String[] targetUserArr = null;
-//                    String[] targetUserArr2 = null;
-//                    List<LinkedHashMap<String, Object>> targetList = null;
-//                    ArrayList<String> paramFactoryList = new ArrayList<String>();
-//
-//                    if("1300".equals(regData.get("L_FactoryId"))){
-//                        paramFactoryList.add("1300");
-//                    }else{
-//                        paramFactoryList.add("1200");
-//                    }
-//
-//                    parameterMap.put("factoryList", paramFactoryList);
-//                    parameterMap.put("menu_id", "COA");
-//                    parameterMap.put("job_type", "COAEXPIRENOTICE");
-//                    targetList = mailReciveSettingDAO.getEmailTargetUser(parameterMap);
-//
-//                    targetUserArr = new String[targetList.size()];
-//                    targetUserArr2 = new String[1];
-//                    for(int j=0; j<targetList.size(); j++){
-//                        LinkedHashMap<String, Object> targetUser = targetList.get(j);
-//                        targetUserArr[j] = targetUser.get("EMAIL").toString();
-//                    }
-//                    targetUserArr2[0] = userInfo.get("EMAIL_ADDRESS").toString();
-//
-//                    MimeMessage msg = mailSender.createMimeMessage();
-//                    MimeMessageHelper msgHelper = new MimeMessageHelper(msg, true, "UTF-8");
-//
-//                    MimeMessage msg2 = mailSender.createMimeMessage();
-//                    MimeMessageHelper msgHelper2 = new MimeMessageHelper(msg2, true, "UTF-8");
-//
-//                    msgHelper.setTo(targetUserArr);
-//                    msgHelper.setFrom(PropUtils.get("mail.sender.account"));
-//
-//                    msgHelper2.setTo(targetUserArr2);
-//                    msgHelper2.setFrom(PropUtils.get("mail.sender.account"));
-//
-//                    String contents="";
-//                    String subject="[DP-PORTAL] "+regData.get("L_MaterialName").toString()+"/"+regData.get("L_LotNo").toString()+"/";
-//
-//                    if("KR".equals(parameterMap.get("USER_LANG"))){
-//                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
-//                                + "<tr>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >원료명</td>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >출하일</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >만료일</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >입고량</td>"
-//                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
-//                                + "</tr>";
-//                        contents += "<tr>"
-//                                + "<td align='center' >" + regData.get("L_MaterialName").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_LotNo").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_StockDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_EDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_Quantity").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_SpecIn").toString() + "</td>"
-//                                + "</tr></table>";
-//                        contents+=PropUtils.get("notice.template.coa.cont.kr");
-//                        subject+=PropUtils.get("notice.template.coa.sub1.kr");
-//                        if("Y".equals(checkMap.get("IS30LIMIT"))){
-//                            subject+=PropUtils.get("notice.template.coa.sub3.kr");
-//                        }else{
-//                            subject+=PropUtils.get("notice.template.coa.sub2.kr");
-//                        }
-//                    }else if("EN".equals(parameterMap.get("USER_LANG"))){
-//                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
-//                                + "<tr>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >name</td>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >ShipmentDate</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >ExpirationDate</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >Quantity</td>"
-//                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
-//                                + "</tr>";
-//                        contents += "<tr>"
-//                                + "<td align='center' >" + regData.get("L_MaterialName").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_LotNo").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_StockDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_EDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_Quantity").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_SpecIn").toString() + "</td>"
-//                                + "</tr></table>";
-//                        contents+=PropUtils.get("notice.template.coa.cont.en");
-//                        subject+=PropUtils.get("notice.template.coa.sub1.en");
-//                        if("Y".equals(checkMap.get("IS30LIMIT"))){
-//                            subject+=PropUtils.get("notice.template.coa.sub3.en");
-//                        }else{
-//                            subject+=PropUtils.get("notice.template.coa.sub2.en");
-//                        }
-//                    }else if("JA".equals(parameterMap.get("USER_LANG"))){
-//                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
-//                                + "<tr>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >原料名</td>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >出荷日</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >有効期限</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >数量</td>"
-//                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
-//                                + "</tr>";
-//                        contents += "<tr>"
-//                                + "<td align='center' >" + regData.get("L_MaterialName").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_LotNo").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_StockDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_EDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_Quantity").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_SpecIn").toString() + "</td>"
-//                                + "</tr></table>";
-//                        contents+=PropUtils.get("notice.template.coa.cont.ja");
-//                        subject+=PropUtils.get("notice.template.coa.sub1.ja");
-//                        if("Y".equals(checkMap.get("IS30LIMIT"))){
-//                            subject+=PropUtils.get("notice.template.coa.sub3.ja");
-//                        }else{
-//                            subject+=PropUtils.get("notice.template.coa.sub2.ja");
-//                        }
-//                    }else if("CN".equals(parameterMap.get("USER_LANG"))){
-//                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
-//                                + "<tr>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >原料名称</td>"
-//                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >发货日期</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >截止日期</td>"
-//                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >入库</td>"
-//                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
-//                                + "</tr>";
-//                        contents += "<tr>"
-//                                + "<td align='center' >" + regData.get("L_MaterialName").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_LotNo").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_StockDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_EDate").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_Quantity").toString() + "</td>"
-//                                + "<td align='center' >" + regData.get("L_SpecIn").toString() + "</td>"
-//                                + "</tr></table>";
-//                        contents+=PropUtils.get("notice.template.coa.cont.cn");
-//                        subject+=PropUtils.get("notice.template.coa.sub1.cn");
-//                        if("Y".equals(checkMap.get("IS30LIMIT"))){
-//                            subject+=PropUtils.get("notice.template.coa.sub3.cn");
-//                        }else{
-//                            subject+=PropUtils.get("notice.template.coa.sub2.cn");
-//                        }
-//                    }
-//
-//                    msgHelper.setSubject(subject);
-//                    msgHelper2.setSubject(subject);
-//                    String mailContents = "";
-//                    mailContents +=contents;
-//                    msgHelper.setText("", mailContents);
-//                    msgHelper2.setText("", mailContents);
-//                    try {
-//                        if("Y".equals(checkMap.get("ISPR"))){
-//                            mailSender.send(msg);
-//                            mailSender.send(msg2);
-//                        }
-//                    } catch (Exception e) {
-//                        // TODO: handle exception
-//                        logger.info("smtp error");
-//                    }
-//                }
-//                if("Y".equals(checkMap.get("IS30LIMIT"))&&"Y".equals(checkMap.get("ISPR"))){ //regData.L_FactoryId
-//                    regData.put("COA_STATUS","F");
-//                }else if(Integer.parseInt(checkMap2.get("IS_SPEC_YN_CNT").toString())>0){
-//                    regData.put("COA_STATUS","I");
-//                }else{
-//                    regData.put("COA_STATUS","B");
-//                }
-//                coaMgmtDAO.updateCOAStatus(regData);
-//            }
-//
 
+                int seq = coaMgmtService.insertCOAListDqms(cpsIFMasterList, cpsIFDetailList);
+                log.info("insertCOAListDqms_seq======"+seq);
+            }
+
+            // UPDATE STATUS
+            for (int i = 0 ; i < coaRegList.size() ; i ++) {
+
+                coaMgmtDTO paramDto = coaRegList.get(i);
+                coaMgmtDTO checkMap = coaMgmtService.regCheck(paramDto);
+                coaMgmtDTO checkMap2 = coaMgmtService.regSpecCheck(paramDto);
+
+                //현업 권한만 spec out 등록가능
+                if(Integer.parseInt(checkMap2.getIS_SPEC_YN_CNT())> 0
+//                        && !"MU".equals(parameterMap.get("USER_TYPE"))
+                ){
+                    response.put("status", "err");
+                    response.put("MSG", "SPECOUT REG CHECKING");
+                    return response;
+                }
+
+                UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                //동우 유저
+                if(user.getEMAIL() == null) {
+                    String userId = user.getUSER_ID();
+                    UserMgrDTO userDto = userMgrService.findUserMgrById(userId);
+                    user.setEMAIL(userDto.getEMAIL());
+                }
+
+                String userEmail =  user.getEMAIL();
+
+                if("Y".equals(checkMap.getIS30LIMIT())
+                            || "Y".equals(checkMap.getIS50LIMIT())){
+                    String[] targetUserArr = null;
+                    String[] targetUserArr2 = null;
+
+                    ArrayList<String> paramFactoryList = new ArrayList<String>();
+
+                    //regData->paramDto  sylee 2025.01.08
+                    if("1200".equals(paramDto.getFACTORY_ID())){
+                        paramFactoryList.add("MANAGE_COA_YN_01");
+                    }else if ("1300".equals(paramDto.getFACTORY_ID())){
+                        paramFactoryList.add("MANAGE_COA_YN_02");
+                    }else if ("3100".equals(paramDto.getFACTORY_ID())){
+                        paramFactoryList.add("MANAGE_COA_YN_04");
+                    }else if ("4100".equals(paramDto.getFACTORY_ID())){
+                        paramFactoryList.add("MANAGE_COA_YN_04");
+                    }else if ("5100".equals(paramDto.getFACTORY_ID())){
+                        paramFactoryList.add("MANAGE_COA_YN_04");
+                    }else {
+                        paramFactoryList.add("MANAGE_COA_YN_03");
+                    }
+                      List<HashMap> targetList = null;
+                      Map<String,Object> parameterMap = new HashMap<>();
+                      parameterMap.put("factoryList", paramFactoryList);
+
+                    //받는사람
+//                    MANAGE_PART_YN;            //-- PART 관리자 □  이건 전체 다 보낸다.
+//                    MANAGE_COA_YN_01;          //-- COA 반도체 □ 1200
+//                    MANAGE_COA_YN_02;          //-- COA 첨단소재 □ 1300
+//                    MANAGE_COA_YN_03;          //-- COA 첨단-삼기 □ 8100
+//                    MANAGE_COA_YN_04;          //-- COA 통신디바이스 □  ( 4100  , 3100  ,5100  )
+
+                    targetList = coaMgmtService.getEmailTargetUser(parameterMap);
+
+                    targetUserArr = new String[targetList.size()];
+                    targetUserArr2 = new String[1];
+                    for(int j=0; j<targetList.size(); j++){
+                        HashMap<String, Object> targetUser = targetList.get(j);
+                        targetUserArr[j] = targetUser.get("EMAIL").toString();
+                    }
+
+                    targetUserArr2[0] = userEmail ;  //발송자
+
+                    MimeMessage msg = mailSender.createMimeMessage();
+                    MimeMessageHelper msgHelper = new MimeMessageHelper(msg, true, "UTF-8");
+
+                    MimeMessage msg2 = mailSender.createMimeMessage();
+                    MimeMessageHelper msgHelper2 = new MimeMessageHelper(msg2, true, "UTF-8");
+
+                    msgHelper.setTo(targetUserArr);
+                    msgHelper.setFrom(PropUtils.get("mail.sender.account"));
+
+                    msgHelper2.setTo(targetUserArr2);
+                    msgHelper2.setFrom(PropUtils.get("mail.sender.account"));
+
+                    String contents="";
+                    String subject="[DP-PORTAL] "+paramDto.getMATERIAL_NAME()+"/"+paramDto.getLOT_NO()+"/";
+
+                    Cookie[] cookies = request.getCookies();
+                    String selLangCookieValue = null;
+                    if (cookies != null) {
+                        for (Cookie cookie : cookies) {
+                            if ("selLang".equals(cookie.getName())) {
+                                selLangCookieValue = cookie.getValue();
+                                break;
+                            }
+                        }
+                    }
+
+                    //다국어 메세지.
+                    if("KOR".equals(selLangCookieValue)){
+                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
+                                + "<tr>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >원료명</td>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >출하일</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >만료일</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >입고량</td>"
+                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
+                                + "</tr>";
+                        contents += "<tr>"
+                                + "<td align='center' >" + paramDto.getMATERIAL_NAME() + "</td>"
+                                + "<td align='center' >" + paramDto.getLOT_NO() + "</td>"
+                                + "<td align='center' >" + paramDto.getSTOCK_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getE_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getQUANTITY() + "</td>"
+                                + "<td align='center' >" + paramDto.getSPEC_IN() + "</td>"
+                                + "</tr></table>";
+                        contents+=PropUtils.get("notice.template.coa.cont.kr");
+                        subject+=PropUtils.get("notice.template.coa.sub1.kr");
+                        if("Y".equals(checkMap.getIS30LIMIT())){
+                            subject+=PropUtils.get("notice.template.coa.sub3.kr");
+                        }else{
+                            subject+=PropUtils.get("notice.template.coa.sub2.kr");
+                        }
+                    }else if("ENG".equals(selLangCookieValue)) {
+                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
+                                + "<tr>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >name</td>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >ShipmentDate</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >ExpirationDate</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >Quantity</td>"
+                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
+                                + "</tr>";
+                        contents += "<tr>"
+                                + "<td align='center' >" + paramDto.getMATERIAL_NAME() + "</td>"
+                                + "<td align='center' >" + paramDto.getLOT_NO() + "</td>"
+                                + "<td align='center' >" + paramDto.getSTOCK_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getE_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getQUANTITY() + "</td>"
+                                + "<td align='center' >" + paramDto.getSPEC_IN() + "</td>"
+                                + "</tr></table>";
+                        contents+=PropUtils.get("notice.template.coa.cont.en");
+                        subject+=PropUtils.get("notice.template.coa.sub1.en");
+                        if("Y".equals(checkMap.getIS30LIMIT())){
+                            subject+=PropUtils.get("notice.template.coa.sub3.en");
+                        }else{
+                            subject+=PropUtils.get("notice.template.coa.sub2.en");
+                        }
+                    }else if("JPN".equals(selLangCookieValue)) {
+                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
+                                + "<tr>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >原料名</td>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >出荷日</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >有効期限</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >数量</td>"
+                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
+                                + "</tr>";
+                        contents += "<tr>"
+                                + "<td align='center' >" + paramDto.getMATERIAL_NAME() + "</td>"
+                                + "<td align='center' >" + paramDto.getLOT_NO() + "</td>"
+                                + "<td align='center' >" + paramDto.getSTOCK_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getE_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getQUANTITY() + "</td>"
+                                + "<td align='center' >" + paramDto.getSPEC_IN() + "</td>"
+                                + "</tr></table>";
+                        contents+=PropUtils.get("notice.template.coa.cont.ja");
+                        subject+=PropUtils.get("notice.template.coa.sub1.ja");
+                        if("Y".equals(checkMap.getIS30LIMIT())){
+                            subject+=PropUtils.get("notice.template.coa.sub3.ja");
+                        }else{
+                            subject+=PropUtils.get("notice.template.coa.sub2.ja");
+                        }
+                    }else if("CHN".equals(selLangCookieValue)) {
+                        contents = "<table width='510' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
+                                + "<tr>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >原料名称</td>"
+                                + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >发货日期</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >截止日期</td>"
+                                + "<td align='center' width='80' style='background-color:#EFEFEF;' >入库</td>"
+                                + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
+                                + "</tr>";
+                        contents += "<tr>"
+                                + "<td align='center' >" + paramDto.getMATERIAL_NAME() + "</td>"
+                                + "<td align='center' >" + paramDto.getLOT_NO() + "</td>"
+                                + "<td align='center' >" + paramDto.getSTOCK_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getE_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getQUANTITY() + "</td>"
+                                + "<td align='center' >" + paramDto.getSPEC_IN() + "</td>"
+                                + "</tr></table>";
+                        contents+=PropUtils.get("notice.template.coa.cont.cn");
+                        subject+=PropUtils.get("notice.template.coa.sub1.cn");
+                        if("Y".equals(checkMap.getIS30LIMIT())){
+                            subject+=PropUtils.get("notice.template.coa.sub3.cn");
+                        }else{
+                            subject+=PropUtils.get("notice.template.coa.sub2.cn");
+                        }
+                    }
+
+                    msgHelper.setSubject(subject);
+                    msgHelper2.setSubject(subject);
+                    String mailContents = "";
+                    mailContents +=contents;
+                    msgHelper.setText("", mailContents);
+                    msgHelper2.setText("", mailContents);
+                    try {
+                        if("Y".equals(checkMap.getISPR())){
+                            mailSender.send(msg);
+                            mailSender.send(msg2);
+                        }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        log.info("smtp error===============");
+                    }
+                }
+                if("Y".equals(checkMap.getIS30LIMIT()) && "Y".equals(checkMap.getISPR())){   //regData.L_FactoryId
+                    paramDto.setCOA_STATUS("F");
+                }else if(Integer.parseInt(checkMap2.getIS_SPEC_YN_CNT())>0){
+                    paramDto.setCOA_STATUS("I");
+                }else{
+                    paramDto.setCOA_STATUS("B");
+                }
+
+                coaMgmtService.updateCOAStatus(paramDto);
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            //response.put("SUCCESS", "N");
             response.put("status", "err");
             response.put("MSG", "L_InterfaceError");
             return response;
         }
 
+        //담당자 메일 발송
+        try {
 
-        //response.put("SUCCESS", "Y");
+
+            ArrayList<String> paramFactoryList = new ArrayList<String>();
+
+            for(int j=0; j<factoryList.size();j++) {
+
+                if ("1200".equals(factoryList.get(j))) {
+                    paramFactoryList.add("MANAGE_COA_YN_01");
+                } else if ("1300".equals(factoryList.get(j))) {
+                    paramFactoryList.add("MANAGE_COA_YN_02");
+                } else if ("3100".equals(factoryList.get(j))) {
+                    paramFactoryList.add("MANAGE_COA_YN_04");
+                } else if ("4100".equals(factoryList.get(j))) {
+                    paramFactoryList.add("MANAGE_COA_YN_04");
+                } else if ("5100".equals(factoryList.get(j))) {
+                    paramFactoryList.add("MANAGE_COA_YN_04");
+                } else {
+                    paramFactoryList.add("MANAGE_COA_YN_03");
+                }
+            }
+
+            Map<String,Object> parameterMap = new HashMap<>();
+            parameterMap.put("factoryList", paramFactoryList);
+
+            List<HashMap> targetList = coaMgmtService.getEmailTargetUser(parameterMap);
+
+            if (null != targetList && targetList.size() > 0) {
+                String[] targetUserArr = new String[targetList.size()];
+                for (int i = 0 ; i < targetList.size() ; i++ ) {
+                    HashMap<String, Object> targetUser = targetList.get(i);
+                    targetUserArr[i] = targetUser.get("EMAIL").toString();
+                }
+
+                if (limsIFList.size() > 0 || cpsIFMasterList.size() > 0) {
+
+                    MimeMessage msg = mailSender.createMimeMessage();
+                    MimeMessageHelper msgHelper = new MimeMessageHelper(msg, true, "UTF-8");
+                    msgHelper.setTo(targetUserArr);
+                    msgHelper.setFrom(PropUtils.get("mail.sender.account"));
+                    msgHelper.setSubject("COA가 등록되었습니다.(COA has been registered.)");
+
+                    String mailContents = "■ COA가 등록되었습니다.";
+                    String mailContents2 = "";
+                    String displayDate = "입고일";
+
+                    for (int i = 0 ; i < coaRegList.size() ; i ++) {
+
+                        coaMgmtDTO paramDto = coaRegList.get(i);
+
+                        mailContents2 += "<tr>"
+                                + "<td align='center' >" + paramDto.getMATERIAL_NAME() + "</td>"
+                                + "<td align='center' >" + paramDto.getLOT_NO() + "</td>"
+                                + "<td align='center' >" + paramDto.getSTOCK_DATE() + "</td>"
+                                + "<td align='center' >" + paramDto.getSPEC_IN() + "</td>"
+                                + "</tr>";
+
+                        if("PR".equals(paramDto.getWETPR())){
+                            displayDate="출하일";
+                        }
+                    }
+                    mailContents += "<table width='350' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
+                            + "<tr>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >원료명</td>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
+                            + "<td align='center' width='80' style='background-color:#EFEFEF;' >"+displayDate+"</td>"
+                            + "<td align='center' width='70' style='background-color:#EFEFEF;' >SPEC<br>IN/OUT</td>"
+                            + "</tr>";
+                    msgHelper.setText("", mailContents+mailContents2);
+                    try {
+                        mailSender.send(msg);
+                    } catch (Exception e) {
+                        log.info("smtp error 1===============");
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            log.info("smtp error 2===============");
+        }
+
         response.put("status", "success");
         return response;
     }
-
-
-
-
-
-
-
-
-
 
 
 //end

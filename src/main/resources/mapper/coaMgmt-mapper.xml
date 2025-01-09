@@ -759,4 +759,28 @@
     </update>
 
 
+    <select id="getEmailTargetUser" resultType="java.util.LinkedHashMap">
+
+        SELECT EMAIL
+        FROM SC_USER_INFO_DW
+        WHERE
+        MANAGE_PART_YN = 'Y'
+        <foreach collection="factoryList" item="item" open="AND" separator="AND">
+            ${item} = 'Y'
+        </foreach>
+    </select>
+
+
+    <update id="updateCOAStatus">
+        /* coaMgmtMapper.updateCOAStatus */
+        UPDATE COA_MASTER
+        SET COA_STATUS = #{COA_STATUS}
+        WHERE COA_ID = #{COA_ID}
+        AND VENDOR_ID = #{VENDOR_ID}
+        AND MATERIAL_ID = #{MATERIAL_ID}
+        AND FACTORY_ID = #{FACTORY_ID}
+        AND LOT_NO = #{LOT_NO}
+    </update>
+
+
 </mapper>

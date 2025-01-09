@@ -114,18 +114,25 @@ public class coaMgmtRepository {
     }
 
 
-
-    public int interfaceDqmsCOAMaster(Map<String, Object> parameterMap) {
-        return sql.insert("coaMgmt.interfaceDqmsCOAMaster", parameterMap);
+    //CPS
+    public int interfaceDqmsCOAMaster(coaMgmtDTO masterList) {
+        return sql.insert("coaMgmt.interfaceDqmsCOAMaster", masterList);
     }
 
-    public int interfaceDqmsCOADetail(Map<String, Object> parameterMap) {
-        return sql.insert("coaMgmt.interfaceDqmsCOADetail", parameterMap);
+    public int interfaceDqmsCOADetail(coaMgmtDTO detailList) {
+        return sql.insert("coaMgmt.interfaceDqmsCOADetail", detailList);
+    }
+    //CPS
+
+
+    //메일 수신자
+    public List<HashMap> getEmailTargetUser(Map<String, Object> params) {
+        return sql.selectList("coaMgmt.getEmailTargetUser", params);
     }
 
-
-
-
+    public int updateCOAStatus(coaMgmtDTO coaMgmtDTO) {
+        return sql.update("coaMgmt.updateCOAStatus", coaMgmtDTO);
+    }
 
 
 }
