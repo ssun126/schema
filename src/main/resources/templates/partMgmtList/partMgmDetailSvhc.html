@@ -331,19 +331,26 @@
         ReqInfo.AddParameter(frmObj);
 
         Common.Ajax("/user/partMgmt/setSvhcExcelData", ReqInfo, function (data) {
-            var dataJson = JSON.parse(data);
-
-            $("#gridArea_attach").pqGrid("option", "dataModel.data", dataJson);
-            $("#gridArea_attach").pqGrid("refreshView");
-            AttachStatus = true;
-            Common.Loading.Hide();
-
-            var returnVal = setApplicableNo('attach',true,'imsi');
-            if(returnVal !== 'true'){
-                isValid = false;
-                Common.Msg(siteLang.getLang(returnVal));
+            if(data.indexOf("|||[ERROR]|||")>0){
+                var mString = MsgStr.replace("|||[ERROR]|||", "");
+                Common.Msg(mString);
                 return;
+            }else{
+                var dataJson = JSON.parse(data);
+
+                $("#gridArea_attach").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea_attach").pqGrid("refreshView");
+                AttachStatus = true;
+                Common.Loading.Hide();
+
+                var returnVal = setApplicableNo('attach',true,'imsi');
+                if(returnVal !== 'true'){
+                    isValid = false;
+                    Common.Msg(siteLang.getLang(returnVal));
+                    return;
+                }
             }
+
 
         });
 
@@ -662,7 +669,7 @@
                 if (idxsNull != "") idxsNull += ",";
                 idxsNull += grid.pdata[j]["SVHC_NUM"];
                 if(stat){
-                    reVal = grid.pdata[j]["SVHC_YN"].trim() +"의 값이 없습니다";
+                    reVal = grid.pdata[j]["SVHC_NUM"].trim() +"의 값이 없습니다";
                     return reVal;
                 }
             }else{

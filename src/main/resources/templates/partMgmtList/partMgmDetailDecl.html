@@ -371,23 +371,30 @@
         ReqInfo.AddParameter(frmObj);
 
         Common.Ajax("/user/partMgmt/setDeclExcelData", ReqInfo, function (data) {
-            var dataJson = JSON.parse(data);
-
-            $("#gridArea_attach").pqGrid("option", "dataModel.data", dataJson);
-            $("#gridArea_attach").pqGrid("refreshView");
-            AttachStatus = true;
-            Common.Loading.Hide();
-
-            var returnVal =setApplicableNo('attach');
-            if(returnVal === 'false'){
-                flag = false;
-                Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+            if(data.indexOf("|||[ERROR]|||")>0){
+                var mString = MsgStr.replace("|||[ERROR]|||", "");
+                Common.Msg(mString);
                 return;
-            }else if(returnVal !== 'true'){
-                flag = false;
-                Common.Msg(siteLang.getLang(returnVal));
-                return;
+            }else{
+                var dataJson = JSON.parse(data);
+
+                $("#gridArea_attach").pqGrid("option", "dataModel.data", dataJson);
+                $("#gridArea_attach").pqGrid("refreshView");
+                AttachStatus = true;
+                Common.Loading.Hide();
+
+                var returnVal =setApplicableNo('attach',true,'imsi');
+                if(returnVal === 'false'){
+                    flag = false;
+                    Common.Msg(siteLang.getLang("첨부내용에 Y로 해당되는 내용이 없습니다"));
+                    return;
+                }else if(returnVal !== 'true'){
+                    flag = false;
+                    Common.Msg(siteLang.getLang(returnVal));
+                    return;
+                }
             }
+
         });
 
     }
