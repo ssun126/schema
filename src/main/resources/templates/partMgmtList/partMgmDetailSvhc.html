@@ -156,8 +156,10 @@
                 </fieldset>
 
                 <fieldset id="svhcDataFieldset" style="display:none;">
+                    <legend><span>SVHC 해당 물질 :  &nbsp;</span><span style="color:red;" name="SVHC_YCNT" th:text="${SVHC_YCNT}"> nn </span>&nbsp; 종</legend>
                     <input type="hidden" name="APPLICABLE_NO" th:value="${svhcDTO.APPLICABLE_NO}">
                     <input type="hidden" name="NONE_APPLICABLE_NO" th:value="${svhcDTO.NONE_APPLICABLE_NO}">
+                    <input type="hidden" name="SVHC_REMARK" th:value="${svhcDTO.SVHC_REMARK}">
                     <div class="cui_jqGrid_section">
                         <div class="cui_jqGrid_head">
                             <div class="jqGrid_label"> &nbsp;</div>
@@ -216,6 +218,14 @@
                 //$('input:radio[name="DATA_GUBUN"]:input[value="WRITE"]').prop('checked',true);
                 $('#svhcFileFieldset').hide();
 		    	$('#svhcDataFieldset').show();
+
+                var cnt=0;
+		    	if($("input[name=APPLICABLE_NO]").val() !== ''){
+		    	    cnt = $("input[name=APPLICABLE_NO]").val().split(',').length;
+		    	    $("span[name=SVHC_YCNT]").text(cnt);
+		    	}
+
+
 		    	//getSvhcData();
             }
         }else{
@@ -331,7 +341,7 @@
         ReqInfo.AddParameter(frmObj);
 
         Common.Ajax("/user/partMgmt/setSvhcExcelData", ReqInfo, function (data) {
-            if(data.indexOf("|||[ERROR]|||")>0){
+            if(data.indexOf("|||[ERROR]|||")> -1){
                 var mString = MsgStr.replace("|||[ERROR]|||", "");
                 Common.Msg(mString);
                 return;
@@ -350,7 +360,6 @@
                     return;
                 }
             }
-
 
         });
 
@@ -404,9 +413,11 @@
         var dataJson = JSON.parse(data);
         var appVal = $("input[name=APPLICABLE_NO]").val();
         var noneappVal = $("input[name=NONE_APPLICABLE_NO]").val();
+        var remarkVal = $("input[name=SVHC_REMARK]").val();
 
         var ArrData = appVal.split(',');
         var NoneArrData = noneappVal.split(',');
+        var ArrRemark = remarkVal.split(',');
 
 
         for(var i = 0; i < dataJson.length; i++){
@@ -429,6 +440,10 @@
                     dataJson[i].SVHC_YN= '';
                 }
 
+            }
+
+            for(var k = 0; k < ArrRemark.length; k++ ){
+                if( ArrRemark[k].indexOf(dataJson[i].SVHC_NUM+":") > -1) dataJson[i].SVHC_REMARK = ArrRemark[k].split(':')[1];
             }
 
         }
@@ -498,6 +513,23 @@
 <!--                $("input[name=APPLICABLE_NO]").val(strSelNo);-->
 
             },
+            change: function (event, ui) {
+                var sheetObj = $(this.element);
+                var grid = sheetObj.pqGrid("instance");
+
+                if (ui.source == "paste" || ui.source == "edit" || ui.source == "update" || ui.source == "clear" || ui.source == "checkbox" || ui.source == "undo") {
+                    if (ui.updateList.length > 0) {
+                        if (ui.updateList[0].newRow.SVHC_YN) {
+
+                            var rowList = grid.search( {
+                                row: { SVHC_YN : 'Y' }
+                            });
+
+                            $("input[name=SVHC_YCNT]").val(rowList.length);
+                        }
+                    }
+                }
+            },
             rowClick: function (event, ui) {
             },
             cellClick: function (event, ui) {
@@ -515,8 +547,8 @@
 
             {  title: "No.", width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: true, editor: false, editable: false },
             { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 500, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NAME", sortable: true, editor: false, editable: false },
-            { title: "EC No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
-            { title: "CAS No.", width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
+            { title: "EC No.", width: 160, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: true, editor: false, editable: false },
+            { title: "CAS No.", width: 160, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: true, editor: false, editable: false },
             { data_langsid: "해당", title: siteLang.getLang("해당"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_YN", sortable: true
                 , editor: {
                     type : "select",
@@ -525,19 +557,9 @@
 
                 }
                 , editable: true
-<!--                , render : function (ui){-->
-<!--                //SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM-->
-<!--                    var data = ui.rowData;-->
-<!--                    var appVal = $("input[name=APPLICABLE_NO]").val();-->
-<!--                    var ArrData = appVal.split(',');-->
-<!--                    var flag = false;-->
-<!--                    for(var i=0; i<ArrData.length; i++){-->
-<!--                        if(data.SVHC_NUM === ArrData[i]) flag = true;-->
-<!--                    }-->
 
-<!--                     //return flag ? 'Y' : 'N';-->
-<!--                }-->
-            }
+            },
+            { data_langsid: "비고",title: siteLang.getLang("비고"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_REMARK", sortable: true, editor: true, editable: true },
 
         ];
         obj.dataModel = { data: data };
@@ -654,6 +676,7 @@
         var idxsN = "";
         var idxsNull = "";
         var idxsEtc = "";
+        var idxsRemark ="";
         var reVal = "true";
         var pqName ='';
         if(flag === 'attach') pqName='_attach';
@@ -666,8 +689,8 @@
                 if (idxsN != "") idxsN += ",";
                 idxsN += grid.pdata[j]["SVHC_NUM"];
             }else if(grid.pdata[j]["SVHC_YN"].trim() === '' ){
-                if (idxsNull != "") idxsNull += ",";
-                idxsNull += grid.pdata[j]["SVHC_NUM"];
+                //if (idxsNull != "") idxsNull += ",";
+                //idxsNull += grid.pdata[j]["SVHC_NUM"];
                 if(stat){
                     reVal = grid.pdata[j]["SVHC_NUM"].trim() +"의 값이 없습니다";
                     return reVal;
@@ -680,11 +703,20 @@
                     return reVal;
                 }
             }
+
+            if (grid.pdata[j]["SVHC_REMARK"] != undefined ){
+                if(grid.pdata[j]["SVHC_REMARK"].trim() !== ''){
+                    if (idxsRemark != "") idxsRemark += ",";
+                    idxsRemark += grid.pdata[j]["SVHC_NUM"] +":"+grid.pdata[j]["SVHC_REMARK"];
+                }
+
+            }
         }
 
         if(gubun !== 'imsi' ){
             $("input[name=APPLICABLE_NO]").val(idxsY);
             $("input[name=NONE_APPLICABLE_NO]").val(idxsN);
+            $("input[name=SVHC_REMARK]").val(idxsRemark);
         }
 
         return reVal;

@@ -159,6 +159,7 @@
                 <fieldset id="declDataFieldset" style="display:none;">
                     <input type="hidden" name="APPLICABLE_NO" th:value="${declDTO.APPLICABLE_NO}">
                     <input type="hidden" name="NONE_APPLICABLE_NO" th:value="${declDTO.NONE_APPLICABLE_NO}">
+                    <input type="hidden" name="SVHC_REMARK" th:value="${declDTO.DECL_REMARK}">
                     <div class="cui_jqGrid_section">
                         <div class="cui_jqGrid_head">
                             <div class="jqGrid_label"> &nbsp;</div>
@@ -462,9 +463,9 @@
                             var iconHtml = "";
 
                             if (data.SubShowHide == undefined || data.SubShowHide == false) {
-                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-e" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;transform: scale(1.7);" class="pq-group-icon ui-icon ui-icon-triangle-1-e" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
                             } else {
-                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-se" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;transform: scale(1.7);" class="pq-group-icon ui-icon ui-icon-triangle-1-se" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
                             }
 
                             return iconHtml;
@@ -500,9 +501,11 @@
 
         var appVal = $("input[name=APPLICABLE_NO]").val();
         var noneappVal = $("input[name=NONE_APPLICABLE_NO]").val();
+        var remarkVal = $("input[name=DECL_REMARK]").val();
 
         var ArrData = appVal.split(',');
         var NoneArrData = noneappVal.split(',');
+        var ArrRemark = remarkVal.split(',');
 
 
         for(var i = 0; i < dataJson.length; i++){
@@ -544,6 +547,10 @@
                 } else {
                     dataJson[i].SubItemsExists = false;
                 }
+            }
+
+            for(var l = 0; l < ArrRemark.length; l++ ){
+                if( ArrRemark[l].indexOf(dataJson[i].SVHC_NUM+":") > -1) dataJson[i].SVHC_REMARK = ArrRemark[l].split(':')[1];
             }
         }
 
@@ -723,9 +730,9 @@
                             var iconHtml = "";
 
                             if (data.SubShowHide == undefined || data.SubShowHide == false) {
-                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-e" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;transform: scale(1.7);" class="pq-group-icon ui-icon ui-icon-triangle-1-e" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
                             } else {
-                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;" class="pq-group-icon ui-icon ui-icon-triangle-1-se" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
+                                iconHtml = '<span style="position:absolute;left:22px;top:6px;cursor:pointer;transform: scale(1.7);" class="pq-group-icon ui-icon ui-icon-triangle-1-se" DECL_NUM="' + data.DECL_NUM + '" onclick="SheetShowHide($(this));"></span>';
                             }
 
                             return iconHtml;
@@ -765,7 +772,8 @@
 <!--                }-->
             },
             { data_langsid: "함량", title: siteLang.getLang("함량"), width: 270, halign: "center", align: "left", dataType: "string", dataIndx: "DECL_WEIGHT", sortable: false, editor: false, editable: false },
-            { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: false, editor: false, editable: false }
+            { data_langsid: "관리 Class", title: siteLang.getLang("관리 Class"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_CLASS", sortable: false, editor: false, editable: false },
+            { data_langsid: "비고", title: siteLang.getLang("비고"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "DECL_REMARK", sortable: false, editor: true, editable: true }
 
         ];
         obj.dataModel = { data: data };
@@ -854,6 +862,8 @@
     var setApplicableNo =  function(flag,stat,gubun){
         var idxsY = "";
         var idxsN = "";
+
+        var idxsRemark ="";
         var Message = "false";
         //var emptyval ="";
         var pqName ="";
@@ -904,7 +914,13 @@
                     return Message;
                 }
 
+            }
 
+            if (grid.pdata[j]["DECL_REMARK"] != undefined ){
+                if(grid.pdata[j]["DECL_REMARK"].trim() !== ''){
+                    if (idxsRemark != "") idxsRemark += ",";
+                    idxsRemark += grid.pdata[j]["DECL_NUM"] +":"+grid.pdata[j]["DECL_REMARK"];
+                }
 
             }
         }

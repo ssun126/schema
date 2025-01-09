@@ -22,6 +22,8 @@ public class PartDetailSvhcDTO {
     private String APPLICABLE_NO;
     @JsonProperty("NONE_APPLICABLE_NO")
     private String NONE_APPLICABLE_NO;
+    @JsonProperty("SVHC_REMARK")
+    private String SVHC_REMARK;
 
     @JsonProperty("WARRANTY_ITEM")
     private String WARRANTY_ITEM;

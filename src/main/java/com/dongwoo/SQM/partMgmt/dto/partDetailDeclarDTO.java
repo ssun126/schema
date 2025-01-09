@@ -22,6 +22,8 @@ public class partDetailDeclarDTO {
     private String APPLICABLE_NO;
     @JsonProperty("NONE_APPLICABLE_NO")
     private String NONE_APPLICABLE_NO;
+    @JsonProperty("DECL_REMARK")
+    private String DECL_REMARK;
 
     @JsonProperty("WARRANTY_ITEM")
     private String WARRANTY_ITEM;
