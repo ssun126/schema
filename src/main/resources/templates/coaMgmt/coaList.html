@@ -187,7 +187,7 @@
             </div>
         </div>
 
-        <!--등록유효섣 팝업-->
+        <!--등록유효성 팝업-->
         <div class="cui_dialog" style="width:500px;display:none;" id="popRegistorInfo">
             <div class="dialog_container">
                 <div class="dialog_head">
@@ -228,6 +228,9 @@
                 </div>
             </div>
         </div>
+
+        <!--등록유효섣 팝업-->
+
 
 </body>
 
@@ -864,11 +867,8 @@
             data: JSON.stringify(selectedData),
             success: function(response) {
                 if(response.status === "success") {
-                     Common.Msg(siteLang.getLang("등록 되었습니다."), {
-                                okback : function () {
-                                   ListSearch();
-                                }
-                     });
+                    $("#popRegistorInfo").data("Hide")();
+                    ListSearch();
                 }else{
                   Common.Msg(response.message);
                 }

@@ -150,6 +150,9 @@ public class coaMgmtDTO {
 
     //조회값
 
+    @JsonProperty("SEQ")
+    private Integer SEQ;
+
     @JsonProperty("ISPR")
     private String ISPR;
 
@@ -188,13 +191,14 @@ public class coaMgmtDTO {
     @JsonProperty("UPLOAD_RESULT")
     private String UPLOAD_RESULT;
 
+    @JsonProperty("INTERFACE_DATE")
+    private String INTERFACE_DATE;
 
     @JsonProperty("UPDATE_YN")
     private String UPDATE_YN;
 
-
-
-
+    @JsonProperty("EMAIL")
+    private String EMAIL;
 
 
 }

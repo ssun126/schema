@@ -121,29 +121,32 @@ public class coaMgmtService {
     }
 
     public int insertCOAListDqms(List<coaMgmtDTO> masterList , List<coaMgmtDTO> detailList ) {
-
-       // return coaMgmtRepository.interfaceCOAProcedure(DB_LINK_TARGET_APPLY);
-
+        //테이블 또는 뷰가 존재하지 않습니다
+        int testSeq = 0 ;
         for (int i = 0 ; i < masterList.size() ; i ++) {
-            //coaMgmtDqmsDAO.interfaceDqmsCOAMaster(masterList.get(i));
-
+          //  coaMgmtRepository.interfaceDqmsCOAMaster(masterList.get(i));
+            testSeq++;
 
         }
-
+        //테이블 또는 뷰가 존재하지 않습니다
         for (int i = 0 ; i < detailList.size() ; i ++) {
+            //coaMgmtRepository.interfaceDqmsCOADetail(detailList.get(i));
 
-
-           // coaMgmtDqmsDAO.interfaceDqmsCOADetail(detailList.get(i));
+            testSeq++;
         }
 
-
-        return  0 ;
-
+        return  testSeq ;
     }
 
 
+    //메일 발송자 가져오기
+    public List<HashMap> getEmailTargetUser(Map<String, Object> params) {
+        return coaMgmtRepository.getEmailTargetUser(params);
+    }
 
 
-
+    public int updateCOAStatus(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.updateCOAStatus(coaMgmtDTO);
+    }
 
 }
