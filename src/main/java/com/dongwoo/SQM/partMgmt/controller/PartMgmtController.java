@@ -889,8 +889,10 @@ public class PartMgmtController {
             }
 
             int yCnt = 0;
-            if(svhcDTO.getAPPLICABLE_NO().trim() != "" ) {
-                yCnt= svhcDTO.getAPPLICABLE_NO().split(",").length;
+            if(svhcDTO.getAPPLICABLE_NO() != null) {
+                if(svhcDTO.getAPPLICABLE_NO().trim() != "" ) {
+                    yCnt= svhcDTO.getAPPLICABLE_NO().split(",").length;
+                }
             }
             model.addAttribute("SVHC_YCNT", yCnt);
 
