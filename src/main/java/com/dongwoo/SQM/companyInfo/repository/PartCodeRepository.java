@@ -30,12 +30,12 @@ public class PartCodeRepository {
         return sql.selectList("partCode.partCodeList", partCodeDTO);
     }
 
-    //지켐스 자재코드 정보 조회
+    //지켐스 자재코드 정보 조회 INTER_PART_MATERIAL
     public List<HashMap> getMaterialList(Map<String, Object> params) {
         return sql.selectList("partCode.getMaterialList", params);
     }
 
-    //업체코드 팝업 조회
+    //업체코드 팝업 조회 SC_COMPANY_CODE
     public List<HashMap> getCompanyList(Map<String, Object> params) {
         return sql.selectList("partCode.getCompanyList", params);
     }
