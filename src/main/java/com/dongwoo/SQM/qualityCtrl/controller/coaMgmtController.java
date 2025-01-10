@@ -1,6 +1,7 @@
 package com.dongwoo.SQM.qualityCtrl.controller;
 
 import com.dongwoo.SQM.common.util.PropUtils;
+import com.dongwoo.SQM.companyInfo.service.PartCodeService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.qualityCtrl.dto.coaMgmtDTO;
 import com.dongwoo.SQM.qualityCtrl.service.coaMgmtService;
@@ -24,6 +25,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -42,11 +44,40 @@ public class coaMgmtController {
 
     private final UserMgrService userMgrService;
 
+    private final PartCodeService partCodeService;
+
+
 
     // E-Mail
     @Resource(name="mailSender")
     private JavaMailSender mailSender;
 
+    private String getSelLangCookie(HttpServletRequest request ,String siteType) {
+        Cookie[] cookies = request.getCookies();
+        String selLangCookieValue = null;
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("selLang".equals(cookie.getName())) {
+
+                    if(siteType.equals("DP")) {
+                        selLangCookieValue = switch (cookie.getValue()) {
+                            case "KOR" -> "KR";
+                            case "ENG" -> "EN";
+                            case "JPN" -> "JA";
+                            case "CHN" -> "CN";
+                            default -> throw new RuntimeException("KR");
+                        };
+                    }else {
+                        selLangCookieValue = cookie.getValue();
+                    }
+                    break;
+                }
+            }
+        }
+
+        return selLangCookieValue;
+    }
 
     private String GetParam(HttpServletRequest request, String pName, String pDefault) {
         String ParamValue = request.getParameter(pName);
@@ -82,13 +113,36 @@ public class coaMgmtController {
 
         model.addAttribute("sStartDate", sStartDate);
 
-        List<BaseCodeDTO> deptList = coaMgmtService.GetBaseCode("COA_STATUS");
-        model.addAttribute("coaStatusList", deptList);
+        List<BaseCodeDTO> statusList = coaMgmtService.GetBaseCode("COA_STATUS");
+        model.addAttribute("coaStatusList", statusList);
 
         List<BaseCodeDTO> plantList = coaMgmtService.GetBaseCodePLANT("PLANT");
         model.addAttribute("coaPlantList", plantList);
 
+        //엑셀 업로드 벤더.SC_COMPANY_CODE
+        List<HashMap> companyList = partCodeService.getCompanyList("", "");
+        model.addAttribute("companyList", companyList);
+
+
         return "coaMgmt/coaList";
+    }
+
+    @PostMapping("/admin/qualityCtrl/getMaterialListCoa")
+    @ResponseBody
+    public List<HashMap> getMaterialListCoa(HttpServletRequest req) {
+        String COM_CODE = req.getParameter("COM_CODE");
+
+        //엑셀 업로드 자재코드  SC_PART_CODE
+        return coaMgmtService.getMaterialListCoa(COM_CODE);
+    }
+
+    @PostMapping("/admin/qualityCtrl/getMaterialFactoryListCoa")
+    @ResponseBody
+    public List<HashMap> getMaterialFactoryListCoa(HttpServletRequest req ,HttpServletRequest request) {
+        String vendorId = req.getParameter("vendorId");
+        String materialId = req.getParameter("materialId");
+        String selLang = getSelLangCookie(request,"DP");
+        return coaMgmtService.getMaterialFactoryList(vendorId ,materialId  ,selLang);
     }
 
     //COA LIST 검색

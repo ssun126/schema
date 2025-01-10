@@ -783,4 +783,73 @@
     </update>
 
 
+    <select id="getMaterialListCoa"  parameterType="HashMap" resultType="hashMap">
+        SELECT
+            PART_CODE,
+            PART_NAME,
+            COM_CODE,
+            PLANT_CODE,
+            PART_STATUS
+        FROM SC_PART_CODE
+        WHERE
+            1=1
+        <if test="COM_CODE != null and COM_CODE != ''">
+            AND COM_CODE =#{COM_CODE}
+        </if>
+
+    </select>
+
+
+
+
+    <!--    <select id="getMaterialSimpleList" resultMap="simpleMaterialMap">-->
+<!--        /* commonMapper.getMaterialList */-->
+<!--        SELECT DISTINCT-->
+<!--        MATERIAL_ID-->
+<!--        , MATERIAL_NAME-->
+<!--        FROM MATERIAL MT-->
+<!--        WHERE 1=1-->
+<!--        <if test="vendorId != null and vendorId != ''">-->
+<!--            AND VENDOR_ID = #{vendorId}-->
+<!--        </if>-->
+<!--        ORDER-->
+<!--        BY MATERIAL_ID ASC-->
+<!--    </select>-->
+
+<!--    <select id="getCpsVendorData" resultType="java.util.LinkedHashMap">-->
+<!--        /* batchMapper.getCpsVendorData */-->
+<!--        SELECT-->
+<!--        FACTORY-->
+<!--        , VENDOR_CODE-->
+<!--        , VENDOR_NAME-->
+<!--        , ADDR-->
+<!--        FROM V_VENDOR_INFO-->
+<!--    </select>-->
+
+
+    <select id="getMaterialFactoryListCoa" resultType="java.util.LinkedHashMap">
+        /* commonMapper.getMaterialFactoryList */
+        SELECT
+        FACTORY_ID
+        , LANGUAGE_CODE_DATA AS FACTORY_NAME
+        FROM MATERIAL
+        LEFT OUTER JOIN(
+            SELECT
+            ID, LANGUAGE_CODE_DATA
+            FROM
+            PLANT
+            LEFT OUTER JOIN
+            SYS_MULTI_LANGUAGE
+            ON
+            PLANT.MULTI_LANG_ID = SYS_MULTI_LANGUAGE.LANGUAGE_CODE_ID
+            AND SYS_MULTI_LANGUAGE.LANGUAGE = #{TOKEN_USER_LANG}
+        ) LANGUAGE_INFO
+        ON MATERIAL.FACTORY_ID = LANGUAGE_INFO.ID
+        WHERE VENDOR_ID = #{vendorId}
+        AND MATERIAL_ID = #{materialId}
+        ORDER
+        BY FACTORY_ID ASC
+    </select>
+
+
 </mapper>

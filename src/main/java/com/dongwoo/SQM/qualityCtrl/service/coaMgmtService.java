@@ -32,6 +32,19 @@ public class coaMgmtService {
         return coaMgmtRepository.getUserList(params);
     }
 
+    public List<HashMap> getMaterialListCoa(String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_CODE", code);
+        return coaMgmtRepository.getMaterialListCoa(params);
+    }
+
+    public List<HashMap> getMaterialFactoryList(String vendorId , String materialId  , String selLang) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("vendorId", vendorId);
+        params.put("materialId", materialId);
+        params.put("TOKEN_USER_LANG", selLang);
+        return coaMgmtRepository.getMaterialFactoryList(params);
+    }
 
     public List<coaMgmtDTO> getCOAList(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getCOAList(coaMgmtDTO);
