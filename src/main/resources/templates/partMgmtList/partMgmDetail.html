@@ -68,6 +68,7 @@
                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <input type="hidden" name="SaveMode" value=""/>
                 <input type="hidden" name="PM_PART_CODE" th:value="${partMgmtDTO.PM_PART_CODE}"/>
+                <input type="hidden" name="PM_APPROVAL_STATUS" th:value="${partMgmtDTO.PM_APPROVAL_STATUS}"/>
                 <fieldset id="msdsFieldset">
                     <legend><span>MSDS</span></legend>
 
@@ -101,7 +102,9 @@
                                     <input type="file" class="cui_file_field" name="MSDS_FILE" >
                                     <input type="hidden" name="MSDS_FILE_STATUS">
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${msdsDTO.MSDS_FILE_NAME == null ? 'display:none;' : '' }">
-                                        <div class="item_label" data-cui-icon="paperclip"><span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span></div>
+                                        <div class="item_label" data-cui-icon="paperclip">
+                                            <span id="MSDS_FILE_NAME" th:value="${msdsDTO.MSDS_FILE_NAME}" th:text="${msdsDTO.MSDS_FILE_NAME}"></span>
+                                        </div>
                                         <div class="item_content">
                                             <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${msdsDTO.MSDS_IDX}]],'MSDS')" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
                                             <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'MSDS',[[${msdsDTO.MSDS_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
@@ -434,31 +437,7 @@
             link.click();
         }
 
-        var frmDetailSubmit = function () {
-            //e.preventDefault();
 
-            var frmObj = $("#frmDetail");
-            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
-            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
-            var ReqInfo = new Common.RequestInfo();
-            ReqInfo.formData  = new FormData();
-            ReqInfo.AddParameter(frmObj);
-
-            Common.Ajax("/user/partMgmt/goMsdsSave", ReqInfo, function (response) {
-                if (response == "OK") {
-                    if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
-                        Common.Msg(siteLang.getLang("저장되었습니다."));
-                        location.reload();
-                    }
-                }else {
-                    Common.MoveUrl("/user/partMgmt/goSvhcDetail?PM_IDX=" + response.split('|||')[1]);
-                }
-            });
-
-            //ReqInfo.formData
-            //return Common.Validate(frmObj);
-
-        }
 
         var frmDetailSave = function () {
             //데이터가 아무것도 없을 때는 저장할 수 없음
@@ -559,16 +538,16 @@
             });
 
             //한번 승인 후 다시 들어온 경우
-            if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){
-                if(!$("input[name=MSDS_CONFIRM_CHK]").is(":checked")){
-                    Common.Msg(siteLang.getLang("MSDS 전자 보증서 제출에 체크 해주세요"));
-                    return;
-                }
-                if(!$("input[name=ROHS_CONFIRM_CHK]").is(":checked")){
-                    Common.Msg(siteLang.getLang("RoHS/Halogen 전자 보증서 제출에 체크 해주세요"));
-                    return;
-                }
-            }
+<!--            if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){-->
+<!--                if(!$("input[name=MSDS_CONFIRM_CHK]").is(":checked")){-->
+<!--                    Common.Msg(siteLang.getLang("MSDS 전자 보증서 제출에 체크 해주세요"));-->
+<!--                    return;-->
+<!--                }-->
+<!--                if(!$("input[name=ROHS_CONFIRM_CHK]").is(":checked")){-->
+<!--                    Common.Msg(siteLang.getLang("RoHS/Halogen 전자 보증서 제출에 체크 해주세요"));-->
+<!--                    return;-->
+<!--                }-->
+<!--            }-->
 
 
             if(!isValid){
@@ -576,10 +555,40 @@
                 return;
             }else{
                 $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                //$("#frmDetail").submit();
                 frmDetailSubmit();
+
             }
+
+        }
+
+        var frmDetailSubmit = function () {
+            //e.preventDefault();
+
+            var frmObj = $("#frmDetail");
+            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.formData  = new FormData();
+            ReqInfo.AddParameter(frmObj);
+
+            Common.Ajax("/user/partMgmt/goMsdsSave", ReqInfo, function (response) {
+                if (response == "OK") {
+                    if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                        Common.Msg(siteLang.getLang("저장되었습니다."));
+                        location.reload();
+                    }
+                } else if(response.indexOf("|||[ERROR]|||")>0){
+                    var mString = response.replace("|||[ERROR]|||", "");
+                    Common.Msg(siteLang.getLang(mString));
+                    return;
+                }else {
+                    Common.MoveUrl("/user/partMgmt/goSvhcDetail?PM_IDX=" + response.split('|||')[1]);
+                    //Common.Msg(response);
+                }
+            });
+
+            //ReqInfo.formData
+            //return Common.Validate(frmObj);
 
         }
     </script>

@@ -896,7 +896,8 @@
                             }
                         }
                     }
-                    if(!flagY && flag !== 'write' && stat !== 'save'){
+                    //if(!flagY && flag !== 'write' && stat !== 'save'){
+                    if(!flagY && stat){
                         //Common.Msg(siteLang.getLang(grid.pdata[j]["DECL_NUM"]+"하위의 값 중 Y로 체크된 것이 없습니다"));
                         Message=grid.pdata[j]["DECL_NUM"]+"하위의 값 중 Y로 체크된 것이 없습니다";
                         return Message;
@@ -914,7 +915,8 @@
                 //$("input[name=APPLICABLE_NO]").val(idxsY);
                 //$("input[name=NONE_APPLICABLE_NO]").val(idxsN);
 
-                if( flag !== 'write' && stat !== 'save' ){
+                //if( flag !== 'write' && stat !== 'save' ){
+                if(stat){
                     var num = grid.pdata[j]["DECL_NUM"].trim() === ''? grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
                     Message= num+"의 값이 없습니다";
                     return Message;
@@ -934,6 +936,7 @@
         if(gubun !== 'imsi'){
            $("input[name=APPLICABLE_NO]").val(idxsY);
            $("input[name=NONE_APPLICABLE_NO]").val(idxsN);
+           $("input[name=DECL_REMARK]").val(idxsRemark);
         }
 
         return Message;
