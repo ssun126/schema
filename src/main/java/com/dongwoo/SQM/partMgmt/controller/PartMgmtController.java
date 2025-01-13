@@ -593,6 +593,8 @@ public class PartMgmtController {
 //                msdsDTO.setMSDS_FILE_PATH("");
 //            }
             partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
+            partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
+            partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
 
             if(msdsFile != null) {
                 if (!msdsFile.isEmpty()) {
@@ -610,55 +612,79 @@ public class PartMgmtController {
                 msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
             }
 
+
+
+            //Rohs
+            String ROHS_IDX = GetParam(request, "ROHS_IDX", "");
+
+            //ROHS file
+            //if (!rohsFile.isEmpty()) {
+            if (rohsFile != null) {
+                if (!rohsFile.isEmpty()) {
+                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, rohsFile);
+                    String etc_filename = rohsFile.getOriginalFilename();
+
+                    rohsDTO.setROHS_FILE_NAME(etc_filename);
+                    rohsDTO.setROHS_FILE_PATH(etc_filepath);
+                }
+            }else{
+                rohsDTO.setROHS_FILE_NAME(OrigRohsDTO.getROHS_FILE_NAME());
+                rohsDTO.setROHS_FILE_PATH(OrigRohsDTO.getROHS_FILE_PATH());
+            }
+
+
+
+            //halogen
+            String HALOGEN_IDX = GetParam(request, "HALOGEN_IDX", "");
+
+            //HALOGEN FILE
+            if (halgFile != null) {
+                if (!halgFile.isEmpty()) {
+                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, halgFile);
+                    String etc_filename = halgFile.getOriginalFilename();
+
+                    halGDTO.setHALOGEN_FILE_NAME(etc_filename);
+                    halGDTO.setHALOGEN_FILE_PATH(etc_filepath);
+                }
+
+            }else{
+                halGDTO.setHALOGEN_FILE_NAME(OrigHalgDTO.getHALOGEN_FILE_NAME());
+                halGDTO.setHALOGEN_FILE_PATH(OrigHalgDTO.getHALOGEN_FILE_PATH());
+            }
+
+
+
             //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
             String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
             String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
             if( !appData.equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
 
-                String MsdsCheck = "";
+                String errorMsg  = "";
+                String chkVal = "";
+                String msdsChkData=compareObjects(msdsDTO,OrigMsdsDTO);
+                chkVal = msdsDTO.getMSDS_CONFIRM_CHK();
+                errorMsg = checkValidate(msdsChkData,chkVal,"MSDS");
 
-                partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
-                partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
 
-                boolean changeData = false; //바뀐 데이터가 없으면 저장 안됨
-                String chkData = "";
-                chkData=compareObjects(msdsDTO,OrigMsdsDTO);
-                if(!chkData.equals("")) {
-                    String errMessage ="";
-                    String[] spData = chkData.split("\\|");
-                    for(int i = 0; i<spData.length; i++){
-                        String FieldName = spData[i].split(":")[0];
-                        //날짜 데이터 바뀌었을 때
-                        if(FieldName.endsWith("_DATE")){
-                            if( msdsDTO.getMSDS_CONFIRM_CHK() == null) {
-                                errMessage = "|||[ERROR]|||MSDS 전자보증서 제출 확인 체크를 해주세요";
-                            }
-                            //return ResponseEntity.ok("NEXT|||"+PM_IDX);
-                        }else{
-                            // 여기 들어오는 것 자체가 바뀐 내용이 있는 것.
-                            changeData = true;
-                        }
-                    }
-                    // 날짜만! 바뀔때만 보증 체크해줘야함
-                    if( !changeData && !errMessage.equals("")){
-                        return ResponseEntity.ok("|||[ERROR]|||"+errMessage);
-                    }
-                    // 변경된 데이터가 있고
-                    if( (changeData && msdsDTO.getMSDS_CONFIRM_CHK() != null) ){
-                        return ResponseEntity.ok("|||[ERROR]||| 갱신된 데이터가 존재합니다. MSDS 전자보증서 제출 확인 체크 해제해 주세요");
-                    }
-//                    if( errMessage.equals("") && msdsDTO.getMSDS_CONFIRM_CHK() != null ) {
-//                        return ResponseEntity.ok("|||[ERROR]||| MSDS 작성일을 변경하거나 MSDS 전자보증서 제출 확인 체크 해제해 주세요");
-//                    }
+                String rohsChkData=compareObjects(rohsDTO,OrigRohsDTO);
+                chkVal = rohsDTO.getROHS_CONFIRM_CHK();
+                errorMsg = checkValidate(rohsChkData,chkVal,"ROHS");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                String HalgChkData=compareObjects(halGDTO,OrigHalgDTO);
+                // rohs halg 는 보증 체크 함께함. 값은 rohs 에 있음
+                errorMsg = checkValidate(HalgChkData,chkVal,"HALOGEN");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
 
 
-
-                }else{
-                    //바뀐데이터가 없다
-                    return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
-                }
 
             }
+
+
+
 
             log.info("MSDS_IDX=================="+MSDS_IDX);
             if (MSDS_IDX == "") {
@@ -669,25 +695,6 @@ public class PartMgmtController {
                 result += partMgmtService.updateMsdsData(msdsDTO);
             }
 
-
-            //Rohs
-            String ROHS_IDX = GetParam(request, "ROHS_IDX", "");
-
-
-            //ROHS file
-            //if (!rohsFile.isEmpty()) {
-            if (rohsFile != null) {
-                String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, rohsFile);
-                String etc_filename = rohsFile.getOriginalFilename();
-
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
-                rohsDTO.setROHS_FILE_NAME(etc_filename);
-                rohsDTO.setROHS_FILE_PATH(etc_filepath);
-
-            }
-
-
             if (ROHS_IDX == "") {
                 //신규
                 result += partMgmtService.insertRohsData(rohsDTO);
@@ -696,29 +703,15 @@ public class PartMgmtController {
                 result += partMgmtService.updateRohsData(rohsDTO);
             }
 
-
-            //halogen
-            String HALOGEN_IDX = GetParam(request, "HALOGEN_IDX", "");
-
-
-            //HALOGEN FILE
-            if (halgFile != null) {
-                String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, halgFile);
-                String etc_filename = halgFile.getOriginalFilename();
-
-                halGDTO.setHALOGEN_FILE_NAME(etc_filename);
-                halGDTO.setHALOGEN_FILE_PATH(etc_filepath);
-
-            }
-
-
-            if (ROHS_IDX == "") {
+            if (HALOGEN_IDX == "") {
                 //신규
                 result += partMgmtService.insertHalogenData(halGDTO);
             } else {
                 //기존
                 result += partMgmtService.updateHalogenData(halGDTO);
             }
+
+
 
             //etc
             int EtcCount = Integer.parseInt(GetParam(request, "etcCount", "0"));
@@ -1946,43 +1939,62 @@ public class PartMgmtController {
         return differences.toString();
     }
 
-//    private String compareRohsData(partDetailRohsDTO dto, partDetailRohsDTO origDto) {
-//        StringBuilder differences = new StringBuilder();
-//
-//        if (!Objects.equals(dto.getrohs, origDto.getMSDS_REG_DATE())) {
-//            differences.append("MSDS File Name differs: ")
-//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
-//            differences.append("MSDS File Path differs: ")
-//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
-//            differences.append("MSDS Language differs: ")
-//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
-//        }
-//
-//        return differences.toString();
-//    }
-//
-//    private String compareHalgData(partDetailHalGDTO dto, partDetailHalGDTO origDto) {
-//        StringBuilder differences = new StringBuilder();
-//
-//        if (!Objects.equals(dto.getMSDS_REG_DATE(), origDto.getMSDS_REG_DATE())) {
-//            differences.append("MSDS File Name differs: ")
-//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
-//            differences.append("MSDS File Path differs: ")
-//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
-//            differences.append("MSDS Language differs: ")
-//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
-//        }
-//
-//        return differences.toString();
-//    }
+    private String checkValidate(String msdsChkData,String confirmChk, String gubun){
+        boolean changeData = false; //바뀐 데이터가 없으면 저장 안됨
+        boolean datechange = false; //날짜 데이터
+        String errorMessage ="";
+
+        if(!msdsChkData.equals("")) {
+            String[] spData = msdsChkData.split("\\|");
+            for(int i = 0; i<spData.length; i++){
+                String FieldName = spData[i].split(":")[0];
+                //날짜 데이터 바뀌었을 때
+                if(FieldName.endsWith("_DATE")){
+                    datechange = true;
+//                            if( msdsDTO.getMSDS_CONFIRM_CHK() == null) {
+//                                errMessage = "|||[ERROR]|||MSDS 전자보증서 제출 확인 체크를 해주세요";
+//                                return ResponseEntity.ok("|||[ERROR]|||"+errMessage);
+//                            }
+                    //return ResponseEntity.ok("NEXT|||"+PM_IDX);
+                }else{
+                    // 여기 들어오는 것 자체가 바뀐 내용이 있는 것.
+                    changeData = true;
+                }
+            }
+
+            //날짜 바뀌고 보증서 체출 체크 여부
+            if(datechange){
+                //보증서 체크가 안되어있고 날짜 외에 바뀐 데이터가 없으면 보증내역 재확인 체크
+                if( confirmChk == null && !changeData) {
+                    errorMessage = "|||[ERROR]|||"+gubun+" 전자보증서 제출 확인 체크를 해주세요";
+
+                }else if(confirmChk != null && changeData){
+                    //날짜가 바뀐 상태에서 재확인 체크, 다른 바뀐 데이터가있으면 체크 풀어야함
+                    errorMessage = "|||[ERROR]|||갱신된 데이터가 존재합니다. "+gubun+" 전자보증서 제출 확인 체크 해제해 주세요";
+                }
+            }else{
+                //날짜가 바뀌지 않음
+                //데이터가 바뀜( 데이터가 안바뀐거면 모든 데이터가 바뀌지 않은거니까. 큰 else로 떨어짐)
+                // 재확인 체크 시 풀어줘야함
+                if( confirmChk != null && changeData ) {
+                    errorMessage = "|||[ERROR]|||"+gubun+" 전자보증서 제출 확인 체크를 해제 해주세요";
+                }
+            }
+
+        }else{
+            //바뀐데이터가 없다
+            //return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
+            // 재확인 체크가 되어있고 바뀐 데이터가 없다
+            if( confirmChk != null ) {
+                errorMessage = "|||[ERROR]||| "+gubun+" 작성일을 변경하거나 "+gubun+" 전자보증서 제출 확인 체크 해제해 주세요";
+            }
+            // 재확인 체크 안되어 있고 바뀐 데이터가 없다 >> ?? 저장되냐?
+            //else if( msdsDTO.getMSDS_CONFIRM_CHK() == null && !changeData) { noneChangeData
+        }
+
+        return errorMessage;
+    }
+
 
 
     public static String compareObjects(Object newDto, Object originDto) {
