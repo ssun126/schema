@@ -62,8 +62,10 @@ public class LabourHRService {
         AuditMgmtDTO authDTO = new AuditMgmtDTO();
         authDTO.setCOM_CODE(comCode);
         authDTO.setAUTH_TYPE(type);
-        authDTO.setREG_DW_USER_IDX(loginIdx);  // 파일 경로 추가
-        authDTO.setUP_DW_USER_IDX(loginIdx);  // 파일 경로 추가
+        authDTO.setREG_DW_USER_IDX(loginIdx);  // 등록자
+        authDTO.setUP_DW_USER_IDX(loginIdx);  // 수정자
+        authDTO.setSEND_USER_IDX(loginIdx);  //제출자
+        authDTO.setINPUT_TYPE(chkType);  //제출자
         authDTO.setAPPROVE_STATE("SEND"); //제출
 
         int comCnt = auditMgmtRepository.selectAuthCnt(authDTO);
@@ -133,6 +135,9 @@ public class LabourHRService {
 
             for (AuditItemPointDTO dto : authItems) {
                 dto.setCOM_CODE(comCode);
+                dto.setAUTH_TYPE("LABOUR");
+                assert authMgmtDTO != null;
+                dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
                 int rtCnt = labourHRRepository.insertAuthItem(dto);  // insert
                 log.info("데이터 저장 Count: " + rtCnt);
             }

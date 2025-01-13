@@ -26,15 +26,14 @@ server:
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@172.30.1.93:1521/orcl
+    username: c##NSQM
+    password: 12345
 #    url: jdbc:oracle:thin:@192.168.13.28:1521/EMP
 #    username: nsqm
 #    password: dongwoo1234
-#    url: jdbc:oracle:thin:@175.126.38.80:1521/ORCL
-    url: jdbc:oracle:thin:@172.20.10.3:1521/orcl
    # url: jdbc:oracle:thin:@CO-NB-21-014.covision.co.kr:1521/xe
 #    url: jdbc:oracle:thin:@172.16.1.191:1521/xe
-    username: c##NSQM
-    password: 12345
   messages:
     basename: messages
     encoding: UTF-8
@@ -69,7 +68,6 @@ spring:
             enable: true  # STARTTLS 활성화
           timeout: 5000
 
-# mybatis
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   config-location: classpath:mybatis-config.xml
