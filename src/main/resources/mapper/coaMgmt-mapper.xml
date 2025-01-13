@@ -405,6 +405,29 @@
             AND A.MATERIAL_ID = B.MATERIAL_ID(+)
     </select>
 
+    <select id="regCheckMap" resultType="java.util.LinkedHashMap">
+        SELECT
+        TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.3 AS THREEDD,(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.3 AS THREED,
+        TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.5 AS FIVEDD,(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.5 AS THREED
+        , A.E_DATE, A.MF_DATE,
+        CASE WHEN TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.3 <![CDATA[<]]> TO_DATE(A.STOCK_DATE) THEN 'Y' ELSE 'N' END AS IS30LIMIT,
+        CASE WHEN TO_DATE(A.E_DATE)-(TO_DATE(A.E_DATE) -TO_DATE(A.MF_DATE))*0.5 <![CDATA[<]]> TO_DATE(A.STOCK_DATE) THEN 'Y' ELSE 'N' END AS IS50LIMIT,
+        CASE WHEN B.WETPR = 'PR' THEN 'Y' ELSE 'N' END AS ISPR,
+        CASE WHEN A.FACTORY_ID = '1200' AND B.WETPR = 'WET' THEN 'Y' ELSE 'N' END AS FACTORY_SPEC_YN,
+        A.FACTORY_ID
+        FROM COA_MASTER A, MATERIAL B
+        WHERE
+        A.COA_ID = #{L_COAId}
+        AND A.VENDOR_ID = #{L_VendorId}
+        AND A.MATERIAL_ID = #{L_MaterialId}
+        AND A.FACTORY_ID = #{L_FactoryId}
+        AND A.LOT_NO = #{L_LotNo}
+        AND A.STOCK_DATE = #{L_StockDate}
+        AND A.VENDOR_ID = B.VENDOR_ID(+)
+        AND A.FACTORY_ID = B.FACTORY_ID(+)
+        AND A.MATERIAL_ID = B.MATERIAL_ID(+)
+    </select>
+
 
     <select id="regSpecCheck" parameterType="coaMgmt"  resultType="coaMgmt">
         SELECT(
@@ -483,6 +506,83 @@
         FROM DUAL
     </select>
 
+    <select id="regSpecCheckMap" resultType="java.util.LinkedHashMap">
+        SELECT(
+        SELECT
+        COUNT(*)
+        FROM(
+        SELECT
+        <![CDATA[
+						CASE WHEN CD.SPEC_LSL IS NULL AND CD.SPEC_USL IS NULL THEN 'N'
+							WHEN CD.SPEC_LSL IS NULL AND TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN CD.SPEC_USL IS NULL AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    ELSE 'Y'
+						END AS IS_SPEC_YN
+					]]>
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{L_COAId}
+        AND CD.LOT_NO = #{L_LotNo}
+        AND SP.VENDOR_ID = #{L_VendorId}
+        AND SP.MATERIAL_ID = #{L_MaterialId}
+        AND SP.FACTORY_ID = #{L_FactoryId}
+        )
+        WHERE IS_SPEC_YN = 'Y'
+        ) IS_SPEC_YN_CNT,
+        (
+        SELECT
+        LISTAGG(SPEC_NAME, ', ')
+        FROM(
+        SELECT
+        <![CDATA[
+						CASE WHEN CD.SPEC_LSL IS NULL AND CD.SPEC_USL IS NULL THEN 'N'
+							WHEN CD.SPEC_LSL IS NULL AND TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN CD.SPEC_USL IS NULL AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN TO_NUMBER(CD.SPEC_USL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LSL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    ELSE 'Y'
+						END AS IS_SPEC_YN
+					]]>
+        , SP.SPEC_NAME
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{L_COAId}
+        AND CD.LOT_NO = #{L_LotNo}
+        AND SP.VENDOR_ID = #{L_VendorId}
+        AND SP.MATERIAL_ID = #{L_MaterialId}
+        AND SP.FACTORY_ID = #{L_FactoryId}
+        )
+        WHERE IS_SPEC_YN = 'Y'
+        ) SPEC_OUT_NAMES,
+        (
+        SELECT
+        COUNT(*)
+        FROM(
+        SELECT
+        <![CDATA[
+						CASE WHEN CD.SPEC_LCL IS NULL AND CD.SPEC_UCL IS NULL THEN 'N'
+							WHEN CD.SPEC_LCL IS NULL AND TO_NUMBER(CD.SPEC_UCL) >= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN CD.SPEC_UCL IS NULL AND TO_NUMBER(CD.SPEC_LCL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    WHEN TO_NUMBER(CD.SPEC_UCL) >= TO_NUMBER(CD.RESULT_VALUE) AND TO_NUMBER(CD.SPEC_LCL) <= TO_NUMBER(CD.RESULT_VALUE) THEN 'N'
+		                    ELSE 'Y'
+						END AS IS_CONTROL_YN
+		            ]]>
+        FROM COA_DETAIL CD
+        JOIN SPEC SP
+        ON SP.SPEC_ID = CD.SPEC_ID
+        WHERE CD.COA_ID = #{L_COAId}
+        AND CD.LOT_NO = #{L_LotNo}
+        AND SP.VENDOR_ID = #{L_VendorId}
+        AND SP.MATERIAL_ID = #{L_MaterialId}
+        AND SP.FACTORY_ID = #{L_FactoryId}
+        )
+        WHERE IS_CONTROL_YN = 'Y'
+        ) IS_CONTROL_YN_CNT
+        FROM DUAL
+    </select>
+
 
     <select id="getStatusCOAMasterByPK" parameterType="coaMgmt" resultType="String">
         SELECT
@@ -515,6 +615,138 @@
         AND MATERIAL_ID = #{MATERIAL_ID}
         AND FACTORY_ID = #{FACTORY_ID}
     </select>
+
+
+    <select id="getMaterialMap" resultType="java.util.LinkedHashMap">
+        /* coaMgmtMapper.getMaterialMap */
+        SELECT
+        FACTORY_ID
+        , FACTORY_NAME
+        , VENDOR_ID
+        , VENDOR_NAME
+        , MATERIAL_ID
+        , MATERIAL_NAME
+        , NVL(TN_FLAG, 'N') AS TN_FLAG
+        , IF_TARGET
+        , IF_DATETIME
+        FROM MATERIAL
+        WHERE VENDOR_ID = #{L_VendorId}
+        AND MATERIAL_ID = #{L_MaterialId}
+        AND FACTORY_ID = #{L_FactoryId}
+    </select>
+
+
+    <select id="getExistCount" resultType="Int">
+        /* coaMgmtMapper.getExistCount */
+        SELECT
+        COUNT(*)
+        FROM COA_MASTER
+        WHERE VENDOR_ID = #{VENDOR_ID}
+        AND MATERIAL_ID = #{MATERIAL_ID}
+        AND FACTORY_ID = #{FACTORY_ID}
+        AND LOT_NO = #{LOT_NO}
+        AND STOCK_DATE = #{STOCK_DATE}
+    </select>
+
+    <insert id="insertCOAMaster">
+        /* coaMgmtMapper.insertCOAMaster */
+        INSERT
+        INTO COA_MASTER (
+        COA_ID
+        , VENDOR_ID
+        , MATERIAL_ID
+        , FACTORY_ID
+        , LOT_NO
+        , STOCK_DATE
+        , MF_DATE
+        , COA_STATUS
+        , E_DATE
+        , QUANTITY
+        , LANGUAGE_TYPE
+        <if test="ETC != null and ETC != ''">
+            , ETC
+        </if>
+        , CREATOR
+        , CREATE_DATETIME
+        )
+        VALUES (
+        #{COA_ID}
+        , #{VENDOR_ID}
+        , #{MATERIAL_ID}
+        , #{FACTORY_ID}
+        , #{LOT_NO}
+        , #{STOCK_DATE}
+        , #{MF_DATE}
+        , #{COA_STATUS}
+        , #{E_DATE}
+        , #{QUANTITY}
+        , #{LANGUAGE_TYPE}
+        <if test="ETC != null and ETC != ''">
+            , #{ETC}
+        </if>
+        , #{CREATOR}
+        , SYSDATE
+        )
+    </insert>
+
+    <insert id="insertCOADetail">
+        /* coaMgmtMapper.insertCOADetail */
+        INSERT
+        INTO COA_DETAIL (
+        COA_ID
+        , LOT_NO
+        , SPEC_ID
+        , SPEC_LSL
+        , SPEC_USL
+        , RESULT_VALUE
+        , IS_SPECIN
+        , SPEC_LCL
+        , SPEC_UCL
+        )
+        VALUES (
+        #{COA_ID}
+        , #{LOT_NO}
+        , #{SPEC_ID}
+
+        <if test="SPEC_LSL == null or SPEC_LSL == ''">
+            , null /* SPEC_LSL */
+        </if>
+        <if test="SPEC_LSL != null and SPEC_LSL != ''">
+            , #{SPEC_LSL}
+        </if>
+
+        <if test="SPEC_USL == null or SPEC_USL == ''">
+            , null /* SPEC_USL */
+        </if>
+        <if test="SPEC_USL != null and SPEC_USL != ''">
+            , #{SPEC_USL}
+        </if>
+
+        <if test="RESULT_VALUE == null or RESULT_VALUE == ''">
+            , null /* RESULT_VALUE */
+        </if>
+        <if test="RESULT_VALUE != null and RESULT_VALUE != ''">
+            , #{RESULT_VALUE}
+        </if>
+        , #{IS_SPECIN}
+
+        <if test="SPEC_LCL == null or SPEC_LCL == ''">
+            , null /* SPEC_LCL */
+        </if>
+        <if test="SPEC_LCL != null and SPEC_LCL != ''">
+            , #{SPEC_LCL}
+        </if>
+
+        <if test="SPEC_UCL == null or SPEC_UCL == ''">
+            , null /* SPEC_UCL */
+        </if>
+        <if test="SPEC_UCL != null and SPEC_UCL != ''">
+            , #{SPEC_UCL}
+        </if>
+        )
+    </insert>
+
+
 
 
     <select id="interfaceLimsCOAMasterData"  parameterType="coaMgmt"  resultType="coaMgmt">
@@ -849,6 +1081,52 @@
         AND MATERIAL_ID = #{materialId}
         ORDER
         BY FACTORY_ID ASC
+    </select>
+
+    <insert id="insertCOADFile">
+        /* coaMgmtMapper.insertCOADFile */
+        INSERT
+        INTO COA_FILE (
+        COA_ID
+        , SERVER_PATH
+        , ORIGINAL_FILENAME
+        )
+        VALUES (
+        #{coaId}
+        , #{filePath}
+        , #{fileName}
+        )
+    </insert>
+
+    <select id="getSpecList" resultType="java.util.LinkedHashMap">
+        /* coaMgmtMapper.getSpecList */
+        SELECT
+        FACTORY_ID
+        , VENDOR_ID
+        , MATERIAL_ID
+        , SPEC_ID
+        , SPEC_NAME
+        , SPEC_ENG_NAME
+        , SPEC_UNIT_NAME
+        , NVL2(SPEC_LSL, DECODE(SUBSTR(SPEC_LSL, 1, 1), '.', '0'||SPEC_LSL, SPEC_LSL) , NULL) AS SPEC_LSL
+        , NVL2(SPEC_USL, DECODE(SUBSTR(SPEC_USL, 1, 1), '.', '0'||SPEC_USL, SPEC_USL) , NULL) AS SPEC_USL
+        , NVL2(SPEC_LCL, DECODE(SUBSTR(SPEC_LCL, 1, 1), '.', '0'||SPEC_LCL, SPEC_LCL) , NULL) AS SPEC_LCL
+        , NVL2(SPEC_UCL, DECODE(SUBSTR(SPEC_UCL, 1, 1), '.', '0'||SPEC_UCL, SPEC_UCL) , NULL) AS SPEC_UCL
+        , DECIMAL_PLACE
+        , REQUIRED_YN
+        FROM SPEC
+        WHERE VENDOR_ID = #{vendorId}
+        AND MATERIAL_ID = #{materialId}
+        AND FACTORY_ID = #{plantId}
+        ORDER BY
+        ORDER_NO
+    </select>
+
+    <select id="parseDate" resultType="String">
+        /* Common.parseDate */
+        SELECT
+        TO_CHAR(TO_DATE(#{param}), 'YYYY-MM-DD') AS DATE_STRING
+        FROM DUAL
     </select>
 
 
