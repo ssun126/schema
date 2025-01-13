@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,13 @@ public class coaMgmtRepository {
         return sql.selectList("coaMgmt.getCOADetailSpec", coaMgmtDTO);
     }
 
+    //엑셀 업로드
+    public List<LinkedHashMap<String,Object>> getSpecList(Map<String, Object> parameterMap) {
+        return sql.selectList("coaMgmt.getSpecList", parameterMap);
+    }
+
+
+
     //업데이트
     public int updateVendorComment(coaMgmtDTO coaMgmtDTO) {
         return sql.update("coaMgmt.updateVendorComment", coaMgmtDTO);
@@ -83,17 +91,40 @@ public class coaMgmtRepository {
         return sql.selectOne("coaMgmt.regSpecCheck", coaMgmtDTO);
     }
 
+    public LinkedHashMap<String,Object> regCheck(Map<String, Object> parameterMap) {
+        return sql.selectOne("coaMgmt.regCheckMap", parameterMap);
+    }
+
+    public LinkedHashMap<String,Object> regSpecCheck(Map<String, Object> parameterMap) {
+        return sql.selectOne("coaMgmt.regSpecCheckMap", parameterMap);
+    }
+
     public String getStatusCOAMasterByPK(coaMgmtDTO coaMgmtDTO) {
         return sql.selectOne("coaMgmt.getStatusCOAMasterByPK", coaMgmtDTO);
     }
+
+
 
     public coaMgmtDTO getMaterial(coaMgmtDTO coaMgmtDTO) {
         return sql.selectOne("coaMgmt.getMaterial", coaMgmtDTO);
     }
 
+    public LinkedHashMap<String,Object> getMaterial(Map<String, Object> parameterMap) {
+        return sql.selectOne("coaMgmt.getMaterialMap", parameterMap);
+    }
+
+    public int getExistCount(Map<String, Object> parameterMap) {
+        return sql.selectOne("coaMgmt.getExistCount", parameterMap);
+    }
+    public Object insertCOAMaster(Map<String, Object> parameterMap) {
+        return sql.insert("coaMgmt.insertCOAMaster", parameterMap);
+    }
+    public Object insertCOADetail(Map<String, Object> parameterMap) {
+        return sql.insert("coaMgmt.insertCOADetail", parameterMap);
+    }
 
 
-//interface
+    //interface
     public coaMgmtDTO interfaceLimsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
         return sql.selectOne("coaMgmt.interfaceLimsCOAMasterData", coaMgmtDTO);
     }
@@ -142,6 +173,16 @@ public class coaMgmtRepository {
     public int updateCOAStatus(coaMgmtDTO coaMgmtDTO) {
         return sql.update("coaMgmt.updateCOAStatus", coaMgmtDTO);
     }
+
+    public int insertCOADFile(Map<String, Object> parameterMap) {
+        return sql.update("coaMgmt.insertCOADFile", parameterMap);
+    }
+
+
+    public String parseDate(String param) {
+        return sql.selectOne("coaMgmt.parseDate", param);
+    }
+
 
 
 }

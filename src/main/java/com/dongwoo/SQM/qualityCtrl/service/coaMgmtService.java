@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,6 +94,14 @@ public class coaMgmtService {
         return coaMgmtRepository.regSpecCheck(coaMgmtDTO);
     }
 
+    public  Map<String, Object> regCheck(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.regCheck(parameterMap);
+    }
+
+    public  Map<String, Object> regSpecCheck(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.regSpecCheck(parameterMap);
+    }
+
 
     public String getStatusCOAMasterByPK(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getStatusCOAMasterByPK(coaMgmtDTO);
@@ -100,6 +109,10 @@ public class coaMgmtService {
 
     public coaMgmtDTO getMaterial(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getMaterial(coaMgmtDTO);
+    }
+
+    public LinkedHashMap<String,Object> getMaterial(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getMaterial(parameterMap);
     }
 
     public coaMgmtDTO interfaceLimsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
@@ -160,6 +173,32 @@ public class coaMgmtService {
 
     public int updateCOAStatus(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.updateCOAStatus(coaMgmtDTO);
+    }
+
+
+    public int insertCOADFile(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOADFile(parameterMap);
+    }
+
+    public List<LinkedHashMap<String,Object>> getSpecList(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getSpecList(parameterMap);
+    }
+
+
+    public int getExistCount(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getExistCount(parameterMap);
+    }
+
+    public Object insertCOAMaster(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOAMaster(parameterMap);
+    }
+
+    public Object insertCOADetail(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOADetail(parameterMap);
+    }
+
+    public String parseDate(String mfDate) {
+        return coaMgmtRepository.parseDate(mfDate);
     }
 
 }

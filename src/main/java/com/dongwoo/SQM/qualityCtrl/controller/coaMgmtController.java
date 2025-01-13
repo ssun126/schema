@@ -1,11 +1,15 @@
 package com.dongwoo.SQM.qualityCtrl.controller;
 
+import com.dongwoo.SQM.common.service.CommonService;
+import com.dongwoo.SQM.common.util.DataUtils;
 import com.dongwoo.SQM.common.util.PropUtils;
 import com.dongwoo.SQM.companyInfo.service.PartCodeService;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.qualityCtrl.dto.coaMgmtDTO;
 import com.dongwoo.SQM.qualityCtrl.service.coaMgmtService;
 import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
+import com.dongwoo.SQM.siteMgr.dto.BaseConfigDTO;
+import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
 import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
 import com.dongwoo.SQM.siteMgr.service.UserMgrService;
@@ -18,6 +22,15 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -30,7 +43,27 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,6 +79,7 @@ public class coaMgmtController {
 
     private final PartCodeService partCodeService;
 
+    private final CommonService commonService ;
 
 
     // E-Mail
@@ -87,6 +121,42 @@ public class coaMgmtController {
         };
 
         return ParamValue;
+    }
+
+    private String changeCoaSpecData(String data, String decimalPlace){
+        String result=null;
+        String str = data;
+        int decimalPlaceInt = Integer.parseInt(decimalPlace);
+        try {
+            //정수형 데이터 확인
+            str = Long.parseLong(str)+"";
+        } catch (NumberFormatException e) {
+            try {
+                //실수형 데이터 확인
+                str = Double.parseDouble(str)+"";
+            } catch (NumberFormatException e2) {
+                return data;
+            }
+
+        }
+        //소수점으로 분할 및 소숫점 데이터처리
+        String[] ary = str.split("\\.");
+        if(ary.length==1){
+            result = ary[0];
+        }else if(ary.length==2){
+            //result = ary[0]+"."+temp;
+            result = ary[0]+"."+ary[1];
+        }else{
+            result = str;
+        }
+        //반올림 처리
+        int rounds = 1;
+        for(int i =0; i<decimalPlaceInt; i++){
+            rounds *=10;
+        }
+        double temp = Math.round(Double.parseDouble(result)*rounds);
+        result = temp/rounds+"";
+        return result;
     }
 
     @PostMapping("/admin/qualityCtrl/userList")
@@ -923,6 +993,621 @@ public class coaMgmtController {
         response.put("status", "success");
         return response;
     }
+
+
+
+    //파일 업로드
+    @RequestMapping("/admin/qualityCtrl/upload")
+    public ResponseEntity<?> excelUpload(@RequestParam(value="file") MultipartFile file
+            ,HttpServletRequest request
+            ,Model model) throws IOException, SQLException {
+
+
+        String fileName = file.getOriginalFilename();
+        Workbook workbook = null;
+        Sheet sheet = null;
+        Row row = null;
+
+
+
+        //xlsx 인지 xls 인지 구분
+        if(fileName.endsWith(".xlsx")) {
+            workbook = new XSSFWorkbook(file.getInputStream());
+            sheet = workbook.getSheetAt(0);
+
+        }else if(fileName.endsWith(".xls")){
+            workbook = new HSSFWorkbook(file.getInputStream());
+            sheet = workbook.getSheetAt(0);
+
+        }else{
+            return ResponseEntity.ok("|||[ERROR]||| Invalid file format. Only .xls and .xlsx are supported.");
+        }
+
+        Row headerRow = sheet.getRow(0);
+        int rowCount = sheet.getPhysicalNumberOfRows();
+        int cellCount = headerRow.getPhysicalNumberOfCells();
+        Date date = null;
+
+        ArrayList<LinkedHashMap<String, Object>> rowList = new ArrayList<LinkedHashMap<String, Object>>();
+        LinkedHashMap<String, Object> rowMap = null;
+
+        try {
+            row = sheet.getRow(3);
+            rowMap = new LinkedHashMap<String, Object>();
+            for (int j = 0 ; j < cellCount ; j++ ) {
+                if(row.getCell(j)==null){
+                    rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                }else{
+                    switch (row.getCell(j).getCellType()) {
+                        case STRING:
+                            rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getStringCellValue());
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(row.getCell(j))) {
+                                date = row.getCell(j).getDateCellValue();
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), new SimpleDateFormat("yyyy-MM-dd").format(date));
+                            } else {
+
+                                if ( j < 3 || headerRow.getCell(j).getStringCellValue().equals("탱크로리번호") )
+                                {
+                                    //row.getCell(j).setCellType(CellType.STRING);
+                                    //rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getStringCellValue());
+
+                                    rowMap.put(headerRow.getCell(j).getStringCellValue(), String.valueOf(row.getCell(j).getNumericCellValue()));
+                                }
+                                else
+                                {
+                                    rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getNumericCellValue());
+                                }
+                            }
+                            break;
+                        case BOOLEAN:
+                            rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getBooleanCellValue());
+                            break;
+                        case FORMULA:
+                            rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getCellFormula());
+                            break;
+                        case ERROR:
+                            rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                            break;
+                        case BLANK:
+                            rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                            break;
+                        default :
+                            rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                            break;
+                    }
+                }
+            }
+            if ( ! StringUtils.isEmpty(String.valueOf(rowMap.get(headerRow.getCell(0).getStringCellValue())))
+                    && ! StringUtils.isEmpty(String.valueOf(rowMap.get(headerRow.getCell(1).getStringCellValue())))
+                    && ! StringUtils.isEmpty(String.valueOf(rowMap.get(headerRow.getCell(2).getStringCellValue()))) ) {
+
+                return ResponseEntity.ok("|||[ERROR]||| 스팩이 변경되었으니 새로 다운받아 사용하시기 바랍니다.");
+            }
+
+            for (int i = 4 ; i < rowCount ; i++ ) {
+                row = sheet.getRow(i);
+                if(row==null){
+                    continue;
+                }
+                rowMap = new LinkedHashMap<String, Object>();
+                for (int j = 0 ; j < cellCount ; j++ ) {
+
+                    if(row.getCell(j)==null){
+                        rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                    }else{
+                        switch (row.getCell(j).getCellType()) {
+                            case STRING:
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getStringCellValue());
+                                break;
+                            case NUMERIC:
+                                if (DateUtil.isCellDateFormatted(row.getCell(j))) {
+                                    date = row.getCell(j).getDateCellValue();
+                                    rowMap.put(headerRow.getCell(j).getStringCellValue(), new SimpleDateFormat("yyyy-MM-dd").format(date));
+                                } else {
+
+                                    if ( j < 5 || headerRow.getCell(j).getStringCellValue().equals("탱크로리번호") )
+                                    {
+                                        //row.getCell(j).setCellType(CellType.STRING);
+                                        //rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getStringCellValue());
+                                        rowMap.put(headerRow.getCell(j).getStringCellValue(), String.valueOf(row.getCell(j).getNumericCellValue()));
+                                    }
+                                    else
+                                    {
+                                        //double temp2 = row.getCell(j).getNumericCellValue();
+                                        //row.getCell(j).setCellType(CellType.STRING);
+                                        //String temp = row.getCell(j).getStringCellValue();
+                                        //rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getStringCellValue()); //소숫점 오류
+                                        rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getNumericCellValue());
+                                    }
+                                }
+                                break;
+                            case BOOLEAN:
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getBooleanCellValue());
+                                break;
+                            case FORMULA:
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), row.getCell(j).getCellFormula());
+                                break;
+                            case ERROR:
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                                break;
+                            case BLANK:
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                                break;
+                            default :
+                                rowMap.put(headerRow.getCell(j).getStringCellValue(), "");
+                                break;
+                        }
+                    }
+                }
+                rowList.add(rowMap);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]||| 엑셀파일에 오류가 발생하였습니다. 엑셀파일을 다시 다운로드 후 재 작성하세요..");
+        }
+
+
+        try {
+
+            Map<String, Object> reqParam = new HashMap<>();  ;
+            String sVendor = GetParam(request, "ddlUpVendor", "");
+            String sMaterial = GetParam(request, "ddlUpMaterial", "");
+            String sPlant = GetParam(request, "ddlUpPlant", "");
+            String sUSER_LANG = getSelLangCookie(request,"DP");
+
+            reqParam.put("vendorId", sVendor);
+            reqParam.put("materialId", sMaterial);
+            reqParam.put("plantId", sPlant);
+            reqParam.put("USER_LANG", sUSER_LANG);
+
+            Map<String, String> resultMap = setCoaList(reqParam, rowList);
+
+            if ("Y".equals(resultMap.get("SUCCESS"))) {
+                return ResponseEntity.ok("OK");
+            } else {
+                System.out.println("coaRegList: err " + resultMap.get("MSG") );
+                return ResponseEntity.ok("|||[ERROR]||| " +resultMap.get("MSG") );
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
+        }
+
+    }
+
+
+
+    public Map<String, String> setCoaList(Map<String,Object> parameterMap
+            ,ArrayList<LinkedHashMap<String, Object>> rowList) {
+
+
+        Map<String, String> rtnMap = new HashMap<String, String>();
+
+        String coaNumber = coaMgmtService.getCOANumber();
+        parameterMap.put("coaId", coaNumber);
+
+        coaMgmtService.insertCOADFile(parameterMap);  //첨부파일
+
+        List<LinkedHashMap<String,Object>> specList = coaMgmtService.getSpecList(parameterMap);
+
+        Map<String, Object> masterMap = null;
+        Map<String, Object> detailMap = null;
+
+        String stockDate = "";
+        String mfDate = "";
+        String tlNum = "";
+        String eDate = "";
+        String quantity = "";
+        String lotNo = "";
+        boolean isEmptyMessage = false;
+        boolean isDataError = false;
+        ArrayList<String> emptyMsg =new ArrayList<String>();
+        ArrayList<String> dataErrorMsg =new ArrayList<String>();
+        JSONArray jemptyMsg = new JSONArray();
+        JSONArray jdataErrorMsg = new JSONArray();
+
+        for (int i = 0 ; i < rowList.size() ; i++) {
+
+            stockDate = "";
+            mfDate = "";
+            tlNum = "";
+
+            LinkedHashMap<String, Object> rowData = rowList.get(i);
+            masterMap = new HashMap<String, Object>();
+            masterMap.put("COA_ID", coaNumber);
+            masterMap.put("VENDOR_ID", parameterMap.get("vendorId"));
+            masterMap.put("MATERIAL_ID", parameterMap.get("materialId"));
+            masterMap.put("FACTORY_ID", parameterMap.get("plantId"));
+            try {
+                if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.lotno.kr"))) {
+                    lotNo = rowData.get(PropUtils.get("excel.template.coa.lotno.kr")).toString();
+                } else if(!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.lotno.en"))) {
+                    lotNo = rowData.get(PropUtils.get("excel.template.coa.lotno.en")).toString();
+                }
+
+                if (!StringUtils.isEmpty(lotNo)) {
+                    masterMap.put("LOT_NO", lotNo);
+                } else {
+                    emptyMsg.add("L_LotNo");
+                    JSONObject jobject = new JSONObject();
+                    jobject.put("code", "L_LotNo");
+                    jemptyMsg.add(jobject);
+                    isEmptyMessage =true;
+                }
+            } catch (Exception e) {
+                isDataError = true;
+                dataErrorMsg.add("L_LotNo");
+                JSONObject jobject = new JSONObject();
+                jobject.put("code", "L_LotNo");
+                jdataErrorMsg.add(jobject);
+            }
+
+            try {
+                if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.mdate.kr"))) {
+                    mfDate = rowData.get(PropUtils.get("excel.template.coa.mdate.kr")).toString();
+                } else if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.mdate.en"))){
+                    mfDate = rowData.get(PropUtils.get("excel.template.coa.mdate.en")).toString();
+                }
+
+                if (!StringUtils.isEmpty(mfDate)) {
+                    mfDate = coaMgmtService.parseDate(mfDate);
+                } else {
+                    emptyMsg.add("L_ManufactureDate");
+                    JSONObject jobject = new JSONObject();
+                    jobject.put("code", "L_ManufactureDate");
+                    jemptyMsg.add(jobject);
+                    isEmptyMessage =true;
+                }
+            } catch (Exception ex) {
+                isDataError = true;
+                dataErrorMsg.add("L_ManufactureDate");
+                JSONObject jobject = new JSONObject();
+                jobject.put("code", "L_ManufactureDate");
+                jdataErrorMsg.add(jobject);
+            }
+
+            masterMap.put("L_VendorId", masterMap.get("VENDOR_ID"));
+            masterMap.put("L_MaterialId", masterMap.get("MATERIAL_ID"));
+            masterMap.put("L_FactoryId", masterMap.get("FACTORY_ID"));
+
+            LinkedHashMap<String,Object> material = coaMgmtService.getMaterial(masterMap);
+
+            if(material== null){
+                rtnMap.put("SUCCESS", "N");
+                rtnMap.put("MSG", "material data err.");
+                //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return rtnMap;
+            }
+
+
+            try {
+                if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.ddate.kr"))) {
+                    stockDate = rowData.get(PropUtils.get("excel.template.coa.ddate.kr")).toString();
+                } else if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.ddate.en"))){
+                    stockDate = rowData.get(PropUtils.get("excel.template.coa.ddate.en")).toString();
+                }
+
+                if (!StringUtils.isEmpty(stockDate)) {
+                    stockDate = coaMgmtService.parseDate(stockDate);
+                } else {
+                    emptyMsg.add("L_DeliveryDate");
+                    JSONObject jobject = new JSONObject();
+                    jobject.put("code", "L_DeliveryDate");
+                    jemptyMsg.add(jobject);
+                    isEmptyMessage =true;
+                }
+            } catch (Exception ex) {
+                isDataError = true;
+                dataErrorMsg.add("L_DeliveryDate");
+                JSONObject jobject = new JSONObject();
+                jobject.put("code", "L_DeliveryDate");
+                jdataErrorMsg.add(jobject);
+            }
+
+            try {
+                if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.edate.kr"))) {
+                    eDate = rowData.get(PropUtils.get("excel.template.coa.edate.kr")).toString();
+                } else if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.edate.en"))){
+                    eDate = rowData.get(PropUtils.get("excel.template.coa.edate.en")).toString();
+                }
+
+                if (!StringUtils.isEmpty(eDate)) {
+                    eDate = coaMgmtService.parseDate(eDate);
+                } else {
+                    emptyMsg.add("L_ExpirationDate");
+                    JSONObject jobject = new JSONObject();
+                    jobject.put("code", "L_ExpirationDate");
+                    jemptyMsg.add(jobject);
+                    isEmptyMessage =true;
+                }
+            } catch (Exception ex) {
+                isDataError = true;
+                dataErrorMsg.add("L_ExpirationDate");
+                JSONObject jobject = new JSONObject();
+                jobject.put("code", "L_ExpirationDate");
+                jdataErrorMsg.add(jobject);
+            }
+
+            try {
+                if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.quantity.kr"))) {
+                    quantity = rowData.get(PropUtils.get("excel.template.coa.quantity.kr")).toString();
+                } else if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.quantity.en"))) {
+                    quantity = rowData.get(PropUtils.get("excel.template.coa.quantity.en")).toString();
+                }
+                if (!StringUtils.isEmpty(quantity)) {
+                } else {
+                    emptyMsg.add("L_Volume");
+                    JSONObject jobject = new JSONObject();
+                    jobject.put("code", "L_Volume");
+                    jemptyMsg.add(jobject);
+                    isEmptyMessage =true;
+                }
+            } catch (Exception ex) {
+                isDataError = true;
+                dataErrorMsg.add("L_Volume");
+                JSONObject jobject = new JSONObject();
+                jobject.put("code", "L_Volume");
+                jdataErrorMsg.add(jobject);
+            }
+
+            if ("Y".equals(material.get("TN_FLAG"))) {
+                try {
+                    if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.tlno.kr"))) {
+                        tlNum = rowData.get(PropUtils.get("excel.template.coa.tlno.kr")).toString();
+                    } else if (!DataUtils.isEmpty(rowData, PropUtils.get("excel.template.coa.tlno.en"))){
+                        tlNum = rowData.get(PropUtils.get("excel.template.coa.tlno.en")).toString();
+                    }
+                    if (!StringUtils.isEmpty(quantity)) {
+                    } else {
+                        emptyMsg.add("L_TankLorryNo");
+                        JSONObject jobject = new JSONObject();
+                        jobject.put("code", "L_TankLorryNo");
+                        jemptyMsg.add(jobject);
+                        isEmptyMessage =true;
+                    }
+                } catch (Exception ex) {
+                    isDataError = true;
+                    dataErrorMsg.add("L_TankLorryNo");
+                    JSONObject jobject = new JSONObject();
+                    jobject.put("code", "L_TankLorryNo");
+                    jdataErrorMsg.add(jobject);
+                }
+
+                masterMap.put("ETC", tlNum);
+            }
+
+            if(isEmptyMessage){
+                //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                rtnMap.put("SUCCESS", "N");
+                rtnMap.put("JSONTYPE", "Y");
+                rtnMap.put("MSG", jemptyMsg.toJSONString());
+                return rtnMap;
+            }
+            if(isDataError){
+                //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                rtnMap.put("SUCCESS", "N");
+                rtnMap.put("JSONTYPE", "Y");
+                rtnMap.put("MSG", jdataErrorMsg.toJSONString());
+                return rtnMap;
+            }
+            masterMap.put("STOCK_DATE", stockDate);
+            masterMap.put("MF_DATE", mfDate);
+            masterMap.put("E_DATE", eDate);
+            masterMap.put("QUANTITY", quantity);
+            masterMap.put("COA_STATUS", "A");
+
+
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String user_gubun = user.getUSER_GUBUN();
+            String user_id = user.getUsername();
+            masterMap.put("CREATOR", user_id);
+
+            masterMap.put("LANGUAGE_TYPE",parameterMap.get("USER_LANG"));
+
+            if (coaMgmtService.getExistCount(masterMap) > 0) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                rtnMap.put("SUCCESS", "N");
+                rtnMap.put("MSG", "M_COAAlreadyExist");
+                //동일 데이터가 존재합니다. 삭제 후  입력해주세요
+                return rtnMap;
+            }
+
+            coaMgmtService.insertCOAMaster(masterMap);
+
+            // 데이터 갯수 확인
+            // logger.debug(" >>>>>>>>>>>>> [ rowData.size() : " + rowData.size() +  " / specList.size() : " + specList.size() + " ]" );
+            if ("Y".equals(material.get("TN_FLAG"))) {
+                // TN_FLAG = "Y"인 경우 SPEC 이외의 컬럼은 4개
+                if ((rowData.size() - 6) != specList.size()) {
+                   // TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    rtnMap.put("SUCCESS", "N");
+                    rtnMap.put("MSG", "업로드한 COA의 스펙 갯수가 기준 스펙 갯수와 다릅니다.");
+
+                    return rtnMap;
+                }
+            } else {
+                if ((rowData.size() - 5) != specList.size()) {
+                    //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    rtnMap.put("SUCCESS", "N");
+                    rtnMap.put("MSG", "업로드한 COA의 스펙 갯수가 기준 스펙 갯수와 다릅니다.");
+
+                    return rtnMap;
+                }
+            }
+
+
+
+            try {
+                for (int j = 0 ; j < specList.size() ; j++) {
+                    LinkedHashMap<String,Object> spec = specList.get(j);
+                    detailMap = new HashMap<String, Object>();
+
+                    // 데이터 유무 확인
+                    if (rowData.containsKey(spec.get("SPEC_NAME"))) {
+                        // resulVal = (String) rowData.get(spec.get("SPEC_NAME"));
+                        detailMap.put("RESULT_VALUE", rowData.get(spec.get("SPEC_NAME")).toString());
+                    } else if (rowData.containsKey(spec.get("SPEC_ENG_NAME"))) {
+                        // resulVal = (String) rowData.get(spec.get("SPEC_NAME"));
+                        detailMap.put("RESULT_VALUE", rowData.get(spec.get("SPEC_ENG_NAME")).toString());
+                    } else {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        rtnMap.put("SUCCESS", "N");
+                        rtnMap.put("MSG", "전 항목 COA Data가 입력되지 않았습니다.");
+                        return rtnMap;
+                    }
+                    //필수여부 체크
+                    if(spec.get("REQUIRED_YN").equals("Y")){
+                        if(detailMap.get("RESULT_VALUE")==null||detailMap.get("RESULT_VALUE").equals("")||detailMap.get("RESULT_VALUE").equals("N/A")){
+                            rtnMap.put("SUCCESS", "N");
+                            rtnMap.put("MSG", "전 항목 COA Data가 입력되지 않았습니다.");
+                            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                            return rtnMap;
+                        }
+                    }
+                    //실수 변경 로직
+                    String RESULT_VALUE = changeCoaSpecData(detailMap.get("RESULT_VALUE").toString(),spec.get("DECIMAL_PLACE").toString());
+                    detailMap.put("RESULT_VALUE",RESULT_VALUE);
+
+                    detailMap.put("COA_ID", coaNumber);
+                    detailMap.put("LOT_NO", masterMap.get("LOT_NO"));
+                    detailMap.put("MATERIAL_ID", masterMap.get("MATERIAL_ID"));
+                    detailMap.put("VENDOR_ID", masterMap.get("VENDOR_ID"));
+                    detailMap.put("FACTORY_ID", masterMap.get("FACTORY_ID"));
+                    detailMap.put("SPEC_ID", spec.get("SPEC_ID"));
+                    detailMap.put("SPEC_LSL", spec.get("SPEC_LSL"));
+                    detailMap.put("SPEC_USL", spec.get("SPEC_USL"));
+                    detailMap.put("SPEC_LCL", spec.get("SPEC_LCL"));
+                    detailMap.put("SPEC_UCL", spec.get("SPEC_UCL"));
+                    detailMap.put("IS_SPECIN", "Y");
+                    //20231207 관리선 존재시, 값 검증
+                    if (null != spec.get("SPEC_LSL") && Double.parseDouble(spec.get("SPEC_LSL").toString()) > Double.parseDouble(detailMap.get("RESULT_VALUE").toString())) {
+                        detailMap.put("IS_SPECIN", "N");
+                    } else if (null != spec.get("SPEC_USL") && Double.parseDouble(spec.get("SPEC_USL").toString()) < Double.parseDouble(detailMap.get("RESULT_VALUE").toString())) {
+                        detailMap.put("IS_SPECIN", "N");
+                    }
+
+                    coaMgmtService.insertCOADetail(detailMap);
+                }
+
+                Map<String,Object> checkParam = new HashMap<String, Object>();
+                checkParam.put("L_COAId", masterMap.get("COA_ID"));
+                checkParam.put("L_VendorId", masterMap.get("L_VendorId"));
+                checkParam.put("L_MaterialId", masterMap.get("L_MaterialId"));
+                checkParam.put("L_FactoryId", masterMap.get("L_FactoryId"));
+                checkParam.put("L_LotNo", masterMap.get("LOT_NO"));
+                checkParam.put("L_StockDate", masterMap.get("STOCK_DATE"));
+
+                Map<String,Object> checkMap = coaMgmtService.regCheck(checkParam);
+                Map<String,Object> checkMap2 = coaMgmtService.regSpecCheck(checkParam);
+
+                if(Integer.parseInt(checkMap2.get("IS_SPEC_YN_CNT").toString())>0){
+                    ArrayList<String> paramFactoryList = new ArrayList<String>();
+
+                    paramFactoryList.add(masterMap.get("L_FactoryId").toString());
+
+
+//                    MANAGE_PART_YN;            //-- PART 관리자 □  이건 전체 다 보낸다.
+//                    MANAGE_COA_YN_01;          //-- COA 반도체 □ 1200
+//                    MANAGE_COA_YN_02;          //-- COA 첨단소재 □ 1300
+//                    MANAGE_COA_YN_03;          //-- COA 첨단-삼기 □ 8100
+//                    MANAGE_COA_YN_04;          //-- COA 통신디바이스 □  ( 4100  , 3100  ,5100  )
+
+
+                    String mailCodeMsg = "";
+                    if("1200".equals(masterMap.get("L_FactoryId").toString()) && "Y".equals(checkMap.get("ISPR"))){
+                        //parameterMap.put("job_type", "COASPECOUT1200PR");
+                        paramFactoryList.add("MANAGE_COA_YN_01");
+                        mailCodeMsg="(익산PR)";
+                    }else if("1200".equals(masterMap.get("L_FactoryId").toString()) && "N".equals(checkMap.get("ISPR"))){
+                        //parameterMap.put("job_type", "COASPECOUT1200WET");
+                        paramFactoryList.add("MANAGE_COA_YN_01");
+                        mailCodeMsg="(익산WET)";
+                    }else if("1300".equals(masterMap.get("L_FactoryId").toString()) && "Y".equals(checkMap.get("ISPR"))){
+                        //parameterMap.put("job_type", "COASPECOUT1300PR");
+                        paramFactoryList.add("MANAGE_COA_YN_02");
+                        mailCodeMsg="(평택PR)";
+                    }else if("1300".equals(masterMap.get("L_FactoryId").toString()) && "N".equals(checkMap.get("ISPR"))){
+                        //parameterMap.put("job_type", "COASPECOUT1300WET");
+                        paramFactoryList.add("MANAGE_COA_YN_02");
+                        mailCodeMsg="(평택WET)";}
+
+                    List<HashMap> targetList = null;
+                    parameterMap.put("factoryList", paramFactoryList);
+                    targetList = coaMgmtService.getEmailTargetUser(parameterMap);
+                    //List<LinkedHashMap<String, Object>> targetList = mailReciveSettingDAO.getEmailTargetUser(parameterMap);
+
+                    String[] targetUserArr = new String[targetList.size()];
+                    for(int j=0; j<targetList.size(); j++){
+                        HashMap<String, Object>  targetUser = targetList.get(j);
+                        targetUserArr[j] = targetUser.get("EMAIL").toString();
+                    }
+
+                    MimeMessage msg = mailSender.createMimeMessage();
+                    MimeMessageHelper msgHelper = new MimeMessageHelper(msg, true, "UTF-8");
+
+
+                    msgHelper.setTo(targetUserArr);
+                    msgHelper.setFrom(PropUtils.get("mail.sender.account"));
+                    System.out.println(material.toString());
+                    System.out.println(masterMap.toString());
+
+                    String contents="";
+                    String subject="[DP-PORTAL] "+"SPEC OUT 알림";
+                    contents += "■SPECOUT 데이터가 등록되었습니다."+mailCodeMsg;
+                    contents += "<table width='700' cellpadding='0' cellspacing='0' border='1' style='border-collapse:collapse; border-color:#CECFCE; border-style:solid; font-size:12px;' >"
+                            + "<tr>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >원료명</td>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >COA_ID</td>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >LOT</td>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >출하일</td>"
+                            + "<td align='center' width='100' style='background-color:#EFEFEF;' >스펙명</td>"
+                            + "</tr>";
+                    contents += "<tr>"
+
+                            + "<td align='center' >" + material.get("MATERIAL_NAME").toString() + "</td>"
+                            + "<td align='center' >" + masterMap.get("COA_ID").toString() + "</td>"
+                            + "<td align='center' >" + masterMap.get("LOT_NO").toString() + "</td>"
+                            + "<td align='center' >" + masterMap.get("STOCK_DATE").toString() + "</td>"
+                            + "<td align='center' >" + checkMap2.get("SPEC_OUT_NAMES").toString() + "</td>"
+                            + "</tr></table>";
+
+                    msgHelper.setSubject(subject);
+                    String mailContents = "";
+                    mailContents +=contents;
+                    msgHelper.setText("", mailContents);
+                    try {
+                        //coa specout 프로세스 개선으로  pr wet 전체 전송
+                        //if("Y".equals(checkMap.get("ISPR"))){
+                        mailSender.send(msg);
+                        //}
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        //logger.info("smtp error");  sylee
+                        //logger.info(e.getMessage());  sylee
+                        e.printStackTrace();
+                    }
+                }
+            }
+            catch (NumberFormatException e){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                rtnMap.put("SUCCESS", "N");
+                rtnMap.put("MSG", "관리선이 설정된 Data에는 특수문자를 제외하고 등록 바랍니다. 이상 시 동우화인켐 담당자 연락 바랍니다.");
+                return rtnMap;
+            }
+            catch (Exception e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                rtnMap.put("SUCCESS", "N");
+                rtnMap.put("MSG", "필요한 스펙데이터가 없습니다");
+                return rtnMap;
+            }
+        }
+
+        rtnMap.put("SUCCESS", "Y");
+        return rtnMap;
+    }
+
+
 
 
 //end
