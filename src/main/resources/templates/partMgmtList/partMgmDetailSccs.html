@@ -36,6 +36,11 @@
         .cui_attachments{
             display:block;
         }
+
+        .cui_border_section{
+            margin: 20px 20px;
+        }
+
     </style>
 </head>
 <body>
@@ -74,9 +79,9 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span data-langsid="확인일자"></span></th>
-                            <th><span data-langsid="구분자"></span></th>
-                            <th><span data-langsid="첨부"></span></th>
+                            <th><span data-langsid="확인일자"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="구분자"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="첨부"></span><span style="color: #e74c3c;">*</span></th>
                         </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -84,7 +89,7 @@
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
                                     <input type="hidden" name="SCCS_IDX" th:value="${sccsDTO.SCCS_IDX}">
-                                    <input type="text" class="cui_text_field datepicker" th:value="${sccsDTO.SCCS_CONFIRM_DATE}"  name="SCCS_CONFIRM_DATE" reqcheck="reqcheck" datePickerControl="" data-messages="sccs 날짜를 입력해주세요." messages="">
+                                    <input type="text" class="cui_text_field datepicker" th:value="${sccsDTO.SCCS_CONFIRM_DATE}"  name="SCCS_CONFIRM_DATE" reqcheck="reqcheck" onkeyup="checkValidDate($(this))"  maxlength="10" datePickerControl="" data-messages="sccs 날짜를 입력해주세요." messages="">
                                 </div>
                             </td>
                             <td><input type="text" class="cui_text_field" th:value="${sccsDTO.SCCS_CHAR}" name="SCCS_CHAR" reqcheck="reqcheck" data-messages="sccs 구분자를 입력해주세요." messages=""></td>
@@ -94,8 +99,8 @@
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${sccsDTO.SCCS_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="SCCS_FILE_NAME" th:value="${sccsDTO.SCCS_FILE_NAME}" th:text="${sccsDTO.SCCS_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${sccsDTO.SCCS_IDX}]],'SCCS')" data-cui-icon="download" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'SCCS',[[${sccsDTO.SCCS_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -117,8 +122,8 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th><span data-langsid="확인일자"></span></th>
-                            <th><span data-langsid="100% 기준 구성성분 확인자료 첨부"></span></th>
+                            <th><span data-langsid="확인일자"></span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="100% 기준 구성성분 확인자료 첨부"></span><span style="color: #e74c3c;">*</span></th>
 
                         </tr>
                         </thead>
@@ -127,7 +132,7 @@
                             <td>
                                 <div class="item_content" data-role="calendar-picker">
                                     <input type="hidden" name="INGRED_IDX"  th:value="${ingredDTO.INGRED_IDX}" >
-                                    <input type="text" class="cui_text_field datepicker" name="INGRED_CONFIRM_DATE"  th:value="${ingredDTO.INGRED_CONFIRM_DATE}"  datePickerControl=""  reqcheck="reqcheck" data-messages="성분명세서 날짜를 입력해주세요." messages="">
+                                    <input type="text" class="cui_text_field datepicker" name="INGRED_CONFIRM_DATE"  th:value="${ingredDTO.INGRED_CONFIRM_DATE}" onkeyup="checkValidDate($(this))"  maxlength="10"  datePickerControl=""  reqcheck="reqcheck" data-messages="성분명세서 날짜를 입력해주세요." messages="">
                                 </div>
                             </td>
                             <td>
@@ -136,9 +141,9 @@
                                     <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${ingredDTO.INGRED_FILE_NAME == null ? 'display:none;' : '' }" >
                                         <div class="item_label" data-cui-icon="paperclip"><span id="INGRED_FILE_NAME" th:value="${ingredDTO.INGRED_FILE_NAME}" th:text="${ingredDTO.INGRED_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${ingredDTO.INGRED_IDX}]],'INGRED')" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'INGRED',[[${ingredDTO.INGRED_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -172,7 +177,7 @@
                         <tr th:each="guarantDTO,guarantStat : ${guarantListDTO}">
                             <td><input type="hidden" th:name="'GUARANT_IDX'+${guarantStat.count}" th:value="${guarantDTO.GUARANT_IDX}" >
                                 <input type="text" class="cui_text_field "  th:value="${guarantDTO.GUARANT_TYPE}" th:name="'GUARANT_TYPE'+${guarantStat.count}" ></td>
-                            <td><input type="text" class="cui_text_field"  th:value="${guarantDTO.GUARANT_CONFIRM_DATE}" th:name="'GUARANT_CONFIRM_DATE'+${guarantStat.count}"  datePickerControl="" >
+                            <td><input type="text" class="cui_text_field"  th:value="${guarantDTO.GUARANT_CONFIRM_DATE}" th:name="'GUARANT_CONFIRM_DATE'+${guarantStat.count}" onkeyup="checkValidDate($(this))"  maxlength="10" datePickerControl="" >
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field"  th:name="'GUARANT_FILE'+${guarantStat.count}" >
@@ -180,9 +185,9 @@
                                 <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${guarantDTO.GUARANT_FILE_NAME == null ? 'display:none;' : '' }">
                                     <div class="item_label" data-cui-icon="paperclip"><span id="GUARANT_FILE_NAME" th:value="${guarantDTO.GUARANT_FILE_NAME}" th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
                                         <div class="item_content">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${guarantDTO.GUARANT_IDX}]],'GUARANT')" data-cui-icon="download" data-tooltip-title="다운로드"
                                             ><span>다운로드</span></button>
-                                            <button type="button" class="cui_button icon endpoint" onclick="status_Del(this)" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
+                                            <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this),'GUARANT',[[${guarantDTO.GUARANT_IDX}]])" data-cui-icon="xmark" data-tooltip-title="삭제"><span>삭제</span></button>
                                         </div>
                                     </div>
                                 </div>
@@ -194,6 +199,24 @@
                         </tbody>
                     </table>
                 </fieldset>
+
+                <div class="cui_border_section" th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
+                    <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>보증 내역의 재확인</span></div>
+                    </div>
+                    <ul class="cui_list" data-bullet="dash">
+                        <li>기 제출한 SCCS / 성분명세 등 보증서류에 대해 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다.</li>
+                    </ul>
+                    <div class="cui_items_wrap" data-direction="column">
+                        <div class="item_content">
+                            <label class="cui_checkbox">
+                                <input type="checkbox" name="CONFIRM_CHK" th:checked="${sccsDTO.CONFIRM_CHK == ' ' ? false:sccsDTO.CONFIRM_CHK}"><i></i>
+                                <span>전자 보증서 제출</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="cui_items_wrap" data-direction="right" >
                     <div class="item_content">
@@ -213,8 +236,8 @@
             guarantCount++;
 
             const newRow = $('<tr>'
-                         + '    <td><input type="hidden" name="GUARANT_IDX' + guarantCount + '"" ><input type="text" class="cui_text_field datepicker" name="GUARANT_TYPE' + guarantCount + '" ></td>'
-                         + '                <td><input type="text" class="cui_text_field" name="GUARANT_CONFIRM_DATE' + guarantCount + '"  datePickerControl="" ></td>'
+                         + '    <td><input type="hidden" name="GUARANT_IDX' + guarantCount + '"" ><input type="text" class="cui_text_field "  name="GUARANT_TYPE' + guarantCount + '" ></td>'
+                         + '                <td><input type="text" class="cui_text_field" name="GUARANT_CONFIRM_DATE' + guarantCount + '" onkeyup="checkValidDate($(this))"  maxlength="10"  datePickerControl="" ></td>'
                          + '                <td>'
                          + '                    <div class="cui_attachments" style="display:flex;">'
                          + '                        <input type="file" class="cui_file_field" name="GUARANT_FILE' + guarantCount + '">'
@@ -226,13 +249,13 @@
 
             newRow.find("button[data-cui-icon=trash]").bind("click", function () {
                 var row = $(this).parent().parent();
-                var selIdx = row.find("input[name^=ETC_IDX]").val();
-                var arrDelIdx = $('input[name=ETC_DEL_IDX]').val();
+                var selIdx = row.find("input[name^=GUARANT_IDX]").val();
+                var arrDelIdx = $('input[name=GUR_DEL_IDX]').val();
                 if(selIdx != ''){
                     if(arrDelIdx != '') arrDelIdx += ',';
                     arrDelIdx += selIdx;
                 }
-                $('input[name=ETC_DEL_IDX]').val(arrDelIdx);
+                $('input[name=GUR_DEL_IDX]').val(arrDelIdx);
                 $(this).parent().parent().remove();
             });
 
@@ -252,30 +275,58 @@
             $(this).parent().parent().remove();
         });
 
-        var frmDetailSubmit = function () {
-            //e.preventDefault();
+        var status_Del = function(obj,mode,idx){
+            //alert(idx+"++++"+mode);
+            Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var frmObj = $("#frmDetail");
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.formData  = new FormData();
+                    ReqInfo.AddParameter(frmObj);
+                    ReqInfo.AddParameter("MODE",mode);
+                    ReqInfo.AddParameter("IDX",idx);
 
-            var frmObj = $("#frmDetail");
-            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
-            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
-            var ReqInfo = new Common.RequestInfo();
-            ReqInfo.formData  = new FormData();
-            ReqInfo.AddParameter(frmObj);
-            Common.Ajax("/user/partMgmt/goSccsSave", ReqInfo, function (response) {
-                    if (response == "OK") {
-                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
-                            Common.Msg(siteLang.getLang("저장되었습니다."));
-                            location.reload();
+                    Common.Ajax("/user/partMgmt/DeleteFileDetail", ReqInfo, function (response) {
+                        if (response == "OK") {
+                            Common.Msg(siteLang.getLang("삭제되었습니다."));
                         }
-                    }else {
-                        Common.MoveUrl("/user/partMgmt/matReg");
-                    }
-                });
+                    });
 
-            //ReqInfo.formData
-            //return Common.Validate(frmObj);
+                    var row = obj.parent().parent();
+                    row.find("span[id*=FILE_NAME]").text('');
+                    row.parent().find("input[name*=FILE_STATUS").val("DEL");
+                    row.css("display","none");
+
+
+                }
+            });
 
         }
+
+        var checkValidDate = function(obj) {
+            let val = obj.val().replace(/\D/g, "");
+            let leng = val.length;
+            let result = '';
+
+            if(leng < 6) result = val;
+            else if(leng < 8){
+                result += val.substring(0,4);
+                result += "-";
+                result += val.substring(4);
+            } else{
+                result += val.substring(0,4);
+                result += "-";
+                result += val.substring(4,6);
+                result += "-";
+                result += val.substring(6);
+
+
+            }
+            obj.val(result);
+        }
+
+
 
         var frmDetailSave = function () {
             //데이터가 아무것도 없을 때는 저장할 수 없음
@@ -333,18 +384,22 @@
 
             //유효성체크
             var frmObj = $("#frmDetail");
-            var isValid = false;
-            isValid = Common.Validate(frmObj);
+            var isValid = true;
+            //isValid = Common.Validate(frmObj);
+
+            if(Common.Validate(frmObj) != true){
+                return;
+            }
 
             //파일 체크
             var flag = '';
-            if($("input[name=SCCS_FILE]") == '' && $("#SCCS_FILE_NAME").val() == '') {
+            if($("input[name=SCCS_FILE]") === '' && $("#SCCS_FILE_NAME").text() === '') {
                  isValid=false;
-                 flag='MSDS';
+                 flag='SCCS';
             }
-            if($("input[name=INGRED_FILE]") == '' && $("#INGRED_FILE_NAME]").val() == '') {
+            if($("input[name=INGRED_FILE]") === '' && $("#INGRED_FILE_NAME]").text() ==='') {
                  isValid=false;
-                 flag='ROHS';
+                 flag='성분명세서';
             }
 
             if(!isValid){
@@ -352,8 +407,8 @@
                 return;
             }
 
-            // etc 파일이나 데이터가 있으면 무조건 둘 다 있어야함. 데이터가 아무것도 없다면 기타는 데이터가 없을 수 있음
-            const rows = document.querySelectorAll('#etcBodyArea tr');
+            // 보증 파일이나 데이터가 있으면 무조건 둘 다 있어야함. 데이터가 아무것도 없다면 기타는 데이터가 없을 수 있음
+            const rows = document.querySelectorAll('#guarBodyArea tr');
 
             // 각 tr(row)에 대해 유효성 검사 수행
             rows.forEach(row => {
@@ -373,25 +428,67 @@
                 }
             });
 
+            //한번 승인 후 다시 들어온 경우
+            if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){
+                if(!$("input[name=CONFIRM_CHK]").is(":checked")){
+                    Common.Msg(siteLang.getLang("보증내역 재확인에 체크 해주세요"));
+                    return;
+                }
+            }
+
+
             if(!isValid){
                 Common.Msg(siteLang.getLang( "보증의 모든 항목을 채우거나 모든 항목을 비워야 합니다."));
                 return;
             }else{
-                $("#frmDetail").find("input[name=SaveMode]").val("Next");
-                //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
-                //$("#frmDetail").submit();
-                frmDetailSubmit();
+                Common.Msg(siteLang.getLang("승인요청 하시겠습니까?"), {
+                    mode : "confrim"
+                    , okback : function () {
+                        $("#frmDetail").find("input[name=SaveMode]").val("Next");
+                        //$("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");
+                        //$("#frmDetail").submit();
+                        frmDetailSubmit();
+                    }
+                });
+
             }
 
-<!--            Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {-->
-<!--                mode : "confrim"-->
-<!--                , okback : function () {-->
-<!--                    $("#frmDetail").find("input[name=SaveMode]").val("Next");-->
-<!--                    $("#frmDetail").find("[messages]").attr("reqcheck", "reqcheck");-->
-<!--                    //$("#frmDetail").submit();-->
-<!--                    frmDetailSubmit();-->
-<!--                }-->
-<!--            });-->
+        }
+
+        var frmDetailSubmit = function () {
+            //e.preventDefault();
+
+            var frmObj = $("#frmDetail");
+            var flag = $("#frmDetail").find("input[name=SaveMode]").val();
+            //var pm_idx = $("input[name=PM_IDX]").val() == '' ? $("input[name=PM_IDX]").val() : 0;
+            var ReqInfo = new Common.RequestInfo();
+            ReqInfo.formData  = new FormData();
+            ReqInfo.AddParameter(frmObj);
+            Common.Ajax("/user/partMgmt/goSccsSave", ReqInfo, function (response) {
+                    if (response == "OK") {
+                        if($("#frmDetail").find("input[name=SaveMode]").val() =="Save"){
+                            Common.Msg(siteLang.getLang("저장되었습니다."), {
+                                mode : "msg"
+                                , okback : function () {
+                                    location.reload();
+                                }
+                            });
+
+                        }
+                    }else if (response.substring(0, 7) == "NEXT|||"){
+                        Common.Msg(siteLang.getLang("요청되었습니다."), {
+                            mode : "msg"
+                            , okback : function () {
+                                Common.MoveUrl("/user/partMgmt/matReg");
+                            }
+                        });
+
+                    }
+                });
+
+            //ReqInfo.formData
+            //return Common.Validate(frmObj);
+
         }
     </script>
 </div>

@@ -28,6 +28,9 @@ public class partDetailMsdsDTO {
     @JsonProperty("MSDS_PART_NAME")
     private String MSDS_PART_NAME;
 
+    @JsonProperty("MSDS_CONFIRM_CHK")
+    private String MSDS_CONFIRM_CHK;
+
     //저장 svhc 갈지 flag
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;

@@ -241,8 +241,19 @@
                         Common.MoveUrl("/user/partMgmt/goReadDetail?PM_IDX=" + data.PM_IDX);
                     }
                     */
+                    var Mode='';
+                    if(data.SheetEditModeStatus){
+                        Mode='edit';
+                        if(data.PM_ACTIVE_YN_ORG === 'ACTIVE'){
+                            Common.Msg(siteLang.getLang("사용여부 INACTIVE 시 수정 가능합니다"));
+                            return;
+                        }else{
+                            Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX+"&MODE="+Mode);
+                        }
+                    }else{
+                        Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX+"&MODE="+Mode);
+                    }
 
-                    Common.MoveUrl("/user/partMgmt/partMgmDetail?PM_IDX=" + data.PM_IDX);
                 }
             },
             rowDblClick: function (event, ui) {
@@ -270,6 +281,7 @@
                     if (ui.cellData == undefined) {
                         return { text: "" };
                     } else {
+
                         if (data.PM_APPROVAL_DATE == "" || data.PM_APPROVAL_DATE == null || data.PM_REQUEST_APPROVAL_DATE == "" || data.PM_REQUEST_APPROVAL_DATE == null) {
                             if(Common.Convert.Int(data.PM_APPROVAL_STATUS) <= 2){
                                 return; // 보임
@@ -307,9 +319,9 @@
                 render : function (ui) {
                     var data = ui.rowData;
 
-                    //if(Common.Convert.Int(data.PM_APPROVAL_STATUS) >= 3){
+                    if(Common.Convert.Int(data.PM_APPROVAL_STATUS) > 3){
                         return { text : "<button class='cui_button' style='min-width:45px;margin:0px;height:18px;' PM_IDX='" + data.PM_IDX + "' onclick='EidtModeChange($(this));'>Edit</button>", style: "padding:0px;" };
-                    //}
+                    }
                     return;
                 }
             },

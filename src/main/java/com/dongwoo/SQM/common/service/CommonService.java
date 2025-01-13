@@ -49,4 +49,6 @@ public interface CommonService {
     List<LinkedHashMap<String, Object>> getAuthUserMenuFactoryList(Map<String, Object> parameterMap);
 
     List<LinkedHashMap<String, Object>> getAuthUserClassList(Map<String, Object> parameterMap);
+
+    String parseDate(String mfDate);
 }

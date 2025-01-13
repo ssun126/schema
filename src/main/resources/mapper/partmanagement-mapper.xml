@@ -24,6 +24,9 @@
     <update id="updateApprovalStatus" parameterType="HashMap">
         UPDATE SC_PART_MANAGEMENT_DATA
         SET PM_APPROVAL_STATUS= #{status}
+        <if test="status == '3'">
+            , PM_REQUEST_APPROVAL_DATE = sysdate
+        </if>
         WHERE PM_IDX=#{idx}
     </update>
 
@@ -149,6 +152,7 @@
     </select>
 
     <select id="searchPartCodeList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
         SELECT
             pc.PART_CODE
             , pc.PART_NAME
@@ -158,9 +162,17 @@
             , scc.COM_NATION
         FROM SC_PART_CODE pc
             LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pc.COM_CODE
-        WHERE
-            scc.COM_CODE = #{COM_CODE}
+        WHERE NOT EXISTS (
+                SELECT 1
+                FROM (SELECT pm_part_code,pm_part_plant_code,pc.COM_CODE
+                FROM SC_PART_MANAGEMENT_DATA  pmd
+                LEFT OUTER JOIN  SC_PART_CODE spc ON pmd.PM_PART_CODE  = spc.PART_CODE AND pmd.PM_PART_PLANT_CODE  = spc.PLANT_CODE
+                LEFT OUTER JOIN SC_COMPANY_CODE scc ON scc.COM_CODE = pc.COM_CODE) pd
+                WHERE pd.pm_part_code = pc.PART_CODE
+            )
+            AND scc.COM_CODE = #{COM_CODE}
             AND pc.PART_STATUS = 'Y'
+
         <if test="PART_CODE != null and PART_CODE != ''">
             <![CDATA[
                 AND (pc.PART_CODE LIKE CONCAT(CONCAT('%',  #{PART_CODE}), '%'))
@@ -239,11 +251,7 @@
         }
     </delete>
 
-    <select id="getEtcFileData" parameterType="String" resultType="HashMap">
-        select ETC_FILE_NAME, ETC_FILE_PATH
-        from SC_PART_MGMT_DETAIL_ETC
-        where ETC_IDX = #{idx}
-    </select>
+
 
 <!--   Detail    -->
 
@@ -254,6 +262,7 @@
             , PART_NAME
             , PM_APPROVAL_STATUS AS PM_APPROVAL_STATUS
             , spmd.PM_ACTIVE_YN
+            , NVL(TO_CHAR(spmd.PM_APPROVAL_DATE, 'YYYY-MM-DD'),' ') as PM_APPROVAL_DATE
         FROM
             SC_PART_CODE spc
             INNER JOIN SC_PART_MANAGEMENT_DATA spmd ON spc.PART_CODE = spmd.PM_PART_CODE AND spc.PLANT_CODE = spmd.PM_PART_PLANT_CODE
@@ -262,12 +271,12 @@
     </select>
 
     <select id="getPartDetailMsdsData" parameterType="String" resultType="partDetailMsds">
-        SELECT *
+        SELECT MSDS_IDX, PM_IDX, MSDS_REG_DATE, MSDS_LANG, MSDS_APPROVAL_NUM, MSDS_FILE_NAME, MSDS_FILE_PATH, NVL(MSDS_CONFIRM_CHK,' ') as MSDS_CONFIRM_CHK
         FROM SC_PART_MGMT_DETAIL_MSDS
         WHERE PM_IDX=#{idx}
     </select>
     <select id="getPartDetailRohsData" parameterType="String" resultType="partDetailRohs">
-        SELECT *
+        SELECT ROHS_IDX, PM_IDX, ROHS_CONFIRM_DATE, ROHS_CD, ROHS_HG, ROHS_PB, ROHS_CR6, ROHS_PBBS, ROHS_PBDES, ROHS_DEHP, ROHS_BBP, ROHS_DBP, ROHS_DIBP, ROHS_FILE_NAME, ROHS_FILE_PATH, NVL(ROHS_CONFIRM_CHK,' ') as ROHS_CONFIRM_CHK
         FROM SC_PART_MGMT_DETAIL_ROHS
         WHERE PM_IDX=#{idx}
     </select>
@@ -284,7 +293,7 @@
 
     <update id="msdsUpdate" parameterType="partDetailMsds">
         UPDATE  SC_PART_MGMT_DETAIL_MSDS
-        SET MSDS_REG_DATE=#{MSDS_REG_DATE},MSDS_LANG = #{MSDS_LANG},MSDS_APPROVAL_NUM = #{MSDS_APPROVAL_NUM}
+        SET MSDS_REG_DATE=#{MSDS_REG_DATE},MSDS_LANG = #{MSDS_LANG},MSDS_APPROVAL_NUM = #{MSDS_APPROVAL_NUM},MSDS_CONFIRM_CHK=#{MSDS_CONFIRM_CHK}
         <if test="MSDS_FILE_NAME != null and MSDS_FILE_NAME != '' and MSDS_FILE_STATUS != 'DEL'">
             <![CDATA[
                 ,MSDS_FILE_NAME=#{MSDS_FILE_NAME} ,MSDS_FILE_PATH=#{MSDS_FILE_PATH}
@@ -298,7 +307,7 @@
     <update id="rohsUpdate" parameterType="partDetailRohs">
         UPDATE SC_PART_MGMT_DETAIL_ROHS
         set ROHS_CONFIRM_DATE= #{ROHS_CONFIRM_DATE},ROHS_CD=#{ROHS_CD},ROHS_HG = #{ROHS_HG},ROHS_PB = #{ROHS_PB}, ROHS_CR6= #{ROHS_CR6}
-            ,ROHS_PBBS = #{ROHS_PBBS},ROHS_PBDES= #{ROHS_PBDES},ROHS_DEHP = #{ROHS_DEHP},ROHS_BBP = #{ROHS_BBP},ROHS_DBP = #{ROHS_DBP},ROHS_DIBP = #{ROHS_DIBP}
+            ,ROHS_PBBS = #{ROHS_PBBS},ROHS_PBDES= #{ROHS_PBDES},ROHS_DEHP = #{ROHS_DEHP},ROHS_BBP = #{ROHS_BBP},ROHS_DBP = #{ROHS_DBP},ROHS_DIBP = #{ROHS_DIBP},ROHS_CONFIRM_CHK=#{ROHS_CONFIRM_CHK}
         <if test="ROHS_FILE_NAME != null and ROHS_FILE_NAME != ''">
             <![CDATA[
                 ,ROHS_FILE_NAME= #{ROHS_FILE_NAME},ROHS_FILE_PATH = #{ROHS_FILE_PATH}
@@ -322,13 +331,13 @@
     
 
     <insert id="msdsSave" parameterType="partDetailMsds">
-        INSERT INTO SC_PART_MGMT_DETAIL_MSDS(MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH)
-        VALUES (SEQ_MSDS_IDX.NEXTVAL,#{PM_IDX},#{MSDS_REG_DATE},#{MSDS_LANG},#{MSDS_APPROVAL_NUM} ,#{MSDS_FILE_NAME} ,#{MSDS_FILE_PATH})
+        INSERT INTO SC_PART_MGMT_DETAIL_MSDS(MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH,MSDS_CONFIRM_CHK)
+        VALUES (SEQ_MSDS_IDX.NEXTVAL,#{PM_IDX},#{MSDS_REG_DATE},#{MSDS_LANG},#{MSDS_APPROVAL_NUM} ,#{MSDS_FILE_NAME} ,#{MSDS_FILE_PATH},#{MSDS_CONFIRM_CHK})
     </insert>
 
     <insert id="rohsSave" parameterType="partDetailRohs">
-        INSERT INTO   SC_PART_MGMT_DETAIL_ROHS(ROHS_IDX,PM_IDX,ROHS_CONFIRM_DATE,ROHS_CD,ROHS_HG,ROHS_PB,ROHS_CR6,ROHS_PBBS,ROHS_PBDES,ROHS_DEHP,ROHS_BBP,ROHS_DBP,ROHS_DIBP,ROHS_FILE_NAME,ROHS_FILE_PATH)
-        VALUES (SEQ_ROHS_IDX.NEXTVAL,#{PM_IDX},#{ROHS_CONFIRM_DATE},#{ROHS_CD},#{ROHS_HG},#{ROHS_PB},#{ROHS_CR6},#{ROHS_PBBS},#{ROHS_PBDES},#{ROHS_DEHP},#{ROHS_BBP},#{ROHS_DBP},#{ROHS_DIBP},#{ROHS_FILE_NAME},#{ROHS_FILE_PATH})
+        INSERT INTO   SC_PART_MGMT_DETAIL_ROHS(ROHS_IDX,PM_IDX,ROHS_CONFIRM_DATE,ROHS_CD,ROHS_HG,ROHS_PB,ROHS_CR6,ROHS_PBBS,ROHS_PBDES,ROHS_DEHP,ROHS_BBP,ROHS_DBP,ROHS_DIBP,ROHS_FILE_NAME,ROHS_FILE_PATH,ROHS_CONFIRM_CHK)
+        VALUES (SEQ_ROHS_IDX.NEXTVAL,#{PM_IDX},#{ROHS_CONFIRM_DATE},#{ROHS_CD},#{ROHS_HG},#{ROHS_PB},#{ROHS_CR6},#{ROHS_PBBS},#{ROHS_PBDES},#{ROHS_DEHP},#{ROHS_BBP},#{ROHS_DBP},#{ROHS_DIBP},#{ROHS_FILE_NAME},#{ROHS_FILE_PATH},#{ROHS_CONFIRM_CHK})
     </insert>
 
     <insert id="halgSave" parameterType="partDetailHalg">
@@ -358,6 +367,36 @@
         WHERE ETC_IDX = #{idx}
     </delete>
 
+
+    <update id="MsdsDeleteFile" parameterType="int">
+        UPDATE  SC_PART_MGMT_DETAIL_MSDS
+        SET MSDS_FILE_NAME= '' ,MSDS_FILE_PATH=''
+        WHERE  MSDS_IDX = #{idx}
+    </update>
+    <update id="RohsDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_ROHS
+        SET ROHS_FILE_NAME=  '' ,ROHS_FILE_PATH =  ''
+        WHERE ROHS_IDX = #{idx}
+    </update>
+
+    <update id="HalogenDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_HALOGEN
+        SET HALOGEN_FILE_NAME =  '' ,HALOGEN_FILE_PATH =  ''
+        WHERE HALOGEN_IDX =#{idx}
+    </update>
+    <select id="getEtcDataIdx" parameterType="int" resultType="partDetailEtc">
+        SELECT *
+        FROM SC_PART_MGMT_DETAIL_ETC
+        WHERE ETC_IDX=#{idx}
+    </select>
+    <update id="EtcDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_ETC
+        SET ETC_FILE_NAME = '',ETC_FILE_PATH = ''
+        WHERE ETC_IDX = #{idx}
+    </update>
+
+
+
     <!--   SVHC   -->
     <select id="getSvhcList" resultType="svhcList">
         SELECT SVHC_NUM, SVHC_NAME,SVHC_CASNUM,SVHC_EUNUM
@@ -366,20 +405,20 @@
     </select>
 
     <select id="getDetailSvhcData" parameterType="String" resultType="partDetailSvhc">
-        SELECT  SVHC_IDX,PM_IDX,DATA_GUBUN,NVL(CONFIRM_DATE, ' ') AS CONFIRM_DATE,NVL(APPLICABLE_NO,' ') AS APPLICABLE_NO
-                ,NVL(FILE_PATH,' ') AS FILE_PATH,NVL(FILE_NAME,' ') AS FILE_NAME,NVL(WARRANTY_ITEM,' ') AS WARRANTY_ITEM
+        SELECT  SVHC_IDX,PM_IDX,DATA_GUBUN,NVL(CONFIRM_DATE, ' ') AS CONFIRM_DATE,NVL(APPLICABLE_NO,' ') AS APPLICABLE_NO ,NVL(NONE_APPLICABLE_NO,' ') AS NONE_APPLICABLE_NO,NVL(SVHC_REMARK,' ') AS SVHC_REMARK
+                ,NVL(FILE_PATH,' ') AS FILE_PATH,NVL(FILE_NAME,' ') AS FILE_NAME,NVL(WARRANTY_ITEM,' ') AS WARRANTY_ITEM, NVL(CONFIRM_CHK,' ') AS CONFIRM_CHK
         FROM SC_PART_MGMT_SVHC_DATA
         WHERE PM_IDX=#{idx}
     </select>
 
     <insert id="svhcSave" parameterType="partDetailSvhc">
-        INSERT INTO  SC_PART_MGMT_SVHC_DATA(SVHC_IDX,PM_IDX,DATA_GUBUN,CONFIRM_DATE,APPLICABLE_NO,FILE_PATH,FILE_NAME,WARRANTY_ITEM)
-        VALUES (SEQ_SVHC_IDX.NEXTVAL,#{PM_IDX},#{DATA_GUBUN},#{CONFIRM_DATE},#{APPLICABLE_NO},#{FILE_PATH},#{FILE_NAME},#{WARRANTY_ITEM})
+        INSERT INTO  SC_PART_MGMT_SVHC_DATA(SVHC_IDX,PM_IDX,DATA_GUBUN,CONFIRM_DATE,APPLICABLE_NO,NONE_APPLICABLE_NO,SVHC_REMARK,FILE_PATH,FILE_NAME,WARRANTY_ITEM,CONFIRM_CHK,SEND_FILE_PATH,SEND_FILE_NAME)
+        VALUES (SEQ_SVHC_IDX.NEXTVAL,#{PM_IDX},#{DATA_GUBUN},#{CONFIRM_DATE},#{APPLICABLE_NO},#{NONE_APPLICABLE_NO},#{SVHC_REMARK},#{FILE_PATH},#{FILE_NAME},#{WARRANTY_ITEM},#{CONFIRM_CHK},#{SEND_FILE_PATH},#{SEND_FILE_NAME})
     </insert>
 
     <update id="svhcUpdate" parameterType="partDetailSvhc">
         UPDATE SC_PART_MGMT_SVHC_DATA
-        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},NONE_APPLICABLE_NO=#{NONE_APPLICABLE_NO},SVHC_REMARK=#{SVHC_REMARK},WARRANTY_ITEM=#{WARRANTY_ITEM},CONFIRM_CHK=#{CONFIRM_CHK},SEND_FILE_PATH=#{SEND_FILE_PATH},SEND_FILE_NAME=#{SEND_FILE_NAME}
         <if test="FILE_NAME != null and FILE_NAME != ''">
             <![CDATA[
                 ,FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME}
@@ -389,29 +428,38 @@
         WHERE PM_IDX =#{PM_IDX}
     </update>
 
+    <update id="SvhcDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_SVHC_DATA
+        SET FILE_PATH='',FILE_NAME=''
+        WHERE SVHC_IDX =#{idx}
+    </update>
+
+
+
     <!--   DECLARATION LETTER   -->
     <select id="getDeclarList" resultType="Declaration">
 
-        SELECT NVL(DECL_NUM,' ') AS DECL_NUM ,NVL(DECL_SUB_NUM,' ') as DECL_SUB_NUM,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT ,NVL(DECL_CLASS, ' ') AS DECL_CLASS
+        SELECT NVL(DECL_NUM,' ') AS DECL_NUM ,NVL(DECL_SUB_NUM,' ') as DECL_SUB_NUM,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT
+            ,NVL(DECL_CLASS, ' ') AS DECL_CLASS
         FROM SC_DECLARATION_DATA
         ORDER BY DECL_IDX asc
     </select>
 
     <select id="getDetailDeclarData" parameterType="String" resultType="partDetailDeclar">
-        SELECT  DECL_IDX,PM_IDX,DATA_GUBUN,NVL(CONFIRM_DATE, ' ') AS CONFIRM_DATE,NVL(APPLICABLE_NO,' ') AS APPLICABLE_NO,NVL(NONE_APPLICABLE_NO,' ') AS NONE_APPLICABLE_NO
-        ,NVL(FILE_PATH,' ') AS FILE_PATH,NVL(FILE_NAME,' ') AS FILE_NAME,NVL(WARRANTY_ITEM,' ') AS WARRANTY_ITEM
+        SELECT  DECL_IDX,PM_IDX,DATA_GUBUN,NVL(CONFIRM_DATE, ' ') AS CONFIRM_DATE,NVL(APPLICABLE_NO,' ') AS APPLICABLE_NO,NVL(NONE_APPLICABLE_NO,' ') AS NONE_APPLICABLE_NO,NVL(DECL_REMARK,' ') AS DECL_REMARK
+        ,NVL(FILE_PATH,' ') AS FILE_PATH,NVL(FILE_NAME,' ') AS FILE_NAME,NVL(WARRANTY_ITEM,' ') AS WARRANTY_ITEM , NVL(CONFIRM_CHK,' ') AS CONFIRM_CHK
         FROM SC_PART_MGMT_DECLARATION_DATA
         WHERE PM_IDX=#{idx}
     </select>
 
     <insert id="declarSave" parameterType="partDetailDeclar">
-        INSERT INTO  SC_PART_MGMT_DECLARATION_DATA(DECL_IDX,PM_IDX,DATA_GUBUN,CONFIRM_DATE,APPLICABLE_NO,NONE_APPLICABLE_NO,FILE_PATH,FILE_NAME,WARRANTY_ITEM)
-        VALUES (SEQ_DECL_IDX.NEXTVAL,#{PM_IDX},#{DATA_GUBUN},#{CONFIRM_DATE},#{APPLICABLE_NO},#{NONE_APPLICABLE_NO},#{FILE_PATH},#{FILE_NAME},#{WARRANTY_ITEM})
+        INSERT INTO  SC_PART_MGMT_DECLARATION_DATA(DECL_IDX,PM_IDX,DATA_GUBUN,CONFIRM_DATE,APPLICABLE_NO,NONE_APPLICABLE_NO,DECL_REMARK,FILE_PATH,FILE_NAME,WARRANTY_ITEM,CONFIRM_CHK,SEND_FILE_PATH,SEND_FILE_NAME)
+        VALUES (SEQ_DECL_IDX.NEXTVAL,#{PM_IDX},#{DATA_GUBUN},#{CONFIRM_DATE},#{APPLICABLE_NO},#{NONE_APPLICABLE_NO},#{DECL_REMARK},#{FILE_PATH},#{FILE_NAME},#{WARRANTY_ITEM},#{CONFIRM_CHK},#{SEND_FILE_PATH},#{SEND_FILE_NAME})
     </insert>
 
     <update id="declarUpdate" parameterType="partDetailDeclar">
         UPDATE SC_PART_MGMT_DECLARATION_DATA
-        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},NONE_APPLICABLE_NO=#{NONE_APPLICABLE_NO},WARRANTY_ITEM=#{WARRANTY_ITEM}
+        SET DATA_GUBUN = #{DATA_GUBUN},CONFIRM_DATE = #{CONFIRM_DATE},APPLICABLE_NO = #{APPLICABLE_NO},NONE_APPLICABLE_NO=#{NONE_APPLICABLE_NO},DECL_REMARK=#{DECL_REMARK},WARRANTY_ITEM=#{WARRANTY_ITEM},CONFIRM_CHK=#{CONFIRM_CHK},SEND_FILE_PATH=#{SEND_FILE_PATH},SEND_FILE_NAME=#{SEND_FILE_NAME}
         <if test="FILE_NAME != null and FILE_NAME != ''">
             <![CDATA[
                 ,FILE_PATH=#{FILE_PATH},FILE_NAME=#{FILE_NAME}
@@ -419,6 +467,12 @@
         </if>
 
         WHERE DECL_IDX =#{DECL_IDX}
+    </update>
+
+    <update id="DeclDeleteFile" parameterType="INT">
+        UPDATE SC_PART_MGMT_DECLARATION_DATA
+        SET FILE_PATH='' ,FILE_NAME=''
+        WHERE DECL_IDX =#{idx}
     </update>
 
     <!--   SCCS   -->
@@ -429,13 +483,13 @@
     </select>
 
     <insert id="sccsSave" parameterType="partDetailSccs">
-        INSERT INTO  SC_PART_MGMT_DETAIL_SCCS(SCCS_IDX,PM_IDX,SCCS_CONFIRM_DATE,SCCS_CHAR,SCCS_FILE_NAME,SCCS_FILE_PATH)
-        VALUES (SEQ_SCCS_IDX.NEXTVAL,#{PM_IDX},#{SCCS_CONFIRM_DATE},#{SCCS_CHAR},#{SCCS_FILE_NAME},#{SCCS_FILE_PATH})
+        INSERT INTO  SC_PART_MGMT_DETAIL_SCCS(SCCS_IDX,PM_IDX,SCCS_CONFIRM_DATE,SCCS_CHAR,SCCS_FILE_NAME,SCCS_FILE_PATH,CONFIRM_CHK)
+        VALUES (SEQ_SCCS_IDX.NEXTVAL,#{PM_IDX},#{SCCS_CONFIRM_DATE},#{SCCS_CHAR},#{SCCS_FILE_NAME},#{SCCS_FILE_PATH},#{CONFIRM_CHK})
     </insert>
 
     <update id="sccsUpdate" parameterType="partDetailSccs">
         UPDATE SC_PART_MGMT_DETAIL_SCCS
-        SET SCCS_CONFIRM_DATE = #{SCCS_CONFIRM_DATE},SCCS_CHAR = #{SCCS_CHAR}
+        SET SCCS_CONFIRM_DATE = #{SCCS_CONFIRM_DATE},SCCS_CHAR = #{SCCS_CHAR},CONFIRM_CHK=#{CONFIRM_CHK}
         <if test="SCCS_FILE_NAME != null and SCCS_FILE_NAME != ''">
             <![CDATA[
                 ,SCCS_FILE_NAME = #{SCCS_FILE_NAME},SCCS_FILE_PATH=#{SCCS_FILE_PATH}
@@ -443,6 +497,12 @@
         </if>
 
         WHERE SCCS_IDX =#{SCCS_IDX}
+    </update>
+
+    <update id="SccsDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_SCCS
+        SET SCCS_FILE_NAME ='',SCCS_FILE_PATH=''
+        WHERE SCCS_IDX =#{idx}
     </update>
 
     <!--   ingred   -->
@@ -467,6 +527,12 @@
         </if>
 
         WHERE INGRED_IDX =#{INGRED_IDX}
+    </update>
+
+    <update id="IngredDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_INGRED
+        SET INGRED_FILE_NAME = '',INGRED_FILE_PATH = ''
+        WHERE INGRED_IDX =#{idx}
     </update>
 
     <!--   guarant   -->
@@ -496,6 +562,161 @@
         DELETE SC_PART_MGMT_DETAIL_GUARANT
         WHERE GUARANT_IDX = #{idx}
     </delete>
+
+
+    <select id="getGuarantDataIdx" parameterType="int" resultType="partDetailGuarant">
+        SELECT *
+        FROM SC_PART_MGMT_DETAIL_GUARANT
+        WHERE GUARANT_IDX=#{idx}
+    </select>
+    <update id="GuarantDeleteFile" parameterType="int">
+        UPDATE SC_PART_MGMT_DETAIL_GUARANT
+        SET GUARANT_FILE_NAME = #{GUARANT_FILE_NAME},GUARANT_FILE_PATH = #{GUARANT_FILE_PATH}
+        WHERE GUARANT_IDX =#{idx}
+    </update>
+
+
+    <!--  히스토리 저장  -->
+    <update id="setHistoryData" parameterType="Map">
+        BEGIN
+            INSERT INTO SC_PART_MGMT_DETAIL_MSDS_HISTORY(HISTOYR_IDX,HISTOYR_GUBUN,HISTORY_REQUEST_USER_IDX,HISTORY_INSERT_DATE,MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH,MSDS_CONFIRM_CHK)
+            SELECT SEQ_MSDS_HISTORY_IDX.NEXTVAL,#{GUBUN},#{USER_IDX},SYSDATE, MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH,MSDS_CONFIRM_CHK
+            FROM SC_PART_MGMT_DETAIL_MSDS
+            WHERE PM_IDX=#{PM_IDX};
+
+            INSERT INTO SC_PART_MGMT_DETAIL_ROHS_HISTORY(HISTOYR_IDX,HISTOYR_GUBUN,HISTORY_REQUEST_USER_IDX,HISTORY_INSERT_DATE,ROHS_IDX, PM_IDX, ROHS_CONFIRM_DATE, ROHS_CD, ROHS_HG, ROHS_PB, ROHS_CR6, ROHS_PBBS, ROHS_PBDES, ROHS_DEHP, ROHS_BBP, ROHS_DBP, ROHS_DIBP, ROHS_FILE_NAME, ROHS_FILE_PATH, ROHS_CONFIRM_CHK)
+            SELECT SEQ_ROHS_HISTORY_IDX.NEXTVAL,#{GUBUN},#{USER_IDX},SYSDATE,ROHS_IDX, PM_IDX, ROHS_CONFIRM_DATE, ROHS_CD, ROHS_HG, ROHS_PB, ROHS_CR6, ROHS_PBBS, ROHS_PBDES, ROHS_DEHP, ROHS_BBP, ROHS_DBP, ROHS_DIBP, ROHS_FILE_NAME, ROHS_FILE_PATH, ROHS_CONFIRM_CHK
+            FROM SC_PART_MGMT_DETAIL_ROHS
+            WHERE PM_IDX=#{PM_IDX};
+
+            INSERT INTO SC_PART_MGMT_DETAIL_HALOGEN_HISTORY(HISTOYR_IDX,HISTOYR_GUBUN,HISTORY_REQUEST_USER_IDX,HISTORY_INSERT_DATE,HALOGEN_IDX, PM_IDX, HALOGEN_CONFIRM_DATE, HALOGEN_CL, HALOGEN_BR, HALOGEN_CLBR, HALOGEN_F, HALOGEN_I, HALOGEN_FILE_NAME, HALOGEN_FILE_PATH)
+            SELECT SEQ_HALOGEN_HISTORY_IDX.NEXTVAL,#{GUBUN},#{USER_IDX},SYSDATE,HALOGEN_IDX, PM_IDX, HALOGEN_CONFIRM_DATE, HALOGEN_CL, HALOGEN_BR, HALOGEN_CLBR, HALOGEN_F, HALOGEN_I, HALOGEN_FILE_NAME, HALOGEN_FILE_PATH
+            FROM SC_PART_MGMT_DETAIL_HALOGEN
+            WHERE PM_IDX=#{PM_IDX};
+
+            INSERT INTO SC_PART_MGMT_DETAIL_ETC_HISTORY(HISTOYR_IDX,HISTOYR_GUBUN,HISTORY_REQUEST_USER_IDX,HISTORY_INSERT_DATE,ETC_IDX, PM_IDX, ETC_CONFIRM_DATE, ETC_ANALYSE_ENTRY, ETC_ANALYSE_RESULT, ETC_FILE_NAME, ETC_FILE_PATH)
+            SELECT SEQ_ETC_HISTORY_IDX.NEXTVAL,#{GUBUN},#{USER_IDX},SYSDATE,ETC_IDX, PM_IDX, ETC_CONFIRM_DATE, ETC_ANALYSE_ENTRY, ETC_ANALYSE_RESULT, ETC_FILE_NAME, ETC_FILE_PATH
+            FROM SC_PART_MGMT_DETAIL_ETC
+            WHERE PM_IDX=#{PM_IDX};
+
+        END;
+    </update>
+
+    <select id="getOrignMsdsData" parameterType="int" resultType="partDetailMsds">
+        SELECT *
+        FROM
+        (
+            select MSDS_IDX,PM_IDX, MSDS_REG_DATE,MSDS_LANG,MSDS_APPROVAL_NUM ,MSDS_FILE_NAME ,MSDS_FILE_PATH,MSDS_CONFIRM_CHK
+            from SC_PART_MGMT_DETAIL_MSDS_HISTORY
+            where PM_IDX = #{PM_IDX} AND HISTOYR_GUBUN ='APPROVAL'
+            order by HISTORY_INSERT_DATE DESC
+        ) T1
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="getOrignRohsData" parameterType="int" resultType="partDetailRohs">
+        SELECT *
+        FROM
+        (
+        select ROHS_IDX, PM_IDX, ROHS_CONFIRM_DATE, ROHS_CD, ROHS_HG, ROHS_PB, ROHS_CR6, ROHS_PBBS, ROHS_PBDES, ROHS_DEHP, ROHS_BBP, ROHS_DBP, ROHS_DIBP, ROHS_FILE_NAME, ROHS_FILE_PATH, ROHS_CONFIRM_CHK
+        from SC_PART_MGMT_DETAIL_ROHS_HISTORY
+        where PM_IDX = #{PM_IDX} AND HISTOYR_GUBUN ='APPROVAL'
+        order by HISTORY_INSERT_DATE DESC
+        ) T1
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="getOrignHalgData" parameterType="int" resultType="partDetailHalg">
+        SELECT *
+        FROM
+        (
+        select HALOGEN_IDX, PM_IDX, HALOGEN_CONFIRM_DATE, HALOGEN_CL, HALOGEN_BR, HALOGEN_CLBR, HALOGEN_F, HALOGEN_I, HALOGEN_FILE_NAME, HALOGEN_FILE_PATH
+        from SC_PART_MGMT_DETAIL_HALOGEN_HISTORY
+        where PM_IDX = #{PM_IDX} AND HISTOYR_GUBUN ='APPROVAL'
+        order by HISTORY_INSERT_DATE DESC
+        ) T1
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="getOrignEtcData" parameterType="int" resultType="partDetailEtc">
+        SELECT *
+        FROM
+        (
+        select ETC_IDX, PM_IDX, ETC_CONFIRM_DATE, ETC_ANALYSE_ENTRY, ETC_ANALYSE_RESULT, ETC_FILE_NAME, ETC_FILE_PATH
+        from SC_PART_MGMT_DETAIL_ETC_HISTORY
+        where PM_IDX = #{PM_IDX} AND HISTOYR_GUBUN ='APPROVAL'
+        order by HISTORY_INSERT_DATE DESC
+        ) T1
+        WHERE ROWNUM = 1
+    </select>
+
+<!--  파일다운로드  -->
+
+    <select id="getMsdsFileData" parameterType="int" resultType="Map">
+        SELECT MSDS_FILE_NAME as FILE_NAME, MSDS_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_MSDS
+        WHERE MSDS_IDX=#{idx}
+    </select>
+    <select id="getRohsFileData" parameterType="int" resultType="Map">
+        SELECT ROHS_FILE_NAME as FILE_NAME, ROHS_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_ROHS
+        WHERE ROHS_IDX=#{idx}
+    </select>
+    <select id="getHalgFileData" parameterType="int" resultType="Map">
+        SELECT HALOGEN_FILE_NAME as FILE_NAME, HALOGEN_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_HALOGEN
+        WHERE HALOGEN_IDX=#{idx}
+    </select>
+    <select id="getEtcFileData" parameterType="int" resultType="Map">
+        SELECT ETC_FILE_NAME as FILE_NAME, ETC_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_ETC
+        WHERE ETC_IDX=#{idx}
+    </select>
+    <select id="getDetailSvhcFileData" parameterType="int" resultType="Map">
+        SELECT  FILE_PATH,FILE_NAME
+        FROM SC_PART_MGMT_SVHC_DATA
+        WHERE SVHC_IDX=#{idx}
+    </select>
+    <select id="getDetailDeclFileData" parameterType="int" resultType="Map">
+        SELECT  FILE_PATH,FILE_NAME
+        FROM SC_PART_MGMT_DECLARATION_DATA
+        WHERE DECL_IDX=#{idx}
+    </select>
+    <select id="getSccsFileData" parameterType="int" resultType="Map">
+        SELECT SCCS_FILE_NAME as FILE_NAME, SCCS_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_SCCS
+        WHERE SCCS_IDX=#{idx}
+    </select>
+    <select id="getIngredFileData" parameterType="int" resultType="Map">
+        SELECT INGRED_FILE_NAME as FILE_NAME, INGRED_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_INGRED
+        WHERE INGRED_IDX=#{idx}
+    </select>
+    <select id="getGuarantDataFileData" parameterType="int" resultType="Map">
+        SELECT GUARANT_FILE_NAME as FILE_NAME, GUARANT_FILE_PATH as FILE_PATH
+        FROM SC_PART_MGMT_DETAIL_GUARANT
+        WHERE GUARANT_IDX=#{idx}
+    </select>
+
+    <update id="initConfirmChk" parameterType="int">
+        BEGIN
+
+            UPDATE SC_PART_MGMT_DETAIL_MSDS
+            SET MSDS_CONFIRM_CHK =NULL
+
+            UPDATE SC_PART_MGMT_DETAIL_ROHS
+            SET ROHS_CONFIRM_CHK =NULL
+
+            UPDATE SC_PART_MGMT_SVHC_DATA
+            SET CONFIRM_CHK =NULL
+
+            UPDATE SC_PART_MGMT_DECLARATION_DATA
+            SET CONFIRM_CHK =NULL
+
+            UPDATE SC_PART_MGMT_DETAIL_SCCS
+            SET CONFIRM_CHK =NULL
+        END;
+    </update>
 
 
 

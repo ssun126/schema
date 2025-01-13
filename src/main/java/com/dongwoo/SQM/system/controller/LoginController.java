@@ -3,6 +3,9 @@ package com.dongwoo.SQM.system.controller;
 import com.dongwoo.SQM.board.dto.Criteria;
 import com.dongwoo.SQM.common.util.JWTSecretKeyUtils;
 import com.dongwoo.SQM.config.security.FormWebAuthenticationDetails;
+import com.dongwoo.SQM.siteMgr.dto.UserMgrDTO;
+import com.dongwoo.SQM.siteMgr.repository.UserMgrRepository;
+import com.dongwoo.SQM.siteMgr.service.UserMgrService;
 import com.dongwoo.SQM.system.dto.LoginDTO;
 import com.dongwoo.SQM.config.security.UserCustom;
 import com.dongwoo.SQM.system.dto.UserInfoCompanyUserDTO;
@@ -42,6 +45,8 @@ public class LoginController {
     private final LoginService loginService;
 
     private final MemberService memberService;
+    private final UserMgrService userMgrService;
+
 
     @GetMapping("/login")
     public String loginForm(@RequestParam(value="error", required = false)String error,
@@ -60,6 +65,24 @@ public class LoginController {
         log.info("comUserIdx======"+comUserIdx);
 
         LoginDTO loginResult = loginService.login(loginDTO);
+
+        //로그인 세션에 메일담기.
+        UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
+        parmaDTO.setCOM_USER_IDX(comUserIdx);
+        List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);
+
+        String email = "" ;
+        for (UserInfoCompanyUserDTO user : companyUserList) {
+            if (user.getCOM_USER_IDX() == comUserIdx) {
+                email = user.getUSER_EMAIL();
+            }
+        }
+        UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        user.setEMAIL(email);
+        //로그인 세션에 메일담기.
+
+        log.info("loginDwUserEmail======"+user.getEMAIL());
+
         if (loginResult != null) {
             if (loginResult.getUSER_GUBN().equals("1")) {
                 // OTP 인증번호 체크
@@ -175,7 +198,7 @@ public class LoginController {
 
             UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
             parmaDTO.setCOM_USER_IDX(comUserIdx);
-            List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);
+            List<UserInfoCompanyUserDTO> companyUserList = memberService.findByMemberInfoAll(parmaDTO);  //업체는 여기서 이메일 세션처리
 
             String email = "" ;
             for (UserInfoCompanyUserDTO user : companyUserList) {
@@ -186,6 +209,8 @@ public class LoginController {
 
             //메일 발송.!! sendEmail(String recipientEmail, String subject, String content)
             log.info("OTP 메일 발송.!! === "+" email:"+email + " OTP:" + randomOtp);
+            UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            user.setEMAIL(email);
 
             return ResponseEntity.ok("OK|" + randomOtp);
 
@@ -335,6 +360,7 @@ public class LoginController {
         int comUserIdx = details.getComUserIdx();
         log.info("authentication4======"+auth);
 
+
         if(auth.isAuthenticated()){
             // login 성공
             log.info("login======"+user.getUSER_NAME());
@@ -344,6 +370,8 @@ public class LoginController {
             log.info("user======"+user);
             for (GrantedAuthority authority : auth.getAuthorities()) {
                 if(!authority.getAuthority().equals("ROLE_ADMIN")){
+                    //업체
+
                     //공동 작업자  COM_USER_IDX 가져오기
                     UserInfoCompanyUserDTO parmaDTO = new UserInfoCompanyUserDTO();
                     parmaDTO.setCOM_CODE(user.getCOM_CODE()); //위에서 만들어진 사용자 IDX
@@ -355,8 +383,18 @@ public class LoginController {
                             String comUserName = userInfoCompanyUserDTO.getUSER_NAME();
                             user.setCOM_USER_IDX(comUserIdx);
                             user.setUSER_NAME(comUserName);
+                            user.setEMAIL(userInfoCompanyUserDTO.getUSER_EMAIL());
                         }
                     }
+                }else{
+                    //동우 유저
+                    String userId = user.getUSER_ID();
+                    UserMgrDTO userDto = userMgrService.findUserMgrById(userId);
+
+                    user.setEMAIL(userDto.getEMAIL()) ;
+                    log.info("loginDwUserEmail======"+user.getEMAIL());
+                    log.info("userDto.loginDwUserEmail======"+userDto.getEMAIL());
+
                 }
                 log.info(authority.getAuthority());
             }

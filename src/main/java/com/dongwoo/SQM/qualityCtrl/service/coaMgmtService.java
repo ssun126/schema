@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,19 @@ public class coaMgmtService {
         return coaMgmtRepository.getUserList(params);
     }
 
+    public List<HashMap> getMaterialListCoa(String code) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("COM_CODE", code);
+        return coaMgmtRepository.getMaterialListCoa(params);
+    }
+
+    public List<HashMap> getMaterialFactoryList(String vendorId , String materialId  , String selLang) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("vendorId", vendorId);
+        params.put("materialId", materialId);
+        params.put("TOKEN_USER_LANG", selLang);
+        return coaMgmtRepository.getMaterialFactoryList(params);
+    }
 
     public List<coaMgmtDTO> getCOAList(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getCOAList(coaMgmtDTO);
@@ -61,6 +75,130 @@ public class coaMgmtService {
 
     public int copyCOADetail(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.copyCOADetail(coaMgmtDTO);
+    }
+
+
+    public int delCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.delCOAMaster(coaMgmtDTO);
+    }
+
+    public int delCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.delCOADetail(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO regCheck(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.regCheck(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO regSpecCheck(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.regSpecCheck(coaMgmtDTO);
+    }
+
+    public  Map<String, Object> regCheck(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.regCheck(parameterMap);
+    }
+
+    public  Map<String, Object> regSpecCheck(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.regSpecCheck(parameterMap);
+    }
+
+
+    public String getStatusCOAMasterByPK(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.getStatusCOAMasterByPK(coaMgmtDTO);
+    }
+
+    public coaMgmtDTO getMaterial(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.getMaterial(coaMgmtDTO);
+    }
+
+    public LinkedHashMap<String,Object> getMaterial(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getMaterial(parameterMap);
+    }
+
+    public coaMgmtDTO interfaceLimsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceLimsCOAMasterData(coaMgmtDTO);
+    }
+
+    public List<coaMgmtDTO> interfaceLimsCOADetailData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceLimsCOADetailData(coaMgmtDTO);
+    }
+
+
+
+    public int interfaceCOAMaster(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceCOAMaster(coaMgmtDTO);
+    }
+
+    public int interfaceCOADetail(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceCOADetail(coaMgmtDTO);
+    }
+
+
+    public coaMgmtDTO interfaceDqmsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceDqmsCOAMasterData(coaMgmtDTO);
+    }
+
+    public List<coaMgmtDTO> interfaceDqmsCOADetailData(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.interfaceDqmsCOADetailData(coaMgmtDTO);
+    }
+
+    public int interfaceCOAProcedure(String DB_LINK_TARGET_APPLY) {
+        return coaMgmtRepository.interfaceCOAProcedure(DB_LINK_TARGET_APPLY);
+    }
+
+    public int insertCOAListDqms(List<coaMgmtDTO> masterList , List<coaMgmtDTO> detailList ) {
+        //테이블 또는 뷰가 존재하지 않습니다
+        int testSeq = 0 ;
+        for (int i = 0 ; i < masterList.size() ; i ++) {
+          //  coaMgmtRepository.interfaceDqmsCOAMaster(masterList.get(i));
+            testSeq++;
+
+        }
+        //테이블 또는 뷰가 존재하지 않습니다
+        for (int i = 0 ; i < detailList.size() ; i ++) {
+            //coaMgmtRepository.interfaceDqmsCOADetail(detailList.get(i));
+
+            testSeq++;
+        }
+
+        return  testSeq ;
+    }
+
+
+    //메일 발송자 가져오기
+    public List<HashMap> getEmailTargetUser(Map<String, Object> params) {
+        return coaMgmtRepository.getEmailTargetUser(params);
+    }
+
+
+    public int updateCOAStatus(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.updateCOAStatus(coaMgmtDTO);
+    }
+
+
+    public int insertCOADFile(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOADFile(parameterMap);
+    }
+
+    public List<LinkedHashMap<String,Object>> getSpecList(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getSpecList(parameterMap);
+    }
+
+
+    public int getExistCount(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getExistCount(parameterMap);
+    }
+
+    public Object insertCOAMaster(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOAMaster(parameterMap);
+    }
+
+    public Object insertCOADetail(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOADetail(parameterMap);
+    }
+
+    public String parseDate(String mfDate) {
+        return coaMgmtRepository.parseDate(mfDate);
     }
 
 }

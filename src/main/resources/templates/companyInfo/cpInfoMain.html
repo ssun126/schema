@@ -535,7 +535,8 @@
               },
             success: function(response) {
                 if(response.status === "success") {
-                    showAlert('success', response.message);
+                    //showAlert('success', response.message);
+                    Common.Msg(siteLang.getLang(response.message));
                     const row = document.getElementById('idListRow-' + userIdx );
                     if (row) {
                         row.remove();

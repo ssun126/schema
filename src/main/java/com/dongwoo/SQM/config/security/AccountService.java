@@ -59,6 +59,8 @@ public class AccountService  implements UserDetailsService {
                 , loginDTO.getCOM_CODE()
                 , loginDTO.getCOM_NAME()
                 , loginDTO.getUSER_NAME() // 이름
+                ,null
+                ,loginDTO.getUSER_ID()
         );
 
         return userCustom;

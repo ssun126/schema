@@ -6,18 +6,25 @@ import com.dongwoo.SQM.siteMgr.service.DeclarationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,53 +52,99 @@ public class DeclarationController {
         return "/deClarationList/list";
     }
 
-    @PostMapping("/declaration/upload")
-    public String upload_Declaration(@RequestParam(value = "file")MultipartFile file) throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-        XSSFSheet worksheet = workbook.getSheetAt(0);
-
+    //@PostMapping("/declaration/upload")
+    @RequestMapping("/declaration/upload")
+    public ResponseEntity<?> upload_Declaration(@RequestParam(value = "file")MultipartFile file) throws IOException {
+        //xlsx 인지 xls 인지 구분
+        String fileName = file.getOriginalFilename();
         List<DeclarationDTO> declarationDTOList = new ArrayList<>();
         int declCnt = 0;
-
-        for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
-            declCnt++;
-            DeclarationDTO declarationDTO = new DeclarationDTO();
-
-            DataFormatter formatter = new DataFormatter();
-            XSSFRow row = worksheet.getRow(i);
-
-            String DECL_NUM = formatter.formatCellValue(row.getCell(1));
-            String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
-            String DECL_NAME = formatter.formatCellValue(row.getCell(3));
-            String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
-            String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
-            String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
-            String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+        if(fileName.endsWith(".xlsx")){
+            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
+            XSSFSheet worksheet = workbook.getSheetAt(0);
 
 
-            log.info("엑셀 값 : "+declCnt+"!!!!!" +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
-            declarationDTO.setDECL_IDX(declCnt);
-            declarationDTO.setDECL_NUM(DECL_NUM);
-            declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
-            declarationDTO.setDECL_NAME(DECL_NAME);
-            declarationDTO.setDECL_CASNUM(DECL_CASNUM);
-            declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
-            declarationDTO.setDECL_CLASS(DECL_CLASS);
-            declarationDTO.setDECL_GROUND(DECL_GROUND);
 
-            declarationDTOList.add(declarationDTO);
 
+            for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
+                declCnt++;
+                DeclarationDTO declarationDTO = new DeclarationDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                XSSFRow row = worksheet.getRow(i);
+
+                String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+
+
+                log.info("엑셀 값 : "+declCnt+"!!!!!" +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                declarationDTO.setDECL_IDX(declCnt);
+                declarationDTO.setDECL_NUM(DECL_NUM);
+                declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                declarationDTO.setDECL_NAME(DECL_NAME);
+                declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                declarationDTO.setDECL_CLASS(DECL_CLASS);
+                declarationDTO.setDECL_GROUND(DECL_GROUND);
+
+                declarationDTOList.add(declarationDTO);
+
+            }
+
+        }else if(fileName.endsWith(".xls")){
+            HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
+            HSSFSheet worksheet = workbook.getSheetAt(0);
+
+            for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
+                declCnt++;
+                DeclarationDTO declarationDTO = new DeclarationDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                HSSFRow row = worksheet.getRow(i);
+
+                String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+
+
+                log.info("엑셀 값 : "+declCnt+"!!!!!" +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                declarationDTO.setDECL_IDX(declCnt);
+                declarationDTO.setDECL_NUM(DECL_NUM);
+                declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                declarationDTO.setDECL_NAME(DECL_NAME);
+                declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                declarationDTO.setDECL_CLASS(DECL_CLASS);
+                declarationDTO.setDECL_GROUND(DECL_GROUND);
+
+                declarationDTOList.add(declarationDTO);
+
+            }
+
+        }else{
+            return ResponseEntity.ok("|||[ERROR]||| Invalid file format. Only .xls and .xlsx are supported.");
         }
+
 
         try{
             //전체삭제
             declarationService.deleteAll();
             declarationService.insert_deClarationBulk(declarationDTOList);
         }catch (SQLException e){
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
+            return ResponseEntity.ok("|||[ERROR]|||" + e.getMessage());
         }
 
-        return "redirect:/admin/siteMgr/declarationList";
+        return ResponseEntity.ok("OK");
 
     }
 }

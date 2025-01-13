@@ -671,6 +671,17 @@ Common.Contains = function (strValue, strCheck) {
         return true;
 }
 
+//값체크 체크 문자열로 시작하는 값 찾기
+//strValue(string) : 원본문자열, strCheck(string) : 체크문자열
+Common.StartContains = function (strValue, strCheck) {
+    if (strValue == undefined || strValue == null)
+        return false;
+
+    // 정규식: strCheck로 시작하는 값을 찾음
+    const regex = new RegExp('^'+strCheck);
+    return regex.test(strValue);
+}
+
 //===========================================================================================
 //제목 : Ajax
 //===========================================================================================
@@ -1785,6 +1796,30 @@ Common.Validate = function (FormObj) {
 
             if (!Common.ChkPwd($.trim($(this).val()))) {
                 Common.Msg(siteLang.getLang("비밀번호를 확인하세요.<br>(영문,숫자를 혼합하여 10~20자 이내)"));
+                RtnValue = false;
+                return false;
+            }
+        }
+        //khs add
+        else if(typeof $(this).attr("type") != "undefined" && typeof $(this).attr("datePickerControl")!= "undefined" && $(this).val() != ""){
+            var result = true;
+            var thisObj = $(this);
+            //var value = $(this).val();
+            try {
+                var date = thisObj.val().split("-");
+                var y = parseInt(date[0], 10),
+                    m = parseInt(date[1], 10),
+                    d = parseInt(date[2], 10);
+
+                let dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+                RtnValue = dateRegex.test(d+'-'+m+'-'+y);
+                if(!RtnValue){
+                    Common.Msg(siteLang.getLang("유효하지 않은 일자 입니다."));
+                    RtnValue = false;
+                    return false;
+                }
+            } catch (err) {
+                Common.Msg(siteLang.getLang("유효하지 않은 일자 입니다."));
                 RtnValue = false;
                 return false;
             }

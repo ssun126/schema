@@ -22,9 +22,18 @@ public class partDetailDeclarDTO {
     private String APPLICABLE_NO;
     @JsonProperty("NONE_APPLICABLE_NO")
     private String NONE_APPLICABLE_NO;
+    @JsonProperty("DECL_REMARK")
+    private String DECL_REMARK;
 
     @JsonProperty("WARRANTY_ITEM")
     private String WARRANTY_ITEM;
+    @JsonProperty("CONFIRM_CHK")
+    private String CONFIRM_CHK;
+
+    @JsonProperty("SEND_FILE_PATH")
+    private String SEND_FILE_PATH;
+    @JsonProperty("SEND_FILE_NAME")
+    private String SEND_FILE_NAME;
 
     @JsonProperty("INFO_FLAG")
     private String INFO_FLAG;
