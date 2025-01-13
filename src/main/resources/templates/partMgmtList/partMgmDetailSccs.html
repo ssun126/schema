@@ -211,9 +211,15 @@
                     <div class="cui_items_wrap" data-direction="column">
                         <div class="item_content">
                             <label class="cui_checkbox">
-                                <input type="checkbox" name="CONFIRM_CHK" th:checked="${sccsDTO.CONFIRM_CHK == ' ' ? false:sccsDTO.CONFIRM_CHK}"><i></i>
+                                <input type="checkbox" name="SCCS_CONFIRM_CHK" th:checked="${sccsDTO.SCCS_CONFIRM_CHK == ' ' ? false:sccsDTO.SCCS_CONFIRM_CHK}"><i></i>
                                 <span>전자 보증서 제출</span>
                             </label>
+
+                            <label class="cui_checkbox">
+                                <input type="checkbox" name="INGRED_CONFIRM_CHK" th:checked="${ingredDTO.INGRED_CONFIRM_CHK == ' ' ? false:ingredDTO.INGRED_CONFIRM_CHK}"><i></i>
+                                <span>MSDS 전자 보증서 제출</span>
+                            </label>
+
                         </div>
                     </div>
                 </div>
@@ -429,12 +435,12 @@
             });
 
             //한번 승인 후 다시 들어온 경우
-            if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){
-                if(!$("input[name=CONFIRM_CHK]").is(":checked")){
-                    Common.Msg(siteLang.getLang("보증내역 재확인에 체크 해주세요"));
-                    return;
-                }
-            }
+<!--            if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){-->
+<!--                if(!$("input[name=CONFIRM_CHK]").is(":checked")){-->
+<!--                    Common.Msg(siteLang.getLang("보증내역 재확인에 체크 해주세요"));-->
+<!--                    return;-->
+<!--                }-->
+<!--            }-->
 
 
             if(!isValid){
@@ -475,6 +481,10 @@
                             });
 
                         }
+                    }else if(response.indexOf("|||[ERROR]|||")>-1){
+                         var mString = response.replace("|||[ERROR]|||", "");
+                         Common.Msg(siteLang.getLang(mString));
+                         return;
                     }else if (response.substring(0, 7) == "NEXT|||"){
                         Common.Msg(siteLang.getLang("요청되었습니다."), {
                             mode : "msg"
