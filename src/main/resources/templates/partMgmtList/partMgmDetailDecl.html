@@ -159,7 +159,7 @@
                 <fieldset id="declDataFieldset" style="display:none;">
                     <input type="hidden" name="APPLICABLE_NO" th:value="${declDTO.APPLICABLE_NO}">
                     <input type="hidden" name="NONE_APPLICABLE_NO" th:value="${declDTO.NONE_APPLICABLE_NO}">
-                    <input type="hidden" name="SVHC_REMARK" th:value="${declDTO.DECL_REMARK}">
+                    <input type="hidden" name="DECL_REMARK" th:value="${declDTO.DECL_REMARK}">
                     <div class="cui_jqGrid_section">
                         <div class="cui_jqGrid_head">
                             <div class="jqGrid_label"> &nbsp;</div>
@@ -550,7 +550,13 @@
             }
 
             for(var l = 0; l < ArrRemark.length; l++ ){
-                if( ArrRemark[l].indexOf(dataJson[i].SVHC_NUM+":") > -1) dataJson[i].SVHC_REMARK = ArrRemark[l].split(':')[1];
+                if (dataJson[i].DECL_NUM.trim() !== "") {
+                    if( ArrRemark[l].indexOf(dataJson[i].DECL_NUM+":") > -1) dataJson[i].DECL_REMARK = ArrRemark[l].split(':')[1];
+                }else{
+                    if( ArrRemark[l].indexOf(dataJson[i].DECL_SUB_NUM+":") > -1) dataJson[i].DECL_REMARK = ArrRemark[l].split(':')[1];
+                }
+
+
             }
         }
 
@@ -890,7 +896,8 @@
                             }
                         }
                     }
-                    if(!flagY && flag !== 'write' && stat !== 'save'){
+                    //if(!flagY && flag !== 'write' && stat !== 'save'){
+                    if(!flagY && stat){
                         //Common.Msg(siteLang.getLang(grid.pdata[j]["DECL_NUM"]+"하위의 값 중 Y로 체크된 것이 없습니다"));
                         Message=grid.pdata[j]["DECL_NUM"]+"하위의 값 중 Y로 체크된 것이 없습니다";
                         return Message;
@@ -908,7 +915,8 @@
                 //$("input[name=APPLICABLE_NO]").val(idxsY);
                 //$("input[name=NONE_APPLICABLE_NO]").val(idxsN);
 
-                if( flag !== 'write' && stat !== 'save' ){
+                //if( flag !== 'write' && stat !== 'save' ){
+                if(stat){
                     var num = grid.pdata[j]["DECL_NUM"].trim() === ''? grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
                     Message= num+"의 값이 없습니다";
                     return Message;
@@ -928,6 +936,7 @@
         if(gubun !== 'imsi'){
            $("input[name=APPLICABLE_NO]").val(idxsY);
            $("input[name=NONE_APPLICABLE_NO]").val(idxsN);
+           $("input[name=DECL_REMARK]").val(idxsRemark);
         }
 
         return Message;

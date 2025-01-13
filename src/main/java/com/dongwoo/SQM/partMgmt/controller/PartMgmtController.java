@@ -29,6 +29,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,13 +38,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -587,19 +586,15 @@ public class PartMgmtController {
 //        String saveMode = GetParam(request,"SaveMode","");
 //
             String MSDS_IDX = GetParam(request, "MSDS_IDX", "");
-//        String MSDS_REG_DATE = GetParam(request,"MSDS_REG_DATE","");
-//        String MSDS_LANG = GetParam(request,"MSDS_LANG","");
-//        String MSDS_APPROVAL_NUM = GetParam(request,"MSDS_APPROVAL_NUM","");
-//        String MSDS_FILE_NAME = GetParam(request,"MSDS_FILE_NAME","");
-//        String MSDS_FILE_PATH = GetParam(request,"MSDS_FILE_PATH","");
-//        String MSDS_PART_CODE = GetParam(request,"MSDS_PART_CODE","");
-//        String MSDS_PART_NAME = GetParam(request,"MSDS_PART_NAME","");
+
             //msds file
-            if (msdsDTO.getMSDS_FILE_STATUS().equals("DEL")) {
-                msdsDTO.setMSDS_FILE_NAME("");
-                msdsDTO.setMSDS_FILE_PATH("");
-            }
-            if(msdsFile != null){
+//            if (msdsDTO.getMSDS_FILE_STATUS().equals("DEL")) {
+//                msdsDTO.setMSDS_FILE_NAME("");
+//                msdsDTO.setMSDS_FILE_PATH("");
+//            }
+            partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
+
+            if(msdsFile != null) {
                 if (!msdsFile.isEmpty()) {
                     String msds_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
                     String msds_filename = msdsFile.getOriginalFilename();
@@ -610,6 +605,59 @@ public class PartMgmtController {
                     msdsDTO.setMSDS_FILE_PATH(msds_filepath);
 
                 }
+            }else{
+                msdsDTO.setMSDS_FILE_NAME(OrigMsdsDTO.getMSDS_FILE_NAME());
+                msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
+            }
+
+            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+            if( !appData.equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+
+                String MsdsCheck = "";
+
+                partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
+                partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
+
+                boolean changeData = false; //바뀐 데이터가 없으면 저장 안됨
+                String chkData = "";
+                chkData=compareObjects(msdsDTO,OrigMsdsDTO);
+                if(!chkData.equals("")) {
+                    String errMessage ="";
+                    String[] spData = chkData.split("\\|");
+                    for(int i = 0; i<spData.length; i++){
+                        String FieldName = spData[i].split(":")[0];
+                        //날짜 데이터 바뀌었을 때
+                        if(FieldName.endsWith("_DATE")){
+                            if( msdsDTO.getMSDS_CONFIRM_CHK() == null) {
+                                errMessage = "|||[ERROR]|||MSDS 전자보증서 제출 확인 체크를 해주세요";
+                            }
+                            //return ResponseEntity.ok("NEXT|||"+PM_IDX);
+                        }else{
+                            // 여기 들어오는 것 자체가 바뀐 내용이 있는 것.
+                            changeData = true;
+                        }
+                    }
+                    // 날짜만! 바뀔때만 보증 체크해줘야함
+                    if( !changeData && !errMessage.equals("")){
+                        return ResponseEntity.ok("|||[ERROR]|||"+errMessage);
+                    }
+                    // 변경된 데이터가 있고
+                    if( (changeData && msdsDTO.getMSDS_CONFIRM_CHK() != null) ){
+                        return ResponseEntity.ok("|||[ERROR]||| 갱신된 데이터가 존재합니다. MSDS 전자보증서 제출 확인 체크 해제해 주세요");
+                    }
+//                    if( errMessage.equals("") && msdsDTO.getMSDS_CONFIRM_CHK() != null ) {
+//                        return ResponseEntity.ok("|||[ERROR]||| MSDS 작성일을 변경하거나 MSDS 전자보증서 제출 확인 체크 해제해 주세요");
+//                    }
+
+
+
+                }else{
+                    //바뀐데이터가 없다
+                    return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
+                }
+
             }
 
             log.info("MSDS_IDX=================="+MSDS_IDX);
@@ -624,19 +672,7 @@ public class PartMgmtController {
 
             //Rohs
             String ROHS_IDX = GetParam(request, "ROHS_IDX", "");
-//        String ROHS_CONFIRM_DATE = GetParam(request,"ROHS_CONFIRM_DATE","");
-//        String ROHS_CD = GetParam(request,"ROHS_CD","");
-//        String ROHS_HG = GetParam(request,"ROHS_HG","");
-//        String ROHS_PB = GetParam(request,"ROHS_PB","");
-//        String ROHS_CR6 = GetParam(request,"ROHS_CR6","");
-//        String ROHS_PBBS = GetParam(request,"ROHS_PBBS","");
-//        String ROHS_PBDES = GetParam(request,"ROHS_PBDES","");
-//        String ROHS_DEHP = GetParam(request,"ROHS_DEHP","");
-//        String ROHS_BBP = GetParam(request,"ROHS_BBP","");
-//        String ROHS_DBP = GetParam(request,"ROHS_DBP","");
-//        String ROHS_DIBP = GetParam(request,"ROHS_DIBP","");
-//        String ROHS_FILE_NAME = GetParam(request,"ROHS_FILE_NAME","");
-//        String ROHS_FILE_PATH = GetParam(request,"ROHS_FILE_PATH","");
+
 
             //ROHS file
             //if (!rohsFile.isEmpty()) {
@@ -663,12 +699,7 @@ public class PartMgmtController {
 
             //halogen
             String HALOGEN_IDX = GetParam(request, "HALOGEN_IDX", "");
-//        String HALOGEN_CONFIRM_DATE = GetParam(request,"HALOGEN_CONFIRM_DATE","");
-//        String HALOGEN_CL = GetParam(request,"HALOGEN_CL","");
-//        String HALOGEN_BR = GetParam(request,"HALOGEN_BR","");
-//        String HALOGEN_CLBR = GetParam(request,"HALOGEN_CLBR","");
-//        String HALOGEN_F = GetParam(request,"HALOGEN_F","");
-//        String HALOGEN_I = GetParam(request,"HALOGEN_I","");
+
 
             //HALOGEN FILE
             if (halgFile != null) {
@@ -889,8 +920,10 @@ public class PartMgmtController {
             }
 
             int yCnt = 0;
-            if(svhcDTO.getAPPLICABLE_NO().trim() != "" ) {
-                yCnt= svhcDTO.getAPPLICABLE_NO().split(",").length;
+            if(svhcDTO.getAPPLICABLE_NO() != null) {
+                if(svhcDTO.getAPPLICABLE_NO().trim() != "" ) {
+                    yCnt= svhcDTO.getAPPLICABLE_NO().split(",").length;
+                }
             }
             model.addAttribute("SVHC_YCNT", yCnt);
 
@@ -1636,7 +1669,8 @@ public class PartMgmtController {
                                                     , @RequestParam(value = "SCCS_FILE", required = false) MultipartFile sccsFile
                                                     , @RequestParam(value = "INGRED_FILE", required = false) MultipartFile ingredFile
                                                     , @ModelAttribute partDetailSccsDTO sccsDTO
-                                                    , @ModelAttribute partDetailIngredDTO ingredGDTO) {
+                                                    , @ModelAttribute partDetailIngredDTO ingredGDTO
+                                                    , @AuthenticationPrincipal UserCustom user) {
 
         int result = 0;
         String PM_PART_CODE = GetParam(request, "PM_PART_CODE", "");
@@ -1766,6 +1800,9 @@ public class PartMgmtController {
             partMgmtService.updateApprovalStatus(PM_IDX, "3");
             //체크 데이터 저장
             //partMgmtService.saveConfirmChkData();
+            //히스토리 데이터 저장, 해당내용은 이후 보증내역 유무에 사용함
+            int userIdx = user.getUSER_IDX();
+            partMgmtService.setHistoryData(PM_IDX,userIdx,"APPROVAL");
             //체크 init
             partMgmtService.initConfirmChk(PM_IDX);
             return ResponseEntity.ok("NEXT|||"+PM_IDX);
@@ -1857,6 +1894,8 @@ public class PartMgmtController {
         }
     }
 
+
+
     //파일명 인코딩
     private String encodeFileName(String filename) throws UnsupportedEncodingException {
         // Encode filename in UTF-8
@@ -1882,6 +1921,122 @@ public class PartMgmtController {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
         }
         return "";
+    }
+
+
+    /******************************************************************************
+     *
+     ****************************************************************************/
+    private String compareMsdsData(partDetailMsdsDTO dto, partDetailMsdsDTO origDto) {
+        StringBuilder differences = new StringBuilder();
+
+        if (!Objects.equals(dto.getMSDS_REG_DATE(), origDto.getMSDS_REG_DATE())) {
+            differences.append("MSDS_REG_DATE|");
+        }
+        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
+            differences.append("MSDS_LANG|");
+        }
+        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
+            differences.append("MSDS_APPROVAL_NUM|");
+        }
+        if (!Objects.equals(dto.getMSDS_FILE_PATH(), origDto.getMSDS_FILE_PATH()) && !Objects.equals(dto.getMSDS_FILE_NAME(), origDto.getMSDS_FILE_NAME())) {
+            differences.append("MSDS_FILE|");
+        }
+
+        return differences.toString();
+    }
+
+//    private String compareRohsData(partDetailRohsDTO dto, partDetailRohsDTO origDto) {
+//        StringBuilder differences = new StringBuilder();
+//
+//        if (!Objects.equals(dto.getrohs, origDto.getMSDS_REG_DATE())) {
+//            differences.append("MSDS File Name differs: ")
+//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
+//            differences.append("MSDS File Path differs: ")
+//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
+//            differences.append("MSDS Language differs: ")
+//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
+//        }
+//
+//        return differences.toString();
+//    }
+//
+//    private String compareHalgData(partDetailHalGDTO dto, partDetailHalGDTO origDto) {
+//        StringBuilder differences = new StringBuilder();
+//
+//        if (!Objects.equals(dto.getMSDS_REG_DATE(), origDto.getMSDS_REG_DATE())) {
+//            differences.append("MSDS File Name differs: ")
+//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
+//            differences.append("MSDS File Path differs: ")
+//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
+//            differences.append("MSDS Language differs: ")
+//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
+//        }
+//
+//        return differences.toString();
+//    }
+
+
+    public static String compareObjects(Object newDto, Object originDto) {
+        StringBuilder differences = new StringBuilder();
+
+        // 두 객체가 같은 클래스인지 확인
+        if (!newDto.getClass().equals(originDto.getClass())) {
+            return "Objects are of different types.";
+        }
+
+        // 클래스의 필드 가져오기
+        Field[] fields = newDto.getClass().getDeclaredFields();
+
+        for (Field field : fields) {
+            field.setAccessible(true); // private 필드 접근 가능 설정
+
+            try {
+                Object value1 = field.get(newDto);
+                Object value2 = field.get(originDto);
+
+                // INFO_FLAG 필드는 제외
+                if ("INFO_FLAG".equals(field.getName())) {
+                    continue;
+                }
+                if ("CONFIRM_CHK".equals(field.getName()) || field.getName().endsWith("CONFIRM_CHK")) {
+                    //if(value1.equals("DEL"))
+                    continue;
+                }
+                // 첨부파일은 따로하자
+                if ("FILE_STATUS".equals(field.getName()) || field.getName().endsWith("FILE_STATUS")) {
+                    //if(value1.equals("DEL"))
+                    continue;
+                }
+//                if ("FILE_NAME".equals(field.getName()) || field.getName().endsWith("FILE_NAME")) {
+//                    //if(value1.equals("DEL"))
+//                    continue;
+//                }
+//                if ("FILE_PATH".equals(field.getName()) || field.getName().endsWith("FILE_PATH")) {
+//                    //if(value1.equals("DEL"))
+//                    continue;
+//                }
+
+                // 값 비교
+                if (!Objects.equals(value1, value2)) {
+                    differences.append(field.getName()).append(": ")
+                            .append(value1).append(",").append(value2).append("|");
+                }
+            } catch (IllegalAccessException e) {
+                differences.append("Error accessing field '").append(field.getName()).append("': ")
+                        .append(e.getMessage()).append("\n");
+            }
+        }
+
+        return differences.toString().isEmpty() ? "" : differences.toString();
     }
 
 }

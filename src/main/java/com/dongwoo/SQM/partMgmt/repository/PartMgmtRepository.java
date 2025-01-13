@@ -199,13 +199,25 @@ public class PartMgmtRepository {
 
 
     public void initConfirmChk(int pmidx){
-        sql.update("partManagement.initConfirmChk1",pmidx);
-        sql.update("partManagement.initConfirmChk2",pmidx);
-        sql.update("partManagement.initConfirmChk3",pmidx);
-        sql.update("partManagement.initConfirmChk4",pmidx);
-        sql.update("partManagement.initConfirmChk5",pmidx);
-
+        sql.update("partManagement.initConfirmChk",pmidx);
     }
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** History set
+     *********************************************************************************************************************/
+    public void setHistoryData(int pmidx, int userIdx , String gubun) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("PM_IDX",pmidx);
+        map.put("USER_IDX",userIdx);
+        map.put("GUBUN",gubun);
+
+        sql.update("partManagement.setHistoryData",map);
+    }
+
+    public partDetailMsdsDTO getOrignMsdsData (int pmidx) { return sql.selectOne("partManagement.getOrignMsdsData",pmidx);}
+    public partDetailRohsDTO getOrignRohsData (int pmidx) { return sql.selectOne("partManagement.getOrignRohsData",pmidx);}
+    public partDetailHalGDTO getOrignHalgData (int pmidx) { return sql.selectOne("partManagement.getOrignHalgData",pmidx);}
 
 
     /*********************************************************************************************************************

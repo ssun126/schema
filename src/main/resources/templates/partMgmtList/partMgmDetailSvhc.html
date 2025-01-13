@@ -302,7 +302,7 @@
 		    $('#svhcFileFieldset').show();
 		    $('#svhcDataFieldset').hide();
 		    //초기화
-		    $("input[name=APPLICABLE_NO]").val('');
+		    //$("input[name=APPLICABLE_NO]").val('');
 		    //$("#gridArea").empty();
 		    $("#gridArea").pqGrid("refreshView");
         }
@@ -525,7 +525,7 @@
                                 row: { SVHC_YN : 'Y' }
                             });
 
-                            $("input[name=SVHC_YCNT]").val(rowList.length);
+                            $("span[name=SVHC_YCNT]").text(rowList.length);
                         }
                     }
                 }
