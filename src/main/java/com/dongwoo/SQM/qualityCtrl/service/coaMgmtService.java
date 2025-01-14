@@ -43,14 +43,15 @@ public class coaMgmtService {
     }
 
 
-    public List<HashMap> getMaterialFactoryList(String vendorId , String materialId  , String selLang) {
+    public List<HashMap> getMaterialFactoryListCoa(String vendorId , String materialId  , String selLang) {
         Map<String, Object> params = new HashMap<>();
         params.put("vendorId", vendorId);
         params.put("materialId", materialId);
         params.put("TOKEN_USER_LANG", selLang);
-        return coaMgmtRepository.getMaterialFactoryList(params);
+        return coaMgmtRepository.getMaterialFactoryListCoa(params);
     }
 
+    //COA LIST 검색
     public List<coaMgmtDTO> getCOAList(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getCOAList(coaMgmtDTO);
     }

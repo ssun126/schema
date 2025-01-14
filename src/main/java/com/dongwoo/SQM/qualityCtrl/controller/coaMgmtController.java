@@ -220,7 +220,7 @@ public class coaMgmtController {
         String vendorId = req.getParameter("vendorId");
         String materialId = req.getParameter("materialId");
         String selLang = getSelLangCookie(request,"DP");
-        return coaMgmtService.getMaterialFactoryList(vendorId ,materialId  ,selLang);
+        return coaMgmtService.getMaterialFactoryListCoa(vendorId ,materialId  ,selLang);
     }
 
     //COA LIST 검색
@@ -228,11 +228,6 @@ public class coaMgmtController {
     public ResponseEntity<?> getcoaList(@RequestBody coaMgmtDTO coaMgmtdto ,HttpServletRequest request) {
         try {
             System.out.println("Received scoreMgmtDTO: " + coaMgmtdto);
-
-//            reqParam.put("TOKEN_USER_ID", tokenInfo.get("USER_ID"));
-//            reqParam.put("TOKEN_USER_TYPE", tokenInfo.get("USER_TYPE"));  // MU , VU 구분 필요
-//            reqParam.put("TOKEN_USER_LANG", tokenInfo.get("USER_LANG"));
-//            reqParam.put("TOKEN_SITE_ID", tokenInfo.get("SITE_ID"));
 
             //로그인 사용자 정보
             UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -242,12 +237,11 @@ public class coaMgmtController {
                 user_type="AU";     //user_gubun :  관리자 , 사용자 권한 구분 확인
             }
             String user_id = user.getUsername();
-            coaMgmtdto.setTOKEN_USER_TYPE(user_type);
             String sUSER_LANG = getSelLangCookie(request,"DP");
+
+            coaMgmtdto.setTOKEN_USER_TYPE(user_type);
             coaMgmtdto.setTOKEN_USER_LANG(sUSER_LANG);
-            coaMgmtdto.setTOKEN_USER_ID("tykkim@lg.com"); //user_id 유저 매핑 해야됨.   test ===  >   tester  ,tykkim@lg.com
-
-
+            coaMgmtdto.setTOKEN_USER_ID(user_id);
 
             List<coaMgmtDTO> coaList = coaMgmtService.getCOAList(coaMgmtdto);
 

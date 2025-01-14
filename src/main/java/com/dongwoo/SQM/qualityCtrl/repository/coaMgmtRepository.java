@@ -34,7 +34,7 @@ public class coaMgmtRepository {
     }
 
     //COA 엑셀 등록 팝업 플랜트
-    public List<HashMap> getMaterialFactoryList(Map<String, Object> params) {
+    public List<HashMap> getMaterialFactoryListCoa(Map<String, Object> params) {
         return sql.selectList("coaMgmt.getMaterialFactoryListCoa", params);
     }
 
