@@ -52,6 +52,37 @@
         </if>
     </select>
 
+    <select id="getCoaMaterialList"  parameterType="HashMap" resultType="hashMap">
+        SELECT
+              FACTORY_ID
+            , FACTORY_NAME
+            , VENDOR_ID
+            , VENDOR_NAME
+            , MATERIAL_ID
+            , MATERIAL_NAME
+            , IF_TARGET
+            , IF_DATETIME
+            , TN_FLAG
+            , WETPR
+        FROM MATERIAL
+        WHERE
+        1=1
+        <if test="VENDOR_ID != null and VENDOR_ID != ''">
+            AND VENDOR_ID =#{VENDOR_ID}
+        </if>
+        <if test="FACTORY_ID != null and FACTORY_ID != ''">
+            AND FACTORY_ID =#{FACTORY_ID}
+        </if>
+        <if test="MATERIAL_ID != null and MATERIAL_ID != ''">
+            AND MATERIAL_ID =#{MATERIAL_ID}
+        </if>
+        <if test="MATERIAL_NAME != null and MATERIAL_NAME != ''">
+            AND MATERIAL_NAME =#{MATERIAL_NAME}
+        </if>
+
+    </select>
+
+
     <!--성적서 그리드-->
     <select id="getCOAList"  parameterType="coaMgmt" resultType="coaMgmt">
         SELECT
@@ -1013,23 +1044,6 @@
         AND FACTORY_ID = #{FACTORY_ID}
         AND LOT_NO = #{LOT_NO}
     </update>
-
-
-    <select id="getMaterialListCoa"  parameterType="HashMap" resultType="hashMap">
-        SELECT
-            PART_CODE,
-            PART_NAME,
-            COM_CODE,
-            PLANT_CODE,
-            PART_STATUS
-        FROM SC_PART_CODE
-        WHERE
-            1=1
-        <if test="COM_CODE != null and COM_CODE != ''">
-            AND COM_CODE =#{COM_CODE}
-        </if>
-
-    </select>
 
 
 

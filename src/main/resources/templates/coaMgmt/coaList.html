@@ -77,7 +77,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="cui_items_wrap" data-direction="left">
+                <div class="cui_items_wrap" data-direction="left"  id="searchMaterialList">
                     <strong class="item_label" data-langsid="자재"></strong>
                     <div class="item_content" id="searchMaterial">
                         <input class="cui_text_field" type="text" id="materialName" name="materialName"
@@ -374,7 +374,7 @@
    }
 
    var selpartMatrailOpen = function () {
-    Common.Dialog({ url : "/admin/companyInfo/materialList" });
+    Common.Dialog({ url : "/admin/qualityCtrl/materialList" });
    }
 
    var popCoaOpen = function (coaId, vendorId, materialId,factoryId ,lotNo) {
@@ -992,9 +992,9 @@ var excelUploadOpen = function () {
 }
 
 function searchMaterial(){
-    var url = "/admin/qualityCtrl/getMaterialListCoa";
+    var url = "/admin/qualityCtrl/getCoaMaterialList";
     var ReqInfo = new Common.RequestInfo();
-    ReqInfo.AddParameter("COM_CODE", document.getElementById('ddlUpVendor').value);
+    ReqInfo.AddParameter("searchVandorId", document.getElementById('ddlUpVendor').value);
     Common.Ajax(url, ReqInfo, function (data) {
        var dataJson = JSON.parse(data);
         setUpMaterialReset(dataJson);
@@ -1012,8 +1012,8 @@ function setUpMaterialReset(dataJson) {
 
     dataJson.forEach(function(material) {
             var option = document.createElement('option');
-            option.value = material.PART_CODE;
-            option.textContent = material.PART_NAME;
+            option.value = material.MATERIAL_ID;
+            option.textContent = material.MATERIAL_NAME;
             ddlUpMaterial.appendChild(option);
     });
 

@@ -592,7 +592,6 @@ public class PartMgmtController {
 //                msdsDTO.setMSDS_FILE_NAME("");
 //                msdsDTO.setMSDS_FILE_PATH("");
 //            }
-            partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
 
             if(msdsFile != null) {
                 if (!msdsFile.isEmpty()) {
@@ -605,60 +604,99 @@ public class PartMgmtController {
                     msdsDTO.setMSDS_FILE_PATH(msds_filepath);
 
                 }
-            }else{
-                msdsDTO.setMSDS_FILE_NAME(OrigMsdsDTO.getMSDS_FILE_NAME());
-                msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
             }
+
+
+
+            //Rohs
+            String ROHS_IDX = GetParam(request, "ROHS_IDX", "");
+
+            //ROHS file
+            //if (!rohsFile.isEmpty()) {
+            if (rohsFile != null) {
+                if (!rohsFile.isEmpty()) {
+                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, rohsFile);
+                    String etc_filename = rohsFile.getOriginalFilename();
+
+                    rohsDTO.setROHS_FILE_NAME(etc_filename);
+                    rohsDTO.setROHS_FILE_PATH(etc_filepath);
+                }
+            }
+
+
+
+            //halogen
+            String HALOGEN_IDX = GetParam(request, "HALOGEN_IDX", "");
+
+            //HALOGEN FILE
+            if (halgFile != null) {
+                if (!halgFile.isEmpty()) {
+                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, halgFile);
+                    String etc_filename = halgFile.getOriginalFilename();
+
+                    halGDTO.setHALOGEN_FILE_NAME(etc_filename);
+                    halGDTO.setHALOGEN_FILE_PATH(etc_filepath);
+                }
+
+            }
+
+
 
             //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
             String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
             String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
-            if( !appData.equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+            if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
 
-                String MsdsCheck = "";
-
+                partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
                 partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
                 partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
 
-                boolean changeData = false; //바뀐 데이터가 없으면 저장 안됨
-                String chkData = "";
-                chkData=compareObjects(msdsDTO,OrigMsdsDTO);
-                if(!chkData.equals("")) {
-                    String errMessage ="";
-                    String[] spData = chkData.split("\\|");
-                    for(int i = 0; i<spData.length; i++){
-                        String FieldName = spData[i].split(":")[0];
-                        //날짜 데이터 바뀌었을 때
-                        if(FieldName.endsWith("_DATE")){
-                            if( msdsDTO.getMSDS_CONFIRM_CHK() == null) {
-                                errMessage = "|||[ERROR]|||MSDS 전자보증서 제출 확인 체크를 해주세요";
-                            }
-                            //return ResponseEntity.ok("NEXT|||"+PM_IDX);
-                        }else{
-                            // 여기 들어오는 것 자체가 바뀐 내용이 있는 것.
-                            changeData = true;
-                        }
-                    }
-                    // 날짜만! 바뀔때만 보증 체크해줘야함
-                    if( !changeData && !errMessage.equals("")){
-                        return ResponseEntity.ok("|||[ERROR]|||"+errMessage);
-                    }
-                    // 변경된 데이터가 있고
-                    if( (changeData && msdsDTO.getMSDS_CONFIRM_CHK() != null) ){
-                        return ResponseEntity.ok("|||[ERROR]||| 갱신된 데이터가 존재합니다. MSDS 전자보증서 제출 확인 체크 해제해 주세요");
-                    }
-//                    if( errMessage.equals("") && msdsDTO.getMSDS_CONFIRM_CHK() != null ) {
-//                        return ResponseEntity.ok("|||[ERROR]||| MSDS 작성일을 변경하거나 MSDS 전자보증서 제출 확인 체크 해제해 주세요");
-//                    }
-
-
-
-                }else{
-                    //바뀐데이터가 없다
-                    return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
+                if(msdsFile == null ){
+                    msdsDTO.setMSDS_FILE_NAME(OrigMsdsDTO.getMSDS_FILE_NAME());
+                    msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
                 }
 
+                if(rohsFile == null){
+                    rohsDTO.setROHS_FILE_NAME(OrigRohsDTO.getROHS_FILE_NAME());
+                    rohsDTO.setROHS_FILE_PATH(OrigRohsDTO.getROHS_FILE_PATH());
+                }
+
+                if(halgFile == null){
+                    halGDTO.setHALOGEN_FILE_NAME(OrigHalgDTO.getHALOGEN_FILE_NAME());
+                    halGDTO.setHALOGEN_FILE_PATH(OrigHalgDTO.getHALOGEN_FILE_PATH());
+                }
+
+
+
+
+
+
+                String errorMsg  = "";
+                String chkVal = "";
+                String msdsChkData=compareObjects(msdsDTO,OrigMsdsDTO);
+                chkVal = msdsDTO.getMSDS_CONFIRM_CHK();
+                errorMsg = checkValidate(msdsChkData,chkVal,"MSDS");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                String rohsChkData=compareObjects(rohsDTO,OrigRohsDTO);
+                chkVal = rohsDTO.getROHS_CONFIRM_CHK();
+                errorMsg = checkValidate(rohsChkData,chkVal,"ROHS");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                String HalgChkData=compareObjects(halGDTO,OrigHalgDTO);
+                // rohs halg 는 보증 체크 함께함. 값은 rohs 에 있음
+                errorMsg = checkValidate(HalgChkData,chkVal,"HALOGEN");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+
+
             }
+
+
+
 
             log.info("MSDS_IDX=================="+MSDS_IDX);
             if (MSDS_IDX == "") {
@@ -669,25 +707,6 @@ public class PartMgmtController {
                 result += partMgmtService.updateMsdsData(msdsDTO);
             }
 
-
-            //Rohs
-            String ROHS_IDX = GetParam(request, "ROHS_IDX", "");
-
-
-            //ROHS file
-            //if (!rohsFile.isEmpty()) {
-            if (rohsFile != null) {
-                String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, rohsFile);
-                String etc_filename = rohsFile.getOriginalFilename();
-
-//            MSDS_FILE_NAME=etc_filename;
-//            MSDS_FILE_PATH = etc_filepath;
-                rohsDTO.setROHS_FILE_NAME(etc_filename);
-                rohsDTO.setROHS_FILE_PATH(etc_filepath);
-
-            }
-
-
             if (ROHS_IDX == "") {
                 //신규
                 result += partMgmtService.insertRohsData(rohsDTO);
@@ -696,29 +715,15 @@ public class PartMgmtController {
                 result += partMgmtService.updateRohsData(rohsDTO);
             }
 
-
-            //halogen
-            String HALOGEN_IDX = GetParam(request, "HALOGEN_IDX", "");
-
-
-            //HALOGEN FILE
-            if (halgFile != null) {
-                String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, halgFile);
-                String etc_filename = halgFile.getOriginalFilename();
-
-                halGDTO.setHALOGEN_FILE_NAME(etc_filename);
-                halGDTO.setHALOGEN_FILE_PATH(etc_filepath);
-
-            }
-
-
-            if (ROHS_IDX == "") {
+            if (HALOGEN_IDX == "") {
                 //신규
                 result += partMgmtService.insertHalogenData(halGDTO);
             } else {
                 //기존
                 result += partMgmtService.updateHalogenData(halGDTO);
             }
+
+
 
             //etc
             int EtcCount = Integer.parseInt(GetParam(request, "etcCount", "0"));
@@ -914,10 +919,10 @@ public class PartMgmtController {
             List<SvhcListDTO> partSvhcDTOList = new ArrayList<>();
             if(svhcDTO == null) {
                 svhcDTO = new PartDetailSvhcDTO();
-
-                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
-                svhcDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
+
+            BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("SVHC_ROW_COUNT");
+            svhcDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
 
             int yCnt = 0;
             if(svhcDTO.getAPPLICABLE_NO() != null) {
@@ -991,58 +996,20 @@ public class PartMgmtController {
             String fileName = files.getOriginalFilename();
             List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
 
+            Workbook workbook = null;
+            Sheet worksheet = null;
+
             if(fileName.endsWith(".xlsx")) {
-                XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
-                XSSFSheet worksheet = workbook.getSheetAt(0);
+                workbook = new XSSFWorkbook(files.getInputStream());
+                worksheet = workbook.getSheetAt(0);
 
 
-                for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
-                    SvhcListDTO svhcListDTO = new SvhcListDTO();
 
-                    DataFormatter formatter = new DataFormatter();
-                    XSSFRow row = worksheet.getRow(i);
-
-                    String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
-                    String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
-
-                    String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
-                    String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
-                    String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
-
-                    svhcListDTO.setSVHC_NUM(SVHC_NUM);
-                    svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
-                    svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
-                    svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
-                    svhcListDTO.setSVHC_YN(SVHC_YN);
-
-                    svhcListDTOList.add(svhcListDTO);
-                }
             }else if(fileName.endsWith(".xls")){
-                HSSFWorkbook workbook = new HSSFWorkbook(files.getInputStream());
-                HSSFSheet worksheet = workbook.getSheetAt(0);
+                workbook = new HSSFWorkbook(files.getInputStream());
+                worksheet = workbook.getSheetAt(0);
 
 
-                for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
-                    SvhcListDTO svhcListDTO = new SvhcListDTO();
-
-                    DataFormatter formatter = new DataFormatter();
-                    HSSFRow row = worksheet.getRow(i);
-
-                    String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
-                    String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
-
-                    String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
-                    String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
-                    String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
-
-                    svhcListDTO.setSVHC_NUM(SVHC_NUM);
-                    svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
-                    svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
-                    svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
-                    svhcListDTO.setSVHC_YN(SVHC_YN);
-
-                    svhcListDTOList.add(svhcListDTO);
-                }
             }else{
                 partSvhcListStr="|||[ERROR]||| Invalid file format. Only .xls and .xlsx are supported.";
                 PrintWriter printer = response.getWriter();
@@ -1050,6 +1017,28 @@ public class PartMgmtController {
                 printer.close();
 
                 return "blank";
+            }
+
+            for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
+                SvhcListDTO svhcListDTO = new SvhcListDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                Row row = worksheet.getRow(i);
+
+                String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
+                String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
+
+                String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
+                String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
+                String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
+
+                svhcListDTO.setSVHC_NUM(SVHC_NUM);
+                svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
+                svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
+                svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
+                svhcListDTO.setSVHC_YN(SVHC_YN);
+
+                svhcListDTOList.add(svhcListDTO);
             }
 
 
@@ -1111,6 +1100,26 @@ public class PartMgmtController {
         int PM_IDX = Integer.parseInt(GetParam(request, "PM_IDX", "0"));
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
+
+        //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+        String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+        String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+        if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+            //승인 이후 수정 시 SVHC 개정이 된다면
+            PartDetailSvhcDTO orgSvhcDTO = partMgmtService.getOrignSvhcData(PM_IDX);
+
+            int orgWarranty = Integer.parseInt(orgSvhcDTO.getWARRANTY_ITEM());
+            int Warranty = Integer.parseInt(svhcDTO.getWARRANTY_ITEM());
+
+             String orgConfirmDate = orgSvhcDTO.getCONFIRM_DATE();
+            String confirmDate = svhcDTO.getCONFIRM_DATE();
+            // 신규추가된 Row에 데이터 넣어준 후 확인일자 바꾸지 않았을 때 다음으로 넘어가지 않게끔 유효성 체크 추가
+            if(orgWarranty != Warranty && orgConfirmDate.equals(confirmDate)){
+                return ResponseEntity.ok("|||[ERROR]||| 보증항목이 변경되었습니다. 확인일자 변경이 필요합니다.");
+            }
+
+        }
+
 
         String blobData = GetParam(request, "blobData", "");
         String Warant = GetParam(request, "WARRANTY_ITEM", "");
@@ -1266,7 +1275,7 @@ public class PartMgmtController {
             if(declDTO == null) {
                 declDTO = new partDetailDeclarDTO();
 
-                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("DECLARATIONREV");
+                BaseConfigDTO baseConfigDTOInfo = BaseConfigService.getBaseConfig_InfoCode("DECLARATION_REV");
                 declDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
             model.addAttribute("declDTO",declDTO);
@@ -1331,78 +1340,56 @@ public class PartMgmtController {
 
             PrintWriter printer = response.getWriter();
 
+            Workbook workbook = null;
+            Sheet worksheet = null;
+
             if(fileName.endsWith(".xlsx")) {
-                XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
-                XSSFSheet worksheet = workbook.getSheetAt(0);
+                workbook = new XSSFWorkbook(files.getInputStream());
+                worksheet = workbook.getSheetAt(0);
 
 
-                for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
-                    DeclarationDTO declarationDTO = new DeclarationDTO();
 
-                    DataFormatter formatter = new DataFormatter();
-                    XSSFRow row = worksheet.getRow(i);
-
-                    String DECL_NUM = formatter.formatCellValue(row.getCell(1));
-                    String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
-                    String DECL_NAME = formatter.formatCellValue(row.getCell(3));
-                    String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
-                    String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
-                    String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
-                    String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
-                    String DECL_YN = formatter.formatCellValue(row.getCell(8));
-
-                    log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
-                    declarationDTO.setDECL_NUM(DECL_NUM);
-                    declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
-                    declarationDTO.setDECL_NAME(DECL_NAME);
-                    declarationDTO.setDECL_CASNUM(DECL_CASNUM);
-                    declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
-                    declarationDTO.setDECL_CLASS(DECL_CLASS);
-                    declarationDTO.setDECL_GROUND(DECL_GROUND);
-                    declarationDTO.setDECL_YN(DECL_YN);
-
-                    declarationDTOList.add(declarationDTO);
-
-                }
             }else if(fileName.endsWith(".xls")){
-                HSSFWorkbook workbook = new HSSFWorkbook(files.getInputStream());
-                HSSFSheet worksheet = workbook.getSheetAt(0);
+                workbook = new HSSFWorkbook(files.getInputStream());
+                worksheet = workbook.getSheetAt(0);
 
 
-                for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
-                    DeclarationDTO declarationDTO = new DeclarationDTO();
 
-                    DataFormatter formatter = new DataFormatter();
-                    HSSFRow row = worksheet.getRow(i);
-
-                    String DECL_NUM = formatter.formatCellValue(row.getCell(1));
-                    String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
-                    String DECL_NAME = formatter.formatCellValue(row.getCell(3));
-                    String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
-                    String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
-                    String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
-                    String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
-                    String DECL_YN = formatter.formatCellValue(row.getCell(8));
-
-                    log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
-                    declarationDTO.setDECL_NUM(DECL_NUM);
-                    declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
-                    declarationDTO.setDECL_NAME(DECL_NAME);
-                    declarationDTO.setDECL_CASNUM(DECL_CASNUM);
-                    declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
-                    declarationDTO.setDECL_CLASS(DECL_CLASS);
-                    declarationDTO.setDECL_GROUND(DECL_GROUND);
-                    declarationDTO.setDECL_YN(DECL_YN);
-
-                    declarationDTOList.add(declarationDTO);
-
-                }
             }else{
                 partDeclListStr="|||[ERROR]||| Invalid file format. Only .xls and .xlsx are supported.";
                 printer.print(partDeclListStr);
                 printer.close();
 
                 return "blank";
+            }
+
+            for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
+                DeclarationDTO declarationDTO = new DeclarationDTO();
+
+                DataFormatter formatter = new DataFormatter();
+                Row row = worksheet.getRow(i);
+
+                String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+                String DECL_YN = formatter.formatCellValue(row.getCell(8));
+
+                log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                declarationDTO.setDECL_NUM(DECL_NUM);
+                declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                declarationDTO.setDECL_NAME(DECL_NAME);
+                declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                declarationDTO.setDECL_CLASS(DECL_CLASS);
+                declarationDTO.setDECL_GROUND(DECL_GROUND);
+                declarationDTO.setDECL_YN(DECL_YN);
+
+                declarationDTOList.add(declarationDTO);
+
             }
 
 
@@ -1464,6 +1451,31 @@ public class PartMgmtController {
         int PM_IDX = Integer.parseInt(GetParam(request, "PM_IDX", "0"));
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
+
+
+        //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+        String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+        String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+        if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+
+            partDetailDeclarDTO orgDeclDTO = partMgmtService.getOrignDeclData(PM_IDX);
+
+            if(declFile == null){
+                declDTO.setFILE_NAME(orgDeclDTO.getFILE_NAME());
+                declDTO.setFILE_PATH(orgDeclDTO.getFILE_PATH());
+            }
+
+            String errorMsg  = "";
+            String chkVal = "";
+            String declChkData=compareObjects(declDTO,orgDeclDTO);
+            chkVal = declDTO.getCONFIRM_CHK();
+            errorMsg = checkValidate(declChkData,chkVal,"Declaration");
+
+            if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+
+        }
+
 
         String blobData = GetParam(request, "blobData", "");
         String Warant = GetParam(request, "WARRANTY_ITEM", "");
@@ -1685,6 +1697,8 @@ public class PartMgmtController {
 //
             String SCCS_IDX = GetParam(request, "SCCS_IDX","");
 
+
+
             //msds file
             //if (!msdsFile.isEmpty()) {
             if(sccsFile != null){
@@ -1698,15 +1712,6 @@ public class PartMgmtController {
                 }
             }
 
-            log.info("SCCS_IDX=================="+SCCS_IDX);
-            if (SCCS_IDX == "") {
-                //신규
-                result += partMgmtService.insertSccsData(sccsDTO);
-            } else {
-                //기존
-                result += partMgmtService.updateSccsData(sccsDTO);
-            }
-
 
             //Ingredent
             String INGRED_IDX = GetParam(request, "INGRED_IDX", "");
@@ -1715,12 +1720,61 @@ public class PartMgmtController {
             //Ingredent file
             //if (!rohsFile.isEmpty()) {
             if (ingredFile != null) {
-                String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, ingredFile);
-                String etc_filename = ingredFile.getOriginalFilename();
+                if (!ingredFile.isEmpty()) {
+                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, ingredFile);
+                    String etc_filename = ingredFile.getOriginalFilename();
 
-                ingredGDTO.setINGRED_FILE_NAME(etc_filename);
-                ingredGDTO.setINGRED_FILE_PATH(etc_filepath);
+                    ingredGDTO.setINGRED_FILE_NAME(etc_filename);
+                    ingredGDTO.setINGRED_FILE_PATH(etc_filepath);
+                }
+            }
 
+
+            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+            if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+
+                partDetailSccsDTO OrignSccsDTO = partMgmtService.getOrignSccsData(PM_IDX);
+                partDetailIngredDTO OrignIngredDTO = partMgmtService.getOrignIngredData(PM_IDX);
+
+                if(ingredFile != null){
+                    sccsDTO.setSCCS_FILE_NAME(OrignSccsDTO.getSCCS_FILE_NAME());
+                    sccsDTO.setSCCS_FILE_PATH(OrignSccsDTO.getSCCS_FILE_PATH());
+                }
+
+                if(ingredFile != null){
+                    ingredGDTO.setINGRED_FILE_PATH(OrignIngredDTO.getINGRED_FILE_NAME());
+                    ingredGDTO.setINGRED_FILE_PATH(OrignIngredDTO.getINGRED_FILE_PATH());
+                }
+
+                String errorMsg  = "";
+                String chkVal = "";
+                String sccsChkData=compareObjects(sccsDTO,OrignSccsDTO);
+                chkVal = sccsDTO.getSCCS_CONFIRM_CHK();
+                errorMsg = checkValidate(sccsChkData,chkVal,"SCCS");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                String rohsChkData=compareObjects(ingredGDTO,OrignIngredDTO);
+                chkVal = ingredGDTO.getINGRED_CONFIRM_CHK();
+                errorMsg = checkValidate(rohsChkData,chkVal,"성분명세서");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+            }
+
+
+
+
+
+            log.info("SCCS_IDX=================="+SCCS_IDX);
+            if (SCCS_IDX == "") {
+                //신규
+                result += partMgmtService.insertSccsData(sccsDTO);
+            } else {
+                //기존
+                result += partMgmtService.updateSccsData(sccsDTO);
             }
 
 
@@ -1804,7 +1858,7 @@ public class PartMgmtController {
             int userIdx = user.getUSER_IDX();
             partMgmtService.setHistoryData(PM_IDX,userIdx,"APPROVAL");
             //체크 init
-            partMgmtService.initConfirmChk(PM_IDX);
+            //partMgmtService.initConfirmChk(PM_IDX);
             return ResponseEntity.ok("NEXT|||"+PM_IDX);
         }
 
@@ -1946,43 +2000,62 @@ public class PartMgmtController {
         return differences.toString();
     }
 
-//    private String compareRohsData(partDetailRohsDTO dto, partDetailRohsDTO origDto) {
-//        StringBuilder differences = new StringBuilder();
-//
-//        if (!Objects.equals(dto.getrohs, origDto.getMSDS_REG_DATE())) {
-//            differences.append("MSDS File Name differs: ")
-//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
-//            differences.append("MSDS File Path differs: ")
-//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
-//            differences.append("MSDS Language differs: ")
-//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
-//        }
-//
-//        return differences.toString();
-//    }
-//
-//    private String compareHalgData(partDetailHalGDTO dto, partDetailHalGDTO origDto) {
-//        StringBuilder differences = new StringBuilder();
-//
-//        if (!Objects.equals(dto.getMSDS_REG_DATE(), origDto.getMSDS_REG_DATE())) {
-//            differences.append("MSDS File Name differs: ")
-//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
-//            differences.append("MSDS File Path differs: ")
-//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
-//        }
-//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
-//            differences.append("MSDS Language differs: ")
-//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
-//        }
-//
-//        return differences.toString();
-//    }
+    private String checkValidate(String ChkData,String confirmChk, String gubun){
+        boolean changeData = false; //바뀐 데이터가 없으면 저장 안됨
+        boolean datechange = false; //날짜 데이터
+        String errorMessage ="";
+
+        if(!ChkData.equals("")) {
+            String[] spData = ChkData.split("\\|");
+            for(int i = 0; i<spData.length; i++){
+                String FieldName = spData[i].split(":")[0];
+                //날짜 데이터 바뀌었을 때
+                if(FieldName.endsWith("_DATE")){
+                    datechange = true;
+//                            if( msdsDTO.getMSDS_CONFIRM_CHK() == null) {
+//                                errMessage = "|||[ERROR]|||MSDS 전자보증서 제출 확인 체크를 해주세요";
+//                                return ResponseEntity.ok("|||[ERROR]|||"+errMessage);
+//                            }
+                    //return ResponseEntity.ok("NEXT|||"+PM_IDX);
+                }else{
+                    // 여기 들어오는 것 자체가 바뀐 내용이 있는 것.
+                    changeData = true;
+                }
+            }
+
+            //날짜 바뀌고 보증서 체출 체크 여부
+            if(datechange){
+                //보증서 체크가 안되어있고 날짜 외에 바뀐 데이터가 없으면 보증내역 재확인 체크
+                if( confirmChk == null && !changeData) {
+                    errorMessage = "|||[ERROR]|||"+gubun+" 전자보증서 제출 확인 체크를 해주세요";
+
+                }else if(confirmChk != null && changeData){
+                    //날짜가 바뀐 상태에서 재확인 체크, 다른 바뀐 데이터가있으면 체크 풀어야함
+                    errorMessage = "|||[ERROR]|||갱신된 데이터가 존재합니다. "+gubun+" 전자보증서 제출 확인 체크 해제해 주세요";
+                }
+            }else{
+                //날짜가 바뀌지 않음
+                //데이터가 바뀜( 데이터가 안바뀐거면 모든 데이터가 바뀌지 않은거니까. 큰 else로 떨어짐)
+                // 재확인 체크 시 풀어줘야함
+                if( confirmChk != null && changeData ) {
+                    errorMessage = "|||[ERROR]|||"+gubun+" 전자보증서 제출 확인 체크를 해제 해주세요";
+                }
+            }
+
+        }else{
+            //바뀐데이터가 없다
+            //return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
+            // 재확인 체크가 되어있고 바뀐 데이터가 없다
+            if( confirmChk != null ) {
+                errorMessage = "|||[ERROR]||| "+gubun+" 작성일을 변경하거나 "+gubun+" 전자보증서 제출 확인 체크 해제해 주세요";
+            }
+            // 재확인 체크 안되어 있고 바뀐 데이터가 없다 >> ?? 저장되냐?
+            //else if( msdsDTO.getMSDS_CONFIRM_CHK() == null && !changeData) { noneChangeData
+        }
+
+        return errorMessage;
+    }
+
 
 
     public static String compareObjects(Object newDto, Object originDto) {
@@ -2011,8 +2084,16 @@ public class PartMgmtController {
                     //if(value1.equals("DEL"))
                     continue;
                 }
-                // 첨부파일은 따로하자
+
                 if ("FILE_STATUS".equals(field.getName()) || field.getName().endsWith("FILE_STATUS")) {
+                    //if(value1.equals("DEL"))
+                    continue;
+                }
+                if ("SEND_FILE_PATH".equals(field.getName()) || field.getName().endsWith("SEND_FILE_PATH")) {
+                    //if(value1.equals("DEL"))
+                    continue;
+                }
+                if ("SEND_FILE_NAME".equals(field.getName()) || field.getName().endsWith("SEND_FILE_NAME")) {
                     //if(value1.equals("DEL"))
                     continue;
                 }
@@ -2024,6 +2105,9 @@ public class PartMgmtController {
 //                    //if(value1.equals("DEL"))
 //                    continue;
 //                }
+                if(value1 != null){
+                    if(value1.equals("") || value1.equals(" ")) value1 = null;
+                }
 
                 // 값 비교
                 if (!Objects.equals(value1, value2)) {

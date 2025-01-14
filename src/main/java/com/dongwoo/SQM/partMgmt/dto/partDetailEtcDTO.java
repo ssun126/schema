@@ -23,6 +23,9 @@ public class partDetailEtcDTO {
     private String ETC_FILE_NAME;
     @JsonProperty("ETC_FILE_PATH")
     private String ETC_FILE_PATH;
+    @JsonProperty("ETC_REMARK")
+    private String ETC_REMARK;
+
 
     @JsonProperty("FILE_STATUS")
     private String FILE_STATUS;
