@@ -324,14 +324,25 @@
 
         </fieldset>
 
-          <div>
-            * 보증 내역의 재확인<br>
-            -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>
-            <label class="cui_checkbox">
-              <input type="checkbox" name="checkbox1" disabled><i></i>
-              <span>전자 보증서 제출</span>
-            </label>
-          </div>
+<!--          <div>-->
+<!--            * 보증 내역의 재확인<br>-->
+<!--            -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>-->
+<!--            <label class="cui_checkbox">-->
+<!--              <input type="checkbox" name="checkbox1" disabled><i></i>-->
+<!--              <span>전자 보증서 제출</span>-->
+<!--            </label>-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }">
+          <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
+          * 보증 내역의 재확인<br>
+          -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>
+          <label class="cui_checkbox">
+            <input type="checkbox" name="CONFIRM_CHK" th:checked="${svhcDTO.CONFIRM_CHK == ' ' ? false:svhcDTO.CONFIRM_CHK}" disabled><i></i>
+            <span>전자 보증서 제출</span>
+          </label>
+        </div>
         </div>
 
 <!--    dcelaration letter    -->
@@ -413,16 +424,19 @@
 
           </fieldset>
 
-          <div>
+
+          <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
+            <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
             * 보증 내역의 재확인<br>
-            -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인
-            드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)<br>
+            -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)
+            <br>
             <label class="cui_checkbox">
-              <input type="checkbox" name="checkbox1" disabled><i></i>
+              <input type="checkbox" name="CONFIRM_CHK" th:checked="${declarDTO.CONFIRM_CHK == ' ' ? false:declarDTO.CONFIRM_CHK}" disabled><i></i>
               <span>전자 보증서 제출</span>
             </label>
           </div>
         </div>
+
 <!--    sccs 페이지    -->
         <div id="step4_contents">
           <fieldset>

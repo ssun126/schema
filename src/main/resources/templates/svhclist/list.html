@@ -26,7 +26,7 @@
                                 <tr>
                                     <th><span data-langsid="양식 다운로드"></span></th>
                                     <td>
-                                        <form id="sendForm" action="/svhcData/upload" method="post" enctype="multipart/form-data" onsubmit="return sendSubmit($(this));">
+                                        <form id="sendForm" method="post" enctype="multipart/form-data" onsubmit="return false;">
                                             <div class="cui_items_wrap" data-direction="left">
                                                 <div class="item_content">
                                                     <div class="cui_attachments" style="width:500px;">
@@ -34,7 +34,7 @@
                                                     </div>
 <!--                                                    <button type="button" class="cui_button" onclick="sampleDownLoad();"><span>SAMPLE</span></button>-->
                                                     <a href="./uploads/default/sample/Svhc/Audit_노동환경_sample.xlsx" download="Audit_노동환경_sample.xlsx" class="cui_button" ><span>SAMPLE</span></a>
-                                                    <button type="button" class="cui_button primary" onclick="sendSubmit($('#sendForm'));"><span data-langsid="저장"></span></button>
+                                                    <button type="button" class="cui_button primary" onclick="sendSubmit();"><span data-langsid="저장"></span></button>
                                                 </div>
                                             </div>
                                         </form>
@@ -62,13 +62,31 @@
         </div>
     </div>
     <script>
-        var sendSubmit = function (obj) {
+        var sendSubmit = function () {
+            var obj = $("#sendForm");
             if (Common.Validate(obj) == true) {
                 Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                     mode : "confrim"
                     , okback : function () {
                         Common.Loading.Show();
-                        obj.submit();
+
+                        var ReqInfo = new Common.RequestInfo();
+                        ReqInfo.formData  = new FormData();
+                        ReqInfo.AddParameter(obj);
+
+                        Common.Ajax("/svhcData/upload", ReqInfo, function (response) {
+                            if (response == "OK") {
+                                Common.Loading.Hide();
+                                Common.Msg(siteLang.getLang("저장되었습니다."), {
+                                    mode : "msg"
+                                    , okback : function () {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
+
+                        //obj.submit();
                     }
                 });
             }
@@ -136,7 +154,7 @@
             obj.colModel = [
                 { title: "NO", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: false, editor: false, editable: false },
                 { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 600, halign: "center", align: "left", dataType: "string", dataIndx: "SVHC_NAME", sortable: false, editor: false, editable: false },
-                { title: "EU No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: false, editor: false, editable: false },
+                { title: "EC No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: false, editor: false, editable: false },
                 { title: "CAS No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: false, editor: false, editable: false }
             ];
             obj.dataModel = { data: data };

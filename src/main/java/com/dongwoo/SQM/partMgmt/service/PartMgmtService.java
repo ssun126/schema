@@ -261,6 +261,25 @@ public class PartMgmtService {
     public void GuarantDeleteFile (int idx) { partMgmtRepository.GuarantDeleteFile(idx);}
 
 
+    /**********************
+     * initConfirmChk
+     * **************/
+    public void initConfirmChk(int pmidx){partMgmtRepository.initConfirmChk(pmidx);}
+
+
+    /**********************
+     * history data set
+     * **************/
+    public void setHistoryData(int pmidx, int userIdx , String gubun){
+
+        partMgmtRepository.setHistoryData(pmidx,userIdx,gubun);
+    }
+
+    public partDetailMsdsDTO getOrignMsdsData(int pmidx){ return partMgmtRepository.getOrignMsdsData(pmidx);}
+    public partDetailRohsDTO getOrignRohsData(int pmidx){ return partMgmtRepository.getOrignRohsData(pmidx);}
+    public partDetailHalGDTO getOrignHalgData(int pmidx){ return partMgmtRepository.getOrignHalgData(pmidx);}
+
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** 파일 관련

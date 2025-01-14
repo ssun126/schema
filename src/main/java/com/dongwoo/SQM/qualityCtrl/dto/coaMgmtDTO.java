@@ -147,4 +147,58 @@ public class coaMgmtDTO {
     private String TOKEN_SITE_ID;
 
 
+
+    //조회값
+
+    @JsonProperty("SEQ")
+    private Integer SEQ;
+
+    @JsonProperty("ISPR")
+    private String ISPR;
+
+    @JsonProperty("IS30LIMIT")
+    private String IS30LIMIT;
+
+    @JsonProperty("IS50LIMIT")
+    private String IS50LIMIT;
+
+    @JsonProperty("IS_SPEC_YN_CNT")
+    private String IS_SPEC_YN_CNT;
+
+    @JsonProperty("IS_CONTROL_YN_CNT")
+    private String IS_CONTROL_YN_CNT;
+
+
+    //등록
+    @JsonProperty("IF_TARGET")
+    private String IF_TARGET;
+
+    @JsonProperty("DB_LINK_TARGET_MASTER")
+    private String DB_LINK_TARGET_MASTER;
+
+    @JsonProperty("DB_LINK_TARGET_DETAIL")
+    private String DB_LINK_TARGET_DETAIL;
+
+    @JsonProperty("DB_LINK_TARGET_MASTER_SEQ")
+    private String DB_LINK_TARGET_MASTER_SEQ;
+
+    @JsonProperty("DB_LINK_TARGET_DETAIL_SEQ")
+    private String DB_LINK_TARGET_DETAIL_SEQ;
+
+    @JsonProperty("DB_LINK_TARGET_APPLY")
+    private String DB_LINK_TARGET_APPLY;
+
+    @JsonProperty("UPLOAD_RESULT")
+    private String UPLOAD_RESULT;
+
+    @JsonProperty("INTERFACE_DATE")
+    private String INTERFACE_DATE;
+
+    @JsonProperty("UPDATE_YN")
+    private String UPDATE_YN;
+
+    @JsonProperty("EMAIL")
+    private String EMAIL;
+
+
 }

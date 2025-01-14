@@ -180,6 +180,14 @@ public class CommonServiceImpl implements CommonService {
     	return commonRepository.updateUserAction(parameterMap);
 	}
 
+
+	@Override
+	public String parseDate(String mfDate) {
+		return commonRepository.parseDate(mfDate);
+	}
+
+
+
     @Override
     public List<String> getMailContents(String mailType) {
     	ArrayList<String> mailContents = new ArrayList<String>();

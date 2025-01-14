@@ -8,13 +8,18 @@ import com.dongwoo.SQM.siteMgr.dto.DeclarationDTO;
 import com.dongwoo.SQM.siteMgr.dto.SvhcListDTO;
 import com.dongwoo.SQM.system.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -24,6 +29,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,15 +37,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -583,19 +586,15 @@ public class PartMgmtController {
 //        String saveMode = GetParam(request,"SaveMode","");
 //
             String MSDS_IDX = GetParam(request, "MSDS_IDX", "");
-//        String MSDS_REG_DATE = GetParam(request,"MSDS_REG_DATE","");
-//        String MSDS_LANG = GetParam(request,"MSDS_LANG","");
-//        String MSDS_APPROVAL_NUM = GetParam(request,"MSDS_APPROVAL_NUM","");
-//        String MSDS_FILE_NAME = GetParam(request,"MSDS_FILE_NAME","");
-//        String MSDS_FILE_PATH = GetParam(request,"MSDS_FILE_PATH","");
-//        String MSDS_PART_CODE = GetParam(request,"MSDS_PART_CODE","");
-//        String MSDS_PART_NAME = GetParam(request,"MSDS_PART_NAME","");
+
             //msds file
-            if (msdsDTO.getMSDS_FILE_STATUS().equals("DEL")) {
-                msdsDTO.setMSDS_FILE_NAME("");
-                msdsDTO.setMSDS_FILE_PATH("");
-            }
-            if(msdsFile != null){
+//            if (msdsDTO.getMSDS_FILE_STATUS().equals("DEL")) {
+//                msdsDTO.setMSDS_FILE_NAME("");
+//                msdsDTO.setMSDS_FILE_PATH("");
+//            }
+            partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
+
+            if(msdsFile != null) {
                 if (!msdsFile.isEmpty()) {
                     String msds_filepath = partMgmtService.uploadFileData(PM_PART_CODE, msdsFile);
                     String msds_filename = msdsFile.getOriginalFilename();
@@ -606,6 +605,59 @@ public class PartMgmtController {
                     msdsDTO.setMSDS_FILE_PATH(msds_filepath);
 
                 }
+            }else{
+                msdsDTO.setMSDS_FILE_NAME(OrigMsdsDTO.getMSDS_FILE_NAME());
+                msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
+            }
+
+            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+            if( !appData.equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+
+                String MsdsCheck = "";
+
+                partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
+                partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
+
+                boolean changeData = false; //바뀐 데이터가 없으면 저장 안됨
+                String chkData = "";
+                chkData=compareObjects(msdsDTO,OrigMsdsDTO);
+                if(!chkData.equals("")) {
+                    String errMessage ="";
+                    String[] spData = chkData.split("\\|");
+                    for(int i = 0; i<spData.length; i++){
+                        String FieldName = spData[i].split(":")[0];
+                        //날짜 데이터 바뀌었을 때
+                        if(FieldName.endsWith("_DATE")){
+                            if( msdsDTO.getMSDS_CONFIRM_CHK() == null) {
+                                errMessage = "|||[ERROR]|||MSDS 전자보증서 제출 확인 체크를 해주세요";
+                            }
+                            //return ResponseEntity.ok("NEXT|||"+PM_IDX);
+                        }else{
+                            // 여기 들어오는 것 자체가 바뀐 내용이 있는 것.
+                            changeData = true;
+                        }
+                    }
+                    // 날짜만! 바뀔때만 보증 체크해줘야함
+                    if( !changeData && !errMessage.equals("")){
+                        return ResponseEntity.ok("|||[ERROR]|||"+errMessage);
+                    }
+                    // 변경된 데이터가 있고
+                    if( (changeData && msdsDTO.getMSDS_CONFIRM_CHK() != null) ){
+                        return ResponseEntity.ok("|||[ERROR]||| 갱신된 데이터가 존재합니다. MSDS 전자보증서 제출 확인 체크 해제해 주세요");
+                    }
+//                    if( errMessage.equals("") && msdsDTO.getMSDS_CONFIRM_CHK() != null ) {
+//                        return ResponseEntity.ok("|||[ERROR]||| MSDS 작성일을 변경하거나 MSDS 전자보증서 제출 확인 체크 해제해 주세요");
+//                    }
+
+
+
+                }else{
+                    //바뀐데이터가 없다
+                    return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
+                }
+
             }
 
             log.info("MSDS_IDX=================="+MSDS_IDX);
@@ -620,19 +672,7 @@ public class PartMgmtController {
 
             //Rohs
             String ROHS_IDX = GetParam(request, "ROHS_IDX", "");
-//        String ROHS_CONFIRM_DATE = GetParam(request,"ROHS_CONFIRM_DATE","");
-//        String ROHS_CD = GetParam(request,"ROHS_CD","");
-//        String ROHS_HG = GetParam(request,"ROHS_HG","");
-//        String ROHS_PB = GetParam(request,"ROHS_PB","");
-//        String ROHS_CR6 = GetParam(request,"ROHS_CR6","");
-//        String ROHS_PBBS = GetParam(request,"ROHS_PBBS","");
-//        String ROHS_PBDES = GetParam(request,"ROHS_PBDES","");
-//        String ROHS_DEHP = GetParam(request,"ROHS_DEHP","");
-//        String ROHS_BBP = GetParam(request,"ROHS_BBP","");
-//        String ROHS_DBP = GetParam(request,"ROHS_DBP","");
-//        String ROHS_DIBP = GetParam(request,"ROHS_DIBP","");
-//        String ROHS_FILE_NAME = GetParam(request,"ROHS_FILE_NAME","");
-//        String ROHS_FILE_PATH = GetParam(request,"ROHS_FILE_PATH","");
+
 
             //ROHS file
             //if (!rohsFile.isEmpty()) {
@@ -659,12 +699,7 @@ public class PartMgmtController {
 
             //halogen
             String HALOGEN_IDX = GetParam(request, "HALOGEN_IDX", "");
-//        String HALOGEN_CONFIRM_DATE = GetParam(request,"HALOGEN_CONFIRM_DATE","");
-//        String HALOGEN_CL = GetParam(request,"HALOGEN_CL","");
-//        String HALOGEN_BR = GetParam(request,"HALOGEN_BR","");
-//        String HALOGEN_CLBR = GetParam(request,"HALOGEN_CLBR","");
-//        String HALOGEN_F = GetParam(request,"HALOGEN_F","");
-//        String HALOGEN_I = GetParam(request,"HALOGEN_I","");
+
 
             //HALOGEN FILE
             if (halgFile != null) {
@@ -884,6 +919,14 @@ public class PartMgmtController {
                 svhcDTO.setWARRANTY_ITEM(baseConfigDTOInfo.getCONFIG_VALUE());
             }
 
+            int yCnt = 0;
+            if(svhcDTO.getAPPLICABLE_NO() != null) {
+                if(svhcDTO.getAPPLICABLE_NO().trim() != "" ) {
+                    yCnt= svhcDTO.getAPPLICABLE_NO().split(",").length;
+                }
+            }
+            model.addAttribute("SVHC_YCNT", yCnt);
+
 
 
 //            if(svhcDTO.getDATA_GUBUN().equals("WRITE")){
@@ -938,36 +981,77 @@ public class PartMgmtController {
 
     }
 
-    @RequestMapping("setSvhcExcelData")
+    @RequestMapping("/setSvhcExcelData")
     public String setSvhcExcelData(HttpServletRequest request, HttpServletResponse response){
         String partSvhcListStr = null;
         try{
             MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("SVHC_FILE");
-            XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
-            XSSFSheet worksheet = workbook.getSheetAt(0);
+
+            //xlsx 인지 xls 인지 구분
+            String fileName = files.getOriginalFilename();
             List<SvhcListDTO> svhcListDTOList = new ArrayList<>();
 
-            for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
-                SvhcListDTO svhcListDTO = new SvhcListDTO();
+            if(fileName.endsWith(".xlsx")) {
+                XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+                XSSFSheet worksheet = workbook.getSheetAt(0);
 
-                DataFormatter formatter = new DataFormatter();
-                XSSFRow row = worksheet.getRow(i);
 
-                String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
-                String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
+                for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
+                    SvhcListDTO svhcListDTO = new SvhcListDTO();
 
-                String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
-                String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
-                String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
+                    DataFormatter formatter = new DataFormatter();
+                    XSSFRow row = worksheet.getRow(i);
 
-                svhcListDTO.setSVHC_NUM(SVHC_NUM);
-                svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
-                svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
-                svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
-                svhcListDTO.setSVHC_YN(SVHC_YN);
+                    String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
+                    String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
 
-                svhcListDTOList.add(svhcListDTO);
+                    String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
+                    String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
+                    String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
+
+                    svhcListDTO.setSVHC_NUM(SVHC_NUM);
+                    svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
+                    svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
+                    svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
+                    svhcListDTO.setSVHC_YN(SVHC_YN);
+
+                    svhcListDTOList.add(svhcListDTO);
+                }
+            }else if(fileName.endsWith(".xls")){
+                HSSFWorkbook workbook = new HSSFWorkbook(files.getInputStream());
+                HSSFSheet worksheet = workbook.getSheetAt(0);
+
+
+                for(int i = 19; i<worksheet.getPhysicalNumberOfRows()-1; i++){
+                    SvhcListDTO svhcListDTO = new SvhcListDTO();
+
+                    DataFormatter formatter = new DataFormatter();
+                    HSSFRow row = worksheet.getRow(i);
+
+                    String SVHC_NUM = formatter.formatCellValue((row.getCell(0)));
+                    String SVHC_NAME = formatter.formatCellValue((row.getCell(1)));
+
+                    String SVHC_CASNUM = formatter.formatCellValue((row.getCell(10)));
+                    String SVHC_EUNUM = formatter.formatCellValue((row.getCell(11)));
+                    String SVHC_YN = formatter.formatCellValue((row.getCell(12)));
+
+                    svhcListDTO.setSVHC_NUM(SVHC_NUM);
+                    svhcListDTO.setSVHC_NAME(SVHC_NAME.replaceAll("'","''"));
+                    svhcListDTO.setSVHC_CASNUM(SVHC_CASNUM);
+                    svhcListDTO.setSVHC_EUNUM(SVHC_EUNUM);
+                    svhcListDTO.setSVHC_YN(SVHC_YN);
+
+                    svhcListDTOList.add(svhcListDTO);
+                }
+            }else{
+                partSvhcListStr="|||[ERROR]||| Invalid file format. Only .xls and .xlsx are supported.";
+                PrintWriter printer = response.getWriter();
+                printer.print(partSvhcListStr);
+                printer.close();
+
+                return "blank";
             }
+
 
             ObjectMapper mapper = new ObjectMapper();
             partSvhcListStr = mapper.writeValueAsString(svhcListDTOList);
@@ -1028,6 +1112,87 @@ public class PartMgmtController {
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
 
+        String blobData = GetParam(request, "blobData", "");
+        String Warant = GetParam(request, "WARRANTY_ITEM", "");
+        String date = GetParam(request, "CONFIRM_DATE", "").replaceAll("-","");
+        String gubun = GetParam(request, "DATA_GUBN", "").replaceAll("-","");
+        if(gubun.equals("WRITE")){
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                //Map<String, Object> dataMap = objectMapper.readValue(blobData, Map.class);
+                List<Map<String, Object>> dataList = objectMapper.readValue(blobData, new TypeReference<>() {});
+                Workbook workbook = new XSSFWorkbook();
+                Sheet sheet = workbook.createSheet("SVHC Data");
+
+                // 헤더 작성
+                Row headerRow = sheet.createRow(0);
+                if (!dataList.isEmpty()) {
+                    int cellIdx = 0;
+                    for (String key : dataList.get(0).keySet()) {
+                        Cell cell = headerRow.createCell(cellIdx++);
+                        cell.setCellValue(key);
+                    }
+                }
+
+                // 데이터 작성
+                int rowIdx = 1;
+                for (Map<String, Object> data : dataList) {
+                    Row row = sheet.createRow(rowIdx++);
+                    int cellIdx = 0;
+                    for (Object value : data.values()) {
+                        Cell cell = row.createCell(cellIdx++);
+                        cell.setCellValue(value != null ? value.toString() : "");
+                    }
+                }
+
+                // Excel 파일 저장
+                try (FileOutputStream fileOut = new FileOutputStream("C:/output/send/svhc/SVHC_"+Warant+"_"+date+".xlsx")) {
+                    workbook.write(fileOut);
+
+                    svhcDTO.setSEND_FILE_PATH("C:/output/uploads/send/svhc/");
+                    svhcDTO.setSEND_FILE_NAME("svhc_"+Warant+"_"+date+".xlsx");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Excel 파일이 생성되었습니다.");
+
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            try {
+                if (svhcFile != null && !svhcFile.isEmpty()) {
+                    // 1. 파일 저장 경로와 파일명 설정
+                    String uploadDir = "C:/output/send/svhc_files"; // 저장할 디렉터리
+//                    String fileName = "custom_name_" + System.currentTimeMillis() + "."
+//                            + getFileExtension(declFile.getOriginalFilename()); // 새로운 파일명 생성
+                    String fileName = "SVHC_"+Warant+"_"+date+".xlsx";
+
+                    File directory = new File(uploadDir);
+                    if (!directory.exists()) {
+                        directory.mkdirs(); // 디렉터리가 없으면 생성
+                    }
+
+                    // 2. 파일 저장
+                    File destinationFile = new File(directory, fileName);
+                    svhcFile.transferTo(destinationFile);
+
+                    // 3. 저장된 파일 정보 처리
+                    System.out.println("파일이 저장되었습니다: " + destinationFile.getAbsolutePath());
+
+                    // 필요하면 declDTO에 파일 경로나 이름 저장
+                    svhcDTO.setSEND_FILE_PATH(destinationFile.getAbsolutePath());
+                    svhcDTO.setSEND_FILE_NAME(fileName);
+
+                    //return ResponseEntity.ok("파일 저장 성공: " + fileName);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body("파일 저장 중 오류 발생: " + e.getMessage());
+            }
+        }
+
+
         try {
 
             //msds
@@ -1036,10 +1201,10 @@ public class PartMgmtController {
             String DATA_GUBUN = GetParam(request,"DATA_GUBUN","");
 
             //msds file
-            if (FILE_STATUS.equals("DEL") || DATA_GUBUN.equals("WRITE")) {
-                svhcDTO.setFILE_NAME("");
-                svhcDTO.setFILE_PATH("");
-            }
+//            if (FILE_STATUS.equals("DEL") || DATA_GUBUN.equals("WRITE")) {
+//                svhcDTO.setFILE_NAME("");
+//                svhcDTO.setFILE_PATH("");
+//            }
 
             //msds file
             if(svhcFile != null){
@@ -1159,43 +1324,92 @@ public class PartMgmtController {
         String partDeclListStr = null;
         try{
             MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("DECL_FILE");
-            XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
-            XSSFSheet worksheet = workbook.getSheetAt(0);
+
+            //xlsx 인지 xls 인지 구분
+            String fileName = files.getOriginalFilename();
             List<DeclarationDTO> declarationDTOList = new ArrayList<>();
 
-            for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
-                DeclarationDTO declarationDTO = new DeclarationDTO();
+            PrintWriter printer = response.getWriter();
 
-                DataFormatter formatter = new DataFormatter();
-                XSSFRow row = worksheet.getRow(i);
+            if(fileName.endsWith(".xlsx")) {
+                XSSFWorkbook workbook = new XSSFWorkbook(files.getInputStream());
+                XSSFSheet worksheet = workbook.getSheetAt(0);
 
-                String DECL_NUM = formatter.formatCellValue(row.getCell(1));
-                String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
-                String DECL_NAME = formatter.formatCellValue(row.getCell(3));
-                String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
-                String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
-                String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
-                String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
-                String DECL_YN = formatter.formatCellValue(row.getCell(8));
 
-                log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
-                declarationDTO.setDECL_NUM(DECL_NUM);
-                declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
-                declarationDTO.setDECL_NAME(DECL_NAME);
-                declarationDTO.setDECL_CASNUM(DECL_CASNUM);
-                declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
-                declarationDTO.setDECL_CLASS(DECL_CLASS);
-                declarationDTO.setDECL_GROUND(DECL_GROUND);
-                declarationDTO.setDECL_YN(DECL_YN);
+                for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
+                    DeclarationDTO declarationDTO = new DeclarationDTO();
 
-                declarationDTOList.add(declarationDTO);
+                    DataFormatter formatter = new DataFormatter();
+                    XSSFRow row = worksheet.getRow(i);
 
+                    String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                    String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                    String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                    String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                    String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                    String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                    String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+                    String DECL_YN = formatter.formatCellValue(row.getCell(8));
+
+                    log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                    declarationDTO.setDECL_NUM(DECL_NUM);
+                    declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                    declarationDTO.setDECL_NAME(DECL_NAME);
+                    declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                    declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                    declarationDTO.setDECL_CLASS(DECL_CLASS);
+                    declarationDTO.setDECL_GROUND(DECL_GROUND);
+                    declarationDTO.setDECL_YN(DECL_YN);
+
+                    declarationDTOList.add(declarationDTO);
+
+                }
+            }else if(fileName.endsWith(".xls")){
+                HSSFWorkbook workbook = new HSSFWorkbook(files.getInputStream());
+                HSSFSheet worksheet = workbook.getSheetAt(0);
+
+
+                for(int i = 3; i<worksheet.getPhysicalNumberOfRows(); i++){
+                    DeclarationDTO declarationDTO = new DeclarationDTO();
+
+                    DataFormatter formatter = new DataFormatter();
+                    HSSFRow row = worksheet.getRow(i);
+
+                    String DECL_NUM = formatter.formatCellValue(row.getCell(1));
+                    String DECL_SUB_NUM = formatter.formatCellValue(row.getCell(2));
+                    String DECL_NAME = formatter.formatCellValue(row.getCell(3));
+                    String DECL_CASNUM = formatter.formatCellValue(row.getCell(4));
+                    String DECL_WEIGHT = formatter.formatCellValue(row.getCell(5));
+                    String DECL_CLASS = formatter.formatCellValue(row.getCell(6));
+                    String DECL_GROUND = formatter.formatCellValue(row.getCell(7));
+                    String DECL_YN = formatter.formatCellValue(row.getCell(8));
+
+                    log.info("엑셀 값 : " +DECL_NUM+ " !!!"+DECL_SUB_NUM+ " !!!"+DECL_NAME+ " !!!"+DECL_CASNUM+ " !!!"+DECL_WEIGHT+ " !!!"+DECL_CLASS+ " !!!"+DECL_GROUND);
+                    declarationDTO.setDECL_NUM(DECL_NUM);
+                    declarationDTO.setDECL_SUB_NUM(DECL_SUB_NUM);
+                    declarationDTO.setDECL_NAME(DECL_NAME);
+                    declarationDTO.setDECL_CASNUM(DECL_CASNUM);
+                    declarationDTO.setDECL_WEIGHT(DECL_WEIGHT);
+                    declarationDTO.setDECL_CLASS(DECL_CLASS);
+                    declarationDTO.setDECL_GROUND(DECL_GROUND);
+                    declarationDTO.setDECL_YN(DECL_YN);
+
+                    declarationDTOList.add(declarationDTO);
+
+                }
+            }else{
+                partDeclListStr="|||[ERROR]||| Invalid file format. Only .xls and .xlsx are supported.";
+                printer.print(partDeclListStr);
+                printer.close();
+
+                return "blank";
             }
+
 
             ObjectMapper mapper = new ObjectMapper();
             partDeclListStr = mapper.writeValueAsString(declarationDTOList);
 
-            PrintWriter printer = response.getWriter();
+
             printer.print(partDeclListStr);
             printer.close();
 
@@ -1250,6 +1464,91 @@ public class PartMgmtController {
         int PM_IDX = Integer.parseInt(GetParam(request, "PM_IDX", "0"));
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
+
+        String blobData = GetParam(request, "blobData", "");
+        String Warant = GetParam(request, "WARRANTY_ITEM", "");
+        String date = GetParam(request, "CONFIRM_DATE", "").replaceAll("-","");
+        String gubun = GetParam(request, "DATA_GUBN", "").replaceAll("-","");
+        if(gubun.equals("WRITE")){
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                //Map<String, Object> dataMap = objectMapper.readValue(blobData, Map.class);
+                List<Map<String, Object>> dataList = objectMapper.readValue(blobData, new TypeReference<>() {});
+                Workbook workbook = new XSSFWorkbook();
+                Sheet sheet = workbook.createSheet("DECL Data");
+
+                // 헤더 작성
+                Row headerRow = sheet.createRow(0);
+                if (!dataList.isEmpty()) {
+                    int cellIdx = 0;
+                    for (String key : dataList.get(0).keySet()) {
+                        Cell cell = headerRow.createCell(cellIdx++);
+                        cell.setCellValue(key);
+                    }
+                }
+
+                // 데이터 작성
+                int rowIdx = 1;
+                for (Map<String, Object> data : dataList) {
+                    Row row = sheet.createRow(rowIdx++);
+                    int cellIdx = 0;
+                    for (Object value : data.values()) {
+                        Cell cell = row.createCell(cellIdx++);
+                        cell.setCellValue(value != null ? value.toString() : "");
+                    }
+                }
+
+                // Excel 파일 저장
+                try (FileOutputStream fileOut = new FileOutputStream("C:/output/send/decl/Declaration_Rev_"+Warant+"_"+date+".xlsx")) {
+                    workbook.write(fileOut);
+
+                    declDTO.setSEND_FILE_PATH("C:/output/send/decl_files/");
+                    declDTO.setSEND_FILE_NAME("Declaration_Rev_"+Warant+"_"+date+".xlsx");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("Excel 파일이 생성되었습니다.");
+
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }else{
+            try {
+                if (declFile != null && !declFile.isEmpty()) {
+                    // 1. 파일 저장 경로와 파일명 설정
+                    String uploadDir = "C:/output/send/decl_files"; // 저장할 디렉터리
+//                    String fileName = "custom_name_" + System.currentTimeMillis() + "."
+//                            + getFileExtension(declFile.getOriginalFilename()); // 새로운 파일명 생성
+                    String fileName = "Declaration_Rev_"+Warant+"_"+date+".xlsx";
+
+                    File directory = new File(uploadDir);
+                    if (!directory.exists()) {
+                        directory.mkdirs(); // 디렉터리가 없으면 생성
+                    }
+
+                    // 2. 파일 저장
+                    File destinationFile = new File(directory, fileName);
+                    declFile.transferTo(destinationFile);
+
+                    // 3. 저장된 파일 정보 처리
+                    System.out.println("파일이 저장되었습니다: " + destinationFile.getAbsolutePath());
+
+                    // 필요하면 declDTO에 파일 경로나 이름 저장
+                    declDTO.setSEND_FILE_PATH(destinationFile.getAbsolutePath());
+                    declDTO.setSEND_FILE_NAME(fileName);
+
+                    //return ResponseEntity.ok("파일 저장 성공: " + fileName);
+                } else {
+                    //return ResponseEntity.badRequest().body("DECL_FILE이 비어 있습니다.");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body("파일 저장 중 오류 발생: " + e.getMessage());
+            }
+        }
+
+
+
 
         try {
 
@@ -1370,7 +1669,8 @@ public class PartMgmtController {
                                                     , @RequestParam(value = "SCCS_FILE", required = false) MultipartFile sccsFile
                                                     , @RequestParam(value = "INGRED_FILE", required = false) MultipartFile ingredFile
                                                     , @ModelAttribute partDetailSccsDTO sccsDTO
-                                                    , @ModelAttribute partDetailIngredDTO ingredGDTO) {
+                                                    , @ModelAttribute partDetailIngredDTO ingredGDTO
+                                                    , @AuthenticationPrincipal UserCustom user) {
 
         int result = 0;
         String PM_PART_CODE = GetParam(request, "PM_PART_CODE", "");
@@ -1498,6 +1798,13 @@ public class PartMgmtController {
         }else{
             //승인요청
             partMgmtService.updateApprovalStatus(PM_IDX, "3");
+            //체크 데이터 저장
+            //partMgmtService.saveConfirmChkData();
+            //히스토리 데이터 저장, 해당내용은 이후 보증내역 유무에 사용함
+            int userIdx = user.getUSER_IDX();
+            partMgmtService.setHistoryData(PM_IDX,userIdx,"APPROVAL");
+            //체크 init
+            partMgmtService.initConfirmChk(PM_IDX);
             return ResponseEntity.ok("NEXT|||"+PM_IDX);
         }
 
@@ -1587,6 +1894,8 @@ public class PartMgmtController {
         }
     }
 
+
+
     //파일명 인코딩
     private String encodeFileName(String filename) throws UnsupportedEncodingException {
         // Encode filename in UTF-8
@@ -1604,6 +1913,130 @@ public class PartMgmtController {
         };
 
         return ParamValue;
+    }
+
+    // 파일 확장자 추출 메서드
+    private String getFileExtension(String fileName) {
+        if (fileName != null && fileName.contains(".")) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        }
+        return "";
+    }
+
+
+    /******************************************************************************
+     *
+     ****************************************************************************/
+    private String compareMsdsData(partDetailMsdsDTO dto, partDetailMsdsDTO origDto) {
+        StringBuilder differences = new StringBuilder();
+
+        if (!Objects.equals(dto.getMSDS_REG_DATE(), origDto.getMSDS_REG_DATE())) {
+            differences.append("MSDS_REG_DATE|");
+        }
+        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
+            differences.append("MSDS_LANG|");
+        }
+        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
+            differences.append("MSDS_APPROVAL_NUM|");
+        }
+        if (!Objects.equals(dto.getMSDS_FILE_PATH(), origDto.getMSDS_FILE_PATH()) && !Objects.equals(dto.getMSDS_FILE_NAME(), origDto.getMSDS_FILE_NAME())) {
+            differences.append("MSDS_FILE|");
+        }
+
+        return differences.toString();
+    }
+
+//    private String compareRohsData(partDetailRohsDTO dto, partDetailRohsDTO origDto) {
+//        StringBuilder differences = new StringBuilder();
+//
+//        if (!Objects.equals(dto.getrohs, origDto.getMSDS_REG_DATE())) {
+//            differences.append("MSDS File Name differs: ")
+//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
+//            differences.append("MSDS File Path differs: ")
+//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
+//            differences.append("MSDS Language differs: ")
+//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
+//        }
+//
+//        return differences.toString();
+//    }
+//
+//    private String compareHalgData(partDetailHalGDTO dto, partDetailHalGDTO origDto) {
+//        StringBuilder differences = new StringBuilder();
+//
+//        if (!Objects.equals(dto.getMSDS_REG_DATE(), origDto.getMSDS_REG_DATE())) {
+//            differences.append("MSDS File Name differs: ")
+//                    .append(dto.getMsdsFileName()).append(" vs ").append(origDto.getMsdsFileName()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_LANG(), origDto.getMSDS_LANG())) {
+//            differences.append("MSDS File Path differs: ")
+//                    .append(dto.getMsdsFilePath()).append(" vs ").append(origDto.getMsdsFilePath()).append("\n");
+//        }
+//        if (!Objects.equals(dto.getMSDS_APPROVAL_NUM(), origDto.getMSDS_APPROVAL_NUM())) {
+//            differences.append("MSDS Language differs: ")
+//                    .append(dto.getMsdsLang()).append(" vs ").append(origDto.getMsdsLang()).append("\n");
+//        }
+//
+//        return differences.toString();
+//    }
+
+
+    public static String compareObjects(Object newDto, Object originDto) {
+        StringBuilder differences = new StringBuilder();
+
+        // 두 객체가 같은 클래스인지 확인
+        if (!newDto.getClass().equals(originDto.getClass())) {
+            return "Objects are of different types.";
+        }
+
+        // 클래스의 필드 가져오기
+        Field[] fields = newDto.getClass().getDeclaredFields();
+
+        for (Field field : fields) {
+            field.setAccessible(true); // private 필드 접근 가능 설정
+
+            try {
+                Object value1 = field.get(newDto);
+                Object value2 = field.get(originDto);
+
+                // INFO_FLAG 필드는 제외
+                if ("INFO_FLAG".equals(field.getName())) {
+                    continue;
+                }
+                if ("CONFIRM_CHK".equals(field.getName()) || field.getName().endsWith("CONFIRM_CHK")) {
+                    //if(value1.equals("DEL"))
+                    continue;
+                }
+                // 첨부파일은 따로하자
+                if ("FILE_STATUS".equals(field.getName()) || field.getName().endsWith("FILE_STATUS")) {
+                    //if(value1.equals("DEL"))
+                    continue;
+                }
+//                if ("FILE_NAME".equals(field.getName()) || field.getName().endsWith("FILE_NAME")) {
+//                    //if(value1.equals("DEL"))
+//                    continue;
+//                }
+//                if ("FILE_PATH".equals(field.getName()) || field.getName().endsWith("FILE_PATH")) {
+//                    //if(value1.equals("DEL"))
+//                    continue;
+//                }
+
+                // 값 비교
+                if (!Objects.equals(value1, value2)) {
+                    differences.append(field.getName()).append(": ")
+                            .append(value1).append(",").append(value2).append("|");
+                }
+            } catch (IllegalAccessException e) {
+                differences.append("Error accessing field '").append(field.getName()).append("': ")
+                        .append(e.getMessage()).append("\n");
+            }
+        }
+
+        return differences.toString().isEmpty() ? "" : differences.toString();
     }
 
 }

@@ -198,6 +198,28 @@ public class PartMgmtRepository {
     public int updateApprovalStatus(String idx){ return sql.update("partManagement.updateApprovalStatus",idx);}
 
 
+    public void initConfirmChk(int pmidx){
+        sql.update("partManagement.initConfirmChk",pmidx);
+    }
+
+    /*********************************************************************************************************************
+     ** Detail v페이지
+     ** History set
+     *********************************************************************************************************************/
+    public void setHistoryData(int pmidx, int userIdx , String gubun) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("PM_IDX",pmidx);
+        map.put("USER_IDX",userIdx);
+        map.put("GUBUN",gubun);
+
+        sql.update("partManagement.setHistoryData",map);
+    }
+
+    public partDetailMsdsDTO getOrignMsdsData (int pmidx) { return sql.selectOne("partManagement.getOrignMsdsData",pmidx);}
+    public partDetailRohsDTO getOrignRohsData (int pmidx) { return sql.selectOne("partManagement.getOrignRohsData",pmidx);}
+    public partDetailHalGDTO getOrignHalgData (int pmidx) { return sql.selectOne("partManagement.getOrignHalgData",pmidx);}
+
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** 파일다운로드

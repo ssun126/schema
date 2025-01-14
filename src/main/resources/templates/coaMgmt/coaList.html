@@ -6,192 +6,338 @@
 
 <body>
 
-        <div class="cui_main">
-            <div class="cui_head">
-                <div class="head_content">
-                    <h2 class="cui_title"><span data-langsid="성적서"></span></h2>
+<div class="cui_main">
+    <div class="cui_head">
+        <div class="head_content">
+            <h2 class="cui_title"><span data-langsid="성적서"></span></h2>
+        </div>
+    </div>
+    <div class="cui_body">
+        <div class="cui_search">
+            <div class="search_list cui_grid_wrap" id="searchArea">
+                <div class="cui_items_wrap" data-direction="left">
+                    <strong class="item_label" data-langsid="등록일"></strong>
+                    <div class="item_content">
+                        <div class="cui_items_wrap">
+                            <div class="item_content" data-role="calendar-picker">
+                                <input type="text" class="cui_text_field datepicker" id="fromDate" name="fromDate"
+                                       datePickerControl="" th:value="${sStartDate}" search="searchBtn">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                        data-langsid="날자 선택"></span></button>
+                            </div>
+                        </div>
+                        <div class="field_connect">~</div>
+                        <div class="cui_items_wrap">
+                            <div class="item_content" data-role="calendar-picker">
+                                <input type="text" class="cui_text_field datepicker" id="toDate" name="toDate"
+                                       datePickerControl="" th:value="${sEndDate}" search="searchBtn">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                        data-langsid="날자 선택"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cui_items_wrap" data-direction="left" id="searchUserList">
+                    <strong class="item_label" data-langsid="등록자"></strong>
+                    <div class="item_content">
+                        <input class="cui_text_field" type="text" id="registerName" name="registerName"
+                               search="searchBtn">
+                        <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selUserOpen();">
+                            <span data-langsid="검색"></span></button>
+                    </div>
+                </div>
+                <div class="cui_items_wrap" data-direction="left" id="CpCodeMgmt">
+                    <strong class="item_label" data-langsid="업체명"></strong>
+                    <div class="item_content">
+                        <input class="cui_text_field" type="text" id="vendorName" name="vendorName" search="searchBtn">
+                        <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();">
+                            <span data-langsid="검색"></span></button>
+                    </div>
+                </div>
+
+                <div class="cui_items_wrap" data-direction="left">
+                    <strong class="item_label" data-langsid="입고일"></strong>
+                    <div class="item_content">
+                        <div class="cui_items_wrap">
+                            <div class="item_content" data-role="calendar-picker">
+                                <input type="text" class="cui_text_field datepicker" id="dlvFromDate" name="dlvFromDate"
+                                       datePickerControl="" th:value="${sEndDate}" search="searchBtn">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                        data-langsid="날자 선택"></span></button>
+                            </div>
+                        </div>
+                        <div class="field_connect">~</div>
+                        <div class="cui_items_wrap">
+                            <div class="item_content" data-role="calendar-picker">
+                                <input type="text" class="cui_text_field datepicker" id="dlvToDate" name="dlvToDate"
+                                       datePickerControl="" th:value="${sEndDate}" search="searchBtn">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                        data-langsid="날자 선택"></span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cui_items_wrap" data-direction="left">
+                    <strong class="item_label" data-langsid="자재"></strong>
+                    <div class="item_content" id="searchMaterial">
+                        <input class="cui_text_field" type="text" id="materialName" name="materialName"
+                               search="searchBtn">
+                        <button type="button" class="cui_button icon" data-cui-icon="search"
+                                onclick="selpartMatrailOpen();"><span data-langsid="검색"></span></button>
+                    </div>
+                </div>
+                <div class="cui_items_wrap" data-direction="left">
+                    <strong class="item_label" data-langsid="성적서 상태"></strong>
+                    <div class="item_content">
+                        <select id="coaStatus" name="coaStatus" class="cui_select_field wide" onchange="ListSearch();">
+                            <option value=""></option>
+                            <option th:each="Status : ${coaStatusList}"
+                                    th:value="${Status.BASE_CODE}"
+                                    th:text="${Status.BASE_NAME}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="cui_items_wrap required_field">
+                    <strong class="item_label">LOT NO</strong>
+                    <div class="item_content">
+                        <input class="cui_text_field" type="text" placeholder="" id="lotNo" name="lotNo"
+                               search="searchBtn">
+                    </div>
+                </div>
+                <div class="cui_items_wrap" data-direction="left">
+                    <strong class="item_label" data-langsid="플랜트"></strong>
+                    <div class="item_content">
+                        <select id="factoryId" name="factoryId" class="cui_select_field wide" onchange="ListSearch();">
+                            <option value=""></option>
+                            <option th:each="plant : ${coaPlantList}"
+                                    th:value="${plant.BASE_CODE}"
+                                    th:text="${plant.BASE_OPTION2}">
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="cui_body">
-                    <div class="cui_search">
-                        <div class="search_list cui_grid_wrap"  id="searchArea">
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label" data-langsid="등록일"></strong>
-                                <div class="item_content">
-                                    <div class="cui_items_wrap">
-                                        <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="fromDate" name="fromDate" datePickerControl="" th:value="${sStartDate}" search="searchBtn">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                        </div>
-                                    </div>
-                                    <div class="field_connect">~</div>
-                                    <div class="cui_items_wrap">
-                                        <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="toDate" name="toDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left" id = "searchUserList">
-                                <strong class="item_label" data-langsid="등록자"></strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="registerName" name="registerName" search="searchBtn">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selUserOpen();"><span data-langsid="검색"></span></button>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left" id = "CpCodeMgmt">
-                                <strong class="item_label" data-langsid="업체명"></strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" id="vendorName" name="vendorName" search="searchBtn">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selCpCodeOpen();"><span data-langsid="검색"></span></button>
-                                </div>
-                            </div>
-
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label" data-langsid="입고일"></strong>
-                                <div class="item_content">
-                                    <div class="cui_items_wrap">
-                                        <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="dlvFromDate" name="dlvFromDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                        </div>
-                                    </div>
-                                    <div class="field_connect">~</div>
-                                    <div class="cui_items_wrap">
-                                        <div class="item_content" data-role="calendar-picker" >
-                                            <input type="text" class="cui_text_field datepicker" id="dlvToDate" name="dlvToDate" datePickerControl="" th:value="${sEndDate}" search="searchBtn">
-                                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label" data-langsid="자재"></strong>
-                                <div class="item_content" id="searchMaterial">
-                                    <input class="cui_text_field" type="text" id="materialName" name="materialName" search="searchBtn">
-                                    <button type="button" class="cui_button icon" data-cui-icon="search" onclick="selpartMatrailOpen();"><span data-langsid="검색"></span></button>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label" data-langsid="성적서 상태"></strong>
-                                <div class="item_content">
-                                    <select id="coaStatus" name="coaStatus" class="cui_select_field wide" onchange="ListSearch();">
-                                        <option value=""></option>
-                                        <option th:each="Status : ${coaStatusList}"
-                                                th:value="${Status.BASE_CODE}"
-                                                th:text="${Status.BASE_NAME}">
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap required_field">
-                                <strong class="item_label">LOT NO</strong>
-                                <div class="item_content">
-                                    <input class="cui_text_field" type="text" placeholder="" id="lotNo" name="lotNo" search="searchBtn">
-                                </div>
-                            </div>
-                            <div class="cui_items_wrap" data-direction="left">
-                                <strong class="item_label" data-langsid="플랜트"></strong>
-                                <div class="item_content">
-                                    <select id="factoryId" name="factoryId" class="cui_select_field wide" onchange="ListSearch();">
-                                        <option value=""></option>
-                                        <option th:each="plant : ${coaPlantList}"
-                                                th:value="${plant.BASE_CODE}"
-                                                th:text="${plant.BASE_OPTION2}">
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="search_action">
-                            <button type="button" id = "searchBtn"  onclick="ListSearch()" class="cui_button primary"><span data-langsid="검색"></span></button>
-                        </div>
-                    </div>
-
-
-
-                <div class="cui_jqGrid_section">
-                    <div class="cui_jqGrid_head">
-                        <div class="jqGrid_label"></div>
-                        <div class="jqGrid_aside">
-                            <button type="button" class="cui_button endpoint" data-cui-icon="copy" onclick="copyOpen();"><span data-langsid="복사"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="addOpen();"><span data-langsid="스팩 다운로드"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="upload" onclick="addOpen();"><span data-langsid="업로드"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="check" onclick="addOpen();"><span data-langsid="등록"></span></button>
-                            <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="delPartCode();"><span data-langsid="선택 삭제"></span></button>
-<!--                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>-->
-                        </div>
-                    </div>
-                    <div class="cui_jqGrid_body" id="Grid">
-                        <div id="gridArea" gridYN=""></div>
-                    </div>
-                </div>
-
+            <div class="search_action">
+                <button type="button" id="searchBtn" onclick="ListSearch()" class="cui_button primary"><span
+                        data-langsid="검색"></span></button>
             </div>
         </div>
 
 
-
-        <!--복사 팝업-->
-        <div class="cui_dialog" style="width:300px;display:none;" id="popCopyCoa">
-            <div class="dialog_container">
-                <div class="dialog_head">
-                    <div class="dialog_title">
-                        <div class="main_label"><span id="modalTitle" data-langsid="COA 데이터 복사"></span></div>
-                    </div>
-                    <div class="dialog_toolbar">
-                        <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close"><span>Close</span></button>
-                    </div>
+        <div class="cui_jqGrid_section">
+            <div class="cui_jqGrid_head">
+                <div class="jqGrid_label"></div>
+                <div class="jqGrid_aside">
+                    <button type="button" class="cui_button endpoint" data-cui-icon="copy" onclick="copyOpen();"><span
+                            data-langsid="복사"></span></button>
+                    <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="addOpen();">
+                        <span data-langsid="스팩 다운로드"></span></button>
+                    <button type="button" class="cui_button endpoint" data-cui-icon="upload"
+                            onclick="excelUploadOpen();"><span data-langsid="업로드"></span></button>
+                    <button type="button" class="cui_button endpoint" data-cui-icon="check" onclick="btnCoaRegist();">
+                        <span data-langsid="등록"></span></button>
+                    <button type="button" class="cui_button endpoint" data-cui-icon="trash" onclick="btnDelete();"><span
+                            data-langsid="선택 삭제"></span></button>
+                    <!--                            <button type="button" class="cui_button endpoint" data-cui-icon="download" onclick="downloadExcel();"><span data-langsid="엑셀 다운로드"></span></button>-->
                 </div>
-                <div class="dialog_body">
-                    <div class="body_root">
-                        <form class="cui_form_section" data-legend="true" name="formPartCodeMgmt">
-                            <fieldset>
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label" data-langsid="출하일"></strong>
-                                    <div class="item_content">
-                                        <input type="text" class="cui_text_field datepicker" id="popCopyCoaDDate" name="popCopyCoaDDate" datePickerControlModal="" reqcheck="reqcheck" data-messages="출하일을 입력해 주세요."  messages="" >
-                                        <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                    </div>
-                                </label>
-
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label" data-langsid="제조일"></strong>
-                                    <input type="text" class="cui_text_field datepicker" id="popCopyCoaMDate" name="popCopyCoaMDate" datePickerControlModal=""  reqcheck="reqcheck" data-messages="제조일을 입력해 주세요."  messages="" >
-                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                </label>
-
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label" data-langsid="만료일"></strong>
-                                    <input type="text" class="cui_text_field datepicker" id="popCopyCoaEDate" name="popCopyCoaEDate" datePickerControlModal=""  reqcheck="reqcheck" data-messages="만료일을 입력해 주세요."  messages="" >
-                                    <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span data-langsid="날자 선택"></span></button>
-                                </label>
-
-                                <label class="cui_items_wrap" data-direction="left">
-                                    <strong class="item_label" data-langsid="수량"></strong>
-                                    <input class="cui_text_field" type="text" placeholder="" id="popCopyCoaVolume" name="popCopyCoaVolume" search="searchBtn" reqcheck="reqcheck" data-messages="수량을 입력해 주세요."  messages="">
-                                </label>
-
-                                <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
-                                    <div class="item_content">
-                                        <button type="button" id="PartCodeMgmtAdd" class="cui_button primary" onclick="copy();"><span data-langsid="등록"></span></button>
-                                        <button type="button" id="PartCodeMgmtPop" class="cui_button secondary" dialogBtn="close"><span data-langsid="취소"></span></button>
-                                    </div>
-                                </div>
-
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
+            </div>
+            <div class="cui_jqGrid_body" id="Grid">
+                <div id="gridArea" gridYN=""></div>
             </div>
         </div>
 
+    </div>
+</div>
 
 
+<!--복사 팝업-->
+<div class="cui_dialog" style="width:300px;display:none;" id="popCopyCoa">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span id="modalTitle" data-langsid="COA 데이터 복사"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close">
+                    <span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_section" data-legend="true" name="formPartCodeMgmt">
+                    <fieldset>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="출하일"></strong>
+                            <div class="item_content">
+                                <input type="text" class="cui_text_field datepicker" id="popCopyCoaDDate"
+                                       name="popCopyCoaDDate" datePickerControlModal="" reqcheck="reqcheck"
+                                       data-messages="출하일을 입력해 주세요." messages="">
+                                <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                        data-langsid="날자 선택"></span></button>
+                            </div>
+                        </label>
 
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="제조일"></strong>
+                            <input type="text" class="cui_text_field datepicker" id="popCopyCoaMDate"
+                                   name="popCopyCoaMDate" datePickerControlModal="" reqcheck="reqcheck"
+                                   data-messages="제조일을 입력해 주세요." messages="">
+                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                    data-langsid="날자 선택"></span></button>
+                        </label>
 
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="만료일"></strong>
+                            <input type="text" class="cui_text_field datepicker" id="popCopyCoaEDate"
+                                   name="popCopyCoaEDate" datePickerControlModal="" reqcheck="reqcheck"
+                                   data-messages="만료일을 입력해 주세요." messages="">
+                            <button type="button" class="cui_button icon endpoint" data-cui-icon="calendar"><span
+                                    data-langsid="날자 선택"></span></button>
+                        </label>
 
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="수량"></strong>
+                            <input class="cui_text_field" type="text" placeholder="" id="popCopyCoaVolume"
+                                   name="popCopyCoaVolume" search="searchBtn" reqcheck="reqcheck"
+                                   data-messages="수량을 입력해 주세요." messages="">
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                            <div class="item_content">
+                                <button type="button" id="PartCodeMgmtAdd" class="cui_button primary" onclick="copy();">
+                                    <span data-langsid="등록"></span></button>
+                                <button type="button" id="PartCodeMgmtPop" class="cui_button secondary"
+                                        dialogBtn="close"><span data-langsid="취소"></span></button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--등록유효성 팝업-->
+<div class="cui_dialog" style="width:500px;display:none;" id="popRegistorInfo">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label" id="ExpiredRegistorTitle"><span data-langsid="잔존유효기간 공지"></span></div>
+                <div class="main_label" id="SpecCheckmodalTitle"><span data-langsid="[입력된 DATA 재 확인 필요]"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close">
+                    <span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form class="cui_form_section" data-legend="true" name="formExpiredRegistor">
+                    <fieldset>
+
+                        <div class="cui_content" data-direction="center">
+                            <div class="item_content" id='popExpiredRegistorViewInfo'>
+                                <!--만료-->
+                            </div>
+
+                            <div class="item_content" id='popSpecCheckViewInfo'>
+                                <!--스펙-->
+                            </div>
+
+                        </div>
+
+                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                            <div class="item_content">
+                                <button type="button" id="coaRegist" class="cui_button primary" onclick="coaReg()"><span
+                                        data-langsid="등록"></span></button>
+                                <button type="button" id="coaRegistCancel" class="cui_button secondary"
+                                        dialogBtn="close"><span data-langsid="취소"></span></button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--엑셀 업로드 팝업-->
+<div class="cui_dialog" style="width:500px;display:none;" id="popUpload">
+    <div class="dialog_container">
+        <div class="dialog_head">
+            <div class="dialog_title">
+                <div class="main_label"><span id="modaluploadTitle" data-langsid="업로드"></span></div>
+            </div>
+            <div class="dialog_toolbar">
+                <button class="cui_button icon endpoint modal-close" data-cui-icon="xmark" dialogBtn="close">
+                    <span>Close</span></button>
+            </div>
+        </div>
+        <div class="dialog_body">
+            <div class="body_root">
+                <form  id="sendForm"  class="cui_form_section" data-legend="true" name="formCoaExcelupload"
+                      enctype="multipart/form-data">
+                    <fieldset>
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="Vendor" style="width: 90px;"></strong>
+                            <div class="item_content">
+                                <select id="ddlUpVendor" name="ddlUpVendor" class="cui_select_field wide"
+                                        onchange="searchMaterial();" reqcheck="reqcheck"
+                                        data-messages="Vendor 를 입력해 주세요." messages="">
+                                    <option value=""></option>
+                                    <option th:each="company : ${companyList}"
+                                            th:value="${company.COM_CODE}"
+                                            th:text="${company.COM_NAME}">
+                                    </option>
+                                </select>
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="Material" style="width: 90px;"></strong>
+                            <div class="item_content">
+                                <select id='ddlUpMaterial' name='ddlUpMaterial'   class='cui_select_field wide'
+                                        onchange="searchMaterialFactoryList()" reqcheck="reqcheck"
+                                        data-messages="Material 를 입력해 주세요." messages="">
+                                </select>
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="Plant Code" style="width: 90px;"></strong>
+                            <div class="item_content">
+                                <select id='ddlUpPlant'  name='ddlUpPlant'  class='cui_select_field wide'
+                                        data-messages="Plant Code 를 입력해 주세요." messages="">
+                                </select>
+                            </div>
+                        </label>
+
+                        <label class="cui_items_wrap" data-direction="left">
+                            <strong class="item_label" data-langsid="파일 업로드" style="width: 90px;"></strong>
+                            <div class="cui_attachments">
+                                <input type="file" id="file" name="file" class="cui_file_field" style="width: 150px;"
+                                       reqcheck="reqcheck" data-messages="엑셀 양식을 등록해 주세요." messages="">
+                            </div>
+                        </label>
+
+                        <div class="cui_items_wrap" data-direction="center" style="top-margin:10px;">
+                            <div class="item_content">
+                                <button type="button" id="Upload" class="cui_button primary" onclick="popUpload();"><span
+                                        data-langsid="업로드"></span></button>
+                                <button type="button" id="closeUpload" class="cui_button secondary" dialogBtn="close">
+                                    <span data-langsid="취소"></span></button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>
@@ -200,341 +346,740 @@
 
 <script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-        });
-
-
-       var ListSearch = function () {
-           var url = "/admin/qualityCtrl/getCOAList";
-           var ReqInfo = new Common.RequestInfo();
-           ReqInfo.AddParameter($("#searchArea"));
-           Common.Ajax(url, ReqInfo, function (data) {
-               var dataJson = JSON.parse(data);
-               for (var i = 0; i < dataJson.length; i++) {
-                   dataJson[i].CHECK_YN = false;
-               }
-               $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
-               $("#gridArea").pqGrid("refreshView");
-           }, { contentType : "application/json" });
-       }
-
-       var selCpCodeOpen = function () {
-        Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
-       }
-
-       var selUserOpen = function () {
-        Common.Dialog({ url : "/admin/qualityCtrl/userList" });
-       }
-
-       var selpartMatrailOpen = function () {
-        Common.Dialog({ url : "/admin/companyInfo/materialList" });
-       }
-
-       var popCoaOpen = function (coaId, vendorId, materialId,factoryId ,lotNo) {
-        Common.Dialog({ url : "/admin/qualityCtrl/popCoa" , param : { COA_ID :coaId , VENDOR_ID : vendorId, MATERIAL_ID : materialId ,FACTORY_ID : factoryId ,LOT_NO : lotNo } });
-       }
-
-    $(function () {
-       var heightMinus = 330;
-       var data = [];
-
-      var RowColorChg = function (ui) {
-
-            var data = ui.rowData;
-            var coaStatus = data.COA_STATUS;
-
-                if (coaStatus == "B" || coaStatus == "C") {
-                    return { style: "background-color:#A9E2F3" } ;
-                } else if (coaStatus == "D" || coaStatus == "H" || coaStatus == "K") {
-                    return { style: "background-color:#F5A9A9" } ;
-                } else if (coaStatus == "E" || coaStatus == "J" ) {
-                    return { style: "background-color:#FFFFFF" } ;
-                } else if (coaStatus == "F" || coaStatus == "G" || coaStatus == "I") {
-                    return { style: "background-color:#FFC19E" } ;
-                } else {
-                    return { style: "background-color:#E1F5A9" } ;
-                }
-        }
-
-       var obj = {
-           bubble: false,
-           numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
-           editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
-           editModel: { clicksToEdit: 2 },
-           selectionModel: { type: 'cell', mode: 'block' },
-           height: $(window).height() - heightMinus,
-           title: "",
-           sortable: false,
-           resizable: true,
-           menuIcon: true,
-           scrollModel: { autoFit: false },
-           hoverMode: 'row',
-           rowHtHead: 30,
-           rowHt:30,
-           roundCorners: false,
-           rowBorders: true,
-           showBottom: true,
-           showHeader: true,
-           showTitle: true,
-           showTop: false,
-           showToolbar: true,
-           stripeRows: false,
-           wrap: false,
-           autoAddRow: false,
-           freezeCols:0,
-           autoRow: false,
-           autoRowHead: false,
-           rowInit: function () {
-               return { style: 'font-size:12px;' };
-           },
-           selectChange: function (event, ui) {
-           },
-           rowClick: function (event, ui) {
-           },
-           cellClick: function (event, ui) {
-           },
-           rowDblClick: function (event, ui) {
-               var data = ui.rowData;
-
-                const coaId = data.COA_ID ;
-                const vendorId = data.VENDOR_ID ;
-                const materialId = data.MATERIAL_ID ;
-                const factoryId = data.FACTORY_ID ;
-                const lotNo = data.LOT_NO ;
-               popCoaOpen(coaId,vendorId, materialId,factoryId ,lotNo);
-           },
-           rowSelect: function (event, ui) {
-           },
-           open: function () {
-           },
-           headerCellClick: function (event, ui) {
-           }
-       };
-       obj.colModel = [
-           {
-               dataIndx: "CHECK_YN", width: 40, halign: "center", align: "center", resizable: true,
-               title: "",
-               type: 'checkBoxSelection', sortable: true, editor: true, editable: true,
-               dataType: 'bool',
-               cb: {
-                   all: false,
-                   header: false
-               }, render: function (ui) {
-
-                   if (ui.cellData == undefined) {
-                       return { text: "" };
-                   } else {
-                       return;
-                   }
-
-                    var data = ui.rowData;
-                    var coaStatus = data.COA_STATUS;
-
-               }
-           },
-           {  data_langsid :"COA ID" ,title: siteLang.getLang("COA ID"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "COA_ID", sortable: true, editor: false, editable: false ,render: RowColorChg} ,
-           {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "VENDOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_ID", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"공장명" ,title: siteLang.getLang("공장명"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"공장명ID" ,title: siteLang.getLang("공장명"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_ID", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"LOT NO." ,title: siteLang.getLang("LOT NO."), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "LOT_NO", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"Quantity(KG)" ,title: siteLang.getLang("Quantity(KG)"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "QUANTITY", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"출하일" ,title: siteLang.getLang("출하일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "STOCK_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"제조일" ,title: siteLang.getLang("제조일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "MF_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"만료일" ,title: siteLang.getLang("만료일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "E_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"COA 상태" ,title: siteLang.getLang("COA 상태"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "COA_STATUS_STR", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"COA 상태값" ,title: siteLang.getLang("COA 상태"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "COA_STATUS", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"유효" ,title: siteLang.getLang("유효"), width: 50, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_IN", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"작성자" ,title: siteLang.getLang("작성자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "CREATOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"등록일시" ,title: siteLang.getLang("등록일시"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "CREATE_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"작업자" ,title: siteLang.getLang("작업자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "IF_USER", sortable: true, editor: false, editable: false ,render: RowColorChg},
-           {  data_langsid :"수신일자" ,title: siteLang.getLang("수신일자"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "IF_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg}
-
-       ];
-       obj.dataModel = { data: data };
-       $("#gridArea").pqGrid(obj);
-       $("#gridArea").attr("gridYN", "Y");
-
-       $(window).resize(function () {
-           $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
-           $("#gridArea").pqGrid("refreshView");
-       });
-
-       ListSearch();
     });
 
 
-   //복사 팝업 오픈.
-    var addOpen = function () {
+   var ListSearch = function () {
+       var url = "/admin/qualityCtrl/getCOAList";
+       var ReqInfo = new Common.RequestInfo();
+       ReqInfo.AddParameter($("#searchArea"));
+       Common.Ajax(url, ReqInfo, function (data) {
+           var dataJson = JSON.parse(data);
+           for (var i = 0; i < dataJson.length; i++) {
+               dataJson[i].CHECK_YN = false;
+           }
+           $("#gridArea").pqGrid("option", "dataModel.data", dataJson);
+           $("#gridArea").pqGrid("refreshView");
+       }, { contentType : "application/json" });
+   }
 
-        $("#popCopyCoaDDate").val("");
-        $("#popCopyCoaMDate").val("");
-        $("#popCopyCoaEDate").val("");
-        $("#popCopyCoaVolume").val("");
+   var selCpCodeOpen = function () {
+    Common.Dialog({ url : "/admin/companyInfo/cpCodeList" });
+   }
 
-        Common.Dialog({ obj : $("#popCopyCoa"), blockClose : false });
+   var selUserOpen = function () {
+    Common.Dialog({ url : "/admin/qualityCtrl/userList" });
+   }
+
+   var selpartMatrailOpen = function () {
+    Common.Dialog({ url : "/admin/companyInfo/materialList" });
+   }
+
+   var popCoaOpen = function (coaId, vendorId, materialId,factoryId ,lotNo) {
+    Common.Dialog({ url : "/admin/qualityCtrl/popCoa" , param : { COA_ID :coaId , VENDOR_ID : vendorId, MATERIAL_ID : materialId ,FACTORY_ID : factoryId ,LOT_NO : lotNo } });
+   }
+
+
+$(function () {
+   var heightMinus = 330;
+   var data = [];
+
+  var RowColorChg = function (ui) {
+
+        var data = ui.rowData;
+        var coaStatus = data.COA_STATUS;
+
+            if (coaStatus == "B" || coaStatus == "C") {
+                return { style: "background-color:#A9E2F3" } ;
+            } else if (coaStatus == "D" || coaStatus == "H" || coaStatus == "K") {
+                return { style: "background-color:#F5A9A9" } ;
+            } else if (coaStatus == "E" || coaStatus == "J" ) {
+                return { style: "background-color:#FFFFFF" } ;
+            } else if (coaStatus == "F" || coaStatus == "G" || coaStatus == "I") {
+                return { style: "background-color:#FFC19E" } ;
+            } else {
+                return { style: "background-color:#E1F5A9" } ;
+            }
     }
 
+   var obj = {
+       bubble: false,
+       numberCell: { show: true, resizable: true, title: "", width: 35, minWidth: 35 },
+       editor: { type: 'textbox', style: 'border-radius:0px;border:0px;' },
+       editModel: { clicksToEdit: 2 },
+       selectionModel: { type: 'cell', mode: 'block' },
+       height: $(window).height() - heightMinus,
+       title: "",
+       sortable: false,
+       resizable: true,
+       menuIcon: true,
+       scrollModel: { autoFit: false },
+       hoverMode: 'row',
+       rowHtHead: 30,
+       rowHt:30,
+       roundCorners: false,
+       rowBorders: true,
+       showBottom: true,
+       showHeader: true,
+       showTitle: true,
+       showTop: false,
+       showToolbar: true,
+       stripeRows: false,
+       wrap: false,
+       autoAddRow: false,
+       freezeCols:0,
+       autoRow: false,
+       autoRowHead: false,
+       rowInit: function () {
+           return { style: 'font-size:12px;' };
+       },
+       selectChange: function (event, ui) {
+       },
+       rowClick: function (event, ui) {
+       },
+       cellClick: function (event, ui) {
+       },
+       rowDblClick: function (event, ui) {
+           var data = ui.rowData;
 
-    var copyOpen = function() {
-
-        var grid = $("#gridArea").pqGrid("instance");
-        const selectedData = [];
-        for (j = 0; j < grid.pdata.length; j++) {
-
-            if (grid.pdata[j]["CHECK_YN"] == true) {
-               var factoryId =  grid.pdata[j]["FACTORY_ID"]   ;
-               var coaStatus = grid.pdata[j]["COA_STATUS"]    ;
-               selectedData.push({ factoryId: factoryId, coaStatus: coaStatus });
-            }
-        }
-
-       if (selectedData.length === 0) {
-               Common.Msg(siteLang.getLang("복사할 항목을 선택하세요."));
-               return;
+            const coaId = data.COA_ID ;
+            const vendorId = data.VENDOR_ID ;
+            const materialId = data.MATERIAL_ID ;
+            const factoryId = data.FACTORY_ID ;
+            const lotNo = data.LOT_NO ;
+           popCoaOpen(coaId,vendorId, materialId,factoryId ,lotNo);
+       },
+       rowSelect: function (event, ui) {
+       },
+       open: function () {
+       },
+       headerCellClick: function (event, ui) {
        }
+   };
+   obj.colModel = [
+       {
+           dataIndx: "CHECK_YN", width: 40, halign: "center", align: "center", resizable: true,
+           title: "",
+           type: 'checkBoxSelection', sortable: true, editor: true, editable: true,
+           dataType: 'bool',
+           cb: {
+               all: false,
+               header: false
+           }, render: function (ui) {
+
+               if (ui.cellData == undefined) {
+                   return { text: "" };
+               } else {
+                   return;
+               }
+
+                var data = ui.rowData;
+                var coaStatus = data.COA_STATUS;
+
+           }
+       },
+       {  data_langsid :"COA ID" ,title: siteLang.getLang("COA ID"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "COA_ID", sortable: true, editor: false, editable: false ,render: RowColorChg} ,
+       {  data_langsid :"업체명" ,title: siteLang.getLang("업체명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "VENDOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"자재명" ,title: siteLang.getLang("자재명"), width: 140, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"자재코드" ,title: siteLang.getLang("자재코드"), width: 90, halign: "center", align: "left", dataType: "string", dataIndx: "MATERIAL_ID", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"공장명" ,title: siteLang.getLang("공장명"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"공장명ID" ,title: siteLang.getLang("공장명"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "FACTORY_ID", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"LOT NO." ,title: siteLang.getLang("LOT NO."), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "LOT_NO", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"Quantity(KG)" ,title: siteLang.getLang("Quantity(KG)"), width: 100, halign: "center", align: "center", dataType: "string", dataIndx: "QUANTITY", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"출하일" ,title: siteLang.getLang("출하일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "STOCK_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"제조일" ,title: siteLang.getLang("제조일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "MF_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"만료일" ,title: siteLang.getLang("만료일"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "E_DATE", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"COA 상태" ,title: siteLang.getLang("COA 상태"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "COA_STATUS_STR", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"COA 상태값" ,title: siteLang.getLang("COA 상태"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "COA_STATUS", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"유효" ,title: siteLang.getLang("유효"), width: 50, halign: "center", align: "center", dataType: "string", dataIndx: "SPEC_IN", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"작성자" ,title: siteLang.getLang("작성자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "CREATOR_NAME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"등록일시" ,title: siteLang.getLang("등록일시"), width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "CREATE_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"작업자" ,title: siteLang.getLang("작업자"), width: 70, halign: "center", align: "center", dataType: "string", dataIndx: "IF_USER", sortable: true, editor: false, editable: false ,render: RowColorChg},
+       {  data_langsid :"수신일자" ,title: siteLang.getLang("수신일자"), width: 80, halign: "center", align: "center", dataType: "string", dataIndx: "IF_DATETIME", sortable: true, editor: false, editable: false ,render: RowColorChg}
+
+   ];
+   obj.dataModel = { data: data };
+   $("#gridArea").pqGrid(obj);
+   $("#gridArea").attr("gridYN", "Y");
+
+   $(window).resize(function () {
+       $("#gridArea").pqGrid("option", "height", $(window).height() - heightMinus);
+       $("#gridArea").pqGrid("refreshView");
+   });
+
+   ListSearch();
+});
 
 
-        var confirmData = true;
-        var otherFacory = false;
-        var mdFactory = false;
+//복사 팝업 오픈.
+var addOpen = function () {
 
-        $.each(selectedData, function(idx, item) {   //값비교
-            if (item.coaStatus != 'E') {
-                confirmData = false;
-                return false;
-            }
-        });
+    $("#popCopyCoaDDate").val("");
+    $("#popCopyCoaMDate").val("");
+    $("#popCopyCoaEDate").val("");
+    $("#popCopyCoaVolume").val("");
 
-        if (!confirmData) {
-           Common.Msg(siteLang.getLang("등록 할 수 없는 대상입니다."));
-           return false;
+    Common.Dialog({ obj : $("#popCopyCoa"), blockClose : false });
+}
+
+
+var copyOpen = function() {
+
+    var grid = $("#gridArea").pqGrid("instance");
+    const selectedData = [];
+    for (j = 0; j < grid.pdata.length; j++) {
+
+        if (grid.pdata[j]["CHECK_YN"] == true) {
+           var factoryId =  grid.pdata[j]["FACTORY_ID"]   ;
+           var coaStatus = grid.pdata[j]["COA_STATUS"]    ;
+           selectedData.push({ factoryId: factoryId, coaStatus: coaStatus });
         }
+    }
 
-        $.each(selectedData, function(idx, item) {
-            if (item.factoryId == '3100') {
-                mdFactory = true;
-            } else {
-                otherFacory = true;
-            }
-        });
+   if (selectedData.length === 0) {
+           Common.Msg(siteLang.getLang("복사할 항목을 선택하세요."));
+           return;
+   }
 
-        if (otherFacory && mdFactory) {
-            Common.Msg(siteLang.getLang("MD는 다른 사업장과 동시에 선택할 수 없습니다."));
+
+    var confirmData = true;
+    var otherFacory = false;
+    var mdFactory = false;
+
+    $.each(selectedData, function(idx, item) {   //값비교
+        if (item.coaStatus != 'E') {
+            confirmData = false;
             return false;
         }
+    });
 
-        addOpen();   //성공시 모달 오픈.
+    if (!confirmData) {
+       Common.Msg(siteLang.getLang("등록 할 수 없는 대상입니다."));
+       return false;
+    }
 
-        /*
-          복사  사용안함 주석처리 됨. 확인후 구현
-          DB 조회후 처리 로직 주석으로 되어 있음. 2024.12.31 sylee
-            var reqCheckParam = {
-                coaRegList : data
-            };
-            var checkOptions = {
-                method : "POST",
-                success: function (data) {
-                    console.log(data)
-                    if(data.IS_SPEC_YN_CNT){
-                        //coa.messageBox(micaCommon.lang("M_NotSelectedRow"));
-                        $("#popSpecCheck").micaModal('show');
-                        $("#popSpecCheckLanguageType").val(data.USER_LANG);
-                        $("#popSpecCheckViewInfo").html(data.SPEC_CHECK_CONT1+data.SPEC_CHECK_SPEC+data.SPEC_CHECK_CONT2);
-                        coa.lodingBar.hide();
-                    }
-                }
-            };
-            common.ajax("/api/coa/coamgmt/registCheck/", reqCheckParam, checkOptions);
-        */
-
-       // return;
-    };
-
-
-    //복사 팝업 (등록) 버튼 클릭.
-    var copy = function() {
-
-        if (Common.Validate($("#popCopyCoa")) != true) {
-          return;
+    $.each(selectedData, function(idx, item) {
+        if (item.factoryId == '3100') {
+            mdFactory = true;
+        } else {
+            otherFacory = true;
         }
+    });
 
-         Common.Msg(siteLang.getLang("복사 하시겠습니까?"), {
-                mode : "confrim"
-                , okback : function () {
-                    Common.Loading.Show();
-                    setTimeout(function () {
-                        //deletePartCode(selectedData);
-                        copyCoa();
-                        $("#popCopyCoa").data("Hide")();
-                        Common.Loading.Hide();
-                    }, 10);
+    if (otherFacory && mdFactory) {
+        Common.Msg(siteLang.getLang("MD는 다른 사업장과 동시에 선택할 수 없습니다."));
+        return false;
+    }
+
+    addOpen();   //성공시 모달 오픈.
+
+    /*
+      복사  사용안함 주석처리 됨. 확인후 구현
+      DB 조회후 처리 로직 주석으로 되어 있음. 2024.12.31 sylee
+        var reqCheckParam = {
+            coaRegList : data
+        };
+        var checkOptions = {
+            method : "POST",
+            success: function (data) {
+                console.log(data)
+                if(data.IS_SPEC_YN_CNT){
+                    //coa.messageBox(micaCommon.lang("M_NotSelectedRow"));
+                    $("#popSpecCheck").micaModal('show');
+                    $("#popSpecCheckLanguageType").val(data.USER_LANG);
+                    $("#popSpecCheckViewInfo").html(data.SPEC_CHECK_CONT1+data.SPEC_CHECK_SPEC+data.SPEC_CHECK_CONT2);
+                    coa.lodingBar.hide();
                 }
-         });
-
-
-    };
-
-
-    function copyCoa() {
-
-        var grid = $("#gridArea").pqGrid("instance");
-        var selectedData = [];
-
-        var dDate =  $("#popCopyCoaDDate").val();
-        var mDate =  $("#popCopyCoaMDate").val();
-        var eDate =  $("#popCopyCoaEDate").val();
-        var volume = $("#popCopyCoaVolume").val();
-
-        for (j = 0; j < grid.pdata.length; j++) {
-
-            if (grid.pdata[j]["CHECK_YN"] == true) {
-               var coaId =  grid.pdata[j]["COA_ID"]   ;
-               var vendorId = grid.pdata[j]["VENDOR_ID"]    ;
-               var materialId = grid.pdata[j]["MATERIAL_ID"]    ;
-               var factoryId = grid.pdata[j]["FACTORY_ID"]    ;
-               var lotNo = grid.pdata[j]["LOT_NO"]    ;
-
-               selectedData.push({
-                      COA_ID :coaId
-                     ,VENDOR_ID : vendorId
-                     ,MATERIAL_ID : materialId
-                     ,FACTORY_ID : factoryId
-                     ,LOT_NO : lotNo
-                     ,STOCK_DATE: dDate
-                     ,MF_DATE:mDate
-                     ,E_DATE:eDate
-                     ,QUANTITY:volume
-                                      });
-
             }
+        };
+        common.ajax("/api/coa/coamgmt/registCheck/", reqCheckParam, checkOptions);
+    */
+
+   // return;
+};
+
+
+//복사 팝업 (등록) 버튼 클릭.
+var copy = function() {
+
+    if (Common.Validate($("#popCopyCoa")) != true) {
+      return;
+    }
+
+     Common.Msg(siteLang.getLang("복사 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                Common.Loading.Show();
+                setTimeout(function () {
+                    copyCoa();
+                    $("#popCopyCoa").data("Hide")();
+                    Common.Loading.Hide();
+                }, 10);
+            }
+     });
+
+
+};
+
+
+function copyCoa() {
+
+    var grid = $("#gridArea").pqGrid("instance");
+    var selectedData = [];
+
+    var dDate =  $("#popCopyCoaDDate").val();
+    var mDate =  $("#popCopyCoaMDate").val();
+    var eDate =  $("#popCopyCoaEDate").val();
+    var volume = $("#popCopyCoaVolume").val();
+
+    for (j = 0; j < grid.pdata.length; j++) {
+
+        if (grid.pdata[j]["CHECK_YN"] == true) {
+           var coaId =  grid.pdata[j]["COA_ID"]   ;
+           var vendorId = grid.pdata[j]["VENDOR_ID"]    ;
+           var materialId = grid.pdata[j]["MATERIAL_ID"]    ;
+           var factoryId = grid.pdata[j]["FACTORY_ID"]    ;
+           var lotNo = grid.pdata[j]["LOT_NO"]    ;
+
+           selectedData.push({
+                  COA_ID :coaId
+                 ,VENDOR_ID : vendorId
+                 ,MATERIAL_ID : materialId
+                 ,FACTORY_ID : factoryId
+                 ,LOT_NO : lotNo
+                 ,STOCK_DATE: dDate
+                 ,MF_DATE:mDate
+                 ,E_DATE:eDate
+                 ,QUANTITY:volume
+                                  });
+
         }
+    }
 
-
-         $.ajax({
-            type: "post",
-            url: "/admin/qualityCtrl/copyCoa",
-            contentType: "application/json",
-            data: JSON.stringify(selectedData ),
-            success: function(response) {
-                if(response.status === "success") {
-                    Common.Msg(siteLang.getLang("복사 되었습니다."));
-                    $("#popCoa").data("Hide")();
-                }else{
-                  Common.Msg(response.message);
-                }
-            },
-            error: function(err) {
-              console.log("에러발생", err);
-              Common.Msg(err)  ;
+     $.ajax({
+        type: "post",
+        url: "/admin/qualityCtrl/copyCoa",
+        contentType: "application/json",
+        data: JSON.stringify(selectedData ),
+        success: function(response) {
+            if(response.status === "success") {
+                 Common.Msg(siteLang.getLang("복사 되었습니다."), {
+                            okback : function () {
+                               ListSearch();
+                            }
+                 });
+            }else{
+              Common.Msg(response.message);
             }
-        });
+        },
+        error: function(err) {
+          console.log("에러발생", err);
+          Common.Msg(err)  ;
+        }
+    });
+}
+
+
+
+var btnDelete = function() {
+
+     Common.Msg(siteLang.getLang("삭제 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                Common.Loading.Show();
+                setTimeout(function () {
+                    deleteCoa();
+                    Common.Loading.Hide();
+                }, 10);
+            }
+     });
+};
+
+
+function deleteCoa() {
+
+    var grid = $("#gridArea").pqGrid("instance");
+    const selectedData = [];
+    for (j = 0; j < grid.pdata.length; j++) {
+
+        if (grid.pdata[j]["CHECK_YN"] == true) {
+
+           var coaId =  grid.pdata[j]["COA_ID"]   ;
+           var vendorId = grid.pdata[j]["VENDOR_ID"]    ;
+           var materialId = grid.pdata[j]["MATERIAL_ID"]    ;
+           var factoryId = grid.pdata[j]["FACTORY_ID"]    ;
+           var lotNo = grid.pdata[j]["LOT_NO"]    ;
+           var coaStatus = grid.pdata[j]["COA_STATUS"]    ;
+
+           selectedData.push({
+                  COA_ID :coaId
+                 ,VENDOR_ID : vendorId
+                 ,MATERIAL_ID : materialId
+                 ,FACTORY_ID : factoryId
+                 ,LOT_NO : lotNo
+                 ,COA_STATUS : coaStatus
+                                  });
+        }
+    }
+
+   if (selectedData.length === 0) {
+           Common.Msg(siteLang.getLang("삭제할 항목을 선택하세요."));
+           return;
+   }
+
+    var confirmData = true;
+
+    $.each(selectedData, function(idx, item) {   //값비교
+        if (item.coaStatus == 'B' || item.coaStatus == 'C' ||item.coaStatus == 'E') {
+            confirmData = false;
+            return false;
+        }
+    });
+
+    if (!confirmData) {
+       Common.Msg(siteLang.getLang("삭제 할 수 없는 대상입니다."));
+       return false;
     }
 
 
+     $.ajax({
+        type: "post",
+        url: "/admin/qualityCtrl/deleteCoa",
+        contentType: "application/json",
+        data: JSON.stringify(selectedData ),
+        success: function(response) {
+            if(response.status === "success") {
+                 Common.Msg(siteLang.getLang("삭제 되었습니다."), {
+                            okback : function () {
+                               ListSearch();
+                            }
+                 });
+            }else{
+              Common.Msg(response.message);
+            }
+        },
+        error: function(err) {
+          console.log("에러발생", err);
+          Common.Msg(err)  ;
+        }
+    });
+}
 
+
+//등록 팝업 오픈.
+var coaRegistOpen = function () {
+
+<!--        $("#popCopyCoaDDate").val("");-->
+<!--        $("#popCopyCoaMDate").val("");-->
+<!--        $("#popCopyCoaEDate").val("");-->
+<!--        $("#popCopyCoaVolume").val("");-->
+
+    Common.Dialog({ obj : $("#popRegistorInfo"), blockClose : false });
+}
+
+var btnCoaRegist = function() {
+
+    var grid = $("#gridArea").pqGrid("instance");
+    const selectedData = [];
+    for (j = 0; j < grid.pdata.length; j++) {
+
+        if (grid.pdata[j]["CHECK_YN"] == true) {
+
+           var coaId =  grid.pdata[j]["COA_ID"]   ;
+           var vendorId = grid.pdata[j]["VENDOR_ID"]    ;
+           var materialId = grid.pdata[j]["MATERIAL_ID"]    ;
+           var factoryId = grid.pdata[j]["FACTORY_ID"]    ;
+           var lotNo = grid.pdata[j]["LOT_NO"]    ;
+           var coaStatus = grid.pdata[j]["COA_STATUS"]    ;
+           var stockDate = grid.pdata[j]["STOCK_DATE"]    ;
+
+           selectedData.push({
+                  COA_ID :coaId
+                 ,VENDOR_ID : vendorId
+                 ,MATERIAL_ID : materialId
+                 ,FACTORY_ID : factoryId
+                 ,LOT_NO : lotNo
+                 ,COA_STATUS : coaStatus
+                 ,STOCK_DATE : stockDate
+                                  });
+        }
+    }
+
+   if (selectedData.length === 0) {
+           Common.Msg(siteLang.getLang("등록할 항목을 선택하세요."));
+           return;
+   }
+
+    var confirmData = true;
+
+    $.each(selectedData, function(idx, item) {
+        if (item.COA_STATUS != 'A' ) {
+            confirmData = false;
+            return false;
+        }
+    });
+
+    if (!confirmData) {
+       Common.Msg(siteLang.getLang("등록 할 수 없는 대상입니다."));
+       return false;
+    }
+
+    var otherFacory = false;
+    var mdFactory = false;
+
+    $.each(selectedData, function(idx, item) {
+        if (item.FACTORY_ID == '3100') {
+            mdFactory = true;
+        } else {
+            otherFacory = true;
+        }
+    });
+
+    if (otherFacory && mdFactory) {
+        Common.Msg(siteLang.getLang("MD는 다른 사업장과 동시에 선택할 수 없습니다."));
+        return false;
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/admin/qualityCtrl/registCheck",
+        contentType: "application/json",
+        data: JSON.stringify(selectedData ),
+        success: function(response) {
+            if(response.status === "success") {
+                $("#ExpiredRegistorTitle").hide();
+                $("#SpecCheckmodalTitle").hide();
+                if(response.IS_SPEC_YN_CNT){
+                 coaRegistOpen();
+<!--                            alert("IS_SPEC_YN_CNT: " + response.IS_SPEC_YN_CNT);-->
+
+                    //보여줄 리턴값 조합.
+                    $("#popSpecCheckViewInfo").html(response.SPEC_CHECK_CONT1
+                                                  + response.SPEC_CHECK_SPEC
+                                                  + response.SPEC_CHECK_CONT2
+                                                  + response.MAIL_INFO);
+
+                    <!--	if(response.USER_TYPE=="MU"||response.USER_TYPE=="AU"){-->
+                    <!--		$("#popSpecCheckRegistrorEnroll").show();
+                    <!--	}-->
+
+                    $("#popSpecCheckViewInfo").show();
+                    $("#popExpiredRegistorViewInfo").hide();
+
+                    $("#SpecCheckmodalTitle").show();
+                    $("#ExpiredRegistorTitle").hide();
+
+
+                }else if(response.IS_CONTROL_YN_CNT){
+                 coaRegistOpen();
+<!--					        alert("IS_CONTROL_YN_CNT: " +response.IS_CONTROL_YN_CNT);-->
+
+                    $("#popSpecCheckViewInfo").show();
+                    $("#popExpiredRegistorViewInfo").hide();
+
+                    $("#SpecCheckmodalTitle").show();
+                    $("#ExpiredRegistorTitle").hide();
+
+                    $("#popSpecCheckViewInfo").html(response.SPEC_CHECK_CONT1
+                                                    + response.SPEC_CHECK_CTRL
+                                                    + response.SPEC_CHECK_CONT2
+                                                    + response.MAIL_INFO);
+
+                    //$("#popSpecCheckRegistrorEnroll").show();  //버튼
+
+                }else if (response.ISEXPIRED){
+                 coaRegistOpen();
+<!--						alert("ISEXPIRED: " + response.ISEXPIRED);-->
+
+                    $("#popSpecCheckViewInfo").hide();
+                    $("#popExpiredRegistorViewInfo").show() ;
+
+                    $("#SpecCheckmodalTitle").hide();
+                    $("#ExpiredRegistorTitle").show();
+
+                    $("#popExpiredRegistorViewInfo").html(response.NOTICE_CONT);
+
+                } else{
+                  registCoa();
+                }
+
+            }else{
+              //에러메세지
+              Common.Msg(response.message);
+            }
+        },
+        error: function(err) {
+          console.log("에러발생", err);
+          Common.Msg(err)  ;
+        }
+    });
+
+};
+
+
+//coaReg
+var coaReg = function() {
+
+       Common.Msg(siteLang.getLang("등록 하시겠습니까?"), {
+            mode : "confrim"
+            , okback : function () {
+                Common.Loading.Show();
+                setTimeout(function () {
+                    registCoa();
+                    Common.Loading.Hide();
+                }, 10);
+            }
+     });
+};
+
+
+function registCoa() {
+
+    var grid = $("#gridArea").pqGrid("instance");
+    const selectedData = [];
+    for (j = 0; j < grid.pdata.length; j++) {
+
+        if (grid.pdata[j]["CHECK_YN"] == true) {
+
+           var coaId =  grid.pdata[j]["COA_ID"]   ;
+           var vendorId = grid.pdata[j]["VENDOR_ID"]    ;
+           var materialId = grid.pdata[j]["MATERIAL_ID"]    ;
+           var factoryId = grid.pdata[j]["FACTORY_ID"]    ;
+           var lotNo = grid.pdata[j]["LOT_NO"]    ;
+           var coaStatus = grid.pdata[j]["COA_STATUS"]    ;
+           var stockDate = grid.pdata[j]["STOCK_DATE"]    ;
+           selectedData.push({
+                  COA_ID :coaId
+                 ,VENDOR_ID : vendorId
+                 ,MATERIAL_ID : materialId
+                 ,FACTORY_ID : factoryId
+                 ,LOT_NO : lotNo
+                 ,STOCK_DATE : stockDate
+                 ,COA_STATUS : coaStatus
+                                  });
+        }
+    }
+
+     $.ajax({
+        type: "post",
+        url: "/admin/qualityCtrl/regist",
+        contentType: "application/json",
+        data: JSON.stringify(selectedData),
+        success: function(response) {
+            if(response.status === "success") {
+                $("#popRegistorInfo").data("Hide")();
+                ListSearch();
+            }else{
+              Common.Msg(response.message);
+            }
+        },
+        error: function(err) {
+          console.log("에러발생", err);
+          Common.Msg(err)  ;
+        }
+    });
+}
+
+
+    //엑셀 업로드 팝업 오픈.
+var excelUploadOpen = function () {
+    var fileInput = document.getElementById('file');
+    fileInput.value = '';
+
+    Common.Dialog({ obj : $("#popUpload"), blockClose : false });
+}
+
+function searchMaterial(){
+    var url = "/admin/qualityCtrl/getMaterialListCoa";
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.AddParameter("COM_CODE", document.getElementById('ddlUpVendor').value);
+    Common.Ajax(url, ReqInfo, function (data) {
+       var dataJson = JSON.parse(data);
+        setUpMaterialReset(dataJson);
+    });
+}
+
+function setUpMaterialReset(dataJson) {
+    var ddlUpMaterial = document.getElementById('ddlUpMaterial');
+
+    $("#ddlUpMaterial option").each(function() {
+        if ($(this).val() !== '0') {
+            $(this).remove();
+        }
+    });
+
+    dataJson.forEach(function(material) {
+            var option = document.createElement('option');
+            option.value = material.PART_CODE;
+            option.textContent = material.PART_NAME;
+            ddlUpMaterial.appendChild(option);
+    });
+
+    searchMaterialFactoryList();
+}
+
+function searchMaterialFactoryList(){
+
+    var url = "/admin/qualityCtrl/getMaterialFactoryListCoa";
+    var ReqInfo = new Common.RequestInfo();
+
+    ReqInfo.AddParameter("vendorId", document.getElementById('ddlUpVendor').value);
+    ReqInfo.AddParameter("materialId", document.getElementById('ddlUpMaterial').value);
+
+    Common.Ajax(url, ReqInfo, function (data) {
+       var dataJson = JSON.parse(data);
+       setMaterialFactoryList(dataJson);
+    });
+}
+
+
+function setMaterialFactoryList(dataJson) {
+    var ddlUpPlant = document.getElementById('ddlUpPlant');
+
+    $("#ddlUpPlant option").each(function() {
+        if ($(this).val() !== '0') {
+            $(this).remove();
+        }
+    });
+
+    dataJson.forEach(function(plant) {
+            var option = document.createElement('option');
+            option.value = plant.FACTORY_ID;
+            option.textContent = plant.FACTORY_NAME;
+            ddlUpPlant.appendChild(option);
+    });
+}
+
+
+function popUpload() {
+  if (Common.Validate($("#popUpload")) != true) {
+      return;
+  }
+
+    var obj = $("#sendForm");
+    Common.Loading.Show();
+
+    var ReqInfo = new Common.RequestInfo();
+    ReqInfo.formData  = new FormData();
+    ReqInfo.AddParameter(obj);
+
+    Common.Ajax("/admin/qualityCtrl/upload", ReqInfo, function (response) {
+        if (response == "OK") {
+            Common.Loading.Hide();
+            Common.Msg(siteLang.getLang("저장되었습니다."), {
+                mode : "msg"
+                , okback : function () {
+                    location.reload();
+                }
+            });
+        }
+    });
+
+
+
+}
 
 
 </script>
