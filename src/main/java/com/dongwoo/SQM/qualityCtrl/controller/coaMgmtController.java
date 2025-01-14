@@ -172,6 +172,22 @@ public class coaMgmtController {
         return coaMgmtService.getUserList(code,name);
     }
 
+    //자재코드 팝업
+    @PostMapping("/admin/qualityCtrl/materialList")
+    public String materialList(Model model) {
+        return "coaMgmt/apiMaterialList";
+    }
+
+
+    @PostMapping("/admin/qualityCtrl/getCoaMaterialList")
+    @ResponseBody
+    public List<HashMap> getCoaMaterialList(HttpServletRequest req) {
+        String code = req.getParameter("searchMaterialId");
+        String name = req.getParameter("searchMaterialName");
+        String vendorId = req.getParameter("searchVandorId");
+        return coaMgmtService.getCoaMaterialList(code,name ,vendorId);
+    }
+
 
     @GetMapping("/admin/qualityCtrl/coaMgmt")
     public String coaList(Model model) {
@@ -197,15 +213,7 @@ public class coaMgmtController {
         return "coaMgmt/coaList";
     }
 
-    @PostMapping("/admin/qualityCtrl/getMaterialListCoa")
-    @ResponseBody
-    public List<HashMap> getMaterialListCoa(HttpServletRequest req) {
-        String COM_CODE = req.getParameter("COM_CODE");
-
-        //엑셀 업로드 자재코드  SC_PART_CODE
-        return coaMgmtService.getMaterialListCoa(COM_CODE);
-    }
-
+    //엑셀 업로드 팝업 플렌트 코드 조회
     @PostMapping("/admin/qualityCtrl/getMaterialFactoryListCoa")
     @ResponseBody
     public List<HashMap> getMaterialFactoryListCoa(HttpServletRequest req ,HttpServletRequest request) {
@@ -217,56 +225,28 @@ public class coaMgmtController {
 
     //COA LIST 검색
     @PostMapping("/admin/qualityCtrl/getCOAList")
-    public ResponseEntity<?> getcoaList(@RequestBody coaMgmtDTO coaMgmtdto) {
+    public ResponseEntity<?> getcoaList(@RequestBody coaMgmtDTO coaMgmtdto ,HttpServletRequest request) {
         try {
             System.out.println("Received scoreMgmtDTO: " + coaMgmtdto);
 
 //            reqParam.put("TOKEN_USER_ID", tokenInfo.get("USER_ID"));
-//            reqParam.put("TOKEN_USER_TYPE", tokenInfo.get("USER_TYPE"));
+//            reqParam.put("TOKEN_USER_TYPE", tokenInfo.get("USER_TYPE"));  // MU , VU 구분 필요
 //            reqParam.put("TOKEN_USER_LANG", tokenInfo.get("USER_LANG"));
 //            reqParam.put("TOKEN_SITE_ID", tokenInfo.get("SITE_ID"));
 
             //로그인 사용자 정보
             UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String user_gubun = user.getUSER_GUBUN();
+            String user_type = "";
+            if(Objects.equals(user_gubun, "100")) {
+                user_type="AU";     //user_gubun :  관리자 , 사용자 권한 구분 확인
+            }
             String user_id = user.getUsername();
-
-
-            coaMgmtdto.setTOKEN_USER_TYPE("AU");   //user_gubun :  관리자 , 사용자 권한 구분 확인
-            coaMgmtdto.setTOKEN_USER_LANG("KR");   //언어 설정 확인.
+            coaMgmtdto.setTOKEN_USER_TYPE(user_type);
+            String sUSER_LANG = getSelLangCookie(request,"DP");
+            coaMgmtdto.setTOKEN_USER_LANG(sUSER_LANG);
             coaMgmtdto.setTOKEN_USER_ID("tykkim@lg.com"); //user_id 유저 매핑 해야됨.   test ===  >   tester  ,tykkim@lg.com
 
-
-//            String vendorNameStr = (String) reqParam.get("vendorName");
-//            List<String> vendorNameList = new ArrayList<String>();
-//
-//            if (!StringUtils.isEmpty(vendorNameStr)) {
-//                if (vendorNameStr.indexOf("|") > -1) {
-//                    String[] vendorNameArr = vendorNameStr.split("|");
-//                    for (int i = 0 ; i < vendorNameArr.length ; i++) {
-//                        vendorNameList.add(vendorNameArr[i]);
-//                    }
-//                    coaMgmtdto.setvendorNameList(vendorNameList);
-//                }
-//            }
-
-
-//            public int deleteCompanyUser(String comCode,int useridx , List<Integer> companyUseridxList) {
-//                Map<String, Object> params = new HashMap<>();
-//                params.put("COM_CODE", comCode);
-//                params.put("USER_IDX", useridx);
-//                params.put("list", companyUseridxList);
-//                return sql.delete("Member.deleteUserinfoCompanyUser", params);
-//            }
-//
-//             <delete id="deleteUserinfoCompanyUser" parameterType="map">
-//                    DELETE FROM SC_USER_INFO_COMPANY_USER
-//            WHERE COM_CODE = #{COM_CODE} AND USER_IDX =#{USER_IDX}
-//            AND COM_USER_IDX NOT IN
-//        <foreach collection="list" item="COM_USER_IDX" open="(" separator="," close=")">
-//            #{COM_USER_IDX}
-//        </foreach>
-//    </delete>
 
 
             List<coaMgmtDTO> coaList = coaMgmtService.getCOAList(coaMgmtdto);

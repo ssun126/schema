@@ -28,10 +28,11 @@ public class coaMgmtRepository {
     public List<HashMap> getUserList(Map<String, Object> params) {
         return sql.selectList("coaMgmt.getUserList", params);
     }
-    //COA 엑셀 등록 팝업 자재 리스트 조회
-    public List<HashMap> getMaterialListCoa(Map<String, Object> params) {
-        return sql.selectList("coaMgmt.getMaterialListCoa", params);
+    //자재 팝업 조회 ,엑셀 업로드 콤보 리스트
+    public List<HashMap> getCoaMaterialList(Map<String, Object> params) {
+        return sql.selectList("coaMgmt.getCoaMaterialList", params);
     }
+
     //COA 엑셀 등록 팝업 플랜트
     public List<HashMap> getMaterialFactoryList(Map<String, Object> params) {
         return sql.selectList("coaMgmt.getMaterialFactoryListCoa", params);
