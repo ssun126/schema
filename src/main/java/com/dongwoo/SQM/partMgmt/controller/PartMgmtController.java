@@ -1703,11 +1703,11 @@ public class PartMgmtController {
             //if (!msdsFile.isEmpty()) {
             if(sccsFile != null){
                 if (!sccsFile.isEmpty()) {
-                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, sccsFile);
-                    String etc_filename = sccsFile.getOriginalFilename();
+                    String sccs_filepath = partMgmtService.uploadFileData(PM_PART_CODE, sccsFile);
+                    String sccs_filename = sccsFile.getOriginalFilename();
 
-                    sccsDTO.setSCCS_FILE_NAME(etc_filename);
-                    sccsDTO.setSCCS_FILE_PATH(etc_filepath);
+                    sccsDTO.setSCCS_FILE_NAME(sccs_filename);
+                    sccsDTO.setSCCS_FILE_PATH(sccs_filepath);
 
                 }
             }
@@ -1721,11 +1721,11 @@ public class PartMgmtController {
             //if (!rohsFile.isEmpty()) {
             if (ingredFile != null) {
                 if (!ingredFile.isEmpty()) {
-                    String etc_filepath = partMgmtService.uploadFileData(PM_PART_CODE, ingredFile);
-                    String etc_filename = ingredFile.getOriginalFilename();
+                    String ingred_filepath = partMgmtService.uploadFileData(PM_PART_CODE, ingredFile);
+                    String ingred_filename = ingredFile.getOriginalFilename();
 
-                    ingredGDTO.setINGRED_FILE_NAME(etc_filename);
-                    ingredGDTO.setINGRED_FILE_PATH(etc_filepath);
+                    ingredGDTO.setINGRED_FILE_NAME(ingred_filename);
+                    ingredGDTO.setINGRED_FILE_PATH(ingred_filepath);
                 }
             }
 
@@ -1811,6 +1811,7 @@ public class PartMgmtController {
                     guarantDTO.setPM_IDX(GetParam(request, "PM_IDX" , ""));
                     guarantDTO.setGUARANT_TYPE(GetParam(request, "GUARANT_TYPE" + (i+1), ""));
                     guarantDTO.setGUARANT_CONFIRM_DATE(GetParam(request, "GUARANT_CONFIRM_DATE" + (i+1), ""));
+                    guarantDTO.setGUARANT_REMARK(GetParam(request, "GUARANT_REMARK" + (i+1), ""));
 
                     MultipartFile files = ((StandardMultipartHttpServletRequest) request).getFile("GUARANT_FILE" + (i+1));
 

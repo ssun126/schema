@@ -19,6 +19,9 @@ public class partDetailGuarantDTO {
     @JsonProperty("GUARANT_FILE_PATH")
     private String GUARANT_FILE_PATH;
 
+    @JsonProperty("GUARANT_REMARK")
+    private String GUARANT_REMARK;
+
     @JsonProperty("FILE_STATUS")
     private String FILE_STATUS;
 }

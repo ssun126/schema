@@ -18,6 +18,8 @@ public class partDetailSccsDTO {
     private String SCCS_FILE_NAME;
     @JsonProperty("SCCS_FILE_PATH")
     private String SCCS_FILE_PATH;
+    @JsonProperty("SCCS_REMARK")
+    private String SCCS_REMARK;
 
     @JsonProperty("FILE_STATUS")
     private String FILE_STATUS;
