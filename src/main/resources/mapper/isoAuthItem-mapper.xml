@@ -17,8 +17,15 @@
         WHERE COM_CODE=#{COM_CODE} AND AUTH_CODE=#{AUTH_CODE}
     </update>
 
-    <select id="selectAuthItem" parameterType="isoAuthItem" resultType="int">
-        SELECT COUNT(*) from SC_ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
+    <select id="selectAuthState" parameterType="isoAuthItem" resultType="String">
+        SELECT CASE
+            WHEN COUNT(CASE WHEN ITEM_STATE = 'APPROVED' THEN 1 END) = COUNT(*) THEN 'APPROVED'
+            WHEN COUNT(CASE WHEN ITEM_STATE = 'REJECT' THEN 1 END) > 0 THEN 'REJECT'
+            WHEN COUNT(CASE WHEN ITEM_STATE = 'SEND' THEN 1 END) > 0 THEN 'SEND'
+            WHEN COUNT(CASE WHEN ITEM_STATE = 'SAVE' THEN 1 END) > 0 THEN 'SAVE'
+            ELSE ''
+            END AS ITEM_STATE
+        from SC_ISO_AUTH_COMPANY_ITEM where AUTH_CODE=#{AUTH_CODE} and COM_CODE=#{COM_CODE}
     </select>
 
 

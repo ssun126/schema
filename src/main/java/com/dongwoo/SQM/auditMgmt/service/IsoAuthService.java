@@ -71,9 +71,10 @@ public class IsoAuthService {
             int rsltCnt = auditMgmtRepository.insertAuth(authDTO); //저장
         }
         AuditMgmtDTO authMgmtDTO = auditMgmtRepository.selectAuth(authDTO);
+
         // 파일이 존재하면 처리
         if (fileNames != null && fileNames.length > 0 && authMgmtDTO != null) {
-
+            log.info("fileNames???"+fileNames.length);
             // 각 파일을 저장하고 경로를 DTO에 추가
             for(int i = 0; i < fileNames.length; i++) {
                 String filePath = saveFile(fileNames[i]);
@@ -107,7 +108,9 @@ public class IsoAuthService {
                 params.put("COM_CODE", comCode);
                 IsoAuthItemDTO ItemDTO = isoAuthRepository.findByIsoAuthItem(params);
                 if(ItemDTO != null){ //이전 정보가 있고
-                    if(ItemDTO != dto) { //정보가 같지 않다면 update
+                    log.info("ItemDTO==="+ItemDTO);
+                    log.info("dto==="+dto);
+                    if(ItemDTO != dto && !ItemDTO.getITEM_STATE().equals("APPROVED") && !ItemDTO.getITEM_STATE().equals("SEND")) { //정보가 같지 않고 승인 데이터가 아니라면 update
                         isoAuthRepository.updateItem(dto);  // updateItem
                     }
                 }else {
@@ -117,7 +120,7 @@ public class IsoAuthService {
         }
 
     }
-
+    //파일 저장
     private String saveFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("파일이 없습니다.");
@@ -243,7 +246,9 @@ public class IsoAuthService {
             log.info("isoAuthItemDTO??"+isoAuthItemDTO);
             rsltCnt = isoAuthRepository.updateStatus(isoAuthItemDTO);
             if(rsltCnt > 0 ){
-                rsltCnt += saveAuthResult(com_code, state, totalPoint);
+                //전체 상태 업데이트
+                String totalState = isoAuthRepository.selectAuthState(isoAuthItemDTO);
+                rsltCnt += saveAuthResult(com_code, totalState, totalPoint);
             }
 
             //승인이면  >> POVIS 전송
