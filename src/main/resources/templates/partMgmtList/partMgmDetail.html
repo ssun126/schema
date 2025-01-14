@@ -128,6 +128,7 @@
                             <col style="width:120px;">
                             <col style="width:120px;">
                             <col style="width:120px;">
+                            <col style="width:170px;">
                             <col>
                         </colgroup>
                         <thead>
@@ -138,7 +139,7 @@
                             <th><span>PB</span><span style="color: #e74c3c;">*</span></th>
                             <th><span>CR6</span><span style="color: #e74c3c;">*</span></th>
                             <th><span>PBBS</span><span style="color: #e74c3c;">*</span></th>
-
+                            <th><span data-langsid="추가 기재사항"></span><span style="color: #e74c3c;">*</span></th>
                             <th><span data-langsid="첨부파일"></span><span style="color: #e74c3c;">*</span></th>
 
                         </tr>
@@ -154,7 +155,7 @@
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PB}"  name="ROHS_PB" reqcheck="reqcheck" data-messages="Rohs PB 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_CR6}"  name="ROHS_CR6" reqcheck="reqcheck" data-messages="Rohs CR6 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_PBBS}"  name="ROHS_PBBS" reqcheck="reqcheck" data-messages="Rohs PBBS 입력해주세요." messages=""></td>
-
+                            <td rowspan="3"><input type="text" class="cui_text_field" th:value="${rohsDTO.ROHS_REMARK}" name="ROHS_REMARK" ></td>
                             <td rowspan="3">
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="ROHS_FILE">
@@ -199,6 +200,7 @@
                             <col style="width:90px;">
                             <col style="width:90px;">
                             <col style="width:90px;">
+                            <col style="width:150px;">
                             <col>
                         </colgroup>
                         <thead>
@@ -209,6 +211,7 @@
                             <th><span>Cl+Br</span><span style="color: #e74c3c;">*</span></th>
                             <th><span>F</span><span style="color: #e74c3c;">*</span></th>
                             <th><span>I</span><span style="color: #e74c3c;">*</span></th>
+                            <th><span data-langsid="추가 기재사항"></span></th>
                             <th><span data-langsid="첨부파일"></span><span style="color: #e74c3c;">*</span></th>
 
                         </tr>
@@ -224,6 +227,7 @@
                             <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_CLBR}" name="HALOGEN_CLBR" reqcheck="reqcheck" data-messages="Halogen CLBR 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_F}" name="HALOGEN_F" reqcheck="reqcheck" data-messages="Halogen F 입력해주세요." messages=""></td>
                             <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_I}" name="HALOGEN_I" reqcheck="reqcheck" data-messages="Halogen I 입력해주세요." messages=""></td>
+                            <td><input type="text" class="cui_text_field" th:value="${halGDTO.HALOGEN_REMARK}" name="HALOGEN_REMARK"></td>
                             <td>
                                 <div class="cui_attachments" style="display:flex;">
                                     <input type="file" class="cui_file_field" name="HALOGEN_FILE">
@@ -251,14 +255,16 @@
                             <col style="width:110px;">
                             <col style="width:90px;">
                             <col style="width:90px;">
+                            <col style="width:180px;">
                             <col>
                             <col style="width:90px;">
                         </colgroup>
                         <thead>
                         <tr>
                             <th><span data-langsid="확인일자"></span></th>
-                            <th><span data-langsid="분석항목"></span></th>
-                            <th><span data-langsid="분석결과"></span></th>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="확인일자"></span></th>
+                            <th><span data-langsid="추가 기재사항"></span></th>
                             <th><span data-langsid="첨부"></span></th>
                             <th><button type="button" class="cui_button secondary" id="addRowButton" ><span data-langsid="추가"></span></button></th>
                         </tr>
@@ -270,6 +276,7 @@
                                 <td><input type="text" class="cui_text_field" th:value="${etcDTO.ETC_ANALYSE_ENTRY}" th:name="'ETC_ANALYSE_ENTRY'+${etcStat.count}"  ></td>
                                 <td><input type="text" class="cui_text_field"  th:value="${etcDTO.ETC_ANALYSE_RESULT}" th:name="'ETC_ANALYSE_RESULT'+${etcStat.count}" >
                                     <input type="hidden" class="cui_text_field" th:name="'ETC_FLAG'+${etcStat.count}"></td>
+                                <td><input type="text" class="cui_text_field"  th:value="${etcDTO.ETC_REMARK}" th:name="'ETC_REMARK'+${etcStat.count}" ></td>
                                 <td>
                                     <div class="cui_attachments" style="display:flex;">
                                         <input type="file" class="cui_file_field" th:name="'ETC_FILE'+${etcStat.count}">
@@ -521,6 +528,7 @@
                 var confirmDate = row.querySelector('[name^="ETC_CONFIRM_DATE"]').value.trim();
                 var analyseEntry = row.querySelector('[name^="ETC_ANALYSE_ENTRY"]').value.trim();
                 var analyseResult = row.querySelector('[name^="ETC_ANALYSE_RESULT"]').value.trim();
+                var analyseRemark = row.querySelector('[name^="ETC_REMARK"]').value.trim();
                 var fileInput = row.querySelector('[name^="ETC_FILE"]');
                 var fileName = fileInput.value.trim();
                 if(fileName == '' && row.querySelector('#ETC_FILE_NAME') !== null) fileName = row.querySelector('#ETC_FILE_NAME').innerText;
