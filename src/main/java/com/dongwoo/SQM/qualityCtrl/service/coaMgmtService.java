@@ -33,11 +33,15 @@ public class coaMgmtService {
         return coaMgmtRepository.getUserList(params);
     }
 
-    public List<HashMap> getMaterialListCoa(String code) {
+    //메인 조회 자재 코드 팝업 ,엑셀 업로드 콤보 리스트
+    public List<HashMap> getCoaMaterialList(String code, String name,String vendorId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("COM_CODE", code);
-        return coaMgmtRepository.getMaterialListCoa(params);
+        params.put("MATERIAL_ID", code);
+        params.put("MATERIAL_NAME", name);
+        params.put("VENDOR_ID", vendorId);
+        return coaMgmtRepository.getCoaMaterialList(params);
     }
+
 
     public List<HashMap> getMaterialFactoryList(String vendorId , String materialId  , String selLang) {
         Map<String, Object> params = new HashMap<>();
