@@ -67,6 +67,7 @@
                 <input type="hidden" name="PM_IDX" th:value="${PM_IDX}"/>
                 <input type="hidden" name="SaveMode" value=""/>
                 <input type="hidden" name="PM_PART_CODE" th:value="${partMgmtDTO.PM_PART_CODE}"/>
+                <input type="hidden" name="PM_APPROVAL_STATUS" th:value="${partMgmtDTO.PM_APPROVAL_STATUS}"/>
                 <fieldset id="declFieldset">
                     <legend><span>Declaration Letter</span></legend>
 
@@ -815,6 +816,10 @@
                         Common.Msg(siteLang.getLang("저장되었습니다."));
                         location.reload();
                     }
+                }else if(response.indexOf("|||[ERROR]|||")>-1){
+                     var mString = response.replace("|||[ERROR]|||", "");
+                     Common.Msg(siteLang.getLang(mString));
+                     return;
                 }else {
                     Common.MoveUrl("/user/partMgmt/goSccsDetail?PM_IDX=" + response.split('|||')[1]);
                 }
@@ -1044,12 +1049,12 @@
         }
 
         //한번 승인 후 다시 들어온 경우
-        if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){
-            if(!$("input[name=CONFIRM_CHK]").is(":checked")){
-                Common.Msg(siteLang.getLang("보증내역 재확인에 체크 해주세요"));
-                return;
-            }
-        }
+<!--        if($("input[name=PM_APPROVAL_DATE]").val().trim() != ''){-->
+<!--            if(!$("input[name=CONFIRM_CHK]").is(":checked")){-->
+<!--                Common.Msg(siteLang.getLang("보증내역 재확인에 체크 해주세요"));-->
+<!--                return;-->
+<!--            }-->
+<!--        }-->
 
 
         //Y 일때는 하위 내용이 하나라도 Y가 있어야함

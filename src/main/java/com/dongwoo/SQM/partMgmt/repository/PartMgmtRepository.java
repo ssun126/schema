@@ -215,9 +215,20 @@ public class PartMgmtRepository {
         sql.update("partManagement.setHistoryData",map);
     }
 
+    /* MSDS/ RoHS Halogen  */
     public partDetailMsdsDTO getOrignMsdsData (int pmidx) { return sql.selectOne("partManagement.getOrignMsdsData",pmidx);}
     public partDetailRohsDTO getOrignRohsData (int pmidx) { return sql.selectOne("partManagement.getOrignRohsData",pmidx);}
     public partDetailHalGDTO getOrignHalgData (int pmidx) { return sql.selectOne("partManagement.getOrignHalgData",pmidx);}
+
+    /* Svhc */
+    public PartDetailSvhcDTO getOrignSvhcData (int pmidx) { return sql.selectOne("partManagement.getOrignSvhcData",pmidx);}
+
+    /* Svhc */
+    public partDetailDeclarDTO getOrignDeclData (int pmidx) { return sql.selectOne("partManagement.getOrignDeclData",pmidx);}
+
+    /* Svhc */
+    public partDetailSccsDTO getOrignSccsData (int pmidx) { return sql.selectOne("partManagement.getOrignSccsData",pmidx);}
+    public partDetailIngredDTO getOrignIngredData (int pmidx) { return sql.selectOne("partManagement.getOrignIngredData",pmidx);}
 
 
     /*********************************************************************************************************************

@@ -111,8 +111,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </td>
                         </tr>
                         </tbody>
@@ -577,7 +575,7 @@
                         Common.Msg(siteLang.getLang("저장되었습니다."));
                         location.reload();
                     }
-                } else if(response.indexOf("|||[ERROR]|||")>0){
+                } else if(response.indexOf("|||[ERROR]|||")>-1){
                     var mString = response.replace("|||[ERROR]|||", "");
                     Common.Msg(siteLang.getLang(mString));
                     return;

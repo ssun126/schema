@@ -18,35 +18,55 @@
                         </div>
                     </div>
                     <div class="cui_body">
-                        <table class="cui_table">
-                            <colgroup>
-                                <col style="width:120px;">
-                                <col>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                                <th><span data-langsid="양식 다운로드"></span></th>
-                                <td>
-                                    <form id="sendForm" method="post" enctype="multipart/form-data" onsubmit="return false;">
+                        <form id="sendForm" method="post" enctype="multipart/form-data" onsubmit="return false;">
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:120px;">
+                                    <col>
+                                    <col style="width:120px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th><span data-langsid="양식 업로드"></span></th>
+                                    <td colspan="3">
                                         <div class="cui_items_wrap" data-direction="left">
                                             <div class="item_content">
                                                 <div class="cui_attachments" style="width:500px;">
-                                                    <input type="file" name="file" id="fileInfo" class="cui_file_field" reqcheck="reqcheck" data-messages="파일을 작성후 첨부해주세요." messages="">
+                                                    <input type="file" name="file" id="fileInfo" class="cui_file_field" >
                                                 </div>
-<!--                                                <button type="button" class="cui_button" onclick="sampleDownLoad()?;"><span>SAMPLE</span></button>-->
-                                                <a href="./uploads/default/sample/Declaration/declaration_sample.xlsx" download="declaration_sample.xlsx" class="cui_button" ><span>SAMPLE</span></a>
                                                 <button type="button" class="cui_button primary" onclick="sendSubmit();"><span data-langsid="저장"></span></button>
                                             </div>
                                         </div>
-                                    </form>
-                                </td>
-                                <th style="width:150px"><span data-langsid="확인서 Rev. 번호"></span></th>
-                                <td style="width:100px">
-                                    <input class="cui_text_field" type="text" th:value="${declarationRev}" readonly>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+
+
+                                    <th style="width:100px;vertical-align:middle;"><span data-langsid="샘플파일"></span></th>
+                                    <td style="width:100px">
+                                        <div class="cui_attachments" style="display:flex;">
+                                            <input type="file" class="cui_file_field" name="DECL_FILE">
+                                        </div>
+                                        <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${DECL_SAMPLE_FILE_NAME == '' ? 'display:none;' : '' }">
+                                            <div class="item_label" data-cui-icon="paperclip" style="width:auto;">
+                                                <span id="DECL_SAMPLE_FILE_NAME" th:value="${DECL_SAMPLE_FILE_NAME}" th:text="${DECL_SAMPLE_FILE_NAME}"></span>
+                                            </div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile('DECL_SAMPLE_FILE')" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                                <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <th style="width:100px;vertical-align:middle;"><span data-langsid="확인서 Rev. 번호"></span></th>
+                                    <td style="width:100px;vertical-align: middle;">
+                                        <input style="vertical-align:middle;width:90px;padding:0px;"  class="cui_text_field" type="number" name="DECLARATION_REV"  th:value="${DECLARATION_REV}" reqcheck="reqcheck" data-messages="확인서 Rev. 번호를 입력해주세요." messages="">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
                         <div class="cui_jqGrid_section">
                             <div class="cui_jqGrid_head">
                                 <div class="jqGrid_label"> &nbsp;</div>
@@ -65,6 +85,12 @@
     <script>
         var sendSubmit = function () {
             var obj = $("#sendForm");
+
+            if($("input[name=DECL_FILE]").val() === '' && $("#DECL_SAMPLE_FILE_NAME").text() === '') {
+                 isValid=false;
+                 return Common.Msg(siteLang.getLang("샘플 파일을 지정해주세요"));
+            }
+
             if (Common.Validate(obj) == true) {
                 Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                     mode : "confrim"
@@ -91,6 +117,33 @@
                     }
                 });
             }
+        }
+
+        var status_Del = function(obj){
+            //alert(idx+"++++"+mode);
+            Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var frmObj = $("#sendForm");
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.formData  = new FormData();
+                    ReqInfo.AddParameter(frmObj);
+
+                    Common.Ajax("/declaration/DeleteDeclSampleFile", ReqInfo, function (response) {
+                        if (response == "OK") {
+                            Common.Msg(siteLang.getLang("삭제되었습니다."));
+                        }
+                    });
+
+                    var row = obj.parent().parent();
+                    row.find("span[id*=FILE_NAME]").text('');
+<!--                    row.paren?t().find("input[name*=FILE_STATUS").val("DEL");-->
+                    row.css("display","none");
+
+
+                }
+            });
+
         }
 
         var sampleDownLoad = function () {
