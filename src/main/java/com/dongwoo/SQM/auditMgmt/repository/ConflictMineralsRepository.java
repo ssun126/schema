@@ -16,7 +16,12 @@ public class ConflictMineralsRepository {
     public int insertFileInfo(ConflictMineralsDTO conflict) {
         return sql.insert("ConflictMinerals.insertFile", conflict);
     }
+    //평가항목 점수 저장
     public int insertItem(ConflictMineralsDTO conflict) {
+        return sql.insert("ConflictMinerals.insertItem", conflict);
+    }
+    //history 저장
+    public int insertHistory(ConflictMineralsDTO conflict) {
         return sql.insert("ConflictMinerals.insertItem", conflict);
     }
 

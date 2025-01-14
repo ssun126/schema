@@ -1,0 +1,77 @@
+20-Nov-2024 16:21:05.181 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server version:        Apache Tomcat/9.0.8
+20-Nov-2024 16:21:05.187 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server built:          Apr 27 2018 19:32:00 UTC
+20-Nov-2024 16:21:05.187 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Server number:         9.0.8.0
+20-Nov-2024 16:21:05.188 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log OS Name:               Windows 10
+20-Nov-2024 16:21:05.188 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log OS Version:            10.0
+20-Nov-2024 16:21:05.188 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Architecture:          amd64
+20-Nov-2024 16:21:05.188 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Java Home:             D:\jdk-17.0.12+7
+20-Nov-2024 16:21:05.189 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Version:           17.0.12+7
+20-Nov-2024 16:21:05.189 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log JVM Vendor:            Eclipse Adoptium
+20-Nov-2024 16:21:05.190 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_BASE:         D:\NewWorkspace\shema\src\main
+20-Nov-2024 16:21:05.190 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log CATALINA_HOME:         D:\apache-tomcat-9.0.8
+20-Nov-2024 16:21:05.191 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.lang=ALL-UNNAMED
+20-Nov-2024 16:21:05.191 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.io=ALL-UNNAMED
+20-Nov-2024 16:21:05.192 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util=ALL-UNNAMED
+20-Nov-2024 16:21:05.192 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+20-Nov-2024 16:21:05.192 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+20-Nov-2024 16:21:05.192 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.home=D:\apache-tomcat-9.0.8
+20-Nov-2024 16:21:05.192 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dcatalina.base=D:\NewWorkspace\shema\src\main
+20-Nov-2024 16:21:05.193 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.io.tmpdir=D:\NewWorkspace\shema\src\main\temp
+20-Nov-2024 16:21:05.193 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.config.file=D:\NewWorkspace\shema\src\main\conf\logging.properties
+20-Nov-2024 16:21:05.193 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager
+20-Nov-2024 16:21:05.193 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -javaagent:D:\JetBrains\IntelliJ IDEA Community Edition 2024.1.4\lib\idea_rt.jar=50684:D:\JetBrains\IntelliJ IDEA Community Edition 2024.1.4\bin
+20-Nov-2024 16:21:05.194 정보 [main] org.apache.catalina.startup.VersionLoggerListener.log Command line argument: -Dfile.encoding=UTF-8
+20-Nov-2024 16:21:05.194 정보 [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [D:\jdk-17.0.12+7\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\app\shhan\product\21c\dbhomeXE\bin;.;C:\Program Files (x86)\WareValley\Chakra Max Universal Client V4\;C:\WINDOWS;C:\WINDOWS\System32;D:\zulu8.72.0.17-ca-jdk8.0.382-win_x64\bin;D:\zulu8.72.0.17-ca-jdk8.0.382-win_x64\bin;C:\Program Files\nodejs\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Users\shhan\AppData\Local\Programs\Python\Python312\Scripts\;C:\Users\shhan\AppData\Local\Programs\Python\Python312\;c:\windows\system32;C:\Users\shhan\AppData\Roaming\npm;D:\JetBrains\IntelliJ IDEA Community Edition 2024.1.4\bin;;.]
+20-Nov-2024 16:21:05.295 정보 [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8080"]
+20-Nov-2024 16:21:06.022 정보 [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+20-Nov-2024 16:21:06.031 정보 [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["ajp-nio-8009"]
+20-Nov-2024 16:21:06.036 정보 [main] org.apache.tomcat.util.net.NioSelectorPool.getSharedSelector Using a shared selector for servlet write/read
+20-Nov-2024 16:21:06.037 정보 [main] org.apache.catalina.startup.Catalina.load Initialization processed in 1680 ms
+20-Nov-2024 16:21:06.102 정보 [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+20-Nov-2024 16:21:06.102 정보 [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet Engine: Apache Tomcat/9.0.8
+20-Nov-2024 16:21:06.117 정보 [main] org.apache.catalina.startup.HostConfig.deployDescriptor Deploying deployment descriptor [D:\NewWorkspace\shema\src\main\conf\Catalina\localhost\ROOT.xml]
+20-Nov-2024 16:21:07.868 경고 [main] org.apache.tomcat.util.descriptor.web.WebXml.setVersion Unknown version string [5.0]. Default version will be used.
+20-Nov-2024 16:21:25.444 정보 [main] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+20-Nov-2024 16:21:25.866 경고 [main] org.apache.catalina.util.SessionIdGeneratorBase.createSecureRandom Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [381] milliseconds.
+20-Nov-2024 16:21:25.895 정보 [main] org.apache.catalina.startup.HostConfig.deployDescriptor Deployment of deployment descriptor [D:\NewWorkspace\shema\src\main\conf\Catalina\localhost\ROOT.xml] has finished in [19,778] ms
+20-Nov-2024 16:21:25.900 정보 [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["http-nio-8080"]
+20-Nov-2024 16:21:25.914 정보 [main] org.apache.coyote.AbstractProtocol.start Starting ProtocolHandler ["ajp-nio-8009"]
+20-Nov-2024 16:21:25.921 정보 [main] org.apache.catalina.startup.Catalina.start Server startup in 19883 ms
+20-Nov-2024 16:22:03.549 정보 [Thread-4] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["http-nio-8080"]
+20-Nov-2024 16:22:03.653 정보 [Thread-4] org.apache.coyote.AbstractProtocol.pause Pausing ProtocolHandler ["ajp-nio-8009"]
+20-Nov-2024 16:22:03.803 정보 [Thread-4] org.apache.catalina.core.StandardService.stopInternal Stopping service [Catalina]
+20-Nov-2024 16:22:03.809 경고 [Thread-4] org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches Failed to clear soft references from ObjectStreamClass$Caches for web application [ROOT]
+ java.lang.ClassCastException: class java.io.ObjectStreamClass$Caches$1 cannot be cast to class java.util.Map (java.io.ObjectStreamClass$Caches$1 and java.util.Map are in module java.base of loader 'bootstrap')
+	at org.apache.catalina.loader.WebappClassLoaderBase.clearCache(WebappClassLoaderBase.java:2175)
+	at org.apache.catalina.loader.WebappClassLoaderBase.clearReferencesObjectStreamClassCaches(WebappClassLoaderBase.java:2162)
+	at org.apache.catalina.loader.WebappClassLoaderBase.clearReferences(WebappClassLoaderBase.java:1535)
+	at org.apache.catalina.loader.WebappClassLoaderBase.stop(WebappClassLoaderBase.java:1480)
+	at org.apache.catalina.loader.WebappLoader.stopInternal(WebappLoader.java:443)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardContext.stopInternal(StandardContext.java:5349)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1443)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1432)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.stopInternal(ContainerBase.java:999)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1443)
+	at org.apache.catalina.core.ContainerBase$StopChild.call(ContainerBase.java:1432)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:145)
+	at org.apache.catalina.core.ContainerBase.stopInternal(ContainerBase.java:999)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardService.stopInternal(StandardService.java:471)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.core.StandardServer.stopInternal(StandardServer.java:791)
+	at org.apache.catalina.util.LifecycleBase.stop(LifecycleBase.java:257)
+	at org.apache.catalina.startup.Catalina.stop(Catalina.java:755)
+	at org.apache.catalina.startup.Catalina$CatalinaShutdownHook.run(Catalina.java:856)
+
+20-Nov-2024 16:22:03.816 정보 [Thread-4] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["http-nio-8080"]
+20-Nov-2024 16:22:03.818 정보 [Thread-4] org.apache.coyote.AbstractProtocol.stop Stopping ProtocolHandler ["ajp-nio-8009"]
+20-Nov-2024 16:22:03.820 정보 [Thread-4] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["http-nio-8080"]
+20-Nov-2024 16:22:03.821 정보 [Thread-4] org.apache.coyote.AbstractProtocol.destroy Destroying ProtocolHandler ["ajp-nio-8009"]

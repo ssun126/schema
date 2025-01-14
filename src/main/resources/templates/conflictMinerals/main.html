@@ -268,7 +268,7 @@
         $('.resultField').hide();
         if(comState != "" ){
             if(comState === 'SEND'){
-                $('#authState').text('[제출:' +'[[${companyAuth.APPROVE_DATE}]]'+']');
+                $('#authState').text('[제출:' +'[[${companyAuth.SEND_DATE}]]'+']');
                 $('#sendAuth').hide();
             }else if(comState === 'APPROVED'){
                 $('#authState').text('[승인:' +'[[${companyAuth.APPROVE_DATE}]]'+']');

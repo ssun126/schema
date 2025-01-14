@@ -1,0 +1,14 @@
+29-Nov-2024 14:14:24.064 정보 [main] org.apache.catalina.core.ApplicationContext.log 2 Spring WebApplicationInitializers detected on classpath
+29-Nov-2024 14:14:35.340 정보 [main] org.apache.catalina.core.ApplicationContext.log Initializing Spring embedded WebApplicationContext
+29-Nov-2024 14:14:58.970 정보 [http-nio-8080-exec-1] org.apache.catalina.core.ApplicationContext.log Initializing Spring DispatcherServlet 'dispatcherServlet'
+29-Nov-2024 14:17:05.310 정보 [Thread-5] org.apache.catalina.core.ApplicationContext.log Destroying Spring FrameworkServlet 'dispatcherServlet'
+29-Nov-2024 14:17:05.311 정보 [Thread-5] org.apache.catalina.core.ApplicationContext.log Closing Spring root WebApplicationContext
+29-Nov-2024 14:17:49.281 정보 [main] org.apache.catalina.core.ApplicationContext.log 2 Spring WebApplicationInitializers detected on classpath
+29-Nov-2024 14:17:59.609 정보 [main] org.apache.catalina.core.ApplicationContext.log Initializing Spring embedded WebApplicationContext
+29-Nov-2024 14:18:48.607 정보 [Thread-5] org.apache.catalina.core.ApplicationContext.log Closing Spring root WebApplicationContext
+29-Nov-2024 14:19:54.811 정보 [main] org.apache.catalina.core.ApplicationContext.log 2 Spring WebApplicationInitializers detected on classpath
+29-Nov-2024 14:20:05.161 정보 [main] org.apache.catalina.core.ApplicationContext.log Initializing Spring embedded WebApplicationContext
+29-Nov-2024 14:21:53.768 정보 [Thread-5] org.apache.catalina.core.ApplicationContext.log Closing Spring root WebApplicationContext
+29-Nov-2024 14:22:31.531 정보 [main] org.apache.catalina.core.ApplicationContext.log 2 Spring WebApplicationInitializers detected on classpath
+29-Nov-2024 14:22:41.819 정보 [main] org.apache.catalina.core.ApplicationContext.log Initializing Spring embedded WebApplicationContext
+29-Nov-2024 14:28:45.839 정보 [Thread-5] org.apache.catalina.core.ApplicationContext.log Closing Spring root WebApplicationContext

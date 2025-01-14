@@ -29,4 +29,8 @@ public class partDetailHalGDTO {
 
     @JsonProperty("HALOGEN_FILE_STATUS")
     private String HALOGEN_FILE_STATUS;
+
+    @JsonProperty("HALOGEN_REMARK")
+    private String HALOGEN_REMARK;
+
 }
