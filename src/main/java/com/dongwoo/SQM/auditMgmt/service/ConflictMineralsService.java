@@ -108,17 +108,18 @@ public class ConflictMineralsService {
             }
         }
 
-        // 데이터 저장
+        // 데이터 저장 - 수정모드이고 입력 데이터가 있다면
         if(modify.equals("Y") && authMgmtDTO != null) {
             for (ConflictMineralsDTO dto : conflictMinerals) {
                 dto.setCOM_CODE(comCode);
                 dto.setAUTH_SEQ(authMgmtDTO.getAUTH_SEQ());
                 //기존 정보가 있는지 확인
                 if (dto.getPART_CODE() != null) {
-                    Map<String, Object> params = new HashMap<>();
+                    Map<String, Object> params = new HashMap<String, Object>();
                     params.put("PART_CODE", dto.getPART_CODE());
                     params.put("COM_CODE", comCode);
                     ConflictMineralsDTO ItemDTO = conflictMineralsRepository.findByPartItem(params);
+                    conflictMineralsRepository.insertItem(dto);  //update전 hitory에 insert
                     if (ItemDTO != null) {
                         if (ItemDTO != dto) {
                             conflictMineralsRepository.updateItem(dto);  // updateItem
@@ -142,7 +143,7 @@ public class ConflictMineralsService {
 
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet sheet4 = workbook.getSheetAt(3); // 4번째 시트는 0-based index이므로 3번째
-        Map<String, String> mrtMap = new HashMap<>();
+        Map<String, String> mrtMap = new HashMap<String, String>();
 
         // 병합된 셀 찾기
         int mergedRegions = sheet4.getNumMergedRegions();
@@ -230,7 +231,7 @@ public class ConflictMineralsService {
                 dto.setMICA_YN(mrtMap.get("MICA_YN"));
 
                 //저장할 제품 번호 >> 등록된 제품 번호인지 확인하여 저장
-                Map<String, Object> params = new HashMap<>();
+                Map<String, Object> params = new HashMap<String, Object>();
                 params.put("PART_CODE", cellB.toString());
                 params.put("COM_CODE", comCode);
 
@@ -290,7 +291,7 @@ public class ConflictMineralsService {
 
     //업체별 인증서 정보
     public AuditMgmtDTO getCompanyAuth(String type, String code) {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return auditMgmtRepository.getCompanyAuth(params);
@@ -298,13 +299,13 @@ public class ConflictMineralsService {
 
     //업체별 분쟁광물 정보 가져오기
     public List<ConflictMineralsDTO> getConflictData(String type, String code) {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return conflictMineralsRepository.getConflictData(params);
     }
     public List<ConflictMineralsDTO> getConflictData(String type, String code, String AUTH_SEQ) {
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<String, Object>();
         params.put("AUTH_SEQ", AUTH_SEQ);
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
