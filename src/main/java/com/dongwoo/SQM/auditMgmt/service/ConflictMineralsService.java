@@ -79,7 +79,7 @@ public class ConflictMineralsService {
 
             // 각 파일을 저장하고 경로를 DTO에 추가
             for(int i = 0; i < fileNames.length; i++) {
-
+                saveUploadData(fileNames[i], authMgmtDTO.getAUTH_SEQ(), type);//파일 내용 저장
 
                 String filePath = saveFile(fileNames[i]);
 
@@ -101,8 +101,6 @@ public class ConflictMineralsService {
                         log.info("dto: " + dto+"////dto: " + dto.getFILE_TYPE());
                         int rtCnt = conflictMineralsRepository.insertFileInfo(dto);  // insert file
 
-                        saveUploadData(fileNames[i], authMgmtDTO.getAUTH_SEQ(), type, dto.getFILE_TYPE());//파일 내용 저장
-                        log.info("파일저장 Count: " + rtCnt);
                     }
                 }
             }
@@ -135,8 +133,8 @@ public class ConflictMineralsService {
     }
 
     @Transactional
-    public void saveUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq, String AUTH_TYPE, String FILE_TYPE) throws IOException {
-        log.info("saveLabourUploadData====================="+auth_seq);
+    public void saveUploadData(@RequestParam(value="file") MultipartFile file, int auth_seq, String AUTH_TYPE) throws IOException {
+
         UserCustom user = (UserCustom) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int comUserIdx = user.getCOM_USER_IDX();
         String comCode = user.getCOM_CODE();
@@ -144,17 +142,18 @@ public class ConflictMineralsService {
         XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
         XSSFSheet sheet4 = workbook.getSheetAt(3); // 4번째 시트는 0-based index이므로 3번째
         Map<String, String> mrtMap = new HashMap<String, String>();
-
+        log.info("saveLabourUploadData====================="+auth_seq);
         // 병합된 셀 찾기
         int mergedRegions = sheet4.getNumMergedRegions();
         for (int i = 0; i < mergedRegions; i++) {
             CellRangeAddress mergedRegion = sheet4.getMergedRegion(i);
 
-
-            // 병합된 셀이 32번째 행부터 시작하는지 확인(32번째 행부터 4개의 행) >> CMRT 이면 4개, EMRT이면 2개
-            int endRow = (FILE_TYPE.equals("CMRT"))? 35:33;
+            Boolean fileCheck = isMergedCell(workbook, 3, 34, 3); //34라인이 병합된 셀이면 CMRT 아니면 EMRT
+            log.info("fileCheck====================="+fileCheck);
+            String fileType = (fileCheck.equals(true))? "CMRT":"EMRT";
+            int endRow = (fileCheck.equals(true))? 35:33;//변합된 셀이 CMRT 이면 4개, EMRT이면 2개
             if (mergedRegion.getFirstRow() >= 31 && mergedRegion.getLastRow() < endRow) {
-
+                log.info("mergedRegion.getFirstColumn() "+mergedRegion.getFirstRow());
                 // 병합된 셀이 D, E열에 걸쳐 있는지 확인
                 if (mergedRegion.getFirstColumn() == 3 && mergedRegion.getLastColumn() == 4) {
                     // 병합된 셀의 첫 번째 셀에서 값 가져오기
@@ -162,9 +161,8 @@ public class ConflictMineralsService {
                     int firstCol = mergedRegion.getFirstColumn();
                     Row row = sheet4.getRow(firstRow);
                     Cell cell = row.getCell(firstCol);
-
-
-                    if ("CMRT".equals(FILE_TYPE)) {
+                    log.info("cell???"+cell);
+                    if ("CMRT".equals(fileType)) {
                         switch (mergedRegion.getFirstRow()) {
                             case 31:
                                 mrtMap.put("TANTALUM_YN", cell.toString());
@@ -182,7 +180,7 @@ public class ConflictMineralsService {
                                 // 기본값을 처리할 경우
                                 break;
                         }
-                    }else if ("EMRT".equals(FILE_TYPE)) {
+                    }else {
                         switch (mergedRegion.getFirstRow()) {
                             case 31:
                                 mrtMap.put("COBALT_YN", cell.toString());
@@ -208,8 +206,8 @@ public class ConflictMineralsService {
         // 7번째 시트 가져오기
         XSSFSheet sheet7 = workbook.getSheetAt(6); // 7번째 시트는 0-based index이므로 6번째
 
-        // 6번째 행(0-based index로 5번째)부터 시작
-        for (int j = 5; j < sheet7.getPhysicalNumberOfRows(); j++) {
+        // 6번째 행(0-based index로 5번째)부터 시작 sheet7.getPhysicalNumberOfRows()
+        for (int j = 5; j < 7; j++) {
             Row row7 = sheet7.getRow(j);
             if (row7 == null) {
                 continue; // 빈 행이면 건너뜀
@@ -219,7 +217,7 @@ public class ConflictMineralsService {
             Cell cellB = row7.getCell(1); // B열은 1번 인덱스
             if (cellB != null) {
                 // B열의 값 출력
-                System.out.println("7번째 시트의 " + (j + 1) + "번째 행 B열 데이터: " + cellB.toString());
+                log.info("7번째 시트의 " + (j + 1) + "번째 행 B열 데이터: " + cellB.toString());
                 ConflictMineralsDTO dto = new ConflictMineralsDTO();
                 dto.setPART_CODE(cellB.toString());
                 dto.setCOM_CODE(comCode);
@@ -244,6 +242,8 @@ public class ConflictMineralsService {
                 //} else {
                  //   conflictMineralsRepository.insertItem(dto);  // insert
                 }
+            }else{
+                log.info("자재정보가 없습니다.");
             }
         }
 
@@ -310,6 +310,22 @@ public class ConflictMineralsService {
         params.put("AUTH_TYPE", type);
         params.put("COM_CODE", code);
         return conflictMineralsRepository.getConflictData(params);
+    }
+    //병합된 셀인지 체크
+    public static boolean isMergedCell(XSSFWorkbook workbook, int sheetIndex, int rowIndex, int colIndex) {
+        XSSFSheet sheet = workbook.getSheetAt(sheetIndex);
+
+        // 병합된 셀 범위를 가져옵니다.
+        for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
+            CellRangeAddress mergedRegion = sheet.getMergedRegion(i);
+
+            // 병합된 셀이 특정 셀을 포함하는지 확인합니다.
+            if (mergedRegion.isInRange(rowIndex, colIndex)) {
+                return true; // 병합된 셀에 포함되면 true를 반환
+            }
+        }
+
+        return false; // 병합된 셀에 포함되지 않으면 false 반환
     }
 
 }
