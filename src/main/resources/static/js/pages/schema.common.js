@@ -1800,6 +1800,30 @@ Common.Validate = function (FormObj) {
                 return false;
             }
         }
+        //khs add
+        else if(typeof $(this).attr("type") != "undefined" && typeof $(this).attr("datePickerControl")!= "undefined" && $(this).val() != ""){
+            var result = true;
+            var thisObj = $(this);
+            //var value = $(this).val();
+            try {
+                var date = thisObj.val().split("-");
+                var y = parseInt(date[0], 10),
+                    m = parseInt(date[1], 10),
+                    d = parseInt(date[2], 10);
+
+                let dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+                RtnValue = dateRegex.test(d+'-'+m+'-'+y);
+                if(!RtnValue){
+                    Common.Msg(siteLang.getLang("유효하지 않은 일자 입니다."));
+                    RtnValue = false;
+                    return false;
+                }
+            } catch (err) {
+                Common.Msg(siteLang.getLang("유효하지 않은 일자 입니다."));
+                RtnValue = false;
+                return false;
+            }
+        }
     });
     return RtnValue;
 }

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,23 @@ public class coaMgmtService {
         return coaMgmtRepository.getUserList(params);
     }
 
+    //메인 조회 자재 코드 팝업 ,엑셀 업로드 콤보 리스트
+    public List<HashMap> getCoaMaterialList(String code, String name,String vendorId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("MATERIAL_ID", code);
+        params.put("MATERIAL_NAME", name);
+        params.put("VENDOR_ID", vendorId);
+        return coaMgmtRepository.getCoaMaterialList(params);
+    }
+
+
+    public List<HashMap> getMaterialFactoryList(String vendorId , String materialId  , String selLang) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("vendorId", vendorId);
+        params.put("materialId", materialId);
+        params.put("TOKEN_USER_LANG", selLang);
+        return coaMgmtRepository.getMaterialFactoryList(params);
+    }
 
     public List<coaMgmtDTO> getCOAList(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getCOAList(coaMgmtDTO);
@@ -80,6 +98,14 @@ public class coaMgmtService {
         return coaMgmtRepository.regSpecCheck(coaMgmtDTO);
     }
 
+    public  Map<String, Object> regCheck(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.regCheck(parameterMap);
+    }
+
+    public  Map<String, Object> regSpecCheck(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.regSpecCheck(parameterMap);
+    }
+
 
     public String getStatusCOAMasterByPK(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getStatusCOAMasterByPK(coaMgmtDTO);
@@ -87,6 +113,10 @@ public class coaMgmtService {
 
     public coaMgmtDTO getMaterial(coaMgmtDTO coaMgmtDTO) {
         return coaMgmtRepository.getMaterial(coaMgmtDTO);
+    }
+
+    public LinkedHashMap<String,Object> getMaterial(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getMaterial(parameterMap);
     }
 
     public coaMgmtDTO interfaceLimsCOAMasterData(coaMgmtDTO coaMgmtDTO) {
@@ -121,29 +151,58 @@ public class coaMgmtService {
     }
 
     public int insertCOAListDqms(List<coaMgmtDTO> masterList , List<coaMgmtDTO> detailList ) {
-
-       // return coaMgmtRepository.interfaceCOAProcedure(DB_LINK_TARGET_APPLY);
-
+        //테이블 또는 뷰가 존재하지 않습니다
+        int testSeq = 0 ;
         for (int i = 0 ; i < masterList.size() ; i ++) {
-            //coaMgmtDqmsDAO.interfaceDqmsCOAMaster(masterList.get(i));
-
+          //  coaMgmtRepository.interfaceDqmsCOAMaster(masterList.get(i));
+            testSeq++;
 
         }
-
+        //테이블 또는 뷰가 존재하지 않습니다
         for (int i = 0 ; i < detailList.size() ; i ++) {
+            //coaMgmtRepository.interfaceDqmsCOADetail(detailList.get(i));
 
-
-           // coaMgmtDqmsDAO.interfaceDqmsCOADetail(detailList.get(i));
+            testSeq++;
         }
 
-
-        return  0 ;
-
+        return  testSeq ;
     }
 
 
+    //메일 발송자 가져오기
+    public List<HashMap> getEmailTargetUser(Map<String, Object> params) {
+        return coaMgmtRepository.getEmailTargetUser(params);
+    }
 
 
+    public int updateCOAStatus(coaMgmtDTO coaMgmtDTO) {
+        return coaMgmtRepository.updateCOAStatus(coaMgmtDTO);
+    }
 
+
+    public int insertCOADFile(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOADFile(parameterMap);
+    }
+
+    public List<LinkedHashMap<String,Object>> getSpecList(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getSpecList(parameterMap);
+    }
+
+
+    public int getExistCount(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.getExistCount(parameterMap);
+    }
+
+    public Object insertCOAMaster(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOAMaster(parameterMap);
+    }
+
+    public Object insertCOADetail(Map<String, Object> parameterMap) {
+        return coaMgmtRepository.insertCOADetail(parameterMap);
+    }
+
+    public String parseDate(String mfDate) {
+        return coaMgmtRepository.parseDate(mfDate);
+    }
 
 }

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +20,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -133,7 +130,7 @@ public class AuditMgmtRestController {
 
     //인증서 파일 다운로드
     @GetMapping("/getIsoAuditFileDown")
-    public ResponseEntity<Resource> downloadISOFile(@RequestParam("filename") String filename) throws Exception {
+    public ResponseEntity<FileSystemResource> downloadISOFile(@RequestParam("filename") String filename) throws Exception {
         Path path = fileStorageService.getISOUploadDirectory().resolve(filename).normalize();
         FileSystemResource resource = new FileSystemResource(path);
 
@@ -152,7 +149,7 @@ public class AuditMgmtRestController {
 
     //인증서 파일 다운로드
     @GetMapping("/getAuditFileDown")
-    public ResponseEntity<Resource> downloadFile(@RequestParam("filename") String filename) throws Exception {
+    public ResponseEntity<FileSystemResource> downloadFile(@RequestParam("filename") String filename) throws Exception {
         Path path = fileStorageService.getUploadDirectory().resolve(filename).normalize();
         FileSystemResource resource = new FileSystemResource(path);
 

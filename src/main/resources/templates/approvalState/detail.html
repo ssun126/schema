@@ -87,7 +87,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${msdsDTO.MSDS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${msdsDTO.MSDS_IDX}]],'MSDS')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -106,6 +106,7 @@
                 <col style="width:120px;">
                 <col style="width:120px;">
                 <col style="width:120px;">
+                <col style="width:170px;">
                 <col>
               </colgroup>
               <thead>
@@ -116,7 +117,7 @@
                 <th><span>PB</span></th>
                 <th><span>CR6</span></th>
                 <th><span>PBBS</span></th>
-
+                <th><span data-langsid="추가 기재사항"></span></th>
                 <th><span data-langsid="첨부파일"></span></th>
 
               </tr>
@@ -129,13 +130,13 @@
                 <td><span th:text="${rohsDTO.ROHS_PB}"   ></span></td>
                 <td><span th:text="${rohsDTO.ROHS_CR6}"  ></span></td>
                 <td><span th:text="${rohsDTO.ROHS_PBBS}" ></span></td>
-
+                <td rowspan="3"><span th:text="${rohsDTO.ROHS_REMARK}" ></span></td>
                 <td rowspan="3">
                   <div class="cui_attachments">
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${rohsDTO.ROHS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${rohsDTO.ROHS_IDX}]],'ROHS')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -169,6 +170,7 @@
                 <col style="width:90px;">
                 <col style="width:90px;">
                 <col style="width:90px;">
+                <col style="width:150px;">
                 <col>
               </colgroup>
               <thead>
@@ -179,7 +181,8 @@
                 <th><span>Cl+Br</span></th>
                 <th><span>F</span></th>
                 <th><span>I</span></th>
-                <th><span>첨부</span></th>
+                <th><span data-langsid="추가 기재사항"></span></th>
+                <th><span data-langsid="첨부파일"></span></th>
               </tr>
               </thead>
               <tbody>
@@ -190,12 +193,13 @@
                 <td><span th:text="${halGDTO.HALOGEN_CLBR}"></span></td>
                 <td><span th:text="${halGDTO.HALOGEN_F}"   ></span></td>
                 <td><span th:text="${halGDTO.HALOGEN_I}"   ></span></td>
+                <td><span th:text="${halGDTO.HALOGEN_REMARK}"   ></span></td>
                 <td>
                   <div class="cui_attachments">
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span  th:text="${halGDTO.HALOGEN_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${halGDTO.HALOGEN_IDX}]],'HALOGEN')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -210,15 +214,16 @@
                 <col style="width:110px;">
                 <col style="width:90px;">
                 <col style="width:90px;">
+                <col style="width:180px;">
                 <col>
-                <col style="width:90px;">
               </colgroup>
               <thead>
               <tr>
-                <th><span>확인일자</span></th>
-                <th><span>분석항목</span></th>
-                <th><span>분석결과</span></th>
-                <th><span>첨부</span></th>
+                <th><span data-langsid="확인일자">확인일자</span></th>
+                <th><span data-langsid="확인일자">분석항목</span></th>
+                <th><span data-langsid="확인일자">분석결과</span></th>
+                <th><span data-langsid="추가 기재사항"></span></th>
+                <th><span data-langsid="첨부">첨부</span></th>
               </tr>
               </thead>
               <tbody>
@@ -226,12 +231,13 @@
                 <td><span th:text="${etcDTO.ETC_CONFIRM_DATE}"></span></td>
                 <td><span th:text="${etcDTO.ETC_ANALYSE_ENTRY}"></span></td>
                 <td><span th:text="${etcDTO.ETC_ANALYSE_RESULT}"></span></td>
+                <td><span th:text="${etcDTO.ETC_REMARK}"></span></td>
                 <td>
                   <div class="cui_attachments">
                     <div class="cui_items_wrap" data-direction="left">
-                      <div class="item_label" data-cui-icon="paperclip"><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
+                      <div class="item_label" data-cui-icon="paperclip" ><span  th:text="${etcDTO.ETC_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${etcDTO.ETC_IDX}]],'ETC')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -239,6 +245,29 @@
               </tbody>
             </table>
           </fieldset>
+
+          <div class="cui_border_section" th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }">
+            <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
+            <div class="cui_bullet_title">
+              <div class="bullet_title_label"><span>보증 내역의 재확인</span></div>
+            </div>
+            <ul class="cui_list" data-bullet="dash">
+              <li>기 제출한 MSDS 및 RoHS / Halogen 함량에 대한 분석서 또는 보증서에 대한 변경 사실이 없음을 확인 드립니다.<br>(확인 결과는 아래의 전자 보증서 제출버턴 클릭시, 보증서 제출과 동일하게 1년씩 기간이 연장 됩니다.)
+              </li>
+            </ul>
+            <div class="cui_items_wrap" data-direction="column" >
+              <div class="item_content">
+                <label class="cui_checkbox">
+                  <input type="checkbox" name="MSDS_CONFIRM_CHK" th:checked="${msdsDTO.MSDS_CONFIRM_CHK == ' ' ? false:msdsDTO.MSDS_CONFIRM_CHK}" disabled><i></i>
+                  <span>MSDS 전자 보증서 제출</span>
+                </label>
+                <label class="cui_checkbox">
+                  <input type="checkbox" name="ROHS_CONFIRM_CHK" th:checked="${rohsDTO.ROHS_CONFIRM_CHK == ' ' ? false:rohsDTO.ROHS_CONFIRM_CHK}" disabled><i></i>
+                  <span>RoHS/Halogen 전자 보증서 제출</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- Step 2 -->
         <div id="step2_contents">
@@ -287,7 +316,7 @@
                       <div class="cui_items_wrap" data-direction="left">
                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${svhcDTO.FILE_NAME}" >파일명.html</span></div>
                         <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                          <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${svhcDTO.SVHC_IDX}]],'SVHC')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                         </div>
                       </div>
                     </div>
@@ -324,11 +353,22 @@
 
           </fieldset>
 
-          <div>
+          <!--          <div>-->
+          <!--            * 보증 내역의 재확인<br>-->
+          <!--            -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>-->
+          <!--            <label class="cui_checkbox">-->
+          <!--              <input type="checkbox" name="checkbox1" disabled><i></i>-->
+          <!--              <span>전자 보증서 제출</span>-->
+          <!--            </label>-->
+          <!--          </div>-->
+          <!--        </div>-->
+
+          <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' '? 'display:none;' : '' }">
+            <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
             * 보증 내역의 재확인<br>
             -. SVHC 보증서에 대한 물질 목록 추가를 확인 하였으며, 해당 표기된 물질외는 모두 비해당임을 확인 드립니다.<br>
             <label class="cui_checkbox">
-              <input type="checkbox" name="checkbox1" disabled><i></i>
+              <input type="checkbox" name="CONFIRM_CHK" th:checked="${svhcDTO.CONFIRM_CHK == ' ' ? false:svhcDTO.CONFIRM_CHK}" disabled><i></i>
               <span>전자 보증서 제출</span>
             </label>
           </div>
@@ -390,7 +430,7 @@
                       <div class="cui_items_wrap" data-direction="left">
                         <div class="item_label" data-cui-icon="paperclip"><span th:text="${declarDTO.FILE_NAME}">파일명.html</span></div>
                         <div class="item_content">
-                          <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                          <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${declarDTO.DECL_IDX}]],'DECL')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                         </div>
                       </div>
                     </div>
@@ -413,16 +453,19 @@
 
           </fieldset>
 
-          <div>
+
+          <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
+            <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
             * 보증 내역의 재확인<br>
-            -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인
-            드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)<br>
+            -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)
+            <br>
             <label class="cui_checkbox">
-              <input type="checkbox" name="checkbox1" disabled><i></i>
+              <input type="checkbox" name="CONFIRM_CHK" th:checked="${declarDTO.CONFIRM_CHK == ' ' ? false:declarDTO.CONFIRM_CHK}" disabled><i></i>
               <span>전자 보증서 제출</span>
             </label>
           </div>
         </div>
+
         <!--    sccs 페이지    -->
         <div id="step4_contents">
           <fieldset>
@@ -444,7 +487,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${sccsDTO.SCCS_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" th:onclick="downloadFile([[${sccsDTO.SCCS_IDX}]],'SCCS')" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -470,7 +513,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${ingredDTO.INGRED_FILE_NAME}">파일명.html</span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${ingredDTO.INGRED_IDX}]],'INGRED')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>
@@ -498,7 +541,7 @@
                     <div class="cui_items_wrap" data-direction="left">
                       <div class="item_label" data-cui-icon="paperclip"><span th:text="${guarantDTO.GUARANT_FILE_NAME}"></span></div>
                       <div class="item_content">
-                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" data-tooltip-title="다운로드"><span>다운로드</span></button>
+                        <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile([[${guarantDTO.GUARANT_IDX}]],'GUARANT')" data-tooltip-title="다운로드"><span>다운로드</span></button>
                       </div>
                     </div>
                   </div>

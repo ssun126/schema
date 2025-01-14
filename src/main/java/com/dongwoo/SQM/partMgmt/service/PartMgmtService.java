@@ -261,6 +261,35 @@ public class PartMgmtService {
     public void GuarantDeleteFile (int idx) { partMgmtRepository.GuarantDeleteFile(idx);}
 
 
+    /**********************
+     * initConfirmChk
+     * **************/
+    public void initConfirmChk(int pmidx){partMgmtRepository.initConfirmChk(pmidx);}
+
+
+    /**********************
+     * history data set
+     * **************/
+    public void setHistoryData(int pmidx, int userIdx , String gubun){
+
+        partMgmtRepository.setHistoryData(pmidx,userIdx,gubun);
+    }
+
+    /* MSDS/ RoHS Halogen  */
+    public partDetailMsdsDTO getOrignMsdsData(int pmidx){ return partMgmtRepository.getOrignMsdsData(pmidx);}
+    public partDetailRohsDTO getOrignRohsData(int pmidx){ return partMgmtRepository.getOrignRohsData(pmidx);}
+    public partDetailHalGDTO getOrignHalgData(int pmidx){ return partMgmtRepository.getOrignHalgData(pmidx);}
+
+    /* Svhc */
+    public PartDetailSvhcDTO getOrignSvhcData(int pmidx) { return partMgmtRepository.getOrignSvhcData(pmidx);}
+
+    /* Declaration Letter */
+    public partDetailDeclarDTO getOrignDeclData(int pmidx) { return partMgmtRepository.getOrignDeclData(pmidx);}
+
+    /* Sccs 성분명세 */
+    public partDetailSccsDTO getOrignSccsData(int pmidx) { return partMgmtRepository.getOrignSccsData(pmidx);}
+    public partDetailIngredDTO getOrignIngredData(int pmidx) { return partMgmtRepository.getOrignIngredData(pmidx);}
+
     /*********************************************************************************************************************
      ** Detail v페이지
      ** 파일 관련

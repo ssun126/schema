@@ -17,6 +17,9 @@ public class partDetailIngredDTO {
     @JsonProperty("INGRED_FILE_PATH")
     private String INGRED_FILE_PATH;
 
+    @JsonProperty("INGRED_CONFIRM_CHK")
+    private String INGRED_CONFIRM_CHK;
+
     @JsonProperty("FILE_STATUS")
     private String FILE_STATUS;
 }

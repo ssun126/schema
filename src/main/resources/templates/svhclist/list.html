@@ -17,35 +17,52 @@
                         </div>
                     </div>
                     <div class="cui_body">
-                        <table class="cui_table">
-                            <colgroup>
-                                <col style="width:120px;">
-                                <col>
-                            </colgroup>
-                            <tbody>
+                        <form id="sendForm" method="post" enctype="multipart/form-data" onsubmit="return false;">
+                            <table class="cui_table">
+                                <colgroup>
+                                    <col style="width:120px;">
+                                    <col>
+                                    <col style="width:120px;">
+                                    <col>
+                                </colgroup>
+                                <tbody>
                                 <tr>
-                                    <th><span data-langsid="양식 다운로드"></span></th>
-                                    <td>
-                                        <form id="sendForm" action="/svhcData/upload" method="post" enctype="multipart/form-data" onsubmit="return sendSubmit($(this));">
-                                            <div class="cui_items_wrap" data-direction="left">
-                                                <div class="item_content">
-                                                    <div class="cui_attachments" style="width:500px;">
-                                                        <input type="file" name="file" id="fileInfo" class="cui_file_field" reqcheck="reqcheck" data-messages="파일을 작성후 첨부해주세요." messages="">
-                                                    </div>
-<!--                                                    <button type="button" class="cui_button" onclick="sampleDownLoad();"><span>SAMPLE</span></button>-->
-                                                    <a href="./uploads/default/sample/Svhc/Audit_노동환경_sample.xlsx" download="Audit_노동환경_sample.xlsx" class="cui_button" ><span>SAMPLE</span></a>
-                                                    <button type="button" class="cui_button primary" onclick="sendSubmit($('#sendForm'));"><span data-langsid="저장"></span></button>
+                                    <th><span data-langsid="양식 업로드"></span></th>
+                                    <td colspan="3">
+                                        <div class="cui_items_wrap" data-direction="left">
+                                            <div class="item_content">
+                                                <div class="cui_attachments" style="width:500px;">
+                                                    <input type="file" name="file" id="fileInfo" class="cui_file_field" >
                                                 </div>
+                                                <button type="button" class="cui_button primary" onclick="sendSubmit();"><span data-langsid="저장"></span></button>
                                             </div>
-                                        </form>
-                                    </td>
-                                    <th style="width:100px"><span data-langsid="보증 물질수"></span></th>
-                                    <td style="width:100px">
-                                        <input class="cui_text_field" type="text" th:value="${svhcRowCount}" readonly>
+                                        </div>
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                <tr>
+                                    <th style="width:100px;vertical-align:middle;"><span data-langsid="샘플파일"></span></th>
+                                    <td style="width:100px">
+                                        <div class="cui_attachments" style="display:flex;">
+                                            <input type="file" class="cui_file_field" name="SVHC_FILE">
+                                        </div>
+                                        <div class="cui_items_wrap file_wrap" data-direction="left" th:style="${SVHC_SAMPLE_FILE_NAME == '' ? 'display:none;' : '' }">
+                                            <div class="item_label" data-cui-icon="paperclip" style="width:auto;">
+                                                <span id="SVHC_SAMPLE_FILE_NAME" th:value="${SVHC_SAMPLE_FILE_NAME}" th:text="${SVHC_SAMPLE_FILE_NAME}"></span>
+                                            </div>
+                                            <div class="item_content">
+                                                <button type="button" class="cui_button icon endpoint" data-cui-icon="download" th:onclick="downloadFile('SVHC_SAMPLE_FILE')" data-tooltip-title="다운로드" ><span data-langsid="다운로드"></span></button>
+                                                <button type="button" class="cui_button icon endpoint" th:onclick="status_Del($(this))" data-cui-icon="xmark" data-tooltip-title="삭제"><span data-langsid="삭제"></span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <th style="width:100px;vertical-align:middle;"><span data-langsid="보증 물질수"></span></th>
+                                    <td style="width:100px;vertical-align: middle;">
+                                        <input style="vertical-align:middle;width:90px;padding:0px;" type="number" class="cui_text_field" name="SVHC_ROW_COUNT" th:value="${SVHC_ROW_COUNT}" reqcheck="reqcheck" data-messages="보증 물질수를 입력해주세요." messages="">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </form>
                         <div class="cui_jqGrid_section">
                             <div class="cui_jqGrid_head">
                                 <div class="jqGrid_label"> &nbsp;</div>
@@ -62,16 +79,67 @@
         </div>
     </div>
     <script>
-        var sendSubmit = function (obj) {
+        var sendSubmit = function () {
+            var obj = $("#sendForm");
+
+            if($("input[name=SVHC_FILE]").val() === '' && $("#SVHC_SAMPLE_FILE_NAME").text() === '') {
+                 isValid=false;
+                 return Common.Msg(siteLang.getLang("샘플 파일을 지정해주세요"));
+            }
+
             if (Common.Validate(obj) == true) {
                 Common.Msg(siteLang.getLang("저장 하시겠습니까?"), {
                     mode : "confrim"
                     , okback : function () {
                         Common.Loading.Show();
-                        obj.submit();
+
+                        var ReqInfo = new Common.RequestInfo();
+                        ReqInfo.formData  = new FormData();
+                        ReqInfo.AddParameter(obj);
+
+                        Common.Ajax("/svhcData/upload", ReqInfo, function (response) {
+                            if (response == "OK") {
+                                Common.Loading.Hide();
+                                Common.Msg(siteLang.getLang("저장되었습니다."), {
+                                    mode : "msg"
+                                    , okback : function () {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        });
+
+                        //obj.submit();
                     }
                 });
             }
+        }
+
+        var status_Del = function(obj){
+            //alert(idx+"++++"+mode);
+            Common.Msg(siteLang.getLang("데이터가 삭제됩니다. 파일을 삭제 하시겠습니까?"), {
+                mode : "confrim"
+                , okback : function () {
+                    var frmObj = $("#sendForm");
+                    var ReqInfo = new Common.RequestInfo();
+                    ReqInfo.formData  = new FormData();
+                    ReqInfo.AddParameter(frmObj);
+
+                    Common.Ajax("/svhcData/DeleteSvhcSampleFile", ReqInfo, function (response) {
+                        if (response == "OK") {
+                            Common.Msg(siteLang.getLang("삭제되었습니다."));
+                        }
+                    });
+
+                    var row = obj.parent().parent();
+                    row.find("span[id*=FILE_NAME]").text('');
+<!--                    row.paren?t().find("input[name*=FILE_STATUS").val("DEL");-->
+                    row.css("display","none");
+
+
+                }
+            });
+
         }
 
         var sampleDownLoad = function () {
@@ -136,7 +204,7 @@
             obj.colModel = [
                 { title: "NO", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_NUM", sortable: false, editor: false, editable: false },
                 { data_langsid: "물질명", title: siteLang.getLang("물질명"), width: 600, halign: "center", align: "left", dataType: "string", dataIndx: "SVHC_NAME", sortable: false, editor: false, editable: false },
-                { title: "EU No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: false, editor: false, editable: false },
+                { title: "EC No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_EUNUM", sortable: false, editor: false, editable: false },
                 { title: "CAS No.", width: 120, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_CASNUM", sortable: false, editor: false, editable: false }
             ];
             obj.dataModel = { data: data };

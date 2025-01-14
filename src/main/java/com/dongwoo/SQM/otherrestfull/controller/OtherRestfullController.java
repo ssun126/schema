@@ -36,7 +36,7 @@ public class OtherRestfullController {
 			HttpServletRequest request,
 			HttpServletResponse response
 	) throws Exception{
-		Map<String, Object> responseData = new HashMap<>();
+		Map<String, Object> responseData = new HashMap<String, Object>();
     	try {
 			responseData.put("msg", "RESTFull TEST SUCCESS");
     	} catch (Exception ex) {
@@ -53,7 +53,7 @@ public class OtherRestfullController {
 			HttpServletResponse response,
 			@RequestBody String param
 	) throws Exception{
-		Map<String, Object> responseData = new HashMap<>();
+		Map<String, Object> responseData = new HashMap<String, Object>();
 		Map<String, Object> reqParam = commonService.jsonDataMap(param);
 
 		// 요청된 URI

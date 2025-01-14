@@ -54,7 +54,7 @@
                                 <td><input type="text" name="REG_INPUT_DATE" class="cui_text_field cui_calendar_val" datePickerControl="" th:value="${data.REG_INPUT_DATE}"></td>
                                 <td>
                                     <div class="cui_attachments" th:if="${data.ITEM_STATE != 'APPROVED' && data.ITEM_STATE != 'SEND'}">
-                                        <input type="file" name="file" id="${data.AUTH_CODE}" class="cui_file_field">
+                                        <input type="file" name="file" id="${data.AUTH_CODE}" class="cui_file_field" accept=".pdf,.ppt,.pptx,.png">
                                     </div>
                                     <div class="cui_attachments" th:if="${data.FILE_NAME != null and data.ITEM_STATE != ''}">
                                         <div class="cui_items_wrap" data-direction="left">
@@ -124,31 +124,37 @@ var rejectReasons = companyIsoAuth
 // 결합된 REASON 값을 textarea에 출력
 document.getElementById('rejectReason').value = rejectReasons;
 
-var notSend = companyIsoAuth.every(function(data) {
-    return data.ITEM_STATE === null;  // 모든 항목의 ITEM_STATE가 null 인지 확인
-});
-var allApproved = companyIsoAuth.every(function(data) {
-    return data.ITEM_STATE === 'APPROVED' && data.COM_CODE !== null;  // 모든 항목의 ITEM_STATE가 'APPROVED'인지 확인
-});
-var notApproved = companyIsoAuth.some(function(data) {
-    return data.ITEM_STATE === 'REJECT';
-});
-var sendSubmit= companyIsoAuth.some(function(data) {
-    return data.ITEM_STATE === 'SEND';
-});
-if (notSend) { //제출전
-    $('#footButton').show();
-    $('#topButton').show();
-}
-if (notApproved) { //반려가 있는 경우
+//상태 체크
+var notSend = companyIsoAuth.every(data => data.ITEM_STATE === null);
+var allApproved = companyIsoAuth.filter(data => data.AUTH_DATE !== null)
+                                .every(data => data.ITEM_STATE === 'APPROVED');
+var notApproved = companyIsoAuth.some(data => data.ITEM_STATE === 'REJECT');
+var sendSubmit = companyIsoAuth.some(data => data.ITEM_STATE === 'SEND');
+
+var finalState;
+
+if (notApproved) {
+    finalState = 'REJECT';  // 하나라도 REJECT가 있으면 REJECT
     $('#topButton').hide();
     $('#submitIsoAuth').hide();
     $('#rejectArea').show();
-}
-if (sendSubmit || allApproved) { //제출하거나 모두 승인이 되면 전체 버튼 숨기기
+} else if (sendSubmit) {
+    finalState = 'SEND';  // 하나라도 SEND가 있으면 SEND
     $('#footButton').hide();
     $('#topButton').hide();
+} else if (notSend) {
+    finalState = 'NOT_SEND';  // 모든 항목의 ITEM_STATE가 null이면 NOT_SEND (혹은 적절한 값)
+    $('#footButton').show();
+    $('#topButton').show();
+} else if (allApproved) {
+    finalState = 'APPROVED';  // 모든 항목이 APPROVED이면 APPROVED
+    $('#footButton').hide();
+    $('#topButton').hide();
+}  else {
+    finalState = 'UNKNOWN';  // 기타 상태에 대한 기본값 (필요시 수정)
 }
+console.log(finalState);
+
 
 // 저장 버튼,제출 버튼 클릭 시 데이터 저장
 $("#submitIsoAuth, #sendIsoAuth").click(function() {
@@ -238,12 +244,9 @@ function saveTableData(flag) {
 
             if (fileInput && fileInput.files.length > 0) {
                 row['FILE_NAME'] = fileInput.files[0].name;
-                row['FILE_PATH'] = fileInput.files[0].path;
-                 console.log("insert path?????????"+fileInput.files[0].path);
             }
             if(row['FILE_NAME'] == undefined){
                 row['FILE_NAME'] =  $(this).find('td').eq(5).find('span').eq(2).text();
-                 console.log("$(this).find('td').eq(5).find('span').eq(2).text()"+$(this).find('td').eq(5).find('span').eq(2).text());
             }
             console.log("insert data"+row['FILE_NAME']);
         }

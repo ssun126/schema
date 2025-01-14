@@ -107,6 +107,10 @@ public class CommonRepository {
 		return sql.selectList("LcsCommonDAO.getCommonCodeList", parameterMap);
 	}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6c45953df46295abf0947b32980eb9fda30ef1cb
 	public List<Map<String, Object>> getQueryForList(String sqlId, Map<?, ?> parameterMap) {
 		return sql.selectList(sqlId, parameterMap);
 	}

@@ -23,11 +23,12 @@ public class UserCustom extends User {
     private String COM_NAME;
     private String USER_NAME;
     private String EMAIL;
+    private String USER_ID;
 
     public UserCustom(String username, String password
             , boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked
             , Collection<? extends GrantedAuthority> authorities
-            , int USER_IDX, int COM_USER_IDX, String USER_GUBUN, String USER_STATUS, String COM_CODE, String COM_NAME, String USER_NAME ,String EMAIL) {
+            , int USER_IDX, int COM_USER_IDX, String USER_GUBUN, String USER_STATUS, String COM_CODE, String COM_NAME, String USER_NAME ,String EMAIL ,String USER_ID) {
         super(username, password
                 , enabled, accountNonExpired, credentialsNonExpired, accountNonLocked
                 , authorities);
@@ -39,6 +40,7 @@ public class UserCustom extends User {
         this.COM_NAME = COM_NAME;
         this.USER_NAME = USER_NAME;
         this.EMAIL = EMAIL;
+        this.USER_ID = USER_ID;
 
     }
 }

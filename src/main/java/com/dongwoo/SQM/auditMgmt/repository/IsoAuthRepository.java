@@ -71,9 +71,9 @@ public class IsoAuthRepository {
         return sql.selectOne("IsoAuthItem.selectAuthItem", isoAuthItemDTO);
     }
 
-    //iso 인증코드와 업체 코드로 수 조회
-    public int selectAuthCnt(AuditMgmtDTO auditMgmtDTO) {
-        return sql.selectOne("IsoAuthItem.selectAuthCnt", auditMgmtDTO);
+    //업체 코드로 수 조회
+    public String selectAuthState(IsoAuthItemDTO isoAuthItemDTO) {
+        return sql.selectOne("IsoAuthItem.selectAuthState", isoAuthItemDTO);
     }
 
     //업체 코드로 iso 정보 조회

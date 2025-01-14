@@ -3,13 +3,9 @@ package com.dongwoo.SQM.common.service.impl;
 import com.dongwoo.SQM.common.dto.CommonDTO;
 import com.dongwoo.SQM.common.repository.CommonRepository;
 import com.dongwoo.SQM.common.service.CommonService;
-import com.dongwoo.SQM.siteMgr.dto.BaseCodeDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -21,7 +17,7 @@ public class CommonServiceImpl implements CommonService {
 
 
     public Map<String, Object> jsonDataMap(String json) throws Exception {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<String, Object>();
         ObjectMapper mapper = new ObjectMapper();
 
         if (null != json && !"".equals(json)) {
@@ -99,7 +95,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public Map<String, Object> executeUpdateQuery(String query, Map<String, Object> parameterMap) {
         int result = commonRepository.executeUpdateQuery(query, parameterMap);
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("ROWS", result);
         return resultMap;
     }
@@ -183,6 +179,14 @@ public class CommonServiceImpl implements CommonService {
 	public int updateUserAction(Map<String, Object> parameterMap) {
     	return commonRepository.updateUserAction(parameterMap);
 	}
+
+
+	@Override
+	public String parseDate(String mfDate) {
+		return commonRepository.parseDate(mfDate);
+	}
+
+
 
     @Override
     public List<String> getMailContents(String mailType) {

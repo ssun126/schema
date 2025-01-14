@@ -6,7 +6,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -84,5 +89,27 @@ public class SvhcListService {
             if(conn != null) conn.close();
 
         }
+    }
+
+    public String uploadFileData(String partcode, MultipartFile fileInfo){
+        String sUrl = "/"+partcode+"/";
+        String filePath = "";
+
+        try{
+            String fileName = fileInfo.getOriginalFilename();
+            Path path = Paths.get("./uploads"+sUrl+fileName);
+            Files.createDirectories((path.getParent()));
+            fileInfo.transferTo(path);
+            //sampleFileDTOList.add(sampleFileDTO);
+
+            filePath ="./uploads"+sUrl;
+
+        }catch (IOException e){
+            e.printStackTrace();
+            //model.addAttribute("message","파일업로드중 오류 : " + file.getOriginalFilename());
+
+        }
+
+        return filePath;
     }
 }
