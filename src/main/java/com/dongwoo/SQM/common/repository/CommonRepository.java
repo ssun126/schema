@@ -103,12 +103,10 @@ public class CommonRepository {
     }
 
 	//LCS Common Code 조회
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getCommonCodeList(Map<String, Object> parameterMap) {
 		return sql.selectList("LcsCommonDAO.getCommonCodeList", parameterMap);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getQueryForList(String sqlId, Map<?, ?> parameterMap) {
 		return sql.selectList(sqlId, parameterMap);
 	}
@@ -181,7 +179,6 @@ public class CommonRepository {
 		return sql.selectOne(" Common.getMailContents", param);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> authorityMenuMoveCheck(Map<String, Object> parameterMap) {
 		return sql.selectList(" Common.authorityMenuMoveCheck", parameterMap);
 	}
