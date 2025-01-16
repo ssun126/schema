@@ -116,6 +116,12 @@
                 </fieldset>
 
                 <fieldset id="declFileFieldset">
+                    <div class="cui_bullet_title">
+                        <div class="bullet_title_label"><span>파일첨부</span></div>
+                        <div class="bullet_title_aside">
+                            <button type="button" class="cui_button secondary" th:onclick="downloadFile([[${declDTO.DECL_IDX}]],'DECL')"><span>양식 다운로드</span></button>
+                        </div>
+                    </div>
                     <table class="cui_table">
                         <colgroup>
                             <col style="width:154px;">
@@ -268,7 +274,9 @@
         });
 
         $("input[name=DECL_FILE]").bind("change", function(){
-            AttachStatus = false;
+            $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
+		    $("#gridArea_attach").pqGrid("refreshView");
+		    AttachStatus = false;
         });
 
 
@@ -911,7 +919,7 @@
 
             }else if(grid.pdata[j]["DECL_YN"].trim() === 'N' || grid.pdata[j]["DECL_YN"].trim() === 'n'){
                 if (idxsN != "") idxsN += ",";
-                var NosN = grid.pdata[j]["DECL_NUM"]  === ''?grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
+                var NosN = grid.pdata[j]["DECL_NUM"].trim()  === ''?grid.pdata[j]["DECL_SUB_NUM"] : grid.pdata[j]["DECL_NUM"];
 
                 idxsN += NosN;
 

@@ -141,7 +141,7 @@ public class DeclarationController {
                     String decl_filepath = declarationService.uploadFileData("decl/sample", declFile);
                     String decl_filename = declFile.getOriginalFilename();
 
-                    BaseConfigDTO baseDTO = BaseConfigService.getBaseConfig_InfoCode("SVHC_SAMPLE_FILE");
+                    BaseConfigDTO baseDTO = BaseConfigService.getBaseConfig_InfoCode("DECL_SAMPLE_FILE");
                     baseDTO.setCONFIG_VALUE(decl_filename);
                     baseDTO.setCONFIG_OPTION(decl_filepath);
                     baseDTO.setCONFIG_OPTION2(decl_filename);

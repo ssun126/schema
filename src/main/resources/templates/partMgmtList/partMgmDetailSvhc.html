@@ -40,6 +40,10 @@
         .cui_border_section{
             margin: 20px 20px;
         }
+
+        .svhc_file_div{
+            margin-left:20px;
+        }
     </style>
 </head>
 <body>
@@ -118,7 +122,7 @@
                     <div class="cui_bullet_title">
                         <div class="bullet_title_label"><span>파일첨부</span></div>
                         <div class="bullet_title_aside">
-                            <button type="button" class="cui_button secondary"><span>양식 다운로드</span></button>
+                            <button type="button" class="cui_button secondary" th:onclick="downloadFile([[${svhcDTO.SVHC_IDX}]],'SVHC')"><span>양식 다운로드</span></button>
                         </div>
                     </div>
                     <table class="cui_table">
@@ -135,7 +139,7 @@
                                         <div class="cui_attachments" style="display:flex;">
                                             <input type="file" class="cui_file_field" name="SVHC_FILE">
                                             <input type="hidden" name="FILE_STATUS">
-                                            <button type="button" class="cui_button primary" onclick="setSvhcExcelData();"><span data-langsid="적용"></span></button>
+                                            <button type="button" class="cui_button primary" onclick="setSvhcExcelData();"><span data-langsid="유효성체크"></span></button>
                                             <div class="cui_items_wrap file_wrap svhc_file_div" data-direction="left"  th:style="${svhcDTO.FILE_NAME == ' ' || svhcDTO.FILE_NAME == null ? 'display:none;' : '' }">
                                                 <div class="item_label" data-cui-icon="paperclip"><span id="FILE_NAME" th:text="${svhcDTO.FILE_NAME}" th:value="${svhcDTO.FILE_NAME}"></span></div>
                                                 <div class="item_content">
@@ -239,6 +243,7 @@
             $('input:radio[name="DATA_GUBUN"]:input[value="ATTACH"]').prop('checked',true);
         }
 
+
         //CHANGE EVENT BIND
         $("input[name=DATA_GUBUN]").bind("change", function(){
             // 직접입력
@@ -280,7 +285,9 @@
         });
 
         $("input[name=SVHC_FILE]").bind("change", function(){
-            AttachStatus = false;
+            $("#gridArea_attach").pqGrid("option", "dataModel.data", []);
+		    $("#gridArea_attach").pqGrid("refreshView");
+            AttachStatus= false;
         });
 
 
@@ -565,7 +572,7 @@
                 , editable: true
 
             },
-            { data_langsid: "비고",title: siteLang.getLang("비고"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_REMARK", sortable: true, editor: true, editable: true },
+            { data_langsid: "비고",title: siteLang.getLang("비고"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_REMARK", sortable: true, editor: true, editable: true }
 
         ];
         obj.dataModel = { data: data };
@@ -748,7 +755,7 @@
             if($("#frmDetail").find("input[name='SVHC_FILE']").val() !== ''){
                 if(!AttachStatus){
                     flag = false;
-                    Common.Msg(siteLang.getLang("첨부 등록 시 적용을 필수적으로 클릭해주세요"));
+                    Common.Msg(siteLang.getLang("첨부 등록 시 유효성 체크를 필수적으로 클릭해주세요"));
                     return;
                 }
                 var returnVal = setApplicableNo('attach',true);
@@ -795,6 +802,19 @@
 
     }
 
+    var downloadFile = function (idx,gubun) {
+        // 서버의 다운로드 URL을 생성 (파일 경로로 이동)
+        var downloadUrl = '/user/partMgmt/partMgmtFileDownIdx?IDX=' + idx +'&GUBUN='+gubun;
+
+        // 다운로드 링크를 동적으로 생성
+        var link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = '';  // 다운로드 시 기본 파일 이름 사용 (optional)
+
+        // 링크 클릭 이벤트를 트리거하여 다운로드 실행
+        link.click();
+    }
+
 
     var frmDetailPrev = function () {
         var pmidx  = $("input[name=PM_IDX]").val();
@@ -825,7 +845,7 @@
             if($("input[name=SVHC_FILE]").val() !== ''){
                 if(!AttachStatus){
                     isValid = false;
-                    returnVal= '첨부 등록 시 적용을 필수적으로 클릭해주세요';
+                    returnVal= '첨부 등록 시 유효성체크를 필수적으로 클릭해주세요';
                     Common.Msg(siteLang.getLang(returnVal));
                     return;
                 }

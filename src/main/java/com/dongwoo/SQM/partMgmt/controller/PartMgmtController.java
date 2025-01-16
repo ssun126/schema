@@ -641,59 +641,62 @@ public class PartMgmtController {
             }
 
 
+            if(!flag.equals("Save")){
+                //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+                String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+                String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+                if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
 
-            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
-            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
-            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
-            if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+                    partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
+                    partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
+                    partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
 
-                partDetailMsdsDTO OrigMsdsDTO = partMgmtService.getOrignMsdsData(PM_IDX);
-                partDetailRohsDTO OrigRohsDTO = partMgmtService.getOrignRohsData(PM_IDX);
-                partDetailHalGDTO OrigHalgDTO = partMgmtService.getOrignHalgData(PM_IDX);
+                    if(msdsFile == null ){
+                        msdsDTO.setMSDS_FILE_NAME(OrigMsdsDTO.getMSDS_FILE_NAME());
+                        msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
+                    }
 
-                if(msdsFile == null ){
-                    msdsDTO.setMSDS_FILE_NAME(OrigMsdsDTO.getMSDS_FILE_NAME());
-                    msdsDTO.setMSDS_FILE_PATH(OrigMsdsDTO.getMSDS_FILE_PATH());
+                    if(rohsFile == null){
+                        rohsDTO.setROHS_FILE_NAME(OrigRohsDTO.getROHS_FILE_NAME());
+                        rohsDTO.setROHS_FILE_PATH(OrigRohsDTO.getROHS_FILE_PATH());
+                    }
+
+                    if(halgFile == null){
+                        halGDTO.setHALOGEN_FILE_NAME(OrigHalgDTO.getHALOGEN_FILE_NAME());
+                        halGDTO.setHALOGEN_FILE_PATH(OrigHalgDTO.getHALOGEN_FILE_PATH());
+                    }
+
+
+
+
+
+
+                    String errorMsg  = "";
+                    String chkVal = "";
+                    String msdsChkData=compareObjects(msdsDTO,OrigMsdsDTO);
+                    chkVal = msdsDTO.getMSDS_CONFIRM_CHK();
+                    errorMsg = checkValidate(msdsChkData,chkVal,"MSDS");
+
+                    if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                    String rohsChkData=compareObjects(rohsDTO,OrigRohsDTO);
+                    chkVal = rohsDTO.getROHS_CONFIRM_CHK();
+                    errorMsg = checkValidate(rohsChkData,chkVal,"ROHS");
+
+                    if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                    String HalgChkData=compareObjects(halGDTO,OrigHalgDTO);
+                    // rohs halg 는 보증 체크 함께함. 값은 rohs 에 있음
+                    errorMsg = checkValidate(HalgChkData,chkVal,"HALOGEN");
+
+                    if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+
+
                 }
-
-                if(rohsFile == null){
-                    rohsDTO.setROHS_FILE_NAME(OrigRohsDTO.getROHS_FILE_NAME());
-                    rohsDTO.setROHS_FILE_PATH(OrigRohsDTO.getROHS_FILE_PATH());
-                }
-
-                if(halgFile == null){
-                    halGDTO.setHALOGEN_FILE_NAME(OrigHalgDTO.getHALOGEN_FILE_NAME());
-                    halGDTO.setHALOGEN_FILE_PATH(OrigHalgDTO.getHALOGEN_FILE_PATH());
-                }
-
-
-
-
-
-
-                String errorMsg  = "";
-                String chkVal = "";
-                String msdsChkData=compareObjects(msdsDTO,OrigMsdsDTO);
-                chkVal = msdsDTO.getMSDS_CONFIRM_CHK();
-                errorMsg = checkValidate(msdsChkData,chkVal,"MSDS");
-
-                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
-
-                String rohsChkData=compareObjects(rohsDTO,OrigRohsDTO);
-                chkVal = rohsDTO.getROHS_CONFIRM_CHK();
-                errorMsg = checkValidate(rohsChkData,chkVal,"ROHS");
-
-                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
-
-                String HalgChkData=compareObjects(halGDTO,OrigHalgDTO);
-                // rohs halg 는 보증 체크 함께함. 값은 rohs 에 있음
-                errorMsg = checkValidate(HalgChkData,chkVal,"HALOGEN");
-
-                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
-
-
 
             }
+
 
 
 
@@ -1101,24 +1104,27 @@ public class PartMgmtController {
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
 
-        //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
-        String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
-        String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
-        if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
-            //승인 이후 수정 시 SVHC 개정이 된다면
-            PartDetailSvhcDTO orgSvhcDTO = partMgmtService.getOrignSvhcData(PM_IDX);
+        if(!flag.equals("Save")){
+            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+            if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+                //승인 이후 수정 시 SVHC 개정이 된다면
+                PartDetailSvhcDTO orgSvhcDTO = partMgmtService.getOrignSvhcData(PM_IDX);
 
-            int orgWarranty = Integer.parseInt(orgSvhcDTO.getWARRANTY_ITEM());
-            int Warranty = Integer.parseInt(svhcDTO.getWARRANTY_ITEM());
+                int orgWarranty = Integer.parseInt(orgSvhcDTO.getWARRANTY_ITEM());
+                int Warranty = Integer.parseInt(svhcDTO.getWARRANTY_ITEM());
 
-             String orgConfirmDate = orgSvhcDTO.getCONFIRM_DATE();
-            String confirmDate = svhcDTO.getCONFIRM_DATE();
-            // 신규추가된 Row에 데이터 넣어준 후 확인일자 바꾸지 않았을 때 다음으로 넘어가지 않게끔 유효성 체크 추가
-            if(orgWarranty != Warranty && orgConfirmDate.equals(confirmDate)){
-                return ResponseEntity.ok("|||[ERROR]||| 보증항목이 변경되었습니다. 확인일자 변경이 필요합니다.");
+                String orgConfirmDate = orgSvhcDTO.getCONFIRM_DATE();
+                String confirmDate = svhcDTO.getCONFIRM_DATE();
+                // 신규추가된 Row에 데이터 넣어준 후 확인일자 바꾸지 않았을 때 다음으로 넘어가지 않게끔 유효성 체크 추가
+                if(orgWarranty != Warranty && orgConfirmDate.equals(confirmDate)){
+                    return ResponseEntity.ok("|||[ERROR]||| 보증항목이 변경되었습니다. 확인일자 변경이 필요합니다.");
+                }
+
             }
-
         }
+
 
 
         String blobData = GetParam(request, "blobData", "");
@@ -1452,29 +1458,31 @@ public class PartMgmtController {
         String flag = GetParam(request, "SaveMode","");
         log.info("flag================"+flag);
 
+        if(!flag.equals("Save")){
+            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+            if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
 
-        //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
-        String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
-        String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
-        if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+                partDetailDeclarDTO orgDeclDTO = partMgmtService.getOrignDeclData(PM_IDX);
 
-            partDetailDeclarDTO orgDeclDTO = partMgmtService.getOrignDeclData(PM_IDX);
+                if(declFile == null){
+                    declDTO.setFILE_NAME(orgDeclDTO.getFILE_NAME());
+                    declDTO.setFILE_PATH(orgDeclDTO.getFILE_PATH());
+                }
 
-            if(declFile == null){
-                declDTO.setFILE_NAME(orgDeclDTO.getFILE_NAME());
-                declDTO.setFILE_PATH(orgDeclDTO.getFILE_PATH());
+                String errorMsg  = "";
+                String chkVal = "";
+                String declChkData=compareObjects(declDTO,orgDeclDTO);
+                chkVal = declDTO.getCONFIRM_CHK();
+                errorMsg = checkValidate(declChkData,chkVal,"Declaration");
+
+                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+
             }
-
-            String errorMsg  = "";
-            String chkVal = "";
-            String declChkData=compareObjects(declDTO,orgDeclDTO);
-            chkVal = declDTO.getCONFIRM_CHK();
-            errorMsg = checkValidate(declChkData,chkVal,"Declaration");
-
-            if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
-
-
         }
+
 
 
         String blobData = GetParam(request, "blobData", "");
@@ -1730,39 +1738,43 @@ public class PartMgmtController {
             }
 
 
-            //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
-            String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
-            String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
-            if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
+            if(!flag.equals("Save")){
+                //승인이 한번 떨어진 이후, 작성중 상태이거나 승인 상태에서는 재보증 확인
+                String appData =  GetParam(request, "PM_APPROVAL_DATE", "");
+                String appStatus = GetParam(request, "PM_APPROVAL_STATUS", "");
+                if( !appData.trim().equals("") && (appStatus.equals("2") || appStatus.equals("4"))) {
 
-                partDetailSccsDTO OrignSccsDTO = partMgmtService.getOrignSccsData(PM_IDX);
-                partDetailIngredDTO OrignIngredDTO = partMgmtService.getOrignIngredData(PM_IDX);
+                    partDetailSccsDTO OrignSccsDTO = partMgmtService.getOrignSccsData(PM_IDX);
+                    partDetailIngredDTO OrignIngredDTO = partMgmtService.getOrignIngredData(PM_IDX);
 
-                if(ingredFile != null){
-                    sccsDTO.setSCCS_FILE_NAME(OrignSccsDTO.getSCCS_FILE_NAME());
-                    sccsDTO.setSCCS_FILE_PATH(OrignSccsDTO.getSCCS_FILE_PATH());
+                    if(sccsFile == null){
+                        sccsDTO.setSCCS_FILE_NAME(OrignSccsDTO.getSCCS_FILE_NAME());
+                        sccsDTO.setSCCS_FILE_PATH(OrignSccsDTO.getSCCS_FILE_PATH());
+                    }
+
+                    if(ingredFile == null){
+                        ingredGDTO.setINGRED_FILE_PATH(OrignIngredDTO.getINGRED_FILE_NAME());
+                        ingredGDTO.setINGRED_FILE_PATH(OrignIngredDTO.getINGRED_FILE_PATH());
+                    }
+
+                    String errorMsg  = "";
+                    String chkVal = "";
+                    String sccsChkData=compareObjects(sccsDTO,OrignSccsDTO);
+                    chkVal = sccsDTO.getSCCS_CONFIRM_CHK();
+                    errorMsg = checkValidate(sccsChkData,chkVal,"SCCS");
+
+                    if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
+                    String rohsChkData=compareObjects(ingredGDTO,OrignIngredDTO);
+                    chkVal = ingredGDTO.getINGRED_CONFIRM_CHK();
+                    errorMsg = checkValidate(rohsChkData,chkVal,"성분명세서");
+
+                    if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
+
                 }
-
-                if(ingredFile != null){
-                    ingredGDTO.setINGRED_FILE_PATH(OrignIngredDTO.getINGRED_FILE_NAME());
-                    ingredGDTO.setINGRED_FILE_PATH(OrignIngredDTO.getINGRED_FILE_PATH());
-                }
-
-                String errorMsg  = "";
-                String chkVal = "";
-                String sccsChkData=compareObjects(sccsDTO,OrignSccsDTO);
-                chkVal = sccsDTO.getSCCS_CONFIRM_CHK();
-                errorMsg = checkValidate(sccsChkData,chkVal,"SCCS");
-
-                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
-
-                String rohsChkData=compareObjects(ingredGDTO,OrignIngredDTO);
-                chkVal = ingredGDTO.getINGRED_CONFIRM_CHK();
-                errorMsg = checkValidate(rohsChkData,chkVal,"성분명세서");
-
-                if(!errorMsg.equals("")) return ResponseEntity.ok("|||[ERROR]|||"+errorMsg);
 
             }
+
 
 
 
@@ -1899,14 +1911,21 @@ public class PartMgmtController {
         }else if(gubun.equals("SVHC")){
             map = partMgmtService.getDetailSvhcFileData(idx);
 
-            path = map.get("FILE_PATH");
-            name = map.get("FILE_NAME");
+//            path = map.get("FILE_PATH");
+//            name = map.get("FILE_NAME");
+            BaseConfigDTO baseDTO = BaseConfigService.getBaseConfig_InfoCode("SVHC_SAMPLE_FILE");
+            path = baseDTO.getCONFIG_OPTION();
+            name = baseDTO.getCONFIG_OPTION2();
 
         }else if(gubun.equals("DECL")){
             map = partMgmtService.getDetailDeclFileData(idx);
 
-            path = map.get("FILE_PATH");
-            name = map.get("FILE_NAME");
+//            path = map.get("FILE_PATH");
+//            name = map.get("FILE_NAME");
+
+            BaseConfigDTO baseDTO = BaseConfigService.getBaseConfig_InfoCode("DECL_SAMPLE_FILE");
+            path = baseDTO.getCONFIG_OPTION();
+            name = baseDTO.getCONFIG_OPTION2();
 
         }else if(gubun.equals("SCCS")){
             map = partMgmtService.getSccsFileData(idx);
@@ -2038,8 +2057,9 @@ public class PartMgmtController {
                 //날짜가 바뀌지 않음
                 //데이터가 바뀜( 데이터가 안바뀐거면 모든 데이터가 바뀌지 않은거니까. 큰 else로 떨어짐)
                 // 재확인 체크 시 풀어줘야함
-                if( confirmChk != null && changeData ) {
-                    errorMessage = "|||[ERROR]|||"+gubun+" 전자보증서 제출 확인 체크를 해제 해주세요";
+                //if( confirmChk != null && changeData ) {
+                if( changeData ) {
+                    errorMessage = "|||[ERROR]|||갱신된 데이터가 존재합니다. "+gubun+"  확인일자를 변경해주세요 ";
                 }
             }
 
@@ -2048,7 +2068,7 @@ public class PartMgmtController {
             //return ResponseEntity.ok("|||[ERROR]||| MSDS 변경된 데이터가 없습니다");
             // 재확인 체크가 되어있고 바뀐 데이터가 없다
             if( confirmChk != null ) {
-                errorMessage = "|||[ERROR]||| "+gubun+" 작성일을 변경하거나 "+gubun+" 전자보증서 제출 확인 체크 해제해 주세요";
+                errorMessage = "|||[ERROR]||| "+gubun+" 확인일자를 변경하거나 "+gubun+" 전자보증서 제출 확인 체크 해제해 주세요";
             }
             // 재확인 체크 안되어 있고 바뀐 데이터가 없다 >> ?? 저장되냐?
             //else if( msdsDTO.getMSDS_CONFIRM_CHK() == null && !changeData) { noneChangeData

@@ -1068,6 +1068,8 @@ Common.Load = function (Obj) {
             thisObj.val("");
             inputObj.val("");
             delObj.css("opacity", "0");
+            //khs add 파일 change 이벤트 타게
+            thisObj.change();
         });
 
         delAreaObj.append(delObj);
@@ -1079,6 +1081,10 @@ Common.Load = function (Obj) {
             inputObj.val(thisObj.val());
             if (thisObj.val() != "") {
                 delObj.css("opacity", "1");
+            }
+            //khs add 파일 없을 때 x 마크 안보이게
+            else{
+                delObj.css("opacity", "0");
             }
         });
     });

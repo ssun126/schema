@@ -106,6 +106,7 @@
               <col style="width:120px;">
               <col style="width:120px;">
               <col style="width:120px;">
+              <col style="width:170px;">
               <col>
             </colgroup>
             <thead>
@@ -116,7 +117,7 @@
               <th><span>PB</span></th>
               <th><span>CR6</span></th>
               <th><span>PBBS</span></th>
-
+              <th><span data-langsid="추가 기재사항"></span></th>
               <th><span data-langsid="첨부파일"></span></th>
 
             </tr>
@@ -129,7 +130,7 @@
                 <td><span th:text="${rohsDTO.ROHS_PB}"   ></span></td>
                 <td><span th:text="${rohsDTO.ROHS_CR6}"  ></span></td>
                 <td><span th:text="${rohsDTO.ROHS_PBBS}" ></span></td>
-
+                <td rowspan="3"><span th:text="${rohsDTO.ROHS_REMARK}" ></span></td>
                 <td rowspan="3">
                   <div class="cui_attachments">
                     <div class="cui_items_wrap" data-direction="left">
@@ -169,6 +170,7 @@
               <col style="width:90px;">
               <col style="width:90px;">
               <col style="width:90px;">
+              <col style="width:150px;">
               <col>
             </colgroup>
             <thead>
@@ -179,6 +181,7 @@
               <th><span>Cl+Br</span></th>
               <th><span>F</span></th>
               <th><span>I</span></th>
+              <th><span data-langsid="추가 기재사항"></span></th>
               <th><span>첨부</span></th>
             </tr>
             </thead>
@@ -190,6 +193,7 @@
               <td><span th:text="${halGDTO.HALOGEN_CLBR}"></span></td>
               <td><span th:text="${halGDTO.HALOGEN_F}"   ></span></td>
               <td><span th:text="${halGDTO.HALOGEN_I}"   ></span></td>
+              <td><span th:text="${halGDTO.HALOGEN_REMARK}"   ></span></td>
               <td>
                 <div class="cui_attachments">
                   <div class="cui_items_wrap" data-direction="left">
@@ -210,6 +214,7 @@
               <col style="width:110px;">
               <col style="width:90px;">
               <col style="width:90px;">
+              <col style="width:180px;">
               <col>
               <col style="width:90px;">
             </colgroup>
@@ -218,6 +223,7 @@
               <th><span>확인일자</span></th>
               <th><span>분석항목</span></th>
               <th><span>분석결과</span></th>
+              <th><span data-langsid="추가 기재사항"></span></th>
               <th><span>첨부</span></th>
             </tr>
             </thead>
@@ -226,6 +232,7 @@
               <td><span th:text="${etcDTO.ETC_CONFIRM_DATE}"></span></td>
               <td><span th:text="${etcDTO.ETC_ANALYSE_ENTRY}"></span></td>
               <td><span th:text="${etcDTO.ETC_ANALYSE_RESULT}"></span></td>
+              <td><span th:text="${etcDTO.ETC_REMARK}"></span></td>
               <td>
                 <div class="cui_attachments">
                   <div class="cui_items_wrap" data-direction="left">
@@ -704,6 +711,7 @@
                     else return 'N';
                 }
             }
+            //,{ data_langsid: "비고",title: siteLang.getLang("비고"), width: 200, halign: "center", align: "center", dataType: "string", dataIndx: "SVHC_REMARK", sortable: true, editor: true, editable: false }
 
         ];
         obj.dataModel = { data: data };
