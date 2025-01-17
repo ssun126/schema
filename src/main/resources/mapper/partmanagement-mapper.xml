@@ -436,7 +436,7 @@
 
 
 
-    <!--   DECLARATION LETTER   -->
+    <!--   제품환경 관리물질   -->
     <select id="getDeclarList" resultType="Declaration">
 
         SELECT NVL(DECL_NUM,' ') AS DECL_NUM ,NVL(DECL_SUB_NUM,' ') as DECL_SUB_NUM,DECL_NAME, DECL_CASNUM,NVL(DECL_WEIGHT,' ') AS DECL_WEIGHT

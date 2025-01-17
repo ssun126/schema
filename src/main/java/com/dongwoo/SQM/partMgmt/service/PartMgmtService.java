@@ -182,7 +182,7 @@ public class PartMgmtService {
 
     /*********************************************************************************************************************
      ** Detail v페이지
-     ** Declaration Letter 페이지 **
+     ** 제품환경 관리물질 페이지 **
      *********************************************************************************************************************/
     //svhc 데이터 로직
     public int insertDeclData(partDetailDeclarDTO declarDTO) {
@@ -283,7 +283,7 @@ public class PartMgmtService {
     /* Svhc */
     public PartDetailSvhcDTO getOrignSvhcData(int pmidx) { return partMgmtRepository.getOrignSvhcData(pmidx);}
 
-    /* Declaration Letter */
+    /* 제품환경 관리물질 */
     public partDetailDeclarDTO getOrignDeclData(int pmidx) { return partMgmtRepository.getOrignDeclData(pmidx);}
 
     /* Sccs 성분명세 */

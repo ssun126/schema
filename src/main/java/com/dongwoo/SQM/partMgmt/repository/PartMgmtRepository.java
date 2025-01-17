@@ -145,7 +145,7 @@ public class PartMgmtRepository {
 
     /*********************************************************************************************************************
      ** Detail v페이지
-     ** DECLARATION LETTER 페이지 **
+     ** 제품환경 관리물질 페이지 **
      *********************************************************************************************************************/
     public List<DeclarationDTO> getDeclarData(){return sql.selectList("partManagement.getDeclarList");}
 

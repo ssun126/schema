@@ -53,7 +53,7 @@
         <ol>
           <li class="active"><span>MSDS / RoHSⅡ / Halogen</span></li>
           <li><span>SVHC</span></li>
-          <li><span>Declaration Letter</span></li>
+          <li><span>제품환경 관리물질</span></li>
           <li><span>SCCS / 성분명세서 / 기타</span></li>
         </ol>
       </div>
@@ -457,7 +457,7 @@
           <div class="chkbox"   th:style="${partMgmtDTO.PM_APPROVAL_DATE == null || partMgmtDTO.PM_APPROVAL_DATE == ' ' ? 'display:none;' : '' }">
             <input type="hidden" name="PM_APPROVAL_DATE"  th:value="${partMgmtDTO.PM_APPROVAL_DATE}">
             * 보증 내역의 재확인<br>
-            -. 기 제출한 Declaration Letter에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)
+            -. 기 제출한 제품환경 관리물질에서 물질 목록 추가 및 물질 재확인 결과, 물질보증 내역에 변경 사실이 없음을 확인 드립니다. (추가된 물질 목록은 '비해당'으로 보증 합니다.)
             <br>
             <label class="cui_checkbox">
               <input type="checkbox" name="CONFIRM_CHK" th:checked="${declarDTO.CONFIRM_CHK == ' ' ? false:declarDTO.CONFIRM_CHK}" disabled><i></i>
